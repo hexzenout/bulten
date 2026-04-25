@@ -3,100 +3,102 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>RADAR MASTER V14</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RADAR MASTER V15</title>
     <style>
         :root { --neon: #00ff00; --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32; --bg: #020202; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* SIDEBAR AYARLARI */
-        .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100%; background: #0a0a0a; border-right: 1px solid #222; transition: 0.3s; z-index: 1000; padding: 20px; visibility: hidden; }
-        .sidebar.active { left: 0; visibility: visible; }
+        /* TEK SIDEBAR AYARI */
+        .sidebar { position: fixed; left: -320px; top: 0; width: 300px; height: 100%; background: #0a0a0a; border-right: 1px solid #222; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; padding: 25px; pointer-events: none; opacity: 0; overflow-y: auto; }
+        .sidebar.active { left: 0; pointer-events: auto; opacity: 1; }
         
-        .menu-triggers { position: fixed; top: 20px; left: 20px; display: flex; gap: 10px; z-index: 1100; }
-        .t-btn { background: #111; color: var(--neon); border: 1px solid #333; padding: 10px 15px; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 0.8em; }
-        .t-btn:hover { background: var(--neon); color: #000; }
+        /* MENU BUTONU */
+        .menu-btn { position: fixed; top: 20px; left: 20px; background: #111; color: var(--neon); border: 1px solid #333; padding: 12px 20px; cursor: pointer; border-radius: 8px; font-weight: bold; z-index: 1100; transition: 0.2s; }
+        .menu-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
 
-        /* İÇERİK */
+        /* İÇERİK YAPISI */
         .main { padding: 100px 20px; max-width: 1000px; margin: 0 auto; }
-        .section { background: #080808; border: 1px solid #1a1a1a; border-radius: 12px; padding: 20px; margin-bottom: 30px; }
-        .section h3 { border-bottom: 1px solid #222; padding-bottom: 10px; font-size: 1em; display: flex; align-items: center; justify-content: space-between; }
+        .section { background: #080808; border: 1px solid #1a1a1a; border-radius: 15px; padding: 25px; margin-bottom: 40px; border-top: 1px solid #222; }
+        .section h3 { color: #444; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8em; border-bottom: 1px solid #111; padding-bottom: 15px; margin-bottom: 20px; }
         
-        /* TIER RENKLERİ */
-        .tier-Altın { color: var(--gold); }
-        .tier-Gümüş { color: var(--silver); }
-        .tier-Bronz { color: var(--bronze); }
+        /* TIER SİSTEMİ RENKLERİ */
+        .tier-altin { color: var(--gold); font-weight: bold; }
+        .tier-gumus { color: var(--silver); }
+        .tier-bronz { color: var(--bronze); }
 
         table { width: 100%; border-collapse: collapse; }
-        td { padding: 15px 10px; border-bottom: 1px solid #111; font-size: 0.85em; }
-        .time { color: var(--neon); font-family: monospace; width: 60px; }
-        .tv-link { border: 1px solid var(--neon); color: var(--neon); padding: 4px 12px; border-radius: 15px; text-decoration: none; font-size: 0.7em; }
+        tr { border-bottom: 1px solid #0f0f0f; transition: 0.2s; }
+        tr:hover { background: #0d0d0d; }
+        td { padding: 16px 10px; font-size: 0.9em; }
+        .time { color: var(--neon); font-family: monospace; width: 65px; font-weight: bold; }
+        .tv-link { border: 1px solid #333; color: #666; padding: 5px 12px; border-radius: 20px; text-decoration: none; font-size: 0.7em; transition: 0.3s; }
+        .tv-link:hover { border-color: var(--neon); color: var(--neon); }
         
-        .sidebar h2 { color: var(--gold); font-size: 1em; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
-        .menu-item { display: block; padding: 10px; color: #888; text-decoration: none; border-bottom: 1px solid #111; font-size: 0.85em; }
-        .menu-item:hover { color: var(--neon); background: #111; }
+        /* MENÜ BAŞLIKLARI */
+        .side-title { color: var(--gold); font-size: 0.9em; letter-spacing: 2px; margin: 30px 0 15px 0; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .menu-item { display: block; padding: 10px; color: #888; text-decoration: none; font-size: 0.85em; border-radius: 4px; }
+        .menu-item:hover { background: #111; color: var(--neon); padding-left: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="menu-triggers">
-        <div class="t-btn" onclick="toggleSide('sites')">☰ SİTELER</div>
-        <div class="t-btn" onclick="toggleSide('tv')">📺 TV KANALLARI</div>
-    </div>
+    <div class="menu-btn" onclick="toggleMenu()">☰ SİSTEM MENÜSÜ</div>
 
-    <div class="sidebar" id="sites-menu">
-        <h2>GİRİŞ LİNKLERİ</h2>
-        <a href="https://tinyurl.com/1xturkey" target="_blank" class="menu-item">1xbet</a> <a href="https://dub.is/betsmovetelegram" target="_blank" class="menu-item">Betsmove</a> <a href="http://dub.run/holiguncel" target="_blank" class="menu-item">Holigan</a> <a href="https://bit.ly/3UzfE7i" target="_blank" class="menu-item">Betandyou</a> <a href="https://bit.ly/Tempobet-yeni-adres" target="_blank" class="menu-item">Tempobet</a> <a href="https://bit.ly/TB-Telegram2026" target="_blank" class="menu-item">Turkbet</a> <a href="https://bit.ly/BS-Telegram2026" target="_blank" class="menu-item">Betsat</a> <a href="https://cutt.ly/Masterbetting" target="_blank" class="menu-item">Masterbetting</a> <a href="http://cutt.ly/PusulaTelegram" target="_blank" class="menu-item">Pusulabet</a> <a href="http://shrtio.com/GamdomTR" target="_blank" class="menu-item">Gamdom</a> <a href="https://t2m.io/stakeguncel" target="_blank" class="menu-item">Stake</a> <a href="https://www.nesine.com" target="_blank" class="menu-item">Nesine</a> <a href="https://www.iddaa.com" target="_blank" class="menu-item">İddaa</a> <a href="https://polymarket.com" target="_blank" class="menu-item">Polymarket</a>
-    </div>
-
-    <div class="sidebar" id="tv-menu">
-        <h2>TV KANALLARI</h2>
-        <a href="https://1xbahis-tv.com" target="_blank" class="menu-item">1xbet TV</a> <a href="https://betsmovetv.site" target="_blank" class="menu-item">Betsmove TV</a> <a href="https://holigantv.app" target="_blank" class="menu-item">Holigan TV</a> <a href="https://turkbettv.com" target="_blank" class="menu-item">Turkbet TV</a> <a href="https://betsattv.com" target="_blank" class="menu-item">Betsat TV</a> <a href="https://www.nesine.com/canli-izle" target="_blank" class="menu-item">Nesine Canlı</a>
+    <div class="sidebar" id="sidebar">
+        <div style="height: 60px;"></div>
+        <div class="side-title">SİTELER</div>
+        <a href="https://tinyurl.com/1xturkey" target="_blank" class="menu-item">1xbet</a><a href="https://dub.is/betsmovetelegram" target="_blank" class="menu-item">Betsmove</a><a href="http://dub.run/holiguncel" target="_blank" class="menu-item">Holigan</a><a href="https://bit.ly/3UzfE7i" target="_blank" class="menu-item">Betandyou</a><a href="https://bit.ly/Tempobet-yeni-adres" target="_blank" class="menu-item">Tempobet</a><a href="https://bit.ly/TB-Telegram2026" target="_blank" class="menu-item">Turkbet</a><a href="https://bit.ly/BS-Telegram2026" target="_blank" class="menu-item">Betsat</a><a href="https://cutt.ly/Masterbetting" target="_blank" class="menu-item">Masterbetting</a><a href="http://cutt.ly/PusulaTelegram" target="_blank" class="menu-item">Pusulabet</a><a href="http://shrtio.com/GamdomTR" target="_blank" class="menu-item">Gamdom</a><a href="https://t2m.io/stakeguncel" target="_blank" class="menu-item">Stake</a><a href="https://www.nesine.com" target="_blank" class="menu-item">Nesine</a><a href="https://www.iddaa.com" target="_blank" class="menu-item">İddaa</a><a href="https://polymarket.com" target="_blank" class="menu-item">Polymarket</a>
+        
+        <div class="side-title">TV KANALLARI</div>
+        <a href="https://1xbahis-tv.com" target="_blank" class="menu-item">1xbet TV</a><a href="https://betsmovetv.site" target="_blank" class="menu-item">Betsmove TV</a><a href="https://holigantv.app" target="_blank" class="menu-item">Holigan TV</a><a href="https://turkbettv.com" target="_blank" class="menu-item">Turkbet TV</a><a href="https://betsattv.com" target="_blank" class="menu-item">Betsat TV</a><a href="https://www.nesine.com/canli-izle" target="_blank" class="menu-item">Nesine Canlı</a>
     </div>
 
     <div class="main">
-        <div style="text-align:center; margin-bottom:50px;">
-            <h1 style="color:var(--neon); letter-spacing:5px; margin:0;">RADAR MASTER V14</h1>
-            <p style="color:#333; font-size:0.7em;">25.04.2026 14:37 | Tier-Sıralı Komuta Merkezi</p>
+        <div style="text-align:center; margin-bottom:60px;">
+            <h1 style="color:var(--neon); letter-spacing:8px; margin:0; font-size:2.8em;">RADAR MASTER</h1>
+            <p style="color:#222; font-size:0.8em; margin-top:10px;">25.04.2026 14:43 | V15 ENTERPRISE EDITION</p>
         </div>
 
         <div class="section">
-            <h3>⚽ FUTBOL: TOP LİGLER</h3>
+            <h3>⚽ FUTBOL: ELİT LİGLER (ALTIN)</h3>
             <table>
-                <tr><td class="time">20:45</td><td class="lig-name tier-Altın">İngiltere Premier Lig</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Altın">Trendyol Süper Lig</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Altın">İspanya La Liga</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Gümüş">Almanya Bundesliga</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Gümüş">İtalya Serie A</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Gümüş">Fransa Ligue 1</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Bronz">Hollanda Eredivisie</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Bronz">Portekiz Liga</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Bronz">Brezilya Serie A</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">20:45</td><td class="lig-name tier-Bronz">Arjantin Prim.</td><td style="color:#444;">1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">18:00</td><td class="tier-altin">İngiltere Premier Lig</td><td>1xbet, Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">19:00</td><td class="tier-altin">Trendyol Süper Lig</td><td>Turkbet, Betsat</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">21:00</td><td class="tier-altin">Şampiyonlar Ligi</td><td>Masterbetting</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
             </table>
         </div>
 
         <div class="section">
-            <h3>🏆 TURNUVALAR</h3>
+            <h3>🥈 FUTBOL: ALT LİGLER (GÜMÜŞ & BRONZ)</h3>
             <table>
-                <tr><td class="time">22:00</td><td class="lig-name tier-Altın">Şampiyonlar Ligi</td><td style="color:#444;">Turkbet, Betsat</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">22:00</td><td class="lig-name tier-Gümüş">Avrupa Ligi</td><td style="color:#444;">Turkbet, Betsat</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">22:00</td><td class="lig-name tier-Bronz">Konferans Ligi</td><td style="color:#444;">Turkbet, Betsat</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">22:00</td><td class="lig-name tier-Altın">Dünya Kupası</td><td style="color:#444;">Turkbet, Betsat</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">15:00</td><td class="tier-gumus">Almanya Bundesliga</td><td>Betsmove</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">17:00</td><td class="tier-bronz">Hollanda Eredivisie</td><td>Pusulabet</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">14:00</td><td class="tier-bronz">TFF 1. Lig</td><td>Nesine</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
             </table>
         </div>
 
         <div class="section">
-            <h3>🏀 BASKETBOL (NBA/NBL/EURO)</h3>
+            <h3>🏀 BASKETBOL KOMUTA MERKEZİ</h3>
             <table>
-                <tr><td class="time">03:00</td><td class="lig-name tier-Altın">NBA</td><td style="color:#444;">Nesine, Stake</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">03:00</td><td class="lig-name tier-Altın">Euroleague</td><td style="color:#444;">Nesine, Stake</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">03:00</td><td class="lig-name tier-Gümüş">Avustralya NBL</td><td style="color:#444;">Nesine, Stake</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">03:00</td><td class="lig-name tier-Gümüş">Türkiye BSL</td><td style="color:#444;">Nesine, Stake</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">03:00</td><td class="lig-name tier-Bronz">Çin CBA</td><td style="color:#444;">Nesine, Stake</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr> <tr><td class="time">03:00</td><td class="lig-name tier-Gümüş">İspanya ACB</td><td style="color:#444;">Nesine, Stake</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">04:00</td><td class="tier-altin">NBA (USA)</td><td>Stake, 1xbet</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">20:30</td><td class="tier-altin">Euroleague</td><td>Holigan</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">21:00</td><td class="tier-gumus">İtalya Lega Basket Serie A</td><td>Betandyou</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">19:00</td><td class="tier-gumus">Yunanistan Erkekler Ligi (GBL)</td><td>1xbet</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">20:00</td><td class="tier-gumus">Almanya BBL</td><td>Turkbet</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">11:00</td><td class="tier-bronz">Güney Kore KBL</td><td>Pusulabet</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
+                <tr><td class="time">12:30</td><td class="tier-bronz">Avustralya NBL</td><td>1xbet</td><td style="text-align:right;"><a href="#" class="tv-link">İZLE</a></td></tr>
             </table>
         </div>
     </div>
 
     <script>
-        function toggleSide(id) {
-            const sites = document.getElementById('sites-menu');
-            const tv = document.getElementById('tv-menu');
-            if(id === 'sites') {
-                sites.classList.toggle('active');
-                tv.classList.remove('active');
-            } else {
-                tv.classList.toggle('active');
-                sites.classList.remove('active');
-            }
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
         }
-
         document.addEventListener('click', (e) => {
-            if(!e.target.closest('.sidebar') && !e.target.closest('.t-btn')) {
-                document.querySelectorAll('.sidebar').forEach(s => s.classList.remove('active'));
+            if(!e.target.closest('.sidebar') && !e.target.closest('.menu-btn')) {
+                document.getElementById('sidebar').classList.remove('active');
             }
         });
     </script>
