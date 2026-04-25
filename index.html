@@ -2,71 +2,128 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8"><title>Radar Giriş Terminali</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Terminal V1</title>
     <style>
-        body { background: #050505; color: #00ff00; font-family: monospace; padding: 20px; }
-        .domain-row { border-bottom: 1px solid #222; padding: 10px; display: flex; justify-content: space-between; }
-        .site-adi { color: #FFD700; font-weight: bold; }
-        .aktif-link { color: #fff; text-decoration: none; border: 1px solid #00ff00; padding: 2px 5px; border-radius: 4px; }
-        .aktif-link:hover { background: #00ff00; color: #000; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #050505; color: #00ff00; padding: 20px; line-height: 1.6; }
+        .header { text-align: center; border-bottom: 2px solid #1a1a1a; padding-bottom: 20px; margin-bottom: 30px; }
+        .container { max-width: 900px; margin: 0 auto; background: #0a0a0a; border-radius: 15px; border: 1px solid #1a1a1a; padding: 20px; box-shadow: 0 0 20px rgba(0,255,0,0.05); }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #111; transition: 0.3s; }
+        .row:hover { background: #0f0f0f; }
+        .site-name { color: #FFD700; font-weight: bold; font-size: 1.1em; width: 30%; }
+        .tg-link { color: #555; font-size: 0.8em; width: 30%; }
+        .domain-box { width: 40%; text-align: right; }
+        .link-btn { display: inline-block; padding: 6px 15px; background: transparent; border: 1px solid #00ff00; color: #00ff00; text-decoration: none; border-radius: 5px; font-size: 0.9em; transition: 0.3s; }
+        .link-btn:hover { background: #00ff00; color: #000; box-shadow: 0 0 10px #00ff00; }
+        .error { border-color: #ff4444; color: #ff4444; }
+        .footer { text-align: center; margin-top: 30px; color: #333; font-size: 0.8em; }
     </style>
 </head>
 <body>
-    <h1>🛰️ RADAR GİRİŞ TERMİNALİ (DOMAIN TAKİBİ)</h1>
-    <p>Son Tarama: 25.04.2026 12:57</p>
-    <div style="background: #111; border-radius: 10px; padding: 10px;">
+    <div class="header">
+        <h1 style="margin:0; font-size: 2em; letter-spacing: 2px;">🛰️ RADAR DOMAIN TERMİNALİ</h1>
+        <p style="color: #666; margin-top: 5px;">Tüm Kanallar Canlı Olarak Taranıyor...</p>
+    </div>
 
-    <div class="domain-row">
-        <span class="site-adi">1xbet</span>
-        <span>onebahis_turkiye</span>
-        <a href="https://Adres Bulunamadı" target="_blank" class="aktif-link">Adres Bulunamadı</a>
-    </div>
+    <div class="container">
+        <div style="display: flex; color: #444; font-size: 0.7em; text-transform: uppercase; padding: 0 15px 10px 15px; font-weight: bold;">
+            <div style="width:30%">SİTE ADI</div>
+            <div style="width:30%">KAYNAK KANAL</div>
+            <div style="width:40%; text-align:right;">GÜNCEL GİRİŞ ADRESİ</div>
+        </div>
+
+        <div class="row">
+            <div class="site-name">1xbet</div>
+            <div class="tg-link">@onebahis_turkiye</div>
+            <div class="domain-box">
+                <a href="https://yor.tar" target="_blank" class="link-btn">yor.tar</a>
+            </div>
+        </div>
     
-    <div class="domain-row">
-        <span class="site-adi">Betsmove</span>
-        <span>moveresmi</span>
-        <a href="https://Adres Bulunamadı" target="_blank" class="aktif-link">Adres Bulunamadı</a>
-    </div>
+        <div class="row">
+            <div class="site-name">Betsmove</div>
+            <div class="tg-link">@moveresmi</div>
+            <div class="domain-box">
+                <a href="https://erlidir.det" target="_blank" class="link-btn">erlidir.det</a>
+            </div>
+        </div>
     
-    <div class="domain-row">
-        <span class="site-adi">Holigan</span>
-        <span>holigantg</span>
-        <a href="https://Adres Bulunamadı" target="_blank" class="aktif-link">Adres Bulunamadı</a>
-    </div>
+        <div class="row">
+            <div class="site-name">Holigan</div>
+            <div class="tg-link">@holigantg</div>
+            <div class="domain-box">
+                <a href="https://dub.pro" target="_blank" class="link-btn">dub.pro</a>
+            </div>
+        </div>
     
-    <div class="domain-row">
-        <span class="site-adi">Betandyou</span>
-        <span>betandyouTR</span>
-        <a href="https://Adres Bulunamadı" target="_blank" class="aktif-link">Adres Bulunamadı</a>
-    </div>
+        <div class="row">
+            <div class="site-name">Betandyou</div>
+            <div class="tg-link">@betandyouTR</div>
+            <div class="domain-box">
+                <a href="https://yoruz.bet" target="_blank" class="link-btn">yoruz.bet</a>
+            </div>
+        </div>
     
-    <div class="domain-row">
-        <span class="site-adi">Tempobet</span>
-        <span>Tempobet_Turk</span>
-        <a href="https://Adres Bulunamadı" target="_blank" class="aktif-link">Adres Bulunamadı</a>
-    </div>
+        <div class="row">
+            <div class="site-name">Tempobet</div>
+            <div class="tg-link">@Tempobet_Turk</div>
+            <div class="domain-box">
+                <a href="https://iili.io" target="_blank" class="link-btn">iili.io</a>
+            </div>
+        </div>
     
-    <div class="domain-row">
-        <span class="site-adi">Turkbet</span>
-        <span>turkbetsosyal</span>
-        <a href="https://www.instagram" target="_blank" class="aktif-link">www.instagram</a>
-    </div>
+        <div class="row">
+            <div class="site-name">Turkbet</div>
+            <div class="tg-link">@turkbetsosyal</div>
+            <div class="domain-box">
+                <a href="https://www.ins" target="_blank" class="link-btn">www.ins</a>
+            </div>
+        </div>
     
-    <div class="domain-row">
-        <span class="site-adi">Betsat</span>
-        <span>betsattr</span>
-        <a href="https://bit.ly" target="_blank" class="aktif-link">bit.ly</a>
-    </div>
+        <div class="row">
+            <div class="site-name">Betsat</div>
+            <div class="tg-link">@betsattr</div>
+            <div class="domain-box">
+                <a href="https://www.ins" target="_blank" class="link-btn">www.ins</a>
+            </div>
+        </div>
     
-    <div class="domain-row">
-        <span class="site-adi">Masterbetting</span>
-        <span>masterbettingtr</span>
-        <a href="https://Adres Bulunamadı" target="_blank" class="aktif-link">Adres Bulunamadı</a>
-    </div>
+        <div class="row">
+            <div class="site-name">Masterbetting</div>
+            <div class="tg-link">@masterbettingtr</div>
+            <div class="domain-box">
+                <a href="https://ediniz.mar" target="_blank" class="link-btn">ediniz.mar</a>
+            </div>
+        </div>
     
-    <div class="domain-row">
-        <span class="site-adi">Pusulabet</span>
-        <span>pusulasocial</span>
-        <a href="https://Adres Bulunamadı" target="_blank" class="aktif-link">Adres Bulunamadı</a>
+        <div class="row">
+            <div class="site-name">Pusulabet</div>
+            <div class="tg-link">@pusulasocial</div>
+            <div class="domain-box">
+                <a href="https://t2m.io" target="_blank" class="link-btn">t2m.io</a>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="site-name">Gamdom</div>
+            <div class="tg-link">@GamdomTopluluk</div>
+            <div class="domain-box">
+                <a href="https://Adres Bulunamadı" target="_blank" class="link-btn error">Adres Bulunamadı</a>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="site-name">Stake</div>
+            <div class="tg-link">@NbaEngg</div>
+            <div class="domain-box">
+                <a href="https://geldi.erk" target="_blank" class="link-btn">geldi.erk</a>
+            </div>
+        </div>
+    
     </div>
-    </div></body></html>
+    <div class="footer">
+        Son Güncelleme: 25.04.2026 13:06 | Otomatik Tarama Modu: Aktif (30dk)
+    </div>
+</body>
+</html>
