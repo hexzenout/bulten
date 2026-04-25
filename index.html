@@ -4,72 +4,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gelişmiş Veri Radarı</title>
+    <title>Radar Terminal V1</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: white; padding: 20px; }
-        .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
-        .mac-karti { 
-            background: #161616; border-radius: 10px; padding: 18px; margin-bottom: 12px; 
-            display: flex; justify-content: space-between; align-items: center;
-            border-left: 10px solid; transition: 0.3s;
-        }
-        .lig-bilgi { font-size: 0.85em; color: #888; text-transform: uppercase; }
-        .takimlar { font-size: 1.25em; font-weight: bold; margin-top: 5px; }
-        .saat { font-family: monospace; color: #00ff00; font-size: 1.3em; background: #222; padding: 5px 12px; border-radius: 5px; }
-        h1 { color: #FFD700; }
+        body { font-family: 'Inter', sans-serif; background: #050505; color: #e0e0e0; padding: 15px; }
+        .radar-header { text-align: center; padding: 20px; border-bottom: 2px solid #1a1a1a; margin-bottom: 20px; }
+        .site-status { display: flex; overflow-x: auto; gap: 10px; margin-bottom: 20px; padding-bottom: 10px; }
+        .status-tag { background: #111; padding: 5px 10px; border-radius: 20px; font-size: 0.7em; border: 1px solid #333; white-space: nowrap; }
+        .online { color: #00ff00; border-color: #00ff00; }
+        .mac-karti { background: #0f0f0f; border: 1px solid #222; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+        .mac-ana { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .tier-bar { width: 6px; height: 100%; position: absolute; left: 0; top: 0; }
+        .detay-tablo { display: none; background: #161616; padding: 15px; border-top: 1px solid #222; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        th { text-align: left; color: #666; padding: 8px; border-bottom: 1px solid #333; }
+        td { padding: 10px 8px; border-bottom: 1px solid #222; }
+        .high-odd { color: #00ff00; font-weight: bold; background: rgba(0,255,0,0.1); border-radius: 4px; padding: 2px 5px; }
+        .bet365-col { color: #ffcc00; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🎯 GELİŞMİŞ VERİ RADARI</h1>
-        <p>SON GÜNCELLEME: 25.04.2026 11:27</p>
+    <div class="radar-header">
+        <h1 style="color:#FFD700; margin:0;">🎯 RADAR TERMINAL V1</h1>
+        <p style="font-size:0.8em; color:#555;">Sistem Aktif | 25.04.2026 12:55</p>
     </div>
 
-    <div class="mac-karti" style="border-left-color: #FFD700;">
-        <div>
-            <div class="lig-bilgi">Futbol | Turkish Super Lig (Altın (Elit Lig))</div>
-            <div class="takimlar">Galatasaray - Beşiktaş</div>
+    <div class="site-status">
+<div class="status-tag online">● 1xbet</div><div class="status-tag online">● Betsmove</div><div class="status-tag online">● Holigan</div><div class="status-tag online">● Tempobet</div><div class="status-tag online">● Nesine</div><div class="status-tag online">● Stake</div></div><div id="bulten">
+    <div class="mac-karti" onclick="toggleDetail(this)" style="position:relative; border-left: 6px solid #C0C0C0;">
+        <div class="mac-ana">
+            <div>
+                <span style="font-size:0.7em; color:#888;">Euroleague (Gümüş)</span>
+                <div style="font-weight:bold; font-size:1.1em; margin-top:4px;">Anadolu Efes - Real Madrid</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="color:#00ff00; font-family:monospace;">20:30</div>
+                <div style="font-size:0.6em; color:#444;">TIKLA ANALİZ ET</div>
+            </div>
         </div>
-        <div class="saat">19:00</div>
-    </div>
+        <div class="detay-tablo">
+            <table>
+                <tr>
+                    <th>Market</th>
+                    <th class="bet365-col">Bet365 (Ref)</th>
+                    <th>1xbet</th>
+                    <th>Nesine</th>
+                </tr>
     
-    <div class="mac-karti" style="border-left-color: #CD7F32;">
-        <div>
-            <div class="lig-bilgi">Futbol | Hollanda Eerste Divisie (Bronz (Altyapı/Yedek))</div>
-            <div class="takimlar">Jong Ajax - Utrecht II</div>
+                <tr>
+                    <td>Barem (Alt/Üst)</td>
+                    <td class="bet365-col">162.5</td>
+                    <td class="high-odd">164.5</td>
+                    <td>161.5</td>
+                </tr>
+        
+                <tr>
+                    <td>MS 1 Oran</td>
+                    <td class="bet365-col">1.90</td>
+                    <td class="high-odd">2.05</td>
+                    <td>1.78</td>
+                </tr>
+        </table></div></div>
+    <div class="mac-karti" onclick="toggleDetail(this)" style="position:relative; border-left: 6px solid #C0C0C0;">
+        <div class="mac-ana">
+            <div>
+                <span style="font-size:0.7em; color:#888;">Turkish Super Lig (Gümüş)</span>
+                <div style="font-weight:bold; font-size:1.1em; margin-top:4px;">Fenerbahçe - Beşiktaş</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="color:#00ff00; font-family:monospace;">19:00</div>
+                <div style="font-size:0.6em; color:#444;">TIKLA ANALİZ ET</div>
+            </div>
         </div>
-        <div class="saat">14:00</div>
-    </div>
+        <div class="detay-tablo">
+            <table>
+                <tr>
+                    <th>Market</th>
+                    <th class="bet365-col">Bet365 (Ref)</th>
+                    <th>1xbet</th>
+                    <th>Nesine</th>
+                </tr>
     
-    <div class="mac-karti" style="border-left-color: #CD7F32;">
-        <div>
-            <div class="lig-bilgi">Futbol | İspanya 3. Lig (Bronz (Altyapı/Yedek))</div>
-            <div class="takimlar">Real Madrid Castilla - Alcorcon</div>
-        </div>
-        <div class="saat">16:00</div>
+                <tr>
+                    <td>Maç Sonucu 1</td>
+                    <td class="bet365-col">1.75</td>
+                    <td class="high-odd">1.88</td>
+                    <td>1.70</td>
+                </tr>
+        
+                <tr>
+                    <td>Korner (9.5)</td>
+                    <td class="bet365-col">1.83</td>
+                    <td class="high-odd">1.95</td>
+                    <td>1.75</td>
+                </tr>
+        </table></div></div>
     </div>
-    
-    <div class="mac-karti" style="border-left-color: #FFD700;">
-        <div>
-            <div class="lig-bilgi">Futbol | English Premier League (Altın (Elit Lig))</div>
-            <div class="takimlar">Liverpool - Chelsea</div>
-        </div>
-        <div class="saat">21:00</div>
-    </div>
-    
-    <div class="mac-karti" style="border-left-color: #CD7F32;">
-        <div>
-            <div class="lig-bilgi">Futbol | Türkiye Gelişim Ligi (Bronz (Altyapı/Yedek))</div>
-            <div class="takimlar">Fenerbahçe U19 - Beşiktaş U19</div>
-        </div>
-        <div class="saat">12:00</div>
-    </div>
-    
-    <div class="mac-karti" style="border-left-color: #FFD700;">
-        <div>
-            <div class="lig-bilgi">Basketbol | NBA (Altın (Elit Lig))</div>
-            <div class="takimlar">Lakers - Warriors</div>
-        </div>
-        <div class="saat">04:00</div>
-    </div>
-    </body></html>
+    <script>
+        function toggleDetail(el) {
+            let detail = el.querySelector('.detay-tablo');
+            detail.style.display = (detail.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
