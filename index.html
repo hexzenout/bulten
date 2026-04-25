@@ -3,92 +3,162 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Radar Terminal V8</title>
+    <title>RADAR TERMİNAL V10</title>
     <style>
-        body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; padding: 20px; }
-        .radar-box { max-width: 900px; margin: 0 auto; background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 12px; overflow: hidden; }
-        .header { padding: 25px; border-bottom: 1px solid #1a1a1a; text-align: center; }
-        .site-row { display: flex; align-items: center; padding: 15px 25px; border-bottom: 1px solid #141414; }
-        .site-name { flex: 1; font-weight: bold; color: #FFD700; }
-        .site-url { flex: 2; color: #444; font-size: 0.8em; font-family: monospace; }
-        .btn { background: #00ff00; color: #000; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 0.8em; }
-        .btn:hover { background: #fff; box-shadow: 0 0 15px #00ff00; }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        body { background: #020202; color: #fff; font-family: 'JetBrains Mono', monospace; margin: 0; padding: 20px; }
+        .wrapper { max-width: 1200px; margin: 0 auto; }
+        .header { border-left: 5px solid #00ff00; padding: 20px; background: #0a0a0a; margin-bottom: 30px; }
+        .site-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .card { background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; position: relative; }
+        .card:hover { border-color: #00ff00; }
+        .name { color: #FFD700; font-size: 1.2em; font-weight: bold; margin-bottom: 15px; display: block; }
+        .btn-box { display: flex; gap: 8px; }
+        .btn { flex: 1; padding: 10px; text-align: center; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 0.75em; }
+        .btn-g { background: #00ff00; color: #000; }
+        .btn-t { border: 1px solid #00ff00; color: #00ff00; }
+        .analysis-sec { margin-top: 50px; background: #0a0a0a; border-radius: 12px; padding: 25px; border: 1px solid #222; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; color: #444; padding: 12px; border-bottom: 1px solid #222; font-size: 0.8em; }
+        td { padding: 15px 12px; border-bottom: 1px solid #111; font-size: 0.9em; }
+        .val { color: #00ff00; background: rgba(0,255,0,0.1); padding: 4px 8px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1 style="color:#00ff00; margin:0;">🛰️ RADAR TERMINAL V8</h1>
-        <p style="color:#444; font-size:0.8em;">25.04.2026 14:01 | Kesin Link & Eksiksiz Liste</p>
-    </div>
-    <div class="radar-box">
+    <div class="wrapper">
+        <div class="header">
+            <h1 style="margin:0; font-size: 1.8em;">🛰️ RADAR TERMİNAL V10 PRO</h1>
+            <p style="color:#444; margin:5px 0 0 0;">25.04.2026 14:13 | Taç, Faul, Şut, Korner Aktif</p>
+        </div>
 
-        <div class="site-row">
-            <div class="site-name">1xbet</div>
-            <div class="site-url">https://tinyurl.com/1xturkey</div>
-            <a href="https://tinyurl.com/1xturkey" target="_blank" class="btn">GİRİŞ YAP</a>
+        <div class="site-grid">
+
+            <div class="card">
+                <span class="name">1xbet</span>
+                <div class="btn-box">
+                    <a href="https://tinyurl.com/1xturkey" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://1xbahis-tv.com" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Betsmove</span>
+                <div class="btn-box">
+                    <a href="https://dub.is/moveyatirim" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://betsmovetv.site" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Holigan</span>
+                <div class="btn-box">
+                    <a href="http://dub.run/holiguncel" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://holigantv.app" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Betandyou</span>
+                <div class="btn-box">
+                    <a href="https://bit.ly/3UzfE7i" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://betandyou-tv.com" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Tempobet</span>
+                <div class="btn-box">
+                    <a href="https://bit.ly/Tempobet-yeni-adres" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://tempobet-tv.com" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Turkbet</span>
+                <div class="btn-box">
+                    <a href="https://bit.ly/TB-Telegram2026" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://turkbettv.com" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Betsat</span>
+                <div class="btn-box">
+                    <a href="https://bit.ly/BS-Telegram2026" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://betsattv.com" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Masterbetting</span>
+                <div class="btn-box">
+                    <a href="https://cutt.ly/Masterbetting" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://masterbettingtv.com" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Pusulabet</span>
+                <div class="btn-box">
+                    <a href="http://cutt.ly/PusulaTelegram" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://pusulabettv.com" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Gamdom</span>
+                <div class="btn-box">
+                    <a href="http://shrtio.com/GamdomTR" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="#" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Stake</span>
+                <div class="btn-box">
+                    <a href="https://t2m.io/stakeguncel" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="#" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Nesine</span>
+                <div class="btn-box">
+                    <a href="https://www.nesine.com" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="https://www.nesine.com/canli-izle" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">İddaa</span>
+                <div class="btn-box">
+                    <a href="https://www.iddaa.com" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="#" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
+            <div class="card">
+                <span class="name">Polymarket</span>
+                <div class="btn-box">
+                    <a href="https://polymarket.com" target="_blank" class="btn btn-g">GİRİŞ YAP</a>
+                    <a href="#" target="_blank" class="btn btn-t">📺 TV</a>
+                </div>
+            </div>
         </div>
-        <div class="site-row">
-            <div class="site-name">Betsmove</div>
-            <div class="site-url">https://dub.is/betsmovetelegram</div>
-            <a href="https://dub.is/betsmovetelegram" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Holigan</div>
-            <div class="site-url">http://dub.run/holiguncel</div>
-            <a href="http://dub.run/holiguncel" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Betandyou</div>
-            <div class="site-url">https://bit.ly/3UzfE7i</div>
-            <a href="https://bit.ly/3UzfE7i" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Tempobet</div>
-            <div class="site-url">https://bit.ly/Tempobet-yeni-adres</div>
-            <a href="https://bit.ly/Tempobet-yeni-adres" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Turkbet</div>
-            <div class="site-url">https://bit.ly/TB-Telegram2026</div>
-            <a href="https://bit.ly/TB-Telegram2026" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Betsat</div>
-            <div class="site-url">https://bit.ly/BS-Telegram2026</div>
-            <a href="https://bit.ly/BS-Telegram2026" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Masterbetting</div>
-            <div class="site-url">https://cutt.ly/Masterbetting</div>
-            <a href="https://cutt.ly/Masterbetting" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Pusulabet</div>
-            <div class="site-url">http://cutt.ly/PusulaTelegram</div>
-            <a href="http://cutt.ly/PusulaTelegram" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Gamdom</div>
-            <div class="site-url">http://shrtio.com/GamdomTR</div>
-            <a href="http://shrtio.com/GamdomTR" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Stake</div>
-            <div class="site-url">https://t2m.io/stakeguncel</div>
-            <a href="https://t2m.io/stakeguncel" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Polymarket</div>
-            <div class="site-url">https://polymarket.com</div>
-            <a href="https://polymarket.com" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">Nesine</div>
-            <div class="site-url">https://www.nesine.com</div>
-            <a href="https://www.nesine.com" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div>
-        <div class="site-row">
-            <div class="site-name">İddaa</div>
-            <div class="site-url">https://www.iddaa.com</div>
-            <a href="https://www.iddaa.com" target="_blank" class="btn">GİRİŞ YAP</a>
-        </div></div></body></html>
+
+        <div class="analysis-sec">
+            <h2 style="color:#00ff00; margin-top:0;">📊 DERİN ANALİZ (TAÇ/FAUL/ŞUT)</h2>
+            <table>
+                <thead>
+                    <tr><th>MAÇ</th><th>MARKET</th><th>BET365</th><th>SENİN SİTEN</th><th>VALUE</th></tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>Arsenal - Liverpool<br><small style="color:#444;">İngiltere</small></td>
+                        <td>Toplam Taç (38.5)</td>
+                        <td style="color:#666;">1.80</td>
+                        <td style="color:#00ff00; font-weight:bold;">2.05</td>
+                        <td><span class="val">%14</span></td>
+                    </tr>
+                    <tr>
+                        <td>Barcelona - Real Madrid<br><small style="color:#444;">İspanya</small></td>
+                        <td>Faul Sayısı (26.5)</td>
+                        <td style="color:#666;">1.72</td>
+                        <td style="color:#00ff00; font-weight:bold;">1.95</td>
+                        <td><span class="val">%13</span></td>
+                    </tr>
+                    <tr>
+                        <td>Lakers - Suns<br><small style="color:#444;">NBA</small></td>
+                        <td>Oyuncu Şut: LeBron 25.5+</td>
+                        <td style="color:#666;">1.83</td>
+                        <td style="color:#00ff00; font-weight:bold;">2.10</td>
+                        <td><span class="val">%15</span></td>
+                    </tr></tbody></table></div></div></body></html>
