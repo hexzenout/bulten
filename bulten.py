@@ -1,37 +1,56 @@
 import datetime
 
-# 1. LİG SINIFLANDIRMALARI (Hata payını sıfıra indiren anahtar kelimeler)
-TIER_1_KEYWORDS = [
-    "super lig", "süper lig", "champions league", "premier league", 
-    "la liga", "serie a", "bundesliga", "eredivisie", "liga nos", 
-    "nba", "euroleague", "cba", "nbl", "besiktas", "galatasaray", "fenerbahce"
+# 1. ELİT LİG ANAHTAR KELİMELERİ (Altın)
+TIER_1_LIGLER = [
+    "super lig", "süper lig", "premier league", "la liga", "serie a", 
+    "bundesliga", "eredivisie", "liga nos", "nba", "euroleague", "cba", "nbl"
 ]
 
-TIER_2_KEYWORDS = ["championship", "tff 1", "serie b", "ligue 2", "bundesliga 2"]
+# 2. KARA LİSTE (Altın olmasını engelleyen, altyapı/yedek takım belirteçleri)
+# Senin dediğin Jong, United (altyapı), II gibi durumları burada yakalıyoruz.
+KARA_LISTE = [
+    "u19", "u21", "u23", "u17", "gelişim", "koleji", "b takımı", "youth", 
+    "academy", "jong", "castilla", " ii", "sub-", "reserve", "reserves"
+]
 
-def get_tier(league_name):
-    # İsmi tamamen küçük harfe çeviriyoruz ki 'Super' ile 'super' fark etmesin
-    name_low = league_name.lower()
+# 3. ELİT TAKIMLAR (Lig ismi geçmese bile takımdan dolayı Altın yapacaklar)
+ELIT_TAKIMLAR = ["fenerbahce", "galatasaray", "besiktas", "real madrid", "barcelona", "lakers", "warriors"]
+
+def get_tier(league_name, home_team, away_team):
+    league_low = league_name.lower()
+    teams_low = (home_team + " " + away_team).lower()
     
-    # Tier 1 Kontrolü
-    if any(key in name_low for key in TIER_1_KEYWORDS):
-        return "#FFD700", "Altın"
-    
-    # Tier 2 Kontrolü
-    if any(key in name_low for key in TIER_2_KEYWORDS):
+    # KONTROL 1: ALTYAPI / YEDEK TAKIM MI? (Önce Çöpleri Ayıkla)
+    # Eğer ligde veya takım adında kara liste kelimesi varsa direkt BRONZ yapıyoruz.
+    if any(ek in teams_low for ek in KARA_LISTE) or any(ek in league_low for ek in KARA_LISTE):
+        return "#CD7F32", "Bronz (Altyapı/Yedek)"
+
+    # KONTROL 2: ELİT LİG Mİ?
+    if any(key in league_low for key in TIER_1_LIGLER):
+        return "#FFD700", "Altın (Elit Lig)"
+
+    # KONTROL 3: ELİT TAKIM MI? (A Takım olduğu kesinleştiği için bakıyoruz)
+    if any(team in teams_low for team in ELIT_TAKIMLAR):
+        return "#FFD700", "Altın (Elit Takım)"
+
+    # KONTROL 4: GÜMÜŞ LİGLER
+    if any(key in league_low for key in ["championship", "tff 1", "serie b", "ligue 2"]):
         return "#C0C0C0", "Gümüş"
         
+    # HİÇBİRİNE UYMUYORSA
     return "#CD7F32", "Bronz"
 
-# Test Maçları (Gerçek veri formatında)
+# TEST VERİLERİ (Senin verdiğin örneklere göre hazırlandı)
 test_data = [
     {"saat": "19:00", "lig": "Turkish Super Lig", "ev": "Galatasaray", "dep": "Beşiktaş", "tip": "Futbol"},
+    {"saat": "14:00", "lig": "Hollanda Eerste Divisie", "ev": "Jong Ajax", "dep": "Utrecht II", "tip": "Futbol"},
+    {"saat": "16:00", "lig": "İspanya 3. Lig", "ev": "Real Madrid Castilla", "dep": "Alcorcon", "tip": "Futbol"},
     {"saat": "21:00", "lig": "English Premier League", "ev": "Liverpool", "dep": "Chelsea", "tip": "Futbol"},
-    {"saat": "18:00", "lig": "TFF 1. Lig", "ev": "Sakaryaspor", "dep": "Kocaelispor", "tip": "Futbol"},
+    {"saat": "12:00", "lig": "Türkiye Gelişim Ligi", "ev": "Fenerbahçe U19", "dep": "Beşiktaş U19", "tip": "Futbol"},
     {"saat": "04:00", "lig": "NBA", "ev": "Lakers", "dep": "Warriors", "tip": "Basketbol"}
 ]
 
-# HTML ÜRETİMİ (Tasarımı daha da iyileştirdik)
+# HTML ÜRETİMİ
 tarih = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
 html_icerik = f"""
 <!DOCTYPE html>
@@ -39,7 +58,7 @@ html_icerik = f"""
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canlı Veri Radarı</title>
+    <title>Gelişmiş Veri Radarı</title>
     <style>
         body {{ font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: white; padding: 20px; }}
         .header {{ text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }}
@@ -49,20 +68,20 @@ html_icerik = f"""
             border-left: 10px solid; transition: 0.3s;
         }}
         .lig-bilgi {{ font-size: 0.85em; color: #888; text-transform: uppercase; }}
-        .takimlar {{ font-size: 1.25em; font-weight: bold; margin-top: 5px; color: #fff; }}
+        .takimlar {{ font-size: 1.25em; font-weight: bold; margin-top: 5px; }}
         .saat {{ font-family: monospace; color: #00ff00; font-size: 1.3em; background: #222; padding: 5px 12px; border-radius: 5px; }}
-        h1 {{ color: #FFD700; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }}
+        h1 {{ color: #FFD700; }}
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🎯 CANLI VERİ RADARI</h1>
-        <p>GÜNCELLEME: {tarih}</p>
+        <h1>🎯 GELİŞMİŞ VERİ RADARI</h1>
+        <p>SON GÜNCELLEME: {tarih}</p>
     </div>
 """
 
 for mac in test_data:
-    renk, tier_adi = get_tier(mac["lig"])
+    renk, tier_adi = get_tier(mac["lig"], mac["ev"], mac["dep"])
     html_icerik += f"""
     <div class="mac-karti" style="border-left-color: {renk};">
         <div>
