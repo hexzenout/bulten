@@ -1,0 +1,30 @@
+name: Radari Guncelle
+on:
+  schedule:
+    - cron: '0 5 * * *' # Her sabah 08:00'de çalışır (UTC 5)
+  workflow_dispatch: # Manuel çalıştırma butonu (Test için lazım olacak)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Kodları Çek
+        uses: actions/checkout@v3
+
+      - name: Python Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Botu Çalıştır
+        run: python bulten.py  # İsmi burada güncelledik
+
+      - name: Siteyi Güncelle
+        run: |
+          git config --global user.name 'RadarBot'
+          git config --global user.email 'bot@radar.com'
+          git add index.html
+          git commit -m "Bülten güncellendi" || exit 0
+          git push
