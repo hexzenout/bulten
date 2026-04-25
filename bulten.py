@@ -1,23 +1,50 @@
+import requests
 import datetime
 
-# LİG SINIFLANDIRMALARI (TIER SİSTEMİ)
-TIER_1 = ["Şampiyonlar Ligi", "Premier Lig", "NBA", "Euroleague"] 
-TIER_2 = ["Championship", "Türkiye Süper Ligi", "Basketbol Süper Ligi"] 
-TIER_3 = ["TFF 1. Lig", "Almanya Reg. Lig"] 
-
-# Örnek Maç Verileri (Burayı yakında canlı API'ye bağlayacağız)
-maclar = [
-    {"saat": "21:45", "lig": "Şampiyonlar Ligi", "ev": "Real Madrid", "dep": "Barcelona", "tip": "Futbol"},
-    {"saat": "22:00", "lig": "Premier Lig", "ev": "Arsenal", "dep": "Man City", "tip": "Futbol"},
-    {"saat": "19:00", "lig": "Türkiye Süper Ligi", "ev": "Fenerbahçe", "dep": "Galatasaray", "tip": "Futbol"},
-    {"saat": "03:00", "lig": "NBA", "ev": "Lakers", "dep": "Celtics", "tip": "Basketbol"},
-    {"saat": "20:30", "lig": "Euroleague", "ev": "Anadolu Efes", "dep": "Panathinaikos", "tip": "Basketbol"}
+# 1. LİG SINIFLANDIRMALARI (Senin kriterlerine göre)
+TIER_1_KEYWORDS = [
+    "Champions League", "Europa League", "Premier League", "Süper Lig", "La Liga", 
+    "Serie A", "Bundesliga", "Eredivisie", "Liga NOS", "NBA", "Euroleague", "CBA", "NBL"
 ]
 
-def get_tier_color(lig_adi):
-    if lig_adi in TIER_1: return "#FFD700" 
-    elif lig_adi in TIER_2: return "#C0C0C0" 
-    else: return "#CD7F32" 
+TIER_2_KEYWORDS = ["Championship", "TFF 1", "Serie B", "Ligue 2", "Bundesliga 2"]
+
+def get_tier(league_name):
+    """Lig ismine bakıp rengini ve önemini döner."""
+    for key in TIER_1_KEYWORDS:
+        if key.lower() in league_name.lower():
+            return "#FFD700", "Altın" # Tier 1
+    for key in TIER_2_KEYWORDS:
+        if key.lower() in league_name.lower():
+            return "#C0C0C0", "Gümüş" # Tier 2
+    return "#CD7F32", "Bronz" # Tier 3
+
+def get_live_data():
+    """Canlı maç verilerini çeker (Örnek ücretsiz API üzerinden)."""
+    # Not: Bu URL örnek bir veri kaynağıdır, profesyonel aşamada RapidAPI veya Flashscore API ile değişebilir.
+    url = "https://www.thesportsdb.com/api/v1/json/3/all_leagues.php" 
+    # Şimdilik sistemin çalışmasını görmek için bugünün maçlarını simüle eden bir veri çekme mantığı kuralım:
+    try:
+        # Gerçek dünyada burada bir requests.get(url) olurdu. 
+        # Şimdilik yapıyı bozmadan gerçek bülten formatına uygun veriyi hazırlıyoruz.
+        test_data = [
+            {"saat": "21:00", "lig": "English Premier League", "ev": "Liverpool", "dep": "Chelsea", "tip": "Futbol"},
+            {"saat": "19:00", "lig": "Turkish Super Lig", "ev": "Galatasaray", "dep": "Beşiktaş", "tip": "Futbol"},
+            {"saat": "20:45", "lig": "Euroleague", "ev": "Real Madrid", "dep": "Fenerbahçe", "tip": "Basketbol"},
+            {"saat": "22:00", "lig": "Portugal Liga NOS", "ev": "Benfica", "dep": "Porto", "tip": "Futbol"},
+            {"saat": "04:00", "lig": "NBA", "ev": "Golden State", "dep": "Lakers", "tip": "Basketbol"},
+            {"saat": "13:00", "lig": "China CBA", "ev": "Guangdong", "dep": "Beijing", "tip": "Basketbol"},
+            {"saat": "18:00", "lig": "TFF 1. Lig", "ev": "Sakaryaspor", "dep": "Kocaelispor", "tip": "Futbol"},
+            {"saat": "15:00", "lig": "Almanya 3. Liga", "ev": "Ulm", "dep": "Preussen", "tip": "Futbol"}
+        ]
+        return test_data
+    except Exception as e:
+        print(f"Veri çekme hatası: {e}")
+        return []
+
+# HTML ÜRETİMİ
+maclar = get_live_data()
+tarih = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
 
 html_icerik = f"""
 <!DOCTYPE html>
@@ -25,29 +52,35 @@ html_icerik = f"""
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Günlük Değer Radarı</title>
+    <title>Canlı Veri Radarı</title>
     <style>
-        body {{ font-family: Arial, sans-serif; background-color: #121212; color: #ffffff; padding: 20px; }}
-        .header {{ text-align: center; margin-bottom: 30px; }}
-        .mac-karti {{ background-color: #1e1e1e; border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid; }}
-        .lig-ismi {{ font-size: 0.9em; color: #888; }}
-        .takimlar {{ font-size: 1.2em; font-weight: bold; margin: 5px 0; }}
-        .saat {{ background-color: #333; padding: 5px 10px; border-radius: 5px; font-weight: bold; }}
+        body {{ font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: white; padding: 20px; }}
+        .header {{ text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }}
+        .mac-karti {{ 
+            background: #161616; border-radius: 10px; padding: 18px; margin-bottom: 12px; 
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 6px solid; transition: 0.3s;
+        }}
+        .mac-karti:hover {{ transform: scale(1.01); background: #222; }}
+        .lig-bilgi {{ font-size: 0.8em; color: #777; text-transform: uppercase; }}
+        .takimlar {{ font-size: 1.15em; font-weight: bold; margin-top: 5px; }}
+        .saat {{ font-family: 'Courier New', monospace; color: #00ff00; font-size: 1.2em; background: #222; padding: 5px 10px; border-radius: 5px; }}
+        h1 {{ color: #FFD700; letter-spacing: 2px; }}
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🎯 Günlük Değer Radarı</h1>
-        <p>Son Güncelleme: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
+        <h1>🎯 CANLI VERİ RADARI</h1>
+        <p>GÜNCELLEME: {tarih}</p>
     </div>
 """
 
 for mac in maclar:
-    renk = get_tier_color(mac["lig"])
+    renk, tier_adi = get_tier(mac["lig"])
     html_icerik += f"""
     <div class="mac-karti" style="border-left-color: {renk};">
         <div>
-            <div class="lig-ismi">{mac['tip']} | {mac['lig']}</div>
+            <div class="lig-bilgi">{mac['tip']} | {mac['lig']} ({tier_adi})</div>
             <div class="takimlar">{mac['ev']} - {mac['dep']}</div>
         </div>
         <div class="saat">{mac['saat']}</div>
@@ -56,5 +89,5 @@ for mac in maclar:
 
 html_icerik += "</body></html>"
 
-with open("index.html", "w", encoding="utf-8") as dosya:
-    dosya.write(html_icerik)
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_icerik)
