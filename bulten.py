@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import datetime
 import re
 
-# --- 1. SİTE VERİLERİ (KESİN LİNKLER) ---
+# --- 1. SİTE VERİLERİ (SENİN VERDİĞİN LİNKLER) ---
 SITELER = {
     "1xbet": {"ana": "https://tinyurl.com/1xturkey", "tg": "onebahis_turkiye"},
     "Betsmove": {"ana": "https://dub.is/betsmovetelegram", "tg": "moveresmi"},
@@ -21,36 +21,34 @@ SITELER = {
     "Polymarket": {"ana": "https://polymarket.com", "tg": None}
 }
 
-def link_dogrula(site_adi, veri):
-    # ADIM 1: Ana linkin çalışıp çalışmadığını sessizce kontrol et
+def link_getir(site_adi, veri):
+    # Kural: Önce senin verdiğin linki "KUTSAL" kabul et ve onu kullan.
+    # Botun linki takip edip bozmasını (bonus8 vb.) engelliyoruz.
+    ana_link = veri["ana"]
+    
     try:
-        # allow_redirects=False yaparak IP adresine kadar gitmesini engelliyoruz, linki olduğu gibi koruyoruz.
-        r = requests.head(veri["ana"], timeout=5)
-        if r.status_code < 405: # Link ayaktaysa direkt senin verdiğini döndür
-            return veri["ana"]
+        # Sadece linkin "yaşayıp yaşamadığını" kontrol et, ama içeriğini kurcalama.
+        r = requests.get(ana_link, timeout=5, allow_redirects=True)
+        if r.status_code < 400:
+            return ana_link # Link sağlamsa direkt senin verdiğin kısa link kalsın.
     except:
         pass
 
-    # ADIM 2: Eğer ana link kırıksa Telegram'dan GERÇEK domaini bul
+    # Eğer ana link kırıksa (B Planı) Telegram'dan en taze mesajı bul.
     if veri["tg"]:
         try:
             tg_url = f"https://t.me/s/{veri['tg']}"
             res = requests.get(tg_url, timeout=10)
             soup = BeautifulSoup(res.text, 'html.parser')
-            
-            # Mesajlardaki linkleri ve butonları tara
-            all_links = soup.find_all('a', href=True)
-            for l in reversed(all_links):
+            links = soup.find_all('a', href=True)
+            for l in reversed(links):
                 href = l['href']
-                # Sosyal medya ve kısaltma servislerini ayıkla
-                if not any(x in href for x in ["t.me", "twitter.com", "instagram.com", "bit.ly", "dub.", "tinyurl", "cutt.ly"]):
-                    # Sadece temiz domaini döndür
-                    clean = re.search(r'https?://[a-zA-Z0-9.-]+', href)
-                    if clean: return clean.group(0)
+                if not any(x in href for x in ["t.me", "twitter", "instagram", "facebook", "bit.ly", "tinyurl"]):
+                    return href
         except:
-            return veri["ana"] # Telegram hatasında bile senin ana linkine geri dön
+            return ana_link
             
-    return veri["ana"]
+    return ana_link
 
 # --- HTML ÜRETİMİ ---
 tarih = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
@@ -59,31 +57,31 @@ html_icerik = f"""
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Radar Terminal V3.1</title>
+    <title>Radar Terminal V4</title>
     <style>
-        body {{ background: #080808; color: #fff; font-family: sans-serif; padding: 20px; }}
-        .terminal {{ max-width: 900px; margin: 0 auto; background: #111; border-radius: 10px; border: 1px solid #222; overflow: hidden; }}
-        .row {{ display: flex; align-items: center; padding: 15px 25px; border-bottom: 1px solid #1a1a1a; }}
+        body {{ background: #050505; color: #fff; font-family: sans-serif; padding: 20px; }}
+        .terminal {{ max-width: 850px; margin: 0 auto; background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 12px; }}
+        .mac-row {{ display: flex; align-items: center; padding: 15px 25px; border-bottom: 1px solid #111; }}
         .site-name {{ flex: 1; font-weight: bold; color: #FFD700; }}
-        .link-text {{ flex: 2; color: #666; font-size: 0.85em; overflow: hidden; text-overflow: ellipsis; }}
-        .btn {{ background: #00ff00; color: #000; padding: 8px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }}
-        .btn:hover {{ background: #00cc00; }}
+        .link-display {{ flex: 2; color: #444; font-size: 0.8em; font-family: monospace; }}
+        .btn {{ background: #00ff00; color: #000; padding: 8px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; transition: 0.2s; }}
+        .btn:hover {{ background: #fff; box-shadow: 0 0 10px #00ff00; }}
     </style>
 </head>
 <body>
-    <div style="text-align:center; margin-bottom:20px;">
-        <h1 style="color:#00ff00;">🛰️ RADAR TERMINAL V3.1</h1>
-        <p style="color:#444;">{tarih} | Manuel Link + Otomatik Telegram Yedekleme</p>
+    <div style="text-align:center; margin-bottom:30px;">
+        <h1 style="color:#00ff00; margin:0; letter-spacing:3px;">🛰️ RADAR TERMINAL V4</h1>
+        <p style="color:#333;">{tarih} | Manuel Link Öncelikli Mod</p>
     </div>
     <div class="terminal">
 """
 
 for site, veri in SITELER.items():
-    guncel = link_dogrula(site, veri)
+    guncel = link_getir(site, veri)
     html_icerik += f"""
-    <div class="row">
+    <div class="mac-row">
         <div class="site-name">{site}</div>
-        <div class="link-text">{guncel}</div>
+        <div class="link-display">{guncel}</div>
         <div>
             <a href="{guncel}" target="_blank" class="btn">GİRİŞ YAP</a>
         </div>
