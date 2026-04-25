@@ -1,56 +1,64 @@
+import requests
+from bs4 import BeautifulSoup
 import datetime
+import re
 
-# 1. ELİT LİG ANAHTAR KELİMELERİ (Altın)
-TIER_1_LIGLER = [
-    "super lig", "süper lig", "premier league", "la liga", "serie a", 
-    "bundesliga", "eredivisie", "liga nos", "nba", "euroleague", "cba", "nbl"
-]
+# --- 1. SİTE VE TELEGRAM KONFİGÜRASYONU ---
+SITELER = {
+    "1xbet": {"tg": "onebahis_turkiye", "base": "https://tinyurl.com/1xturkey", "type": "1x"},
+    "Betsmove": {"tg": "moveresmi", "base": "https://dub.is/betsmovetelegram", "type": "mover"},
+    "Holigan": {"tg": "holigantg", "base": "http://dub.run/holiguncel", "type": "holigan"},
+    "Tempobet": {"tg": "Tempobet_Turk", "base": "https://bit.ly/Tempobet-yeni-adres", "type": "tempo"},
+    "Nesine": {"tg": None, "base": "https://www.nesine.com", "type": "yasal"},
+    "Stake": {"tg": "NbaEngg", "base": "https://t2m.io/stakeguncel", "type": "stake"}
+}
 
-# 2. KARA LİSTE (Altın olmasını engelleyen, altyapı/yedek takım belirteçleri)
-# Senin dediğin Jong, United (altyapı), II gibi durumları burada yakalıyoruz.
-KARA_LISTE = [
-    "u19", "u21", "u23", "u17", "gelişim", "koleji", "b takımı", "youth", 
-    "academy", "jong", "castilla", " ii", "sub-", "reserve", "reserves"
-]
+# --- 2. TELEGRAM'DAN GÜNCEL DOMAIN ÇEKİCİ (DEDEKTİF) ---
+def get_current_domain(tg_channel):
+    if not tg_channel: return None
+    try:
+        url = f"https://t.me/s/{tg_channel}"
+        res = requests.get(url, timeout=10)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        # Son mesajlardaki linkleri ara
+        links = soup.find_all('a', href=True)
+        for link in reversed(links):
+            href = link['href']
+            if "http" in href and "t.me" not in href:
+                return href
+        return None
+    except:
+        return None
 
-# 3. ELİT TAKIMLAR (Lig ismi geçmese bile takımdan dolayı Altın yapacaklar)
-ELIT_TAKIMLAR = ["fenerbahce", "galatasaray", "besiktas", "real madrid", "barcelona", "lakers", "warriors"]
+# --- 3. AKILLI TIER SİSTEMİ (Önceki geliştirme) ---
+KARA_LISTE = ["u19", "u21", "jong", "castilla", " ii", "gelişim"]
+def get_tier(league, home, away):
+    text = (league + " " + home + " " + away).lower()
+    if any(x in text for x in KARA_LISTE): return "#CD7F32", "Bronz"
+    if any(x in ["super lig", "nba", "euroleague", "premier league"] in text for x in [True]): return "#FFD700", "Altın"
+    return "#C0C0C0", "Gümüş"
 
-def get_tier(league_name, home_team, away_team):
-    league_low = league_name.lower()
-    teams_low = (home_team + " " + away_team).lower()
-    
-    # KONTROL 1: ALTYAPI / YEDEK TAKIM MI? (Önce Çöpleri Ayıkla)
-    # Eğer ligde veya takım adında kara liste kelimesi varsa direkt BRONZ yapıyoruz.
-    if any(ek in teams_low for ek in KARA_LISTE) or any(ek in league_low for ek in KARA_LISTE):
-        return "#CD7F32", "Bronz (Altyapı/Yedek)"
+# --- 4. VERİ TOPLAMA SİMÜLASYONU (API Bağlantı Altyapısı) ---
+# Burası bir sonraki adımda gerçek API verileriyle dolacak
+def get_odds_data():
+    return [
+        {
+            "saat": "20:30", "lig": "Euroleague", "ev": "Anadolu Efes", "dep": "Real Madrid", "tip": "Basketbol",
+            "marketler": [
+                {"market": "Barem (Alt/Üst)", "bet365": "162.5", "1xbet": "164.5", "nesine": "161.5", "status": "VALUE"},
+                {"market": "MS 1 Oran", "bet365": "1.90", "1xbet": "2.05", "nesine": "1.78", "status": "TOP"}
+            ]
+        },
+        {
+            "saat": "19:00", "lig": "Turkish Super Lig", "ev": "Fenerbahçe", "dep": "Beşiktaş", "tip": "Futbol",
+            "marketler": [
+                {"market": "Maç Sonucu 1", "bet365": "1.75", "1xbet": "1.88", "nesine": "1.70", "status": "TOP"},
+                {"market": "Korner (9.5)", "bet365": "1.83", "1xbet": "1.95", "nesine": "1.75", "status": "VALUE"}
+            ]
+        }
+    ]
 
-    # KONTROL 2: ELİT LİG Mİ?
-    if any(key in league_low for key in TIER_1_LIGLER):
-        return "#FFD700", "Altın (Elit Lig)"
-
-    # KONTROL 3: ELİT TAKIM MI? (A Takım olduğu kesinleştiği için bakıyoruz)
-    if any(team in teams_low for team in ELIT_TAKIMLAR):
-        return "#FFD700", "Altın (Elit Takım)"
-
-    # KONTROL 4: GÜMÜŞ LİGLER
-    if any(key in league_low for key in ["championship", "tff 1", "serie b", "ligue 2"]):
-        return "#C0C0C0", "Gümüş"
-        
-    # HİÇBİRİNE UYMUYORSA
-    return "#CD7F32", "Bronz"
-
-# TEST VERİLERİ (Senin verdiğin örneklere göre hazırlandı)
-test_data = [
-    {"saat": "19:00", "lig": "Turkish Super Lig", "ev": "Galatasaray", "dep": "Beşiktaş", "tip": "Futbol"},
-    {"saat": "14:00", "lig": "Hollanda Eerste Divisie", "ev": "Jong Ajax", "dep": "Utrecht II", "tip": "Futbol"},
-    {"saat": "16:00", "lig": "İspanya 3. Lig", "ev": "Real Madrid Castilla", "dep": "Alcorcon", "tip": "Futbol"},
-    {"saat": "21:00", "lig": "English Premier League", "ev": "Liverpool", "dep": "Chelsea", "tip": "Futbol"},
-    {"saat": "12:00", "lig": "Türkiye Gelişim Ligi", "ev": "Fenerbahçe U19", "dep": "Beşiktaş U19", "tip": "Futbol"},
-    {"saat": "04:00", "lig": "NBA", "ev": "Lakers", "dep": "Warriors", "tip": "Basketbol"}
-]
-
-# HTML ÜRETİMİ
+# --- 5. HTML ÜRETİMİ (GELİŞMİŞ ARAYÜZ) ---
 tarih = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
 html_icerik = f"""
 <!DOCTYPE html>
@@ -58,41 +66,86 @@ html_icerik = f"""
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gelişmiş Veri Radarı</title>
+    <title>Radar Terminal V1</title>
     <style>
-        body {{ font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: white; padding: 20px; }}
-        .header {{ text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }}
-        .mac-karti {{ 
-            background: #161616; border-radius: 10px; padding: 18px; margin-bottom: 12px; 
-            display: flex; justify-content: space-between; align-items: center;
-            border-left: 10px solid; transition: 0.3s;
-        }}
-        .lig-bilgi {{ font-size: 0.85em; color: #888; text-transform: uppercase; }}
-        .takimlar {{ font-size: 1.25em; font-weight: bold; margin-top: 5px; }}
-        .saat {{ font-family: monospace; color: #00ff00; font-size: 1.3em; background: #222; padding: 5px 12px; border-radius: 5px; }}
-        h1 {{ color: #FFD700; }}
+        body {{ font-family: 'Inter', sans-serif; background: #050505; color: #e0e0e0; padding: 15px; }}
+        .radar-header {{ text-align: center; padding: 20px; border-bottom: 2px solid #1a1a1a; margin-bottom: 20px; }}
+        .site-status {{ display: flex; overflow-x: auto; gap: 10px; margin-bottom: 20px; padding-bottom: 10px; }}
+        .status-tag {{ background: #111; padding: 5px 10px; border-radius: 20px; font-size: 0.7em; border: 1px solid #333; white-space: nowrap; }}
+        .online {{ color: #00ff00; border-color: #00ff00; }}
+        .mac-karti {{ background: #0f0f0f; border: 1px solid #222; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }}
+        .mac-ana {{ padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }}
+        .tier-bar {{ width: 6px; height: 100%; position: absolute; left: 0; top: 0; }}
+        .detay-tablo {{ display: none; background: #161616; padding: 15px; border-top: 1px solid #222; }}
+        table {{ width: 100%; border-collapse: collapse; font-size: 0.85em; }}
+        th {{ text-align: left; color: #666; padding: 8px; border-bottom: 1px solid #333; }}
+        td {{ padding: 10px 8px; border-bottom: 1px solid #222; }}
+        .high-odd {{ color: #00ff00; font-weight: bold; background: rgba(0,255,0,0.1); border-radius: 4px; padding: 2px 5px; }}
+        .bet365-col {{ color: #ffcc00; font-weight: bold; }}
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🎯 GELİŞMİŞ VERİ RADARI</h1>
-        <p>SON GÜNCELLEME: {tarih}</p>
+    <div class="radar-header">
+        <h1 style="color:#FFD700; margin:0;">🎯 RADAR TERMINAL V1</h1>
+        <p style="font-size:0.8em; color:#555;">Sistem Aktif | {tarih}</p>
     </div>
+
+    <div class="site-status">
 """
 
-for mac in test_data:
-    renk, tier_adi = get_tier(mac["lig"], mac["ev"], mac["dep"])
-    html_icerik += f"""
-    <div class="mac-karti" style="border-left-color: {renk};">
-        <div>
-            <div class="lig-bilgi">{mac['tip']} | {mac['lig']} ({tier_adi})</div>
-            <div class="takimlar">{mac['ev']} - {mac['dep']}</div>
-        </div>
-        <div class="saat">{mac['saat']}</div>
-    </div>
-    """
+# Site durumlarını ekle
+for site, info in SITELER.items():
+    status_class = "online" if info["tg"] or site == "Nesine" else ""
+    html_icerik += f'<div class="status-tag {status_class}">● {site}</div>'
 
-html_icerik += "</body></html>"
+html_icerik += '</div><div id="bulten">'
+
+# Maçları ekle
+for mac in get_odds_data():
+    renk, tier = get_tier(mac["lig"], mac["ev"], mac["dep"])
+    html_icerik += f"""
+    <div class="mac-karti" onclick="toggleDetail(this)" style="position:relative; border-left: 6px solid {renk};">
+        <div class="mac-ana">
+            <div>
+                <span style="font-size:0.7em; color:#888;">{mac['lig']} ({tier})</span>
+                <div style="font-weight:bold; font-size:1.1em; margin-top:4px;">{mac['ev']} - {mac['dep']}</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="color:#00ff00; font-family:monospace;">{mac['saat']}</div>
+                <div style="font-size:0.6em; color:#444;">TIKLA ANALİZ ET</div>
+            </div>
+        </div>
+        <div class="detay-tablo">
+            <table>
+                <tr>
+                    <th>Market</th>
+                    <th class="bet365-col">Bet365 (Ref)</th>
+                    <th>1xbet</th>
+                    <th>Nesine</th>
+                </tr>
+    """
+    for m in mac['marketler']:
+        html_icerik += f"""
+                <tr>
+                    <td>{m['market']}</td>
+                    <td class="bet365-col">{m['bet365']}</td>
+                    <td class="{"high-odd" if float(m['1xbet'].split()[0]) > float(m['bet365'].split()[0]) else ""}">{m['1xbet']}</td>
+                    <td>{m['nesine']}</td>
+                </tr>
+        """
+    html_icerik += "</table></div></div>"
+
+html_icerik += """
+    </div>
+    <script>
+        function toggleDetail(el) {
+            let detail = el.querySelector('.detay-tablo');
+            detail.style.display = (detail.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
+"""
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_icerik)
