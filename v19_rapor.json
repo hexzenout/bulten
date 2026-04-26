@@ -1,6 +1,6 @@
 {
-    "son_guncelleme": "26-04-2026 10:07:14",
-    "kalan_hak": "362",
+    "son_guncelleme": "26-04-2026 11:57:32",
+    "kalan_hak": "343",
     "veriler": [
         {
             "kategori": "ALTIN",
@@ -580,7 +580,7 @@
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Coventry City - Wrexham AFC",
-            "saat_raw": "2026-04-26T11:00:00Z",
+            "saat_raw": "2026-04-26T11:02:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -621,6 +621,13 @@
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
+            "mac": "Watford - Coventry City",
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONSHIP",
             "mac": "Derby County - Sheffield United",
             "saat_raw": "2026-05-02T11:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
@@ -629,6 +636,13 @@
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Hull City - Norwich City",
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONSHIP",
+            "mac": "Wrexham AFC - Middlesbrough",
             "saat_raw": "2026-05-02T11:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
@@ -650,7 +664,7 @@
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "Excelsior - FC Utrecht",
-            "saat_raw": "2026-04-26T10:15:00Z",
+            "saat_raw": "2026-04-26T10:16:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
