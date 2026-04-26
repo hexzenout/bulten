@@ -1,37 +1,27 @@
 import os
 import requests
-import time
-import random
 import json
 from datetime import datetime
+import time
 
 # ==========================================
 # 1. ŞİFRELERİ KASADAN (SECRETS) ÇEKME
 # ==========================================
 odds_keys_env = os.getenv("ODDS_KEYS", "")
-rapid_keys_env = os.getenv("RAPID_KEYS", "")
-
 ODDS_API_POOL = [k.strip() for k in odds_keys_env.split(",") if k.strip()]
-FOOTBALL_API_POOL = [k.strip() for k in rapid_keys_env.split(",") if k.strip()]
 
 # ==========================================
 # 2. ALTIN LİSTELER (KIRMIZI ÇİZGİLER)
 # ==========================================
-ALTIN_FUTBOL = ["Super Lig", "Premier League", "La Liga", "Bundesliga", "Serie A", "Ligue 1", "Eredivisie", "Primeira Liga", "Champions League", "Europa League", "Conference League", "Championship", "Serie A (Brazil)", "Primera Division (Argentina)", "MLS", "World Cup", "Euro"]
-ALTIN_BASKET = ["NBA", "Euroleague", "BSL", "Liga ACB", "Lega A", "Heba A1", "LNB Pro A", "BBL", "EuroCup", "Champions League", "VTB", "NCAA", "WNBA"]
+ALTIN_FUTBOL = ["Super Lig", "Premier League", "La Liga", "Bundesliga", "Serie A", "Ligue 1", "Eredivisie", "Primeira Liga", "Champions League", "Europa League", "Conference League", "Championship", "MLS"]
+ALTIN_BASKET = ["NBA", "Euroleague", "BSL", "Liga ACB", "Lega A", "EuroCup", "NCAA"]
 
 # ==========================================
-# 3. V19 KOMUTA ZEKASI (MOTOR)
+# 3. GERÇEK V19 KOMUTA ZEKASI
 # ==========================================
 class V19Intelligence:
     def __init__(self):
         self.odds_index = 0
-        self.football_index = 0
-        self.user_agents = [
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/114.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605.1.15"
-        ]
 
     def kategori_bul(self, lig_adi, spor_turu):
         if spor_turu == "soccer":
@@ -42,31 +32,67 @@ class V19Intelligence:
             return "GÜMÜŞ"
         return "BRONZ"
 
+    def oran_cek(self, api_sport_key):
+        """The Odds API'den Ban Korumalı Gerçek Veri Çeker"""
+        while self.odds_index < len(ODDS_API_POOL):
+            key = ODDS_API_POOL[self.odds_index]
+            url = f"https://api.the-odds-api.com/v4/sports/{api_sport_key}/odds/?apiKey={key}&regions=eu&markets=h2h"
+            try:
+                res = requests.get(url, timeout=10)
+                if res.status_code == 200:
+                    return res.json()
+                elif res.status_code in [401, 429]:
+                    print(f"[!] {self.odds_index + 1}. Şifre Limiti Doldu. Diğerine geçiliyor...")
+                    self.odds_index += 1
+                else:
+                    break
+            except:
+                break
+        return []
+
     def operasyon_baslat(self):
-        print("V19 BEYNİ: Tarama Başlatılıyor...")
+        print("V19 BEYNİ: GERÇEK ZAMANLI API TARAMASI BAŞLADI...")
         alarmlar = []
         
-        # Test ve Vitrin Görünümü İçin Örnek Veri Pompası (API'ler buraya eklenecek)
-        alarmlar.append({
-            "kategori": self.kategori_bul("Super Lig", "soccer"),
-            "lig": "SÜPER LİG",
-            "mac": "GALATASARAY - FENERBAHÇE",
-            "uyari": "🚨 SARI KART FIRSATI: 18 Faul var, Kart 0."
-        })
-        
-        alarmlar.append({
-            "kategori": self.kategori_bul("NBA", "basketball"),
-            "lig": "NBA",
-            "mac": "LAKERS - CELTICS",
-            "uyari": "🔥 HIZLI HÜCUM: Barem 220.5 Üst potansiyeli."
-        })
+        # Tarama Yapılacak Hedef Ligler (The Odds API Formatında)
+        hedef_ligler = [
+            {"key": "soccer_turkey_super_league", "isim": "Super Lig", "tur": "soccer"},
+            {"key": "soccer_epl", "isim": "Premier League", "tur": "soccer"},
+            {"key": "basketball_nba", "isim": "NBA", "tur": "basketball"},
+            {"key": "basketball_euroleague", "isim": "Euroleague", "tur": "basketball"}
+        ]
 
-        alarmlar.append({
-            "kategori": self.kategori_bul("Championship", "soccer"),
-            "lig": "CHAMPIONSHIP",
-            "mac": "SUNDERLAND - MILLWALL",
-            "uyari": "🚩 OFSAYT ÜST: Defans arkası sızıntı tespit edildi."
-        })
+        for hedef in hedef_ligler:
+            print(f"> {hedef['isim']} taranıyor...")
+            maclar = self.oran_cek(hedef["key"])
+            
+            if maclar:
+                # API limitini yememek için şimdilik lig başına ilk 5 maçı çekiyoruz
+                for mac in maclar[:5]: 
+                    home = mac.get('home_team', 'Bilinmiyor')
+                    away = mac.get('away_team', 'Bilinmiyor')
+                    
+                    # Başlangıç saatini hesapla
+                    baslangic_utc = mac.get('commence_time', '')
+                    saat_metni = "Saat Belirsiz"
+                    if baslangic_utc:
+                        try:
+                            dt = datetime.strptime(baslangic_utc, "%Y-%m-%dT%H:%M:%SZ")
+                            saat_metni = f"Maç Saati: {dt.strftime('%H:%M')} (UTC)"
+                        except:
+                            pass
+
+                    kategori = self.kategori_bul(hedef["isim"], hedef["tur"])
+                    
+                    alarmlar.append({
+                        "kategori": kategori,
+                        "lig": hedef["isim"].upper(),
+                        "mac": f"{home} - {away}",
+                        "uyari": f"📡 ORAN RADARI AKTİF | {saat_metni} | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+                    })
+            
+            # API'yi çok yormamak için ligler arası ufak bekleme
+            time.sleep(1)
 
         rapor = {
             "son_guncelleme": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
@@ -75,7 +101,7 @@ class V19Intelligence:
         
         with open("v19_rapor.json", "w", encoding="utf-8") as f:
             json.dump(rapor, f, ensure_ascii=False, indent=4)
-        print("[+] Operasyon Başarılı: Rapor dosyası oluşturuldu.")
+        print(f"[+] Operasyon Tamam! Toplam {len(alarmlar)} maç bulundu.")
 
 if __name__ == "__main__":
     v19 = V19Intelligence()
