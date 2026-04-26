@@ -54,12 +54,35 @@ class V19Intelligence:
         print("V19 BEYNİ: GERÇEK ZAMANLI API TARAMASI BAŞLADI...")
         alarmlar = []
         
-        # Tarama Yapılacak Hedef Ligler (The Odds API Formatında)
+        # Tarama Yapılacak Tüm Hedef Ligler (Gerçek API Kodlarıyla)
         hedef_ligler = [
+            # --- FUTBOL (ALTIN & GÜMÜŞ LİGLER) ---
             {"key": "soccer_turkey_super_league", "isim": "Super Lig", "tur": "soccer"},
             {"key": "soccer_epl", "isim": "Premier League", "tur": "soccer"},
+            {"key": "soccer_spain_la_liga", "isim": "La Liga", "tur": "soccer"},
+            {"key": "soccer_germany_bundesliga", "isim": "Bundesliga", "tur": "soccer"},
+            {"key": "soccer_italy_serie_a", "isim": "Serie A", "tur": "soccer"},
+            {"key": "soccer_france_ligue_one", "isim": "Ligue 1", "tur": "soccer"},
+            {"key": "soccer_uefa_champs_league", "isim": "Champions League", "tur": "soccer"},
+            {"key": "soccer_uefa_europa_league", "isim": "Europa League", "tur": "soccer"},
+            {"key": "soccer_uefa_europa_conference_league", "isim": "Conference League", "tur": "soccer"},
+            {"key": "soccer_efl_champ", "isim": "Championship", "tur": "soccer"},
+            {"key": "soccer_netherlands_eredivisie", "isim": "Eredivisie", "tur": "soccer"},
+            {"key": "soccer_portugal_primeira_liga", "isim": "Primeira Liga", "tur": "soccer"},
+            {"key": "soccer_brazil_campeonato", "isim": "Serie A (Brazil)", "tur": "soccer"},
+            {"key": "soccer_argentina_primera_division", "isim": "Primera Division (Argentina)", "tur": "soccer"},
+            
+            # --- BASKETBOL (ALTIN & GÜMÜŞ LİGLER) ---
             {"key": "basketball_nba", "isim": "NBA", "tur": "basketball"},
-            {"key": "basketball_euroleague", "isim": "Euroleague", "tur": "basketball"}
+            {"key": "basketball_euroleague", "isim": "Euroleague", "tur": "basketball"},
+            {"key": "basketball_ncaab", "isim": "NCAA", "tur": "basketball"},
+            {"key": "basketball_wnba", "isim": "WNBA", "tur": "basketball"},
+            {"key": "basketball_spain_liga_acb", "isim": "Liga ACB", "tur": "basketball"},
+            {"key": "basketball_italy_lega_a", "isim": "Lega A", "tur": "basketball"},
+            {"key": "basketball_germany_bbl", "isim": "BBL", "tur": "basketball"},
+            {"key": "basketball_france_lnb_pro_a", "isim": "LNB Pro A", "tur": "basketball"},
+            {"key": "basketball_eurocup", "isim": "EuroCup", "tur": "basketball"}
+        ]
         ]
 
         for hedef in hedef_ligler:
