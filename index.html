@@ -3,115 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 GLOBAL COMMAND</title>
+    <title>V19 COMMAND CENTER v2.0</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        :root { --gold: #f59e0b; --silver: #9ca3af; --bg: #09090b; --panel: #18181b; --green: #10b981; --border: #27272a; --text: #f4f4f5; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;900&display=swap');
         
-        .sidebar { width: 260px; background: #0f0f12; height: 100vh; border-right: 1px solid var(--border); transition: 0.3s; flex-shrink: 0; }
-        .sidebar.closed { transform: translateX(-260px); margin-right: -260px; }
-        .nav-item { padding: 18px 25px; cursor: pointer; color: #a1a1aa; font-weight: 700; border-left: 4px solid transparent; display: flex; align-items: center; gap: 10px; }
-        .nav-item.active { background: rgba(16, 185, 129, 0.1); color: #fff; border-color: var(--green); }
+        :root { 
+            --gold: #f59e0b; --silver: #9ca3af; --bronze: #b45309; 
+            --bg: #09090b; --panel: #121214; --green: #10b981; 
+            --border: #27272a; --text: #f4f4f5; --muted: #71717a;
+        }
         
-        .main { flex-grow: 1; padding: 25px 40px; height: 100vh; overflow-y: auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 25px; }
-        .tabs { display: flex; gap: 15px; margin-bottom: 30px; }
-        .tab { padding: 10px 20px; background: transparent; border: 1px solid var(--border); cursor: pointer; border-radius: 6px; color: #a1a1aa; font-weight: 700; }
-        .tab.active.gold { border-color: var(--gold); color: var(--gold); background: rgba(245,158,11,0.05); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        .league-group { margin-bottom: 40px; }
-        .league-header { font-size: 1.1em; font-weight: 900; color: #fff; margin-bottom: 15px; padding: 12px 15px; background: #131316; border-left: 4px solid var(--green); border-radius: 0 6px 6px 0; display: flex; align-items: center; gap: 12px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
-        .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; position: relative; }
-        .match-teams { font-size: 1.1em; font-weight: 900; color: #fff; margin-bottom: 10px; }
-        .alert-box { font-size: 0.85em; color: #a1a1aa; background: #0c0c0e; padding: 10px; border-radius: 6px; border: 1px dashed #27272a; }
+        /* Sidebar */
+        .sidebar { width: 280px; background: #0c0c0e; border-right: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; }
+        .brand { padding: 30px; font-weight: 900; font-size: 1.4em; color: var(--green); letter-spacing: -1px; border-bottom: 1px solid var(--border); }
+        .nav-item { padding: 20px 30px; cursor: pointer; color: var(--muted); font-weight: 700; transition: 0.2s; display: flex; align-items: center; gap: 12px; }
+        .nav-item:hover { background: #18181b; color: #fff; }
+        .nav-item.active { background: rgba(16, 185, 129, 0.1); color: var(--green); border-right: 4px solid var(--green); }
+        
+        /* Main Area */
+        .main { flex-grow: 1; display: flex; flex-direction: column; background: var(--bg); }
+        .header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .content { flex-grow: 1; padding: 30px 40px; overflow-y: auto; scroll-behavior: smooth; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab { 
+            padding: 10px 24px; background: var(--panel); border: 1px solid var(--border); 
+            cursor: pointer; border-radius: 8px; color: var(--muted); font-weight: 700; font-size: 0.85em; transition: 0.2s;
+        }
+        .tab.active.gold { border-color: var(--gold); color: var(--gold); background: rgba(245,158,11,0.1); }
+        .tab.active.silver { border-color: var(--silver); color: var(--silver); background: rgba(156,163,175,0.1); }
+        .tab.active.bronze { border-color: var(--bronze); color: var(--bronze); background: rgba(180,83,9,0.1); }
+
+        /* Accordion (Lig Grupları) */
+        .league-acc { margin-bottom: 12px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--panel); }
+        .acc-header { 
+            padding: 18px 25px; background: #18181b; cursor: pointer; display: flex; 
+            justify-content: space-between; align-items: center; font-weight: 800; font-size: 0.95em;
+        }
+        .acc-header:hover { background: #202023; }
+        .acc-content { display: none; padding: 20px; background: var(--bg); border-top: 1px solid var(--border); }
+        .acc-content.open { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; }
+
+        /* Match Card */
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 18px; border-radius: 8px; position: relative; }
+        .match-time { font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: var(--green); margin-bottom: 8px; display: block; }
+        .match-teams { font-weight: 800; font-size: 1.05em; margin-bottom: 12px; }
+        .alert-box { font-size: 0.8em; color: var(--muted); border-top: 1px solid var(--border); pt: 10px; margin-top: 10px; }
+
+        .clock { font-family: 'JetBrains Mono'; color: var(--green); font-size: 0.8em; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar" id="sidebar">
-        <div style="color:var(--green); text-align:center; margin:30px 0; font-weight:900; font-size:1.5em;">V19 GLOBAL</div>
+    <div class="sidebar">
+        <div class="brand">V19 COMMAND</div>
         <div class="nav-item active" onclick="setSport('futbol', this)"><span>⚽</span> FUTBOL RADARI</div>
         <div class="nav-item" onclick="setSport('basketbol', this)"><span>🏀</span> BASKETBOL RADARI</div>
     </div>
     
     <div class="main">
         <div class="header">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <button onclick="document.getElementById('sidebar').classList.toggle('closed')" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">☰</button>
-                <h2 style="margin:0" id="title">⚽ FUTBOL RADARI</h2>
+            <h2 id="title" style="margin:0; font-weight:900;">⚽ FUTBOL</h2>
+            <div class="clock" id="clock">BAĞLANTI KURULUYOR...</div>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active gold" onclick="setCategory('ALTIN', this)">🏆 ALTIN</button>
+                <button class="tab" onclick="setCategory('GÜMÜŞ', this)">🥈 GÜMÜŞ</button>
+                <button class="tab" onclick="setCategory('BRONZ', this)">🥉 BRONZ</button>
             </div>
-            <div id="clock" style="font-family:monospace; color:var(--green); background:rgba(16,185,129,0.1); padding:6px 12px; border-radius:6px; border:1px solid rgba(16,185,129,0.2);">YÜKLENİYOR...</div>
+            <div id="content-area"></div>
         </div>
-
-        <div class="tabs">
-            <button class="tab active gold" onclick="setCategory('ALTIN', this)">🏆 ALTIN KATEGORİ</button>
-            <button class="tab" onclick="setCategory('GÜMÜŞ', this)">🥈 GÜMÜŞ KATEGORİ</button>
-        </div>
-
-        <div id="content-area"></div>
     </div>
 
     <script>
         let currentSport = 'futbol', currentCategory = 'ALTIN', allData = [];
+
         const countryMap = {
-            "SUPER LIG": { flag: "🇹🇷", country: "Türkiye" }, "BSL": { flag: "🇹🇷", country: "Türkiye" },
-            "PREMIER LEAGUE": { flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", country: "İngiltere" }, "LA LIGA": { flag: "🇪🇸", country: "İspanya" },
-            "LIGA ACB": { flag: "🇪🇸", country: "İspanya" }, "BUNDESLIGA": { flag: "🇩🇪", country: "Almanya" },
-            "BBL": { flag: "🇩🇪", country: "Almanya" }, "SERIE A": { flag: "🇮🇹", country: "İtalya" },
-            "LEGA A": { flag: "🇮🇹", country: "İtalya" }, "LIGUE 1": { flag: "🇫🇷", country: "Fransa" },
-            "LNB PRO A": { flag: "🇫🇷", country: "Fransa" }, "EREDIVISIE": { flag: "🇳🇱", country: "Hollanda" },
-            "PRIMEIRA LIGA": { flag: "🇵🇹", country: "Portekiz" }, "NBA": { flag: "🇺🇸", country: "ABD" },
-            "NCAA": { flag: "🇺🇸", country: "ABD" }, "WNBA": { flag: "🇺🇸", country: "ABD" }, "MLS": { flag: "🇺🇸", country: "ABD" },
-            "CHAMPIONS LEAGUE": { flag: "🇪🇺", country: "Avrupa" }, "EUROPA LEAGUE": { flag: "🇪🇺", country: "Avrupa" },
-            "CONFERENCE LEAGUE": { flag: "🇪🇺", country: "Avrupa" }, "EUROLEAGUE": { flag: "🇪🇺", country: "Avrupa" },
-            "EURO INTERNATIONAL": { flag: "🇪🇺", country: "Avrupa" }, "EUROCUP": { flag: "🇪🇺", country: "Avrupa" },
-            "BCL": { flag: "🇪🇺", country: "Avrupa" }, "HEBA A1": { flag: "🇬🇷", country: "Yunanistan" },
-            "VTB": { flag: "🇷🇺", country: "Rusya" }, "SERIE A (BRAZIL)": { flag: "🇧🇷", country: "Brezilya" },
-            "PRIMERA DIVISION (ARGENTINA)": { flag: "🇦🇷", country: "Arjantin" }
+            "SUPER LIG": { f: "🇹🇷", c: "Türkiye" }, "BSL": { f: "🇹🇷", c: "Türkiye" },
+            "PREMIER LEAGUE": { f: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", c: "İngiltere" }, "LA LIGA": { f: "🇪🇸", c: "İspanya" },
+            "LIGA ACB": { f: "🇪🇸", c: "İspanya" }, "BUNDESLIGA": { f: "🇩🇪", c: "Almanya" },
+            "BBL": { f: "🇩🇪", c: "Almanya" }, "SERIE A": { f: "🇮🇹", c: "İtalya" },
+            "LEGA A": { f: "🇮🇹", c: "İtalya" }, "LIGUE 1": { f: "🇫🇷", c: "Fransa" },
+            "LNB PRO A": { f: "🇫🇷", c: "Fransa" }, "EREDIVISIE": { f: "🇳🇱", c: "Hollanda" },
+            "PRIMEIRA LIGA": { f: "🇵🇹", c: "Portekiz" }, "NBA": { f: "🇺🇸", c: "ABD" },
+            "NCAA": { f: "🇺🇸", c: "ABD" }, "WNBA": { f: "🇺🇸", c: "ABD" }, "MLS": { f: "🇺🇸", c: "ABD" },
+            "CHAMPIONS LEAGUE": { f: "🇪🇺", c: "Avrupa" }, "EUROPA LEAGUE": { f: "🇪🇺", c: "Avrupa" },
+            "CONFERENCE LEAGUE": { f: "🇪🇺", c: "Avrupa" }, "EUROLEAGUE": { f: "🇪🇺", c: "Avrupa" },
+            "EUROCUP": { f: "🇪🇺", c: "Avrupa" }, "BCL": { f: "🇪🇺", c: "Avrupa" },
+            "HEBA A1": { f: "🇬🇷", c: "Yunanistan" }, "VTB": { f: "🇷🇺", c: "Rusya" },
+            "SERIE A (BRAZIL)": { f: "🇧🇷", c: "Brezilya" }, "PRIMERA DIVISION (ARGENTINA)": { f: "🇦🇷", c: "Arjantin" }
         };
+
         const basketLigleri = ["NBA", "EUROLEAGUE", "ACB", "LEGA A", "LNB", "BBL", "NCAA", "WNBA", "EUROCUP", "BSL", "HEBA", "VTB", "BCL"];
 
         async function update() {
             try {
                 const res = await fetch(`v19_rapor.json?t=${Date.now()}`);
                 const data = await res.json();
-                document.getElementById('clock').innerText = "SON TARAMA: " + data.son_guncelleme;
+                document.getElementById('clock').innerText = "LAST_SCAN: " + data.son_guncelleme;
                 allData = data.veriler || [];
                 render();
-            } catch(e) { console.log("Hata:", e); }
+            } catch(e) { console.log("Fetch error"); }
         }
 
         function render() {
             const area = document.getElementById('content-area'); area.innerHTML = "";
+            const now = new Date();
+            const nextWeek = new Date(); nextWeek.setDate(now.getDate() + 7);
+
+            // Filtrele: Spor + Kategori + Tarih (7 Gün Sınırı)
             const filtered = allData.filter(m => {
                 const isBasket = basketLigleri.some(b => m.lig.toUpperCase().includes(b));
-                return (isBasket ? 'basketbol' : 'futbol') === currentSport && m.kategori.toUpperCase() === currentCategory;
+                const matchSport = isBasket ? 'basketbol' : 'futbol';
+                
+                // Tarih Kontrolü
+                let matchDate = new Date(); // Varsayılan bugün
+                const timeStr = m.uyari.match(/\d{2}:\d{2}/);
+                // Not: The Odds API tarihini tam parse etmek için Python'dan tam ISO tarihini yollamalıyız, 
+                // ancak şimdilik "Dünya Kupası" gibi uzak ligleri isimden engelliyoruz.
+                const isTooFar = m.lig.toUpperCase().includes("WORLD CUP");
+
+                return matchSport === currentSport && m.kategori.toUpperCase() === currentCategory && !isTooFar;
             });
-            if (filtered.length === 0) { area.innerHTML = `<div style="text-align:center; padding:50px; color:#555;">Maç bulunamadı.</div>`; return; }
-            
+
             const grouped = {};
             filtered.forEach(m => { if (!grouped[m.lig]) grouped[m.lig] = []; grouped[m.lig].push(m); });
+
             for (let lig in grouped) {
-                let info = { flag: "🏳️", country: "Uluslararası" };
-                for (let key in countryMap) { if (lig.includes(key)) { info = countryMap[key]; break; } }
-                let ligHtml = `<div class="league-group"><div class="league-header"><span>${info.flag}</span> ${info.country} - ${lig}</div><div class="grid">`;
+                let info = { f: "🏳️", c: "INT" };
+                for (let k in countryMap) { if (lig.toUpperCase().includes(k)) { info = countryMap[k]; break; } }
+                
+                // Maçları Saate Göre Sırala
+                grouped[lig].sort((a, b) => a.uyari.localeCompare(b.uyari));
+
+                let acc = document.createElement('div');
+                acc.className = 'league-acc';
+                acc.innerHTML = `
+                    <div class="acc-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span>${info.f} ${info.c.toUpperCase()} - ${lig}</span>
+                        <span style="color:var(--muted)">${grouped[lig].length} MAÇ ▾</span>
+                    </div>
+                    <div class="acc-content"></div>
+                `;
+
+                const content = acc.querySelector('.acc-content');
                 grouped[lig].forEach(m => {
-                    let cleanAlert = m.uyari;
-                    let timeMatch = cleanAlert.match(/\d{2}:\d{2}/);
-                    if(timeMatch) {
-                        let [h, min] = timeMatch[0].split(':');
+                    let cleanMsg = m.uyari.replace(" (UTC)", "");
+                    let tMatch = cleanMsg.match(/\d{2}:\d{2}/);
+                    if(tMatch) {
+                        let [h, min] = tMatch[0].split(':');
                         let trH = (parseInt(h) + 3) % 24;
-                        cleanAlert = cleanAlert.replace(timeMatch[0], trH.toString().padStart(2, '0') + ":" + min + " (TSİ)");
+                        cleanMsg = cleanMsg.replace(tMatch[0], trH.toString().padStart(2, '0') + ":" + min + " (TSİ)");
                     }
-                    ligHtml += `<div class="card"><div class="match-teams">${m.mac}</div><div class="alert-box">${cleanAlert}</div></div>`;
+                    content.innerHTML += `
+                        <div class="card">
+                            <span class="match-time">⏱ ${cleanMsg.match(/\d{2}:\d{2} \(TSİ\)/) || ""}</span>
+                            <div class="match-teams">${m.mac}</div>
+                            <div class="alert-box">${cleanMsg.split('|').pop()}</div>
+                        </div>
+                    `;
                 });
-                ligHtml += `</div></div>`; area.innerHTML += ligHtml;
+                area.appendChild(acc);
             }
         }
-        function setSport(s, el) { currentSport = s; document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active')); el.classList.add('active'); render(); }
-        function setCategory(c, el) { currentCategory = c; document.querySelectorAll('.tab').forEach(x => x.classList.remove('active', 'gold')); el.classList.add('active', 'gold'); render(); }
+
+        function setSport(s, el) { 
+            currentSport = s; 
+            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('title').innerText = s === 'futbol' ? '⚽ FUTBOL' : '🏀 BASKETBOL';
+            render(); 
+        }
+        function setCategory(c, el) { 
+            currentCategory = c; 
+            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active', 'gold', 'silver', 'bronze'));
+            el.classList.add('active', c.toLowerCase() === 'altın' ? 'gold' : c.toLowerCase() === 'gümüş' ? 'silver' : 'bronze');
+            render(); 
+        }
         setInterval(update, 15000); update();
     </script>
 </body>
