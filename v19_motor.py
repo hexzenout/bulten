@@ -83,8 +83,6 @@ class V19Intelligence:
             {"key": "basketball_france_lnb_pro_a", "isim": "LNB Pro A", "tur": "basketball"},
             {"key": "basketball_eurocup", "isim": "EuroCup", "tur": "basketball"}
         ]
-        ]
-
         for hedef in hedef_ligler:
             print(f"> {hedef['isim']} taranıyor...")
             maclar = self.oran_cek(hedef["key"])
