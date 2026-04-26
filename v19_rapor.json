@@ -1,14 +1,7 @@
 {
-    "son_guncelleme": "26-04-2026 17:12:14",
-    "kalan_hak": "271",
+    "son_guncelleme": "26-04-2026 19:52:58",
+    "kalan_hak": "252",
     "veriler": [
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Galatasaray - Fenerbahce",
-            "saat_raw": "2026-04-26T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
@@ -68,7 +61,28 @@
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
+            "mac": "Antalyaspor - Alanyaspor",
+            "saat_raw": "2026-05-03T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SUPER LIG",
+            "mac": "Kayserispor - Eyüpspor",
+            "saat_raw": "2026-05-03T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SUPER LIG",
             "mac": "Fatih Karagümrük - Genclerbirligi SK",
+            "saat_raw": "2026-05-03T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SUPER LIG",
+            "mac": "Kasimpasa SK - Kocaelispor",
             "saat_raw": "2026-05-03T17:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
@@ -84,13 +98,6 @@
             "lig": "PREMIER LEAGUE",
             "mac": "Leeds United - Burnley",
             "saat_raw": "2026-05-01T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Bournemouth - Crystal Palace",
-            "saat_raw": "2026-05-02T14:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -159,15 +166,8 @@
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
-            "mac": "CA Osasuna - Sevilla",
-            "saat_raw": "2026-04-26T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
             "mac": "Villarreal - Celta Vigo",
-            "saat_raw": "2026-04-26T19:00:00Z",
+            "saat_raw": "2026-04-26T19:02:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -250,13 +250,6 @@
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
-            "mac": "Borussia Dortmund - SC Freiburg",
-            "saat_raw": "2026-04-26T15:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
             "mac": "Bayern Munich - 1. FC Heidenheim",
             "saat_raw": "2026-05-02T13:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
@@ -320,15 +313,8 @@
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
-            "mac": "Torino - Inter Milan",
-            "saat_raw": "2026-04-26T16:01:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
             "mac": "AC Milan - Juventus",
-            "saat_raw": "2026-04-26T18:45:00Z",
+            "saat_raw": "2026-04-26T18:47:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -413,27 +399,6 @@
             "lig": "SERIE A",
             "mac": "AS Roma - Fiorentina",
             "saat_raw": "2026-05-04T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Le Havre - Metz",
-            "saat_raw": "2026-04-26T15:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Paris FC - Lille",
-            "saat_raw": "2026-04-26T15:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Rennes - Nantes",
-            "saat_raw": "2026-04-26T15:15:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -677,20 +642,6 @@
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
-            "mac": "Santa Clara - Braga",
-            "saat_raw": "2026-04-26T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "CF Estrela - FC Porto",
-            "saat_raw": "2026-04-26T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
             "mac": "AVS Futebol SAD - Sporting Lisbon",
             "saat_raw": "2026-04-26T19:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
@@ -700,6 +651,13 @@
             "lig": "PRIMEIRA LIGA",
             "mac": "Gil Vicente - Casa Pia",
             "saat_raw": "2026-04-27T19:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "Sporting Lisbon - Tondela",
+            "saat_raw": "2026-04-29T19:15:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -753,6 +711,13 @@
         },
         {
             "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "Rio Ave FC - Gil Vicente",
+            "saat_raw": "2026-05-03T19:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Corinthians - Vasco da Gama",
             "saat_raw": "2026-04-26T19:00:00Z",
@@ -762,7 +727,7 @@
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Grêmio - Coritiba",
-            "saat_raw": "2026-04-26T19:00:00Z",
+            "saat_raw": "2026-04-26T19:01:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -867,7 +832,7 @@
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Independiente Rivadavia - Gimnasia Mendoza",
-            "saat_raw": "2026-04-26T18:00:00Z",
+            "saat_raw": "2026-04-26T17:59:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -1049,14 +1014,14 @@
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Toronto Raptors - Cleveland Cavaliers",
-            "saat_raw": "2026-04-26T17:15:00Z",
+            "saat_raw": "2026-04-26T17:13:41Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Portland Trail Blazers - San Antonio Spurs",
-            "saat_raw": "2026-04-26T19:40:00Z",
+            "saat_raw": "2026-04-26T19:49:48Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
