@@ -1,5 +1,5 @@
 {
-    "son_guncelleme": "26-04-2026 05:33:00",
+    "son_guncelleme": "26-04-2026 05:41:47",
     "veriler": [
         {
             "kategori": "ALTIN",
@@ -63,6 +63,312 @@
         },
         {
             "kategori": "ALTIN",
+            "lig": "LA LIGA",
+            "mac": "Rayo Vallecano - Real Sociedad",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 12:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA",
+            "mac": "Oviedo - Elche CF",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 14:15 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA",
+            "mac": "CA Osasuna - Sevilla",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 16:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA",
+            "mac": "Villarreal - Celta Vigo",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA",
+            "mac": "Espanyol - Levante",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA",
+            "mac": "VfB Stuttgart - Werder Bremen",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 13:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA",
+            "mac": "Borussia Dortmund - SC Freiburg",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 15:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA",
+            "mac": "Bayern Munich - 1. FC Heidenheim",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 13:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA",
+            "mac": "Union Berlin - 1. FC Köln",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 13:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA",
+            "mac": "Werder Bremen - Augsburg",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 13:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A",
+            "mac": "Fiorentina - Sassuolo",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 10:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A",
+            "mac": "Genoa - Como",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 13:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A",
+            "mac": "Torino - Inter Milan",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 16:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A",
+            "mac": "AC Milan - Juventus",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 18:45 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A",
+            "mac": "Cagliari - Atalanta BC",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 16:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1",
+            "mac": "Lorient - Strasbourg",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 13:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1",
+            "mac": "Le Havre - Metz",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 15:15 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1",
+            "mac": "Paris FC - Lille",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 15:15 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1",
+            "mac": "Rennes - Nantes",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 15:15 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1",
+            "mac": "Marseille - Nice",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 18:45 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONS LEAGUE",
+            "mac": "Paris Saint Germain - Bayern Munich",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONS LEAGUE",
+            "mac": "Atlético Madrid - Arsenal",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "EUROPA LEAGUE",
+            "mac": "Nottingham Forest - Aston Villa",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "EUROPA LEAGUE",
+            "mac": "SC Braga - SC Freiburg",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CONFERENCE LEAGUE",
+            "mac": "Shakhtar Donetsk - Crystal Palace",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CONFERENCE LEAGUE",
+            "mac": "Rayo Vallecano - Strasbourg",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONSHIP",
+            "mac": "Coventry City - Wrexham AFC",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 11:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONSHIP",
+            "mac": "Southampton - Ipswich Town",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 18:45 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONSHIP",
+            "mac": "Portsmouth - Birmingham City",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 11:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONSHIP",
+            "mac": "Blackburn Rovers - Leicester City",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 11:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "CHAMPIONSHIP",
+            "mac": "Bristol City - Stoke City",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 11:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "EREDIVISIE",
+            "mac": "Excelsior - FC Utrecht",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 10:15 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "EREDIVISIE",
+            "mac": "Heracles Almelo - FC Volendam",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 12:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "EREDIVISIE",
+            "mac": "FC Utrecht - NAC Breda",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 14:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "EREDIVISIE",
+            "mac": "Groningen - Excelsior",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 16:45 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "EREDIVISIE",
+            "mac": "Ajax - PSV Eindhoven",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 18:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "Estoril - Famalicão",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 14:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "Santa Clara - Braga",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 17:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "CF Estrela - FC Porto",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 17:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "AVS Futebol SAD - Sporting Lisbon",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "Gil Vicente - Casa Pia",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:15 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Corinthians - Vasco da Gama",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Grêmio - Coritiba",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Atletico Paranaense - Vitoria",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 21:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Bragantino-SP - Palmeiras",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 21:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Atletico Mineiro - Flamengo",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 23:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISION (ARGENTINA)",
+            "mac": "Independiente Rivadavia - Gimnasia Mendoza",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 18:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISION (ARGENTINA)",
+            "mac": "Belgrano de Cordoba - Gimnasia La Plata",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 20:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISION (ARGENTINA)",
+            "mac": "Newells Old Boys - Instituto de Córdoba",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 20:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISION (ARGENTINA)",
+            "mac": "Atlético Tucuman - Banfield",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 23:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISION (ARGENTINA)",
+            "mac": "Velez Sarsfield BA - Union Santa Fe",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 21:45 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Toronto Raptors - Cleveland Cavaliers",
             "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 17:10 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
@@ -114,6 +420,36 @@
             "lig": "EUROLEAGUE",
             "mac": "Real Madrid - Hapoel Tel Aviv",
             "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 18:45 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "WNBA",
+            "mac": "New York Liberty - Connecticut Sun",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 23:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "WNBA",
+            "mac": "Toronto Tempo - Washington Mystics",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 23:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "WNBA",
+            "mac": "Seattle Storm - Golden State Valkyries",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 02:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "WNBA",
+            "mac": "Indiana Fever - Dallas Wings",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 17:00 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "WNBA",
+            "mac": "Las Vegas Aces - Phoenix Mercury",
+            "uyari": "📡 ORAN RADARI AKTİF | Maç Saati: 19:30 (UTC) | Büroların açılış oranları sisteme kaydedildi. Değişimler bekleniyor."
         }
     ]
 }
