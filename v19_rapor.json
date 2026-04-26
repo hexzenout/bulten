@@ -1,6 +1,6 @@
 {
-    "son_guncelleme": "26-04-2026 14:34:21",
-    "kalan_hak": "307",
+    "son_guncelleme": "26-04-2026 17:09:32",
+    "kalan_hak": "288",
     "veriler": [
         {
             "kategori": "ALTIN",
@@ -63,6 +63,13 @@
             "lig": "SUPER LIG",
             "mac": "Trabzonspor - Goztepe",
             "saat_raw": "2026-05-02T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SUPER LIG",
+            "mac": "Fatih Karagümrük - Genclerbirligi SK",
+            "saat_raw": "2026-05-03T17:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -147,13 +154,6 @@
             "lig": "PREMIER LEAGUE",
             "mac": "Everton - Manchester City",
             "saat_raw": "2026-05-04T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Oviedo - Elche CF",
-            "saat_raw": "2026-04-26T14:18:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -250,13 +250,6 @@
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
-            "mac": "VfB Stuttgart - Werder Bremen",
-            "saat_raw": "2026-04-26T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
             "mac": "Borussia Dortmund - SC Freiburg",
             "saat_raw": "2026-04-26T15:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
@@ -327,15 +320,8 @@
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
-            "mac": "Genoa - Como",
-            "saat_raw": "2026-04-26T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
             "mac": "Torino - Inter Milan",
-            "saat_raw": "2026-04-26T16:00:00Z",
+            "saat_raw": "2026-04-26T16:01:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -427,13 +413,6 @@
             "lig": "SERIE A",
             "mac": "AS Roma - Fiorentina",
             "saat_raw": "2026-05-04T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Lorient - Strasbourg",
-            "saat_raw": "2026-04-26T13:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -635,13 +614,6 @@
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
-            "mac": "Heracles Almelo - FC Volendam",
-            "saat_raw": "2026-04-26T12:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
             "mac": "FC Utrecht - NAC Breda",
             "saat_raw": "2026-05-02T14:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
@@ -705,13 +677,6 @@
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
-            "mac": "Estoril - Famalicão",
-            "saat_raw": "2026-04-26T14:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
             "mac": "Santa Clara - Braga",
             "saat_raw": "2026-04-26T17:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
@@ -770,6 +735,20 @@
             "lig": "PRIMEIRA LIGA",
             "mac": "FC Porto - Alverca",
             "saat_raw": "2026-05-02T19:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "Casa Pia - Tondela",
+            "saat_raw": "2026-05-03T14:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "Braga - Estoril",
+            "saat_raw": "2026-05-03T17:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
