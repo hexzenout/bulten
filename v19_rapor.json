@@ -1,14 +1,7 @@
 {
-    "son_guncelleme": "26-04-2026 11:57:32",
-    "kalan_hak": "343",
+    "son_guncelleme": "26-04-2026 14:11:22",
+    "kalan_hak": "326",
     "veriler": [
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Genclerbirligi SK - Kocaelispor",
-            "saat_raw": "2026-04-26T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
@@ -341,13 +334,6 @@
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
-            "mac": "Fiorentina - Sassuolo",
-            "saat_raw": "2026-04-26T10:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
             "mac": "Genoa - Como",
             "saat_raw": "2026-04-26T13:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
@@ -579,13 +565,6 @@
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
-            "mac": "Coventry City - Wrexham AFC",
-            "saat_raw": "2026-04-26T11:02:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
             "mac": "Southampton - Ipswich Town",
             "saat_raw": "2026-04-28T18:45:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
@@ -658,13 +637,6 @@
             "lig": "CHAMPIONSHIP",
             "mac": "Sheffield Wednesday - West Bromwich Albion",
             "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "Excelsior - FC Utrecht",
-            "saat_raw": "2026-04-26T10:16:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
