@@ -1,6 +1,6 @@
 {
-    "son_guncelleme": "26-04-2026 19:52:58",
-    "kalan_hak": "252",
+    "son_guncelleme": "26-04-2026 20:00:19",
+    "kalan_hak": "235",
     "veriler": [
         {
             "kategori": "ALTIN",
@@ -832,7 +832,7 @@
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Independiente Rivadavia - Gimnasia Mendoza",
-            "saat_raw": "2026-04-26T17:59:00Z",
+            "saat_raw": "2026-04-26T18:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -1064,6 +1064,13 @@
             "lig": "NBA",
             "mac": "New York Knicks - Atlanta Hawks",
             "saat_raw": "2026-04-29T00:10:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "mac": "Cleveland Cavaliers - Toronto Raptors",
+            "saat_raw": "2026-04-29T23:10:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
