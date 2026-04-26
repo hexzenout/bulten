@@ -1,1217 +1,1419 @@
 {
-    "son_guncelleme": "26-04-2026 06:06:47",
+    "son_guncelleme": "26-04-2026 06:19:46",
     "veriler": [
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Genclerbirligi SK - Kocaelispor",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Galatasaray - Fenerbahce",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Alanyaspor - Samsunspor",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T14:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Besiktas JK - Fatih Karagümrük",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Torku Konyaspor - Trabzonspor",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Çaykur Rizespor - Torku Konyaspor",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-01T14:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Gazişehir Gaziantep - Besiktas JK",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-01T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Fenerbahce - Basaksehir",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Samsunspor - Galatasaray",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
             "mac": "Trabzonspor - Goztepe",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Manchester United - Brentford",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Leeds United - Burnley",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-01T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Bournemouth - Crystal Palace",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Brentford - West Ham United",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Newcastle United - Brighton and Hove Albion",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Wolverhampton Wanderers - Sunderland",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Arsenal - Fulham",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T16:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Bournemouth - Crystal Palace",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T13:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Manchester United - Liverpool",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T14:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Aston Villa - Tottenham Hotspur",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T18:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Chelsea - Nottingham Forest",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-04T14:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PREMIER LEAGUE",
             "mac": "Everton - Manchester City",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-04T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Rayo Vallecano - Real Sociedad",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 12:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T12:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Oviedo - Elche CF",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T14:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "CA Osasuna - Sevilla",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T16:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Villarreal - Celta Vigo",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Espanyol - Levante",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Girona - Mallorca",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-01T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Villarreal - Levante",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 12:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T12:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Valencia - Atlético Madrid",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Alavés - Athletic Bilbao",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T16:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "CA Osasuna - Barcelona",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Celta Vigo - Elche CF",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 12:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T12:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Getafe - Rayo Vallecano",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T14:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Real Betis - Oviedo",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T16:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Espanyol - Real Madrid",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LA LIGA",
             "mac": "Sevilla - Real Sociedad",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-04T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "VfB Stuttgart - Werder Bremen",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T13:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "Borussia Dortmund - SC Freiburg",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T15:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "Bayern Munich - 1. FC Heidenheim",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T13:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "Union Berlin - 1. FC Köln",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T13:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "Werder Bremen - Augsburg",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T13:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "Eintracht Frankfurt - Hamburger SV",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T13:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "TSG Hoffenheim - VfB Stuttgart",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T13:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "Bayer Leverkusen - RB Leipzig",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T16:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "FC St. Pauli - FSV Mainz 05",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T13:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "Borussia Monchengladbach - Borussia Dortmund",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T15:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "BUNDESLIGA",
             "mac": "SC Freiburg - VfL Wolfsburg",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T17:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Fiorentina - Sassuolo",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 10:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T10:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Genoa - Como",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T13:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Torino - Inter Milan",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T16:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "AC Milan - Juventus",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Cagliari - Atalanta BC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T16:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Lazio - Udinese",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Pisa - Lecce",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-01T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Udinese - Torino",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T13:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Como - Napoli",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T16:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Atalanta BC - Genoa",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Bologna - Cagliari",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 10:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T10:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Sassuolo - AC Milan",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T13:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Juventus - Hellas Verona",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T16:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Inter Milan - Parma",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Cremonese - Lazio",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-04T16:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "AS Roma - Fiorentina",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-04T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Lorient - Strasbourg",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T13:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Le Havre - Metz",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T15:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Paris FC - Lille",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T15:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Rennes - Nantes",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T15:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Marseille - Nice",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Nantes - Marseille",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T13:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Paris Saint Germain - Lorient",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T15:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Metz - AS Monaco",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Nice - RC Lens",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:05 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T19:05:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Lille - Le Havre",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 13:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T13:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Auxerre - Angers",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T15:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Paris FC - Brest",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T15:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Strasbourg - Toulouse",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 15:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T15:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "LIGUE 1",
             "mac": "Lyon - Rennes",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONS LEAGUE",
             "mac": "Paris Saint Germain - Bayern Munich",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONS LEAGUE",
             "mac": "Atlético Madrid - Arsenal",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-29T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EUROPA LEAGUE",
             "mac": "Nottingham Forest - Aston Villa",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-30T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EUROPA LEAGUE",
             "mac": "SC Braga - SC Freiburg",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-30T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CONFERENCE LEAGUE",
             "mac": "Shakhtar Donetsk - Crystal Palace",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-30T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CONFERENCE LEAGUE",
             "mac": "Rayo Vallecano - Strasbourg",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-30T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Coventry City - Wrexham AFC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T11:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Southampton - Ipswich Town",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Portsmouth - Birmingham City",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Blackburn Rovers - Leicester City",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Bristol City - Stoke City",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Swansea City - Charlton Athletic",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Derby County - Sheffield United",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Hull City - Norwich City",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Millwall - Oxford United",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "CHAMPIONSHIP",
             "mac": "Sheffield Wednesday - West Bromwich Albion",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 11:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T11:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "Excelsior - FC Utrecht",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 10:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T10:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "Heracles Almelo - FC Volendam",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 12:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T12:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "FC Utrecht - NAC Breda",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "Groningen - Excelsior",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T16:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "Ajax - PSV Eindhoven",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T18:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "NEC Nijmegen - SC Telstar",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "FC Volendam - Heerenveen",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 10:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T10:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "FC Zwolle - Heracles Almelo",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 12:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T12:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "Fortuna Sittard - Feyenoord",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 12:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T12:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "AZ Alkmaar - FC Twente Enschede",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T14:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EREDIVISIE",
             "mac": "Sparta Rotterdam - Go Ahead Eagles",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T14:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "Estoril - Famalicão",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T14:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "Santa Clara - Braga",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "CF Estrela - FC Porto",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "AVS Futebol SAD - Sporting Lisbon",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T19:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "Gil Vicente - Casa Pia",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:15 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T19:15:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "Nacional - AVS Futebol SAD",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "Arouca - Santa Clara",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "Moreirense FC - CF Estrela",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 14:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T14:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "Famalicão - Benfica",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMEIRA LIGA",
             "mac": "FC Porto - Alverca",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T19:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Corinthians - Vasco da Gama",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Grêmio - Coritiba",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Atletico Paranaense - Vitoria",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 21:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Bragantino-SP - Palmeiras",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 21:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Atletico Mineiro - Flamengo",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Fluminense - Chapecoense",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Botafogo - Remo",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Vitoria - Coritiba",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 21:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Palmeiras - Santos",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 21:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Atletico Paranaense - Grêmio",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Cruzeiro - Atletico Mineiro",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T00:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Sao Paulo - Bahia",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Flamengo - Vasco da Gama",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Chapecoense - Bragantino-SP",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 21:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Internacional - Fluminense",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 21:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Mirassol - Corinthians",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Independiente Rivadavia - Gimnasia Mendoza",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T18:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Belgrano de Cordoba - Gimnasia La Plata",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 20:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T20:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Newells Old Boys - Instituto de Córdoba",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 20:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T20:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Atlético Tucuman - Banfield",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T23:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Velez Sarsfield BA - Union Santa Fe",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 21:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T21:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Atlético Huracán - Argentinos Juniors",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T00:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Racing Club - Atlético Huracán",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T00:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "River Plate - Atlético Tucuman",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T00:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Belgrano de Cordoba - Sarmiento de Junin",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T00:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Lanus - Deportivo Riestra",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T00:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "LA Galaxy - Real Salt Lake",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T23:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Toronto FC - San Jose Earthquakes",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Sporting Kansas City - Seattle Sounders FC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T18:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Real Salt Lake - Portland Timbers",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 20:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T20:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Inter Miami CF - Orlando City SC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T23:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Atlanta United FC - CF Montreal",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "New England Revolution - Charlotte FC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Columbus Crew SC - Minnesota United FC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "New York Red Bulls - FC Dallas",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Philadelphia Union - Nashville SC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-02T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Chicago Fire - FC Cincinnati",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T00:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Houston Dynamo - Colorado Rapids",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T00:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "San Diego FC - Los Angeles FC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 01:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T01:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "LA Galaxy - Vancouver Whitecaps FC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 02:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T02:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "New York City FC - D.C. United",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "MLS",
             "mac": "Austin FC - St. Louis City SC",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 21:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-03T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Mexico - South Africa",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-11T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "South Korea - Czech Republic",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 02:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-12T02:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Canada - Bosnia & Herzegovina",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-12T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "USA - Paraguay",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 01:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-13T01:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Qatar - Switzerland",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-13T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Brazil - Morocco",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 22:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-13T22:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Haiti - Scotland",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 01:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-14T01:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Australia - Turkey",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 04:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-14T04:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Germany - Curaçao",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-14T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Netherlands - Japan",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 20:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-14T20:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Ivory Coast - Ecuador",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-14T23:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Sweden - Tunisia",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 02:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-15T02:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Spain - Cape Verde",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 16:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-15T16:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Belgium - Egypt",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-15T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Saudi Arabia - Uruguay",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 22:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-15T22:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Iran - New Zealand",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 01:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-16T01:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "France - Senegal",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-16T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Iraq - Norway",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 22:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-16T22:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Argentina - Algeria",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 01:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-17T01:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Austria - Jordan",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 04:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-17T04:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Portugal - DR Congo",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-17T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "England - Croatia",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 20:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-17T20:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Ghana - Panama",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-17T23:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Uzbekistan - Colombia",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 02:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-18T02:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "USA - Australia",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-19T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Colombia - DR Congo",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 02:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-24T02:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WORLD CUP",
             "mac": "Colombia - Portugal",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-06-27T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Toronto Raptors - Cleveland Cavaliers",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:10 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T17:10:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Portland Trail Blazers - San Antonio Spurs",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:40 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T19:40:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Philadelphia 76ers - Boston Celtics",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:10 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-26T23:10:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Houston Rockets - Los Angeles Lakers",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 01:40 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-27T01:40:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Orlando Magic - Detroit Pistons",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:10 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T00:10:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Phoenix Suns - Oklahoma City Thunder",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 01:40 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T01:40:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "Denver Nuggets - Minnesota Timberwolves",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 02:40 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T02:40:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
             "mac": "New York Knicks - Atlanta Hawks",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 00:10 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-29T00:10:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EUROLEAGUE",
             "mac": "Olympiacos - AS Monaco",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T18:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EUROLEAGUE",
             "mac": "Fenerbahce SK - Žalgiris",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EUROLEAGUE",
             "mac": "Valencia Basket - Panathinaikos",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-28T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EUROLEAGUE",
             "mac": "Real Madrid - Hapoel Tel Aviv",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 18:45 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-04-29T18:45:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
             "mac": "New York Liberty - Connecticut Sun",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-08T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
             "mac": "Toronto Tempo - Washington Mystics",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 23:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-08T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
             "mac": "Seattle Storm - Golden State Valkyries",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 02:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-09T02:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
             "mac": "Indiana Fever - Dallas Wings",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 17:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-09T17:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
             "mac": "Las Vegas Aces - Phoenix Mercury",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 19:30 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-09T19:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
             "mac": "Portland Fire - Chicago Sky",
-            "uyari": "📡 RADAR AKTİF | Maç Saati: 01:00 (UTC) | Oranlar ve istatistik analizi bekleniyor."
+            "saat_raw": "2026-05-10T01:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz ve istatistik eşleşmesi bekleniyor."
         }
     ]
 }
