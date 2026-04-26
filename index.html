@@ -3,100 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 STRATEJİ MERKEZİ</title>
+    <title>V19 COMMAND CENTER</title>
     <style>
-        :root { --gold: #FFD700; --silver: #C0C0C0; --bg: #0a0a0a; --green: #00ff41; --panel: #151515; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; display: flex; }
-        .sidebar { width: 250px; background: #111; height: 100vh; border-right: 1px solid #333; flex-shrink: 0; }
-        .main { flex-grow: 1; padding: 20px; height: 100vh; overflow-y: auto; }
-        .header { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
         
-        /* Lig Grupları */
-        .league-group { margin-bottom: 30px; border: 1px solid #222; border-radius: 8px; background: rgba(255,255,255,0.02); padding: 15px; }
-        .league-header { font-size: 1.2em; font-weight: bold; color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 15px; display: flex; align-items: center; }
-        .league-header::before { content: '◈'; margin-right: 10px; color: var(--green); }
+        :root { 
+            --gold: #f59e0b; 
+            --silver: #9ca3af; 
+            --bronze: #b45309; 
+            --bg: #09090b; 
+            --panel: #18181b; 
+            --green: #10b981; 
+            --border: #27272a;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+        }
         
-        /* Maç Kartları - Grid Ayarı */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-        .card { background: var(--panel); border: 1px solid #333; padding: 15px; border-radius: 6px; position: relative; }
-        .match-info { font-weight: bold; color: var(--green); margin-bottom: 8px; }
-        .time-tag { font-size: 0.8em; color: #888; background: #000; padding: 2px 6px; border-radius: 3px; }
-        .alert-text { font-size: 0.9em; color: #ccc; margin-top: 10px; border-top: 1px solid #222; pt: 8px; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); display: flex; overflow-x: hidden; }
         
-        .nav-item { padding: 15px; cursor: pointer; color: #888; border-left: 3px solid transparent; }
-        .nav-item.active { background: rgba(0,255,65,0.1); color: #fff; border-color: var(--green); }
+        /* Sidebar (Hamburger Menü Uyumlu) */
+        .sidebar { width: 260px; background: #0f0f12; height: 100vh; border-right: 1px solid var(--border); flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .sidebar.closed { transform: translateX(-260px); margin-right: -260px; }
+        .brand { color: var(--green); text-align: center; margin: 30px 0; font-weight: 800; font-size: 1.5em; letter-spacing: 2px; }
+        .nav-item { padding: 18px 25px; cursor: pointer; color: var(--text-muted); font-weight: 600; border-left: 4px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text-main); }
+        .nav-item.active { background: rgba(16, 185, 129, 0.1); color: #fff; border-color: var(--green); }
+        
+        /* Ana İçerik */
+        .main { flex-grow: 1; padding: 25px 40px; height: 100vh; overflow-y: auto; box-sizing: border-box; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 25px; }
+        .menu-btn { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: 0.2s; }
+        .menu-btn:hover { color: var(--green); }
+        .header-title-box { display: flex; align-items: center; gap: 15px; }
+        .title-text { font-size: 1.4em; font-weight: 800; margin: 0; }
+        .clock { font-family: monospace; font-size: 0.85em; background: rgba(16,185,129,0.1); color: var(--green); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.2); }
+        
+        /* Sekmeler (Altın / Gümüş / Bronz) */
+        .tabs { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .tab { padding: 8px 20px; background: transparent; border: 1px solid var(--border); cursor: pointer; border-radius: 6px; color: var(--text-muted); font-weight: 600; transition: 0.3s; font-size: 0.9em; }
+        .tab:hover { border-color: #555; color: var(--text-main); }
+        .tab.active.gold { border-color: var(--gold); color: var(--gold); background: rgba(245,158,11,0.05); }
+        .tab.active.silver { border-color: var(--silver); color: var(--silver); background: rgba(156,163,175,0.05); }
+        .tab.active.bronze { border-color: var(--bronze); color: var(--bronze); background: rgba(180,83,9,0.05); }
+        
+        /* Lig Grupları & Kartlar */
+        .league-group { margin-bottom: 40px; }
+        .league-header { font-size: 1.1em; font-weight: 800; color: var(--text-main); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; padding: 10px 15px; background: #131316; border-left: 3px solid var(--green); border-radius: 0 6px 6px 0; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
+        
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; position: relative; display: flex; flex-direction: column; gap: 10px; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.5); border-color: #3f3f46; }
+        .match-teams { font-size: 1.05em; font-weight: 800; color: #fff; line-height: 1.3; }
+        .alert-box { font-size: 0.85em; color: var(--text-muted); background: #0c0c0e; padding: 10px; border-radius: 6px; border: 1px dashed #27272a; margin-top: auto; }
+        .status-dot { display: inline-block; width: 8px; height: 8px; background: var(--green); border-radius: 50%; margin-right: 5px; box-shadow: 0 0 8px var(--green); }
+        
+        .empty-msg { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; border: 1px dashed var(--border); border-radius: 8px; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h2 style="text-align:center; color:var(--green)">V19 BÜLTEN</h2>
-        <div class="nav-item active" onclick="setSport('futbol')">⚽ FUTBOL</div>
-        <div class="nav-item" onclick="setSport('basketbol')">🏀 BASKETBOL</div>
+    <div class="sidebar" id="sidebar">
+        <div class="brand">V19 // RADAR</div>
+        <div class="nav-item active" onclick="setSport('futbol', this)">
+            <span>⚽</span> FUTBOL BÜLTENİ
+        </div>
+        <div class="nav-item" onclick="setSport('basketbol', this)">
+            <span>🏀</span> BASKETBOL BÜLTENİ
+        </div>
     </div>
     
     <div class="main">
         <div class="header">
-            <h2 id="title">⚽ FUTBOL RADARI</h2>
-            <div id="clock" style="color:var(--green)">BAĞLANILIYOR...</div>
+            <div class="header-title-box">
+                <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+                <h2 class="title-text" id="title">⚽ FUTBOL RADARI</h2>
+            </div>
+            <div class="clock" id="clock">SİSTEM BAĞLANTISI BEKLENİYOR...</div>
         </div>
 
-        <div id="content-area">
-            </div>
+        <div class="tabs">
+            <button class="tab active gold" onclick="setCategory('ALTIN', this)">🏆 ALTIN KATEGORİ</button>
+            <button class="tab" onclick="setCategory('GÜMÜŞ', this)">🥈 GÜMÜŞ KATEGORİ</button>
+            <button class="tab" onclick="setCategory('BRONZ', this)">🥉 BRONZ KATEGORİ</button>
+        </div>
+
+        <div id="content-area"></div>
     </div>
 
     <script>
         let currentSport = 'futbol';
-        const basketLigleri = ["NBA", "Euroleague", "BSL", "Liga ACB", "NCAA", "EuroCup"];
+        let currentCategory = 'ALTIN';
+        let allData = [];
+
+        // Basketbol filtresi (Büyük/Küçük harf duyarsız yapıldı)
+        const basketLigleri = ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "NCAA", "WNBA"];
+
+        // LİG SEMBOLLERİ (ROSETTA TAŞI)
+        const leagueIcons = {
+            "PREMIER LEAGUE": "🦁",
+            "SUPER LIG": "🇹🇷",
+            "LA LIGA": "🐂",
+            "BUNDESLIGA": "🦅",
+            "SERIE A": "🛡️",
+            "LIGUE 1": "🗼",
+            "CHAMPIONS LEAGUE": "⭐",
+            "EUROPA LEAGUE": "🏆",
+            "CONFERENCE LEAGUE": "🟢",
+            "EREDIVISIE": "🌷",
+            "PRIMEIRA LIGA": "⚓",
+            "SERIE A (BRAZIL)": "🇧🇷",
+            "PRIMERA DIVISION (ARGENTINA)": "🇦🇷",
+            "NBA": "🇺🇸",
+            "EUROLEAGUE": "🌍",
+            "NCAA": "🎓"
+        };
+
+        function getIconForLeague(ligAdi) {
+            let upperLig = ligAdi.toUpperCase();
+            for(let key in leagueIcons) {
+                if(upperLig.includes(key)) return leagueIcons[key];
+            }
+            return currentSport === 'futbol' ? '⚽' : '🏀';
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('closed');
+        }
+
+        // SOL MENÜ DEĞİŞİMİ
+        function setSport(s, element) { 
+            currentSport = s; 
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            
+            document.getElementById('title').innerText = s === 'futbol' ? '⚽ FUTBOL RADARI' : '🏀 BASKETBOL RADARI';
+            render(); 
+        }
+
+        // KATEGORİ DEĞİŞİMİ
+        function setCategory(cat, element) {
+            currentCategory = cat;
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active', 'gold', 'silver', 'bronze'));
+            
+            let colorClass = cat === 'ALTIN' ? 'gold' : cat === 'GÜMÜŞ' ? 'silver' : 'bronze';
+            element.classList.add('active', colorClass);
+            
+            render();
+        }
 
         async function update() {
             try {
                 const res = await fetch(`v19_rapor.json?t=${Date.now()}`);
                 const data = await res.json();
-                document.getElementById('clock').innerText = "GÜNCELLEME: " + data.son_guncelleme;
-                render(data.veriler);
-            } catch(e) { console.log("Veri bekleniyor..."); }
+                document.getElementById('clock').innerText = "SON TARAMA: " + data.son_guncelleme;
+                allData = data.veriler || [];
+                render();
+            } catch(e) { console.log("Veri okunamıyor, arka planda tarama sürüyor..."); }
         }
 
-        function render(veriler) {
+        function render() {
             const area = document.getElementById('content-area');
             area.innerHTML = "";
 
-            // 1. Spor Türüne Göre Filtrele
-            const filtered = veriler.filter(m => {
-                const isBasket = basketLigleri.some(b => m.lig.includes(b));
-                return currentSport === 'futbol' ? !isBasket : isBasket;
+            // 1. Filtreleme (Spor + Kategori)
+            const filtered = allData.filter(m => {
+                const upperLig = m.lig.toUpperCase();
+                const isBasket = basketLigleri.some(b => upperLig.includes(b));
+                const matchSport = isBasket ? 'basketbol' : 'futbol';
+                
+                return matchSport === currentSport && m.kategori.toUpperCase() === currentCategory;
             });
 
-            // 2. LİG BAZLI GRUPLA (Dağınıklığı Önleyen Kısım)
+            if (filtered.length === 0) {
+                area.innerHTML = `<div class="empty-msg">Bu kategoride şu an aktif radar tespiti bulunmuyor. Sistem aramaya devam ediyor...</div>`;
+                return;
+            }
+
+            // 2. Liglere Göre Gruplama
             const grouped = {};
             filtered.forEach(m => {
-                if (!grouped[m.lig]) grouped[m.lig] = [];
-                grouped[m.lig].push(m);
+                const ligUpper = m.lig.toUpperCase();
+                if (!grouped[ligUpper]) grouped[ligUpper] = [];
+                grouped[ligUpper].push(m);
             });
 
-            // 3. Ekrana Bas
+            // 3. HTML İnşası (Semboller ve Temiz Tasarım)
             for (let lig in grouped) {
+                let icon = getIconForLeague(lig);
                 let ligHtml = `
                     <div class="league-group">
-                        <div class="league-header">${lig.toUpperCase()}</div>
+                        <div class="league-header">
+                            <span>${icon}</span> ${lig}
+                        </div>
                         <div class="grid">
                 `;
 
                 grouped[lig].forEach(m => {
-                    // UTC -> TRT Dönüşümü (+3 Saat)
-                    let timeStr = m.uyari.match(/\d{2}:\d{2}/);
+                    // UTC -> TSİ Saat Çevirisi ve Fazlalıkları Silme
+                    let cleanAlert = m.uyari;
+                    let timeStr = cleanAlert.match(/\d{2}:\d{2}/);
+                    
                     if(timeStr) {
                         let [h, m_val] = timeStr[0].split(':');
                         let newH = (parseInt(h) + 3) % 24;
                         let trTime = `${newH.toString().padStart(2, '0')}:${m_val}`;
-                        m.uyari = m.uyari.replace(timeStr[0], trTime + " (TSİ)");
+                        
+                        cleanAlert = cleanAlert.replace(timeStr[0], trTime + " (TSİ)");
+                        cleanAlert = cleanAlert.replace(" (UTC)", ""); // Çift yazan UTC'yi yok et
                     }
 
                     ligHtml += `
                         <div class="card">
-                            <div class="match-info">${m.mac}</div>
-                            <div class="alert-text">${m.uyari}</div>
+                            <div class="match-teams">${m.mac}</div>
+                            <div class="alert-box">
+                                <span class="status-dot"></span>${cleanAlert}
+                            </div>
                         </div>
                     `;
                 });
@@ -104,12 +225,6 @@
                 ligHtml += `</div></div>`;
                 area.innerHTML += ligHtml;
             }
-        }
-
-        function setSport(s) { 
-            currentSport = s; 
-            document.getElementById('title').innerText = s === 'futbol' ? '⚽ FUTBOL RADARI' : '🏀 BASKETBOL RADARI';
-            update(); 
         }
 
         setInterval(update, 15000);
