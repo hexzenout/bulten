@@ -1,127 +1,79 @@
-import os
-import requests
-import json
+import os, requests, json, time
 from datetime import datetime
-import time
 
-# ==========================================
-# 1. API KASASI VE KOTA TAKİBİ
-# ==========================================
-odds_keys_env = os.getenv("ODDS_KEYS", "")
-ODDS_API_POOL = [k.strip() for k in odds_keys_env.split(",") if k.strip()]
+ODDS_API_POOL = [k.strip() for k in os.getenv("ODDS_KEYS", "").split(",") if k.strip()]
 
-# ==========================================
-# 2. ALTIN LİSTELER (SENİN KIRMIZI ÇİZGİLERİN)
-# ==========================================
-ALTIN_FUTBOL = [
-    "Super Lig", "Premier League", "La Liga", "Bundesliga", "Serie A", "Ligue 1", 
-    "Eredivisie", "Primeira Liga", "Champions League", "Europa League", 
-    "Conference League", "Championship", "Serie A (Brazil)", "Primera Division (Argentina)", "MLS"
-]
-ALTIN_BASKET = [
-    "NBA", "Euroleague", "BSL", "Liga ACB", "Lega A", "Heba A1", "LNB Pro A", 
-    "BBL", "EuroCup", "BCL", "VTB", "NCAA", "WNBA"
-]
+# SENİN LİSTELERİN
+ALTIN_FUTBOL = ["Super Lig","Premier League","La Liga","Bundesliga","Serie A","Ligue 1","Eredivisie","Primeira Liga","Champions League","Europa League","Conference League","Championship","Brazil","Argentina","MLS"]
+ALTIN_BASKET = ["NBA","Euroleague","BSL","Liga ACB","Lega A","Heba A1","LNB Pro A","BBL","EuroCup","BCL","VTB","NCAA","WNBA"]
 
 class V19Intelligence:
     def __init__(self):
-        self.odds_index = 0
-        self.kalan_hak = 500
+        self.odds_index, self.kalan_hak = 0, "500"
 
     def kategori_bul(self, lig_adi, spor_turu):
-        lig_upper = lig_adi.upper()
-        if spor_turu == "soccer":
-            if any(x.upper() in lig_upper for x in ALTIN_FUTBOL): return "ALTIN"
-            return "GÜMÜŞ"
-        elif spor_turu == "basketball":
-            if any(x.upper() in lig_upper for x in ALTIN_BASKET): return "ALTIN"
-            return "GÜMÜŞ"
-        return "BRONZ"
+        l = lig_adi.upper()
+        hedef = ALTIN_BASKET if spor_turu == "basketball" else ALTIN_FUTBOL
+        return "ALTIN" if any(x.upper() in l for x in hedef) else "GÜMÜŞ"
 
-    def oran_cek(self, api_sport_key):
+    def oran_cek(self, sport_key):
         while self.odds_index < len(ODDS_API_POOL):
-            key = ODDS_API_POOL[self.odds_index]
-            url = f"https://api.the-odds-api.com/v4/sports/{api_sport_key}/odds/?apiKey={key}&regions=eu&markets=h2h"
+            url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds/?apiKey={ODDS_API_POOL[self.odds_index]}&regions=eu&markets=h2h"
             try:
-                res = requests.get(url, timeout=15)
-                # Kota Bilgisini Header'dan Yakala
-                self.kalan_hak = res.headers.get('x-requests-remaining', self.kalan_hak)
-                
-                if res.status_code == 200:
-                    return res.json()
-                elif res.status_code in [401, 429]:
-                    self.odds_index += 1
-                else:
-                    break
-            except:
-                break
+                r = requests.get(url, timeout=15)
+                self.kalan_hak = r.headers.get('x-requests-remaining', self.kalan_hak)
+                if r.status_code == 200: return r.json()
+                if r.status_code in [401, 429]: self.odds_index += 1
+                else: break
+            except: break
         return []
 
-    def operasyon_baslat(self):
-        print(f"V19 BEYNİ AKTİF | ŞİFRE HAVUZU: {len(ODDS_API_POOL)}")
+    def baslat(self):
         alarmlar = []
-        
         hedef_ligler = [
-            {"key": "soccer_turkey_super_league", "isim": "Super Lig", "tur": "soccer"},
-            {"key": "soccer_epl", "isim": "Premier League", "tur": "soccer"},
-            {"key": "soccer_spain_la_liga", "isim": "La Liga", "tur": "soccer"},
-            {"key": "soccer_germany_bundesliga", "isim": "Bundesliga", "tur": "soccer"},
-            {"key": "soccer_italy_serie_a", "isim": "Serie A", "tur": "soccer"},
-            {"key": "soccer_france_ligue_one", "isim": "Ligue 1", "tur": "soccer"},
-            {"key": "soccer_uefa_champs_league", "isim": "Champions League", "tur": "soccer"},
-            {"key": "soccer_uefa_europa_league", "isim": "Europa League", "tur": "soccer"},
-            {"key": "soccer_uefa_europa_conference_league", "isim": "Conference League", "tur": "soccer"},
-            {"key": "soccer_efl_champ", "isim": "Championship", "tur": "soccer"},
-            {"key": "soccer_netherlands_eredivisie", "isim": "Eredivisie", "tur": "soccer"},
-            {"key": "soccer_portugal_primeira_liga", "isim": "Primeira Liga", "tur": "soccer"},
-            {"key": "soccer_brazil_campeonato", "isim": "Serie A (Brazil)", "tur": "soccer"},
-            {"key": "soccer_argentina_primera_division", "isim": "Primera Division (Argentina)", "tur": "soccer"},
-            {"key": "soccer_usa_mls", "isim": "MLS", "tur": "soccer"},
-            {"key": "basketball_nba", "isim": "NBA", "tur": "basketball"},
-            {"key": "basketball_euroleague", "isim": "Euroleague", "tur": "basketball"},
-            {"key": "basketball_spain_liga_acb", "isim": "Liga ACB", "tur": "basketball"},
-            {"key": "basketball_italy_lega_a", "isim": "Lega A", "tur": "basketball"},
-            {"key": "basketball_germany_bbl", "isim": "BBL", "tur": "basketball"},
-            {"key": "basketball_france_lnb_pro_a", "isim": "LNB Pro A", "tur": "basketball"},
-            {"key": "basketball_eurocup", "isim": "EuroCup", "tur": "basketball"},
-            {"key": "basketball_turkey_bsl", "isim": "BSL", "tur": "basketball"},
-            {"key": "basketball_greece_a1", "isim": "Heba A1", "tur": "basketball"},
-            {"key": "basketball_vtb_united_league", "isim": "VTB", "tur": "basketball"},
-            {"key": "basketball_champions_league", "isim": "BCL", "tur": "basketball"},
-            {"key": "basketball_ncaab", "isim": "NCAA", "tur": "basketball"},
-            {"key": "basketball_wnba", "isim": "WNBA", "tur": "basketball"}
+            {"key": "soccer_turkey_super_league", "n": "Super Lig", "t": "soccer"},
+            {"key": "soccer_epl", "n": "Premier League", "t": "soccer"},
+            {"key": "soccer_spain_la_liga", "n": "La Liga", "t": "soccer"},
+            {"key": "soccer_germany_bundesliga", "n": "Bundesliga", "t": "soccer"},
+            {"key": "soccer_italy_serie_a", "n": "Serie A", "t": "soccer"},
+            {"key": "soccer_france_ligue_one", "n": "Ligue 1", "t": "soccer"},
+            {"key": "soccer_uefa_champs_league", "n": "Champions League", "t": "soccer"},
+            {"key": "soccer_uefa_europa_league", "n": "Europa League", "t": "soccer"},
+            {"key": "soccer_efl_champ", "n": "Championship", "t": "soccer"},
+            {"key": "soccer_netherlands_eredivisie", "n": "Eredivisie", "t": "soccer"},
+            {"key": "soccer_portugal_primeira_liga", "n": "Primeira Liga", "t": "soccer"},
+            {"key": "soccer_brazil_campeonato", "n": "Serie A (Brazil)", "t": "soccer"},
+            {"key": "soccer_argentina_primera_division", "n": "Primera Division (Argentina)", "t": "soccer"},
+            {"key": "soccer_usa_mls", "n": "MLS", "t": "soccer"},
+            {"key": "basketball_nba", "n": "NBA", "t": "basketball"},
+            {"key": "basketball_euroleague", "n": "Euroleague", "t": "basketball"},
+            {"key": "basketball_spain_liga_acb", "n": "Liga ACB", "t": "basketball"},
+            {"key": "basketball_italy_lega_a", "n": "Lega A", "t": "basketball"},
+            {"key": "basketball_germany_bbl", "n": "BBL", "t": "basketball"},
+            {"key": "basketball_france_lnb_pro_a", "n": "LNB Pro A", "t": "basketball"},
+            {"key": "basketball_eurocup", "n": "EuroCup", "t": "basketball"},
+            {"key": "basketball_turkey_bsl", "n": "BSL", "t": "basketball"},
+            {"key": "basketball_greece_a1", "n": "Heba A1", "t": "basketball"},
+            {"key": "basketball_vtb_united_league", "n": "VTB", "t": "basketball"},
+            {"key": "basketball_champions_league", "n": "BCL", "t": "basketball"},
+            {"key": "basketball_ncaab", "n": "NCAA", "t": "basketball"},
+            {"key": "basketball_wnba", "n": "WNBA", "t": "basketball"}
         ]
-
-        for hedef in hedef_ligler:
-            print(f"> {hedef['isim']} taranıyor...")
-            maclar = self.oran_cek(hedef["key"])
-            
-            if maclar:
-                for mac in maclar:
-                    home = mac.get('home_team', 'Bilinmiyor')
-                    away = mac.get('away_team', 'Deplasman')
-                    raw_time = mac.get('commence_time', '') 
-                    
-                    kategori = self.kategori_bul(hedef["isim"], hedef["tur"])
+        for h in hedef_ligler:
+            print(f"> {h['n']} taranıyor...")
+            data = self.oran_cek(h['key'])
+            if data:
+                for m in data:
                     alarmlar.append({
-                        "kategori": kategori,
-                        "lig": hedef["isim"].upper(),
-                        "mac": f"{home} - {away}",
-                        "saat_raw": raw_time, 
-                        "uyari": "CANLI RADAR ANALİZİ BEKLENİYOR..."
+                        "kategori": self.kategori_bul(h['n'], h['t']),
+                        "lig": h['n'].upper(),
+                        "mac": f"{m.get('home_team')} - {m.get('away_team')}",
+                        "saat_raw": m.get('commence_time'),
+                        "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
                     })
-            time.sleep(1.2)
-
-        rapor = {
-            "son_guncelleme": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
-            "kalan_hak": self.kalan_hak,
-            "veriler": alarmlar
-        }
+            time.sleep(1)
         
         with open("v19_rapor.json", "w", encoding="utf-8") as f:
-            json.dump(rapor, f, ensure_ascii=False, indent=4)
-        print(f"[+] Radar Tamamlandı. Kalan API Hakkı: {self.kalan_hak}")
+            json.dump({"son_guncelleme": datetime.now().strftime("%d-%m-%Y %H:%M:%S"), "kalan_hak": self.kalan_hak, "veriler": alarmlar}, f, ensure_ascii=False, indent=4)
 
-if __name__ == "__main__":
-    v19 = V19Intelligence()
-    v19.operasyon_baslat()
+if __name__ == "__main__": V19Intelligence().baslat()
