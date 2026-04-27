@@ -1,6 +1,7 @@
 {
-    "son_guncelleme": "27-04-2026 21:03:44",
-    "lig_sayac": {
+    "up": "21:08",
+    "veriler": [],
+    "sayac": {
         "SUPER LIG": 0,
         "PREMIER LEAGUE": 0,
         "LA LIGA": 0,
@@ -8,14 +9,10 @@
         "SERIE A": 0,
         "LIGUE 1": 0,
         "CHAMPIONS LEAGUE": 0,
-        "EUROPA LEAGUE": 0,
-        "CONFERENCE LEAGUE": 0,
         "NBA": 0,
         "EUROLEAGUE": 0,
         "BSL": 0,
         "LIGA ACB": 0,
-        "LEGA A": 0,
-        "BBL": 0
-    },
-    "veriler": []
+        "LEGA A": 0
+    }
 }
