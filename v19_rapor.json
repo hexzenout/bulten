@@ -1,24 +1,1002 @@
 {
-    "up": "21:29",
+    "up": "21:36",
     "sayac": {
-        "SİSTEM UYARISI": 2
+        "SUPER LIG": 9,
+        "PREMIER LEAGUE": 20,
+        "LA LIGA": 20,
+        "BUNDESLIGA": 18,
+        "SERIE A": 20,
+        "LIGUE 1": 18,
+        "CHAMPIONS LEAGUE": 2,
+        "EUROPA LEAGUE": 2,
+        "CONFERENCE LEAGUE": 2,
+        "NBA": 8,
+        "EUROLEAGUE": 4
     },
     "veriler": [
         {
             "k": "ALTIN",
-            "l": "SİSTEM UYARISI",
+            "l": "SUPER LIG",
             "t": "futbol",
-            "m": "API Şifresi Hatalı veya Bülten Boş",
-            "dt": "2026-04-27",
-            "tm": "21:29"
+            "m": "Çaykur Rizespor - Torku Konyaspor",
+            "dt": "2026-05-01",
+            "tm": "17:00"
         },
         {
             "k": "ALTIN",
-            "l": "SİSTEM UYARISI",
+            "l": "SUPER LIG",
+            "t": "futbol",
+            "m": "Gazişehir Gaziantep - Besiktas JK",
+            "dt": "2026-05-01",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SUPER LIG",
+            "t": "futbol",
+            "m": "Fenerbahce - Basaksehir",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SUPER LIG",
+            "t": "futbol",
+            "m": "Samsunspor - Galatasaray",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SUPER LIG",
+            "t": "futbol",
+            "m": "Trabzonspor - Goztepe",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SUPER LIG",
+            "t": "futbol",
+            "m": "Antalyaspor - Alanyaspor",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SUPER LIG",
+            "t": "futbol",
+            "m": "Kayserispor - Eyüpspor",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SUPER LIG",
+            "t": "futbol",
+            "m": "Fatih Karagümrük - Genclerbirligi SK",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SUPER LIG",
+            "t": "futbol",
+            "m": "Kasimpasa SK - Kocaelispor",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Leeds United - Burnley",
+            "dt": "2026-05-01",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Brentford - West Ham United",
+            "dt": "2026-05-02",
+            "tm": "17:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Newcastle United - Brighton and Hove Albion",
+            "dt": "2026-05-02",
+            "tm": "17:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Wolverhampton Wanderers - Sunderland",
+            "dt": "2026-05-02",
+            "tm": "17:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Arsenal - Fulham",
+            "dt": "2026-05-02",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Bournemouth - Crystal Palace",
+            "dt": "2026-05-03",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Manchester United - Liverpool",
+            "dt": "2026-05-03",
+            "tm": "17:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Aston Villa - Tottenham Hotspur",
+            "dt": "2026-05-03",
+            "tm": "21:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Chelsea - Nottingham Forest",
+            "dt": "2026-05-04",
+            "tm": "17:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Everton - Manchester City",
+            "dt": "2026-05-04",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Liverpool - Chelsea",
+            "dt": "2026-05-09",
+            "tm": "14:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Fulham - Bournemouth",
+            "dt": "2026-05-09",
+            "tm": "17:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Brighton and Hove Albion - Wolverhampton Wanderers",
+            "dt": "2026-05-09",
+            "tm": "17:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Sunderland - Manchester United",
+            "dt": "2026-05-09",
+            "tm": "17:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Manchester City - Brentford",
+            "dt": "2026-05-09",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Burnley - Aston Villa",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Crystal Palace - Everton",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Nottingham Forest - Newcastle United",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "West Ham United - Arsenal",
+            "dt": "2026-05-10",
+            "tm": "18:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "PREMIER LEAGUE",
+            "t": "futbol",
+            "m": "Tottenham Hotspur - Leeds United",
+            "dt": "2026-05-11",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Girona - Mallorca",
+            "dt": "2026-05-01",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Villarreal - Levante",
+            "dt": "2026-05-02",
+            "tm": "15:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Valencia - Atlético Madrid",
+            "dt": "2026-05-02",
+            "tm": "17:15"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Alavés - Athletic Bilbao",
+            "dt": "2026-05-02",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "CA Osasuna - Barcelona",
+            "dt": "2026-05-02",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Celta Vigo - Elche CF",
+            "dt": "2026-05-03",
+            "tm": "15:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Getafe - Rayo Vallecano",
+            "dt": "2026-05-03",
+            "tm": "17:15"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Real Betis - Oviedo",
+            "dt": "2026-05-03",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Espanyol - Real Madrid",
+            "dt": "2026-05-03",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Sevilla - Real Sociedad",
+            "dt": "2026-05-04",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Levante - CA Osasuna",
+            "dt": "2026-05-08",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Elche CF - Alavés",
+            "dt": "2026-05-09",
+            "tm": "15:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Sevilla - Espanyol",
+            "dt": "2026-05-09",
+            "tm": "17:15"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Atlético Madrid - Celta Vigo",
+            "dt": "2026-05-09",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Real Sociedad - Real Betis",
+            "dt": "2026-05-09",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Mallorca - Villarreal",
+            "dt": "2026-05-10",
+            "tm": "15:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Athletic Bilbao - Valencia",
+            "dt": "2026-05-10",
+            "tm": "17:15"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Oviedo - Getafe",
+            "dt": "2026-05-10",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Barcelona - Real Madrid",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LA LIGA",
+            "t": "futbol",
+            "m": "Rayo Vallecano - Girona",
+            "dt": "2026-05-11",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Bayern Munich - 1. FC Heidenheim",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Union Berlin - 1. FC Köln",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Werder Bremen - Augsburg",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Eintracht Frankfurt - Hamburger SV",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "TSG Hoffenheim - VfB Stuttgart",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Bayer Leverkusen - RB Leipzig",
+            "dt": "2026-05-02",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "FC St. Pauli - FSV Mainz 05",
+            "dt": "2026-05-03",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Borussia Monchengladbach - Borussia Dortmund",
+            "dt": "2026-05-03",
+            "tm": "18:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "SC Freiburg - VfL Wolfsburg",
+            "dt": "2026-05-03",
+            "tm": "20:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Borussia Dortmund - Eintracht Frankfurt",
+            "dt": "2026-05-08",
+            "tm": "21:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Augsburg - Borussia Monchengladbach",
+            "dt": "2026-05-09",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "VfB Stuttgart - Bayer Leverkusen",
+            "dt": "2026-05-09",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "RB Leipzig - FC St. Pauli",
+            "dt": "2026-05-09",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "TSG Hoffenheim - Werder Bremen",
+            "dt": "2026-05-09",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "VfL Wolfsburg - Bayern Munich",
+            "dt": "2026-05-09",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "Hamburger SV - SC Freiburg",
+            "dt": "2026-05-10",
+            "tm": "16:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "1. FC Köln - 1. FC Heidenheim",
+            "dt": "2026-05-10",
+            "tm": "18:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "BUNDESLIGA",
+            "t": "futbol",
+            "m": "FSV Mainz 05 - Union Berlin",
+            "dt": "2026-05-10",
+            "tm": "20:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Pisa - Lecce",
+            "dt": "2026-05-01",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Udinese - Torino",
+            "dt": "2026-05-02",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Como - Napoli",
+            "dt": "2026-05-02",
+            "tm": "19:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Atalanta BC - Genoa",
+            "dt": "2026-05-02",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Bologna - Cagliari",
+            "dt": "2026-05-03",
+            "tm": "13:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Sassuolo - AC Milan",
+            "dt": "2026-05-03",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Juventus - Hellas Verona",
+            "dt": "2026-05-03",
+            "tm": "19:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Inter Milan - Parma",
+            "dt": "2026-05-03",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Cremonese - Lazio",
+            "dt": "2026-05-04",
+            "tm": "19:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "AS Roma - Fiorentina",
+            "dt": "2026-05-04",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Torino - Sassuolo",
+            "dt": "2026-05-08",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Cagliari - Udinese",
+            "dt": "2026-05-09",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Lazio - Inter Milan",
+            "dt": "2026-05-09",
+            "tm": "19:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Lecce - Juventus",
+            "dt": "2026-05-09",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Hellas Verona - Como",
+            "dt": "2026-05-10",
+            "tm": "13:30"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Cremonese - Pisa",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Fiorentina - Genoa",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Parma - AS Roma",
+            "dt": "2026-05-10",
+            "tm": "19:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "AC Milan - Atalanta BC",
+            "dt": "2026-05-10",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SERIE A",
+            "t": "futbol",
+            "m": "Napoli - Bologna",
+            "dt": "2026-05-11",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Nantes - Marseille",
+            "dt": "2026-05-02",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Paris Saint Germain - Lorient",
+            "dt": "2026-05-02",
+            "tm": "18:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Metz - AS Monaco",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Nice - RC Lens",
+            "dt": "2026-05-02",
+            "tm": "22:05"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Lille - Le Havre",
+            "dt": "2026-05-03",
+            "tm": "16:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Auxerre - Angers",
+            "dt": "2026-05-03",
+            "tm": "18:15"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Paris FC - Brest",
+            "dt": "2026-05-03",
+            "tm": "18:15"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Strasbourg - Toulouse",
+            "dt": "2026-05-03",
+            "tm": "18:15"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Lyon - Rennes",
+            "dt": "2026-05-03",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "RC Lens - Nantes",
+            "dt": "2026-05-08",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "AS Monaco - Lille",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Angers - Strasbourg",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Auxerre - Nice",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Paris Saint Germain - Brest",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Le Havre - Marseille",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Metz - Lorient",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Toulouse - Lyon",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "LIGUE 1",
+            "t": "futbol",
+            "m": "Rennes - Paris FC",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "CHAMPIONS LEAGUE",
+            "t": "futbol",
+            "m": "Paris Saint Germain - Bayern Munich",
+            "dt": "2026-04-28",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "CHAMPIONS LEAGUE",
+            "t": "futbol",
+            "m": "Atlético Madrid - Arsenal",
+            "dt": "2026-04-29",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "EUROPA LEAGUE",
+            "t": "futbol",
+            "m": "Nottingham Forest - Aston Villa",
+            "dt": "2026-04-30",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "EUROPA LEAGUE",
+            "t": "futbol",
+            "m": "SC Braga - SC Freiburg",
+            "dt": "2026-04-30",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "CONFERENCE LEAGUE",
+            "t": "futbol",
+            "m": "Shakhtar Donetsk - Crystal Palace",
+            "dt": "2026-04-30",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "CONFERENCE LEAGUE",
+            "t": "futbol",
+            "m": "Rayo Vallecano - Strasbourg",
+            "dt": "2026-04-30",
+            "tm": "22:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "NBA",
             "t": "basketbol",
-            "m": "API Şifresi Hatalı veya Bülten Boş",
-            "dt": "2026-04-27",
-            "tm": "21:29"
+            "m": "Orlando Magic - Detroit Pistons",
+            "dt": "2026-04-28",
+            "tm": "03:10"
+        },
+        {
+            "k": "ALTIN",
+            "l": "NBA",
+            "t": "basketbol",
+            "m": "Phoenix Suns - Oklahoma City Thunder",
+            "dt": "2026-04-28",
+            "tm": "04:40"
+        },
+        {
+            "k": "ALTIN",
+            "l": "NBA",
+            "t": "basketbol",
+            "m": "Denver Nuggets - Minnesota Timberwolves",
+            "dt": "2026-04-28",
+            "tm": "05:40"
+        },
+        {
+            "k": "ALTIN",
+            "l": "NBA",
+            "t": "basketbol",
+            "m": "Boston Celtics - Philadelphia 76ers",
+            "dt": "2026-04-29",
+            "tm": "02:10"
+        },
+        {
+            "k": "ALTIN",
+            "l": "NBA",
+            "t": "basketbol",
+            "m": "New York Knicks - Atlanta Hawks",
+            "dt": "2026-04-29",
+            "tm": "03:10"
+        },
+        {
+            "k": "ALTIN",
+            "l": "NBA",
+            "t": "basketbol",
+            "m": "San Antonio Spurs - Portland Trail Blazers",
+            "dt": "2026-04-29",
+            "tm": "04:40"
+        },
+        {
+            "k": "ALTIN",
+            "l": "NBA",
+            "t": "basketbol",
+            "m": "Cleveland Cavaliers - Toronto Raptors",
+            "dt": "2026-04-30",
+            "tm": "02:10"
+        },
+        {
+            "k": "ALTIN",
+            "l": "NBA",
+            "t": "basketbol",
+            "m": "Los Angeles Lakers - Houston Rockets",
+            "dt": "2026-04-30",
+            "tm": "04:40"
+        },
+        {
+            "k": "ALTIN",
+            "l": "EUROLEAGUE",
+            "t": "basketbol",
+            "m": "Fenerbahce SK - Žalgiris",
+            "dt": "2026-04-28",
+            "tm": "20:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "EUROLEAGUE",
+            "t": "basketbol",
+            "m": "Olympiacos - AS Monaco",
+            "dt": "2026-04-28",
+            "tm": "21:00"
+        },
+        {
+            "k": "ALTIN",
+            "l": "EUROLEAGUE",
+            "t": "basketbol",
+            "m": "Valencia Basket - Panathinaikos",
+            "dt": "2026-04-28",
+            "tm": "21:45"
+        },
+        {
+            "k": "ALTIN",
+            "l": "EUROLEAGUE",
+            "t": "basketbol",
+            "m": "Real Madrid - Hapoel Tel Aviv",
+            "dt": "2026-04-29",
+            "tm": "21:45"
         }
     ]
 }
