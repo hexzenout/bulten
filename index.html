@@ -60,59 +60,168 @@
         </div>
     </div>
     <script>
-        let currentSport = 'futbol', currentCategory = 'ALTIN', allData = [];
-        const meta = { "SUPER LIG": {f:"tr",n:"TÜRKİYE"}, "NBA": {f:"us",n:"ABD"}, "PREMIER LEAGUE": {f:"gb-eng",n:"İNGİLTERE"}, "LA LIGA": {f:"es",n:"İSPANYA"}, "LIGA ACB": {f:"es",n:"İSPANYA"}, "EUROLEAGUE": {f:"eu",n:"AVRUPA"}, "BSL": {f:"tr",n:"TÜRKİYE"}, "SERIE A": {f:"it",n:"İTALYA"} };
-        const basketLigleri = ["NBA","EUROLEAGUE","ACB","LEGA A","LNB","BBL","NCAA","WNBA","EUROCUP","BSL","HEBA","VTB","BCL"];
+        let currentMode = 'futbol', currentCategory = 'ALTIN', allData = [];
+        // YENİ: Favorileri Timestamp (Zaman Damgası) ile Yönetme
+        let favorites = JSON.parse(localStorage.getItem('v19_favs_v2')) || {};
+        
+        // --- 24 SAATLİK İMHA PROTOKOLÜ ---
+        function cleanExpiredFavorites() {
+            const now = Date.now();
+            const ONE_DAY = 24 * 60 * 60 * 1000; // 24 saatin milisaniye karşılığı
+            let hasChanged = false;
+
+            for (let mac in favorites) {
+                if (now - favorites[mac] > ONE_DAY) {
+                    delete favorites[mac];
+                    hasChanged = true;
+                }
+            }
+            if (hasChanged) {
+                localStorage.setItem('v19_favs_v2', JSON.stringify(favorites));
+            }
+        }
+        cleanExpiredFavorites(); // Sayfa açılır açılmaz temizlik yap
+
+        const leagueMeta = {
+            "SUPER LIG": {f:"tr", n:"TÜRKİYE"}, "BSL": {f:"tr", n:"TÜRKİYE"},
+            "PREMIER LEAGUE": {f:"gb-eng", n:"İNGİLTERE"}, "CHAMPIONSHIP": {f:"gb-eng", n:"İNGİLTERE"},
+            "LA LIGA": {f:"es", n:"İSPANYA"}, "LIGA ACB": {f:"es", n:"İSPANYA"},
+            "BUNDESLIGA": {f:"de", n:"ALMANYA"}, "BBL": {f:"de", n:"ALMANYA"},
+            "SERIE A": {f:"it", n:"İTALYA"}, "LEGA A": {f:"it", n:"İTALYA"},
+            "LIGUE 1": {f:"fr", n:"FRANSA"}, "LNB PRO A": {f:"fr", n:"FRANSA"},
+            "EREDIVISIE": {f:"nl", n:"HOLLANDA"}, "PRIMEIRA LIGA": {f:"pt", n:"PORTEKİZ"},
+            "NBA": {f:"us", n:"ABD"}, "WNBA": {f:"us", n:"ABD"}, "NCAA": {f:"us", n:"ABD"}, "MLS": {f:"us", n:"ABD"},
+            "SERIE A (BRAZIL)": {f:"br", n:"BREZİLYA"}, "PRIMERA DIVISION (ARGENTINA)": {f:"ar", n:"ARJANTİN"},
+            "EUROLEAGUE": {f:"eu", n:"AVRUPA"}, "EUROCUP": {f:"eu", n:"AVRUPA"}, "BCL": {f:"eu", n:"AVRUPA"},
+            "CHAMPIONS LEAGUE": {f:"eu", n:"AVRUPA"}, "EUROPA LEAGUE": {f:"eu", n:"AVRUPA"}, "CONFERENCE LEAGUE": {f:"eu", n:"AVRUPA"},
+            "HEBA A1": {f:"gr", n:"YUNANİSTAN"}, "VTB": {f:"ru", n:"RUSYA"}, "WORLD CUP": {f:"un", n:"DÜNYA"}
+        };
+        const basketKeywords = ["NBA","EUROLEAGUE","ACB","LEGA A","LNB","BBL","NCAA","WNBA","EUROCUP","BSL","HEBA","VTB","BCL"];
+
+        // HAMBURGER MENÜ AÇ/KAPA
+        function toggleMenu() {
+            document.getElementById('menu-items').classList.toggle('collapsed');
+        }
+
+        // FAVORİ EKLE/ÇIKAR (GÜNCELLENDİ)
+        function toggleFav(macAdi, iconElement) {
+            if(favorites[macAdi]) {
+                delete favorites[macAdi]; // Varsa sil
+                iconElement.classList.replace('fa-solid', 'fa-regular');
+                iconElement.classList.remove('active');
+            } else {
+                favorites[macAdi] = Date.now(); // Yoksa ekle ve şu anki saati kaydet
+                iconElement.classList.replace('fa-regular', 'fa-solid');
+                iconElement.classList.add('active');
+            }
+            localStorage.setItem('v19_favs_v2', JSON.stringify(favorites));
+            
+            if(currentMode === 'favoriler') render();
+        }
+
         async function update() {
             try {
                 const r = await fetch(`v19_rapor.json?t=${Date.now()}`);
                 const d = await r.json();
-                document.getElementById('quota').innerText = d.kalan_hak;
-                document.getElementById('scan-time').innerText = d.son_guncelleme;
-                allData = d.veriler || []; render();
+                document.getElementById('quota').innerText = d.kalan_hak || "500";
+                document.getElementById('scan-time').innerText = d.son_guncelleme.split(' ')[1];
+                allData = d.veriler || []; 
+                cleanExpiredFavorites(); // Her güncellemede kontrol et
+                render();
             } catch(e) {}
         }
-        function getDay(iso) {
+
+        function getDayLabel(iso) {
+            if(!iso) return "BELİRSİZ";
             const d = new Date(iso), now = new Date();
-            if (d.toDateString() === now.toDateString()) return "BUGÜN";
+            if(d.toDateString() === now.toDateString()) return "BUGÜN";
             now.setDate(now.getDate()+1);
-            if (d.toDateString() === now.toDateString()) return "YARIN";
+            if(d.toDateString() === now.toDateString()) return "YARIN";
             return d.toLocaleDateString('tr-TR', {weekday:'long', day:'numeric', month:'long'}).toUpperCase();
         }
+
         function render() {
             const area = document.getElementById('content-area'); area.innerHTML = "";
-            const filtered = allData.filter(m => {
-                const isB = basketLigleri.some(k => m.lig.toUpperCase().includes(k));
-                return (isB ? 'basketbol' : 'futbol') === currentSport && m.kategori === currentCategory;
-            });
+            
+            let filtered = [];
+            if(currentMode === 'favoriler') {
+                // Object.keys(favorites) ile favori listesini alıyoruz
+                filtered = allData.filter(m => Object.keys(favorites).includes(m.mac));
+                document.getElementById('kategori-tabs').style.display = 'none';
+            } else {
+                document.getElementById('kategori-tabs').style.display = 'flex';
+                filtered = allData.filter(m => {
+                    const isB = basketKeywords.some(k => m.lig.toUpperCase().includes(k));
+                    return (isB ? 'basketbol' : 'futbol') === currentMode && m.kategori === currentCategory;
+                });
+            }
+
+            if(filtered.length === 0) {
+                area.innerHTML = `<div class="empty-state">Bu kriterlere uygun maç bulunamadı.</div>`;
+                return;
+            }
+
             const days = {};
             filtered.forEach(m => {
-                const day = getDay(m.saat_raw);
+                const day = getDayLabel(m.saat_raw);
                 if(!days[day]) days[day] = {};
                 if(!days[day][m.lig]) days[day][m.lig] = [];
                 days[day][m.lig].push(m);
             });
+
             Object.keys(days).forEach(day => {
                 area.innerHTML += `<div class="date-divider">${day}</div>`;
                 for(let lig in days[day]) {
-                    const mta = meta[lig.toUpperCase()] || {f:"un",n:"DİĞER"};
+                    const mta = leagueMeta[lig.toUpperCase()] || {f:"un", n:"DİĞER"};
                     const lBox = document.createElement('div'); lBox.className = 'league-box';
-                    lBox.innerHTML = `<div class="league-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
-                        <span><img src="https://flagcdn.com/w40/${mta.f}.png" class="flag"> ${mta.n} - ${lig}</span>
-                        <i class="fa-solid fa-chevron-down fa-xs"></i></div><div class="league-content"></div>`;
-                    const cont = lBox.querySelector('.league-content');
+                    lBox.innerHTML = `
+                        <div class="league-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
+                            <span><img src="https://flagcdn.com/w40/${mta.f}.png" class="flag"> ${mta.n} - ${lig}</span>
+                            <i class="fa-solid fa-chevron-down fa-xs" style="color:var(--muted)"></i>
+                        </div>
+                        <div class="league-content ${currentMode === 'favoriler' ? 'open' : ''}"></div>
+                    `;
+                    const content = lBox.querySelector('.league-content');
                     days[day][lig].sort((a,b)=>a.saat_raw.localeCompare(b.saat_raw)).forEach(m => {
                         const d = new Date(m.saat_raw);
                         const tsi = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0');
-                        cont.innerHTML += `<div class="card"><span class="card-time"><i class="fa-regular fa-clock"></i> ${tsi} (TSİ)</span><div class="card-match">${m.mac}</div><div style="font-size:0.85em; color:var(--muted); border-top:1px solid #1f1f23; padding-top:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.uyari}</div></div>`;
+                        // Favori kontrolü güncellendi
+                        const isFav = Object.keys(favorites).includes(m.mac);
+                        
+                        content.innerHTML += `
+                            <div class="card">
+                                <i class="fa-${isFav ? 'solid active' : 'regular'} fa-star fav-star" onclick="toggleFav('${m.mac}', this)"></i>
+                                <span class="card-time"><i class="fa-regular fa-clock"></i> ${tsi} (TSİ)</span>
+                                <div class="card-match">${m.mac}</div>
+                                <div style="font-size:0.85em; color:var(--muted); border-top:1px solid #1f1f23; padding-top:12px;">
+                                    <i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.uyari}
+                                </div>
+                            </div>
+                        `;
                     });
                     area.appendChild(lBox);
                 }
             });
         }
-        function setSport(s,el) { currentSport=s; document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active')); el.classList.add('active'); document.getElementById('title').innerText=s.toUpperCase(); render(); }
+
+        function setMode(mode, el) { 
+            currentMode = mode; 
+            document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active')); 
+            el.classList.add('active'); 
+            
+            if(mode === 'canli') {
+                document.getElementById('bulten-view').style.display = 'none';
+                document.getElementById('stream-view').classList.add('active');
+                document.getElementById('title').innerText = "4'LÜ EKRAN CANLI YAYIN";
+            } else {
+                document.getElementById('stream-view').classList.remove('active');
+                document.getElementById('bulten-view').style.display = 'block';
+                document.getElementById('title').innerText = mode.toUpperCase() + (mode === 'favoriler' ? "" : " RADARI");
+                render(); 
+            }
+        }
         function setCategory(c,el) { currentCategory=c; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active','gold')); el.classList.add('active','gold'); render(); }
-        setInterval(update, 20000); update();
+        setInterval(update, 15000); update();
     </script>
 </body>
 </html>
