@@ -12,7 +12,7 @@
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR */
+        /* SIDEBAR (TEKLİ SEÇİM) */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
         .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.1em; letter-spacing: 1px; }
         .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
@@ -30,15 +30,40 @@
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
 
-        /* LİSTELEME */
-        .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--text); border-bottom: 1px solid #000; display: flex; align-items: center; text-transform: uppercase; }
-        .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
-        .match-row:hover { background: #0a0a0c; }
+        /* LİSTELEME VE AÇILIR KAPANIR SİSTEM */
+        .league-head { 
+            background: #18181b; /* Daha belirgin zemin rengi */
+            padding: 10px 15px; 
+            font-weight: 900; 
+            font-size: 0.75em; 
+            color: #fff; 
+            border: 1px solid #27272a; 
+            border-bottom: none;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            cursor: pointer; /* Tıklanabilir el işareti */
+            transition: 0.2s;
+        }
+        .league-head:hover { background: #27272a; }
+        .head-left { display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .head-right { display: flex; align-items: center; gap: 15px; }
+        
+        .league-content {
+            border: 1px solid #27272a;
+            border-top: none;
+            margin-bottom: 15px;
+            background: #0a0a0c;
+        }
+
+        .match-row { display: flex; align-items: center; padding: 12px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
+        .match-row:last-child { border-bottom: none; }
+        .match-row:hover { background: #111; }
         .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 55px; font-weight: bold; }
         .m-teams { font-weight: 700; flex-grow: 1; color: #fff; display: flex; align-items: center; }
         
-        /* BAYRAK CSS GÜNCELLEMESİ */
-        .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 8px; display: inline-block; }
+        .flag { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
+        .chevron { transition: transform 0.3s ease; color: var(--muted); }
 
         /* FİNANS & BORSA */
         .fin-grid { display: none; grid-template-columns: 360px 1fr; gap: 20px; }
@@ -108,10 +133,23 @@
     </div>
 
     <script>
-let allData = [], ligSayac = {}, activeSport = 'futbol', curMode = 'bulletin';
+        let allData = [], ligSayac = {}, activeSport = 'futbol', curMode = 'bulletin';
         let wallet = parseFloat(localStorage.getItem('v19_w')) || 100.00;
         let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
         let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
+
+        // LİGLERE ÜLKE İSİMLERİ EKLENDİ
+        const META = {
+            "SUPER LIG": {f:"tr", c:"TÜRKİYE"}, "PREMIER LEAGUE": {f:"gb-eng", c:"İNGİLTERE"}, "LA LIGA": {f:"es", c:"İSPANYA"},
+            "BUNDESLIGA": {f:"de", c:"ALMANYA"}, "SERIE A": {f:"it", c:"İTALYA"}, "LIGUE 1": {f:"fr", c:"FRANSA"},
+            "CHAMPIONS LEAGUE": {f:"eu", c:"AVRUPA"}, "EUROPA LEAGUE": {f:"eu", c:"AVRUPA"}, "CONFERENCE LEAGUE": {f:"eu", c:"AVRUPA"},
+            "CHAMPIONSHIP": {f:"gb-eng", c:"İNGİLTERE"}, "EREDIVISIE": {f:"nl", c:"HOLLANDA"}, "PRIMEIRA LIGA": {f:"pt", c:"PORTEKİZ"},
+            "BRAZIL SERIE A": {f:"br", c:"BREZİLYA"}, "ARGENTINA PRIMERA": {f:"ar", c:"ARJANTİN"}, "MLS": {f:"us", c:"AMERİKA"},
+            
+            "NBA": {f:"us", c:"AMERİKA"}, "EUROLEAGUE": {f:"eu", c:"AVRUPA"}, "WNBA": {f:"us", c:"AMERİKA"}, "NCAA": {f:"us", c:"AMERİKA"},
+            "BSL": {f:"tr", c:"TÜRKİYE"}, "LIGA ACB": {f:"es", c:"İSPANYA"}, "LEGA A": {f:"it", c:"İTALYA"}, "LNB PRO A": {f:"fr", c:"FRANSA"},
+            "BBL": {f:"de", c:"ALMANYA"}, "EUROCUP": {f:"eu", c:"AVRUPA"}, "BCL": {f:"eu", c:"AVRUPA"}, "VTB": {f:"ru", c:"RUSYA"}
+        };
 
         function switchSport(s) {
             activeSport = s; curMode = 'bulletin';
@@ -135,19 +173,16 @@ let allData = [], ligSayac = {}, activeSport = 'futbol', curMode = 'bulletin';
                 const r = await fetch('v19_rapor.json?t=' + Date.now());
                 const d = await r.json(); allData = d.veriler || []; ligSayac = d.sayac || {};
                 buildFilters(); render();
-            } catch(e) { document.getElementById('list-area').innerHTML = "<div style='padding:50px; text-align:center; color:#555'>VERİ BEKLENİYOR... LÜTFEN ACTIONS ÇALIŞTIRIN.</div>"; }
+            } catch(e) { document.getElementById('list-area').innerHTML = "<div style='padding:50px; text-align:center; color:#555'>VERİ BEKLENİYOR...</div>"; }
         }
 
         function buildFilters() {
             const dSel = document.getElementById('date-sel'), lSel = document.getElementById('league-sel');
-            
-            // Tarihleri hafızada topla, tek seferde bas
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const dates = [...new Set(allData.filter(m => m.t === activeSport).map(m => m.dt))].sort();
             dates.forEach(d => dateHtml += `<option value="${d}">${d}</option>`);
             dSel.innerHTML = dateHtml;
             
-            // Ligleri hafızada topla, tek seferde bas
             let ligHtml = '<option value="ALL">TÜM LİGLER</option>';
             for(let l in ligSayac) {
                 let isFutbol = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA LIGA", "BRAZIL SERIE A", "ARGENTINA PRIMERA", "MLS", "SİSTEM UYARISI"].includes(l);
@@ -158,45 +193,64 @@ let allData = [], ligSayac = {}, activeSport = 'futbol', curMode = 'bulletin';
             lSel.innerHTML = ligHtml;
         }
 
+        // AÇILIR KAPANIR (TOGGLE) FONKSİYONU
+        window.toggleLeague = function(id, el) {
+            const content = document.getElementById(id);
+            const icon = el.querySelector('.chevron');
+            if(content.style.display === 'none') {
+                content.style.display = 'block';
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.display = 'none';
+                icon.style.transform = 'rotate(-90deg)';
+            }
+        };
+
         function render() {
             if(curMode !== 'bulletin') return;
             const area = document.getElementById('list-area');
             const dVal = document.getElementById('date-sel').value, lVal = document.getElementById('league-sel').value;
             
             let filtered = allData.filter(m => m.t === activeSport && (dVal==='ALL'||m.dt===dVal) && (lVal==='ALL'||m.l===lVal));
-            
-            // OPTİMİZASYON: DOM'a sürekli yazmak yerine HTML'i string olarak biriktir
-            let htmlContent = ""; 
-            
+            let htmlContent = "";
             const days = {}; filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
+
             Object.keys(days).sort().forEach(day => {
-                htmlContent += `<div style="background:#111; color:var(--green); font-size:0.7em; font-weight:900; padding:5px 15px; margin:10px 0; border-left:4px solid var(--green)">${day}</div>`;
+                htmlContent += `<div style="color:var(--green); font-size:0.7em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:10px;">${day}</div>`;
                 const groups = {}; days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
                 
                 for(let lig in groups) {
-                    const fCode = groups[lig][0].f || "un";
+                    const mData = META[lig] || {f:"un", c:"DÜNYA"};
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
                     const iColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
+                    const uid = `lg_${day}_${lig.replace(/\s+/g, '')}`; // Her lig için benzersiz ID
                     
+                    // LİG BAŞLIĞI (Açılır/Kapanır) VE YENİ GÖRÜNÜM
                     htmlContent += `
-                        <div class="league-head">
+                        <div class="league-head" onclick="toggleLeague('${uid}', this)">
                             <div class="head-left">
-                                <span style="font-size:1.2em; color:${iColor}; margin-right:8px;">${ikon}</span>
-                                <span>${lig}</span>
+                                <span style="font-size:1.2em; color:${iColor}; margin-right:5px;">${ikon}</span>
+                                <span>${mData.c} - ${lig}</span>
                             </div>
-                        </div>`;
+                            <div class="head-right">
+                                <img src="https://flagcdn.com/w40/${mData.f}.png" class="flag">
+                                <i class="fa-solid fa-chevron-down chevron"></i>
+                            </div>
+                        </div>
+                        <div id="${uid}" class="league-content" style="display:block;">
+                    `;
                         
                     groups[lig].sort((a,b)=>a.tm.localeCompare(b.tm)).forEach(m => {
                         htmlContent += `
-                        <div class="match-row">
-                            <div class="m-time">${m.tm}</div>
-                            <div class="m-teams">${m.m} <img src="https://flagcdn.com/w40/${fCode}.png" class="flag"></div>
-                        </div>`;
+                            <div class="match-row">
+                                <div class="m-time">${m.tm}</div>
+                                <div class="m-teams">${m.m}</div>
+                            </div>`;
                     });
+                    
+                    htmlContent += `</div>`; // İçeriği kapat
                 }
             });
-            
-            // Tüm HTML bittikten sonra ekrana TEK BİR KERE bas. Kasma ortadan kalkar.
             area.innerHTML = htmlContent;
         }
 
@@ -222,7 +276,7 @@ let allData = [], ligSayac = {}, activeSport = 'futbol', curMode = 'bulletin';
             const area = document.getElementById('p-list'); 
             let htmlContent = "";
             pending.forEach(b => {
-                htmlContent += `<div class="op-row"><span>${b.name} ($${b.amt} @${b.odds})</span><div><button class="op-btn" style="background:var(--green); color:#000; margin-right:5px;" onclick="resolve(${b.id}, 'win')">W</button><button class="op-btn" style="background:var(--red); color:#fff;" onclick="resolve(${b.id}, 'loss')">L</button></div></div>`;
+                htmlContent += `<div class="op-row"><span>${b.name} ($${b.amt} @${b.odds})</span><div><button onclick="resolve(${b.id}, 'win')" style="background:var(--green); color:#000; border:none; padding:4px 8px; border-radius:3px; font-weight:900; cursor:pointer; margin-right:5px;">W</button><button onclick="resolve(${b.id}, 'loss')" style="background:var(--red); color:#fff; border:none; padding:4px 8px; border-radius:3px; font-weight:900; cursor:pointer;">L</button></div></div>`;
             });
             area.innerHTML = htmlContent;
         }
