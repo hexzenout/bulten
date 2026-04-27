@@ -12,8 +12,9 @@
         
         .sidebar { width: 280px; background: #000; border-right: 2px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; }
         .brand { padding: 30px 25px; font-weight: 900; font-size: 1.5em; color: var(--text); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        .menu-btn { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; transition: 0.2s; }
+        .menu-btn:hover { color: #fff; }
         
-        .menu-btn { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; }
         .menu-items { display: block; border-bottom: 1px solid var(--border); }
         .menu-items.collapsed { display: none; }
         
@@ -22,16 +23,17 @@
         .check-box { font-size: 1.3em; color: var(--muted); transition: 0.2s; }
         .nav-item.active { color: #fff; background: rgba(255,255,255,0.03); border-left: 4px solid var(--green); }
         .nav-item.active .check-box { color: var(--green); }
+        .nav-item.fav-tab.active { border-left-color: var(--gold); }
+        .nav-item.canli-tab.active { border-left-color: var(--green); }
         
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: #000; }
         .quota-box { background: rgba(16, 185, 129, 0.05); padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2); font-family: 'JetBrains Mono'; font-size: 0.9em; color: var(--green); }
         .content { flex-grow: 1; padding: 30px; overflow-y: auto; }
 
-        /* 6'LI EKRAN */
         .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 15px; height: calc(100vh - 140px); }
         .stream-grid.active { display: grid; }
-        .stream-box { background: #000; border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; }
+        .stream-box { background: #000; border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
         .stream-header { padding: 8px 12px; background: #0a0a0c; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid var(--border); }
         .stream-input { flex-grow: 1; background: #050505; border: 1px solid #222; color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 0.75em; font-family: 'JetBrains Mono'; }
         .stream-btn { background: var(--green); color: #000; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.7em; }
@@ -40,6 +42,7 @@
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
         .tab { padding: 10px 24px; background: var(--panel); border: 1px solid var(--border); cursor: pointer; border-radius: 6px; color: var(--muted); font-weight: 900; font-size: 0.8em; }
         .tab.active.gold { border-color: var(--gold); color: var(--gold); background: rgba(251,191,36,0.05); }
+        .tab.active.silver { border-color: #fff; color: #fff; }
         
         .date-divider { color: var(--green); font-family: 'JetBrains Mono'; font-weight: 800; font-size: 0.9em; margin: 30px 0 10px 0; border-left: 4px solid var(--green); padding-left: 12px; }
         .league-box { margin-bottom: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); overflow: hidden; }
@@ -117,6 +120,15 @@
         let allData = [];
         let favorites = JSON.parse(localStorage.getItem('v19_favs_v3')) || {};
 
+        function cleanExpiredFavorites() {
+            const now = Date.now();
+            let changed = false;
+            for (let m in favorites) {
+                if (now - favorites[m] > (24 * 60 * 60 * 1000)) { delete favorites[m]; changed = true; }
+            }
+            if (changed) localStorage.setItem('v19_favs_v3', JSON.stringify(favorites));
+        }
+
         function toggleMenu() { document.getElementById('menu-items').classList.toggle('collapsed'); }
         function loadStream(id) { document.getElementById(`frame-${id}`).src = document.getElementById(`input-${id}`).value || "about:blank"; }
         function handleInputClear(id) { if(!document.getElementById(`input-${id}`).value) document.getElementById(`frame-${id}`).src = "about:blank"; }
@@ -158,14 +170,17 @@
 
         const leagueMeta = {
             "SUPER LIG": {f:"tr", n:"TÜRKİYE"}, "BSL": {f:"tr", n:"TÜRKİYE"},
-            "PREMIER LEAGUE": {f:"gb-eng", n:"İNGİLTERE"}, "LA LIGA": {f:"es", n:"İSPANYA"}, "LIGA ACB": {f:"es", n:"İSPANYA"},
+            "PREMIER LEAGUE": {f:"gb-eng", n:"İNGİLTERE"}, "CHAMPIONSHIP": {f:"gb-eng", n:"İNGİLTERE"},
+            "LA LIGA": {f:"es", n:"İSPANYA"}, "LIGA ACB": {f:"es", n:"İSPANYA"},
             "BUNDESLIGA": {f:"de", n:"ALMANYA"}, "BBL": {f:"de", n:"ALMANYA"},
             "SERIE A": {f:"it", n:"İTALYA"}, "LEGA A": {f:"it", n:"İTALYA"},
-            "LIGUE 1": {f:"fr", n:"FRANSA"}, "PRO A": {f:"fr", n:"FRANSA"},
+            "LIGUE 1": {f:"fr", n:"FRANSA"}, "LNB PRO A": {f:"fr", n:"FRANSA"},
             "EREDIVISIE": {f:"nl", n:"HOLLANDA"}, "NBA": {f:"us", n:"ABD"}, "EUROLEAGUE": {f:"eu", n:"AVRUPA"},
-            "CHAMPIONS LEAGUE": {f:"eu", n:"AVRUPA"}, "CHAMPIONSHIP": {f:"gb-eng", n:"İNGİLTERE"}, "PRIMERA DIVISION (ARGENTINA)": {f:"ar", n:"ARJANTİN"}
+            "CHAMPIONS LEAGUE": {f:"eu", n:"AVRUPA"}, "PRIMERA DIVISION (ARGENTINA)": {f:"ar", n:"ARJANTİN"},
+            "HEBA A1": {f:"gr", n:"YUNANİSTAN"}, "VTB": {f:"ru", n:"RUSYA"}, "WORLD CUP": {f:"un", n:"DÜNYA"},
+            "EUROCUP": {f:"eu", n:"AVRUPA"}, "BCL": {f:"eu", n:"AVRUPA"}, "SİSTEM UYARISI": {f:"un", n:"UYARI"}
         };
-        const basketKeywords = ["NBA","EUROLEAGUE","ACB","LEGA","PRO A","BBL","NCAA","WNBA","EUROCUP","BSL","HEBA","VTB","BCL"];
+        const basketKeywords = ["NBA","EUROLEAGUE","ACB","LEGA","PRO A","BBL","NCAA","WNBA","EUROCUP","BSL","HEBA","VTB","BCL","BASKETBOL"];
 
         async function update() {
             try {
@@ -187,20 +202,29 @@
 
             if(filtered.length === 0) { area.innerHTML = `<div style="text-align:center; padding:50px; color:#555;">Kriterlere uygun maç bulunamadı.</div>`; return; }
 
-            // KUSURSUZ TARİH SIRALAMASI
             const days = {};
             filtered.forEach(m => {
                 const d = new Date(m.saat_raw);
-                const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                // SAAT DİLİMİ BETONLAMASI: Türkiye saatine göre gerçek gün (YYYY-MM-DD)
+                const dateKey = d.toLocaleDateString('en-CA', { timeZone: 'Europe/Istanbul' });
                 if(!days[dateKey]) days[dateKey] = [];
                 days[dateKey].push(m);
             });
 
             Object.keys(days).sort().forEach(dateKey => {
-                const dateObj = new Date(dateKey);
                 const now = new Date();
-                const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-                let label = dateKey === todayKey ? "BUGÜN" : dateObj.toLocaleDateString('tr-TR', {weekday:'long', day:'numeric', month:'long'}).toUpperCase();
+                const todayKey = now.toLocaleDateString('en-CA', { timeZone: 'Europe/Istanbul' });
+                const tomorrowObj = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+                const tomorrowKey = tomorrowObj.toLocaleDateString('en-CA', { timeZone: 'Europe/Istanbul' });
+
+                let label = "";
+                if(dateKey === todayKey) label = "BUGÜN";
+                else if(dateKey === tomorrowKey) label = "YARIN";
+                else {
+                    const parts = dateKey.split('-');
+                    const dateObj = new Date(parts[0], parts[1]-1, parts[2]);
+                    label = dateObj.toLocaleDateString('tr-TR', {weekday:'long', day:'numeric', month:'long'}).toUpperCase();
+                }
 
                 area.innerHTML += `<div class="date-divider">${label}</div>`;
                 const groups = {};
@@ -213,8 +237,9 @@
                     const cont = lBox.querySelector('.league-content');
                     groups[lig].sort((a,b)=>a.saat_raw.localeCompare(b.saat_raw)).forEach(m => {
                         const d = new Date(m.saat_raw);
-                        const tsi = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0');
-                        cont.innerHTML += `<div class="card"><i class="fa-solid fa-star fav-star ${favorites[m.mac]?'active':''}" onclick="toggleFav('${m.mac}', this)"></i><span class="card-time">${tsi} (TSİ)</span><div class="card-match">${m.mac}</div><div style="font-size:0.85em; color:var(--muted); border-top:1px solid #1f1f23; padding-top:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.uyari}</div></div>`;
+                        // TSİ Saat Gösterimi
+                        const timeStr = d.toLocaleTimeString('tr-TR', {timeZone: 'Europe/Istanbul', hour: '2-digit', minute:'2-digit'});
+                        cont.innerHTML += `<div class="card"><i class="fa-solid fa-star fav-star ${favorites[m.mac]?'active':''}" onclick="toggleFav('${m.mac}', this)"></i><span class="card-time">${timeStr} (TSİ)</span><div class="card-match">${m.mac}</div><div style="font-size:0.85em; color:var(--muted); border-top:1px solid #1f1f23; padding-top:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.uyari}</div></div>`;
                     });
                     area.appendChild(lBox);
                 }
