@@ -1,6 +1,6 @@
 {
-    "son_guncelleme": "27-04-2026 09:31:57",
-    "kalan_hak": "142",
+    "son_guncelleme": "27-04-2026 12:09:57",
+    "kalan_hak": "125",
     "veriler": [
         {
             "kategori": "ALTIN",
@@ -1019,13 +1019,6 @@
         },
         {
             "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Rio Ave FC - Gil Vicente",
-            "saat_raw": "2026-05-03T19:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Botafogo - Remo",
             "saat_raw": "2026-05-02T19:00:00Z",
@@ -1111,29 +1104,15 @@
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Racing Club - Atlético Huracán",
-            "saat_raw": "2026-05-03T00:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "River Plate - Atlético Tucuman",
-            "saat_raw": "2026-05-03T00:00:00Z",
+            "saat_raw": "2026-05-03T00:15:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Belgrano de Cordoba - Sarmiento de Junin",
-            "saat_raw": "2026-05-03T00:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Lanus - Deportivo Riestra",
-            "saat_raw": "2026-05-03T00:00:00Z",
+            "saat_raw": "2026-05-03T00:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -1147,6 +1126,13 @@
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Gimnasia La Plata - Argentinos Juniors",
+            "saat_raw": "2026-05-03T20:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMERA DIVISION (ARGENTINA)",
+            "mac": "Racing Club - Atlético Huracán",
             "saat_raw": "2026-05-03T20:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
@@ -1175,6 +1161,13 @@
             "kategori": "ALTIN",
             "lig": "PRIMERA DIVISION (ARGENTINA)",
             "mac": "Gimnasia Mendoza - Defensa y Justicia",
+            "saat_raw": "2026-05-03T20:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PRIMERA DIVISION (ARGENTINA)",
+            "mac": "Lanus - Deportivo Riestra",
             "saat_raw": "2026-05-03T20:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
@@ -1370,15 +1363,15 @@
         {
             "kategori": "ALTIN",
             "lig": "EUROLEAGUE",
-            "mac": "Olympiacos - AS Monaco",
-            "saat_raw": "2026-04-28T18:00:00Z",
+            "mac": "Fenerbahce SK - Žalgiris",
+            "saat_raw": "2026-04-28T17:45:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
             "kategori": "ALTIN",
             "lig": "EUROLEAGUE",
-            "mac": "Fenerbahce SK - Žalgiris",
-            "saat_raw": "2026-04-28T18:45:00Z",
+            "mac": "Olympiacos - AS Monaco",
+            "saat_raw": "2026-04-28T18:00:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
