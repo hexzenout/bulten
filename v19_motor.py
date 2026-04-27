@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 ODDS_API_POOL = [k.strip() for k in os.getenv("ODDS_KEYS", "").split(",") if k.strip()]
 
+# Tam 27 Liglik Liste
 LIGLER = [
     {"k":"soccer_turkey_super_league", "n":"SÜPER LİG", "t":"futbol", "f":"tr", "c":"TÜRKİYE"},
     {"k":"soccer_epl", "n":"PREMIER LEAGUE", "t":"futbol", "f":"gb-eng", "c":"İNGİLTERE"},
