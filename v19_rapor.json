@@ -1,1525 +1,4659 @@
 {
-    "son_guncelleme": "27-04-2026 18:54:15",
-    "kalan_hak": "33",
+    "son_guncelleme": "27-04-2026 19:02:58",
+    "kalan_hak": "479",
     "veriler": [
         {
             "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Besiktas JK - Fatih Karagümrük",
-            "saat_raw": "2026-04-27T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Torku Konyaspor - Trabzonspor",
-            "saat_raw": "2026-04-27T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Çaykur Rizespor - Torku Konyaspor",
-            "saat_raw": "2026-05-01T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Gazişehir Gaziantep - Besiktas JK",
-            "saat_raw": "2026-05-01T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Fenerbahce - Basaksehir",
-            "saat_raw": "2026-05-02T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Samsunspor - Galatasaray",
-            "saat_raw": "2026-05-02T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Trabzonspor - Goztepe",
-            "saat_raw": "2026-05-02T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Antalyaspor - Alanyaspor",
-            "saat_raw": "2026-05-03T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Kayserispor - Eyüpspor",
-            "saat_raw": "2026-05-03T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Fatih Karagümrük - Genclerbirligi SK",
-            "saat_raw": "2026-05-03T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Kasimpasa SK - Kocaelispor",
-            "saat_raw": "2026-05-03T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Manchester United - Brentford",
-            "saat_raw": "2026-04-27T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Leeds United - Burnley",
-            "saat_raw": "2026-05-01T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Brentford - West Ham United",
-            "saat_raw": "2026-05-02T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Newcastle United - Brighton and Hove Albion",
-            "saat_raw": "2026-05-02T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Wolverhampton Wanderers - Sunderland",
-            "saat_raw": "2026-05-02T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Arsenal - Fulham",
-            "saat_raw": "2026-05-02T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Bournemouth - Crystal Palace",
-            "saat_raw": "2026-05-03T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Manchester United - Liverpool",
-            "saat_raw": "2026-05-03T14:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Aston Villa - Tottenham Hotspur",
-            "saat_raw": "2026-05-03T18:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Chelsea - Nottingham Forest",
-            "saat_raw": "2026-05-04T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Everton - Manchester City",
-            "saat_raw": "2026-05-04T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Liverpool - Chelsea",
-            "saat_raw": "2026-05-09T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Fulham - Bournemouth",
-            "saat_raw": "2026-05-09T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Brighton and Hove Albion - Wolverhampton Wanderers",
-            "saat_raw": "2026-05-09T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Sunderland - Manchester United",
-            "saat_raw": "2026-05-09T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Manchester City - Brentford",
-            "saat_raw": "2026-05-09T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Burnley - Aston Villa",
-            "saat_raw": "2026-05-10T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Crystal Palace - Everton",
-            "saat_raw": "2026-05-10T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Nottingham Forest - Newcastle United",
-            "saat_raw": "2026-05-10T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "West Ham United - Arsenal",
-            "saat_raw": "2026-05-10T15:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PREMIER LEAGUE",
-            "mac": "Tottenham Hotspur - Leeds United",
-            "saat_raw": "2026-05-11T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Espanyol - Levante",
-            "saat_raw": "2026-04-27T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Girona - Mallorca",
-            "saat_raw": "2026-05-01T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Villarreal - Levante",
-            "saat_raw": "2026-05-02T12:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Valencia - Atlético Madrid",
-            "saat_raw": "2026-05-02T14:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Alavés - Athletic Bilbao",
-            "saat_raw": "2026-05-02T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "CA Osasuna - Barcelona",
-            "saat_raw": "2026-05-02T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Celta Vigo - Elche CF",
-            "saat_raw": "2026-05-03T12:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Getafe - Rayo Vallecano",
-            "saat_raw": "2026-05-03T14:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Real Betis - Oviedo",
-            "saat_raw": "2026-05-03T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Espanyol - Real Madrid",
-            "saat_raw": "2026-05-03T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Sevilla - Real Sociedad",
-            "saat_raw": "2026-05-04T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Levante - CA Osasuna",
-            "saat_raw": "2026-05-08T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Elche CF - Alavés",
-            "saat_raw": "2026-05-09T12:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Sevilla - Espanyol",
-            "saat_raw": "2026-05-09T14:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Atlético Madrid - Celta Vigo",
-            "saat_raw": "2026-05-09T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Real Sociedad - Real Betis",
-            "saat_raw": "2026-05-09T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Mallorca - Villarreal",
-            "saat_raw": "2026-05-10T12:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Athletic Bilbao - Valencia",
-            "saat_raw": "2026-05-10T14:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Oviedo - Getafe",
-            "saat_raw": "2026-05-10T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Barcelona - Real Madrid",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LA LIGA",
-            "mac": "Rayo Vallecano - Girona",
-            "saat_raw": "2026-05-11T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Bayern Munich - 1. FC Heidenheim",
-            "saat_raw": "2026-05-02T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Union Berlin - 1. FC Köln",
-            "saat_raw": "2026-05-02T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Werder Bremen - Augsburg",
-            "saat_raw": "2026-05-02T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Eintracht Frankfurt - Hamburger SV",
-            "saat_raw": "2026-05-02T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "TSG Hoffenheim - VfB Stuttgart",
-            "saat_raw": "2026-05-02T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Bayer Leverkusen - RB Leipzig",
-            "saat_raw": "2026-05-02T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "FC St. Pauli - FSV Mainz 05",
-            "saat_raw": "2026-05-03T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Borussia Monchengladbach - Borussia Dortmund",
-            "saat_raw": "2026-05-03T15:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "SC Freiburg - VfL Wolfsburg",
-            "saat_raw": "2026-05-03T17:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Borussia Dortmund - Eintracht Frankfurt",
-            "saat_raw": "2026-05-08T18:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Augsburg - Borussia Monchengladbach",
-            "saat_raw": "2026-05-09T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "VfB Stuttgart - Bayer Leverkusen",
-            "saat_raw": "2026-05-09T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "RB Leipzig - FC St. Pauli",
-            "saat_raw": "2026-05-09T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "TSG Hoffenheim - Werder Bremen",
-            "saat_raw": "2026-05-09T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "VfL Wolfsburg - Bayern Munich",
-            "saat_raw": "2026-05-09T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "Hamburger SV - SC Freiburg",
-            "saat_raw": "2026-05-10T13:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "1. FC Köln - 1. FC Heidenheim",
-            "saat_raw": "2026-05-10T15:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BUNDESLIGA",
-            "mac": "FSV Mainz 05 - Union Berlin",
-            "saat_raw": "2026-05-10T17:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Lazio - Udinese",
-            "saat_raw": "2026-04-27T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Pisa - Lecce",
-            "saat_raw": "2026-05-01T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Udinese - Torino",
-            "saat_raw": "2026-05-02T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Como - Napoli",
-            "saat_raw": "2026-05-02T16:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Atalanta BC - Genoa",
-            "saat_raw": "2026-05-02T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Bologna - Cagliari",
-            "saat_raw": "2026-05-03T10:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Sassuolo - AC Milan",
-            "saat_raw": "2026-05-03T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Juventus - Hellas Verona",
-            "saat_raw": "2026-05-03T16:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Inter Milan - Parma",
-            "saat_raw": "2026-05-03T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Cremonese - Lazio",
-            "saat_raw": "2026-05-04T16:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "AS Roma - Fiorentina",
-            "saat_raw": "2026-05-04T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Torino - Sassuolo",
-            "saat_raw": "2026-05-08T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Cagliari - Udinese",
-            "saat_raw": "2026-05-09T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Lazio - Inter Milan",
-            "saat_raw": "2026-05-09T16:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Lecce - Juventus",
-            "saat_raw": "2026-05-09T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Hellas Verona - Como",
-            "saat_raw": "2026-05-10T10:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Cremonese - Pisa",
-            "saat_raw": "2026-05-10T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Fiorentina - Genoa",
-            "saat_raw": "2026-05-10T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Parma - AS Roma",
-            "saat_raw": "2026-05-10T16:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "AC Milan - Atalanta BC",
-            "saat_raw": "2026-05-10T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A",
-            "mac": "Napoli - Bologna",
-            "saat_raw": "2026-05-11T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Nantes - Marseille",
-            "saat_raw": "2026-05-02T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Paris Saint Germain - Lorient",
-            "saat_raw": "2026-05-02T15:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Metz - AS Monaco",
-            "saat_raw": "2026-05-02T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Nice - RC Lens",
-            "saat_raw": "2026-05-02T19:05:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Lille - Le Havre",
-            "saat_raw": "2026-05-03T13:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Auxerre - Angers",
-            "saat_raw": "2026-05-03T15:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Paris FC - Brest",
-            "saat_raw": "2026-05-03T15:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Strasbourg - Toulouse",
-            "saat_raw": "2026-05-03T15:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Lyon - Rennes",
-            "saat_raw": "2026-05-03T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "RC Lens - Nantes",
-            "saat_raw": "2026-05-08T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "AS Monaco - Lille",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Angers - Strasbourg",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Auxerre - Nice",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Paris Saint Germain - Brest",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Le Havre - Marseille",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Metz - Lorient",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Toulouse - Lyon",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "LIGUE 1",
-            "mac": "Rennes - Paris FC",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONS LEAGUE",
-            "mac": "Paris Saint Germain - Bayern Munich",
-            "saat_raw": "2026-04-28T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONS LEAGUE",
-            "mac": "Atlético Madrid - Arsenal",
-            "saat_raw": "2026-04-29T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EUROPA LEAGUE",
-            "mac": "Nottingham Forest - Aston Villa",
-            "saat_raw": "2026-04-30T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EUROPA LEAGUE",
-            "mac": "SC Braga - SC Freiburg",
-            "saat_raw": "2026-04-30T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CONFERENCE LEAGUE",
-            "mac": "Shakhtar Donetsk - Crystal Palace",
-            "saat_raw": "2026-04-30T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CONFERENCE LEAGUE",
-            "mac": "Rayo Vallecano - Strasbourg",
-            "saat_raw": "2026-04-30T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Southampton - Ipswich Town",
-            "saat_raw": "2026-04-28T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Portsmouth - Birmingham City",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Blackburn Rovers - Leicester City",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Bristol City - Stoke City",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Swansea City - Charlton Athletic",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Watford - Coventry City",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Derby County - Sheffield United",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Hull City - Norwich City",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Wrexham AFC - Middlesbrough",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Millwall - Oxford United",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "CHAMPIONSHIP",
-            "mac": "Sheffield Wednesday - West Bromwich Albion",
-            "saat_raw": "2026-05-02T11:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "FC Utrecht - NAC Breda",
-            "saat_raw": "2026-05-02T14:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "Groningen - Excelsior",
-            "saat_raw": "2026-05-02T16:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "Ajax - PSV Eindhoven",
-            "saat_raw": "2026-05-02T18:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "NEC Nijmegen - SC Telstar",
-            "saat_raw": "2026-05-02T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "FC Volendam - Heerenveen",
-            "saat_raw": "2026-05-03T10:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "FC Zwolle - Heracles Almelo",
-            "saat_raw": "2026-05-03T12:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "Fortuna Sittard - Feyenoord",
-            "saat_raw": "2026-05-03T12:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "AZ Alkmaar - FC Twente Enschede",
-            "saat_raw": "2026-05-03T14:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EREDIVISIE",
-            "mac": "Sparta Rotterdam - Go Ahead Eagles",
-            "saat_raw": "2026-05-03T14:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Gil Vicente - Casa Pia",
-            "saat_raw": "2026-04-27T19:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Sporting Lisbon - Tondela",
-            "saat_raw": "2026-04-29T19:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Nacional - AVS Futebol SAD",
-            "saat_raw": "2026-05-02T14:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Arouca - Santa Clara",
-            "saat_raw": "2026-05-02T14:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Moreirense FC - CF Estrela",
-            "saat_raw": "2026-05-02T14:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Famalicão - Benfica",
-            "saat_raw": "2026-05-02T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "FC Porto - Alverca",
-            "saat_raw": "2026-05-02T19:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Casa Pia - Tondela",
-            "saat_raw": "2026-05-03T14:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Braga - Estoril",
-            "saat_raw": "2026-05-03T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMEIRA LIGA",
-            "mac": "Rio Ave FC - Gil Vicente",
-            "saat_raw": "2026-05-03T19:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Botafogo - Remo",
-            "saat_raw": "2026-05-02T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Vitoria - Coritiba",
-            "saat_raw": "2026-05-02T21:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Palmeiras - Santos",
-            "saat_raw": "2026-05-02T21:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Atletico Paranaense - Grêmio",
-            "saat_raw": "2026-05-02T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Cruzeiro - Atletico Mineiro",
-            "saat_raw": "2026-05-03T00:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Sao Paulo - Bahia",
-            "saat_raw": "2026-05-03T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Flamengo - Vasco da Gama",
-            "saat_raw": "2026-05-03T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Chapecoense - Bragantino-SP",
-            "saat_raw": "2026-05-03T21:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Internacional - Fluminense",
-            "saat_raw": "2026-05-03T21:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Mirassol - Corinthians",
-            "saat_raw": "2026-05-03T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Coritiba - Internacional",
-            "saat_raw": "2026-05-09T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Fluminense - Vitoria",
-            "saat_raw": "2026-05-09T21:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Bahia - Cruzeiro",
-            "saat_raw": "2026-05-10T00:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Atletico Mineiro - Botafogo",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Remo - Palmeiras",
-            "saat_raw": "2026-05-10T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Santos - Bragantino-SP",
-            "saat_raw": "2026-05-10T21:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Mirassol - Chapecoense",
-            "saat_raw": "2026-05-10T21:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Corinthians - Sao Paulo",
-            "saat_raw": "2026-05-10T21:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Grêmio - Flamengo",
-            "saat_raw": "2026-05-10T22:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "SERIE A (BRAZIL)",
-            "mac": "Vasco da Gama - Atletico Paranaense",
-            "saat_raw": "2026-05-10T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Velez Sarsfield BA - Union Santa Fe",
-            "saat_raw": "2026-04-27T21:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Atlético Huracán - Argentinos Juniors",
-            "saat_raw": "2026-04-28T00:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "River Plate - Atlético Tucuman",
-            "saat_raw": "2026-05-03T00:15:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Belgrano de Cordoba - Sarmiento de Junin",
-            "saat_raw": "2026-05-03T00:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Aldosivi Mar del Plata - Independiente Rivadavia",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Gimnasia La Plata - Argentinos Juniors",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Racing Club - Atlético Huracán",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Barracas Central - Banfield",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Central Córdoba - Boca Juniors",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Rosario Central - CA Tigre BA",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Gimnasia Mendoza - Defensa y Justicia",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Lanus - Deportivo Riestra",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Estudiantes de Río Cuarto - Instituto de Córdoba",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Platense - Estudiantes",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "San Lorenzo - Independiente",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "PRIMERA DIVISION (ARGENTINA)",
-            "mac": "Velez Sarsfield BA - Newells Old Boys",
-            "saat_raw": "2026-05-03T20:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Toronto FC - San Jose Earthquakes",
-            "saat_raw": "2026-05-02T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Sporting Kansas City - Seattle Sounders FC",
-            "saat_raw": "2026-05-02T18:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Real Salt Lake - Portland Timbers",
-            "saat_raw": "2026-05-02T20:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Inter Miami CF - Orlando City SC",
-            "saat_raw": "2026-05-02T23:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Atlanta United FC - CF Montreal",
-            "saat_raw": "2026-05-02T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "New England Revolution - Charlotte FC",
-            "saat_raw": "2026-05-02T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Columbus Crew SC - Minnesota United FC",
-            "saat_raw": "2026-05-02T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "New York Red Bulls - FC Dallas",
-            "saat_raw": "2026-05-02T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Philadelphia Union - Nashville SC",
-            "saat_raw": "2026-05-02T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Chicago Fire - FC Cincinnati",
-            "saat_raw": "2026-05-03T00:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Houston Dynamo - Colorado Rapids",
-            "saat_raw": "2026-05-03T00:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "San Diego FC - Los Angeles FC",
-            "saat_raw": "2026-05-03T01:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "LA Galaxy - Vancouver Whitecaps FC",
-            "saat_raw": "2026-05-03T02:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "New York City FC - D.C. United",
-            "saat_raw": "2026-05-03T19:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "MLS",
-            "mac": "Austin FC - St. Louis City SC",
-            "saat_raw": "2026-05-03T21:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "NBA",
-            "mac": "Orlando Magic - Detroit Pistons",
-            "saat_raw": "2026-04-28T00:10:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "NBA",
-            "mac": "Phoenix Suns - Oklahoma City Thunder",
-            "saat_raw": "2026-04-28T01:40:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "NBA",
-            "mac": "Denver Nuggets - Minnesota Timberwolves",
-            "saat_raw": "2026-04-28T02:40:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "NBA",
-            "mac": "Boston Celtics - Philadelphia 76ers",
-            "saat_raw": "2026-04-28T23:10:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "NBA",
-            "mac": "New York Knicks - Atlanta Hawks",
-            "saat_raw": "2026-04-29T00:10:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "NBA",
-            "mac": "San Antonio Spurs - Portland Trail Blazers",
-            "saat_raw": "2026-04-29T01:40:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "NBA",
-            "mac": "Cleveland Cavaliers - Toronto Raptors",
-            "saat_raw": "2026-04-29T23:10:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "NBA",
-            "mac": "Los Angeles Lakers - Houston Rockets",
-            "saat_raw": "2026-04-30T01:40:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "EUROLEAGUE",
+            "lig": "BASKETBALL EUROLEAGUE",
+            "tur": "basketbol",
             "mac": "Fenerbahce SK - Žalgiris",
-            "saat_raw": "2026-04-28T17:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-04-28",
+            "saat": "20:45",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
-            "lig": "EUROLEAGUE",
+            "lig": "BASKETBALL EUROLEAGUE",
+            "tur": "basketbol",
             "mac": "Olympiacos - AS Monaco",
-            "saat_raw": "2026-04-28T18:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-04-28",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
-            "lig": "EUROLEAGUE",
+            "lig": "BASKETBALL EUROLEAGUE",
+            "tur": "basketbol",
             "mac": "Valencia Basket - Panathinaikos",
-            "saat_raw": "2026-04-28T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-04-28",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
-            "lig": "EUROLEAGUE",
+            "lig": "BASKETBALL EUROLEAGUE",
+            "tur": "basketbol",
             "mac": "Real Madrid - Hapoel Tel Aviv",
-            "saat_raw": "2026-04-29T18:45:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-04-29",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "tur": "basketbol",
+            "mac": "Orlando Magic - Detroit Pistons",
+            "tarih": "2026-04-28",
+            "saat": "03:10",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "tur": "basketbol",
+            "mac": "Phoenix Suns - Oklahoma City Thunder",
+            "tarih": "2026-04-28",
+            "saat": "04:40",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "tur": "basketbol",
+            "mac": "Denver Nuggets - Minnesota Timberwolves",
+            "tarih": "2026-04-28",
+            "saat": "05:40",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "tur": "basketbol",
+            "mac": "Boston Celtics - Philadelphia 76ers",
+            "tarih": "2026-04-29",
+            "saat": "02:10",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "tur": "basketbol",
+            "mac": "New York Knicks - Atlanta Hawks",
+            "tarih": "2026-04-29",
+            "saat": "03:10",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "tur": "basketbol",
+            "mac": "San Antonio Spurs - Portland Trail Blazers",
+            "tarih": "2026-04-29",
+            "saat": "04:40",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "tur": "basketbol",
+            "mac": "Cleveland Cavaliers - Toronto Raptors",
+            "tarih": "2026-04-30",
+            "saat": "02:10",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "NBA",
+            "tur": "basketbol",
+            "mac": "Los Angeles Lakers - Houston Rockets",
+            "tarih": "2026-04-30",
+            "saat": "04:40",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
+            "tur": "basketbol",
             "mac": "Minnesota Lynx - Nigeria",
-            "saat_raw": "2026-04-28T00:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-04-28",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
+            "tur": "basketbol",
             "mac": "New York Liberty - Connecticut Sun",
-            "saat_raw": "2026-05-08T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-05-09",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
+            "tur": "basketbol",
             "mac": "Toronto Tempo - Washington Mystics",
-            "saat_raw": "2026-05-08T23:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-05-09",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
+            "tur": "basketbol",
             "mac": "Seattle Storm - Golden State Valkyries",
-            "saat_raw": "2026-05-09T02:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-05-09",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
+            "tur": "basketbol",
             "mac": "Indiana Fever - Dallas Wings",
-            "saat_raw": "2026-05-09T17:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-05-09",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
+            "tur": "basketbol",
             "mac": "Las Vegas Aces - Phoenix Mercury",
-            "saat_raw": "2026-05-09T19:30:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-05-09",
+            "saat": "22:30",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "ALTIN",
             "lig": "WNBA",
+            "tur": "basketbol",
             "mac": "Portland Fire - Chicago Sky",
-            "saat_raw": "2026-05-10T01:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
+            "tarih": "2026-05-10",
+            "saat": "04:00",
+            "uyari": "📡 Analiz Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
-            "lig": "SİSTEM UYARISI",
-            "mac": "AVRUPA BASKETBOL EKSİK",
-            "saat_raw": "2026-04-27T18:54:15.717791+00:00",
-            "uyari": "BASKET_KEY eksik! LNB, ACB, BSL atlandı."
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Velez Sarsfield BA - Union Santa Fe",
+            "tarih": "2026-04-28",
+            "saat": "00:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Atlético Huracán - Argentinos Juniors",
+            "tarih": "2026-04-28",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "River Plate - Atlético Tucuman",
+            "tarih": "2026-05-03",
+            "saat": "03:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Belgrano de Cordoba - Sarmiento de Junin",
+            "tarih": "2026-05-03",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Aldosivi Mar del Plata - Independiente Rivadavia",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Gimnasia La Plata - Argentinos Juniors",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Racing Club - Atlético Huracán",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Barracas Central - Banfield",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Central Córdoba - Boca Juniors",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Rosario Central - CA Tigre BA",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Gimnasia Mendoza - Defensa y Justicia",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Lanus - Deportivo Riestra",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Estudiantes de Río Cuarto - Instituto de Córdoba",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Platense - Estudiantes",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "San Lorenzo - Independiente",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMERA DIVISIÓN - ARGENTINA",
+            "tur": "futbol",
+            "mac": "Velez Sarsfield BA - Newells Old Boys",
+            "tarih": "2026-05-03",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "A-LEAGUE",
+            "tur": "futbol",
+            "mac": "Auckland FC - Melbourne City",
+            "tarih": "2026-05-02",
+            "saat": "08:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "A-LEAGUE",
+            "tur": "futbol",
+            "mac": "Melbourne Victory - Sydney FC",
+            "tarih": "2026-05-02",
+            "saat": "12:40",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "AUSTRIAN FOOTBALL BUNDESLIGA",
+            "tur": "futbol",
+            "mac": "Ried - FC Blau-Weiß Linz",
+            "tarih": "2026-05-02",
+            "saat": "18:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "AUSTRIAN FOOTBALL BUNDESLIGA",
+            "tur": "futbol",
+            "mac": "Grazer AK - WSG Tirol",
+            "tarih": "2026-05-02",
+            "saat": "18:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "AUSTRIAN FOOTBALL BUNDESLIGA",
+            "tur": "futbol",
+            "mac": "Austria Wien - Hartberg",
+            "tarih": "2026-05-03",
+            "saat": "15:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "AUSTRIAN FOOTBALL BUNDESLIGA",
+            "tur": "futbol",
+            "mac": "RB Salzburg - Sturm Graz",
+            "tarih": "2026-05-03",
+            "saat": "18:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "AUSTRIAN FOOTBALL BUNDESLIGA",
+            "tur": "futbol",
+            "mac": "Rheindorf Altach - Wolfsberger AC",
+            "tarih": "2026-05-04",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "AUSTRIAN FOOTBALL BUNDESLIGA",
+            "tur": "futbol",
+            "mac": "LASK - Rapid Wien",
+            "tarih": "2026-05-04",
+            "saat": "21:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "BELGIUM FIRST DIV",
+            "tur": "futbol",
+            "mac": "Cercle Brugge KSV - SV Zulte-Waregem",
+            "tarih": "2026-05-01",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "BELGIUM FIRST DIV",
+            "tur": "futbol",
+            "mac": "Westerlo - Leuven",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "BELGIUM FIRST DIV",
+            "tur": "futbol",
+            "mac": "Charleroi - Genk",
+            "tarih": "2026-05-02",
+            "saat": "19:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "BELGIUM FIRST DIV",
+            "tur": "futbol",
+            "mac": "Sint Truiden - Union Saint-Gilloise",
+            "tarih": "2026-05-02",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "BELGIUM FIRST DIV",
+            "tur": "futbol",
+            "mac": "KV Mechelen - Gent",
+            "tarih": "2026-05-03",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "BELGIUM FIRST DIV",
+            "tur": "futbol",
+            "mac": "Royal Antwerp - Standard Liege",
+            "tarih": "2026-05-03",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "BELGIUM FIRST DIV",
+            "tur": "futbol",
+            "mac": "Anderlecht - Club Brugge",
+            "tarih": "2026-05-03",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "BELGIUM FIRST DIV",
+            "tur": "futbol",
+            "mac": "Dender - RAAL La Louvière",
+            "tarih": "2026-05-03",
+            "saat": "20:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Botafogo - Remo",
+            "tarih": "2026-05-02",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Vitoria - Coritiba",
+            "tarih": "2026-05-03",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Palmeiras - Santos",
+            "tarih": "2026-05-03",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Atletico Paranaense - Grêmio",
+            "tarih": "2026-05-03",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Cruzeiro - Atletico Mineiro",
+            "tarih": "2026-05-03",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Sao Paulo - Bahia",
+            "tarih": "2026-05-03",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Flamengo - Vasco da Gama",
+            "tarih": "2026-05-03",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Chapecoense - Bragantino-SP",
+            "tarih": "2026-05-04",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Internacional - Fluminense",
+            "tarih": "2026-05-04",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Mirassol - Corinthians",
+            "tarih": "2026-05-04",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Coritiba - Internacional",
+            "tarih": "2026-05-09",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Fluminense - Vitoria",
+            "tarih": "2026-05-10",
+            "saat": "00:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Bahia - Cruzeiro",
+            "tarih": "2026-05-10",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Atletico Mineiro - Botafogo",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Remo - Palmeiras",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Santos - Bragantino-SP",
+            "tarih": "2026-05-11",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Mirassol - Chapecoense",
+            "tarih": "2026-05-11",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Corinthians - Sao Paulo",
+            "tarih": "2026-05-11",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Grêmio - Flamengo",
+            "tarih": "2026-05-11",
+            "saat": "01:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE A",
+            "tur": "futbol",
+            "mac": "Vasco da Gama - Atletico Paranaense",
+            "tarih": "2026-05-11",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Athletic Club (MG) - Nautico PE",
+            "tarih": "2026-04-28",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Botafogo - Nautico PE",
+            "tarih": "2026-05-02",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Cuiabá - Criciuma",
+            "tarih": "2026-05-03",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Fortaleza - Goiás",
+            "tarih": "2026-05-03",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Operario PR - Londrina",
+            "tarih": "2026-05-03",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "São Bernardo - Ponte Preta",
+            "tarih": "2026-05-03",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Sport Recife - Ceará",
+            "tarih": "2026-05-04",
+            "saat": "00:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Atletico Goianiense - Juventude",
+            "tarih": "2026-05-04",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "América Mineiro - Clube de Regatas Brasil",
+            "tarih": "2026-05-04",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Avai - Grêmio Novorizontino",
+            "tarih": "2026-05-04",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "BRAZIL SÉRIE B",
+            "tur": "futbol",
+            "mac": "Vila Nova - Athletic Club (MG)",
+            "tarih": "2026-05-05",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "PRIMERA DIVISIÓN - CHILE",
+            "tur": "futbol",
+            "mac": "Colo Colo - Coquimbo Unido",
+            "tarih": "2026-05-04",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - CHINA",
+            "tur": "futbol",
+            "mac": "Dalian Yingbo - Chongqing Tonglianglong FC",
+            "tarih": "2026-05-01",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - CHINA",
+            "tur": "futbol",
+            "mac": "Henan FC - Liaoning Tieren FC",
+            "tarih": "2026-05-01",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - CHINA",
+            "tur": "futbol",
+            "mac": "Shandong Luneng Taishan FC - Qingdao West Coast FC",
+            "tarih": "2026-05-01",
+            "saat": "14:35",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - CHINA",
+            "tur": "futbol",
+            "mac": "Tianjin Jinmen Tiger FC - Wuhan Three Towns",
+            "tarih": "2026-05-01",
+            "saat": "14:35",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - CHINA",
+            "tur": "futbol",
+            "mac": "Shanghai Shenhua FC - Chengdu Rongcheng FC",
+            "tarih": "2026-05-01",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - CHINA",
+            "tur": "futbol",
+            "mac": "Qingdao Hainiu FC - Shanghai SIPG FC",
+            "tarih": "2026-05-02",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - CHINA",
+            "tur": "futbol",
+            "mac": "Zhejiang - Shenzhen Peng City FC",
+            "tarih": "2026-05-02",
+            "saat": "14:35",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - CHINA",
+            "tur": "futbol",
+            "mac": "Yunnan Yukun - Beijing FC",
+            "tarih": "2026-05-02",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Libertad Asuncion - Independiente del Valle",
+            "tarih": "2026-04-29",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Lanus - LDU Quito",
+            "tarih": "2026-04-29",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "UCV FC - Rosario Central",
+            "tarih": "2026-04-29",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Cruzeiro - Boca Juniors",
+            "tarih": "2026-04-29",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Deportes Tolima - Coquimbo Unido",
+            "tarih": "2026-04-29",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Sporting Cristal - Junior FC",
+            "tarih": "2026-04-29",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Mirassol - Club Always Ready",
+            "tarih": "2026-04-30",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Platense - Independiente Santa Fe",
+            "tarih": "2026-04-30",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Barcelona SC - Universidad Católica (CHI)",
+            "tarih": "2026-04-30",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Cerro Porteño - Palmeiras-SP",
+            "tarih": "2026-04-30",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Estudiantes La Plata - Flamengo-RJ",
+            "tarih": "2026-04-30",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Club Universitario de Deportes - Nacional de Montevideo",
+            "tarih": "2026-04-30",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Club Bolívar - Fluminense-RJ",
+            "tarih": "2026-05-01",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Independiente Rivadavia - Deportivo La Guaira",
+            "tarih": "2026-05-01",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Corinthians-SP - Peñarol Montevideo",
+            "tarih": "2026-05-01",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA LIBERTADORES",
+            "tur": "futbol",
+            "mac": "Independiente Medellín - Cusco FC",
+            "tarih": "2026-05-01",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Botafogo - Club Independiente Petrolero",
+            "tarih": "2026-04-29",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "San Lorenzo - Santos",
+            "tarih": "2026-04-29",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Barracas Central - Audax Italiano",
+            "tarih": "2026-04-29",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Recoleta FC - C.D. Cuenca",
+            "tarih": "2026-04-29",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Millonarios - Sao Paulo",
+            "tarih": "2026-04-29",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "O'Higgins - CA Boston River",
+            "tarih": "2026-04-29",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "CA Juventud - Puerto Cabello",
+            "tarih": "2026-04-30",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Caracas FC - Racing Club",
+            "tarih": "2026-04-30",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Deportivo Pereira - Montevideo City Torque",
+            "tarih": "2026-04-30",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Club Cienciano - Clube Atlético Mineiro",
+            "tarih": "2026-04-30",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Palestino - Grêmio",
+            "tarih": "2026-04-30",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Carabobo FC - Blooming",
+            "tarih": "2026-05-01",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Vasco da Gama - Olimpia Asunción",
+            "tarih": "2026-05-01",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "CA Tigre BA - América de Cali",
+            "tarih": "2026-05-01",
+            "saat": "03:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Bragantino-SP - River Plate",
+            "tarih": "2026-05-01",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPA SUDAMERICANA",
+            "tur": "futbol",
+            "mac": "Alianza Atlético - Macará",
+            "tarih": "2026-05-01",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "DENMARK SUPERLIGA",
+            "tur": "futbol",
+            "mac": "FC Copenhagen - Vejle Boldklub",
+            "tarih": "2026-04-27",
+            "saat": "20:01",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "DENMARK SUPERLIGA",
+            "tur": "futbol",
+            "mac": "Brondby IF - FC Nordsjaelland",
+            "tarih": "2026-05-01",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "DENMARK SUPERLIGA",
+            "tur": "futbol",
+            "mac": "OB Odense BK - Silkeborg IF",
+            "tarih": "2026-05-03",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "DENMARK SUPERLIGA",
+            "tur": "futbol",
+            "mac": "Randers FC - Vejle Boldklub",
+            "tarih": "2026-05-03",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "DENMARK SUPERLIGA",
+            "tur": "futbol",
+            "mac": "FC Fredericia - FC Copenhagen",
+            "tarih": "2026-05-03",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "DENMARK SUPERLIGA",
+            "tur": "futbol",
+            "mac": "AGF Aarhus - SonderjyskE",
+            "tarih": "2026-05-03",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "DENMARK SUPERLIGA",
+            "tur": "futbol",
+            "mac": "FC Midtjylland - Viborg FF",
+            "tarih": "2026-05-04",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Southampton - Ipswich Town",
+            "tarih": "2026-04-28",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Portsmouth - Birmingham City",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Blackburn Rovers - Leicester City",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Bristol City - Stoke City",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Swansea City - Charlton Athletic",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Watford - Coventry City",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Derby County - Sheffield United",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Hull City - Norwich City",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Wrexham AFC - Middlesbrough",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Millwall - Oxford United",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "CHAMPIONSHIP",
+            "tur": "futbol",
+            "mac": "Sheffield Wednesday - West Bromwich Albion",
+            "tarih": "2026-05-02",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Northampton Town - Barnsley",
+            "tarih": "2026-04-28",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Peterborough United - Mansfield Town",
+            "tarih": "2026-04-28",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Stockport County FC - Port Vale",
+            "tarih": "2026-04-28",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Reading - Blackpool",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Bolton Wanderers - Luton",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Exeter City - Bradford City",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Leyton Orient - Burton Albion",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Mansfield Town - Cardiff City",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Wimbledon - Huddersfield Town",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Port Vale - Lincoln City",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Northampton Town - Plymouth Argyle",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Wycombe Wanderers - Rotherham United",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Stevenage - Wigan Athletic",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Oldham Athletic - Accrington Stanley",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Harrogate Town - Barnet",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Barrow - Newport County",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Notts County - Bristol Rovers",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Bromley FC - Walsall",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Crewe Alexandra - Cambridge United",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Cheltenham Town - Colchester United",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Swindon Town - Chesterfield FC",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Crawley Town - Salford City",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Fleetwood Town - Milton Keynes Dons",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Gillingham - Shrewsbury Town",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE 2",
+            "tur": "futbol",
+            "mac": "Tranmere Rovers - Grimsby Town",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Manchester United - Brentford",
+            "tarih": "2026-04-27",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Leeds United - Burnley",
+            "tarih": "2026-05-01",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Brentford - West Ham United",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Newcastle United - Brighton and Hove Albion",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Wolverhampton Wanderers - Sunderland",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Arsenal - Fulham",
+            "tarih": "2026-05-02",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Bournemouth - Crystal Palace",
+            "tarih": "2026-05-03",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Manchester United - Liverpool",
+            "tarih": "2026-05-03",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Aston Villa - Tottenham Hotspur",
+            "tarih": "2026-05-03",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Chelsea - Nottingham Forest",
+            "tarih": "2026-05-04",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Everton - Manchester City",
+            "tarih": "2026-05-04",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Liverpool - Chelsea",
+            "tarih": "2026-05-09",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Fulham - Bournemouth",
+            "tarih": "2026-05-09",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Brighton and Hove Albion - Wolverhampton Wanderers",
+            "tarih": "2026-05-09",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Sunderland - Manchester United",
+            "tarih": "2026-05-09",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Manchester City - Brentford",
+            "tarih": "2026-05-09",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Burnley - Aston Villa",
+            "tarih": "2026-05-10",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Crystal Palace - Everton",
+            "tarih": "2026-05-10",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Nottingham Forest - Newcastle United",
+            "tarih": "2026-05-10",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "West Ham United - Arsenal",
+            "tarih": "2026-05-10",
+            "saat": "18:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EPL",
+            "tur": "futbol",
+            "mac": "Tottenham Hotspur - Leeds United",
+            "tarih": "2026-05-11",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FA CUP",
+            "tur": "futbol",
+            "mac": "Chelsea - Manchester City",
+            "tarih": "2026-05-16",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Mexico - South Africa",
+            "tarih": "2026-06-11",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "South Korea - Czech Republic",
+            "tarih": "2026-06-12",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Canada - Bosnia & Herzegovina",
+            "tarih": "2026-06-12",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "USA - Paraguay",
+            "tarih": "2026-06-13",
+            "saat": "04:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Qatar - Switzerland",
+            "tarih": "2026-06-13",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Brazil - Morocco",
+            "tarih": "2026-06-14",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Haiti - Scotland",
+            "tarih": "2026-06-14",
+            "saat": "04:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Australia - Turkey",
+            "tarih": "2026-06-14",
+            "saat": "07:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Germany - Curaçao",
+            "tarih": "2026-06-14",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Netherlands - Japan",
+            "tarih": "2026-06-14",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Ivory Coast - Ecuador",
+            "tarih": "2026-06-15",
+            "saat": "02:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Sweden - Tunisia",
+            "tarih": "2026-06-15",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Spain - Cape Verde",
+            "tarih": "2026-06-15",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Belgium - Egypt",
+            "tarih": "2026-06-15",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Saudi Arabia - Uruguay",
+            "tarih": "2026-06-16",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Iran - New Zealand",
+            "tarih": "2026-06-16",
+            "saat": "04:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "France - Senegal",
+            "tarih": "2026-06-16",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Iraq - Norway",
+            "tarih": "2026-06-17",
+            "saat": "01:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Argentina - Algeria",
+            "tarih": "2026-06-17",
+            "saat": "04:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Austria - Jordan",
+            "tarih": "2026-06-17",
+            "saat": "07:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Portugal - DR Congo",
+            "tarih": "2026-06-17",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "England - Croatia",
+            "tarih": "2026-06-17",
+            "saat": "23:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Ghana - Panama",
+            "tarih": "2026-06-18",
+            "saat": "02:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Uzbekistan - Colombia",
+            "tarih": "2026-06-18",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "USA - Australia",
+            "tarih": "2026-06-19",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Colombia - DR Congo",
+            "tarih": "2026-06-24",
+            "saat": "05:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "FIFA WORLD CUP",
+            "tur": "futbol",
+            "mac": "Colombia - Portugal",
+            "tarih": "2026-06-28",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "VEIKKAUSLIIGA - FINLAND",
+            "tur": "futbol",
+            "mac": "FC Inter Turku - HJK Helsinki",
+            "tarih": "2026-04-29",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "VEIKKAUSLIIGA - FINLAND",
+            "tur": "futbol",
+            "mac": "SJK Seinäjoki - Ilves Tampere",
+            "tarih": "2026-05-02",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "VEIKKAUSLIIGA - FINLAND",
+            "tur": "futbol",
+            "mac": "IFK Mariehamn - VPS Vaasa",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "VEIKKAUSLIIGA - FINLAND",
+            "tur": "futbol",
+            "mac": "Jaro - TPS Turku",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "VEIKKAUSLIIGA - FINLAND",
+            "tur": "futbol",
+            "mac": "AC Oulu - KuPS Kuopio",
+            "tarih": "2026-05-02",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "VEIKKAUSLIIGA - FINLAND",
+            "tur": "futbol",
+            "mac": "HJK Helsinki - FC Lahti",
+            "tarih": "2026-05-04",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "VEIKKAUSLIIGA - FINLAND",
+            "tur": "futbol",
+            "mac": "IF Gnistan - FC Inter Turku",
+            "tarih": "2026-05-05",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COUPE DE FRANCE",
+            "tur": "futbol",
+            "mac": "RC Lens - Nice",
+            "tarih": "2026-05-22",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Nantes - Marseille",
+            "tarih": "2026-05-02",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Paris Saint Germain - Lorient",
+            "tarih": "2026-05-02",
+            "saat": "18:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Metz - AS Monaco",
+            "tarih": "2026-05-02",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Nice - RC Lens",
+            "tarih": "2026-05-02",
+            "saat": "22:05",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Lille - Le Havre",
+            "tarih": "2026-05-03",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Auxerre - Angers",
+            "tarih": "2026-05-03",
+            "saat": "18:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Paris FC - Brest",
+            "tarih": "2026-05-03",
+            "saat": "18:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Strasbourg - Toulouse",
+            "tarih": "2026-05-03",
+            "saat": "18:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Lyon - Rennes",
+            "tarih": "2026-05-03",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "RC Lens - Nantes",
+            "tarih": "2026-05-08",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "AS Monaco - Lille",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Angers - Strasbourg",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Auxerre - Nice",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Paris Saint Germain - Brest",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Le Havre - Marseille",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Metz - Lorient",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Toulouse - Lyon",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LIGUE 1 - FRANCE",
+            "tur": "futbol",
+            "mac": "Rennes - Paris FC",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "Boulogne - USL Dunkerque",
+            "tarih": "2026-04-27",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "Amiens - Red Star",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "Montpellier - Clermont",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "USL Dunkerque - Grenoble",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "Guingamp - SC Bastia",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "Le Mans FC - Stade de Reims",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "Pau FC - Nancy",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "Rodez AF - Saint Etienne",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGUE 2 - FRANCE",
+            "tur": "futbol",
+            "mac": "Troyes - Stade Lavallois",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Bayern Munich - 1. FC Heidenheim",
+            "tarih": "2026-05-02",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Union Berlin - 1. FC Köln",
+            "tarih": "2026-05-02",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Werder Bremen - Augsburg",
+            "tarih": "2026-05-02",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Eintracht Frankfurt - Hamburger SV",
+            "tarih": "2026-05-02",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "TSG Hoffenheim - VfB Stuttgart",
+            "tarih": "2026-05-02",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Bayer Leverkusen - RB Leipzig",
+            "tarih": "2026-05-02",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "FC St. Pauli - FSV Mainz 05",
+            "tarih": "2026-05-03",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Borussia Monchengladbach - Borussia Dortmund",
+            "tarih": "2026-05-03",
+            "saat": "18:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "SC Freiburg - VfL Wolfsburg",
+            "tarih": "2026-05-03",
+            "saat": "20:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Borussia Dortmund - Eintracht Frankfurt",
+            "tarih": "2026-05-08",
+            "saat": "21:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Augsburg - Borussia Monchengladbach",
+            "tarih": "2026-05-09",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "VfB Stuttgart - Bayer Leverkusen",
+            "tarih": "2026-05-09",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "RB Leipzig - FC St. Pauli",
+            "tarih": "2026-05-09",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "TSG Hoffenheim - Werder Bremen",
+            "tarih": "2026-05-09",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "VfL Wolfsburg - Bayern Munich",
+            "tarih": "2026-05-09",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Hamburger SV - SC Freiburg",
+            "tarih": "2026-05-10",
+            "saat": "16:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "1. FC Köln - 1. FC Heidenheim",
+            "tarih": "2026-05-10",
+            "saat": "18:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "FSV Mainz 05 - Union Berlin",
+            "tarih": "2026-05-10",
+            "saat": "20:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "Dynamo Dresden - 1. FC Kaiserslautern",
+            "tarih": "2026-05-02",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "Arminia Bielefeld - VfL Bochum",
+            "tarih": "2026-05-02",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "Holstein Kiel - Eintracht Braunschweig",
+            "tarih": "2026-05-02",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "FC Schalke 04 - Fortuna Düsseldorf",
+            "tarih": "2026-05-02",
+            "saat": "21:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "1. FC Magdeburg - Hertha Berlin",
+            "tarih": "2026-05-03",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "Greuther Fürth - 1. FC Nürnberg",
+            "tarih": "2026-05-03",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "Elversberg - SC Paderborn",
+            "tarih": "2026-05-03",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "Hannover 96 - SC Preußen Münster",
+            "tarih": "2026-05-03",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "BUNDESLIGA 2 - GERMANY",
+            "tur": "futbol",
+            "mac": "Karlsruher SC - SV Darmstadt 98",
+            "tarih": "2026-05-03",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "FRAUEN-BUNDESLIGA",
+            "tur": "futbol",
+            "mac": "Werder Bremen - Bayern Munich",
+            "tarih": "2026-04-29",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "DFB-POKAL",
+            "tur": "futbol",
+            "mac": "Bayern Munich - VfB Stuttgart",
+            "tarih": "2026-05-23",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "1. FC Saarbrücken - Waldhof Mannheim",
+            "tarih": "2026-05-02",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Alemannia Aachen - Hansa Rostock",
+            "tarih": "2026-05-02",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Jahn Regensburg - TSG Hoffenheim II",
+            "tarih": "2026-05-02",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "SC Verl - TSV Havelse",
+            "tarih": "2026-05-02",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Schweinfurt - TSV 1860 München",
+            "tarih": "2026-05-02",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "SSV Ulm 1846 - FC Viktoria Köln 1904",
+            "tarih": "2026-05-02",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "VfB Stuttgart II - Rot-Weiss Essen",
+            "tarih": "2026-05-02",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "MSV Duisburg - FC Energie Cottbus",
+            "tarih": "2026-05-03",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Wehen Wiesbaden - VfL Osnabrück",
+            "tarih": "2026-05-03",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "FC Ingolstadt 04 - Erzgebirge Aue",
+            "tarih": "2026-05-03",
+            "saat": "20:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Erzgebirge Aue - MSV Duisburg",
+            "tarih": "2026-05-08",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "FC Energie Cottbus - Wehen Wiesbaden",
+            "tarih": "2026-05-09",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "TSV 1860 München - FC Ingolstadt 04",
+            "tarih": "2026-05-09",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Hansa Rostock - VfB Stuttgart II",
+            "tarih": "2026-05-09",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Rot-Weiss Essen - SC Verl",
+            "tarih": "2026-05-09",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "VfL Osnabrück - SSV Ulm 1846",
+            "tarih": "2026-05-09",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "Waldhof Mannheim - Jahn Regensburg",
+            "tarih": "2026-05-09",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "TSV Havelse - Schweinfurt",
+            "tarih": "2026-05-10",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "FC Viktoria Köln 1904 - Alemannia Aachen",
+            "tarih": "2026-05-10",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "3. LIGA - GERMANY",
+            "tur": "futbol",
+            "mac": "TSG Hoffenheim II - 1. FC Saarbrücken",
+            "tarih": "2026-05-10",
+            "saat": "20:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Panetolikos Agrinio - AE Kifisia FC",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Panserraikos FC - AEL",
+            "tarih": "2026-05-02",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Asteras Tripolis - Atromitos Athens",
+            "tarih": "2026-05-02",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "OFI Crete - Aris Thessaloniki",
+            "tarih": "2026-05-03",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Levadiakos - Volos FC",
+            "tarih": "2026-05-03",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "PAOK Thessaloniki - Olympiakos Piraeus",
+            "tarih": "2026-05-03",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Panathinaikos - AEK Athens",
+            "tarih": "2026-05-03",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Panserraikos FC - AE Kifisia FC",
+            "tarih": "2026-05-09",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Aris Thessaloniki - OFI Crete",
+            "tarih": "2026-05-10",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Volos FC - Levadiakos",
+            "tarih": "2026-05-10",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPER LEAGUE - GREECE",
+            "tur": "futbol",
+            "mac": "Olympiakos Piraeus - PAOK Thessaloniki",
+            "tarih": "2026-05-10",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "COPPA ITALIA",
+            "tur": "futbol",
+            "mac": "Lazio - Inter Milan",
+            "tarih": "2026-05-13",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Lazio - Udinese",
+            "tarih": "2026-04-27",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Pisa - Lecce",
+            "tarih": "2026-05-01",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Udinese - Torino",
+            "tarih": "2026-05-02",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Como - Napoli",
+            "tarih": "2026-05-02",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Atalanta BC - Genoa",
+            "tarih": "2026-05-02",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Bologna - Cagliari",
+            "tarih": "2026-05-03",
+            "saat": "13:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Sassuolo - AC Milan",
+            "tarih": "2026-05-03",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Juventus - Hellas Verona",
+            "tarih": "2026-05-03",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Inter Milan - Parma",
+            "tarih": "2026-05-03",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Cremonese - Lazio",
+            "tarih": "2026-05-04",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "AS Roma - Fiorentina",
+            "tarih": "2026-05-04",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Torino - Sassuolo",
+            "tarih": "2026-05-08",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Cagliari - Udinese",
+            "tarih": "2026-05-09",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Lazio - Inter Milan",
+            "tarih": "2026-05-09",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Lecce - Juventus",
+            "tarih": "2026-05-09",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Hellas Verona - Como",
+            "tarih": "2026-05-10",
+            "saat": "13:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Cremonese - Pisa",
+            "tarih": "2026-05-10",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Fiorentina - Genoa",
+            "tarih": "2026-05-10",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Parma - AS Roma",
+            "tarih": "2026-05-10",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "AC Milan - Atalanta BC",
+            "tarih": "2026-05-10",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A - ITALY",
+            "tur": "futbol",
+            "mac": "Napoli - Bologna",
+            "tarih": "2026-05-11",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Empoli - Avellino",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Bari - Virtus Entella",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Carrarese - Cesena FC",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Juve Stabia - Frosinone",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Mantova - Monza",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Modena - Reggiana",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Padova - Pescara",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Palermo - US Catanzaro 1929",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Sampdoria - Südtirol",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SERIE B - ITALY",
+            "tur": "futbol",
+            "mac": "Spezia - Venezia",
+            "tarih": "2026-05-01",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "K LEAGUE 1",
+            "tur": "futbol",
+            "mac": "FC Seoul - Sangju Sangmu FC",
+            "tarih": "2026-05-02",
+            "saat": "08:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "K LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Ulsan Hyundai FC - Pohang Steelers",
+            "tarih": "2026-05-02",
+            "saat": "08:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "K LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Incheon United - Gangwon FC",
+            "tarih": "2026-05-02",
+            "saat": "10:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "K LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Jeju United FC - Jeonbuk Hyundai Motors",
+            "tarih": "2026-05-02",
+            "saat": "10:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "K LEAGUE 1",
+            "tur": "futbol",
+            "mac": "Gwangju FC - Daejeon Citizen",
+            "tarih": "2026-05-02",
+            "saat": "13:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE OF IRELAND",
+            "tur": "futbol",
+            "mac": "Drogheda United - Sligo Rovers",
+            "tarih": "2026-05-01",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE OF IRELAND",
+            "tur": "futbol",
+            "mac": "Dundalk - Shelbourne Dublin",
+            "tarih": "2026-05-01",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE OF IRELAND",
+            "tur": "futbol",
+            "mac": "Galway United - St Patricks Athletic",
+            "tarih": "2026-05-01",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE OF IRELAND",
+            "tur": "futbol",
+            "mac": "Bohemians - Derry City",
+            "tarih": "2026-05-01",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LEAGUE OF IRELAND",
+            "tur": "futbol",
+            "mac": "Shamrock Rovers - Waterford FC",
+            "tarih": "2026-05-01",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGA MX",
+            "tur": "futbol",
+            "mac": "América - Pumas",
+            "tarih": "2026-05-03",
+            "saat": "02:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGA MX",
+            "tur": "futbol",
+            "mac": "Atlas - Cruz Azul",
+            "tarih": "2026-05-03",
+            "saat": "02:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGA MX",
+            "tur": "futbol",
+            "mac": "Tigres - Guadalajara",
+            "tarih": "2026-05-03",
+            "saat": "02:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "LIGA MX",
+            "tur": "futbol",
+            "mac": "Toluca - Pachuca",
+            "tarih": "2026-05-03",
+            "saat": "02:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "FC Utrecht - NAC Breda",
+            "tarih": "2026-05-02",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "Groningen - Excelsior",
+            "tarih": "2026-05-02",
+            "saat": "19:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "Ajax - PSV Eindhoven",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "NEC Nijmegen - SC Telstar",
+            "tarih": "2026-05-02",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "FC Volendam - Heerenveen",
+            "tarih": "2026-05-03",
+            "saat": "13:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "FC Zwolle - Heracles Almelo",
+            "tarih": "2026-05-03",
+            "saat": "15:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "Fortuna Sittard - Feyenoord",
+            "tarih": "2026-05-03",
+            "saat": "15:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "AZ Alkmaar - FC Twente Enschede",
+            "tarih": "2026-05-03",
+            "saat": "17:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "DUTCH EREDIVISIE",
+            "tur": "futbol",
+            "mac": "Sparta Rotterdam - Go Ahead Eagles",
+            "tarih": "2026-05-03",
+            "saat": "17:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "Tromso - SK Brann",
+            "tarih": "2026-04-29",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "Bodø/Glimt - IK Start",
+            "tarih": "2026-04-30",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "Viking FK - Rosenborg",
+            "tarih": "2026-05-01",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "SK Brann - Fredrikstad FK",
+            "tarih": "2026-05-02",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "Lillestrom - Sarpsborg FK",
+            "tarih": "2026-05-03",
+            "saat": "15:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "Sandefjord - Aalesund",
+            "tarih": "2026-05-03",
+            "saat": "18:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "Kristiansund BK - HamKam",
+            "tarih": "2026-05-03",
+            "saat": "18:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "IK Start - Tromso",
+            "tarih": "2026-05-03",
+            "saat": "18:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "Vålerenga - KFUM",
+            "tarih": "2026-05-03",
+            "saat": "20:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ELITESERIEN - NORWAY",
+            "tur": "futbol",
+            "mac": "Bodø/Glimt - Molde",
+            "tarih": "2026-05-04",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EKSTRAKLASA - POLAND",
+            "tur": "futbol",
+            "mac": "Korona Kielce - Piast Gliwice",
+            "tarih": "2026-05-01",
+            "saat": "18:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EKSTRAKLASA - POLAND",
+            "tur": "futbol",
+            "mac": "Legia Warszawa - Widzew Łódź",
+            "tarih": "2026-05-01",
+            "saat": "21:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EKSTRAKLASA - POLAND",
+            "tur": "futbol",
+            "mac": "Motor Lublin - Lech Poznań",
+            "tarih": "2026-05-02",
+            "saat": "21:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EKSTRAKLASA - POLAND",
+            "tur": "futbol",
+            "mac": "GKS Katowice - Nieciecza",
+            "tarih": "2026-05-03",
+            "saat": "13:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EKSTRAKLASA - POLAND",
+            "tur": "futbol",
+            "mac": "Zagłębie Lubin - Cracovia Kraków",
+            "tarih": "2026-05-03",
+            "saat": "15:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EKSTRAKLASA - POLAND",
+            "tur": "futbol",
+            "mac": "Pogoń Szczecin - Wisła Płock",
+            "tarih": "2026-05-03",
+            "saat": "18:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "EKSTRAKLASA - POLAND",
+            "tur": "futbol",
+            "mac": "Radomiak Radom - Lechia Gdańsk",
+            "tarih": "2026-05-04",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Gil Vicente - Casa Pia",
+            "tarih": "2026-04-27",
+            "saat": "22:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Sporting Lisbon - Tondela",
+            "tarih": "2026-04-29",
+            "saat": "22:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Nacional - AVS Futebol SAD",
+            "tarih": "2026-05-02",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Arouca - Santa Clara",
+            "tarih": "2026-05-02",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Moreirense FC - CF Estrela",
+            "tarih": "2026-05-02",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Famalicão - Benfica",
+            "tarih": "2026-05-02",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "FC Porto - Alverca",
+            "tarih": "2026-05-02",
+            "saat": "22:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Casa Pia - Tondela",
+            "tarih": "2026-05-03",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Braga - Estoril",
+            "tarih": "2026-05-03",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "PRIMEIRA LIGA - PORTUGAL",
+            "tur": "futbol",
+            "mac": "Rio Ave FC - Gil Vicente",
+            "tarih": "2026-05-03",
+            "saat": "22:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PREMIER LEAGUE - RUSSIA",
+            "tur": "futbol",
+            "mac": "FC Baltika Kaliningrad - FC Akron Tolyatti",
+            "tarih": "2026-04-27",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PREMIER LEAGUE - RUSSIA",
+            "tur": "futbol",
+            "mac": "Kryliya Sovetov - Spartak Moscow",
+            "tarih": "2026-05-01",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PREMIER LEAGUE - RUSSIA",
+            "tur": "futbol",
+            "mac": "Lokomotiv Moscow - Dinamo Moscow",
+            "tarih": "2026-05-01",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PREMIER LEAGUE - RUSSIA",
+            "tur": "futbol",
+            "mac": "FC Dynamo Makhachkala - FK Rostov",
+            "tarih": "2026-05-02",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PREMIER LEAGUE - RUSSIA",
+            "tur": "futbol",
+            "mac": "CSKA Moscow - Zenit St Petersburg",
+            "tarih": "2026-05-02",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PREMIER LEAGUE - RUSSIA",
+            "tur": "futbol",
+            "mac": "FK Sochi - Gazovik Orenburg",
+            "tarih": "2026-05-03",
+            "saat": "14:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "PREMIER LEAGUE - RUSSIA",
+            "tur": "futbol",
+            "mac": "FC Akhmat Grozny - FC Nizhny Novgorod",
+            "tarih": "2026-05-03",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Shabab - Al-Fateh",
+            "tarih": "2026-04-28",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Neom - Al-Hazem",
+            "tarih": "2026-04-28",
+            "saat": "19:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Hilal - Damac",
+            "tarih": "2026-04-28",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Khaleej - Al-Najma",
+            "tarih": "2026-04-28",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Riyadh - Al-Qadsiah",
+            "tarih": "2026-04-29",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Taawoun - Al-Ittihad",
+            "tarih": "2026-04-29",
+            "saat": "19:10",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Nassr - Al-Ahli",
+            "tarih": "2026-04-29",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Okhdood - Al-Ettifaq",
+            "tarih": "2026-04-30",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Kholood - Al-Fayha",
+            "tarih": "2026-04-30",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Fateh - Neom",
+            "tarih": "2026-05-02",
+            "saat": "18:50",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Damac - Al-Khaleej",
+            "tarih": "2026-05-02",
+            "saat": "19:10",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Hazem - Al-Hilal",
+            "tarih": "2026-05-02",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Shabab - Al-Taawoun",
+            "tarih": "2026-05-03",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Ahli - Al-Okhdood",
+            "tarih": "2026-05-03",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Qadsiah - Al-Nassr",
+            "tarih": "2026-05-03",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Fayha - Al-Riyadh",
+            "tarih": "2026-05-04",
+            "saat": "19:10",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Ettifaq - Al-Najma",
+            "tarih": "2026-05-04",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SAUDI PRO LEAGUE",
+            "tur": "futbol",
+            "mac": "Al-Ittihad - Al-Kholood",
+            "tarih": "2026-05-04",
+            "saat": "21:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Espanyol - Levante",
+            "tarih": "2026-04-27",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Girona - Mallorca",
+            "tarih": "2026-05-01",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Villarreal - Levante",
+            "tarih": "2026-05-02",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Valencia - Atlético Madrid",
+            "tarih": "2026-05-02",
+            "saat": "17:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Alavés - Athletic Bilbao",
+            "tarih": "2026-05-02",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "CA Osasuna - Barcelona",
+            "tarih": "2026-05-02",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Celta Vigo - Elche CF",
+            "tarih": "2026-05-03",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Getafe - Rayo Vallecano",
+            "tarih": "2026-05-03",
+            "saat": "17:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Real Betis - Oviedo",
+            "tarih": "2026-05-03",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Espanyol - Real Madrid",
+            "tarih": "2026-05-03",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Sevilla - Real Sociedad",
+            "tarih": "2026-05-04",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Levante - CA Osasuna",
+            "tarih": "2026-05-08",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Elche CF - Alavés",
+            "tarih": "2026-05-09",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Sevilla - Espanyol",
+            "tarih": "2026-05-09",
+            "saat": "17:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Atlético Madrid - Celta Vigo",
+            "tarih": "2026-05-09",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Real Sociedad - Real Betis",
+            "tarih": "2026-05-09",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Mallorca - Villarreal",
+            "tarih": "2026-05-10",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Athletic Bilbao - Valencia",
+            "tarih": "2026-05-10",
+            "saat": "17:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Oviedo - Getafe",
+            "tarih": "2026-05-10",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Barcelona - Real Madrid",
+            "tarih": "2026-05-10",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA - SPAIN",
+            "tur": "futbol",
+            "mac": "Rayo Vallecano - Girona",
+            "tarih": "2026-05-11",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Cádiz CF - Las Palmas",
+            "tarih": "2026-04-27",
+            "saat": "21:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Andorra CF - Albacete",
+            "tarih": "2026-05-01",
+            "saat": "17:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Deportivo La Coruña - Leganés",
+            "tarih": "2026-05-01",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Zaragoza - Granada CF",
+            "tarih": "2026-05-01",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Cultural Leonesa - Cádiz CF",
+            "tarih": "2026-05-02",
+            "saat": "17:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "CD Castellón - Córdoba",
+            "tarih": "2026-05-02",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "SD Eibar - Málaga",
+            "tarih": "2026-05-02",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Real Racing Club de Santander - SD Huesca",
+            "tarih": "2026-05-03",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Sporting Gijón - AD Ceuta FC",
+            "tarih": "2026-05-03",
+            "saat": "17:15",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Real Sociedad B - Burgos CF",
+            "tarih": "2026-05-03",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Las Palmas - Real Valladolid CF",
+            "tarih": "2026-05-03",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "LA LIGA 2 - SPAIN",
+            "tur": "futbol",
+            "mac": "Almería - CD Mirandés",
+            "tarih": "2026-05-04",
+            "saat": "21:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "PREMIERSHIP - SCOTLAND",
+            "tur": "futbol",
+            "mac": "Livingston - Aberdeen",
+            "tarih": "2026-05-01",
+            "saat": "21:45",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "PREMIERSHIP - SCOTLAND",
+            "tur": "futbol",
+            "mac": "Dundee FC - St Mirren",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "PREMIERSHIP - SCOTLAND",
+            "tur": "futbol",
+            "mac": "Kilmarnock - Dundee United",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "PREMIERSHIP - SCOTLAND",
+            "tur": "futbol",
+            "mac": "Falkirk F.C. - Motherwell",
+            "tarih": "2026-05-02",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "PREMIERSHIP - SCOTLAND",
+            "tur": "futbol",
+            "mac": "Hibernian - Celtic",
+            "tarih": "2026-05-03",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "PREMIERSHIP - SCOTLAND",
+            "tur": "futbol",
+            "mac": "Hearts - Rangers",
+            "tarih": "2026-05-04",
+            "saat": "19:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "AIK - Malmo FF",
+            "tarih": "2026-04-27",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "BK Hacken - IK Sirius",
+            "tarih": "2026-04-27",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Örgryte IS - Degerfors IF",
+            "tarih": "2026-04-27",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Mjällby AIF - Halmstads BK",
+            "tarih": "2026-04-27",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Kalmar FF - IF Elfsborg",
+            "tarih": "2026-04-27",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Degerfors IF - BK Hacken",
+            "tarih": "2026-05-02",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "IK Sirius - Kalmar FF",
+            "tarih": "2026-05-02",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Hammarby IF - Västerås SK",
+            "tarih": "2026-05-03",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Malmo FF - Mjällby AIF",
+            "tarih": "2026-05-03",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "IF Elfsborg - AIK",
+            "tarih": "2026-05-03",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "GAIS - Örgryte IS",
+            "tarih": "2026-05-03",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Djurgardens IF - IFK Goteborg",
+            "tarih": "2026-05-04",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "ALLSVENSKAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Halmstads BK - IF Brommapojkarna",
+            "tarih": "2026-05-04",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "IFK Norrkoping - Landskrona BoIS",
+            "tarih": "2026-04-28",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Ljungskile SK - Nordic United FC",
+            "tarih": "2026-05-02",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Sandvikens IF - Norrby IF",
+            "tarih": "2026-05-02",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Varbergs BoIS - Örebro SK",
+            "tarih": "2026-05-02",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "GIF Sundsvall - IK Oddevold",
+            "tarih": "2026-05-02",
+            "saat": "18:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Östersunds FK - IFK Värnamo",
+            "tarih": "2026-05-03",
+            "saat": "14:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Helsingborgs IF - IK Brage",
+            "tarih": "2026-05-03",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Landskrona BoIS - Östers IF",
+            "tarih": "2026-05-04",
+            "saat": "20:05",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SUPERETTAN - SWEDEN",
+            "tur": "futbol",
+            "mac": "Falkenbergs FF - IFK Norrkoping",
+            "tarih": "2026-05-05",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SWISS SUPERLEAGUE",
+            "tur": "futbol",
+            "mac": "FC Lausanne-Sport - FC Luzern",
+            "tarih": "2026-05-02",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SWISS SUPERLEAGUE",
+            "tur": "futbol",
+            "mac": "FC Winterthur - FC Zurich",
+            "tarih": "2026-05-02",
+            "saat": "19:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SWISS SUPERLEAGUE",
+            "tur": "futbol",
+            "mac": "FC Basel - FC Thun",
+            "tarih": "2026-05-02",
+            "saat": "21:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SWISS SUPERLEAGUE",
+            "tur": "futbol",
+            "mac": "FC St Gallen - FC Sion",
+            "tarih": "2026-05-03",
+            "saat": "15:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SWISS SUPERLEAGUE",
+            "tur": "futbol",
+            "mac": "FC Lugano - BSC Young Boys",
+            "tarih": "2026-05-03",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "SWISS SUPERLEAGUE",
+            "tur": "futbol",
+            "mac": "Grasshopper Zürich - Servette",
+            "tarih": "2026-05-03",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Torku Konyaspor - Trabzonspor",
+            "tarih": "2026-04-27",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Çaykur Rizespor - Torku Konyaspor",
+            "tarih": "2026-05-01",
+            "saat": "17:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Gazişehir Gaziantep - Besiktas JK",
+            "tarih": "2026-05-01",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Fenerbahce - Basaksehir",
+            "tarih": "2026-05-02",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Samsunspor - Galatasaray",
+            "tarih": "2026-05-02",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Trabzonspor - Goztepe",
+            "tarih": "2026-05-02",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Antalyaspor - Alanyaspor",
+            "tarih": "2026-05-03",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Kayserispor - Eyüpspor",
+            "tarih": "2026-05-03",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Fatih Karagümrük - Genclerbirligi SK",
+            "tarih": "2026-05-03",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "TURKEY SUPER LEAGUE",
+            "tur": "futbol",
+            "mac": "Kasimpasa SK - Kocaelispor",
+            "tarih": "2026-05-03",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "UEFA CHAMPIONS LEAGUE",
+            "tur": "futbol",
+            "mac": "Paris Saint Germain - Bayern Munich",
+            "tarih": "2026-04-28",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "UEFA CHAMPIONS LEAGUE",
+            "tur": "futbol",
+            "mac": "Atlético Madrid - Arsenal",
+            "tarih": "2026-04-29",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "UEFA CHAMPIONS LEAGUE WOMEN",
+            "tur": "futbol",
+            "mac": "Lyon - Arsenal",
+            "tarih": "2026-05-02",
+            "saat": "16:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "UEFA CHAMPIONS LEAGUE WOMEN",
+            "tur": "futbol",
+            "mac": "Barcelona - Bayern Munich",
+            "tarih": "2026-05-03",
+            "saat": "17:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "UEFA EUROPA CONFERENCE LEAGUE",
+            "tur": "futbol",
+            "mac": "Shakhtar Donetsk - Crystal Palace",
+            "tarih": "2026-04-30",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "UEFA EUROPA CONFERENCE LEAGUE",
+            "tur": "futbol",
+            "mac": "Rayo Vallecano - Strasbourg",
+            "tarih": "2026-04-30",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "UEFA EUROPA LEAGUE",
+            "tur": "futbol",
+            "mac": "Nottingham Forest - Aston Villa",
+            "tarih": "2026-04-30",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "UEFA EUROPA LEAGUE",
+            "tur": "futbol",
+            "mac": "SC Braga - SC Freiburg",
+            "tarih": "2026-04-30",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Toronto FC - San Jose Earthquakes",
+            "tarih": "2026-05-02",
+            "saat": "20:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Sporting Kansas City - Seattle Sounders FC",
+            "tarih": "2026-05-02",
+            "saat": "21:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Real Salt Lake - Portland Timbers",
+            "tarih": "2026-05-02",
+            "saat": "23:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Inter Miami CF - Orlando City SC",
+            "tarih": "2026-05-03",
+            "saat": "02:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Atlanta United FC - CF Montreal",
+            "tarih": "2026-05-03",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "New England Revolution - Charlotte FC",
+            "tarih": "2026-05-03",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Columbus Crew SC - Minnesota United FC",
+            "tarih": "2026-05-03",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "New York Red Bulls - FC Dallas",
+            "tarih": "2026-05-03",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Philadelphia Union - Nashville SC",
+            "tarih": "2026-05-03",
+            "saat": "02:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Chicago Fire - FC Cincinnati",
+            "tarih": "2026-05-03",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Houston Dynamo - Colorado Rapids",
+            "tarih": "2026-05-03",
+            "saat": "03:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "San Diego FC - Los Angeles FC",
+            "tarih": "2026-05-03",
+            "saat": "04:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "LA Galaxy - Vancouver Whitecaps FC",
+            "tarih": "2026-05-03",
+            "saat": "05:30",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "New York City FC - D.C. United",
+            "tarih": "2026-05-03",
+            "saat": "22:00",
+            "uyari": "📡 Analiz Aktif"
+        },
+        {
+            "kategori": "GÜMÜŞ",
+            "lig": "MLS",
+            "tur": "futbol",
+            "mac": "Austin FC - St. Louis City SC",
+            "tarih": "2026-05-04",
+            "saat": "00:30",
+            "uyari": "📡 Analiz Aktif"
         }
     ]
 }
