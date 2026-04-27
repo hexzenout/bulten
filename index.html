@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 COMMAND | EXTREME TERMINAL</title>
+    <title>V19 COMMAND | CAPITAL MANAGEMENT</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
@@ -12,67 +12,69 @@
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR (TİKLER KALKTI) */
+        /* SIDEBAR */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-        .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); letter-spacing: 1px; font-size: 1.1em; }
+        .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); font-size: 1.2em; }
         .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
-        .nav-item i { margin-right: 12px; font-size: 1.2em; }
+        .nav-item i { margin-right: 15px; font-size: 1.2em; }
         .nav-item.active { background: rgba(16,185,129,0.05); color: #fff; border-left: 3px solid var(--green); }
         .nav-item.basket.active { border-left-color: var(--orange); }
 
         /* MAIN */
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); gap: 30px; }
+        .header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
         
         /* ROLLING PROGRESS */
-        .roll-box { flex-grow: 1; }
+        .roll-container { flex-grow: 1; margin: 0 40px; }
         .roll-label { display: flex; justify-content: space-between; font-size: 0.65em; font-weight: 900; margin-bottom: 5px; color: var(--muted); }
         .roll-track { background: #111; height: 10px; border-radius: 5px; border: 1px solid #222; overflow: hidden; }
         .roll-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); width: 0.1%; transition: 1.5s; }
 
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
-        /* MACKOLİK COMPACT */
-        .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); }
+        /* MACKOLİK TASARIM */
+        .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .tab { padding: 6px 15px; background: #000; border: 1px solid var(--border); cursor: pointer; border-radius: 4px; color: var(--muted); font-weight: 800; font-size: 0.7em; }
         .tab.active.gold { border-color: var(--gold); color: var(--gold); }
+        .tab.active.silver { border-color: #cbd5e1; color: #cbd5e1; }
+        .tab.active.bronze { border-color: #b45309; color: #b45309; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 6px; border-radius: 4px; font-size: 0.75em; font-weight: bold; }
 
-        /* LİG SATIRI (BAYRAK + İKON + LİG) */
+        /* LİG SATIRI: BAYRAK + İKON + LİG */
         .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--muted); border-bottom: 1px solid #000; display: flex; align-items: center; gap: 10px; }
-        .match-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
+        .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
         .match-row:hover { background: #0a0a0c; }
         .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 50px; font-weight: bold; }
-        .m-teams { font-weight: 700; flex-grow: 1; }
-        .flag { width: 20px; height: 13px; object-fit: cover; border-radius: 2px; }
+        .m-teams { font-weight: 700; flex-grow: 1; color: #fff; }
+        .flag { width: 18px; height: 12px; object-fit: cover; border-radius: 1px; }
 
         /* FİNANS */
         .fin-grid { display: none; grid-template-columns: 380px 1fr; gap: 20px; }
         .fin-grid.active { display: grid; }
         .wallet-card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
         .w-val { font-family: 'JetBrains Mono'; font-size: 2.2em; font-weight: 900; color: var(--gold); margin: 10px 0; }
-        .pending-box { background: #000; padding: 10px; border-radius: 4px; border-left: 4px solid var(--gold); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; }
-        .op-btn { padding: 5px 12px; border-radius: 3px; border: none; font-weight: 900; cursor: pointer; font-size: 0.7em; }
+        .pending-item { background: #000; padding: 12px; border-radius: 4px; border-left: 4px solid var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; }
+        .op-btn { padding: 6px 12px; border: none; border-radius: 3px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
 
-        /* CHART */
+        /* BORSA GRAFİĞİ */
         #chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="brand">V19 ELITE UNIT</div>
-        <div class="nav-item active" id="btn-f" onclick="toggleSport('futbol')"><i class="fa-solid fa-futbol"></i> FUTBOL BÜLTENİ</div>
-        <div class="nav-item basket active" id="btn-b" onclick="toggleSport('basketbol')"><i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET BÜLTENİ</div>
-        <div class="nav-item" onclick="setMode('bulletin', this)"><i class="fa-solid fa-list-ul"></i> ANA RADAR</div>
+        <div class="brand">V19 ELITE TERMINAL</div>
+        <div class="nav-item active" id="nav-f" onclick="toggleSport('futbol')"><i class="fa-solid fa-futbol"></i> FUTBOL RADARI</div>
+        <div class="nav-item active" id="nav-b" onclick="toggleSport('basketbol')"><i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI</div>
+        <div class="nav-item" onclick="setMode('bulletin', this)"><i class="fa-solid fa-layer-group"></i> ANA BÜLTEN</div>
         <div class="nav-item" onclick="setMode('finance', this)" style="color:var(--gold); border-top:1px solid #111;"><i class="fa-solid fa-chart-line"></i> USDT FİNANS</div>
         <div class="nav-item" onclick="setMode('stream', this)"><i class="fa-solid fa-tv"></i> 6'LI EKRAN</div>
     </div>
 
     <div class="main">
         <div class="header">
-            <div class="roll-box">
-                <div class="roll-label"><span>ROLLING PROGRESS: $100 -> $100K</span> <span id="roll-perc">0.1%</span></div>
+            <div class="roll-container">
+                <div class="roll-label"><span>ROLLING PROGRESS ($100 → $100K)</span> <span id="roll-perc">0.1%</span></div>
                 <div class="roll-track"><div class="roll-fill" id="roll-bar"></div></div>
             </div>
             <div id="h-wallet" style="font-family:'JetBrains Mono'; font-weight:900; color:var(--gold)">100.00 USDT</div>
@@ -81,26 +83,28 @@
         <div class="content">
             <div id="v-bulletin">
                 <div class="filter-row">
-                    <button class="tab active gold" onclick="setCat('ALTIN')">ALTIN LİGLER</button>
+                    <button class="tab active gold" id="cat-ALTIN" onclick="setCat('ALTIN')">ALTIN LİGLER</button>
+                    <button class="tab" id="cat-GÜMÜŞ" onclick="setCat('GÜMÜŞ')">GÜMÜŞ</button>
+                    <button class="tab" id="cat-BRONZ" onclick="setCat('BRONZ')">BRONZ</button>
                     <select id="date-sel" class="c-select" onchange="render()"><option value="ALL">TÜM TARİHLER</option></select>
-                    <select id="league-sel" class="c-select" onchange="render()"><option value="ALL">SABİT LİG RADARI</option></select>
+                    <select id="league-sel" class="c-select" onchange="render()"><option value="ALL">LİG FİLTRESİ</option></select>
                 </div>
                 <div id="list-area"></div>
             </div>
 
             <div class="fin-grid" id="v-finance">
                 <div class="wallet-card">
-                    <div style="font-size:0.7em; font-weight:bold; color:var(--muted)">MEVCUT SERMAYE (USDT)</div>
+                    <div style="font-size:0.7em; font-weight:bold; color:var(--muted)">MEVCUT KASA (USDT)</div>
                     <div class="w-val" id="w-val">100.00</div>
-                    <div style="margin-bottom:20px; border-top:1px solid #1f1f23; padding-top:15px;">
-                        <input type="text" id="bet-name" class="c-select" style="width:100%; box-sizing:border-box; margin-bottom:10px;" placeholder="Maç / Operasyon Adı">
-                        <div style="display:flex; gap:10px;">
-                            <input type="number" id="bet-amt" class="c-select" style="flex:1" placeholder="Tutar">
+                    <div style="margin-top:20px; border-top:1px solid #1f1f23; padding-top:15px;">
+                        <input type="text" id="bet-name" class="c-select" style="width:100%; margin-bottom:10px;" placeholder="Maç / İşlem Adı">
+                        <div style="display:flex; gap:10px; margin-bottom:15px;">
+                            <input type="number" id="bet-amt" class="c-select" style="flex:1" placeholder="USDT">
                             <input type="number" id="bet-odds" class="c-select" style="flex:1" placeholder="Oran">
-                            <button class="op-btn" style="background:var(--green); color:#000;" onclick="addPending()">İŞLEMİ AÇ</button>
+                            <button class="op-btn" style="background:var(--green); color:#000;" onclick="addPending()">EKLE</button>
                         </div>
                     </div>
-                    <h4 style="margin:0 0 10px 0; font-size:0.75em; color:var(--gold)">BEKLEYEN İŞLEMLER</h4>
+                    <h4 style="margin:0 0 10px 0; font-size:0.75em; color:var(--gold)">BEKLEYEN OPERASYONLAR</h4>
                     <div id="pending-list"></div>
                 </div>
                 <div id="chart"></div>
@@ -134,8 +138,8 @@
         function toggleSport(s) {
             if(activeSports.includes(s)) { if(activeSports.length > 1) activeSports = activeSports.filter(x => x !== s); }
             else activeSports.push(s);
-            document.getElementById('btn-f').classList.toggle('active', activeSports.includes('futbol'));
-            document.getElementById('btn-b').classList.toggle('active', activeSports.includes('basketbol'));
+            document.getElementById('nav-f').classList.toggle('active', activeSports.includes('futbol'));
+            document.getElementById('nav-b').classList.toggle('active', activeSports.includes('basketbol'));
             render();
         }
 
@@ -173,7 +177,7 @@
         function renderPending() {
             const area = document.getElementById('pending-list'); area.innerHTML = "";
             pending.forEach(b => {
-                area.innerHTML += `<div class="pending-box"><span>${b.name} ($${b.amt})</span><div><button class="op-btn" style="background:var(--green); color:#000; margin-right:5px;" onclick="resolve(${b.id}, 'win')">W</button><button class="op-btn" style="background:var(--red); color:#fff;" onclick="resolve(${b.id}, 'loss')">L</button></div></div>`;
+                area.innerHTML += `<div class="pending-item"><span>${b.name} ($${b.amt})</span><div><button class="op-btn" style="background:var(--green); color:#000; margin-right:5px;" onclick="resolve(${b.id}, 'win')">W</button><button class="op-btn" style="background:var(--red); color:#fff;" onclick="resolve(${b.id}, 'loss')">L</button></div></div>`;
             });
         }
 
@@ -186,17 +190,19 @@
         }
 
         async function updateData() {
-            const r = await fetch('v19_rapor.json?t=' + Date.now());
-            const d = await r.json();
-            allData = d.veriler || [];
-            buildFilters(d.sayac); render();
+            try {
+                const r = await fetch('v19_rapor.json?t=' + Date.now());
+                const d = await r.json();
+                allData = d.veriler || [];
+                buildFilters(d.sayac); render();
+            } catch(e) {}
         }
 
         function buildFilters(sayac) {
             const dSel = document.getElementById('date-sel'), lSel = document.getElementById('league-sel');
             const dates = [...new Set(allData.map(m => m.tarih))].sort();
             dSel.innerHTML = '<option value="ALL">TARİH SEÇ</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
-            lSel.innerHTML = '<option value="ALL">SABİT RADAR</option>';
+            lSel.innerHTML = '<option value="ALL">LİG SEÇ</option>';
             for(let l in sayac) lSel.innerHTML += `<option value="${l}">${l} (${sayac[l]})</option>`;
         }
 
@@ -205,7 +211,7 @@
             const area = document.getElementById('list-area'); area.innerHTML = "";
             const dVal = document.getElementById('date-sel').value, lVal = document.getElementById('league-sel').value;
 
-            let filtered = allData.filter(m => activeSports.includes(m.tur) && (dVal==='ALL'||m.tarih===dVal) && (lVal==='ALL'||m.lig===lVal));
+            let filtered = allData.filter(m => activeSports.includes(m.tur) && m.kategori === curCat && (dVal==='ALL'||m.tarih===dVal) && (lVal==='ALL'||m.lig===lVal));
             const days = {};
             filtered.forEach(m => { if(!days[m.tarih]) days[m.tarih] = []; days[m.tarih].push(m); });
 
@@ -236,6 +242,13 @@
                 grid: { borderColor: '#1f1f23' }
             });
             chart.render();
+        }
+
+        function setCat(c) {
+            curCat = c;
+            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active', 'gold', 'silver', 'bronze'));
+            document.getElementById('cat-'+c).classList.add('active', c === 'ALTIN' ? 'gold' : (c === 'GÜMÜŞ' ? 'silver' : 'bronze'));
+            render();
         }
 
         updateUI(); renderPending(); updateData(); setInterval(updateData, 60000);
