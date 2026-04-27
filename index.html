@@ -108,7 +108,7 @@
     </div>
 
     <script>
-        let allData = [], ligSayac = {}, activeSport = 'futbol', curMode = 'bulletin';
+let allData = [], ligSayac = {}, activeSport = 'futbol', curMode = 'bulletin';
         let wallet = parseFloat(localStorage.getItem('v19_w')) || 100.00;
         let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
         let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
@@ -135,31 +135,42 @@
                 const r = await fetch('v19_rapor.json?t=' + Date.now());
                 const d = await r.json(); allData = d.veriler || []; ligSayac = d.sayac || {};
                 buildFilters(); render();
-            } catch(e) { document.getElementById('list-area').innerHTML = "<div style='padding:50px; text-align:center; color:#555'>VERİ BEKLENİYOR...</div>"; }
+            } catch(e) { document.getElementById('list-area').innerHTML = "<div style='padding:50px; text-align:center; color:#555'>VERİ BEKLENİYOR... LÜTFEN ACTIONS ÇALIŞTIRIN.</div>"; }
         }
 
         function buildFilters() {
             const dSel = document.getElementById('date-sel'), lSel = document.getElementById('league-sel');
+            
+            // Tarihleri hafızada topla, tek seferde bas
+            let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const dates = [...new Set(allData.filter(m => m.t === activeSport).map(m => m.dt))].sort();
-            dSel.innerHTML = '<option value="ALL">TÜM TARİHLER</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
-            lSel.innerHTML = '<option value="ALL">TÜM LİGLER</option>';
+            dates.forEach(d => dateHtml += `<option value="${d}">${d}</option>`);
+            dSel.innerHTML = dateHtml;
+            
+            // Ligleri hafızada topla, tek seferde bas
+            let ligHtml = '<option value="ALL">TÜM LİGLER</option>';
             for(let l in ligSayac) {
                 let isFutbol = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA LIGA", "BRAZIL SERIE A", "ARGENTINA PRIMERA", "MLS", "SİSTEM UYARISI"].includes(l);
                 if((activeSport==='futbol' && isFutbol) || (activeSport==='basketbol' && !isFutbol)) {
-                    lSel.innerHTML += `<option value="${l}">${l} (${ligSayac[l]})</option>`;
+                    ligHtml += `<option value="${l}">${l} (${ligSayac[l]})</option>`;
                 }
             }
+            lSel.innerHTML = ligHtml;
         }
 
         function render() {
             if(curMode !== 'bulletin') return;
-            const area = document.getElementById('list-area'); area.innerHTML = "";
+            const area = document.getElementById('list-area');
             const dVal = document.getElementById('date-sel').value, lVal = document.getElementById('league-sel').value;
+            
             let filtered = allData.filter(m => m.t === activeSport && (dVal==='ALL'||m.dt===dVal) && (lVal==='ALL'||m.l===lVal));
+            
+            // OPTİMİZASYON: DOM'a sürekli yazmak yerine HTML'i string olarak biriktir
+            let htmlContent = ""; 
             
             const days = {}; filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
             Object.keys(days).sort().forEach(day => {
-                area.innerHTML += `<div style="background:#111; color:var(--green); font-size:0.7em; font-weight:900; padding:5px 15px; margin:10px 0; border-left:4px solid var(--green)">${day}</div>`;
+                htmlContent += `<div style="background:#111; color:var(--green); font-size:0.7em; font-weight:900; padding:5px 15px; margin:10px 0; border-left:4px solid var(--green)">${day}</div>`;
                 const groups = {}; days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
                 
                 for(let lig in groups) {
@@ -167,16 +178,16 @@
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
                     const iColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
                     
-                    // BAYRAK BURADAN KALDIRILDI, SADECE İKON VE LİG ADI
-                    area.innerHTML += `
+                    htmlContent += `
                         <div class="league-head">
-                            <span style="font-size:1.2em; color:${iColor}; margin-right:8px;">${ikon}</span>
-                            <span>${lig}</span>
+                            <div class="head-left">
+                                <span style="font-size:1.2em; color:${iColor}; margin-right:8px;">${ikon}</span>
+                                <span>${lig}</span>
+                            </div>
                         </div>`;
                         
                     groups[lig].sort((a,b)=>a.tm.localeCompare(b.tm)).forEach(m => {
-                        // BAYRAK MAÇIN YANINA (m.m'nin sağına) EKLENDİ
-                        area.innerHTML += `
+                        htmlContent += `
                         <div class="match-row">
                             <div class="m-time">${m.tm}</div>
                             <div class="m-teams">${m.m} <img src="https://flagcdn.com/w40/${fCode}.png" class="flag"></div>
@@ -184,6 +195,9 @@
                     });
                 }
             });
+            
+            // Tüm HTML bittikten sonra ekrana TEK BİR KERE bas. Kasma ortadan kalkar.
+            area.innerHTML = htmlContent;
         }
 
         function setManual() {
@@ -205,10 +219,12 @@
         }
 
         function renderP() {
-            const area = document.getElementById('p-list'); area.innerHTML = "";
+            const area = document.getElementById('p-list'); 
+            let htmlContent = "";
             pending.forEach(b => {
-                area.innerHTML += `<div class="op-row"><span>${b.name} ($${b.amt} @${b.odds})</span><div><button class="op-btn" style="background:var(--green); color:#000; margin-right:5px;" onclick="resolve(${b.id}, 'win')">W</button><button class="op-btn" style="background:var(--red); color:#fff;" onclick="resolve(${b.id}, 'loss')">L</button></div></div>`;
+                htmlContent += `<div class="op-row"><span>${b.name} ($${b.amt} @${b.odds})</span><div><button class="op-btn" style="background:var(--green); color:#000; margin-right:5px;" onclick="resolve(${b.id}, 'win')">W</button><button class="op-btn" style="background:var(--red); color:#fff;" onclick="resolve(${b.id}, 'loss')">L</button></div></div>`;
             });
+            area.innerHTML = htmlContent;
         }
 
         function save() { localStorage.setItem('v19_w', wallet); localStorage.setItem('v19_h', JSON.stringify(history)); localStorage.setItem('v19_p', JSON.stringify(pending)); }
