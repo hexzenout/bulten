@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 COMMAND | CAPITAL TERMINAL</title>
+    <title>V19 COMMAND | EXTREME TERMINAL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
@@ -12,146 +12,106 @@
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR */
+        /* SIDEBAR (TİKLER KALKTI) */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-        .brand { padding: 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; letter-spacing: 2px; }
-        .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
-        .nav-item:hover { color: #fff; background: #0a0a0a; }
+        .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); letter-spacing: 1px; font-size: 1.1em; }
+        .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
+        .nav-item i { margin-right: 12px; font-size: 1.2em; }
         .nav-item.active { background: rgba(16,185,129,0.05); color: #fff; border-left: 3px solid var(--green); }
-        .check-box { font-size: 1.2em; color: var(--muted); }
-        .active .check-box { color: var(--green); }
+        .nav-item.basket.active { border-left-color: var(--orange); }
 
-        /* MAIN AREA */
+        /* MAIN */
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .header { padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
+        .header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); gap: 30px; }
         
-        /* ROLLING BAR */
-        .rolling-wrapper { flex-grow: 1; margin: 0 40px; }
-        .rolling-label { display: flex; justify-content: space-between; font-size: 0.65em; font-weight: 900; margin-bottom: 5px; color: var(--muted); }
-        .rolling-track { background: #111; height: 8px; border-radius: 4px; border: 1px solid #222; overflow: hidden; }
-        .rolling-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); width: 0.1%; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* ROLLING PROGRESS */
+        .roll-box { flex-grow: 1; }
+        .roll-label { display: flex; justify-content: space-between; font-size: 0.65em; font-weight: 900; margin-bottom: 5px; color: var(--muted); }
+        .roll-track { background: #111; height: 10px; border-radius: 5px; border: 1px solid #222; overflow: hidden; }
+        .roll-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); width: 0.1%; transition: 1.5s; }
 
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
-        /* FILTERS */
-        .filter-row { display: flex; gap: 10px; margin-bottom: 20px; background: var(--panel); padding: 12px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
-        .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
-        .c-select:focus { border-color: var(--green); }
-        .tab { padding: 8px 15px; background: #000; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-size: 0.7em; font-weight: 800; cursor: pointer; }
+        /* MACKOLİK COMPACT */
+        .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); }
+        .tab { padding: 6px 15px; background: #000; border: 1px solid var(--border); cursor: pointer; border-radius: 4px; color: var(--muted); font-weight: 800; font-size: 0.7em; }
         .tab.active.gold { border-color: var(--gold); color: var(--gold); }
+        .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 6px; border-radius: 4px; font-size: 0.75em; font-weight: bold; }
 
-        /* LISTING (MACKOLIK STYLE) */
-        .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--muted); border-bottom: 1px solid #000; display: flex; align-items: center; justify-content: space-between; }
-        .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; transition: 0.1s; }
+        /* LİG SATIRI (BAYRAK + İKON + LİG) */
+        .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--muted); border-bottom: 1px solid #000; display: flex; align-items: center; gap: 10px; }
+        .match-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
         .match-row:hover { background: #0a0a0c; }
-        .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 55px; font-weight: bold; }
-        .m-icon { width: 25px; font-size: 1.1em; }
+        .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 50px; font-weight: bold; }
         .m-teams { font-weight: 700; flex-grow: 1; }
-        .m-league-tag { font-size: 0.8em; color: var(--muted); background: #18181b; padding: 2px 6px; border-radius: 3px; margin-left: 10px; }
-        .m-ops { display: flex; gap: 5px; }
-        .m-btn { background: #111; border: 1px solid var(--border); color: var(--muted); padding: 4px 8px; border-radius: 3px; font-size: 0.7em; font-weight: bold; cursor: pointer; }
-        .m-btn:hover { border-color: var(--muted); color: #fff; }
+        .flag { width: 20px; height: 13px; object-fit: cover; border-radius: 2px; }
 
-        /* FINANCE & EXCEL */
-        .fin-container { display: none; grid-template-columns: 380px 1fr; gap: 20px; }
-        .fin-container.active { display: grid; }
-        .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
-        .wallet-val { font-family: 'JetBrains Mono'; font-size: 2.5em; font-weight: 900; color: var(--gold); margin: 10px 0; }
-        .excel-input-group { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .excel-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #000; border-radius: 4px; border-left: 4px solid var(--gold); margin-bottom: 8px; font-size: 0.8em; }
-        .op-win { background: var(--green); color: #000; padding: 6px 12px; border-radius: 3px; border: none; font-weight: 900; cursor: pointer; }
-        .op-loss { background: var(--red); color: #fff; padding: 6px 12px; border-radius: 3px; border: none; font-weight: 900; cursor: pointer; }
+        /* FİNANS */
+        .fin-grid { display: none; grid-template-columns: 380px 1fr; gap: 20px; }
+        .fin-grid.active { display: grid; }
+        .wallet-card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
+        .w-val { font-family: 'JetBrains Mono'; font-size: 2.2em; font-weight: 900; color: var(--gold); margin: 10px 0; }
+        .pending-box { background: #000; padding: 10px; border-radius: 4px; border-left: 4px solid var(--gold); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; }
+        .op-btn { padding: 5px 12px; border-radius: 3px; border: none; font-weight: 900; cursor: pointer; font-size: 0.7em; }
 
-        /* FLAGS */
-        .flag { width: 18px; height: 12px; object-fit: cover; border-radius: 1px; margin-right: 8px; }
+        /* CHART */
+        #chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="brand">V19 CAPITAL</div>
-        
-        <div class="nav-item active" id="f-tick" onclick="toggleFilter('futbol')">
-            <span><i class="fa-solid fa-futbol"></i> FUTBOL RADARI</span>
-            <i class="fa-solid fa-circle-check check-box"></i>
-        </div>
-        <div class="nav-item active" id="b-tick" onclick="toggleFilter('basketbol')">
-            <span><i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI</span>
-            <i class="fa-solid fa-circle-check check-box"></i>
-        </div>
-        
-        <div class="nav-item" onclick="setMode('bulletin', this)">
-            <span><i class="fa-solid fa-layer-group"></i> ANA BÜLTEN</span>
-        </div>
-        <div class="nav-item" onclick="setMode('finance', this)" style="color:var(--gold)">
-            <span><i class="fa-solid fa-chart-line"></i> USDT FİNANS</span>
-        </div>
-        <div class="nav-item" onclick="setMode('stream', this)">
-            <span><i class="fa-solid fa-tv"></i> 6'LI EKRAN</span>
-        </div>
+        <div class="brand">V19 ELITE UNIT</div>
+        <div class="nav-item active" id="btn-f" onclick="toggleSport('futbol')"><i class="fa-solid fa-futbol"></i> FUTBOL BÜLTENİ</div>
+        <div class="nav-item basket active" id="btn-b" onclick="toggleSport('basketbol')"><i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET BÜLTENİ</div>
+        <div class="nav-item" onclick="setMode('bulletin', this)"><i class="fa-solid fa-list-ul"></i> ANA RADAR</div>
+        <div class="nav-item" onclick="setMode('finance', this)" style="color:var(--gold); border-top:1px solid #111;"><i class="fa-solid fa-chart-line"></i> USDT FİNANS</div>
+        <div class="nav-item" onclick="setMode('stream', this)"><i class="fa-solid fa-tv"></i> 6'LI EKRAN</div>
     </div>
 
     <div class="main">
         <div class="header">
-            <div class="rolling-wrapper">
-                <div class="rolling-label">
-                    <span>PROGRESS TO $100,000</span>
-                    <span id="progress-text">0.1%</span>
-                </div>
-                <div class="rolling-track"><div class="rolling-fill" id="roll-bar"></div></div>
+            <div class="roll-box">
+                <div class="roll-label"><span>ROLLING PROGRESS: $100 -> $100K</span> <span id="roll-perc">0.1%</span></div>
+                <div class="roll-track"><div class="roll-fill" id="roll-bar"></div></div>
             </div>
-            <div id="h-wallet" style="font-family:'JetBrains Mono'; font-weight:900; color:var(--gold); font-size:1.1em;">100.00 USDT</div>
+            <div id="h-wallet" style="font-family:'JetBrains Mono'; font-weight:900; color:var(--gold)">100.00 USDT</div>
         </div>
 
         <div class="content">
             <div id="v-bulletin">
                 <div class="filter-row">
-                    <button class="tab active gold" onclick="setCat('ALTIN', this)">ALTIN LİGLER</button>
-                    <select id="date-sel" class="c-select" onchange="render()"></select>
-                    <select id="league-sel" class="c-select" onchange="render()"></select>
-                    <button class="tab" onclick="updateData()"><i class="fa-solid fa-rotate"></i></button>
+                    <button class="tab active gold" onclick="setCat('ALTIN')">ALTIN LİGLER</button>
+                    <select id="date-sel" class="c-select" onchange="render()"><option value="ALL">TÜM TARİHLER</option></select>
+                    <select id="league-sel" class="c-select" onchange="render()"><option value="ALL">SABİT LİG RADARI</option></select>
                 </div>
                 <div id="list-area"></div>
             </div>
 
-            <div class="fin-container" id="v-finance">
-                <div class="card">
-                    <div style="font-size:0.7em; font-weight:bold; color:var(--muted)">TOPLAM SERMAYE (USDT)</div>
-                    <div class="wallet-val" id="w-val">100.00</div>
-                    
-                    <div class="excel-input-group">
-                        <input type="text" id="bet-name" class="c-select" placeholder="Operasyon Hedefi (Maç)">
+            <div class="fin-grid" id="v-finance">
+                <div class="wallet-card">
+                    <div style="font-size:0.7em; font-weight:bold; color:var(--muted)">MEVCUT SERMAYE (USDT)</div>
+                    <div class="w-val" id="w-val">100.00</div>
+                    <div style="margin-bottom:20px; border-top:1px solid #1f1f23; padding-top:15px;">
+                        <input type="text" id="bet-name" class="c-select" style="width:100%; box-sizing:border-box; margin-bottom:10px;" placeholder="Maç / Operasyon Adı">
                         <div style="display:flex; gap:10px;">
                             <input type="number" id="bet-amt" class="c-select" style="flex:1" placeholder="Tutar">
                             <input type="number" id="bet-odds" class="c-select" style="flex:1" placeholder="Oran">
+                            <button class="op-btn" style="background:var(--green); color:#000;" onclick="addPending()">İŞLEMİ AÇ</button>
                         </div>
-                        <button class="op-win" style="width:100%; padding:12px" onclick="addPending()">İŞLEMİ BAŞLAT (BEKLEMEDE)</button>
                     </div>
-
-                    <div style="margin-top:25px; border-top:1px solid #1f1f23; padding-top:15px;">
-                        <h4 style="margin:0 0 15px 0; font-size:0.75em; color:var(--gold)">BEKLEYEN İŞLEMLER</h4>
-                        <div id="pending-list"></div>
-                    </div>
+                    <h4 style="margin:0 0 10px 0; font-size:0.75em; color:var(--gold)">BEKLEYEN İŞLEMLER</h4>
+                    <div id="pending-list"></div>
                 </div>
-                <div class="card" style="display:flex; flex-direction:column;">
-                    <div style="display:flex; gap:10px; margin-bottom:15px;">
-                        <button class="tab active">GÜNLÜK</button><button class="tab">HAFTALIK</button><button class="tab">AYLIK</button>
-                    </div>
-                    <div id="chart-area" style="flex:1"></div>
-                </div>
+                <div id="chart"></div>
             </div>
 
-            <div id="v-stream" style="display:none; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(2,1fr); gap:15px; height:85vh;">
+            <div id="v-stream" style="display:none; grid-template-columns:repeat(3,1fr); gap:10px; height:80vh;">
                 <script>
                     for(let i=1; i<=6; i++) {
-                        document.write(`
-                        <div style="background:#000; border:1px solid #222; border-radius:8px; display:flex; flex-direction:column; overflow:hidden;">
-                            <div style="padding:8px; background:#0a0a0c; display:flex; gap:8px; border-bottom:1px solid #1f1f23;">
-                                <input id="in-${i}" style="flex:1; background:#000; border:1px solid #333; color:#fff; font-size:11px; padding:5px; border-radius:3px;">
-                                <button onclick="document.getElementById('fr-${i}').src=document.getElementById('in-${i}').value" style="background:var(--green); border:none; font-weight:bold; font-size:10px; padding:5px 10px; cursor:pointer; border-radius:3px;">İZLE</button>
-                                <button onclick="document.getElementById('in-${i}').value=''; document.getElementById('fr-${i}').src='about:blank'" style="background:var(--red); border:none; color:#fff; font-size:10px; padding:5px; border-radius:3px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                            <iframe id="fr-${i}" style="flex:1; border:none; background:#000;" src="about:blank" allowfullscreen></iframe>
+                        document.write(`<div style="background:#000; border:1px solid #222; display:flex; flex-direction:column; border-radius:6px; overflow:hidden;">
+                            <div style="padding:5px; background:#0a0a0c; display:flex; gap:5px;"><input id="in-${i}" style="flex:1; background:#000; border:1px solid #333; color:#fff; font-size:10px; padding:3px;"><button onclick="document.getElementById('fr-${i}').src=document.getElementById('in-${i}').value" style="background:var(--green); border:none; font-size:10px; font-weight:bold; cursor:pointer;">İZLE</button></div>
+                            <iframe id="fr-${i}" style="flex:1; border:none;" src="about:blank"></iframe>
                         </div>`);
                     }
                 </script>
@@ -160,25 +120,29 @@
     </div>
 
     <script>
-        let allData = [], ligSayac = {}, activeSports = ['futbol', 'basketbol'], curMode = 'bulletin', curCat = 'ALTIN';
-        let wallet = parseFloat(localStorage.getItem('v19_wallet')) || 100.00;
-        let history = JSON.parse(localStorage.getItem('v19_history')) || [100.00];
-        let pending = JSON.parse(localStorage.getItem('v19_pending')) || [];
+        let allData = [], activeSports = ['futbol', 'basketbol'], curCat = 'ALTIN', appMode = 'bulletin';
+        let wallet = parseFloat(localStorage.getItem('v19_w')) || 100.00;
+        let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
+        let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
 
-        const FLAGS = {"SUPER LIG":"tr", "BSL":"tr", "PREMIER LEAGUE":"gb-eng", "LA LIGA":"es", "LIGA ACB":"es", "BUNDESLIGA":"de", "SERIE A":"it", "LIGUE 1":"fr", "NBA":"us", "EUROLEAGUE":"eu", "CHAMPIONS LEAGUE":"eu"};
+        const META = {
+            "SUPER LIG": {f:"tr", i:"futbol"}, "PREMIER LEAGUE": {f:"gb-eng", i:"futbol"}, "LA LIGA": {f:"es", i:"futbol"},
+            "BUNDESLIGA": {f:"de", i:"futbol"}, "SERIE A": {f:"it", i:"futbol"}, "LIGUE 1": {f:"fr", i:"futbol"},
+            "CHAMPIONS LEAGUE": {f:"eu", i:"futbol"}, "NBA": {f:"us", i:"basketball"}, "EUROLEAGUE": {f:"eu", i:"basketball"}
+        };
 
-        function toggleFilter(s) {
+        function toggleSport(s) {
             if(activeSports.includes(s)) { if(activeSports.length > 1) activeSports = activeSports.filter(x => x !== s); }
             else activeSports.push(s);
-            document.getElementById('f-tick').classList.toggle('active', activeSports.includes('futbol'));
-            document.getElementById('b-tick').classList.toggle('active', activeSports.includes('basketbol'));
+            document.getElementById('btn-f').classList.toggle('active', activeSports.includes('futbol'));
+            document.getElementById('btn-b').classList.toggle('active', activeSports.includes('basketbol'));
             render();
         }
 
         function setMode(m, el) {
-            curMode = m;
+            appMode = m;
             document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-            if(el) el.classList.add('active');
+            el.classList.add('active');
             document.getElementById('v-bulletin').style.display = m === 'bulletin' ? 'block' : 'none';
             document.getElementById('v-finance').style.display = m === 'finance' ? 'grid' : 'none';
             document.getElementById('v-stream').style.display = m === 'stream' ? 'grid' : 'none';
@@ -186,58 +150,11 @@
             render();
         }
 
-        async function updateData() {
-            const r = await fetch('v19_rapor.json?t=' + Date.now());
-            const d = await r.json();
-            allData = d.veriler || []; ligSayac = d.lig_sayac || {};
-            buildFilters(); render();
-        }
-
-        function buildFilters() {
-            const dSel = document.getElementById('date-sel'), lSel = document.getElementById('league-sel');
-            const dates = [...new Set(allData.map(m => m.tarih))].sort();
-            dSel.innerHTML = '<option value="ALL">TÜM TARİHLER</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
-            lSel.innerHTML = '<option value="ALL">SABİT LİG RADARI</option>';
-            for(let l in ligSayac) lSel.innerHTML += `<option value="${l}">${l} (${ligSayac[l]})</option>`;
-        }
-
-        function render() {
-            if(curMode !== 'bulletin') return;
-            const area = document.getElementById('list-area'); area.innerHTML = "";
-            const dVal = document.getElementById('date-sel').value, lVal = document.getElementById('league-sel').value;
-
-            let filtered = allData.filter(m => activeSports.includes(m.tur) && (dVal==='ALL' || m.tarih===dVal) && (lVal==='ALL' || m.lig===lVal));
-            const days = {};
-            filtered.forEach(m => { if(!days[m.tarih]) days[m.tarih] = []; days[m.tarih].push(m); });
-
-            Object.keys(days).sort().forEach(day => {
-                area.innerHTML += `<div class="league-head" style="color:var(--green)">${day}</div>`;
-                const groups = {};
-                days[day].forEach(m => { if(!groups[m.lig]) groups[m.lig] = []; groups[m.lig].push(m); });
-                for(let lig in groups) {
-                    const f = FLAGS[lig] || "un";
-                    area.innerHTML += `<div class="league-head"><span><img src="https://flagcdn.com/w40/${f}.png" class="flag"> ${lig}</span></div>`;
-                    groups[lig].sort((a,b)=>a.saat.localeCompare(b.saat)).forEach(m => {
-                        area.innerHTML += `
-                        <div class="match-row">
-                            <div class="m-time">${m.saat}</div>
-                            <div class="m-icon"><i class="fa-solid fa-${m.tur==='futbol'?'futbol':'basketball'}" style="color:${m.tur==='futbol'?'#fff':'var(--orange)'}"></i></div>
-                            <div class="m-teams">${m.mac}</div>
-                            <div class="m-ops">
-                                <button class="m-btn" onclick="window.open('https://www.google.com/search?q=${m.mac}+score')">CANLI</button>
-                                <button class="m-btn" onclick="window.open('https://www.google.com/search?q=${m.mac}+h2h')">H2H</button>
-                            </div>
-                        </div>`;
-                    });
-                }
-            });
-        }
-
         function addPending() {
             const name = document.getElementById('bet-name').value, amt = parseFloat(document.getElementById('bet-amt').value), odds = parseFloat(document.getElementById('bet-odds').value);
-            if(!name || !amt || !odds) return;
+            if(!name || !amt) return;
             pending.push({ id: Date.now(), name, amt, odds });
-            localStorage.setItem('v19_pending', JSON.stringify(pending));
+            localStorage.setItem('v19_p', JSON.stringify(pending));
             renderPending();
             document.getElementById('bet-name').value = '';
         }
@@ -247,23 +164,16 @@
             if(res === 'win') wallet += (b.amt * b.odds) - b.amt; else wallet -= b.amt;
             history.push(wallet);
             pending = pending.filter(x => x.id !== id);
-            localStorage.setItem('v19_wallet', wallet);
-            localStorage.setItem('v19_history', JSON.stringify(history));
-            localStorage.setItem('v19_pending', JSON.stringify(pending));
-            updateUI(); renderPending(); initChart();
+            localStorage.setItem('v19_w', wallet);
+            localStorage.setItem('v19_h', JSON.stringify(history));
+            localStorage.setItem('v19_p', JSON.stringify(pending));
+            updateUI(); renderPending(); if(appMode === 'finance') initChart();
         }
 
         function renderPending() {
             const area = document.getElementById('pending-list'); area.innerHTML = "";
             pending.forEach(b => {
-                area.innerHTML += `
-                <div class="excel-row">
-                    <span>${b.name} ($${b.amt} @${b.odds})</span>
-                    <div style="display:flex; gap:5px;">
-                        <button class="op-win" style="font-size:10px; padding:4px 8px" onclick="resolve(${b.id}, 'win')">KAZANDI</button>
-                        <button class="op-loss" style="font-size:10px; padding:4px 8px" onclick="resolve(${b.id}, 'loss')">KAYIP</button>
-                    </div>
-                </div>`;
+                area.innerHTML += `<div class="pending-box"><span>${b.name} ($${b.amt})</span><div><button class="op-btn" style="background:var(--green); color:#000; margin-right:5px;" onclick="resolve(${b.id}, 'win')">W</button><button class="op-btn" style="background:var(--red); color:#fff;" onclick="resolve(${b.id}, 'loss')">L</button></div></div>`;
             });
         }
 
@@ -272,26 +182,63 @@
             document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
             let prog = (Math.log10(wallet / 100) / Math.log10(100000 / 100)) * 100;
             document.getElementById('roll-bar').style.width = Math.max(0.1, prog) + "%";
-            document.getElementById('progress-text').innerText = Math.max(0.1, prog).toFixed(2) + "%";
+            document.getElementById('roll-perc').innerText = Math.max(0.1, prog).toFixed(2) + "%";
+        }
+
+        async function updateData() {
+            const r = await fetch('v19_rapor.json?t=' + Date.now());
+            const d = await r.json();
+            allData = d.veriler || [];
+            buildFilters(d.sayac); render();
+        }
+
+        function buildFilters(sayac) {
+            const dSel = document.getElementById('date-sel'), lSel = document.getElementById('league-sel');
+            const dates = [...new Set(allData.map(m => m.tarih))].sort();
+            dSel.innerHTML = '<option value="ALL">TARİH SEÇ</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
+            lSel.innerHTML = '<option value="ALL">SABİT RADAR</option>';
+            for(let l in sayac) lSel.innerHTML += `<option value="${l}">${l} (${sayac[l]})</option>`;
+        }
+
+        function render() {
+            if(appMode !== 'bulletin') return;
+            const area = document.getElementById('list-area'); area.innerHTML = "";
+            const dVal = document.getElementById('date-sel').value, lVal = document.getElementById('league-sel').value;
+
+            let filtered = allData.filter(m => activeSports.includes(m.tur) && (dVal==='ALL'||m.tarih===dVal) && (lVal==='ALL'||m.lig===lVal));
+            const days = {};
+            filtered.forEach(m => { if(!days[m.tarih]) days[m.tarih] = []; days[m.tarih].push(m); });
+
+            Object.keys(days).sort().forEach(day => {
+                area.innerHTML += `<div style="background:#111; color:var(--green); font-size:0.7em; font-weight:900; padding:5px 15px; margin:10px 0;">${day}</div>`;
+                const groups = {};
+                days[day].forEach(m => { if(!groups[m.lig]) groups[m.lig] = []; groups[m.lig].push(m); });
+                for(let lig in groups) {
+                    const mta = META[lig] || {f:"un", i:groups[lig][0].tur};
+                    area.innerHTML += `<div class="league-head"><img src="https://flagcdn.com/w40/${mta.f}.png" class="flag"><i class="fa-solid fa-${mta.i==='futbol'?'futbol':'basketball'}" style="color:${mta.i==='futbol'?'#fff':'var(--orange)'}"></i> ${lig}</div>`;
+                    groups[lig].sort((a,b)=>a.saat.localeCompare(b.saat)).forEach(m => {
+                        area.innerHTML += `<div class="match-row"><div class="m-time">${m.saat}</div><div class="m-teams">${m.mac}</div></div>`;
+                    });
+                }
+            });
         }
 
         let chart;
         function initChart() {
             if(chart) chart.destroy();
-            chart = new ApexCharts(document.querySelector("#chart-area"), {
+            chart = new ApexCharts(document.querySelector("#chart"), {
                 series: [{ name: "USDT", data: history }],
-                chart: { type: 'area', height: '100%', toolbar: false, animations: { enabled: false } },
-                colors: [wallet >= history[0] ? '#10b981' : '#ef4444'],
-                stroke: { curve: 'smooth', width: 3 },
-                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0 } },
-                xaxis: { labels: { show: false } },
+                chart: { type: 'area', height: 350, toolbar: false, animations: { enabled: false }, background: 'transparent' },
                 theme: { mode: 'dark' },
+                colors: [wallet >= 100 ? '#10b981' : '#ef4444'],
+                stroke: { curve: 'smooth', width: 3 },
+                xaxis: { labels: { show: false } },
                 grid: { borderColor: '#1f1f23' }
             });
             chart.render();
         }
 
-        updateUI(); renderPending(); updateData();
+        updateUI(); renderPending(); updateData(); setInterval(updateData, 60000);
     </script>
 </body>
 </html>
