@@ -3,191 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 ELITE TERMINAL</title>
+    <title>V19 ELITE COMMAND | 6-SCREEN TERMINAL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;800&family=Inter:wght@400;700;900&display=swap');
         :root { --gold: #fbbf24; --green: #10b981; --bg: #050505; --panel: #0c0c0e; --border: #1f1f23; --text: #fff; --muted: #71717a; }
+        
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR (SABİT & AÇILIR) */
-        .sidebar { width: 280px; background: #000; border-right: 2px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s ease; }
-        .sidebar.closed { transform: translateX(-280px); margin-right: -280px; }
-        .brand { padding: 30px 25px; font-weight: 900; font-size: 1.5em; color: var(--green); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-        .nav-item { padding: 22px 30px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 1.1em; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
-        .nav-item:hover { color: #fff; background: #111; }
-        .nav-item.active { color: var(--green); background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--green); }
-        .nav-item.fav-tab.active { color: var(--gold); background: rgba(251, 191, 36, 0.1); border-left-color: var(--gold); }
+        /* SABİT SIDEBAR */
+        .sidebar { width: 280px; background: #000; border-right: 2px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; }
+        .brand { padding: 30px 25px; font-weight: 900; font-size: 1.5em; color: var(--text); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        
+        /* AKORDİYON MENÜ */
+        .menu-btn { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; transition: 0.2s; }
+        .menu-btn:hover { color: #fff; }
+        .menu-items { display: block; border-bottom: 1px solid var(--border); }
+        .menu-items.collapsed { display: none; }
+        
+        .nav-item { padding: 18px 30px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 1em; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
+        .nav-item:hover { color: #fff; background: #0a0a0a; }
+        .nav-item i { width: 20px; }
+        .check-icon { color: var(--green); visibility: hidden; font-size: 0.9em; }
+        .nav-item.active { color: #fff; background: rgba(255,255,255,0.03); }
+        .nav-item.active .check-icon { visibility: visible; }
         
         /* MAIN */
-        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background: #070707; }
+        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: #000; }
-        .header-left { display: flex; align-items: center; gap: 20px; }
-        .menu-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; transition: 0.2s; }
-        .menu-btn:hover { color: var(--green); }
         .quota-box { background: rgba(16, 185, 129, 0.05); padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2); font-family: 'JetBrains Mono'; font-size: 0.9em; color: var(--green); }
         
-        .content { flex-grow: 1; padding: 30px 40px; overflow-y: auto; scroll-behavior: smooth; }
-        
-        /* BÜLTEN KISMI */
-        .tabs { display: flex; gap: 12px; margin-bottom: 30px; }
-        .tab { padding: 12px 28px; background: var(--panel); border: 1px solid var(--border); cursor: pointer; border-radius: 8px; color: var(--muted); font-weight: 900; font-size: 0.9em; transition: 0.3s; }
-        .tab.active.gold { border-color: var(--gold); color: var(--gold); background: rgba(251,191,36,0.05); }
-        .tab.active.silver { border-color: #fff; color: #fff; }
-        
-        .date-divider { color: var(--green); font-family: 'JetBrains Mono'; font-weight: 800; font-size: 0.95em; margin: 35px 0 15px 0; border-left: 4px solid var(--green); padding-left: 15px; }
-        .league-box { margin-bottom: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--panel); overflow: hidden; }
-        .league-trigger { padding: 20px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 1.1em; background: #0a0a0c; }
-        .league-trigger:hover { background: #121214; }
-        .league-content { display: none; padding: 15px; background: #050505; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 12px; }
-        .league-content.open { display: grid; }
-        
-        .card { background: var(--panel); border: 1px solid var(--border); padding: 22px; border-radius: 10px; border-left: 5px solid #27272a; position: relative; transition: 0.2s; }
-        .card:hover { border-left-color: var(--green); }
-        .card-time { font-family: 'JetBrains Mono'; font-size: 0.95em; color: var(--green); margin-bottom: 10px; display: block; font-weight: bold; }
-        .card-match { font-weight: 900; font-size: 1.3em; line-height: 1.2; margin-bottom: 15px; color: #fff; padding-right: 35px; }
-        
-        /* FAVORİ YILDIZI */
-        .fav-star { position: absolute; top: 20px; right: 20px; font-size: 1.5em; color: #27272a; cursor: pointer; transition: 0.2s; }
-        .fav-star:hover { transform: scale(1.2); color: var(--muted); }
-        .fav-star.active { color: var(--gold); text-shadow: 0 0 15px rgba(251,191,36,0.4); }
+        .content { flex-grow: 1; padding: 30px; overflow-y: auto; }
 
-        .flag { width: 32px; height: 22px; object-fit: cover; border-radius: 4px; margin-right: 15px; vertical-align: middle; }
-        .empty-state { text-align: center; padding: 50px; color: var(--muted); font-style: italic; font-size: 1.1em; }
-
-        /* CANLI YAYIN (4'LÜ EKRAN) MODÜLÜ */
-        .stream-grid { display: none; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; height: calc(100vh - 140px); }
+        /* 6'LI EKRAN IZGARA SİSTEMİ */
+        .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 15px; height: calc(100vh - 140px); }
         .stream-grid.active { display: grid; }
         .stream-box { background: #000; border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
-        .stream-header { padding: 12px; background: #0a0a0c; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
-        .stream-input { flex-grow: 1; background: #050505; border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 4px; font-family: 'JetBrains Mono'; font-size: 0.8em; }
-        .stream-input:focus { outline: none; border-color: var(--green); }
-        .stream-btn { background: var(--green); color: #000; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .stream-frame { flex-grow: 1; border: none; width: 100%; height: 100%; background: #050505; }
+        .stream-header { padding: 8px 12px; background: #0a0a0c; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid var(--border); }
+        .stream-input { flex-grow: 1; background: #050505; border: 1px solid #222; color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 0.75em; font-family: 'JetBrains Mono'; }
+        .stream-btn { background: var(--green); color: #000; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.7em; }
+        .stream-frame { flex-grow: 1; border: none; background: #000; }
+
+        /* BÜLTEN KARTLARI */
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab { padding: 10px 24px; background: var(--panel); border: 1px solid var(--border); cursor: pointer; border-radius: 6px; color: var(--muted); font-weight: 900; font-size: 0.8em; }
+        .tab.active.gold { border-color: var(--gold); color: var(--gold); }
+        .date-divider { color: var(--green); font-family: 'JetBrains Mono'; font-weight: 800; font-size: 0.9em; margin: 30px 0 10px 0; border-left: 4px solid var(--green); padding-left: 12px; }
+        .league-box { margin-bottom: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); overflow: hidden; }
+        .league-trigger { padding: 18px 22px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 1em; background: #0a0a0c; }
+        .league-content { display: none; padding: 15px; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 12px; }
+        .league-content.open { display: grid; }
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 10px; position: relative; border-left: 4px solid #222; }
+        .card-match { font-weight: 900; font-size: 1.2em; color: #fff; margin: 10px 0; }
+        .fav-star { position: absolute; top: 18px; right: 18px; font-size: 1.3em; color: #222; cursor: pointer; }
+        .fav-star.active { color: var(--gold); }
+        .flag { width: 30px; height: 20px; object-fit: cover; border-radius: 3px; margin-right: 12px; vertical-align: middle; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar">
         <div class="brand">
-            V19 TERMINAL
-            <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('closed')"><i class="fa-solid fa-bars"></i></button>
+            <button class="menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+            <span>V19 TERMINAL</span>
         </div>
-        <div id="menu-items">
-            <div class="nav-item active" onclick="setMode('futbol', this)"><i class="fa-solid fa-futbol"></i> FUTBOL RADARI</div>
-            <div class="nav-item" onclick="setMode('basketbol', this)"><i class="fa-solid fa-basketball"></i> BASKETBOL RADARI</div>
-            <div class="nav-item fav-tab" onclick="setMode('favoriler', this)"><i class="fa-solid fa-star"></i> FAVORİ BÜLTENİ</div>
-            <div class="nav-item" onclick="setMode('canli', this)" style="color:var(--green); border-top:1px solid #1f1f23; margin-top:10px;"><i class="fa-solid fa-tv"></i> 4'LÜ EKRAN İZLE</div>
+        
+        <div class="menu-items" id="menu-items">
+            <div class="nav-item active" id="filter-futbol" onclick="toggleSport('futbol')">
+                <div><i class="fa-solid fa-futbol"></i> Futbol</div>
+                <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <div class="nav-item active" id="filter-basketbol" onclick="toggleSport('basketbol')">
+                <div><i class="fa-solid fa-basketball"></i> Basketbol</div>
+                <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <div class="nav-item" id="nav-fav" onclick="setAppMode('favoriler', this)">
+                <div><i class="fa-solid fa-star"></i> Favoriler</div>
+            </div>
+            <div class="nav-item" onclick="setAppMode('canli', this)" style="color:var(--gold)">
+                <div><i class="fa-solid fa-tv"></i> 6'LI EKRAN İZLE</div>
+            </div>
         </div>
     </div>
 
     <div class="main">
         <div class="header">
-            <div class="header-left">
-                <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('closed')"><i class="fa-solid fa-bars"></i></button>
-                <h2 id="title" style="margin:0; font-weight:900; font-size: 1.4em;">FUTBOL RADARI</h2>
-            </div>
-            <div class="quota-box">
-                <i class="fa-solid fa-microchip"></i> KOTA: <span id="quota">--</span> | <span id="scan-time">--:--</span>
-            </div>
+            <h2 id="title" style="margin:0; font-weight:900;">BÜLTEN RADARI</h2>
+            <div class="quota-box">KOTA: <span id="quota">--</span> | <span id="scan-time">--:--</span></div>
         </div>
 
         <div class="content">
             <div id="bulten-view">
                 <div class="tabs" id="kategori-tabs">
                     <button class="tab active gold" onclick="setCategory('ALTIN', this)">ALTIN LİGLER</button>
-                    <button class="tab" onclick="setCategory('GÜMÜŞ', this)">GÜMÜŞ LİGLER</button>
+                    <button class="tab" onclick="setCategory('GÜMÜŞ', this)">GÜMÜŞ</button>
                 </div>
                 <div id="content-area"></div>
             </div>
 
             <div class="stream-grid" id="stream-view">
-                <div class="stream-box">
-                    <div class="stream-header">
-                        <span style="color:var(--green); font-weight:bold;">CH1</span>
-                        <input type="text" class="stream-input" id="s1" placeholder="Yayın linkini buraya yapıştır...">
-                        <button class="stream-btn" onclick="loadStream(1)">İZLE</button>
-                    </div>
-                    <iframe id="f1" class="stream-frame" src="about:blank" allowfullscreen></iframe>
-                </div>
-                <div class="stream-box">
-                    <div class="stream-header">
-                        <span style="color:var(--green); font-weight:bold;">CH2</span>
-                        <input type="text" class="stream-input" id="s2" placeholder="Yayın linkini buraya yapıştır...">
-                        <button class="stream-btn" onclick="loadStream(2)">İZLE</button>
-                    </div>
-                    <iframe id="f2" class="stream-frame" src="about:blank" allowfullscreen></iframe>
-                </div>
-                <div class="stream-box">
-                    <div class="stream-header">
-                        <span style="color:var(--green); font-weight:bold;">CH3</span>
-                        <input type="text" class="stream-input" id="s3" placeholder="Yayın linkini buraya yapıştır...">
-                        <button class="stream-btn" onclick="loadStream(3)">İZLE</button>
-                    </div>
-                    <iframe id="f3" class="stream-frame" src="about:blank" allowfullscreen></iframe>
-                </div>
-                <div class="stream-box">
-                    <div class="stream-header">
-                        <span style="color:var(--green); font-weight:bold;">CH4</span>
-                        <input type="text" class="stream-input" id="s4" placeholder="Yayın linkini buraya yapıştır...">
-                        <button class="stream-btn" onclick="loadStream(4)">İZLE</button>
-                    </div>
-                    <iframe id="f4" class="stream-frame" src="about:blank" allowfullscreen></iframe>
-                </div>
+                <script>
+                    for(let i=1; i<=6; i++) {
+                        document.write(`
+                        <div class="stream-box">
+                            <div class="stream-header">
+                                <span style="color:var(--green); font-weight:bold; font-size:0.7em;">CH${i}</span>
+                                <input type="text" class="stream-input" id="input-${i}" placeholder="Link..." oninput="handleInputClear(${i})">
+                                <button class="stream-btn" onclick="loadStream(${i})">İZLE</button>
+                            </div>
+                            <iframe id="frame-${i}" class="stream-frame" src="about:blank" allowfullscreen></iframe>
+                        </div>
+                        `);
+                    }
+                </script>
             </div>
         </div>
     </div>
 
     <script>
-        let currentMode = 'futbol', currentCategory = 'ALTIN', allData = [];
+        let activeSports = ['futbol', 'basketbol']; // Çoklu seçim listesi
+        let currentAppMode = 'bulten'; 
+        let currentCategory = 'ALTIN';
+        let allData = [];
         let favorites = JSON.parse(localStorage.getItem('v19_favs_v3')) || {};
 
-        // 24 SAAT İMHA PROTOKOLÜ
-        function cleanExpiredFavorites() {
-            const now = Date.now();
-            let hasChanged = false;
-            for (let mac in favorites) {
-                if (now - favorites[mac] > (24 * 60 * 60 * 1000)) {
-                    delete favorites[mac];
-                    hasChanged = true;
+        function toggleMenu() { document.getElementById('menu-items').classList.toggle('collapsed'); }
+
+        // ÇOKLU SPOR SEÇİMİ MANTIĞI
+        function toggleSport(sport) {
+            setAppMode('bulten'); // Spor seçince bültene dön
+            if (activeSports.includes(sport)) {
+                if (activeSports.length > 1) { // En az biri seçili kalmalı
+                    activeSports = activeSports.filter(s => s !== sport);
+                    document.getElementById('filter-' + sport).classList.remove('active');
                 }
-            }
-            if (hasChanged) localStorage.setItem('v19_favs_v3', JSON.stringify(favorites));
-        }
-
-        const leagueMeta = {
-            "SUPER LIG": {f:"tr", n:"TÜRKİYE"}, "BSL": {f:"tr", n:"TÜRKİYE"},
-            "PREMIER LEAGUE": {f:"gb-eng", n:"İNGİLTERE"}, "CHAMPIONSHIP": {f:"gb-eng", n:"İNGİLTERE"},
-            "LA LIGA": {f:"es", n:"İSPANYA"}, "LIGA ACB": {f:"es", n:"İSPANYA"},
-            "BUNDESLIGA": {f:"de", n:"ALMANYA"}, "BBL": {f:"de", n:"ALMANYA"},
-            "SERIE A": {f:"it", n:"İTALYA"}, "LEGA A": {f:"it", n:"İTALYA"},
-            "LIGUE 1": {f:"fr", n:"FRANSA"}, "LNB PRO A": {f:"fr", n:"FRANSA"},
-            "EREDIVISIE": {f:"nl", n:"HOLLANDA"}, "PRIMEIRA LIGA": {f:"pt", n:"PORTEKİZ"},
-            "NBA": {f:"us", n:"ABD"}, "WNBA": {f:"us", n:"ABD"}, "NCAA": {f:"us", n:"ABD"}, "MLS": {f:"us", n:"ABD"},
-            "SERIE A (BRAZIL)": {f:"br", n:"BREZİLYA"}, "PRIMERA DIVISION (ARGENTINA)": {f:"ar", n:"ARJANTİN"},
-            "EUROLEAGUE": {f:"eu", n:"AVRUPA"}, "EUROCUP": {f:"eu", n:"AVRUPA"}, "BCL": {f:"eu", n:"AVRUPA"},
-            "CHAMPIONS LEAGUE": {f:"eu", n:"AVRUPA"}, "EUROPA LEAGUE": {f:"eu", n:"AVRUPA"}, "CONFERENCE LEAGUE": {f:"eu", n:"AVRUPA"},
-            "HEBA A1": {f:"gr", n:"YUNANİSTAN"}, "VTB": {f:"ru", n:"RUSYA"}, "WORLD CUP": {f:"un", n:"DÜNYA"}
-        };
-        const basketKeywords = ["NBA","EUROLEAGUE","ACB","LEGA A","LNB","BBL","NCAA","WNBA","EUROCUP","BSL","HEBA","VTB","BCL"];
-
-        function loadStream(id) {
-            const url = document.getElementById(`s${id}`).value;
-            if(url) document.getElementById(`f${id}`).src = url;
-        }
-
-        function toggleFav(macAdi, iconElement) {
-            if(favorites[macAdi]) {
-                delete favorites[macAdi];
-                iconElement.classList.replace('fa-solid', 'fa-regular');
-                iconElement.classList.remove('active');
             } else {
-                favorites[macAdi] = Date.now();
-                iconElement.classList.replace('fa-regular', 'fa-solid');
-                iconElement.classList.add('active');
+                activeSports.push(sport);
+                document.getElementById('filter-' + sport).classList.add('active');
             }
+            render();
+        }
+
+        function setAppMode(mode, el) {
+            currentAppMode = mode;
+            if(el) {
+                document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+                el.classList.add('active');
+            }
+            
+            if(mode === 'canli') {
+                document.getElementById('bulten-view').style.display = 'none';
+                document.getElementById('stream-view').classList.add('active');
+                document.getElementById('title').innerText = "6'LI EKRAN İZLEME MERKEZİ";
+            } else {
+                document.getElementById('stream-view').classList.remove('active');
+                document.getElementById('bulten-view').style.display = 'block';
+                document.getElementById('title').innerText = mode === 'favoriler' ? "FAVORİLER" : "BÜLTEN RADARI";
+                render();
+            }
+        }
+
+        // YAYIN YÜKLEME VE SİLME DÜZELTMESİ
+        function loadStream(id) {
+            const url = document.getElementById(`input-${id}`).value;
+            const frame = document.getElementById(`frame-${id}`);
+            frame.src = url ? url : "about:blank";
+        }
+
+        function handleInputClear(id) {
+            const val = document.getElementById(`input-${id}`).value;
+            if(!val) document.getElementById(`frame-${id}`).src = "about:blank";
+        }
+
+        // --- FAVORİ VE RADAR MANTIĞI (Önceki Turn'lerden Gelen Altyapı) ---
+        function toggleFav(mac, el) {
+            if(favorites[mac]) delete favorites[mac];
+            else favorites[mac] = Date.now();
             localStorage.setItem('v19_favs_v3', JSON.stringify(favorites));
-            if(currentMode === 'favoriler') render();
+            render();
         }
 
         async function update() {
@@ -196,45 +189,41 @@
                 const d = await r.json();
                 document.getElementById('quota').innerText = d.kalan_hak || "500";
                 document.getElementById('scan-time').innerText = d.son_guncelleme.split(' ')[1];
-                allData = d.veriler || []; 
-                cleanExpiredFavorites();
+                allData = d.veriler || [];
                 render();
             } catch(e) {}
         }
 
-        function getDayLabel(iso) {
-            if(!iso) return "BELİRSİZ";
-            const d = new Date(iso), now = new Date();
-            if(d.toDateString() === now.toDateString()) return "BUGÜN";
-            now.setDate(now.getDate()+1);
-            if(d.toDateString() === now.toDateString()) return "YARIN";
-            return d.toLocaleDateString('tr-TR', {weekday:'long', day:'numeric', month:'long'}).toUpperCase();
-        }
+        const leagueMeta = {
+            "SUPER LIG": {f:"tr", n:"TÜRKİYE"}, "BSL": {f:"tr", n:"TÜRKİYE"},
+            "PREMIER LEAGUE": {f:"gb-eng", n:"İNGİLTERE"}, "LA LIGA": {f:"es", n:"İSPANYA"}, "LIGA ACB": {f:"es", n:"İSPANYA"},
+            "NBA": {f:"us", n:"ABD"}, "EUROLEAGUE": {f:"eu", n:"AVRUPA"}
+        };
+        const basketKeywords = ["NBA","EUROLEAGUE","ACB","LEGA A","LNB","BBL","NCAA","WNBA","EUROCUP","BSL","HEBA","VTB","BCL"];
 
         function render() {
             const area = document.getElementById('content-area'); area.innerHTML = "";
             const tabs = document.getElementById('kategori-tabs');
             
             let filtered = [];
-            if(currentMode === 'favoriler') {
+            if(currentAppMode === 'favoriler') {
                 tabs.style.display = 'none';
-                filtered = allData.filter(m => Object.keys(favorites).includes(m.mac));
+                filtered = allData.filter(m => favorites[m.mac]);
             } else {
                 tabs.style.display = 'flex';
                 filtered = allData.filter(m => {
                     const isB = basketKeywords.some(k => m.lig.toUpperCase().includes(k));
-                    return (isB ? 'basketbol' : 'futbol') === currentMode && m.kategori === currentCategory;
+                    const matchType = isB ? 'basketbol' : 'futbol';
+                    return activeSports.includes(matchType) && m.kategori === currentCategory;
                 });
             }
 
-            if(filtered.length === 0) {
-                area.innerHTML = `<div class="empty-state">Hedef bulunamadı veya radar beklemede...</div>`;
-                return;
-            }
+            if(filtered.length === 0) { area.innerHTML = `<div style="text-align:center; padding:50px; color:#555;">Kriterlere uygun maç bulunamadı.</div>`; return; }
 
             const days = {};
             filtered.forEach(m => {
-                const day = getDayLabel(m.saat_raw);
+                const d = new Date(m.saat_raw), now = new Date();
+                let day = d.toDateString() === now.toDateString() ? "BUGÜN" : d.toLocaleDateString('tr-TR', {weekday:'long', day:'numeric', month:'long'}).toUpperCase();
                 if(!days[day]) days[day] = {};
                 if(!days[day][m.lig]) days[day][m.lig] = [];
                 days[day][m.lig].push(m);
@@ -245,55 +234,19 @@
                 for(let lig in days[day]) {
                     const mta = leagueMeta[lig.toUpperCase()] || {f:"un", n:"DİĞER"};
                     const lBox = document.createElement('div'); lBox.className = 'league-box';
-                    lBox.innerHTML = `
-                        <div class="league-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
-                            <span><img src="https://flagcdn.com/w40/${mta.f}.png" class="flag"> ${mta.n} - ${lig}</span>
-                            <i class="fa-solid fa-chevron-down fa-xs" style="color:var(--muted)"></i>
-                        </div>
-                        <div class="league-content ${currentMode === 'favoriler' ? 'open' : ''}"></div>
-                    `;
-                    const content = lBox.querySelector('.league-content');
-                    days[day][lig].sort((a,b)=>a.saat_raw.localeCompare(b.saat_raw)).forEach(m => {
+                    lBox.innerHTML = `<div class="league-trigger" onclick="this.nextElementSibling.classList.toggle('open')"><span><img src="https://flagcdn.com/w40/${mta.f}.png" class="flag"> ${mta.n} - ${lig}</span><i class="fa-solid fa-chevron-down fa-xs"></i></div><div class="league-content"></div>`;
+                    const cont = lBox.querySelector('.league-content');
+                    days[day][lig].forEach(m => {
                         const d = new Date(m.saat_raw);
                         const tsi = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0');
-                        const isFav = Object.keys(favorites).includes(m.mac);
-                        
-                        content.innerHTML += `
-                            <div class="card">
-                                <i class="fa-${isFav ? 'solid active' : 'regular'} fa-star fav-star" onclick="toggleFav('${m.mac}', this)"></i>
-                                <span class="card-time"><i class="fa-regular fa-clock"></i> ${tsi} (TSİ)</span>
-                                <div class="card-match">${m.mac}</div>
-                                <div style="font-size:0.85em; color:var(--muted); border-top:1px solid #1f1f23; padding-top:12px;">
-                                    <i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.uyari}
-                                </div>
-                            </div>
-                        `;
+                        cont.innerHTML += `<div class="card"><i class="fa-solid fa-star fav-star ${favorites[m.mac]?'active':''}" onclick="toggleFav('${m.mac}', this)"></i><span class="card-time">${tsi} (TSİ)</span><div class="card-match">${m.mac}</div><div style="font-size:0.85em; color:var(--muted); border-top:1px solid #1f1f23; padding-top:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.uyari}</div></div>`;
                     });
                     area.appendChild(lBox);
                 }
             });
         }
-
-        function setMode(mode, el) { 
-            currentMode = mode; 
-            document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active')); 
-            el.classList.add('active'); 
-            
-            if(mode === 'canli') {
-                document.getElementById('bulten-view').style.display = 'none';
-                document.getElementById('stream-view').classList.add('active');
-                document.getElementById('title').innerText = "4'LÜ EKRAN İZLEME MERKEZİ";
-            } else {
-                document.getElementById('stream-view').classList.remove('active');
-                document.getElementById('bulten-view').style.display = 'block';
-                document.getElementById('title').innerText = mode === 'favoriler' ? "FAVORİ BÜLTENİ" : mode.toUpperCase() + " RADARI";
-                render(); 
-            }
-        }
-        function setCategory(c,el) { currentCategory=c; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active','gold','silver')); el.classList.add('active', c==='ALTIN'?'gold':'silver'); render(); }
-        
-        update();
-        setInterval(update, 15000); 
+        function setCategory(c,el) { currentCategory=c; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active','gold')); el.classList.add('active','gold'); render(); }
+        update(); setInterval(update, 15000);
     </script>
 </body>
 </html>
