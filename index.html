@@ -7,57 +7,69 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;800&family=Inter:wght@400;700;900&display=swap');
-        :root { --gold: #fbbf24; --green: #10b981; --bg: #050505; --panel: #0c0c0e; --border: #1f1f23; --text: #fff; --muted: #71717a; }
+        :root { --gold: #fbbf24; --green: #10b981; --bg: #050505; --panel: #0c0c0e; --border: #1f1f23; --border-light: #27272a; --text: #fff; --muted: #a1a1aa; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        .sidebar { width: 280px; background: #000; border-right: 2px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; }
-        .brand { padding: 30px 25px; font-weight: 900; font-size: 1.5em; color: var(--text); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
-        .menu-btn { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; transition: 0.2s; }
+        .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; }
+        .brand { padding: 25px 20px; font-weight: 900; font-size: 1.3em; color: var(--text); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .menu-btn { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; transition: 0.2s; }
         .menu-btn:hover { color: #fff; }
         
         .menu-items { display: block; border-bottom: 1px solid var(--border); }
         .menu-items.collapsed { display: none; }
         
-        .nav-item { padding: 18px 25px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 1em; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
-        .nav-item-left { display: flex; align-items: center; gap: 12px; }
-        .check-box { font-size: 1.3em; color: var(--muted); transition: 0.2s; }
-        .nav-item.active { color: #fff; background: rgba(255,255,255,0.03); border-left: 4px solid var(--green); }
+        .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.95em; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
+        .nav-item-left { display: flex; align-items: center; gap: 10px; }
+        .check-box { font-size: 1.2em; color: var(--muted); transition: 0.2s; }
+        .nav-item.active { color: #fff; background: rgba(255,255,255,0.03); border-left: 3px solid var(--green); }
         .nav-item.active .check-box { color: var(--green); }
         .nav-item.fav-tab.active { border-left-color: var(--gold); }
         .nav-item.canli-tab.active { border-left-color: var(--green); }
         
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: #000; }
-        .quota-box { background: rgba(16, 185, 129, 0.05); padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2); font-family: 'JetBrains Mono'; font-size: 0.9em; color: var(--green); }
-        .content { flex-grow: 1; padding: 30px; overflow-y: auto; }
+        .header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: #000; }
+        .quota-box { background: rgba(16, 185, 129, 0.05); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.2); font-family: 'JetBrains Mono'; font-size: 0.8em; color: var(--green); }
+        .content { flex-grow: 1; padding: 20px 30px; overflow-y: auto; }
 
-        .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 15px; height: calc(100vh - 140px); }
+        /* YAYIN EKRANI */
+        .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; height: calc(100vh - 100px); }
         .stream-grid.active { display: grid; }
-        .stream-box { background: #000; border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
-        .stream-header { padding: 8px 12px; background: #0a0a0c; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid var(--border); }
-        .stream-input { flex-grow: 1; background: #050505; border: 1px solid #222; color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 0.75em; font-family: 'JetBrains Mono'; }
-        
-        .stream-btn { background: var(--green); color: #000; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.7em; }
-        .stream-close-btn { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.7em; }
-        
+        .stream-box { background: #000; border: 1px solid var(--border); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; }
+        .stream-header { padding: 6px 10px; background: #0a0a0c; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid var(--border); }
+        .stream-input { flex-grow: 1; background: #050505; border: 1px solid #222; color: #fff; padding: 4px 8px; border-radius: 3px; font-size: 0.7em; font-family: 'JetBrains Mono'; }
+        .stream-btn { background: var(--green); color: #000; border: none; padding: 4px 10px; border-radius: 3px; font-weight: bold; cursor: pointer; font-size: 0.7em; }
+        .stream-close-btn { background: #ef4444; color: #fff; border: none; padding: 4px 8px; border-radius: 3px; font-weight: bold; cursor: pointer; font-size: 0.7em; }
         .stream-frame { flex-grow: 1; border: none; background: #000; }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
-        .tab { padding: 10px 24px; background: var(--panel); border: 1px solid var(--border); cursor: pointer; border-radius: 6px; color: var(--muted); font-weight: 900; font-size: 0.8em; }
+        /* KATEGORİ VE TARİH FİLTRELERİ */
+        .filter-row { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
+        .tab { padding: 8px 18px; background: var(--panel); border: 1px solid var(--border); cursor: pointer; border-radius: 4px; color: var(--muted); font-weight: 800; font-size: 0.75em; text-transform: uppercase; transition: 0.2s; }
+        .tab.active { background: #18181b; color: #fff; border-color: #3f3f46; }
         .tab.active.gold { border-color: var(--gold); color: var(--gold); background: rgba(251,191,36,0.05); }
-        .tab.active.silver { border-color: #fff; color: #fff; }
-        .tab.active.bronze { border-color: #b45309; color: #b45309; }
+        .date-btn { padding: 6px 14px; background: transparent; border: 1px solid var(--border); cursor: pointer; border-radius: 20px; color: var(--muted); font-weight: 700; font-size: 0.75em; transition: 0.2s; }
+        .date-btn:hover { background: #111; }
+        .date-btn.active { background: var(--green); color: #000; border-color: var(--green); }
+        .filter-divider { width: 1px; height: 20px; background: var(--border); margin: 0 5px; }
+
+        /* MACKOLİK TARZI KOMPAKT LİSTELEME */
+        .league-box { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--panel); overflow: hidden; }
+        .league-trigger { padding: 10px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 0.85em; background: #0f0f12; border-bottom: 1px solid #000; }
+        .league-trigger:hover { background: #18181b; }
+        .league-content { display: none; background: #050505; }
+        .league-content.open { display: block; }
         
-        .date-divider { color: var(--green); font-family: 'JetBrains Mono'; font-weight: 800; font-size: 0.9em; margin: 30px 0 10px 0; border-left: 4px solid var(--green); padding-left: 12px; }
-        .league-box { margin-bottom: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); overflow: hidden; }
-        .league-trigger { padding: 18px 22px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 1em; background: #0a0a0c; }
-        .league-content { display: none; padding: 15px; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 12px; }
-        .league-content.open { display: grid; }
-        .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 10px; position: relative; border-left: 4px solid #222; }
-        .card-match { font-weight: 900; font-size: 1.2em; color: #fff; margin: 10px 0; padding-right:30px; }
-        .fav-star { position: absolute; top: 18px; right: 18px; font-size: 1.3em; color: #222; cursor: pointer; }
-        .fav-star.active { color: var(--gold); }
-        .flag { width: 30px; height: 20px; object-fit: cover; border-radius: 3px; margin-right: 12px; vertical-align: middle; }
+        .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--border-light); font-size: 0.85em; transition: 0.1s; }
+        .match-row:hover { background: #0a0a0c; }
+        .match-row:last-child { border-bottom: none; }
+        
+        .m-time { font-family: 'JetBrains Mono'; color: var(--green); font-weight: bold; width: 60px; flex-shrink: 0; }
+        .m-fav { width: 30px; color: #3f3f46; cursor: pointer; font-size: 1.1em; flex-shrink: 0; text-align: center; }
+        .m-fav:hover { color: var(--muted); }
+        .m-fav.active { color: var(--gold); }
+        .m-teams { font-weight: 700; color: #fff; flex-grow: 1; }
+        .m-alert { font-size: 0.8em; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+        
+        .flag { width: 20px; height: 14px; object-fit: cover; border-radius: 2px; margin-right: 8px; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -87,25 +99,30 @@
 
     <div class="main">
         <div class="header">
-            <h2 id="title" style="margin:0; font-weight:900;">BÜLTEN RADARI</h2>
+            <h2 id="title" style="margin:0; font-weight:900; font-size:1.2em;">BÜLTEN RADARI</h2>
             <div class="quota-box">KOTA: <span id="quota">--</span> | <span id="scan-time">--:--</span></div>
         </div>
         <div class="content">
             <div id="bulten-view">
-                <div class="tabs" id="kategori-tabs">
-                    <button class="tab active gold" onclick="setCategory('ALTIN', this)">ALTIN LİGLER</button>
-                    <button class="tab" onclick="setCategory('GÜMÜŞ', this)">GÜMÜŞ LİGLER</button>
-                    <button class="tab" onclick="setCategory('BRONZ', this)">BRONZ (DİĞER)</button>
+                <div class="filter-row">
+                    <button class="tab active gold" id="cat-ALTIN" onclick="setCategory('ALTIN')">ALTIN</button>
+                    <button class="tab" id="cat-GÜMÜŞ" onclick="setCategory('GÜMÜŞ')">GÜMÜŞ</button>
+                    <button class="tab" id="cat-BRONZ" onclick="setCategory('BRONZ')">BRONZ</button>
+                    <div class="filter-divider"></div>
+                    <div id="date-filters-container" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        </div>
                 </div>
+                
                 <div id="content-area"></div>
             </div>
+            
             <div class="stream-grid" id="stream-view">
                 <script>
                     for(let i=1; i<=6; i++) {
                         document.write(`
                         <div class="stream-box">
                             <div class="stream-header">
-                                <span style="color:var(--green); font-weight:bold; font-size:0.7em;">CH${i}</span>
+                                <span style="color:var(--green); font-weight:bold; font-size:0.8em;">CH${i}</span>
                                 <input type="text" class="stream-input" id="input-${i}" placeholder="Link..." oninput="handleInputClear(${i})">
                                 <button class="stream-close-btn" onclick="clearStream(${i})" title="Kapat"><i class="fa-solid fa-xmark"></i></button>
                                 <button class="stream-btn" onclick="loadStream(${i})">İZLE</button>
@@ -123,8 +140,9 @@
         let activeSports = ['futbol', 'basketbol']; 
         let currentAppMode = 'bulten'; 
         let currentCategory = 'ALTIN';
+        let currentDate = 'ALL'; // Tarih filtresi
         let allData = [];
-        let favorites = JSON.parse(localStorage.getItem('v19_favs_v3')) || {};
+        let favorites = JSON.parse(localStorage.getItem('v19_favs_v4')) || {};
 
         function cleanExpiredFavorites() {
             const now = Date.now();
@@ -132,12 +150,12 @@
             for (let m in favorites) {
                 if (now - favorites[m] > (24 * 60 * 60 * 1000)) { delete favorites[m]; changed = true; }
             }
-            if (changed) localStorage.setItem('v19_favs_v3', JSON.stringify(favorites));
+            if (changed) localStorage.setItem('v19_favs_v4', JSON.stringify(favorites));
         }
 
         function toggleMenu() { document.getElementById('menu-items').classList.toggle('collapsed'); }
         
-        // YAYIN KONTROLLERİ: Çarpı Butonu ve Anında Temizleme
+        // YAYIN KONTROLLERİ
         function loadStream(id) { document.getElementById(`frame-${id}`).src = document.getElementById(`input-${id}`).value || "about:blank"; }
         function handleInputClear(id) { if(document.getElementById(`input-${id}`).value.trim() === "") document.getElementById(`frame-${id}`).src = "about:blank"; }
         function clearStream(id) { document.getElementById(`input-${id}`).value = ''; document.getElementById(`frame-${id}`).src = "about:blank"; }
@@ -177,21 +195,32 @@
             }
         }
 
-        // LİG - BAYRAK SÖZLÜĞÜ
-        const leagueMeta = {
-            "SUPER LIG": {f:"tr", n:"TÜRKİYE"}, "BSL": {f:"tr", n:"TÜRKİYE"},
-            "PREMIER LEAGUE": {f:"gb-eng", n:"İNGİLTERE"}, "CHAMPIONSHIP": {f:"gb-eng", n:"İNGİLTERE"},
-            "LA LIGA": {f:"es", n:"İSPANYA"}, "LIGA ACB": {f:"es", n:"İSPANYA"},
-            "BUNDESLIGA": {f:"de", n:"ALMANYA"}, "BBL": {f:"de", n:"ALMANYA"},
-            "SERIE A": {f:"it", n:"İTALYA"}, "LEGA A": {f:"it", n:"İTALYA"},
-            "LIGUE 1": {f:"fr", n:"FRANSA"}, "LNB PRO A": {f:"fr", n:"FRANSA"}, "PRO A": {f:"fr", n:"FRANSA"},
-            "EREDIVISIE": {f:"nl", n:"HOLLANDA"}, "PRIMEIRA LIGA": {f:"pt", n:"PORTEKİZ"},
-            "NBA": {f:"us", n:"ABD"}, "WNBA": {f:"us", n:"ABD"}, "NCAA": {f:"us", n:"ABD"}, "MLS": {f:"us", n:"ABD"},
-            "SERIE A (BRAZIL)": {f:"br", n:"BREZİLYA"}, "PRIMERA DIVISION (ARGENTINA)": {f:"ar", n:"ARJANTİN"},
-            "EUROLEAGUE": {f:"eu", n:"AVRUPA"}, "EUROCUP": {f:"eu", n:"AVRUPA"}, "BCL": {f:"eu", n:"AVRUPA"},
-            "CHAMPIONS LEAGUE": {f:"eu", n:"AVRUPA"}, "EUROPA LEAGUE": {f:"eu", n:"AVRUPA"}, "CONFERENCE LEAGUE": {f:"eu", n:"AVRUPA"},
-            "HEBA A1": {f:"gr", n:"YUNANİSTAN"}, "VTB": {f:"ru", n:"RUSYA"}, "WORLD CUP": {f:"un", n:"DÜNYA"}
+        // AKILLI BAYRAK VE İSİM SÖZLÜĞÜ (İçinde geçiyorsa yakalar)
+        const leagueKeywords = {
+            "TÜRKİYE": ["SUPER LIG", "SÜPER LİG", "TURKEY", "1. LIG", "BSL", "TBSL"],
+            "İNGİLTERE": ["PREMIER", "CHAMPIONSHIP", "ENGLAND", "FA CUP"],
+            "İSPANYA": ["LA LIGA", "PRIMERA", "SPAIN", "ACB"],
+            "ALMANYA": ["BUNDESLIGA", "GERMANY", "BBL"],
+            "İTALYA": ["SERIE A", "ITALY", "LEGA A", "SERIE B"],
+            "FRANSA": ["LIGUE 1", "FRANCE", "PRO A", "LNB"],
+            "HOLLANDA": ["EREDIVISIE", "NETHERLANDS"],
+            "PORTEKİZ": ["PRIMEIRA", "PORTUGAL"],
+            "BREZİLYA": ["BRAZIL", "BRASILEIRO"],
+            "ARJANTİN": ["ARGENTINA", "PRIMERA DIVISION"],
+            "ABD": ["NBA", "WNBA", "NCAA", "MLS", "USA"],
+            "AVRUPA": ["EUROLEAGUE", "EUROCUP", "CHAMPIONS LEAGUE", "EUROPA", "CONFERENCE", "BCL"]
         };
+        const flagCodes = {"TÜRKİYE": "tr", "İNGİLTERE": "gb-eng", "İSPANYA": "es", "ALMANYA": "de", "İTALYA": "it", "FRANSA": "fr", "HOLLANDA": "nl", "PORTEKİZ": "pt", "BREZİLYA": "br", "ARJANTİN": "ar", "ABD": "us", "AVRUPA": "eu"};
+
+        function getLeagueInfo(ligAdi) {
+            let upperLig = ligAdi.toUpperCase();
+            for (let country in leagueKeywords) {
+                if (leagueKeywords[country].some(keyword => upperLig.includes(keyword))) {
+                    return { n: country, f: flagCodes[country] };
+                }
+            }
+            return { n: "DİĞER", f: "un" };
+        }
 
         async function update() {
             try {
@@ -199,75 +228,128 @@
                 const d = await r.json();
                 document.getElementById('quota').innerText = d.kalan_hak || "500";
                 document.getElementById('scan-time').innerText = d.son_guncelleme.split(' ')[1];
-                allData = d.veriler || []; render();
+                allData = d.veriler || []; 
+                cleanExpiredFavorites();
+                render();
             } catch(e) {}
         }
 
-        // GÜVENLİ TARİH FONKSİYONU (Zaman Dilimi Hatasını Engeller)
-        function toLocalISODate(dateObj) {
-            const offset = dateObj.getTimezoneOffset() * 60000;
-            return new Date(dateObj.getTime() - offset).toISOString().split('T')[0];
+        function setCategory(c) { 
+            currentCategory = c; 
+            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active', 'gold')); 
+            const activeTab = document.getElementById('cat-' + c);
+            activeTab.classList.add('active');
+            if(c==='ALTIN') activeTab.classList.add('gold');
+            render(); 
+        }
+
+        function setDateFilter(date) {
+            currentDate = date;
+            render();
+        }
+
+        function buildDateFilters(availableDates) {
+            const container = document.getElementById('date-filters-container');
+            container.innerHTML = `<button class="date-btn ${currentDate === 'ALL' ? 'active' : ''}" onclick="setDateFilter('ALL')">HEPSİNİ GÖSTER</button>`;
+            
+            const now = new Date();
+            const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(now);
+            const tmrwStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(new Date(now.getTime() + 86400000));
+
+            availableDates.forEach(dateKey => {
+                if(dateKey === "BİLİNMİYOR") return;
+                let label = "";
+                if(dateKey === todayStr) label = "BUGÜN";
+                else if(dateKey === tmrwStr) label = "YARIN";
+                else {
+                    const parts = dateKey.split('-');
+                    label = `${parts[2]} ${new Date(parts[0], parts[1]-1, parts[2]).toLocaleDateString('tr-TR', {month:'short'}).toUpperCase()}`;
+                }
+                
+                container.innerHTML += `<button class="date-btn ${currentDate === dateKey ? 'active' : ''}" onclick="setDateFilter('${dateKey}')">${label}</button>`;
+            });
         }
 
         function render() {
             const area = document.getElementById('content-area'); area.innerHTML = "";
             
+            // ANA FİLTRELEME (Spor Türü ve Kategori)
             let filtered = allData.filter(m => {
-                return currentAppMode === 'favoriler' ? favorites[m.mac] : (activeSports.includes(m.tur) && m.kategori === currentCategory);
+                if(currentAppMode === 'favoriler') return favorites[m.mac];
+                return activeSports.includes(m.tur) && m.kategori === currentCategory;
             });
 
             if(filtered.length === 0) { area.innerHTML = `<div style="text-align:center; padding:50px; color:#555;">Kriterlere uygun maç bulunamadı.</div>`; return; }
 
+            // TARİHLERİ ÇIKART VE FİLTRE BUTONLARINI GÜNCELLE
+            const uniqueDates = [...new Set(filtered.map(m => m.tarih))].sort();
+            buildDateFilters(uniqueDates);
+
+            // TARİH FİLTRESİ UYGULA
+            if(currentDate !== 'ALL') {
+                filtered = filtered.filter(m => m.tarih === currentDate);
+            }
+
+            // GÜNLERE GÖRE GRUPLA
             const days = {};
             filtered.forEach(m => {
-                // Saat Python'dan zaten TSİ ve YYYY-MM-DD olarak hazır geliyor. Çeviriye gerek yok!
-                const dateKey = m.tarih; 
-                if(!days[dateKey]) days[dateKey] = [];
-                days[dateKey].push(m);
+                if(!days[m.tarih]) days[m.tarih] = [];
+                days[m.tarih].push(m);
             });
 
             Object.keys(days).sort().forEach(dateKey => {
-                const now = new Date();
-                const todayStr = toLocalISODate(now);
-                const tmrw = new Date(now.getTime() + 86400000);
-                const tmrwStr = toLocalISODate(tmrw);
-
-                let label = "";
-                if(dateKey === todayStr) label = "BUGÜN";
-                else if(dateKey === tmrwStr) label = "YARIN";
-                else if(dateKey === "BİLİNMİYOR") label = "BELİRSİZ TARİH";
-                else {
-                    const parts = dateKey.split('-');
-                    const dateObj = new Date(parts[0], parts[1]-1, parts[2]);
-                    label = dateObj.toLocaleDateString('tr-TR', {weekday:'long', day:'numeric', month:'long'}).toUpperCase();
-                }
-
-                area.innerHTML += `<div class="date-divider">${label}</div>`;
+                // LİGLERE GÖRE GRUPLA
                 const groups = {};
                 days[dateKey].forEach(m => { if(!groups[m.lig]) groups[m.lig] = []; groups[m.lig].push(m); });
                 
                 for(let lig in groups) {
-                    let mta = { f: "un", n: "DİĞER LİGLER" };
-                    for (let key in leagueMeta) {
-                        if (lig.toUpperCase().includes(key)) { mta = leagueMeta[key]; break; }
+                    const info = getLeagueInfo(lig);
+                    const lBox = document.createElement('div'); lBox.className = 'league-box';
+                    
+                    // Tarih başlığını lig satırına küçük olarak ekliyoruz (Çok daha kompakt)
+                    let displayDate = dateKey;
+                    if(dateKey !== "BİLİNMİYOR") {
+                        const parts = dateKey.split('-');
+                        displayDate = `${parts[2]}/${parts[1]}`;
                     }
 
-                    const lBox = document.createElement('div'); lBox.className = 'league-box';
-                    lBox.innerHTML = `<div class="league-trigger" onclick="this.nextElementSibling.classList.toggle('open')"><span><img src="https://flagcdn.com/w40/${mta.f}.png" class="flag"> ${mta.n} - ${lig}</span><i class="fa-solid fa-chevron-down fa-xs"></i></div><div class="league-content"></div>`;
+                    lBox.innerHTML = `
+                        <div class="league-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
+                            <span><img src="https://flagcdn.com/w40/${info.f}.png" class="flag"> ${info.n} - ${lig} <span style="color:var(--muted); font-size:0.8em; margin-left:10px;">[${displayDate}]</span></span>
+                            <i class="fa-solid fa-chevron-down fa-xs" style="color:var(--muted)"></i>
+                        </div>
+                        <div class="league-content open"></div>
+                    `;
                     const cont = lBox.querySelector('.league-content');
                     
                     groups[lig].sort((a,b)=>a.saat.localeCompare(b.saat)).forEach(m => {
-                        cont.innerHTML += `<div class="card"><i class="fa-solid fa-star fav-star ${favorites[m.mac]?'active':''}" onclick="toggleFav('${m.mac}', this)"></i><span class="card-time">${m.saat} (TSİ)</span><div class="card-match">${m.mac}</div><div style="font-size:0.85em; color:var(--muted); border-top:1px solid #1f1f23; padding-top:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.uyari}</div></div>`;
+                        const isFav = favorites[m.mac];
+                        cont.innerHTML += `
+                            <div class="match-row">
+                                <div class="m-time">${m.saat}</div>
+                                <div class="m-fav ${isFav?'active':''}" onclick="toggleFav('${m.mac}', this)"><i class="fa-${isFav?'solid':'regular'} fa-star"></i></div>
+                                <div class="m-teams">${m.mac}</div>
+                                <div class="m-alert"><i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.kategori}</div>
+                            </div>
+                        `;
                     });
                     area.appendChild(lBox);
                 }
             });
         }
         
-        function toggleFav(m, el) { if(favorites[m]) delete favorites[m]; else favorites[m] = Date.now(); localStorage.setItem('v19_favs_v3', JSON.stringify(favorites)); render(); }
-        function setCategory(c,el) { currentCategory=c; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active','gold','silver','bronze')); 
-            const colorClass = c === 'ALTIN' ? 'gold' : c === 'GÜMÜŞ' ? 'silver' : 'bronze';
-            el.classList.add('active', colorClass); render(); 
+        function toggleFav(m, el) { 
+            if(favorites[m]) {
+                delete favorites[m];
+                el.classList.remove('active');
+                el.innerHTML = '<i class="fa-regular fa-star"></i>';
+            } else {
+                favorites[m] = Date.now();
+                el.classList.add('active');
+                el.innerHTML = '<i class="fa-solid fa-star"></i>';
+            }
+            localStorage.setItem('v19_favs_v4', JSON.stringify(favorites)); 
+            if(currentAppMode === 'favoriler') render();
         }
         
         update(); setInterval(update, 15000);
