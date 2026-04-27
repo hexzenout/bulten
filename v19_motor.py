@@ -3,9 +3,8 @@ from datetime import datetime
 
 ODDS_API_POOL = [k.strip() for k in os.getenv("ODDS_KEYS", "").split(",") if k.strip()]
 
-# SENİN LİSTELERİN
-ALTIN_FUTBOL = ["Super Lig","Premier League","La Liga","Bundesliga","Serie A","Ligue 1","Eredivisie","Primeira Liga","Champions League","Europa League","Conference League","Championship","Brazil","Argentina","MLS"]
-ALTIN_BASKET = ["NBA","Euroleague","BSL","Liga ACB","Lega A","Heba A1","LNB Pro A","BBL","EuroCup","BCL","VTB","NCAA","WNBA"]
+ALTIN_FUTBOL = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "EREDIVISIE", "PRIMEIRA LIGA", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "BRAZIL", "ARGENTINA", "MLS", "WORLD CUP"]
+ALTIN_BASKET = ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "HEBA A1", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"]
 
 class V19Intelligence:
     def __init__(self):
@@ -14,7 +13,7 @@ class V19Intelligence:
     def kategori_bul(self, lig_adi, spor_turu):
         l = lig_adi.upper()
         hedef = ALTIN_BASKET if spor_turu == "basketball" else ALTIN_FUTBOL
-        return "ALTIN" if any(x.upper() in l for x in hedef) else "GÜMÜŞ"
+        return "ALTIN" if any(x in l for x in hedef) else "GÜMÜŞ"
 
     def oran_cek(self, sport_key):
         while self.odds_index < len(ODDS_API_POOL):
@@ -30,6 +29,7 @@ class V19Intelligence:
 
     def baslat(self):
         alarmlar = []
+        # KESİNTİSİZ 29 LİG
         hedef_ligler = [
             {"key": "soccer_turkey_super_league", "n": "Super Lig", "t": "soccer"},
             {"key": "soccer_epl", "n": "Premier League", "t": "soccer"},
@@ -39,12 +39,14 @@ class V19Intelligence:
             {"key": "soccer_france_ligue_one", "n": "Ligue 1", "t": "soccer"},
             {"key": "soccer_uefa_champs_league", "n": "Champions League", "t": "soccer"},
             {"key": "soccer_uefa_europa_league", "n": "Europa League", "t": "soccer"},
+            {"key": "soccer_uefa_europa_conference_league", "n": "Conference League", "t": "soccer"},
             {"key": "soccer_efl_champ", "n": "Championship", "t": "soccer"},
             {"key": "soccer_netherlands_eredivisie", "n": "Eredivisie", "t": "soccer"},
             {"key": "soccer_portugal_primeira_liga", "n": "Primeira Liga", "t": "soccer"},
             {"key": "soccer_brazil_campeonato", "n": "Serie A (Brazil)", "t": "soccer"},
             {"key": "soccer_argentina_primera_division", "n": "Primera Division (Argentina)", "t": "soccer"},
             {"key": "soccer_usa_mls", "n": "MLS", "t": "soccer"},
+            {"key": "soccer_fifa_world_cup", "n": "World Cup", "t": "soccer"},
             {"key": "basketball_nba", "n": "NBA", "t": "basketball"},
             {"key": "basketball_euroleague", "n": "Euroleague", "t": "basketball"},
             {"key": "basketball_spain_liga_acb", "n": "Liga ACB", "t": "basketball"},
@@ -60,7 +62,6 @@ class V19Intelligence:
             {"key": "basketball_wnba", "n": "WNBA", "t": "basketball"}
         ]
         for h in hedef_ligler:
-            print(f"> {h['n']} taranıyor...")
             data = self.oran_cek(h['key'])
             if data:
                 for m in data:
@@ -69,7 +70,7 @@ class V19Intelligence:
                         "lig": h['n'].upper(),
                         "mac": f"{m.get('home_team')} - {m.get('away_team')}",
                         "saat_raw": m.get('commence_time'),
-                        "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+                        "uyari": "📡 RADAR ANALİZİ AKTİF"
                     })
             time.sleep(1)
         
