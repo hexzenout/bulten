@@ -20,60 +20,23 @@
             --muted: #71717a; 
         }
         
-        body { 
-            margin: 0; 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
-        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR (SADE MENÜ İSİMLERİ) */
-        .sidebar { 
-            width: 260px; 
-            background: #000; 
-            border-right: 1px solid var(--border); 
-            display: flex; 
-            flex-direction: column; 
-            flex-shrink: 0; 
-        }
-        .brand { 
-            padding: 25px 20px; 
-            font-weight: 900; 
-            color: var(--green); 
-            border-bottom: 1px solid var(--border); 
-            text-align: center; 
-            font-size: 1.1em; 
-            letter-spacing: 1px; 
-        }
-        .nav-item { 
-            padding: 15px 20px; 
-            cursor: pointer; 
-            color: var(--muted); 
-            font-weight: 700; 
-            font-size: 0.85em; 
-            display: flex; 
-            align-items: center; 
-            border-bottom: 1px solid #0a0a0a; 
-            transition: 0.2s; 
-        }
+        .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+        .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.1em; letter-spacing: 1px; }
+        .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
         .nav-item i { margin-right: 12px; font-size: 1.2em; }
         .nav-item:hover { background: #0a0a0a; color: #fff; }
         .nav-item.active { background: rgba(16,185,129,0.05); color: #fff; border-left: 3px solid var(--green); }
         .nav-item.basket.active { border-left-color: var(--orange); }
 
-        /* MAIN YAPI */
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .header { padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
-        /* FİLTRELER */
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
 
-        /* LİG AYRIMI: BELİRGİN LACİVERT VE AÇILIR/KAPANIR */
         .league-head { 
             background: #1e293b; 
             padding: 10px 15px; 
@@ -91,23 +54,17 @@
         .league-head:hover { background: #334155; }
         .head-left { display: flex; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .league-content { 
-            border: 1px solid var(--border); 
-            border-top: none; 
-            margin-bottom: 15px; 
-            background: #0a0a0c; 
-        }
+        .league-content { border: 1px solid var(--border); border-top: none; margin-bottom: 15px; background: #0a0a0c; }
         
-        /* MAÇ SATIRI: BAYRAK MAÇIN YANINDA */
         .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
         .match-row:last-child { border-bottom: none; }
         .match-row:hover { background: #111; }
         .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 55px; font-weight: bold; }
         .m-teams { font-weight: 700; flex-grow: 1; color: #fff; display: flex; align-items: center; }
-        .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 10px; display: inline-block; }
+        .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 10px; display: inline-block; vertical-align: middle; }
+        
         .chevron { transition: transform 0.3s ease; color: var(--muted); }
 
-        /* FİNANS & BORSA */
         .fin-grid { display: none; grid-template-columns: 360px 1fr; gap: 20px; }
         .fin-grid.active { display: grid; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
@@ -116,7 +73,6 @@
         .op-btn { padding: 6px 10px; border: none; border-radius: 3px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
         #chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
 
-        /* 6'LI EKRAN (STREAM) EKSİKSİZ */
         .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 85vh; }
         .stream-grid.active { display: grid; }
         .stream-box { background: #000; border: 1px solid #222; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
@@ -205,7 +161,6 @@
     </div>
 
     <script>
-        // KISALTILMAMIŞ, PROFESYONEL VE TEMİZ JAVASCRIPT YAPISI
         let allData = [];
         let ligSayac = {};
         let activeSport = 'futbol';
@@ -215,7 +170,34 @@
         let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
         let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
 
-        // GÖRÜNÜM DEĞİŞTİRME FONKSİYONU
+        // EMOJİ HARİTASI (DROPDOWN İÇİN)
+        const EMOJI_MAP = {
+            "TÜRKİYE": "🇹🇷", "İNGİLTERE": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "İSPANYA": "🇪🇸", 
+            "ALMANYA": "🇩🇪", "İTALYA": "🇮🇹", "FRANSA": "🇫🇷", 
+            "AVRUPA": "🇪🇺", "HOLLANDA": "🇳🇱", "PORTEKİZ": "🇵🇹", 
+            "BREZİLYA": "🇧🇷", "ARJANTİN": "🇦🇷", "AMERİKA": "🇺🇸", "RUSYA": "🇷🇺"
+        };
+
+        // TARİH FORMATLAMA ZEKASI (BUGÜN / YARIN)
+        function formatTarih(dStr) {
+            if(!dStr) return "";
+            const parts = dStr.split('-');
+            if(parts.length !== 3) return dStr;
+            
+            const dTarget = new Date(parts[0], parts[1] - 1, parts[2]);
+            const dToday = new Date();
+            dToday.setHours(0,0,0,0);
+            
+            const diffTime = dTarget.getTime() - dToday.getTime();
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) return "BUGÜN";
+            if (diffDays === 1) return "YARIN";
+            
+            const aylar = ["OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZİRAN","TEMMUZ","AĞUSTOS","EYLÜL","EKİM","KASIM","ARALIK"];
+            return parseInt(parts[2]) + " " + aylar[parseInt(parts[1]) - 1];
+        }
+
         function switchMode(mode, el) {
             document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
             el.classList.add('active');
@@ -244,7 +226,6 @@
             }
         }
 
-        // VERİ YÜKLEME
         async function load() {
             try {
                 const response = await fetch('v19_rapor.json?t=' + Date.now());
@@ -258,38 +239,39 @@
             }
         }
 
-        // FİLTRELERİ OLUŞTURMA
         function buildFilters() {
             const dSel = document.getElementById('date-sel');
             const lSel = document.getElementById('league-sel');
             
+            // Tarihler
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const dates = [...new Set(allData.filter(m => m.t === activeSport).map(m => m.dt))].sort();
             dates.forEach(d => {
-                dateHtml += `<option value="${d}">${d}</option>`;
+                dateHtml += `<option value="${d}">${formatTarih(d)}</option>`;
             });
             dSel.innerHTML = dateHtml;
             
+            // Ligler (Sıfır olanlar dahil ve Emojili)
             let ligHtml = '<option value="ALL">TÜM LİGLER</option>';
             for(let ligAdi in ligSayac) {
-                // ligAdi artık "TÜRKİYE - SÜPER LİG" şeklinde geliyor.
-                // İçindeki kelimelere göre futbol mu basket mi ayıklıyoruz:
-                let isFutbol = ["SÜPER LİG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "MLS"].some(x => ligAdi.includes(x));
+                let isFutbol = ["SÜPER LİG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA LIGA", "BRAZIL SERIE A", "ARGENTINA PRIMERA", "MLS"].some(x => ligAdi.includes(x));
                 
                 if((activeSport === 'futbol' && isFutbol) || (activeSport === 'basketbol' && !isFutbol)) {
-                    if(ligSayac[ligAdi] > 0) {
-                        ligHtml += `<option value="${ligAdi}">${ligAdi} (${ligSayac[ligAdi]})</option>`;
-                    }
+                    // Ülke ismini ayıkla ve emojisni bul
+                    const ulkeIsmi = ligAdi.split(" - ")[0];
+                    const emoji = EMOJI_MAP[ulkeIsmi] || "🏳️";
+                    const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
+                    
+                    // 0 Maç dahi olsa göster
+                    ligHtml += `<option value="${ligAdi}">${emoji} ${ikon} ${ligAdi} (${ligSayac[ligAdi]})</option>`;
                 }
             }
             lSel.innerHTML = ligHtml;
         }
 
-        // AÇILIR KAPANIR LİG FONKSİYONU
         window.toggleLeague = function(id, element) {
             const content = document.getElementById(id);
             const icon = element.querySelector('.chevron');
-            
             if(content.style.display === 'none') {
                 content.style.display = 'block';
                 icon.style.transform = 'rotate(0deg)';
@@ -299,16 +281,13 @@
             }
         };
 
-        // BÜLTENİ EKRANA ÇİZME
         function render() {
             if(curMode !== 'bulletin') return;
-            
             const area = document.getElementById('list-area');
             const dVal = document.getElementById('date-sel').value;
             const lVal = document.getElementById('league-sel').value;
             
             let filtered = allData.filter(m => m.t === activeSport && (dVal === 'ALL' || m.dt === dVal) && (lVal === 'ALL' || m.l === lVal));
-            
             let htmlString = "";
             const days = {};
             
@@ -318,7 +297,9 @@
             });
             
             Object.keys(days).sort().forEach(day => {
-                htmlString += `<div style="color:var(--green); font-size:0.7em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:10px;">${day}</div>`;
+                // TARİH BAŞLIĞI BUGÜN / YARIN GÖRÜNÜMÜ
+                const displayDate = formatTarih(day);
+                htmlString += `<div style="color:var(--green); font-size:0.7em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:10px; letter-spacing: 1px;">${displayDate}</div>`;
                 
                 const groups = {};
                 days[day].forEach(m => {
@@ -332,7 +313,6 @@
                     const ikonColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
                     const uniqueId = `lg_${day}_${lig.replace(/\s+/g, '')}`;
                     
-                    // LİG BAŞLIĞI: LACİVERT ZEMİN, AÇILIR KAPANIR
                     htmlString += `
                         <div class="league-head" onclick="toggleLeague('${uniqueId}', this)">
                             <div class="head-left">
@@ -345,18 +325,15 @@
                     `;
                         
                     groups[lig].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
-                        // BAYRAK TAM OLARAK MAÇ ADININ SAĞINDA (FB - GS 🇹🇷)
                         htmlString += `
                         <div class="match-row">
                             <div class="m-time">${m.tm}</div>
-                            <div class="m-teams">${m.m} <img src="https://flagcdn.com/w40/${m.f}.png" class="flag"></div>
+                            <div class="m-teams">${m.m} <img src="https://flagcdn.com/w40/${flagCode}.png" class="flag"></div>
                         </div>`;
                     });
-                    
-                    htmlString += `</div>`; // Content Div Kapatma
+                    htmlString += `</div>`;
                 }
             });
-            
             area.innerHTML = htmlString;
         }
 
@@ -364,11 +341,7 @@
         function setManual() {
             const val = parseFloat(document.getElementById('m-val').value);
             if(!val || val < 0) return;
-            wallet = val;
-            history.push(wallet);
-            saveData();
-            updateUI();
-            initChart();
+            wallet = val; history.push(wallet); saveData(); updateUI(); initChart();
             document.getElementById('m-val').value = '';
         }
 
@@ -376,40 +349,22 @@
             const name = document.getElementById('b-name').value;
             const amt = parseFloat(document.getElementById('b-amt').value);
             const odds = parseFloat(document.getElementById('b-odds').value);
-            
             if(!name || !amt || !odds) return;
-            
             pending.push({ id: Date.now(), name: name, amt: amt, odds: odds });
-            saveData();
-            renderPending();
-            document.getElementById('b-name').value = '';
+            saveData(); renderPending(); document.getElementById('b-name').value = '';
         }
 
         function resolveBet(id, result) {
             const bet = pending.find(x => x.id === id);
-            
-            if(result === 'win') {
-                wallet += (bet.amt * bet.odds) - bet.amt;
-            } else {
-                wallet -= bet.amt;
-            }
-            
-            history.push(wallet);
-            pending = pending.filter(x => x.id !== id);
-            
-            saveData();
-            updateUI();
-            renderPending();
-            
-            if(curMode === 'finance') {
-                initChart();
-            }
+            if(result === 'win') { wallet += (bet.amt * bet.odds) - bet.amt; } else { wallet -= bet.amt; }
+            history.push(wallet); pending = pending.filter(x => x.id !== id);
+            saveData(); updateUI(); renderPending();
+            if(curMode === 'finance') { initChart(); }
         }
 
         function renderPending() {
             const area = document.getElementById('p-list');
             let htmlString = "";
-            
             pending.forEach(b => {
                 htmlString += `
                 <div class="op-row">
@@ -420,7 +375,6 @@
                     </div>
                 </div>`;
             });
-            
             area.innerHTML = htmlString;
         }
 
@@ -443,10 +397,7 @@
             chart = new ApexCharts(document.querySelector("#chart"), {
                 series: [{ name: "USDT", data: history }],
                 chart: { 
-                    type: 'area', 
-                    height: 450, 
-                    toolbar: { show: true }, 
-                    background: 'transparent',
+                    type: 'area', height: 450, toolbar: { show: true }, background: 'transparent',
                     animations: { enabled: true, easing: 'easeinout', speed: 800 }
                 },
                 theme: { mode: 'dark' },
@@ -473,7 +424,6 @@
             chart.render();
         }
 
-        // UYGULAMAYI BAŞLAT
         updateUI();
         renderPending();
         load();
