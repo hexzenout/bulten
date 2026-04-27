@@ -1,18 +1,16 @@
 import os, requests, json, time
 from datetime import datetime, timedelta
 
-# --- ŞİFRE HAVUZU ---
 ODDS_API_POOL = [k.strip() for k in os.getenv("ODDS_KEYS", "").split(",") if k.strip()]
 BASKET_KEY = os.getenv("BASKET_KEY", "").strip()
 BETSAPI_TOKEN = os.getenv("BETSAPI_TOKEN", "").strip()
 
-ALTIN_LIGLER = ["SUPER LIG", "SUPER LEAGUE", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "NBA", "EUROLEAGUE", "BSL", "LIGA ACB"]
+ALTIN_LIGLER = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "NBA", "EUROLEAGUE", "BSL", "LIGA ACB"]
 GUMUS_LIGLER = ["CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA LIGA", "BRAZIL", "ARGENTINA", "MLS", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA", "PRO A", "BBL"]
 
 class V19Intelligence:
     def __init__(self):
-        self.odds_index = 0
-        self.kalan_hak = "500"
+        self.odds_index, self.kalan_hak = 0, "500"
         self.sonuclar = []
         self.eklenen_maclar = set()
 
@@ -27,19 +25,15 @@ class V19Intelligence:
         return "BRONZ"
 
     def format_zaman(self, raw_zaman, kaynak):
-        # SAAT KAYMASINI BİTİREN BETON HESAPLAMA (UTC + 3)
         try:
-            if kaynak == "odds": # 2026-04-28T18:45:00Z
-                dt_utc = datetime.strptime(raw_zaman, "%Y-%m-%dT%H:%M:%SZ")
-            elif kaynak == "api-sport": # 2026-04-28T18:45:00+00:00
-                clean_time = raw_zaman.split("+")[0]
-                dt_utc = datetime.strptime(clean_time, "%Y-%m-%dT%H:%M:%S")
-            elif kaynak == "betsapi": # 1714329900 (Unix)
-                dt_utc = datetime.utcfromtimestamp(int(raw_zaman))
+            if kaynak == "odds": dt_utc = datetime.strptime(raw_zaman, "%Y-%m-%dT%H:%M:%SZ")
+            elif kaynak == "api-sport": dt_utc = datetime.strptime(raw_zaman.split("+")[0], "%Y-%m-%dT%H:%M:%S")
+            elif kaynak == "betsapi": dt_utc = datetime.utcfromtimestamp(int(raw_zaman))
+            else: return "BİLİNMİYOR", "00:00"
             
-            dt_tsi = dt_utc + timedelta(hours=3) # Sabit TSİ
+            dt_tsi = dt_utc + timedelta(hours=3) # UTC+3 Betonlama
             return dt_tsi.strftime("%Y-%m-%d"), dt_tsi.strftime("%H:%M")
-        except:
+        except Exception as e:
             return "BİLİNMİYOR", "00:00"
 
     def mac_ekle(self, kategori, lig, tur, mac_adi, tarih, saat, uyari):
@@ -49,10 +43,10 @@ class V19Intelligence:
             self.eklenen_maclar.add(mac_id)
 
     def operasyon(self):
-        print("V19 RADAR: 3 MOTORLU TARAMA BAŞLADI...")
+        print("V19 RADAR: ZIRHLI TARAMA BAŞLADI...")
         
-        # 1. MOTOR: THE ODDS API (GARANTİLİ ANA LİGLER)
-        # Önce Süper Lig ve devlerin kaybolmaması için nokta atışı tarama yapıyoruz
+        # 1. MOTOR: THE ODDS API (Ana Damar - Asla Çökmemeli)
+        print("--- THE ODDS API TARANIYOR ---")
         garanti_ligler = [
             {"key": "soccer_turkey_super_league", "n": "Süper Lig", "t": "soccer"},
             {"key": "soccer_epl", "n": "Premier League", "t": "soccer"},
@@ -68,56 +62,55 @@ class V19Intelligence:
         for h in garanti_ligler:
             curr_key = self.get_odds_key()
             if not curr_key: break
-            url = f"https://api.the-odds-api.com/v4/sports/{h['key']}/odds/?apiKey={curr_key}&regions=eu&markets=h2h"
             try:
-                r = requests.get(url, timeout=10)
+                r = requests.get(f"https://api.the-odds-api.com/v4/sports/{h['key']}/odds/?apiKey={curr_key}&regions=eu&markets=h2h", timeout=10)
                 if r.status_code == 200:
                     self.kalan_hak = r.headers.get('x-requests-remaining', self.kalan_hak)
                     for m in r.json():
                         tarih, saat = self.format_zaman(m.get('commence_time'), "odds")
                         tur = "basketbol" if h['t'] == "basketball" else "futbol"
                         mac_adi = f"{m.get('home_team')} - {m.get('away_team')}"
-                        self.mac_ekle(self.kategori_bul(h['n']), h['n'].upper(), tur, mac_adi, tarih, saat, "📊 TheOdds Aktif")
+                        self.mac_ekle(self.kategori_bul(h['n']), h['n'].upper(), tur, mac_adi, tarih, saat, "📊 TheOdds Radar")
                 elif r.status_code in [401, 429]: self.odds_index += 1
-            except: pass
+            except Exception as e: print(f"Odds API Hatası ({h['n']}): {e}")
             time.sleep(0.5)
 
-        # 2. MOTOR: BETSAPI (TSUNAMİ MODU - DÜNYADAKİ TÜM LİGLER)
+        # 2. MOTOR: BETSAPI (Tsunami Modu - Hata yapsa da diğerlerini bozmaz)
         if BETSAPI_TOKEN:
+            print("--- BETSAPI TARANIYOR ---")
             for sport_id, tur in [("1", "futbol"), ("18", "basketbol")]:
-                # Sadece önümüzdeki 2 günü tarar ki sistem şişmesin
-                for extra_day in [0, 1]: 
-                    tarih_str = (datetime.now() + timedelta(days=extra_day)).strftime('%Y%m%d')
-                    url = f"https://api.bfin.com/v1/events/upcoming?sport_id={sport_id}&token={BETSAPI_TOKEN}&day={tarih_str}"
-                    try:
-                        r = requests.get(url, timeout=10)
-                        if r.status_code == 200 and r.json().get('success') == 1:
-                            for m in r.json().get('results', []):
-                                tarih, saat = self.format_zaman(m['time'], "betsapi")
-                                lig_adi = m['league']['name']
-                                mac_adi = f"{m['home']['name']} - {m['away']['name']}"
-                                self.mac_ekle(self.kategori_bul(lig_adi), lig_adi.upper(), tur, mac_adi, tarih, saat, "📡 BetsAPI Radar")
-                    except: pass
-                    time.sleep(1)
+                try:
+                    r = requests.get(f"https://api.bfin.com/v1/events/upcoming?sport_id={sport_id}&token={BETSAPI_TOKEN}&day={datetime.now().strftime('%Y%m%d')}", timeout=10)
+                    if r.status_code == 200 and r.json().get('success') == 1:
+                        for m in r.json().get('results', []):
+                            tarih, saat = self.format_zaman(m['time'], "betsapi")
+                            lig_adi = m['league']['name']
+                            mac_adi = f"{m['home']['name']} - {m['away']['name']}"
+                            self.mac_ekle(self.kategori_bul(lig_adi), lig_adi.upper(), tur, mac_adi, tarih, saat, "📡 BetsAPI Radar")
+                except Exception as e: print(f"BetsAPI Hatası: {e}")
+                time.sleep(1)
 
-        # 3. MOTOR: API-BASKETBALL (YEDEK AVRUPA)
+        # 3. MOTOR: API-BASKETBALL (Yedek Basketbol)
         if BASKET_KEY:
-            hedef_basket = [{"id": "2", "n": "LNB Pro A"}, {"id": "117", "n": "Liga ACB"}, {"id": "31", "n": "BSL"}, {"id": "1", "n": "BBL"}]
-            headers = {'x-apisports-key': BASKET_KEY, 'x-rapidapi-host': 'v1.basketball.api-sports.io'}
+            print("--- API-BASKETBALL TARANIYOR ---")
+            hedef_basket = [{"id": "2", "n": "LNB Pro A"}, {"id": "117", "n": "Liga ACB"}, {"id": "31", "n": "BSL"}, {"id": "1", "n": "BBL"}, {"id": "10", "n": "Heba A1"}, {"id": "4", "n": "VTB"}, {"id": "6", "n": "BCL"}]
             for h in hedef_basket:
                 try:
-                    r = requests.get(f"https://v1.basketball.api-sports.io/games?league={h['id']}&season=2025-2026", headers=headers, timeout=10)
+                    r = requests.get(f"https://v1.basketball.api-sports.io/games?league={h['id']}&season=2025-2026", headers={'x-apisports-key': BASKET_KEY, 'x-rapidapi-host': 'v1.basketball.api-sports.io'}, timeout=10)
                     if r.status_code == 200:
                         for m in [g for g in r.json().get('response', []) if g['status']['short'] == 'NS']:
                             tarih, saat = self.format_zaman(m['date'], "api-sport")
                             mac_adi = f"{m['teams']['home']['name']} - {m['teams']['away']['name']}"
-                            self.mac_ekle(self.kategori_bul(h['n']), h['n'].upper(), "basketbol", mac_adi, tarih, saat, "📡 API-Sport Aktif")
-                except: pass
+                            self.mac_ekle(self.kategori_bul(h['n']), h['n'].upper(), "basketbol", mac_adi, tarih, saat, "🏀 API-Sport Radar")
+                except Exception as e: print(f"API-Basketball Hatası ({h['n']}): {e}")
                 time.sleep(1)
 
-        # RAPOR KAYDI
-        with open("v19_rapor.json", "w", encoding="utf-8") as f:
-            json.dump({"son_guncelleme": datetime.now().strftime("%d-%m-%Y %H:%M:%S"), "kalan_hak": self.kalan_hak, "veriler": self.sonuclar}, f, ensure_ascii=False, indent=4)
+        # RAPOR KAYDI (Eğer sonuç boşsa eski dosyayı bozma)
+        if len(self.sonuclar) > 0:
+            with open("v19_rapor.json", "w", encoding="utf-8") as f:
+                json.dump({"son_guncelleme": datetime.now().strftime("%d-%m-%Y %H:%M:%S"), "kalan_hak": self.kalan_hak, "veriler": self.sonuclar}, f, ensure_ascii=False, indent=4)
+        else:
+            print("KRİTİK UYARI: Hiçbir veri çekilemedi. Rapor güncellenmedi.")
 
 if __name__ == "__main__":
     V19Intelligence().operasyon()
