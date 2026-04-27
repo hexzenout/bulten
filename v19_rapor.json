@@ -1,14 +1,7 @@
 {
-    "son_guncelleme": "27-04-2026 16:01:16",
-    "kalan_hak": "106",
+    "son_guncelleme": "27-04-2026 17:12:59",
+    "kalan_hak": "89",
     "veriler": [
-        {
-            "kategori": "ALTIN",
-            "lig": "SUPER LIG",
-            "mac": "Alanyaspor - Samsunspor",
-            "saat_raw": "2026-04-27T14:00:00Z",
-            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
-        },
         {
             "kategori": "ALTIN",
             "lig": "SUPER LIG",
@@ -510,7 +503,7 @@
             "kategori": "ALTIN",
             "lig": "SERIE A",
             "mac": "Cagliari - Atalanta BC",
-            "saat_raw": "2026-04-27T16:30:00Z",
+            "saat_raw": "2026-04-27T16:31:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
@@ -1139,8 +1132,29 @@
         {
             "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
+            "mac": "Mirassol - Chapecoense",
+            "saat_raw": "2026-05-10T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
             "mac": "Corinthians - Sao Paulo",
             "saat_raw": "2026-05-10T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Grêmio - Flamengo",
+            "saat_raw": "2026-05-10T22:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Vasco da Gama - Atletico Paranaense",
+            "saat_raw": "2026-05-10T23:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
