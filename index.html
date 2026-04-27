@@ -12,7 +12,7 @@
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR (ANA BÜLTEN VE TİKLER KALDIRILDI) */
+        /* SIDEBAR (TEKLİ SEÇİM NİZAMI) */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
         .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.2em; letter-spacing: 2px; }
         .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
@@ -21,13 +21,13 @@
         .nav-item.active { background: rgba(16,185,129,0.05); color: #fff; border-left: 3px solid var(--green); }
         .nav-item.basket.active { border-left-color: var(--orange); }
 
-        /* MAIN (ÜST BAR KALDIRILDI) */
+        /* MAIN (ÜST BAR TEMİZLENDİ) */
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
         
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
-        /* FİLTRE & AÇILIR KUTULAR (ÜLKE KODU YOK) */
+        /* FİLTRE & AÇILIR KUTULAR */
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .tab { padding: 8px 15px; background: #000; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-size: 0.7em; font-weight: 800; cursor: pointer; }
         .tab.active.gold { border-color: var(--gold); color: var(--gold); }
@@ -95,7 +95,7 @@
                     
                     <div class="manual-box">
                         <input type="number" id="manual-amt" class="c-select" style="flex:1" placeholder="Yeni Kasa (Örn: 500)">
-                        <button onclick="setManualWallet()" style="background:#3f3f46; color:#fff; border:none; border-radius:4px; font-weight:bold; font-size:0.7em; cursor:pointer; padding:0 10px;">EL İLE GÜNCELLE</button>
+                        <button onclick="setManualWallet()" style="background:#3f3f46; color:#fff; border:none; border-radius:4px; font-weight:bold; font-size:0.7em; cursor:pointer; padding:0 10px;">GÜNCELLE</button>
                     </div>
 
                     <div style="margin-top:20px; border-top:1px solid #1f1f23; padding-top:15px;">
@@ -124,10 +124,9 @@
             "SUPER LIG": "tr", "PREMIER LEAGUE": "gb-eng", "LA LIGA": "es",
             "BUNDESLIGA": "de", "SERIE A": "it", "LIGUE 1": "fr",
             "CHAMPIONS LEAGUE": "eu", "EUROPA LEAGUE": "eu", "CONFERENCE LEAGUE": "eu",
-            "NBA": "us", "EUROLEAGUE": "eu", "BSL": "tr", "LIGA ACB": "es", "LEGA A": "it", "SİSTEM UYARISI": "un"
+            "NBA": "us", "EUROLEAGUE": "eu"
         };
 
-        // TEKLİ SEÇİM SİSTEMİ (MENÜ)
         function switchSport(s) {
             activeSport = s;
             curMode = 'bulletin';
@@ -138,7 +137,6 @@
             buildFilters(); render();
         }
 
-        // FİNANS EKRANINA GEÇİŞ
         function setMode(m, el) {
             curMode = m;
             document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
@@ -158,7 +156,6 @@
             } catch(e) {}
         }
 
-        // AÇILIR KUTULAR (ÜLKE KODU YOK, SADECE LİG ADI)
         function buildFilters() {
             const dSel = document.getElementById('date-sel'), lSel = document.getElementById('league-sel');
             const dates = [...new Set(allData.filter(m => m.t === activeSport).map(m => m.dt))].sort();
@@ -166,21 +163,25 @@
             
             lSel.innerHTML = '<option value="ALL">TÜM LİGLER</option>';
             for(let l in ligSayac) {
-                // Sadece seçili spora ait ligleri göster (Futbolsa futbol, basketse basket)
-                let isFutbol = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "SİSTEM UYARISI"].includes(l);
+                let isFutbol = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE"].includes(l);
                 if((activeSport === 'futbol' && isFutbol) || (activeSport === 'basketbol' && !isFutbol)) {
                     lSel.innerHTML += `<option value="${l}">${l} (${ligSayac[l]})</option>`;
                 }
             }
         }
 
-        // BÜLTENİ ÇİZ: BAYRAK SAĞDA, İKON SOLDA
         function render() {
             if(curMode !== 'bulletin') return;
             const area = document.getElementById('list-area'); area.innerHTML = "";
             const dVal = document.getElementById('date-sel').value, lVal = document.getElementById('league-sel').value;
 
             let filtered = allData.filter(m => m.t === activeSport && (dVal==='ALL'||m.dt===dVal) && (lVal==='ALL'||m.l===lVal));
+            
+            if(filtered.length === 0) {
+                area.innerHTML = `<div style="text-align:center; padding:50px; color:var(--muted);">Bu kategoride veya tarihte uygun maç bulunmuyor.</div>`;
+                return;
+            }
+
             const days = {};
             filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
 
@@ -194,7 +195,6 @@
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
                     const ikonColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
                     
-                    // LİG BAŞLIĞI: [İKON] [LİG ADI] -------- [BAYRAK]
                     area.innerHTML += `
                         <div class="league-head">
                             <div class="head-left">
@@ -211,7 +211,6 @@
             });
         }
 
-        // FİNANS: MANUEL KASA GÜNCELLEME
         function setManualWallet() {
             const newVal = parseFloat(document.getElementById('manual-amt').value);
             if(!newVal || newVal < 0) return;
@@ -251,7 +250,6 @@
             document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
         }
 
-        // BORSA GRAFİĞİ VE HEDEF BARİYERLERİ (500, 1000, 2000...)
         let chart;
         function initChart() {
             if(chart) chart.destroy();
