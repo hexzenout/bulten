@@ -1,43 +1,7 @@
 {
-    "son_guncelleme": "27-04-2026 19:02:58",
-    "kalan_hak": "479",
+    "son_guncelleme": "27-04-2026 19:13:37",
+    "kalan_hak": "425",
     "veriler": [
-        {
-            "kategori": "ALTIN",
-            "lig": "BASKETBALL EUROLEAGUE",
-            "tur": "basketbol",
-            "mac": "Fenerbahce SK - Žalgiris",
-            "tarih": "2026-04-28",
-            "saat": "20:45",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BASKETBALL EUROLEAGUE",
-            "tur": "basketbol",
-            "mac": "Olympiacos - AS Monaco",
-            "tarih": "2026-04-28",
-            "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BASKETBALL EUROLEAGUE",
-            "tur": "basketbol",
-            "mac": "Valencia Basket - Panathinaikos",
-            "tarih": "2026-04-28",
-            "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "ALTIN",
-            "lig": "BASKETBALL EUROLEAGUE",
-            "tur": "basketbol",
-            "mac": "Real Madrid - Hapoel Tel Aviv",
-            "tarih": "2026-04-29",
-            "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
-        },
         {
             "kategori": "ALTIN",
             "lig": "NBA",
@@ -45,7 +9,7 @@
             "mac": "Orlando Magic - Detroit Pistons",
             "tarih": "2026-04-28",
             "saat": "03:10",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -54,7 +18,7 @@
             "mac": "Phoenix Suns - Oklahoma City Thunder",
             "tarih": "2026-04-28",
             "saat": "04:40",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -63,7 +27,7 @@
             "mac": "Denver Nuggets - Minnesota Timberwolves",
             "tarih": "2026-04-28",
             "saat": "05:40",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -72,7 +36,7 @@
             "mac": "Boston Celtics - Philadelphia 76ers",
             "tarih": "2026-04-29",
             "saat": "02:10",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -81,7 +45,7 @@
             "mac": "New York Knicks - Atlanta Hawks",
             "tarih": "2026-04-29",
             "saat": "03:10",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -90,7 +54,7 @@
             "mac": "San Antonio Spurs - Portland Trail Blazers",
             "tarih": "2026-04-29",
             "saat": "04:40",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -99,7 +63,7 @@
             "mac": "Cleveland Cavaliers - Toronto Raptors",
             "tarih": "2026-04-30",
             "saat": "02:10",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -108,7 +72,7 @@
             "mac": "Los Angeles Lakers - Houston Rockets",
             "tarih": "2026-04-30",
             "saat": "04:40",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -117,7 +81,7 @@
             "mac": "Minnesota Lynx - Nigeria",
             "tarih": "2026-04-28",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -126,7 +90,7 @@
             "mac": "New York Liberty - Connecticut Sun",
             "tarih": "2026-05-09",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -135,7 +99,7 @@
             "mac": "Toronto Tempo - Washington Mystics",
             "tarih": "2026-05-09",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -144,7 +108,7 @@
             "mac": "Seattle Storm - Golden State Valkyries",
             "tarih": "2026-05-09",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -153,7 +117,7 @@
             "mac": "Indiana Fever - Dallas Wings",
             "tarih": "2026-05-09",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -162,7 +126,7 @@
             "mac": "Las Vegas Aces - Phoenix Mercury",
             "tarih": "2026-05-09",
             "saat": "22:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -171,7 +135,7 @@
             "mac": "Portland Fire - Chicago Sky",
             "tarih": "2026-05-10",
             "saat": "04:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -180,7 +144,7 @@
             "mac": "Velez Sarsfield BA - Union Santa Fe",
             "tarih": "2026-04-28",
             "saat": "00:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -189,7 +153,7 @@
             "mac": "Atlético Huracán - Argentinos Juniors",
             "tarih": "2026-04-28",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -198,7 +162,7 @@
             "mac": "River Plate - Atlético Tucuman",
             "tarih": "2026-05-03",
             "saat": "03:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -207,7 +171,7 @@
             "mac": "Belgrano de Cordoba - Sarmiento de Junin",
             "tarih": "2026-05-03",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -216,7 +180,7 @@
             "mac": "Aldosivi Mar del Plata - Independiente Rivadavia",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -225,7 +189,7 @@
             "mac": "Gimnasia La Plata - Argentinos Juniors",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -234,7 +198,7 @@
             "mac": "Racing Club - Atlético Huracán",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -243,7 +207,7 @@
             "mac": "Barracas Central - Banfield",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -252,7 +216,7 @@
             "mac": "Central Córdoba - Boca Juniors",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -261,7 +225,7 @@
             "mac": "Rosario Central - CA Tigre BA",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -270,7 +234,7 @@
             "mac": "Gimnasia Mendoza - Defensa y Justicia",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -279,7 +243,7 @@
             "mac": "Lanus - Deportivo Riestra",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -288,7 +252,7 @@
             "mac": "Estudiantes de Río Cuarto - Instituto de Córdoba",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -297,7 +261,7 @@
             "mac": "Platense - Estudiantes",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -306,7 +270,7 @@
             "mac": "San Lorenzo - Independiente",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -315,7 +279,7 @@
             "mac": "Velez Sarsfield BA - Newells Old Boys",
             "tarih": "2026-05-03",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -324,7 +288,7 @@
             "mac": "Auckland FC - Melbourne City",
             "tarih": "2026-05-02",
             "saat": "08:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -333,7 +297,7 @@
             "mac": "Melbourne Victory - Sydney FC",
             "tarih": "2026-05-02",
             "saat": "12:40",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -342,7 +306,7 @@
             "mac": "Ried - FC Blau-Weiß Linz",
             "tarih": "2026-05-02",
             "saat": "18:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -351,7 +315,7 @@
             "mac": "Grazer AK - WSG Tirol",
             "tarih": "2026-05-02",
             "saat": "18:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -360,7 +324,7 @@
             "mac": "Austria Wien - Hartberg",
             "tarih": "2026-05-03",
             "saat": "15:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -369,7 +333,7 @@
             "mac": "RB Salzburg - Sturm Graz",
             "tarih": "2026-05-03",
             "saat": "18:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -378,7 +342,7 @@
             "mac": "Rheindorf Altach - Wolfsberger AC",
             "tarih": "2026-05-04",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -387,7 +351,7 @@
             "mac": "LASK - Rapid Wien",
             "tarih": "2026-05-04",
             "saat": "21:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -396,7 +360,7 @@
             "mac": "Cercle Brugge KSV - SV Zulte-Waregem",
             "tarih": "2026-05-01",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -405,7 +369,7 @@
             "mac": "Westerlo - Leuven",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -414,7 +378,7 @@
             "mac": "Charleroi - Genk",
             "tarih": "2026-05-02",
             "saat": "19:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -423,7 +387,7 @@
             "mac": "Sint Truiden - Union Saint-Gilloise",
             "tarih": "2026-05-02",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -432,7 +396,7 @@
             "mac": "KV Mechelen - Gent",
             "tarih": "2026-05-03",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -441,7 +405,7 @@
             "mac": "Royal Antwerp - Standard Liege",
             "tarih": "2026-05-03",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -450,7 +414,7 @@
             "mac": "Anderlecht - Club Brugge",
             "tarih": "2026-05-03",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -459,7 +423,7 @@
             "mac": "Dender - RAAL La Louvière",
             "tarih": "2026-05-03",
             "saat": "20:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -468,7 +432,7 @@
             "mac": "Botafogo - Remo",
             "tarih": "2026-05-02",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -477,7 +441,7 @@
             "mac": "Vitoria - Coritiba",
             "tarih": "2026-05-03",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -486,7 +450,7 @@
             "mac": "Palmeiras - Santos",
             "tarih": "2026-05-03",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -495,7 +459,7 @@
             "mac": "Atletico Paranaense - Grêmio",
             "tarih": "2026-05-03",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -504,7 +468,7 @@
             "mac": "Cruzeiro - Atletico Mineiro",
             "tarih": "2026-05-03",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -513,7 +477,7 @@
             "mac": "Sao Paulo - Bahia",
             "tarih": "2026-05-03",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -522,7 +486,7 @@
             "mac": "Flamengo - Vasco da Gama",
             "tarih": "2026-05-03",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -531,7 +495,7 @@
             "mac": "Chapecoense - Bragantino-SP",
             "tarih": "2026-05-04",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -540,7 +504,7 @@
             "mac": "Internacional - Fluminense",
             "tarih": "2026-05-04",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -549,7 +513,7 @@
             "mac": "Mirassol - Corinthians",
             "tarih": "2026-05-04",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -558,7 +522,7 @@
             "mac": "Coritiba - Internacional",
             "tarih": "2026-05-09",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -567,7 +531,7 @@
             "mac": "Fluminense - Vitoria",
             "tarih": "2026-05-10",
             "saat": "00:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -576,7 +540,7 @@
             "mac": "Bahia - Cruzeiro",
             "tarih": "2026-05-10",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -585,7 +549,7 @@
             "mac": "Atletico Mineiro - Botafogo",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -594,7 +558,7 @@
             "mac": "Remo - Palmeiras",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -603,7 +567,7 @@
             "mac": "Santos - Bragantino-SP",
             "tarih": "2026-05-11",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -612,7 +576,7 @@
             "mac": "Mirassol - Chapecoense",
             "tarih": "2026-05-11",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -621,7 +585,7 @@
             "mac": "Corinthians - Sao Paulo",
             "tarih": "2026-05-11",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -630,7 +594,7 @@
             "mac": "Grêmio - Flamengo",
             "tarih": "2026-05-11",
             "saat": "01:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -639,7 +603,7 @@
             "mac": "Vasco da Gama - Atletico Paranaense",
             "tarih": "2026-05-11",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -648,7 +612,7 @@
             "mac": "Athletic Club (MG) - Nautico PE",
             "tarih": "2026-04-28",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -657,7 +621,7 @@
             "mac": "Botafogo - Nautico PE",
             "tarih": "2026-05-02",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -666,7 +630,7 @@
             "mac": "Cuiabá - Criciuma",
             "tarih": "2026-05-03",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -675,7 +639,7 @@
             "mac": "Fortaleza - Goiás",
             "tarih": "2026-05-03",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -684,7 +648,7 @@
             "mac": "Operario PR - Londrina",
             "tarih": "2026-05-03",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -693,7 +657,7 @@
             "mac": "São Bernardo - Ponte Preta",
             "tarih": "2026-05-03",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -702,7 +666,7 @@
             "mac": "Sport Recife - Ceará",
             "tarih": "2026-05-04",
             "saat": "00:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -711,7 +675,7 @@
             "mac": "Atletico Goianiense - Juventude",
             "tarih": "2026-05-04",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -720,7 +684,7 @@
             "mac": "América Mineiro - Clube de Regatas Brasil",
             "tarih": "2026-05-04",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -729,7 +693,7 @@
             "mac": "Avai - Grêmio Novorizontino",
             "tarih": "2026-05-04",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -738,7 +702,7 @@
             "mac": "Vila Nova - Athletic Club (MG)",
             "tarih": "2026-05-05",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -747,7 +711,7 @@
             "mac": "Colo Colo - Coquimbo Unido",
             "tarih": "2026-05-04",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -756,7 +720,7 @@
             "mac": "Dalian Yingbo - Chongqing Tonglianglong FC",
             "tarih": "2026-05-01",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -765,7 +729,7 @@
             "mac": "Henan FC - Liaoning Tieren FC",
             "tarih": "2026-05-01",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -774,7 +738,7 @@
             "mac": "Shandong Luneng Taishan FC - Qingdao West Coast FC",
             "tarih": "2026-05-01",
             "saat": "14:35",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -783,7 +747,7 @@
             "mac": "Tianjin Jinmen Tiger FC - Wuhan Three Towns",
             "tarih": "2026-05-01",
             "saat": "14:35",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -792,7 +756,7 @@
             "mac": "Shanghai Shenhua FC - Chengdu Rongcheng FC",
             "tarih": "2026-05-01",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -801,7 +765,7 @@
             "mac": "Qingdao Hainiu FC - Shanghai SIPG FC",
             "tarih": "2026-05-02",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -810,7 +774,7 @@
             "mac": "Zhejiang - Shenzhen Peng City FC",
             "tarih": "2026-05-02",
             "saat": "14:35",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -819,7 +783,7 @@
             "mac": "Yunnan Yukun - Beijing FC",
             "tarih": "2026-05-02",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -828,7 +792,7 @@
             "mac": "Libertad Asuncion - Independiente del Valle",
             "tarih": "2026-04-29",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -837,7 +801,7 @@
             "mac": "Lanus - LDU Quito",
             "tarih": "2026-04-29",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -846,7 +810,7 @@
             "mac": "UCV FC - Rosario Central",
             "tarih": "2026-04-29",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -855,7 +819,7 @@
             "mac": "Cruzeiro - Boca Juniors",
             "tarih": "2026-04-29",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -864,7 +828,7 @@
             "mac": "Deportes Tolima - Coquimbo Unido",
             "tarih": "2026-04-29",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -873,7 +837,7 @@
             "mac": "Sporting Cristal - Junior FC",
             "tarih": "2026-04-29",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -882,7 +846,7 @@
             "mac": "Mirassol - Club Always Ready",
             "tarih": "2026-04-30",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -891,7 +855,7 @@
             "mac": "Platense - Independiente Santa Fe",
             "tarih": "2026-04-30",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -900,7 +864,7 @@
             "mac": "Barcelona SC - Universidad Católica (CHI)",
             "tarih": "2026-04-30",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -909,7 +873,7 @@
             "mac": "Cerro Porteño - Palmeiras-SP",
             "tarih": "2026-04-30",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -918,7 +882,7 @@
             "mac": "Estudiantes La Plata - Flamengo-RJ",
             "tarih": "2026-04-30",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -927,7 +891,7 @@
             "mac": "Club Universitario de Deportes - Nacional de Montevideo",
             "tarih": "2026-04-30",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -936,7 +900,7 @@
             "mac": "Club Bolívar - Fluminense-RJ",
             "tarih": "2026-05-01",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -945,7 +909,7 @@
             "mac": "Independiente Rivadavia - Deportivo La Guaira",
             "tarih": "2026-05-01",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -954,7 +918,7 @@
             "mac": "Corinthians-SP - Peñarol Montevideo",
             "tarih": "2026-05-01",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -963,7 +927,7 @@
             "mac": "Independiente Medellín - Cusco FC",
             "tarih": "2026-05-01",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -972,7 +936,7 @@
             "mac": "Botafogo - Club Independiente Petrolero",
             "tarih": "2026-04-29",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -981,7 +945,7 @@
             "mac": "San Lorenzo - Santos",
             "tarih": "2026-04-29",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -990,7 +954,7 @@
             "mac": "Barracas Central - Audax Italiano",
             "tarih": "2026-04-29",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -999,7 +963,7 @@
             "mac": "Recoleta FC - C.D. Cuenca",
             "tarih": "2026-04-29",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1008,7 +972,7 @@
             "mac": "Millonarios - Sao Paulo",
             "tarih": "2026-04-29",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1017,7 +981,7 @@
             "mac": "O'Higgins - CA Boston River",
             "tarih": "2026-04-29",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1026,7 +990,7 @@
             "mac": "CA Juventud - Puerto Cabello",
             "tarih": "2026-04-30",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1035,7 +999,7 @@
             "mac": "Caracas FC - Racing Club",
             "tarih": "2026-04-30",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1044,7 +1008,7 @@
             "mac": "Deportivo Pereira - Montevideo City Torque",
             "tarih": "2026-04-30",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1053,7 +1017,7 @@
             "mac": "Club Cienciano - Clube Atlético Mineiro",
             "tarih": "2026-04-30",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1062,7 +1026,7 @@
             "mac": "Palestino - Grêmio",
             "tarih": "2026-04-30",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1071,7 +1035,7 @@
             "mac": "Carabobo FC - Blooming",
             "tarih": "2026-05-01",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1080,7 +1044,7 @@
             "mac": "Vasco da Gama - Olimpia Asunción",
             "tarih": "2026-05-01",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1089,7 +1053,7 @@
             "mac": "CA Tigre BA - América de Cali",
             "tarih": "2026-05-01",
             "saat": "03:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1098,7 +1062,7 @@
             "mac": "Bragantino-SP - River Plate",
             "tarih": "2026-05-01",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1107,16 +1071,7 @@
             "mac": "Alianza Atlético - Macará",
             "tarih": "2026-05-01",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "BRONZ",
-            "lig": "DENMARK SUPERLIGA",
-            "tur": "futbol",
-            "mac": "FC Copenhagen - Vejle Boldklub",
-            "tarih": "2026-04-27",
-            "saat": "20:01",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1125,7 +1080,7 @@
             "mac": "Brondby IF - FC Nordsjaelland",
             "tarih": "2026-05-01",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1134,7 +1089,7 @@
             "mac": "OB Odense BK - Silkeborg IF",
             "tarih": "2026-05-03",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1143,7 +1098,7 @@
             "mac": "Randers FC - Vejle Boldklub",
             "tarih": "2026-05-03",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1152,7 +1107,7 @@
             "mac": "FC Fredericia - FC Copenhagen",
             "tarih": "2026-05-03",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1161,7 +1116,7 @@
             "mac": "AGF Aarhus - SonderjyskE",
             "tarih": "2026-05-03",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1170,7 +1125,7 @@
             "mac": "FC Midtjylland - Viborg FF",
             "tarih": "2026-05-04",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1179,7 +1134,7 @@
             "mac": "Southampton - Ipswich Town",
             "tarih": "2026-04-28",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1188,7 +1143,7 @@
             "mac": "Portsmouth - Birmingham City",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1197,7 +1152,7 @@
             "mac": "Blackburn Rovers - Leicester City",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1206,7 +1161,7 @@
             "mac": "Bristol City - Stoke City",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1215,7 +1170,7 @@
             "mac": "Swansea City - Charlton Athletic",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1224,7 +1179,7 @@
             "mac": "Watford - Coventry City",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1233,7 +1188,7 @@
             "mac": "Derby County - Sheffield United",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1242,7 +1197,7 @@
             "mac": "Hull City - Norwich City",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1251,7 +1206,7 @@
             "mac": "Wrexham AFC - Middlesbrough",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1260,7 +1215,7 @@
             "mac": "Millwall - Oxford United",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -1269,7 +1224,7 @@
             "mac": "Sheffield Wednesday - West Bromwich Albion",
             "tarih": "2026-05-02",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1278,7 +1233,7 @@
             "mac": "Northampton Town - Barnsley",
             "tarih": "2026-04-28",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1287,7 +1242,7 @@
             "mac": "Peterborough United - Mansfield Town",
             "tarih": "2026-04-28",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1296,7 +1251,7 @@
             "mac": "Stockport County FC - Port Vale",
             "tarih": "2026-04-28",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1305,7 +1260,7 @@
             "mac": "Reading - Blackpool",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1314,7 +1269,7 @@
             "mac": "Bolton Wanderers - Luton",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1323,7 +1278,7 @@
             "mac": "Exeter City - Bradford City",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1332,7 +1287,7 @@
             "mac": "Leyton Orient - Burton Albion",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1341,7 +1296,7 @@
             "mac": "Mansfield Town - Cardiff City",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1350,7 +1305,7 @@
             "mac": "Wimbledon - Huddersfield Town",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1359,7 +1314,7 @@
             "mac": "Port Vale - Lincoln City",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1368,7 +1323,7 @@
             "mac": "Northampton Town - Plymouth Argyle",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1377,7 +1332,7 @@
             "mac": "Wycombe Wanderers - Rotherham United",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1386,7 +1341,7 @@
             "mac": "Stevenage - Wigan Athletic",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1395,7 +1350,7 @@
             "mac": "Oldham Athletic - Accrington Stanley",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1404,7 +1359,7 @@
             "mac": "Harrogate Town - Barnet",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1413,7 +1368,7 @@
             "mac": "Barrow - Newport County",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1422,7 +1377,7 @@
             "mac": "Notts County - Bristol Rovers",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1431,7 +1386,7 @@
             "mac": "Bromley FC - Walsall",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1440,7 +1395,7 @@
             "mac": "Crewe Alexandra - Cambridge United",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1449,7 +1404,7 @@
             "mac": "Cheltenham Town - Colchester United",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1458,7 +1413,7 @@
             "mac": "Swindon Town - Chesterfield FC",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1467,7 +1422,7 @@
             "mac": "Crawley Town - Salford City",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1476,7 +1431,7 @@
             "mac": "Fleetwood Town - Milton Keynes Dons",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1485,7 +1440,7 @@
             "mac": "Gillingham - Shrewsbury Town",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1494,7 +1449,7 @@
             "mac": "Tranmere Rovers - Grimsby Town",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1503,7 +1458,7 @@
             "mac": "Manchester United - Brentford",
             "tarih": "2026-04-27",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1512,7 +1467,7 @@
             "mac": "Leeds United - Burnley",
             "tarih": "2026-05-01",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1521,7 +1476,7 @@
             "mac": "Brentford - West Ham United",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1530,7 +1485,7 @@
             "mac": "Newcastle United - Brighton and Hove Albion",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1539,7 +1494,7 @@
             "mac": "Wolverhampton Wanderers - Sunderland",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1548,7 +1503,7 @@
             "mac": "Arsenal - Fulham",
             "tarih": "2026-05-02",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1557,7 +1512,7 @@
             "mac": "Bournemouth - Crystal Palace",
             "tarih": "2026-05-03",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1566,7 +1521,7 @@
             "mac": "Manchester United - Liverpool",
             "tarih": "2026-05-03",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1575,7 +1530,7 @@
             "mac": "Aston Villa - Tottenham Hotspur",
             "tarih": "2026-05-03",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1584,7 +1539,7 @@
             "mac": "Chelsea - Nottingham Forest",
             "tarih": "2026-05-04",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1593,7 +1548,7 @@
             "mac": "Everton - Manchester City",
             "tarih": "2026-05-04",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1602,7 +1557,7 @@
             "mac": "Liverpool - Chelsea",
             "tarih": "2026-05-09",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1611,7 +1566,7 @@
             "mac": "Fulham - Bournemouth",
             "tarih": "2026-05-09",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1620,7 +1575,7 @@
             "mac": "Brighton and Hove Albion - Wolverhampton Wanderers",
             "tarih": "2026-05-09",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1629,7 +1584,7 @@
             "mac": "Sunderland - Manchester United",
             "tarih": "2026-05-09",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1638,7 +1593,7 @@
             "mac": "Manchester City - Brentford",
             "tarih": "2026-05-09",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1647,7 +1602,7 @@
             "mac": "Burnley - Aston Villa",
             "tarih": "2026-05-10",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1656,7 +1611,7 @@
             "mac": "Crystal Palace - Everton",
             "tarih": "2026-05-10",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1665,7 +1620,7 @@
             "mac": "Nottingham Forest - Newcastle United",
             "tarih": "2026-05-10",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1674,7 +1629,7 @@
             "mac": "West Ham United - Arsenal",
             "tarih": "2026-05-10",
             "saat": "18:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1683,7 +1638,7 @@
             "mac": "Tottenham Hotspur - Leeds United",
             "tarih": "2026-05-11",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1692,7 +1647,7 @@
             "mac": "Chelsea - Manchester City",
             "tarih": "2026-05-16",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1701,7 +1656,7 @@
             "mac": "Mexico - South Africa",
             "tarih": "2026-06-11",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1710,7 +1665,7 @@
             "mac": "South Korea - Czech Republic",
             "tarih": "2026-06-12",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1719,7 +1674,7 @@
             "mac": "Canada - Bosnia & Herzegovina",
             "tarih": "2026-06-12",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1728,7 +1683,7 @@
             "mac": "USA - Paraguay",
             "tarih": "2026-06-13",
             "saat": "04:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1737,7 +1692,7 @@
             "mac": "Qatar - Switzerland",
             "tarih": "2026-06-13",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1746,7 +1701,7 @@
             "mac": "Brazil - Morocco",
             "tarih": "2026-06-14",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1755,7 +1710,7 @@
             "mac": "Haiti - Scotland",
             "tarih": "2026-06-14",
             "saat": "04:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1764,7 +1719,7 @@
             "mac": "Australia - Turkey",
             "tarih": "2026-06-14",
             "saat": "07:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1773,7 +1728,7 @@
             "mac": "Germany - Curaçao",
             "tarih": "2026-06-14",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1782,7 +1737,7 @@
             "mac": "Netherlands - Japan",
             "tarih": "2026-06-14",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1791,7 +1746,7 @@
             "mac": "Ivory Coast - Ecuador",
             "tarih": "2026-06-15",
             "saat": "02:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1800,7 +1755,7 @@
             "mac": "Sweden - Tunisia",
             "tarih": "2026-06-15",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1809,7 +1764,7 @@
             "mac": "Spain - Cape Verde",
             "tarih": "2026-06-15",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1818,7 +1773,7 @@
             "mac": "Belgium - Egypt",
             "tarih": "2026-06-15",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1827,7 +1782,7 @@
             "mac": "Saudi Arabia - Uruguay",
             "tarih": "2026-06-16",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1836,7 +1791,7 @@
             "mac": "Iran - New Zealand",
             "tarih": "2026-06-16",
             "saat": "04:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1845,7 +1800,7 @@
             "mac": "France - Senegal",
             "tarih": "2026-06-16",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1854,7 +1809,7 @@
             "mac": "Iraq - Norway",
             "tarih": "2026-06-17",
             "saat": "01:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1863,7 +1818,7 @@
             "mac": "Argentina - Algeria",
             "tarih": "2026-06-17",
             "saat": "04:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1872,7 +1827,7 @@
             "mac": "Austria - Jordan",
             "tarih": "2026-06-17",
             "saat": "07:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1881,7 +1836,7 @@
             "mac": "Portugal - DR Congo",
             "tarih": "2026-06-17",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1890,7 +1845,7 @@
             "mac": "England - Croatia",
             "tarih": "2026-06-17",
             "saat": "23:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1899,7 +1854,7 @@
             "mac": "Ghana - Panama",
             "tarih": "2026-06-18",
             "saat": "02:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1908,7 +1863,7 @@
             "mac": "Uzbekistan - Colombia",
             "tarih": "2026-06-18",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1917,7 +1872,7 @@
             "mac": "USA - Australia",
             "tarih": "2026-06-19",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1926,7 +1881,7 @@
             "mac": "Colombia - DR Congo",
             "tarih": "2026-06-24",
             "saat": "05:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1935,7 +1890,7 @@
             "mac": "Colombia - Portugal",
             "tarih": "2026-06-28",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1944,7 +1899,7 @@
             "mac": "FC Inter Turku - HJK Helsinki",
             "tarih": "2026-04-29",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1953,7 +1908,7 @@
             "mac": "SJK Seinäjoki - Ilves Tampere",
             "tarih": "2026-05-02",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1962,7 +1917,7 @@
             "mac": "IFK Mariehamn - VPS Vaasa",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1971,7 +1926,7 @@
             "mac": "Jaro - TPS Turku",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1980,7 +1935,7 @@
             "mac": "AC Oulu - KuPS Kuopio",
             "tarih": "2026-05-02",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1989,7 +1944,7 @@
             "mac": "HJK Helsinki - FC Lahti",
             "tarih": "2026-05-04",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -1998,7 +1953,7 @@
             "mac": "IF Gnistan - FC Inter Turku",
             "tarih": "2026-05-05",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2007,7 +1962,7 @@
             "mac": "RC Lens - Nice",
             "tarih": "2026-05-22",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2016,7 +1971,7 @@
             "mac": "Nantes - Marseille",
             "tarih": "2026-05-02",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2025,7 +1980,7 @@
             "mac": "Paris Saint Germain - Lorient",
             "tarih": "2026-05-02",
             "saat": "18:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2034,7 +1989,7 @@
             "mac": "Metz - AS Monaco",
             "tarih": "2026-05-02",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2043,7 +1998,7 @@
             "mac": "Nice - RC Lens",
             "tarih": "2026-05-02",
             "saat": "22:05",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2052,7 +2007,7 @@
             "mac": "Lille - Le Havre",
             "tarih": "2026-05-03",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2061,7 +2016,7 @@
             "mac": "Auxerre - Angers",
             "tarih": "2026-05-03",
             "saat": "18:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2070,7 +2025,7 @@
             "mac": "Paris FC - Brest",
             "tarih": "2026-05-03",
             "saat": "18:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2079,7 +2034,7 @@
             "mac": "Strasbourg - Toulouse",
             "tarih": "2026-05-03",
             "saat": "18:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2088,7 +2043,7 @@
             "mac": "Lyon - Rennes",
             "tarih": "2026-05-03",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2097,7 +2052,7 @@
             "mac": "RC Lens - Nantes",
             "tarih": "2026-05-08",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2106,7 +2061,7 @@
             "mac": "AS Monaco - Lille",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2115,7 +2070,7 @@
             "mac": "Angers - Strasbourg",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2124,7 +2079,7 @@
             "mac": "Auxerre - Nice",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2133,7 +2088,7 @@
             "mac": "Paris Saint Germain - Brest",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2142,7 +2097,7 @@
             "mac": "Le Havre - Marseille",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2151,7 +2106,7 @@
             "mac": "Metz - Lorient",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2160,7 +2115,7 @@
             "mac": "Toulouse - Lyon",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2169,7 +2124,7 @@
             "mac": "Rennes - Paris FC",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2178,7 +2133,7 @@
             "mac": "Boulogne - USL Dunkerque",
             "tarih": "2026-04-27",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2187,7 +2142,7 @@
             "mac": "Amiens - Red Star",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2196,7 +2151,7 @@
             "mac": "Montpellier - Clermont",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2205,7 +2160,7 @@
             "mac": "USL Dunkerque - Grenoble",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2214,7 +2169,7 @@
             "mac": "Guingamp - SC Bastia",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2223,7 +2178,7 @@
             "mac": "Le Mans FC - Stade de Reims",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2232,7 +2187,7 @@
             "mac": "Pau FC - Nancy",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2241,7 +2196,7 @@
             "mac": "Rodez AF - Saint Etienne",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2250,7 +2205,7 @@
             "mac": "Troyes - Stade Lavallois",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2259,7 +2214,7 @@
             "mac": "Bayern Munich - 1. FC Heidenheim",
             "tarih": "2026-05-02",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2268,7 +2223,7 @@
             "mac": "Union Berlin - 1. FC Köln",
             "tarih": "2026-05-02",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2277,7 +2232,7 @@
             "mac": "Werder Bremen - Augsburg",
             "tarih": "2026-05-02",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2286,7 +2241,7 @@
             "mac": "Eintracht Frankfurt - Hamburger SV",
             "tarih": "2026-05-02",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2295,7 +2250,7 @@
             "mac": "TSG Hoffenheim - VfB Stuttgart",
             "tarih": "2026-05-02",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2304,7 +2259,7 @@
             "mac": "Bayer Leverkusen - RB Leipzig",
             "tarih": "2026-05-02",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2313,7 +2268,7 @@
             "mac": "FC St. Pauli - FSV Mainz 05",
             "tarih": "2026-05-03",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2322,7 +2277,7 @@
             "mac": "Borussia Monchengladbach - Borussia Dortmund",
             "tarih": "2026-05-03",
             "saat": "18:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2331,7 +2286,7 @@
             "mac": "SC Freiburg - VfL Wolfsburg",
             "tarih": "2026-05-03",
             "saat": "20:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2340,7 +2295,7 @@
             "mac": "Borussia Dortmund - Eintracht Frankfurt",
             "tarih": "2026-05-08",
             "saat": "21:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2349,7 +2304,7 @@
             "mac": "Augsburg - Borussia Monchengladbach",
             "tarih": "2026-05-09",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2358,7 +2313,7 @@
             "mac": "VfB Stuttgart - Bayer Leverkusen",
             "tarih": "2026-05-09",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2367,7 +2322,7 @@
             "mac": "RB Leipzig - FC St. Pauli",
             "tarih": "2026-05-09",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2376,7 +2331,7 @@
             "mac": "TSG Hoffenheim - Werder Bremen",
             "tarih": "2026-05-09",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2385,7 +2340,7 @@
             "mac": "VfL Wolfsburg - Bayern Munich",
             "tarih": "2026-05-09",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2394,7 +2349,7 @@
             "mac": "Hamburger SV - SC Freiburg",
             "tarih": "2026-05-10",
             "saat": "16:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2403,7 +2358,7 @@
             "mac": "1. FC Köln - 1. FC Heidenheim",
             "tarih": "2026-05-10",
             "saat": "18:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2412,7 +2367,7 @@
             "mac": "FSV Mainz 05 - Union Berlin",
             "tarih": "2026-05-10",
             "saat": "20:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2421,7 +2376,7 @@
             "mac": "Dynamo Dresden - 1. FC Kaiserslautern",
             "tarih": "2026-05-02",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2430,7 +2385,7 @@
             "mac": "Arminia Bielefeld - VfL Bochum",
             "tarih": "2026-05-02",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2439,7 +2394,7 @@
             "mac": "Holstein Kiel - Eintracht Braunschweig",
             "tarih": "2026-05-02",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2448,7 +2403,7 @@
             "mac": "FC Schalke 04 - Fortuna Düsseldorf",
             "tarih": "2026-05-02",
             "saat": "21:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2457,7 +2412,7 @@
             "mac": "1. FC Magdeburg - Hertha Berlin",
             "tarih": "2026-05-03",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2466,7 +2421,7 @@
             "mac": "Greuther Fürth - 1. FC Nürnberg",
             "tarih": "2026-05-03",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2475,7 +2430,7 @@
             "mac": "Elversberg - SC Paderborn",
             "tarih": "2026-05-03",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2484,7 +2439,7 @@
             "mac": "Hannover 96 - SC Preußen Münster",
             "tarih": "2026-05-03",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2493,7 +2448,7 @@
             "mac": "Karlsruher SC - SV Darmstadt 98",
             "tarih": "2026-05-03",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2502,7 +2457,7 @@
             "mac": "Werder Bremen - Bayern Munich",
             "tarih": "2026-04-29",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2511,7 +2466,7 @@
             "mac": "Bayern Munich - VfB Stuttgart",
             "tarih": "2026-05-23",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2520,7 +2475,7 @@
             "mac": "1. FC Saarbrücken - Waldhof Mannheim",
             "tarih": "2026-05-02",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2529,7 +2484,7 @@
             "mac": "Alemannia Aachen - Hansa Rostock",
             "tarih": "2026-05-02",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2538,7 +2493,7 @@
             "mac": "Jahn Regensburg - TSG Hoffenheim II",
             "tarih": "2026-05-02",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2547,7 +2502,7 @@
             "mac": "SC Verl - TSV Havelse",
             "tarih": "2026-05-02",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2556,7 +2511,7 @@
             "mac": "Schweinfurt - TSV 1860 München",
             "tarih": "2026-05-02",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2565,7 +2520,7 @@
             "mac": "SSV Ulm 1846 - FC Viktoria Köln 1904",
             "tarih": "2026-05-02",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2574,7 +2529,7 @@
             "mac": "VfB Stuttgart II - Rot-Weiss Essen",
             "tarih": "2026-05-02",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2583,7 +2538,7 @@
             "mac": "MSV Duisburg - FC Energie Cottbus",
             "tarih": "2026-05-03",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2592,7 +2547,7 @@
             "mac": "Wehen Wiesbaden - VfL Osnabrück",
             "tarih": "2026-05-03",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2601,7 +2556,7 @@
             "mac": "FC Ingolstadt 04 - Erzgebirge Aue",
             "tarih": "2026-05-03",
             "saat": "20:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2610,7 +2565,7 @@
             "mac": "Erzgebirge Aue - MSV Duisburg",
             "tarih": "2026-05-08",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2619,7 +2574,7 @@
             "mac": "FC Energie Cottbus - Wehen Wiesbaden",
             "tarih": "2026-05-09",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2628,7 +2583,7 @@
             "mac": "TSV 1860 München - FC Ingolstadt 04",
             "tarih": "2026-05-09",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2637,7 +2592,7 @@
             "mac": "Hansa Rostock - VfB Stuttgart II",
             "tarih": "2026-05-09",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2646,7 +2601,7 @@
             "mac": "Rot-Weiss Essen - SC Verl",
             "tarih": "2026-05-09",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2655,7 +2610,7 @@
             "mac": "VfL Osnabrück - SSV Ulm 1846",
             "tarih": "2026-05-09",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2664,7 +2619,7 @@
             "mac": "Waldhof Mannheim - Jahn Regensburg",
             "tarih": "2026-05-09",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2673,7 +2628,7 @@
             "mac": "TSV Havelse - Schweinfurt",
             "tarih": "2026-05-10",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2682,7 +2637,7 @@
             "mac": "FC Viktoria Köln 1904 - Alemannia Aachen",
             "tarih": "2026-05-10",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2691,7 +2646,7 @@
             "mac": "TSG Hoffenheim II - 1. FC Saarbrücken",
             "tarih": "2026-05-10",
             "saat": "20:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2700,7 +2655,7 @@
             "mac": "Panetolikos Agrinio - AE Kifisia FC",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2709,7 +2664,7 @@
             "mac": "Panserraikos FC - AEL",
             "tarih": "2026-05-02",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2718,7 +2673,7 @@
             "mac": "Asteras Tripolis - Atromitos Athens",
             "tarih": "2026-05-02",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2727,7 +2682,7 @@
             "mac": "OFI Crete - Aris Thessaloniki",
             "tarih": "2026-05-03",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2736,7 +2691,7 @@
             "mac": "Levadiakos - Volos FC",
             "tarih": "2026-05-03",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2745,7 +2700,7 @@
             "mac": "PAOK Thessaloniki - Olympiakos Piraeus",
             "tarih": "2026-05-03",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2754,7 +2709,7 @@
             "mac": "Panathinaikos - AEK Athens",
             "tarih": "2026-05-03",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2763,7 +2718,7 @@
             "mac": "Panserraikos FC - AE Kifisia FC",
             "tarih": "2026-05-09",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2772,7 +2727,7 @@
             "mac": "Aris Thessaloniki - OFI Crete",
             "tarih": "2026-05-10",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2781,7 +2736,7 @@
             "mac": "Volos FC - Levadiakos",
             "tarih": "2026-05-10",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2790,7 +2745,7 @@
             "mac": "Olympiakos Piraeus - PAOK Thessaloniki",
             "tarih": "2026-05-10",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2799,7 +2754,7 @@
             "mac": "Lazio - Inter Milan",
             "tarih": "2026-05-13",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2808,7 +2763,7 @@
             "mac": "Lazio - Udinese",
             "tarih": "2026-04-27",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2817,7 +2772,7 @@
             "mac": "Pisa - Lecce",
             "tarih": "2026-05-01",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2826,7 +2781,7 @@
             "mac": "Udinese - Torino",
             "tarih": "2026-05-02",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2835,7 +2790,7 @@
             "mac": "Como - Napoli",
             "tarih": "2026-05-02",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2844,7 +2799,7 @@
             "mac": "Atalanta BC - Genoa",
             "tarih": "2026-05-02",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2853,7 +2808,7 @@
             "mac": "Bologna - Cagliari",
             "tarih": "2026-05-03",
             "saat": "13:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2862,7 +2817,7 @@
             "mac": "Sassuolo - AC Milan",
             "tarih": "2026-05-03",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2871,7 +2826,7 @@
             "mac": "Juventus - Hellas Verona",
             "tarih": "2026-05-03",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2880,7 +2835,7 @@
             "mac": "Inter Milan - Parma",
             "tarih": "2026-05-03",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2889,7 +2844,7 @@
             "mac": "Cremonese - Lazio",
             "tarih": "2026-05-04",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2898,7 +2853,7 @@
             "mac": "AS Roma - Fiorentina",
             "tarih": "2026-05-04",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2907,7 +2862,7 @@
             "mac": "Torino - Sassuolo",
             "tarih": "2026-05-08",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2916,7 +2871,7 @@
             "mac": "Cagliari - Udinese",
             "tarih": "2026-05-09",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2925,7 +2880,7 @@
             "mac": "Lazio - Inter Milan",
             "tarih": "2026-05-09",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2934,7 +2889,7 @@
             "mac": "Lecce - Juventus",
             "tarih": "2026-05-09",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2943,7 +2898,7 @@
             "mac": "Hellas Verona - Como",
             "tarih": "2026-05-10",
             "saat": "13:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2952,7 +2907,7 @@
             "mac": "Cremonese - Pisa",
             "tarih": "2026-05-10",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2961,7 +2916,7 @@
             "mac": "Fiorentina - Genoa",
             "tarih": "2026-05-10",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2970,7 +2925,7 @@
             "mac": "Parma - AS Roma",
             "tarih": "2026-05-10",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2979,7 +2934,7 @@
             "mac": "AC Milan - Atalanta BC",
             "tarih": "2026-05-10",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -2988,7 +2943,7 @@
             "mac": "Napoli - Bologna",
             "tarih": "2026-05-11",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -2997,7 +2952,7 @@
             "mac": "Empoli - Avellino",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3006,7 +2961,7 @@
             "mac": "Bari - Virtus Entella",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3015,7 +2970,7 @@
             "mac": "Carrarese - Cesena FC",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3024,7 +2979,7 @@
             "mac": "Juve Stabia - Frosinone",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3033,7 +2988,7 @@
             "mac": "Mantova - Monza",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3042,7 +2997,7 @@
             "mac": "Modena - Reggiana",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3051,7 +3006,7 @@
             "mac": "Padova - Pescara",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3060,7 +3015,7 @@
             "mac": "Palermo - US Catanzaro 1929",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3069,7 +3024,7 @@
             "mac": "Sampdoria - Südtirol",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3078,7 +3033,97 @@
             "mac": "Spezia - Venezia",
             "tarih": "2026-05-01",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Tokyo Verdy - Kashima Antlers",
+            "tarih": "2026-04-29",
+            "saat": "07:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Shimizu S Pulse - V-Varen Nagasaki",
+            "tarih": "2026-04-29",
+            "saat": "07:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Avispa Fukuoka - Hiroshima Sanfrecce FC",
+            "tarih": "2026-04-29",
+            "saat": "08:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Vissel Kobe - Cerezo Osaka",
+            "tarih": "2026-04-29",
+            "saat": "08:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "JEF United Chiba - Yokohama F Marinos",
+            "tarih": "2026-04-29",
+            "saat": "08:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Nagoya Grampus - Fagiano Okayama",
+            "tarih": "2026-04-29",
+            "saat": "09:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Kyoto Purple Sanga - Gamba Osaka",
+            "tarih": "2026-04-29",
+            "saat": "09:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Urawa Red Diamonds - Kawasaki Frontale",
+            "tarih": "2026-04-29",
+            "saat": "09:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Mito HollyHock - FC Machida Zelvia",
+            "tarih": "2026-04-29",
+            "saat": "10:00",
+            "uyari": "📡 Radar Analizi Aktif"
+        },
+        {
+            "kategori": "BRONZ",
+            "lig": "J LEAGUE",
+            "tur": "futbol",
+            "mac": "Kashiwa Reysol - FC Tokyo",
+            "tarih": "2026-04-29",
+            "saat": "10:00",
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3087,7 +3132,7 @@
             "mac": "FC Seoul - Sangju Sangmu FC",
             "tarih": "2026-05-02",
             "saat": "08:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3096,7 +3141,7 @@
             "mac": "Ulsan Hyundai FC - Pohang Steelers",
             "tarih": "2026-05-02",
             "saat": "08:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3105,7 +3150,7 @@
             "mac": "Incheon United - Gangwon FC",
             "tarih": "2026-05-02",
             "saat": "10:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3114,7 +3159,7 @@
             "mac": "Jeju United FC - Jeonbuk Hyundai Motors",
             "tarih": "2026-05-02",
             "saat": "10:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3123,7 +3168,7 @@
             "mac": "Gwangju FC - Daejeon Citizen",
             "tarih": "2026-05-02",
             "saat": "13:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3132,7 +3177,7 @@
             "mac": "Drogheda United - Sligo Rovers",
             "tarih": "2026-05-01",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3141,7 +3186,7 @@
             "mac": "Dundalk - Shelbourne Dublin",
             "tarih": "2026-05-01",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3150,7 +3195,7 @@
             "mac": "Galway United - St Patricks Athletic",
             "tarih": "2026-05-01",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3159,7 +3204,7 @@
             "mac": "Bohemians - Derry City",
             "tarih": "2026-05-01",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3168,7 +3213,7 @@
             "mac": "Shamrock Rovers - Waterford FC",
             "tarih": "2026-05-01",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3177,7 +3222,7 @@
             "mac": "América - Pumas",
             "tarih": "2026-05-03",
             "saat": "02:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3186,7 +3231,7 @@
             "mac": "Atlas - Cruz Azul",
             "tarih": "2026-05-03",
             "saat": "02:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3195,7 +3240,7 @@
             "mac": "Tigres - Guadalajara",
             "tarih": "2026-05-03",
             "saat": "02:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3204,7 +3249,7 @@
             "mac": "Toluca - Pachuca",
             "tarih": "2026-05-03",
             "saat": "02:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3213,7 +3258,7 @@
             "mac": "FC Utrecht - NAC Breda",
             "tarih": "2026-05-02",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3222,7 +3267,7 @@
             "mac": "Groningen - Excelsior",
             "tarih": "2026-05-02",
             "saat": "19:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3231,7 +3276,7 @@
             "mac": "Ajax - PSV Eindhoven",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3240,7 +3285,7 @@
             "mac": "NEC Nijmegen - SC Telstar",
             "tarih": "2026-05-02",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3249,7 +3294,7 @@
             "mac": "FC Volendam - Heerenveen",
             "tarih": "2026-05-03",
             "saat": "13:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3258,7 +3303,7 @@
             "mac": "FC Zwolle - Heracles Almelo",
             "tarih": "2026-05-03",
             "saat": "15:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3267,7 +3312,7 @@
             "mac": "Fortuna Sittard - Feyenoord",
             "tarih": "2026-05-03",
             "saat": "15:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3276,7 +3321,7 @@
             "mac": "AZ Alkmaar - FC Twente Enschede",
             "tarih": "2026-05-03",
             "saat": "17:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3285,7 +3330,7 @@
             "mac": "Sparta Rotterdam - Go Ahead Eagles",
             "tarih": "2026-05-03",
             "saat": "17:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3294,7 +3339,7 @@
             "mac": "Tromso - SK Brann",
             "tarih": "2026-04-29",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3303,7 +3348,7 @@
             "mac": "Bodø/Glimt - IK Start",
             "tarih": "2026-04-30",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3312,7 +3357,7 @@
             "mac": "Viking FK - Rosenborg",
             "tarih": "2026-05-01",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3321,7 +3366,7 @@
             "mac": "SK Brann - Fredrikstad FK",
             "tarih": "2026-05-02",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3330,7 +3375,7 @@
             "mac": "Lillestrom - Sarpsborg FK",
             "tarih": "2026-05-03",
             "saat": "15:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3339,7 +3384,7 @@
             "mac": "Sandefjord - Aalesund",
             "tarih": "2026-05-03",
             "saat": "18:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3348,7 +3393,7 @@
             "mac": "Kristiansund BK - HamKam",
             "tarih": "2026-05-03",
             "saat": "18:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3357,7 +3402,7 @@
             "mac": "IK Start - Tromso",
             "tarih": "2026-05-03",
             "saat": "18:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3366,7 +3411,7 @@
             "mac": "Vålerenga - KFUM",
             "tarih": "2026-05-03",
             "saat": "20:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3375,7 +3420,7 @@
             "mac": "Bodø/Glimt - Molde",
             "tarih": "2026-05-04",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3384,7 +3429,7 @@
             "mac": "Korona Kielce - Piast Gliwice",
             "tarih": "2026-05-01",
             "saat": "18:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3393,7 +3438,7 @@
             "mac": "Legia Warszawa - Widzew Łódź",
             "tarih": "2026-05-01",
             "saat": "21:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3402,7 +3447,7 @@
             "mac": "Motor Lublin - Lech Poznań",
             "tarih": "2026-05-02",
             "saat": "21:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3411,7 +3456,7 @@
             "mac": "GKS Katowice - Nieciecza",
             "tarih": "2026-05-03",
             "saat": "13:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3420,7 +3465,7 @@
             "mac": "Zagłębie Lubin - Cracovia Kraków",
             "tarih": "2026-05-03",
             "saat": "15:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3429,7 +3474,7 @@
             "mac": "Pogoń Szczecin - Wisła Płock",
             "tarih": "2026-05-03",
             "saat": "18:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3438,7 +3483,7 @@
             "mac": "Radomiak Radom - Lechia Gdańsk",
             "tarih": "2026-05-04",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3447,7 +3492,7 @@
             "mac": "Gil Vicente - Casa Pia",
             "tarih": "2026-04-27",
             "saat": "22:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3456,7 +3501,7 @@
             "mac": "Sporting Lisbon - Tondela",
             "tarih": "2026-04-29",
             "saat": "22:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3465,7 +3510,7 @@
             "mac": "Nacional - AVS Futebol SAD",
             "tarih": "2026-05-02",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3474,7 +3519,7 @@
             "mac": "Arouca - Santa Clara",
             "tarih": "2026-05-02",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3483,7 +3528,7 @@
             "mac": "Moreirense FC - CF Estrela",
             "tarih": "2026-05-02",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3492,7 +3537,7 @@
             "mac": "Famalicão - Benfica",
             "tarih": "2026-05-02",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3501,7 +3546,7 @@
             "mac": "FC Porto - Alverca",
             "tarih": "2026-05-02",
             "saat": "22:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3510,7 +3555,7 @@
             "mac": "Casa Pia - Tondela",
             "tarih": "2026-05-03",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3519,7 +3564,7 @@
             "mac": "Braga - Estoril",
             "tarih": "2026-05-03",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -3528,7 +3573,7 @@
             "mac": "Rio Ave FC - Gil Vicente",
             "tarih": "2026-05-03",
             "saat": "22:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3537,7 +3582,7 @@
             "mac": "FC Baltika Kaliningrad - FC Akron Tolyatti",
             "tarih": "2026-04-27",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3546,7 +3591,7 @@
             "mac": "Kryliya Sovetov - Spartak Moscow",
             "tarih": "2026-05-01",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3555,7 +3600,7 @@
             "mac": "Lokomotiv Moscow - Dinamo Moscow",
             "tarih": "2026-05-01",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3564,7 +3609,7 @@
             "mac": "FC Dynamo Makhachkala - FK Rostov",
             "tarih": "2026-05-02",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3573,7 +3618,7 @@
             "mac": "CSKA Moscow - Zenit St Petersburg",
             "tarih": "2026-05-02",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3582,7 +3627,7 @@
             "mac": "FK Sochi - Gazovik Orenburg",
             "tarih": "2026-05-03",
             "saat": "14:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3591,7 +3636,7 @@
             "mac": "FC Akhmat Grozny - FC Nizhny Novgorod",
             "tarih": "2026-05-03",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3600,7 +3645,7 @@
             "mac": "Al-Shabab - Al-Fateh",
             "tarih": "2026-04-28",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3609,7 +3654,7 @@
             "mac": "Neom - Al-Hazem",
             "tarih": "2026-04-28",
             "saat": "19:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3618,7 +3663,7 @@
             "mac": "Al-Hilal - Damac",
             "tarih": "2026-04-28",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3627,7 +3672,7 @@
             "mac": "Al-Khaleej - Al-Najma",
             "tarih": "2026-04-28",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3636,7 +3681,7 @@
             "mac": "Al-Riyadh - Al-Qadsiah",
             "tarih": "2026-04-29",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3645,7 +3690,7 @@
             "mac": "Al-Taawoun - Al-Ittihad",
             "tarih": "2026-04-29",
             "saat": "19:10",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3654,7 +3699,7 @@
             "mac": "Al-Nassr - Al-Ahli",
             "tarih": "2026-04-29",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3663,7 +3708,7 @@
             "mac": "Al-Okhdood - Al-Ettifaq",
             "tarih": "2026-04-30",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3672,7 +3717,7 @@
             "mac": "Al-Kholood - Al-Fayha",
             "tarih": "2026-04-30",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3681,7 +3726,7 @@
             "mac": "Al-Fateh - Neom",
             "tarih": "2026-05-02",
             "saat": "18:50",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3690,7 +3735,7 @@
             "mac": "Damac - Al-Khaleej",
             "tarih": "2026-05-02",
             "saat": "19:10",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3699,7 +3744,7 @@
             "mac": "Al-Hazem - Al-Hilal",
             "tarih": "2026-05-02",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3708,7 +3753,7 @@
             "mac": "Al-Shabab - Al-Taawoun",
             "tarih": "2026-05-03",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3717,7 +3762,7 @@
             "mac": "Al-Ahli - Al-Okhdood",
             "tarih": "2026-05-03",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3726,7 +3771,7 @@
             "mac": "Al-Qadsiah - Al-Nassr",
             "tarih": "2026-05-03",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3735,7 +3780,7 @@
             "mac": "Al-Fayha - Al-Riyadh",
             "tarih": "2026-05-04",
             "saat": "19:10",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3744,7 +3789,7 @@
             "mac": "Al-Ettifaq - Al-Najma",
             "tarih": "2026-05-04",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -3753,7 +3798,7 @@
             "mac": "Al-Ittihad - Al-Kholood",
             "tarih": "2026-05-04",
             "saat": "21:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3762,7 +3807,7 @@
             "mac": "Espanyol - Levante",
             "tarih": "2026-04-27",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3771,7 +3816,7 @@
             "mac": "Girona - Mallorca",
             "tarih": "2026-05-01",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3780,7 +3825,7 @@
             "mac": "Villarreal - Levante",
             "tarih": "2026-05-02",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3789,7 +3834,7 @@
             "mac": "Valencia - Atlético Madrid",
             "tarih": "2026-05-02",
             "saat": "17:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3798,7 +3843,7 @@
             "mac": "Alavés - Athletic Bilbao",
             "tarih": "2026-05-02",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3807,7 +3852,7 @@
             "mac": "CA Osasuna - Barcelona",
             "tarih": "2026-05-02",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3816,7 +3861,7 @@
             "mac": "Celta Vigo - Elche CF",
             "tarih": "2026-05-03",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3825,7 +3870,7 @@
             "mac": "Getafe - Rayo Vallecano",
             "tarih": "2026-05-03",
             "saat": "17:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3834,7 +3879,7 @@
             "mac": "Real Betis - Oviedo",
             "tarih": "2026-05-03",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3843,7 +3888,7 @@
             "mac": "Espanyol - Real Madrid",
             "tarih": "2026-05-03",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3852,7 +3897,7 @@
             "mac": "Sevilla - Real Sociedad",
             "tarih": "2026-05-04",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3861,7 +3906,7 @@
             "mac": "Levante - CA Osasuna",
             "tarih": "2026-05-08",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3870,7 +3915,7 @@
             "mac": "Elche CF - Alavés",
             "tarih": "2026-05-09",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3879,7 +3924,7 @@
             "mac": "Sevilla - Espanyol",
             "tarih": "2026-05-09",
             "saat": "17:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3888,7 +3933,7 @@
             "mac": "Atlético Madrid - Celta Vigo",
             "tarih": "2026-05-09",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3897,7 +3942,7 @@
             "mac": "Real Sociedad - Real Betis",
             "tarih": "2026-05-09",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3906,7 +3951,7 @@
             "mac": "Mallorca - Villarreal",
             "tarih": "2026-05-10",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3915,7 +3960,7 @@
             "mac": "Athletic Bilbao - Valencia",
             "tarih": "2026-05-10",
             "saat": "17:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3924,7 +3969,7 @@
             "mac": "Oviedo - Getafe",
             "tarih": "2026-05-10",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3933,7 +3978,7 @@
             "mac": "Barcelona - Real Madrid",
             "tarih": "2026-05-10",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3942,7 +3987,7 @@
             "mac": "Rayo Vallecano - Girona",
             "tarih": "2026-05-11",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3951,7 +3996,7 @@
             "mac": "Cádiz CF - Las Palmas",
             "tarih": "2026-04-27",
             "saat": "21:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3960,7 +4005,7 @@
             "mac": "Andorra CF - Albacete",
             "tarih": "2026-05-01",
             "saat": "17:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3969,7 +4014,7 @@
             "mac": "Deportivo La Coruña - Leganés",
             "tarih": "2026-05-01",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3978,7 +4023,7 @@
             "mac": "Zaragoza - Granada CF",
             "tarih": "2026-05-01",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3987,7 +4032,7 @@
             "mac": "Cultural Leonesa - Cádiz CF",
             "tarih": "2026-05-02",
             "saat": "17:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -3996,7 +4041,7 @@
             "mac": "CD Castellón - Córdoba",
             "tarih": "2026-05-02",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4005,7 +4050,7 @@
             "mac": "SD Eibar - Málaga",
             "tarih": "2026-05-02",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4014,7 +4059,7 @@
             "mac": "Real Racing Club de Santander - SD Huesca",
             "tarih": "2026-05-03",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4023,7 +4068,7 @@
             "mac": "Sporting Gijón - AD Ceuta FC",
             "tarih": "2026-05-03",
             "saat": "17:15",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4032,7 +4077,7 @@
             "mac": "Real Sociedad B - Burgos CF",
             "tarih": "2026-05-03",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4041,7 +4086,7 @@
             "mac": "Las Palmas - Real Valladolid CF",
             "tarih": "2026-05-03",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4050,7 +4095,7 @@
             "mac": "Almería - CD Mirandés",
             "tarih": "2026-05-04",
             "saat": "21:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4059,7 +4104,7 @@
             "mac": "Livingston - Aberdeen",
             "tarih": "2026-05-01",
             "saat": "21:45",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4068,7 +4113,7 @@
             "mac": "Dundee FC - St Mirren",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4077,7 +4122,7 @@
             "mac": "Kilmarnock - Dundee United",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4086,7 +4131,7 @@
             "mac": "Falkirk F.C. - Motherwell",
             "tarih": "2026-05-02",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4095,7 +4140,7 @@
             "mac": "Hibernian - Celtic",
             "tarih": "2026-05-03",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4104,52 +4149,7 @@
             "mac": "Hearts - Rangers",
             "tarih": "2026-05-04",
             "saat": "19:30",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "BRONZ",
-            "lig": "ALLSVENSKAN - SWEDEN",
-            "tur": "futbol",
-            "mac": "AIK - Malmo FF",
-            "tarih": "2026-04-27",
-            "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "BRONZ",
-            "lig": "ALLSVENSKAN - SWEDEN",
-            "tur": "futbol",
-            "mac": "BK Hacken - IK Sirius",
-            "tarih": "2026-04-27",
-            "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "BRONZ",
-            "lig": "ALLSVENSKAN - SWEDEN",
-            "tur": "futbol",
-            "mac": "Örgryte IS - Degerfors IF",
-            "tarih": "2026-04-27",
-            "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "BRONZ",
-            "lig": "ALLSVENSKAN - SWEDEN",
-            "tur": "futbol",
-            "mac": "Mjällby AIF - Halmstads BK",
-            "tarih": "2026-04-27",
-            "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "BRONZ",
-            "lig": "ALLSVENSKAN - SWEDEN",
-            "tur": "futbol",
-            "mac": "Kalmar FF - IF Elfsborg",
-            "tarih": "2026-04-27",
-            "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4158,7 +4158,7 @@
             "mac": "Degerfors IF - BK Hacken",
             "tarih": "2026-05-02",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4167,7 +4167,7 @@
             "mac": "IK Sirius - Kalmar FF",
             "tarih": "2026-05-02",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4176,7 +4176,7 @@
             "mac": "Hammarby IF - Västerås SK",
             "tarih": "2026-05-03",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4185,7 +4185,7 @@
             "mac": "Malmo FF - Mjällby AIF",
             "tarih": "2026-05-03",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4194,7 +4194,7 @@
             "mac": "IF Elfsborg - AIK",
             "tarih": "2026-05-03",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4203,7 +4203,7 @@
             "mac": "GAIS - Örgryte IS",
             "tarih": "2026-05-03",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4212,7 +4212,7 @@
             "mac": "Djurgardens IF - IFK Goteborg",
             "tarih": "2026-05-04",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4221,7 +4221,7 @@
             "mac": "Halmstads BK - IF Brommapojkarna",
             "tarih": "2026-05-04",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4230,7 +4230,7 @@
             "mac": "IFK Norrkoping - Landskrona BoIS",
             "tarih": "2026-04-28",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4239,7 +4239,7 @@
             "mac": "Ljungskile SK - Nordic United FC",
             "tarih": "2026-05-02",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4248,7 +4248,7 @@
             "mac": "Sandvikens IF - Norrby IF",
             "tarih": "2026-05-02",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4257,7 +4257,7 @@
             "mac": "Varbergs BoIS - Örebro SK",
             "tarih": "2026-05-02",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4266,7 +4266,7 @@
             "mac": "GIF Sundsvall - IK Oddevold",
             "tarih": "2026-05-02",
             "saat": "18:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4275,7 +4275,7 @@
             "mac": "Östersunds FK - IFK Värnamo",
             "tarih": "2026-05-03",
             "saat": "14:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4284,7 +4284,7 @@
             "mac": "Helsingborgs IF - IK Brage",
             "tarih": "2026-05-03",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4293,7 +4293,7 @@
             "mac": "Landskrona BoIS - Östers IF",
             "tarih": "2026-05-04",
             "saat": "20:05",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4302,7 +4302,7 @@
             "mac": "Falkenbergs FF - IFK Norrkoping",
             "tarih": "2026-05-05",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4311,7 +4311,7 @@
             "mac": "FC Lausanne-Sport - FC Luzern",
             "tarih": "2026-05-02",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4320,7 +4320,7 @@
             "mac": "FC Winterthur - FC Zurich",
             "tarih": "2026-05-02",
             "saat": "19:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4329,7 +4329,7 @@
             "mac": "FC Basel - FC Thun",
             "tarih": "2026-05-02",
             "saat": "21:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4338,7 +4338,7 @@
             "mac": "FC St Gallen - FC Sion",
             "tarih": "2026-05-03",
             "saat": "15:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4347,7 +4347,7 @@
             "mac": "FC Lugano - BSC Young Boys",
             "tarih": "2026-05-03",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4356,16 +4356,7 @@
             "mac": "Grasshopper Zürich - Servette",
             "tarih": "2026-05-03",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
-        },
-        {
-            "kategori": "BRONZ",
-            "lig": "TURKEY SUPER LEAGUE",
-            "tur": "futbol",
-            "mac": "Torku Konyaspor - Trabzonspor",
-            "tarih": "2026-04-27",
-            "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4374,7 +4365,7 @@
             "mac": "Çaykur Rizespor - Torku Konyaspor",
             "tarih": "2026-05-01",
             "saat": "17:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4383,7 +4374,7 @@
             "mac": "Gazişehir Gaziantep - Besiktas JK",
             "tarih": "2026-05-01",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4392,7 +4383,7 @@
             "mac": "Fenerbahce - Basaksehir",
             "tarih": "2026-05-02",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4401,7 +4392,7 @@
             "mac": "Samsunspor - Galatasaray",
             "tarih": "2026-05-02",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4410,7 +4401,7 @@
             "mac": "Trabzonspor - Goztepe",
             "tarih": "2026-05-02",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4419,7 +4410,7 @@
             "mac": "Antalyaspor - Alanyaspor",
             "tarih": "2026-05-03",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4428,7 +4419,7 @@
             "mac": "Kayserispor - Eyüpspor",
             "tarih": "2026-05-03",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4437,7 +4428,7 @@
             "mac": "Fatih Karagümrük - Genclerbirligi SK",
             "tarih": "2026-05-03",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4446,7 +4437,7 @@
             "mac": "Kasimpasa SK - Kocaelispor",
             "tarih": "2026-05-03",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4455,7 +4446,7 @@
             "mac": "Paris Saint Germain - Bayern Munich",
             "tarih": "2026-04-28",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4464,7 +4455,7 @@
             "mac": "Atlético Madrid - Arsenal",
             "tarih": "2026-04-29",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4473,7 +4464,7 @@
             "mac": "Lyon - Arsenal",
             "tarih": "2026-05-02",
             "saat": "16:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4482,7 +4473,7 @@
             "mac": "Barcelona - Bayern Munich",
             "tarih": "2026-05-03",
             "saat": "17:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4491,7 +4482,7 @@
             "mac": "Shakhtar Donetsk - Crystal Palace",
             "tarih": "2026-04-30",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "BRONZ",
@@ -4500,7 +4491,7 @@
             "mac": "Rayo Vallecano - Strasbourg",
             "tarih": "2026-04-30",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4509,7 +4500,7 @@
             "mac": "Nottingham Forest - Aston Villa",
             "tarih": "2026-04-30",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "ALTIN",
@@ -4518,7 +4509,7 @@
             "mac": "SC Braga - SC Freiburg",
             "tarih": "2026-04-30",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4527,7 +4518,7 @@
             "mac": "Toronto FC - San Jose Earthquakes",
             "tarih": "2026-05-02",
             "saat": "20:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4536,7 +4527,7 @@
             "mac": "Sporting Kansas City - Seattle Sounders FC",
             "tarih": "2026-05-02",
             "saat": "21:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4545,7 +4536,7 @@
             "mac": "Real Salt Lake - Portland Timbers",
             "tarih": "2026-05-02",
             "saat": "23:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4554,7 +4545,7 @@
             "mac": "Inter Miami CF - Orlando City SC",
             "tarih": "2026-05-03",
             "saat": "02:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4563,7 +4554,7 @@
             "mac": "Atlanta United FC - CF Montreal",
             "tarih": "2026-05-03",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4572,7 +4563,7 @@
             "mac": "New England Revolution - Charlotte FC",
             "tarih": "2026-05-03",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4581,7 +4572,7 @@
             "mac": "Columbus Crew SC - Minnesota United FC",
             "tarih": "2026-05-03",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4590,7 +4581,7 @@
             "mac": "New York Red Bulls - FC Dallas",
             "tarih": "2026-05-03",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4599,7 +4590,7 @@
             "mac": "Philadelphia Union - Nashville SC",
             "tarih": "2026-05-03",
             "saat": "02:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4608,7 +4599,7 @@
             "mac": "Chicago Fire - FC Cincinnati",
             "tarih": "2026-05-03",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4617,7 +4608,7 @@
             "mac": "Houston Dynamo - Colorado Rapids",
             "tarih": "2026-05-03",
             "saat": "03:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4626,7 +4617,7 @@
             "mac": "San Diego FC - Los Angeles FC",
             "tarih": "2026-05-03",
             "saat": "04:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4635,7 +4626,7 @@
             "mac": "LA Galaxy - Vancouver Whitecaps FC",
             "tarih": "2026-05-03",
             "saat": "05:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4644,7 +4635,7 @@
             "mac": "New York City FC - D.C. United",
             "tarih": "2026-05-03",
             "saat": "22:00",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         },
         {
             "kategori": "GÜMÜŞ",
@@ -4653,7 +4644,7 @@
             "mac": "Austin FC - St. Louis City SC",
             "tarih": "2026-05-04",
             "saat": "00:30",
-            "uyari": "📡 Analiz Aktif"
+            "uyari": "📡 Radar Analizi Aktif"
         }
     ]
 }
