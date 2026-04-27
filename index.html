@@ -15,7 +15,6 @@
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
         .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.1em; letter-spacing: 1px; }
         .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
@@ -28,11 +27,9 @@
         .header { padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
-        /* BÜLTEN TASARIMI */
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
 
-        /* CUSTOM DROPDOWN */
         .c-dropdown { position: relative; min-width: 280px; }
         .c-drop-btn { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 0.75em; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; }
         .c-drop-btn img { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-right: 8px; vertical-align: middle; }
@@ -54,10 +51,8 @@
         .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 10px; display: inline-block; vertical-align: middle; }
         .chevron { transition: transform 0.3s ease; color: var(--muted); }
 
-        /* YENİ FİNANS DASHBOARD YAPISI */
         .fin-layout { display: none; flex-direction: column; gap: 20px; height: 100%; overflow-y: auto; padding-right: 10px; }
         .fin-layout.active { display: flex; }
-        
         .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
         .kpi-card { background: var(--panel); border: 1px solid var(--border); padding: 15px 20px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; }
         .kpi-title { font-size: 0.65em; font-weight: bold; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
@@ -66,7 +61,6 @@
         .fin-middle { display: grid; grid-template-columns: 2.5fr 1fr; gap: 15px; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
         
-        /* EXCEL STİLİ TABLO */
         .excel-container { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; flex-grow: 1; min-height: 300px; }
         .excel-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .excel-tabs { display: flex; gap: 10px; }
@@ -86,7 +80,6 @@
         .op-btn { padding: 6px 12px; border: none; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
         #chart { height: 100%; min-height: 250px; }
 
-        /* 6'LI EKRAN */
         .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 85vh; }
         .stream-grid.active { display: grid; }
         .stream-box { background: #000; border: 1px solid #222; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
@@ -139,7 +132,6 @@
             </div>
 
             <div class="fin-layout" id="v-finance">
-                
                 <div class="kpi-grid">
                     <div class="kpi-card">
                         <span class="kpi-title">AKTİF KASA BÜYÜKLÜĞÜ</span>
@@ -163,7 +155,6 @@
                     <div class="card" style="padding:10px;">
                         <div id="chart"></div>
                     </div>
-                    
                     <div class="card">
                         <h4 style="margin:0 0 15px 0; font-size:0.8em; color:var(--muted); text-transform:uppercase;">YENİ İŞLEM GİRİŞİ</h4>
                         <input type="text" id="b-name" class="c-select" style="width:100%; box-sizing:border-box; margin-bottom:12px; padding:10px;" placeholder="Operasyon Adı (Örn: Real Madrid MS1)">
@@ -194,11 +185,9 @@
                         </div>
                     </div>
                     <div class="table-wrapper">
-                        <table id="ledger-table">
-                            </table>
+                        <table id="ledger-table"></table>
                     </div>
                 </div>
-
             </div>
 
             <div id="v-stream" class="stream-grid">
@@ -225,13 +214,43 @@
         let activeSport = 'futbol';
         let curMode = 'bulletin';
         let selectedLeague = 'ALL';
-        let currentTableTab = 'pend'; // Excel tablosu aktif sekmesi
+        let currentTableTab = 'pend';
         
-        // VERİTABANI YÖNETİMİ
         let wallet = parseFloat(localStorage.getItem('v19_w')) || 100.00;
         let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
         let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
-        let ledger = JSON.parse(localStorage.getItem('v19_ledger')) || []; // Yeni Excel Defteri
+        let ledger = JSON.parse(localStorage.getItem('v19_ledger')) || [];
+
+        // ZIRHLI LİG KİMLİKLERİ (Hata İhtimalini Sıfırlayan Eşleştirme)
+        const LIG_SPOR = {
+            "TÜRKİYE - SÜPER LİG": "futbol",
+            "İNGİLTERE - PREMIER LEAGUE": "futbol",
+            "İSPANYA - LA LIGA": "futbol",
+            "ALMANYA - BUNDESLIGA": "futbol",
+            "İTALYA - SERIE A": "futbol",
+            "FRANSA - LIGUE 1": "futbol",
+            "AVRUPA - CHAMPIONS LEAGUE": "futbol",
+            "AVRUPA - EUROPA LEAGUE": "futbol",
+            "AVRUPA - CONFERENCE LEAGUE": "futbol",
+            "İNGİLTERE - CHAMPIONSHIP": "futbol",
+            "HOLLANDA - EREDIVISIE": "futbol",
+            "PORTEKİZ - PRIMEIRA LIGA": "futbol",
+            "BREZİLYA - BRAZIL SERIE A": "futbol",
+            "ARJANTİN - ARGENTINA PRIMERA": "futbol",
+            "AMERİKA - MLS": "futbol",
+            "AMERİKA - NBA": "basketbol",
+            "AVRUPA - EUROLEAGUE": "basketbol",
+            "AMERİKA - WNBA": "basketbol",
+            "AMERİKA - NCAA": "basketbol",
+            "TÜRKİYE - BSL": "basketbol",
+            "İSPANYA - LIGA ACB": "basketbol", // ACB ARTIK %100 BASKETBOL
+            "İTALYA - LEGA A": "basketbol",
+            "FRANSA - LNB PRO A": "basketbol",
+            "ALMANYA - BBL": "basketbol",
+            "AVRUPA - EUROCUP": "basketbol",
+            "AVRUPA - BCL": "basketbol",
+            "RUSYA - VTB": "basketbol"
+        };
 
         const LIG_RESIMLERI = {
             "TÜRKİYE": "tr", "İNGİLTERE": "gb-eng", "İSPANYA": "es", 
@@ -241,21 +260,8 @@
         };
 
         function getFlag(ligAdi) {
-            const str = ligAdi.toUpperCase();
-            if(str.includes("TÜRKİYE") || str.includes("SUPER LIG") || str.includes("SÜPER LİG") || str.includes("BSL")) return "tr";
-            if(str.includes("İNGİLTERE") || str.includes("PREMIER") || str.includes("CHAMPIONSHIP")) return "gb-eng";
-            if(str.includes("İSPANYA") || str.includes("LA LIGA") || str.includes("LIGA ACB")) return "es";
-            if(str.includes("ALMANYA") || str.includes("BUNDESLIGA") || str.includes("BBL")) return "de";
-            if(str.includes("İTALYA") || str.includes("SERIE A") || str.includes("LEGA A")) return "it";
-            if(str.includes("FRANSA") || str.includes("LIGUE 1") || str.includes("LNB PRO A")) return "fr";
-            if(str.includes("HOLLANDA") || str.includes("EREDIVISIE")) return "nl";
-            if(str.includes("PORTEKİZ") || str.includes("PRIMEIRA")) return "pt";
-            if(str.includes("BREZİLYA") || str.includes("BRAZIL")) return "br";
-            if(str.includes("ARJANTİN") || str.includes("ARGENTINA")) return "ar";
-            if(str.includes("AMERİKA") || str.includes("MLS") || str.includes("NBA") || str.includes("WNBA") || str.includes("NCAA")) return "us";
-            if(str.includes("RUSYA") || str.includes("VTB")) return "ru";
-            if(str.includes("AVRUPA") || str.includes("CHAMPIONS") || str.includes("EUROPA") || str.includes("CONFERENCE") || str.includes("EUROLEAGUE") || str.includes("EUROCUP") || str.includes("BCL")) return "eu";
-            return "un";
+            const ulkeIsmi = ligAdi.split(" - ")[0];
+            return LIG_RESIMLERI[ulkeIsmi] || "un";
         }
 
         function formatTarih(dStr) {
@@ -304,17 +310,11 @@
                 buildFilters(); render();
             } 
             else if(mode === 'finance') {
-                curMode = 'finance'; 
-                document.getElementById('v-bulletin').style.display = 'none'; 
-                document.getElementById('v-stream').classList.remove('active');
-                document.getElementById('v-finance').classList.add('active'); 
-                updateFinanceDashboard();
-                setTimeout(initChart, 100);
+                curMode = 'finance'; document.getElementById('v-bulletin').style.display = 'none'; document.getElementById('v-stream').classList.remove('active');
+                document.getElementById('v-finance').classList.add('active'); updateFinanceDashboard(); setTimeout(initChart, 100);
             }
             else if(mode === 'stream') {
-                curMode = 'stream'; 
-                document.getElementById('v-bulletin').style.display = 'none'; 
-                document.getElementById('v-finance').classList.remove('active');
+                curMode = 'stream'; document.getElementById('v-bulletin').style.display = 'none'; document.getElementById('v-finance').classList.remove('active');
                 document.getElementById('v-stream').classList.add('active');
             }
         }
@@ -338,9 +338,14 @@
             
             let ligHtml = `<div class="c-drop-item" onclick="selectLeague('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
             for(let ligAdi in ligSayac) {
-                let isFutbol = ["LİG", "LIG", "PREMIER", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS", "EUROPA", "CONFERENCE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA", "BRAZIL", "ARGENTINA", "MLS"].some(x => ligAdi.toUpperCase().includes(x));
+                // LİG KİMLİĞİNİ LIG_SPOR OBJESİNDEN KESİN OLARAK ALIYORUZ
+                let spor = LIG_SPOR[ligAdi];
+                if(!spor) { // Bilinmeyen bir lig geldiyse hata vermemesi için
+                    let isF = ["LİG", "LIG", "PREMIER", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS", "EUROPA", "CONFERENCE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA", "BRAZIL", "ARGENTINA", "MLS"].some(x => ligAdi.toUpperCase().includes(x));
+                    spor = isF ? 'futbol' : 'basketbol';
+                }
                 
-                if((activeSport === 'futbol' && isFutbol) || (activeSport === 'basketbol' && !isFutbol)) {
+                if(spor === activeSport) {
                     const flagCode = getFlag(ligAdi); 
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
                     const displayText = `<img src="https://flagcdn.com/w40/${flagCode}.png"> <span style="color:${activeSport==='futbol'?'#fff':'var(--orange)'}; margin-right:5px;">${ikon}</span> ${ligAdi} (${ligSayac[ligAdi]})`;
@@ -365,14 +370,26 @@
             let filtered = allData.filter(m => m.t === activeSport && (dVal === 'ALL' || m.dt === dVal) && (lVal === 'ALL' || m.l === lVal));
             let htmlString = "";
             const days = {};
+            
+            // 1. Önce maçları Tarihe göre grupla
             filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
             
             Object.keys(days).sort().forEach(day => {
                 const displayDate = formatTarih(day);
                 htmlString += `<div style="color:var(--green); font-size:0.7em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:10px; letter-spacing: 1px;">${displayDate}</div>`;
-                const groups = {}; days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
                 
-                for(let lig in groups) {
+                const groups = {}; 
+                days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
+                
+                // 2. KRONOLOJİK NİZAM: Ligleri o gün içindeki en erken maça göre saat sırasına sok
+                let sortedLeagues = Object.keys(groups).sort((ligA, ligB) => {
+                    let minTimeA = groups[ligA].reduce((min, m) => m.tm < min ? m.tm : min, "23:59");
+                    let minTimeB = groups[ligB].reduce((min, m) => m.tm < min ? m.tm : min, "23:59");
+                    return minTimeA.localeCompare(minTimeB);
+                });
+                
+                // 3. Sıralanmış ligleri ekrana bas
+                sortedLeagues.forEach(lig => {
                     const flagCode = getFlag(lig); 
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
                     const ikonColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
@@ -389,6 +406,7 @@
                         <div id="${uniqueId}" class="league-content" style="display:block;">
                     `;
                         
+                    // 4. Ligin içindeki maçları kendi içinde saatine göre sırala
                     groups[lig].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
                         htmlString += `
                         <div class="match-row">
@@ -397,75 +415,36 @@
                         </div>`;
                     });
                     htmlString += `</div>`;
-                }
+                });
             });
             area.innerHTML = htmlString;
         }
 
-        // --- PROFESYONEL FİNANS YÖNETİMİ ---
-
-        function getTimestamp() {
-            const now = new Date();
-            return now.getTime(); // milisaniye cinsinden tam zaman
-        }
-
-        function formatDateTr(timestamp) {
-            const d = new Date(timestamp);
-            return `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getFullYear()}`;
-        }
+        // FİNANS MODÜLÜ
+        function getTimestamp() { return new Date().getTime(); }
+        function formatDateTr(ts) { const d = new Date(ts); return `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getFullYear()}`; }
 
         function setManual() { 
             const val = parseFloat(document.getElementById('m-val').value); 
             if(!val || val < 0) return; 
-            
-            const pnl = val - wallet; // Değişim farkı
-            wallet = val; 
-            history.push(wallet); 
-            
-            // Deftere manual log düş
-            ledger.unshift({
-                id: getTimestamp(), date: getTimestamp(),
-                name: "MANUEL KASA GÜNCELLEMESİ",
-                amt: 0, odds: 0, res: 'info', pnl: pnl, bal: wallet
-            });
-
+            const pnl = val - wallet; wallet = val; history.push(wallet); 
+            ledger.unshift({ id: getTimestamp(), date: getTimestamp(), name: "MANUEL KASA GÜNCELLEMESİ", amt: 0, odds: 0, res: 'info', pnl: pnl, bal: wallet });
             saveData(); updateFinanceDashboard(); document.getElementById('m-val').value = ''; 
         }
 
         function addBet() { 
-            const name = document.getElementById('b-name').value; 
-            const amt = parseFloat(document.getElementById('b-amt').value); 
-            const odds = parseFloat(document.getElementById('b-odds').value); 
-            
+            const name = document.getElementById('b-name').value; const amt = parseFloat(document.getElementById('b-amt').value); const odds = parseFloat(document.getElementById('b-odds').value); 
             if(!name || !amt || !odds) return; 
-            
             pending.push({ id: getTimestamp(), date: getTimestamp(), name: name, amt: amt, odds: odds }); 
             saveData(); updateFinanceDashboard(); 
-            document.getElementById('b-name').value = ''; 
-            document.getElementById('b-amt').value = ''; 
-            document.getElementById('b-odds').value = ''; 
+            document.getElementById('b-name').value = ''; document.getElementById('b-amt').value = ''; document.getElementById('b-odds').value = ''; 
         }
 
         function resolveBet(id, result) { 
-            const bet = pending.find(x => x.id === id); 
-            let pnl = 0;
-
-            if(result === 'win') { 
-                pnl = (bet.amt * bet.odds) - bet.amt;
-                wallet += pnl; 
-            } else { 
-                pnl = -bet.amt;
-                wallet += pnl; 
-            } 
-            
-            history.push(wallet); 
-            pending = pending.filter(x => x.id !== id); 
-            
-            // İşlemi geçmiş defterine yaz (Başa ekle)
-            ledger.unshift({
-                id: bet.id, date: getTimestamp(), name: bet.name, amt: bet.amt, odds: bet.odds, res: result, pnl: pnl, bal: wallet
-            });
-
+            const bet = pending.find(x => x.id === id); let pnl = 0;
+            if(result === 'win') { pnl = (bet.amt * bet.odds) - bet.amt; wallet += pnl; } else { pnl = -bet.amt; wallet += pnl; } 
+            history.push(wallet); pending = pending.filter(x => x.id !== id); 
+            ledger.unshift({ id: bet.id, date: getTimestamp(), name: bet.name, amt: bet.amt, odds: bet.odds, res: result, pnl: pnl, bal: wallet });
             saveData(); updateFinanceDashboard();
         }
 
@@ -478,162 +457,69 @@
 
         function renderTable() {
             const table = document.getElementById('ledger-table');
-            let html = `
-                <tr>
-                    <th>Tarih</th>
-                    <th>Operasyon</th>
-                    <th>Risk ($)</th>
-                    <th>Oran</th>
-                    <th>Durum</th>
-                    <th>P&L</th>
-                    <th>Bakiye</th>
-                </tr>
-            `;
+            let html = `<tr><th>Tarih</th><th>Operasyon</th><th>Risk ($)</th><th>Oran</th><th>Durum</th><th>P&L</th><th>Bakiye</th></tr>`;
 
             if(currentTableTab === 'pend') {
-                if(pending.length === 0) {
-                    html += `<tr><td colspan="7" style="text-align:center; padding:30px; color:#555;">Bekleyen işlem bulunmuyor.</td></tr>`;
-                } else {
+                if(pending.length === 0) { html += `<tr><td colspan="7" style="text-align:center; padding:30px; color:#555;">Bekleyen işlem bulunmuyor.</td></tr>`; } 
+                else {
                     pending.forEach(b => {
-                        const dateStr = formatDateTr(b.date);
                         html += `
-                        <tr>
-                            <td class="td-mono">${dateStr}</td>
-                            <td>${b.name}</td>
-                            <td class="td-mono">${b.amt.toFixed(2)}</td>
-                            <td class="td-mono">${b.odds.toFixed(2)}</td>
-                            <td><span class="badge-p">BEKLİYOR</span></td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td style="text-align:right;">
-                                <button onclick="resolveBet(${b.id}, 'win')" class="op-btn" style="background:var(--green); color:#000; margin-right:5px;">W</button>
-                                <button onclick="resolveBet(${b.id}, 'loss')" class="op-btn" style="background:var(--red); color:#fff;">L</button>
-                            </td>
-                        </tr>`;
+                        <tr><td class="td-mono">${formatDateTr(b.date)}</td><td>${b.name}</td><td class="td-mono">${b.amt.toFixed(2)}</td><td class="td-mono">${b.odds.toFixed(2)}</td>
+                        <td><span class="badge-p">BEKLİYOR</span></td><td>-</td><td>-</td>
+                        <td style="text-align:right;"><button onclick="resolveBet(${b.id}, 'win')" class="op-btn" style="background:var(--green); color:#000; margin-right:5px;">W</button><button onclick="resolveBet(${b.id}, 'loss')" class="op-btn" style="background:var(--red); color:#fff;">L</button></td></tr>`;
                     });
                 }
             } else {
-                // Zaman filtresi uygula
-                let filteredLedger = ledger;
-                const now = new Date();
-                
-                if(currentTableTab === 'month') {
-                    filteredLedger = ledger.filter(x => {
-                        const d = new Date(x.date);
-                        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-                    });
-                } else if(currentTableTab === '3month') {
-                    const threeMonthsAgo = new Date();
-                    threeMonthsAgo.setMonth(now.getMonth() - 3);
-                    filteredLedger = ledger.filter(x => new Date(x.date) >= threeMonthsAgo);
-                }
+                let filteredLedger = ledger; const now = new Date();
+                if(currentTableTab === 'month') { filteredLedger = ledger.filter(x => { const d = new Date(x.date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); }); } 
+                else if(currentTableTab === '3month') { const threeMonthsAgo = new Date(); threeMonthsAgo.setMonth(now.getMonth() - 3); filteredLedger = ledger.filter(x => new Date(x.date) >= threeMonthsAgo); }
 
-                if(filteredLedger.length === 0) {
-                    html += `<tr><td colspan="7" style="text-align:center; padding:30px; color:#555;">Bu dönemde kayıtlı işlem yok.</td></tr>`;
-                } else {
+                if(filteredLedger.length === 0) { html += `<tr><td colspan="7" style="text-align:center; padding:30px; color:#555;">Bu dönemde kayıtlı işlem yok.</td></tr>`; } 
+                else {
                     filteredLedger.forEach(row => {
-                        const dateStr = formatDateTr(row.date);
-                        const isWin = row.res === 'win';
-                        const isInfo = row.res === 'info';
-                        
-                        let badge = `<span class="badge-l">KAYIP</span>`;
-                        if(isWin) badge = `<span class="badge-w">KAZANÇ</span>`;
-                        if(isInfo) badge = `<span style="color:var(--muted); font-size:0.8em;">GÜNCELLEME</span>`;
-
+                        const isWin = row.res === 'win'; const isInfo = row.res === 'info';
+                        let badge = `<span class="badge-l">KAYIP</span>`; if(isWin) badge = `<span class="badge-w">KAZANÇ</span>`; if(isInfo) badge = `<span style="color:var(--muted); font-size:0.8em;">GÜNCELLEME</span>`;
                         const pnlColor = row.pnl > 0 ? 'var(--green)' : (row.pnl < 0 ? 'var(--red)' : 'var(--muted)');
                         const pnlSign = row.pnl > 0 ? '+' : '';
-
-                        html += `
-                        <tr>
-                            <td class="td-mono">${dateStr}</td>
-                            <td>${row.name}</td>
-                            <td class="td-mono">${row.amt > 0 ? row.amt.toFixed(2) : '-'}</td>
-                            <td class="td-mono">${row.odds > 0 ? row.odds.toFixed(2) : '-'}</td>
-                            <td>${badge}</td>
-                            <td class="td-mono" style="color:${pnlColor}">${pnlSign}${row.pnl.toFixed(2)}</td>
-                            <td class="td-mono">${row.bal.toFixed(2)}</td>
-                        </tr>`;
+                        html += `<tr><td class="td-mono">${formatDateTr(row.date)}</td><td>${row.name}</td><td class="td-mono">${row.amt > 0 ? row.amt.toFixed(2) : '-'}</td><td class="td-mono">${row.odds > 0 ? row.odds.toFixed(2) : '-'}</td><td>${badge}</td><td class="td-mono" style="color:${pnlColor}">${pnlSign}${row.pnl.toFixed(2)}</td><td class="td-mono">${row.bal.toFixed(2)}</td></tr>`;
                     });
                 }
             }
-
             table.innerHTML = html;
         }
 
         function updateFinanceDashboard() {
             document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
             document.getElementById('kpi-wallet').innerText = "$" + wallet.toFixed(2);
-
-            // Risk hesapla (Bekleyen toplam)
             const activeRisk = pending.reduce((sum, bet) => sum + bet.amt, 0);
             document.getElementById('kpi-risk').innerText = "$" + activeRisk.toFixed(2);
-
-            // Net Kar Zarar hesapla (Sıfırdan bu yana defter pnl toplamı)
             const netPnl = ledger.reduce((sum, row) => sum + row.pnl, 0);
-            const pnlColor = netPnl >= 0 ? 'var(--green)' : 'var(--red)';
             document.getElementById('kpi-pnl').innerText = (netPnl > 0 ? "+$" : "-$") + Math.abs(netPnl).toFixed(2);
-            document.getElementById('kpi-pnl').style.color = pnlColor;
-
-            // Win Rate Hesapla (Sadece bahisleri say, info/manuel olanları sayma)
+            document.getElementById('kpi-pnl').style.color = netPnl >= 0 ? 'var(--green)' : 'var(--red)';
             const validBets = ledger.filter(x => x.res === 'win' || x.res === 'loss');
-            let winRate = 0;
-            if(validBets.length > 0) {
-                const wins = validBets.filter(x => x.res === 'win').length;
-                winRate = (wins / validBets.length) * 100;
-            }
+            let winRate = 0; if(validBets.length > 0) { const wins = validBets.filter(x => x.res === 'win').length; winRate = (wins / validBets.length) * 100; }
             document.getElementById('kpi-winrate').innerText = "%" + winRate.toFixed(1);
-
-            renderTable();
-            initChart();
+            renderTable(); initChart();
         }
 
-        function saveData() {
-            localStorage.setItem('v19_w', wallet);
-            localStorage.setItem('v19_h', JSON.stringify(history));
-            localStorage.setItem('v19_p', JSON.stringify(pending));
-            localStorage.setItem('v19_ledger', JSON.stringify(ledger));
-        }
+        function saveData() { localStorage.setItem('v19_w', wallet); localStorage.setItem('v19_h', JSON.stringify(history)); localStorage.setItem('v19_p', JSON.stringify(pending)); localStorage.setItem('v19_ledger', JSON.stringify(ledger)); }
 
-        // BORSA GRAFİĞİ FONKSİYONU
         let chart;
         function initChart() {
             if(chart) chart.destroy();
-            
-            // Sadece grafiğin div'i görünür olduğunda çiz
             if(document.getElementById('v-finance').style.display === 'none') return;
-
             chart = new ApexCharts(document.querySelector("#chart"), {
                 series: [{ name: "KASA (USDT)", data: history }],
-                chart: { 
-                    type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent',
-                    animations: { enabled: true, easing: 'easeinout', speed: 800 },
-                    parentHeightOffset: 0
-                },
-                theme: { mode: 'dark' },
-                colors: [wallet >= history[0] ? '#10b981' : '#ef4444'],
-                stroke: { curve: 'straight', width: 2 },
+                chart: { type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent', animations: { enabled: true, easing: 'easeinout', speed: 800 }, parentHeightOffset: 0 },
+                theme: { mode: 'dark' }, colors: [wallet >= history[0] ? '#10b981' : '#ef4444'], stroke: { curve: 'straight', width: 2 },
                 xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } },
-                yaxis: { 
-                    opposite: true, 
-                    labels: { style: { colors: '#71717a', fontSize: '11px', fontFamily: 'JetBrains Mono' }, formatter: (val) => '$' + val.toFixed(0) }
-                },
+                yaxis: { opposite: true, labels: { style: { colors: '#71717a', fontSize: '11px', fontFamily: 'JetBrains Mono' }, formatter: (val) => '$' + val.toFixed(0) } },
                 grid: { borderColor: '#27272a', strokeDashArray: 4 },
-                annotations: {
-                    yaxis: [
-                        { y: 500, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: '$500', style: { color: '#fff', background: '#3f3f46' } } },
-                        { y: 1000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: '$1K', style: { color: '#fff', background: '#3f3f46' } } },
-                        { y: 2000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: '$2K', style: { color: '#fff', background: '#3f3f46' } } },
-                        { y: 5000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: '$5K', style: { color: '#fff', background: '#3f3f46' } } },
-                        { y: 10000, borderColor: '#fbbf24', strokeDashArray: 0, label: { text: 'HEDEF $10K', style: { color: '#000', background: '#fbbf24', fontWeight: 'bold' } } },
-                        { y: 50000, borderColor: '#10b981', strokeDashArray: 0, label: { text: 'HEDEF $50K', style: { color: '#000', background: '#10b981', fontWeight: 'bold' } } },
-                        { y: 100000, borderColor: '#10b981', strokeDashArray: 0, label: { text: 'NİHAİ $100K', style: { color: '#000', background: '#10b981', fontWeight: 'bold' } } }
-                    ]
-                }
+                annotations: { yaxis: [{ y: 500, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: '$500', style: { color: '#fff', background: '#3f3f46' } } }, { y: 1000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: '$1K', style: { color: '#fff', background: '#3f3f46' } } }, { y: 2000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: '$2K', style: { color: '#fff', background: '#3f3f46' } } }, { y: 5000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: '$5K', style: { color: '#fff', background: '#3f3f46' } } }, { y: 10000, borderColor: '#fbbf24', strokeDashArray: 0, label: { text: 'HEDEF $10K', style: { color: '#000', background: '#fbbf24', fontWeight: 'bold' } } }, { y: 50000, borderColor: '#10b981', strokeDashArray: 0, label: { text: 'HEDEF $50K', style: { color: '#000', background: '#10b981', fontWeight: 'bold' } } }, { y: 100000, borderColor: '#10b981', strokeDashArray: 0, label: { text: 'NİHAİ $100K', style: { color: '#000', background: '#10b981', fontWeight: 'bold' } } }] }
             });
             chart.render();
         }
 
-        // BAŞLANGIÇ ÇAĞRILARI
         document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
         load();
     </script>
