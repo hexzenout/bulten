@@ -1,6 +1,6 @@
 {
-    "son_guncelleme": "27-04-2026 12:09:57",
-    "kalan_hak": "125",
+    "son_guncelleme": "27-04-2026 16:01:16",
+    "kalan_hak": "106",
     "veriler": [
         {
             "kategori": "ALTIN",
@@ -1019,6 +1019,13 @@
         },
         {
             "kategori": "ALTIN",
+            "lig": "PRIMEIRA LIGA",
+            "mac": "Rio Ave FC - Gil Vicente",
+            "saat_raw": "2026-05-03T19:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
             "lig": "SERIE A (BRAZIL)",
             "mac": "Botafogo - Remo",
             "saat_raw": "2026-05-02T19:00:00Z",
@@ -1085,6 +1092,55 @@
             "lig": "SERIE A (BRAZIL)",
             "mac": "Mirassol - Corinthians",
             "saat_raw": "2026-05-03T23:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Coritiba - Internacional",
+            "saat_raw": "2026-05-09T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Fluminense - Vitoria",
+            "saat_raw": "2026-05-09T21:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Bahia - Cruzeiro",
+            "saat_raw": "2026-05-10T00:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Atletico Mineiro - Botafogo",
+            "saat_raw": "2026-05-10T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Remo - Palmeiras",
+            "saat_raw": "2026-05-10T19:00:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Santos - Bragantino-SP",
+            "saat_raw": "2026-05-10T21:30:00Z",
+            "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
+        },
+        {
+            "kategori": "ALTIN",
+            "lig": "SERIE A (BRAZIL)",
+            "mac": "Corinthians - Sao Paulo",
+            "saat_raw": "2026-05-10T21:30:00Z",
             "uyari": "📡 RADAR AKTİF | Analiz bekleniyor."
         },
         {
