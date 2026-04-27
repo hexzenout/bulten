@@ -217,4 +217,59 @@
             "EREDIVISIE": {f:"nl", n:"HOLLANDA"}, "PRIMEIRA LIGA": {f:"pt", n:"PORTEKİZ"},
             "NBA": {f:"us", n:"ABD"}, "WNBA": {f:"us", n:"ABD"}, "NCAA": {f:"us", n:"ABD"}, "MLS": {f:"us", n:"ABD"},
             "SERIE A (BRAZIL)": {f:"br", n:"BREZİLYA"}, "PRIMERA DIVISION (ARGENTINA)": {f:"ar", n:"ARJANTİN"},
-            "EUROLEAGUE": {f:"eu", n:"AVRUPA"}, "EUROCUP": {f:"eu", n:"AVRUPA
+            "EUROLEAGUE": {f:"eu", n:"AVRUPA"}, "EUROCUP": {f:"eu", n:"AVRUPA"}, "BCL": {f:"eu", n:"AVRUPA"},
+            "CHAMPIONS LEAGUE": {f:"eu", n:"AVRUPA"}, "EUROPA LEAGUE": {f:"eu", n:"AVRUPA"}, "CONFERENCE LEAGUE": {f:"eu", n:"AVRUPA"},
+            "HEBA A1": {f:"gr", n:"YUNANİSTAN"}, "VTB": {f:"ru", n:"RUSYA"}, "WORLD CUP": {f:"un", n:"DÜNYA"}
+        };
+        const basketKeywords = ["NBA","EUROLEAGUE","ACB","LEGA A","LNB","BBL","NCAA","WNBA","EUROCUP","BSL","HEBA","VTB","BCL"];
+
+        function render() {
+            const area = document.getElementById('content-area'); area.innerHTML = "";
+            const tabs = document.getElementById('kategori-tabs');
+            
+            let filtered = [];
+            if(currentAppMode === 'favoriler') {
+                tabs.style.display = 'none';
+                filtered = allData.filter(m => favorites[m.mac]);
+            } else {
+                tabs.style.display = 'flex';
+                filtered = allData.filter(m => {
+                    const isB = basketKeywords.some(k => m.lig.toUpperCase().includes(k));
+                    const matchType = isB ? 'basketbol' : 'futbol';
+                    // Seçilen spor kutucuklarından gelen onaya göre filtrele
+                    return activeSports.includes(matchType) && m.kategori === currentCategory;
+                });
+            }
+
+            if(filtered.length === 0) { area.innerHTML = `<div style="text-align:center; padding:50px; color:#555;">Kriterlere uygun maç bulunamadı.</div>`; return; }
+
+            const days = {};
+            filtered.forEach(m => {
+                const d = new Date(m.saat_raw), now = new Date();
+                let day = d.toDateString() === now.toDateString() ? "BUGÜN" : d.toLocaleDateString('tr-TR', {weekday:'long', day:'numeric', month:'long'}).toUpperCase();
+                if(!days[day]) days[day] = {};
+                if(!days[day][m.lig]) days[day][m.lig] = [];
+                days[day][m.lig].push(m);
+            });
+
+            Object.keys(days).forEach(day => {
+                area.innerHTML += `<div class="date-divider">${day}</div>`;
+                for(let lig in days[day]) {
+                    const mta = leagueMeta[lig.toUpperCase()] || {f:"un", n:"DİĞER"};
+                    const lBox = document.createElement('div'); lBox.className = 'league-box';
+                    lBox.innerHTML = `<div class="league-trigger" onclick="this.nextElementSibling.classList.toggle('open')"><span><img src="https://flagcdn.com/w40/${mta.f}.png" class="flag"> ${mta.n} - ${lig}</span><i class="fa-solid fa-chevron-down fa-xs"></i></div><div class="league-content"></div>`;
+                    const cont = lBox.querySelector('.league-content');
+                    days[day][lig].forEach(m => {
+                        const d = new Date(m.saat_raw);
+                        const tsi = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0');
+                        cont.innerHTML += `<div class="card"><i class="fa-solid fa-star fav-star ${favorites[m.mac]?'active':''}" onclick="toggleFav('${m.mac}', this)"></i><span class="card-time">${tsi} (TSİ)</span><div class="card-match">${m.mac}</div><div style="font-size:0.85em; color:var(--muted); border-top:1px solid #1f1f23; padding-top:10px;"><i class="fa-solid fa-satellite-dish" style="color:var(--green)"></i> ${m.uyari}</div></div>`;
+                    });
+                    area.appendChild(lBox);
+                }
+            });
+        }
+        function setCategory(c,el) { currentCategory=c; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active','gold')); el.classList.add('active','gold'); render(); }
+        update(); setInterval(update, 15000);
+    </script>
+</body>
+</html>
