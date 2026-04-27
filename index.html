@@ -12,49 +12,47 @@
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR (TEKLİ SEÇİM NİZAMI) */
+        /* SIDEBAR (ANA BÜLTEN VE TİKLER KALDIRILDI) */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-        .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.1em; letter-spacing: 1px; }
+        .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.2em; letter-spacing: 2px; }
         .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
         .nav-item i { margin-right: 12px; font-size: 1.2em; }
         .nav-item:hover { background: #0a0a0a; color: #fff; }
         .nav-item.active { background: rgba(16,185,129,0.05); color: #fff; border-left: 3px solid var(--green); }
         .nav-item.basket.active { border-left-color: var(--orange); }
 
-        /* MAIN & ROLLING BAR */
+        /* MAIN (ÜST BAR KALDIRILDI) */
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .header { padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
-        .roll-wrapper { flex-grow: 1; margin: 0 40px; }
-        .roll-label { display: flex; justify-content: space-between; font-size: 0.65em; font-weight: 900; margin-bottom: 5px; color: var(--muted); }
-        .roll-track { background: #111; height: 8px; border-radius: 4px; border: 1px solid #222; overflow: hidden; }
-        .roll-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); width: 0.1%; transition: 1.5s; }
-
+        .header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
+        
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
-        /* FİLTRE VE AÇILIR KUTU */
+        /* FİLTRE & AÇILIR KUTULAR (ÜLKE KODU YOK) */
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
-        .tab { padding: 6px 15px; background: #000; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-size: 0.7em; font-weight: 800; cursor: pointer; }
+        .tab { padding: 8px 15px; background: #000; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-size: 0.7em; font-weight: 800; cursor: pointer; }
         .tab.active.gold { border-color: var(--gold); color: var(--gold); }
-        .tab.active.silver { border-color: #cbd5e1; color: #cbd5e1; }
-        .tab.active.bronze { border-color: #b45309; color: #b45309; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 7px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
 
-        /* MACKOLİK LİSTE (BAYRAK VE İKON) */
-        .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--muted); border-bottom: 1px solid #000; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
-        .match-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
+        /* LİSTELEME: BAYRAK SAĞDA, İKON SOLDA */
+        .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--text); border-bottom: 1px solid #000; display: flex; align-items: center; justify-content: space-between; text-transform: uppercase; }
+        .head-left { display: flex; align-items: center; gap: 8px; }
+        .flag { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
+
+        .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
         .match-row:hover { background: #0a0a0c; }
         .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 50px; font-weight: bold; }
         .m-teams { font-weight: 700; flex-grow: 1; color: #fff; display: flex; align-items: center; gap: 8px; }
-        .flag { width: 20px; height: 14px; object-fit: cover; border-radius: 2px; }
 
-        /* FİNANS YÖNETİMİ */
-        .fin-container { display: none; grid-template-columns: 380px 1fr; gap: 20px; }
+        /* FİNANS & MANUEL GÜNCELLEME */
+        .fin-container { display: none; grid-template-columns: 350px 1fr; gap: 20px; }
         .fin-container.active { display: grid; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
         .w-val { font-family: 'JetBrains Mono'; font-size: 2.5em; font-weight: 900; color: var(--gold); margin: 10px 0; }
         .op-row { background: #000; padding: 12px; border-radius: 4px; border-left: 4px solid var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; font-weight: bold; }
         .op-btn { padding: 6px 10px; border: none; border-radius: 3px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
         #chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+
+        .manual-box { margin-top:15px; padding-top:15px; border-top:1px solid #1f1f23; display: flex; gap: 10px; }
     </style>
 </head>
 <body>
@@ -69,28 +67,21 @@
             <span><i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI</span>
         </div>
         
-        <div class="nav-item" onclick="setMode('bulletin', this)" style="margin-top:20px;">
-            <i class="fa-solid fa-layer-group"></i> ANA BÜLTEN
-        </div>
-        <div class="nav-item" onclick="setMode('finance', this)" style="color:var(--gold); border-top:1px solid #111;">
-            <i class="fa-solid fa-chart-line"></i> USDT FİNANS
+        <div class="nav-item" onclick="setMode('finance', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:20px;">
+            <span><i class="fa-solid fa-chart-line"></i> USDT FİNANS & KASA</span>
         </div>
     </div>
 
     <div class="main">
         <div class="header">
-            <div class="roll-wrapper">
-                <div class="roll-label"><span>PROGRESS TO $100K</span> <span id="roll-perc">0.1%</span></div>
-                <div class="roll-track"><div class="roll-fill" id="roll-bar"></div></div>
-            </div>
+            <h2 style="margin:0; font-size:1em; font-weight:900;">OPERASYON MERKEZİ</h2>
             <div id="h-wallet" style="font-family:'JetBrains Mono'; font-weight:900; color:var(--gold); font-size:1.1em;">100.00 USDT</div>
         </div>
 
         <div class="content">
             <div id="v-bulletin">
                 <div class="filter-row">
-                    <button class="tab active gold" onclick="setCat('ALTIN')">ALTIN LİGLER</button>
-                    <button class="tab" onclick="setCat('GÜMÜŞ')">GÜMÜŞ</button>
+                    <button class="tab active gold">ALTIN LİGLER</button>
                     <select id="date-sel" class="c-select" onchange="render()"><option value="ALL">TÜM TARİHLER</option></select>
                     <select id="league-sel" class="c-select" onchange="render()"><option value="ALL">TÜM LİGLER</option></select>
                 </div>
@@ -101,11 +92,19 @@
                 <div class="card">
                     <div style="font-size:0.7em; font-weight:bold; color:var(--muted)">MEVCUT KASA (USDT)</div>
                     <div class="w-val" id="w-val">100.00</div>
-                    <input type="text" id="bet-name" class="c-select" style="width:100%; box-sizing:border-box; margin-bottom:10px;" placeholder="Operasyon / Maç Adı">
-                    <div style="display:flex; gap:10px; margin-bottom:15px;">
-                        <input type="number" id="bet-amt" class="c-select" style="flex:1" placeholder="Miktar ($)">
-                        <input type="number" id="bet-odds" class="c-select" style="flex:1" placeholder="Oran">
-                        <button class="op-btn" style="background:var(--green); color:#000;" onclick="addPending()">İŞLEM AÇ</button>
+                    
+                    <div class="manual-box">
+                        <input type="number" id="manual-amt" class="c-select" style="flex:1" placeholder="Yeni Kasa (Örn: 500)">
+                        <button onclick="setManualWallet()" style="background:#3f3f46; color:#fff; border:none; border-radius:4px; font-weight:bold; font-size:0.7em; cursor:pointer; padding:0 10px;">EL İLE GÜNCELLE</button>
+                    </div>
+
+                    <div style="margin-top:20px; border-top:1px solid #1f1f23; padding-top:15px;">
+                        <input type="text" id="bet-name" class="c-select" style="width:100%; box-sizing:border-box; margin-bottom:10px;" placeholder="Operasyon Adı (Örn: Real Madrid MS1)">
+                        <div style="display:flex; gap:10px; margin-bottom:15px;">
+                            <input type="number" id="bet-amt" class="c-select" style="flex:1" placeholder="Miktar ($)">
+                            <input type="number" id="bet-odds" class="c-select" style="flex:1" placeholder="Oran">
+                            <button class="op-btn" style="background:var(--green); color:#000;" onclick="addPending()">İŞLEM AÇ</button>
+                        </div>
                     </div>
                     <h4 style="margin:15px 0 10px 0; font-size:0.75em; color:var(--gold)">BEKLEYENLER</h4>
                     <div id="pending-list"></div>
@@ -116,43 +115,37 @@
     </div>
 
     <script>
-        let allData = [], ligSayac = {}, activeSport = 'futbol', curCat = 'ALTIN', curMode = 'bulletin';
+        let allData = [], ligSayac = {}, activeSport = 'futbol', curMode = 'bulletin';
         let wallet = parseFloat(localStorage.getItem('v19_w')) || 100.00;
         let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
         let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
 
-        // 27 LİGLİK VERİ TABANI (Tüm 15 Futbol + 12 Basketbol ligleri tanımlandı)
         const META = {
-            "SUPER LIG": {f:"tr", i:"⚽"}, "PREMIER LEAGUE": {f:"gb-eng", i:"⚽"}, "LA LIGA": {f:"es", i:"⚽"},
-            "BUNDESLIGA": {f:"de", i:"⚽"}, "SERIE A": {f:"it", i:"⚽"}, "LIGUE 1": {f:"fr", i:"⚽"},
-            "CHAMPIONS LEAGUE": {f:"eu", i:"⚽"}, "EUROPA LEAGUE": {f:"eu", i:"⚽"}, "CONFERENCE LEAGUE": {f:"eu", i:"⚽"},
-            "CHAMPIONSHIP": {f:"gb-eng", i:"⚽"}, "EREDIVISIE": {f:"nl", i:"⚽"}, "PRIMEIRA LIGA": {f:"pt", i:"⚽"},
-            "BRAZIL SERIE A": {f:"br", i:"⚽"}, "ARGENTINA PRIMERA": {f:"ar", i:"⚽"}, "MLS": {f:"us", i:"⚽"},
-            
-            "NBA": {f:"us", i:"🏀"}, "EUROLEAGUE": {f:"eu", i:"🏀"}, "WNBA": {f:"us", i:"🏀"}, "NCAA": {f:"us", i:"🏀"},
-            "BSL": {f:"tr", i:"🏀"}, "LIGA ACB": {f:"es", i:"🏀"}, "LEGA A": {f:"it", i:"🏀"}, "LNB PRO A": {f:"fr", i:"🏀"},
-            "BBL": {f:"de", i:"🏀"}, "EUROCUP": {f:"eu", i:"🏀"}, "BCL": {f:"eu", i:"🏀"}, "VTB": {f:"ru", i:"🏀"}
+            "SUPER LIG": "tr", "PREMIER LEAGUE": "gb-eng", "LA LIGA": "es",
+            "BUNDESLIGA": "de", "SERIE A": "it", "LIGUE 1": "fr",
+            "CHAMPIONS LEAGUE": "eu", "EUROPA LEAGUE": "eu", "CONFERENCE LEAGUE": "eu",
+            "NBA": "us", "EUROLEAGUE": "eu", "BSL": "tr", "LIGA ACB": "es", "LEGA A": "it", "SİSTEM UYARISI": "un"
         };
 
-        // DROPWDOWN İÇİN EMOJİ BAYRAKLAR
-        const FLAG_EMOJI = {"tr":"🇹🇷", "gb-eng":"🏴󠁧󠁢󠁥󠁮󠁧󠁿", "es":"🇪🇸", "de":"🇩🇪", "it":"🇮🇹", "fr":"🇫🇷", "eu":"🇪🇺", "nl":"🇳🇱", "pt":"🇵🇹", "br":"🇧🇷", "ar":"🇦🇷", "us":"🇺🇸", "ru":"🇷🇺", "un":"🏳️"};
-
-        // TEKLİ SEÇİM SİSTEMİ (FUTBOL VE BASKETBOL AYRILDI)
+        // TEKLİ SEÇİM SİSTEMİ (MENÜ)
         function switchSport(s) {
             activeSport = s;
-            document.getElementById('btn-f').classList.toggle('active', s === 'futbol');
-            document.getElementById('btn-b').classList.toggle('active', s === 'basketbol');
+            curMode = 'bulletin';
+            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+            document.getElementById(s === 'futbol' ? 'btn-f' : 'btn-b').classList.add('active');
+            document.getElementById('v-bulletin').style.display = 'block';
+            document.getElementById('v-finance').style.display = 'none';
             buildFilters(); render();
         }
 
+        // FİNANS EKRANINA GEÇİŞ
         function setMode(m, el) {
             curMode = m;
             document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
             el.classList.add('active');
-            document.getElementById('v-bulletin').style.display = m === 'bulletin' ? 'block' : 'none';
-            document.getElementById('v-finance').style.display = m === 'finance' ? 'grid' : 'none';
-            if(m === 'finance') setTimeout(initChart, 100);
-            render();
+            document.getElementById('v-bulletin').style.display = 'none';
+            document.getElementById('v-finance').style.display = 'grid';
+            setTimeout(initChart, 100);
         }
 
         async function loadData() {
@@ -165,6 +158,7 @@
             } catch(e) {}
         }
 
+        // AÇILIR KUTULAR (ÜLKE KODU YOK, SADECE LİG ADI)
         function buildFilters() {
             const dSel = document.getElementById('date-sel'), lSel = document.getElementById('league-sel');
             const dates = [...new Set(allData.filter(m => m.t === activeSport).map(m => m.dt))].sort();
@@ -172,30 +166,21 @@
             
             lSel.innerHTML = '<option value="ALL">TÜM LİGLER</option>';
             for(let l in ligSayac) {
-                const mta = META[l] || {f:"un", i: activeSport === 'futbol' ? '⚽' : '🏀'};
-                // Sadece seçili spora ait ligleri göster, yanına Emojiyi + İkonu koy
-                if((activeSport === 'futbol' && mta.i === '⚽') || (activeSport === 'basketbol' && mta.i === '🏀')) {
-                    const emoji = FLAG_EMOJI[mta.f] || "🏳️";
-                    lSel.innerHTML += `<option value="${l}">${emoji} ${mta.i} ${l} (${ligSayac[l]})</option>`;
+                // Sadece seçili spora ait ligleri göster (Futbolsa futbol, basketse basket)
+                let isFutbol = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "SİSTEM UYARISI"].includes(l);
+                if((activeSport === 'futbol' && isFutbol) || (activeSport === 'basketbol' && !isFutbol)) {
+                    lSel.innerHTML += `<option value="${l}">${l} (${ligSayac[l]})</option>`;
                 }
             }
         }
 
-        function setCat(c) {
-            curCat = c;
-            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active', 'gold', 'silver', 'bronze'));
-            event.target.classList.add('active', c === 'ALTIN' ? 'gold' : (c === 'GÜMÜŞ' ? 'silver' : 'bronze'));
-            render();
-        }
-
+        // BÜLTENİ ÇİZ: BAYRAK SAĞDA, İKON SOLDA
         function render() {
             if(curMode !== 'bulletin') return;
             const area = document.getElementById('list-area'); area.innerHTML = "";
             const dVal = document.getElementById('date-sel').value, lVal = document.getElementById('league-sel').value;
 
-            // Filtreleme (Spor + Kategori + Tarih + Lig)
-            let filtered = allData.filter(m => m.t === activeSport && m.k === curCat && (dVal==='ALL'||m.dt===dVal) && (lVal==='ALL'||m.l===lVal));
-            
+            let filtered = allData.filter(m => m.t === activeSport && (dVal==='ALL'||m.dt===dVal) && (lVal==='ALL'||m.l===lVal));
             const days = {};
             filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
 
@@ -205,9 +190,20 @@
                 days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
                 
                 for(let lig in groups) {
-                    const mta = META[lig] || {f:"un", i: activeSport === 'futbol' ? '⚽' : '🏀'};
-                    // LİG BAŞLIĞI: BAYRAK + SPOR İKONU + LİG ADI
-                    area.innerHTML += `<div class="league-head"><img src="https://flagcdn.com/w40/${mta.f}.png" class="flag"><span style="color:${mta.i==='⚽'?'#fff':'var(--orange)'}; font-size:1.2em">${mta.i}</span> ${lig}</div>`;
+                    const flagCode = META[lig] || "un";
+                    const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
+                    const ikonColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
+                    
+                    // LİG BAŞLIĞI: [İKON] [LİG ADI] -------- [BAYRAK]
+                    area.innerHTML += `
+                        <div class="league-head">
+                            <div class="head-left">
+                                <span style="font-size:1.2em; color:${ikonColor}">${ikon}</span>
+                                <span>${lig}</span>
+                            </div>
+                            <img src="https://flagcdn.com/w40/${flagCode}.png" class="flag" alt="${flagCode}">
+                        </div>`;
+                        
                     groups[lig].sort((a,b)=>a.tm.localeCompare(b.tm)).forEach(m => {
                         area.innerHTML += `<div class="match-row"><div class="m-time">${m.tm}</div><div class="m-teams">${m.m}</div></div>`;
                     });
@@ -215,7 +211,18 @@
             });
         }
 
-        // FİNANS YÖNETİMİ
+        // FİNANS: MANUEL KASA GÜNCELLEME
+        function setManualWallet() {
+            const newVal = parseFloat(document.getElementById('manual-amt').value);
+            if(!newVal || newVal < 0) return;
+            wallet = newVal;
+            history.push(wallet);
+            localStorage.setItem('v19_w', wallet);
+            localStorage.setItem('v19_h', JSON.stringify(history));
+            updateUI(); initChart();
+            document.getElementById('manual-amt').value = '';
+        }
+
         function addPending() {
             const name = document.getElementById('bet-name').value, amt = parseFloat(document.getElementById('bet-amt').value), odds = parseFloat(document.getElementById('bet-odds').value);
             if(!name || !amt || !odds) return;
@@ -242,22 +249,33 @@
         function updateUI() {
             document.getElementById('w-val').innerText = wallet.toFixed(2);
             document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
-            let prog = (Math.log10(wallet / 100) / Math.log10(100000 / 100)) * 100;
-            document.getElementById('roll-bar').style.width = Math.max(0.1, prog) + "%";
-            document.getElementById('roll-perc').innerText = Math.max(0.1, prog).toFixed(2) + "%";
         }
 
+        // BORSA GRAFİĞİ VE HEDEF BARİYERLERİ (500, 1000, 2000...)
         let chart;
         function initChart() {
             if(chart) chart.destroy();
             chart = new ApexCharts(document.querySelector("#chart"), {
                 series: [{ name: "USDT", data: history }],
-                chart: { type: 'area', height: 350, toolbar: false, animations: { enabled: false }, background: 'transparent' },
+                chart: { type: 'area', height: 400, toolbar: false, animations: { enabled: false }, background: 'transparent' },
                 theme: { mode: 'dark' },
                 colors: [wallet >= history[0] ? '#10b981' : '#ef4444'],
-                stroke: { curve: 'smooth', width: 3 },
+                stroke: { curve: 'straight', width: 2 },
+                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0 } },
                 xaxis: { labels: { show: false } },
-                grid: { borderColor: '#1f1f23' }
+                yaxis: { tickAmount: 5, labels: { style: { colors: '#71717a' }, formatter: (val) => val.toFixed(0) + "$" } },
+                grid: { borderColor: '#1f1f23' },
+                annotations: {
+                    yaxis: [
+                        { y: 500, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: 'Bariyer: $500', style: { color: '#fff', background: '#3f3f46' } } },
+                        { y: 1000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: 'Bariyer: $1K', style: { color: '#fff', background: '#3f3f46' } } },
+                        { y: 2000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: 'Bariyer: $2K', style: { color: '#fff', background: '#3f3f46' } } },
+                        { y: 5000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: 'Bariyer: $5K', style: { color: '#fff', background: '#3f3f46' } } },
+                        { y: 10000, borderColor: '#fbbf24', strokeDashArray: 0, label: { text: 'HEDEF: $10K', style: { color: '#000', background: '#fbbf24', fontWeight: 'bold' } } },
+                        { y: 50000, borderColor: '#10b981', strokeDashArray: 0, label: { text: 'HEDEF: $50K', style: { color: '#000', background: '#10b981', fontWeight: 'bold' } } },
+                        { y: 100000, borderColor: '#10b981', strokeDashArray: 0, label: { text: 'NİHAİ: $100K', style: { color: '#000', background: '#10b981', fontWeight: 'bold' } } }
+                    ]
+                }
             });
             chart.render();
         }
