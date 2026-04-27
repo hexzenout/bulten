@@ -34,9 +34,21 @@
         .header { padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
+        /* FİLTRELER */
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
 
+        /* ÖZEL AÇILIR KUTU (CUSTOM DROPDOWN) İÇİN CSS */
+        .c-dropdown { position: relative; min-width: 280px; }
+        .c-drop-btn { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 0.75em; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; }
+        .c-drop-btn img { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-right: 8px; vertical-align: middle; }
+        .c-drop-list { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #0a0a0c; border: 1px solid var(--border); z-index: 100; max-height: 400px; overflow-y: auto; border-radius: 4px; margin-top: 5px; box-shadow: 0 10px 20px rgba(0,0,0,0.8); }
+        .c-drop-item { padding: 10px 12px; font-size: 0.75em; font-weight: bold; cursor: pointer; display: flex; align-items: center; border-bottom: 1px solid #161618; color: #fff; transition: 0.2s; }
+        .c-drop-item:last-child { border-bottom: none; }
+        .c-drop-item:hover { background: #1f1f23; }
+        .c-drop-item img { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-right: 8px; }
+
+        /* LİG AYRIMI VE BÜLTEN */
         .league-head { 
             background: #1e293b; 
             padding: 10px 15px; 
@@ -53,18 +65,16 @@
         }
         .league-head:hover { background: #334155; }
         .head-left { display: flex; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
-        
         .league-content { border: 1px solid var(--border); border-top: none; margin-bottom: 15px; background: #0a0a0c; }
-        
         .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
         .match-row:last-child { border-bottom: none; }
         .match-row:hover { background: #111; }
         .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 55px; font-weight: bold; }
         .m-teams { font-weight: 700; flex-grow: 1; color: #fff; display: flex; align-items: center; }
         .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 10px; display: inline-block; vertical-align: middle; }
-        
         .chevron { transition: transform 0.3s ease; color: var(--muted); }
 
+        /* FİNANS & BORSA */
         .fin-grid { display: none; grid-template-columns: 360px 1fr; gap: 20px; }
         .fin-grid.active { display: grid; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
@@ -73,6 +83,7 @@
         .op-btn { padding: 6px 10px; border: none; border-radius: 3px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
         #chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
 
+        /* 6'LI EKRAN */
         .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 85vh; }
         .stream-grid.active { display: grid; }
         .stream-box { background: #000; border: 1px solid #222; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
@@ -112,7 +123,14 @@
             <div id="v-bulletin">
                 <div class="filter-row">
                     <select id="date-sel" class="c-select" onchange="render()"><option value="ALL">TÜM TARİHLER</option></select>
-                    <select id="league-sel" class="c-select" onchange="render()"><option value="ALL">TÜM LİGLER</option></select>
+                    
+                    <div class="c-dropdown" id="league-dropdown">
+                        <div class="c-drop-btn" onclick="toggleLeagueDrop(event)">
+                            <div id="league-drop-text" style="display:flex; align-items:center;">TÜM LİGLER</div>
+                            <i class="fa-solid fa-chevron-down" style="margin-left:10px;"></i>
+                        </div>
+                        <div class="c-drop-list" id="league-drop-list"></div>
+                    </div>
                 </div>
                 <div id="list-area"></div>
             </div>
@@ -165,20 +183,21 @@
         let ligSayac = {};
         let activeSport = 'futbol';
         let curMode = 'bulletin';
+        let selectedLeague = 'ALL'; // Custom dropdown için seçili lig
         
         let wallet = parseFloat(localStorage.getItem('v19_w')) || 100.00;
         let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
         let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
 
-        // EMOJİ HARİTASI (DROPDOWN İÇİN)
-        const EMOJI_MAP = {
-            "TÜRKİYE": "🇹🇷", "İNGİLTERE": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "İSPANYA": "🇪🇸", 
-            "ALMANYA": "🇩🇪", "İTALYA": "🇮🇹", "FRANSA": "🇫🇷", 
-            "AVRUPA": "🇪🇺", "HOLLANDA": "🇳🇱", "PORTEKİZ": "🇵🇹", 
-            "BREZİLYA": "🇧🇷", "ARJANTİN": "🇦🇷", "AMERİKA": "🇺🇸", "RUSYA": "🇷🇺"
+        // BAYRAK ÇEKMEK İÇİN ÜLKE KODU HARİTASI
+        const LIG_RESIMLERI = {
+            "TÜRKİYE": "tr", "İNGİLTERE": "gb-eng", "İSPANYA": "es", 
+            "ALMANYA": "de", "İTALYA": "it", "FRANSA": "fr", 
+            "AVRUPA": "eu", "HOLLANDA": "nl", "PORTEKİZ": "pt", 
+            "BREZİLYA": "br", "ARJANTİN": "ar", "AMERİKA": "us", "RUSYA": "ru"
         };
 
-        // TARİH FORMATLAMA ZEKASI (BUGÜN / YARIN)
+        // TARİH HESAPLAYICI (BUGÜN / YARIN)
         function formatTarih(dStr) {
             if(!dStr) return "";
             const parts = dStr.split('-');
@@ -198,6 +217,29 @@
             return parseInt(parts[2]) + " " + aylar[parseInt(parts[1]) - 1];
         }
 
+        // ÖZEL AÇILIR KUTU İŞLEMLERİ (CUSTOM DROPDOWN)
+        function toggleLeagueDrop(e) {
+            e.stopPropagation();
+            const list = document.getElementById('league-drop-list');
+            list.style.display = list.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function selectLeague(val, htmlContent) {
+            selectedLeague = val;
+            document.getElementById('league-drop-text').innerHTML = htmlContent;
+            document.getElementById('league-drop-list').style.display = 'none';
+            render();
+        }
+
+        // Ekranda boş bir yere tıklayınca dropdown'u kapat
+        document.addEventListener('click', function(e) {
+            const drop = document.getElementById('league-dropdown');
+            if(drop && !drop.contains(e.target)) {
+                document.getElementById('league-drop-list').style.display = 'none';
+            }
+        });
+
+        // SEKME DEĞİŞTİRME
         function switchMode(mode, el) {
             document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
             el.classList.add('active');
@@ -205,6 +247,8 @@
             if(mode === 'futbol' || mode === 'basketbol') {
                 activeSport = mode;
                 curMode = 'bulletin';
+                selectedLeague = 'ALL';
+                document.getElementById('league-drop-text').innerHTML = "TÜM LİGLER";
                 document.getElementById('v-bulletin').style.display = 'block';
                 document.getElementById('v-finance').classList.remove('active');
                 document.getElementById('v-stream').classList.remove('active');
@@ -239,9 +283,10 @@
             }
         }
 
+        // FİLTRELERİ OLUŞTURMA (RESİMLİ DROPDOWN)
         function buildFilters() {
             const dSel = document.getElementById('date-sel');
-            const lSel = document.getElementById('league-sel');
+            const lList = document.getElementById('league-drop-list');
             
             // Tarihler
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
@@ -251,22 +296,25 @@
             });
             dSel.innerHTML = dateHtml;
             
-            // Ligler (Sıfır olanlar dahil ve Emojili)
-            let ligHtml = '<option value="ALL">TÜM LİGLER</option>';
+            // Ligler (Resimli Özel Dropdown İçin)
+            let ligHtml = `<div class="c-drop-item" onclick="selectLeague('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
+            
             for(let ligAdi in ligSayac) {
                 let isFutbol = ["SÜPER LİG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA LIGA", "BRAZIL SERIE A", "ARGENTINA PRIMERA", "MLS"].some(x => ligAdi.includes(x));
                 
                 if((activeSport === 'futbol' && isFutbol) || (activeSport === 'basketbol' && !isFutbol)) {
-                    // Ülke ismini ayıkla ve emojisni bul
                     const ulkeIsmi = ligAdi.split(" - ")[0];
-                    const emoji = EMOJI_MAP[ulkeIsmi] || "🏳️";
+                    const flagCode = LIG_RESIMLERI[ulkeIsmi] || "un";
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
                     
-                    // 0 Maç dahi olsa göster
-                    ligHtml += `<option value="${ligAdi}">${emoji} ${ikon} ${ligAdi} (${ligSayac[ligAdi]})</option>`;
+                    // Görseli ve yazıyı hazırlıyoruz
+                    const displayText = `<img src="https://flagcdn.com/w40/${flagCode}.png"> <span style="color:${activeSport==='futbol'?'#fff':'var(--orange)'}; margin-right:5px;">${ikon}</span> ${ligAdi} (${ligSayac[ligAdi]})`;
+                    
+                    // Veriyi data-val ile HTML içine gömüp click fonksiyonuna gönderiyoruz
+                    ligHtml += `<div class="c-drop-item" onclick="selectLeague(this.getAttribute('data-val'), this.innerHTML)" data-val="${ligAdi}">${displayText}</div>`;
                 }
             }
-            lSel.innerHTML = ligHtml;
+            lList.innerHTML = ligHtml;
         }
 
         window.toggleLeague = function(id, element) {
@@ -281,11 +329,12 @@
             }
         };
 
+        // BÜLTENİ EKRANA ÇİZME
         function render() {
             if(curMode !== 'bulletin') return;
             const area = document.getElementById('list-area');
             const dVal = document.getElementById('date-sel').value;
-            const lVal = document.getElementById('league-sel').value;
+            const lVal = selectedLeague; // Özel dropdowndan gelen değer
             
             let filtered = allData.filter(m => m.t === activeSport && (dVal === 'ALL' || m.dt === dVal) && (lVal === 'ALL' || m.l === lVal));
             let htmlString = "";
@@ -297,7 +346,6 @@
             });
             
             Object.keys(days).sort().forEach(day => {
-                // TARİH BAŞLIĞI BUGÜN / YARIN GÖRÜNÜMÜ
                 const displayDate = formatTarih(day);
                 htmlString += `<div style="color:var(--green); font-size:0.7em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:10px; letter-spacing: 1px;">${displayDate}</div>`;
                 
