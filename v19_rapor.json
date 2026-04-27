@@ -1,33 +1,24 @@
 {
-    "up": "21:18",
+    "up": "21:29",
     "sayac": {
-        "SUPER LIG": 0,
-        "PREMIER LEAGUE": 0,
-        "LA LIGA": 0,
-        "BUNDESLIGA": 0,
-        "SERIE A": 0,
-        "LIGUE 1": 0,
-        "CHAMPIONS LEAGUE": 0,
-        "EUROPA LEAGUE": 0,
-        "CONFERENCE LEAGUE": 0,
-        "CHAMPIONSHIP": 0,
-        "EREDIVISIE": 0,
-        "PRIMEIRA LIGA": 0,
-        "BRAZIL SERIE A": 0,
-        "ARGENTINA PRIMERA": 0,
-        "MLS": 0,
-        "NBA": 0,
-        "EUROLEAGUE": 0,
-        "WNBA": 0,
-        "NCAA": 0,
-        "BSL": 0,
-        "LIGA ACB": 0,
-        "LEGA A": 0,
-        "LNB PRO A": 0,
-        "BBL": 0,
-        "EUROCUP": 0,
-        "BCL": 0,
-        "VTB": 0
+        "SİSTEM UYARISI": 2
     },
-    "veriler": []
+    "veriler": [
+        {
+            "k": "ALTIN",
+            "l": "SİSTEM UYARISI",
+            "t": "futbol",
+            "m": "API Şifresi Hatalı veya Bülten Boş",
+            "dt": "2026-04-27",
+            "tm": "21:29"
+        },
+        {
+            "k": "ALTIN",
+            "l": "SİSTEM UYARISI",
+            "t": "basketbol",
+            "m": "API Şifresi Hatalı veya Bülten Boş",
+            "dt": "2026-04-27",
+            "tm": "21:29"
+        }
+    ]
 }
