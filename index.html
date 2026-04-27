@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 COMMAND | CAPITAL TERMINAL</title>
+    <title>V19 ELITE | CAPITAL TERMINAL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
@@ -12,104 +12,84 @@
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR (TEKLİ SEÇİM NİZAMI) */
+        /* SIDEBAR (TEKLİ SEÇİM) */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-        .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.2em; letter-spacing: 2px; }
+        .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.1em; letter-spacing: 1px; }
         .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
         .nav-item i { margin-right: 12px; font-size: 1.2em; }
-        .nav-item:hover { background: #0a0a0a; color: #fff; }
         .nav-item.active { background: rgba(16,185,129,0.05); color: #fff; border-left: 3px solid var(--green); }
         .nav-item.basket.active { border-left-color: var(--orange); }
 
-        /* MAIN (ÜST BAR TEMİZLENDİ) */
+        /* MAIN */
         .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
+        .header { padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
         
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
-        /* FİLTRE & AÇILIR KUTULAR */
+        /* MACKOLİK LİSTE (BAYRAK SAĞDA) */
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
-        .tab { padding: 8px 15px; background: #000; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-size: 0.7em; font-weight: 800; cursor: pointer; }
+        .tab { padding: 6px 15px; background: #000; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); font-size: 0.7em; font-weight: 800; cursor: pointer; }
         .tab.active.gold { border-color: var(--gold); color: var(--gold); }
-        .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 7px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
+        .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 7px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; }
 
-        /* LİSTELEME: BAYRAK SAĞDA, İKON SOLDA */
         .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--text); border-bottom: 1px solid #000; display: flex; align-items: center; justify-content: space-between; text-transform: uppercase; }
-        .head-left { display: flex; align-items: center; gap: 8px; }
-        .flag { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; }
-
         .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
-        .match-row:hover { background: #0a0a0c; }
-        .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 50px; font-weight: bold; }
-        .m-teams { font-weight: 700; flex-grow: 1; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 55px; font-weight: bold; }
+        .m-teams { font-weight: 700; flex-grow: 1; color: #fff; }
+        .flag { width: 22px; height: 14px; object-fit: cover; border-radius: 1px; }
 
-        /* FİNANS & MANUEL GÜNCELLEME */
+        /* FİNANS */
         .fin-container { display: none; grid-template-columns: 350px 1fr; gap: 20px; }
         .fin-container.active { display: grid; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
-        .w-val { font-family: 'JetBrains Mono'; font-size: 2.5em; font-weight: 900; color: var(--gold); margin: 10px 0; }
-        .op-row { background: #000; padding: 12px; border-radius: 4px; border-left: 4px solid var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; font-weight: bold; }
-        .op-btn { padding: 6px 10px; border: none; border-radius: 3px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
+        .w-val { font-family: 'JetBrains Mono'; font-size: 2.2em; font-weight: 900; color: var(--gold); margin: 10px 0; }
+        .op-row { background: #000; padding: 12px; border-radius: 4px; border-left: 4px solid var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75em; font-weight: bold; }
         #chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
-
-        .manual-box { margin-top:15px; padding-top:15px; border-top:1px solid #1f1f23; display: flex; gap: 10px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="brand">V19 CAPITAL</div>
-        
-        <div class="nav-item active" id="btn-f" onclick="switchSport('futbol')">
-            <span><i class="fa-solid fa-futbol"></i> FUTBOL RADARI</span>
-        </div>
-        <div class="nav-item basket" id="btn-b" onclick="switchSport('basketbol')">
-            <span><i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI</span>
-        </div>
-        
-        <div class="nav-item" onclick="setMode('finance', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:20px;">
-            <span><i class="fa-solid fa-chart-line"></i> USDT FİNANS & KASA</span>
-        </div>
+        <div class="brand">V19 ELITE</div>
+        <div class="nav-item active" id="btn-f" onclick="switchSport('futbol')"><i class="fa-solid fa-futbol"></i> FUTBOL RADARI</div>
+        <div class="nav-item basket" id="btn-b" onclick="switchSport('basketbol')"><i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI</div>
+        <div class="nav-item" onclick="setMode('finance', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:20px;"><i class="fa-solid fa-chart-line"></i> USDT FİNANS</div>
     </div>
 
     <div class="main">
         <div class="header">
-            <h2 style="margin:0; font-size:1em; font-weight:900;">OPERASYON MERKEZİ</h2>
-            <div id="h-wallet" style="font-family:'JetBrains Mono'; font-weight:900; color:var(--gold); font-size:1.1em;">100.00 USDT</div>
+            <h2 id="title" style="margin:0; font-size:0.9em; font-weight:900;">BÜLTEN RADARI</h2>
+            <div id="h-wallet" style="font-family:'JetBrains Mono'; font-weight:900; color:var(--gold)">100.00 USDT</div>
         </div>
 
         <div class="content">
             <div id="v-bulletin">
                 <div class="filter-row">
                     <button class="tab active gold">ALTIN LİGLER</button>
-                    <select id="date-sel" class="c-select" onchange="render()"><option value="ALL">TÜM TARİHLER</option></select>
-                    <select id="league-sel" class="c-select" onchange="render()"><option value="ALL">TÜM LİGLER</option></select>
+                    <select id="date-sel" class="c-select" onchange="render()"><option value="ALL">TARİH SEÇ</option></select>
+                    <select id="league-sel" class="c-select" onchange="render()"><option value="ALL">LİG SEÇ</option></select>
                 </div>
                 <div id="list-area"></div>
             </div>
 
             <div class="fin-container" id="v-finance">
                 <div class="card">
-                    <div style="font-size:0.7em; font-weight:bold; color:var(--muted)">MEVCUT KASA (USDT)</div>
+                    <div style="font-size:0.7em; font-weight:bold; color:var(--muted)">TOPLAM VARLIK</div>
                     <div class="w-val" id="w-val">100.00</div>
-                    
-                    <div class="manual-box">
-                        <input type="number" id="manual-amt" class="c-select" style="flex:1" placeholder="Yeni Kasa (Örn: 500)">
-                        <button onclick="setManualWallet()" style="background:#3f3f46; color:#fff; border:none; border-radius:4px; font-weight:bold; font-size:0.7em; cursor:pointer; padding:0 10px;">GÜNCELLE</button>
+                    <div style="display:flex; gap:10px; margin-bottom:20px;">
+                        <input type="number" id="m-amt" class="c-select" style="flex:1" placeholder="Manuel Kasa">
+                        <button onclick="setManual()" style="background:#333; color:#fff; border:none; padding:10px; border-radius:4px; font-weight:bold; cursor:pointer;">SET</button>
                     </div>
-
-                    <div style="margin-top:20px; border-top:1px solid #1f1f23; padding-top:15px;">
-                        <input type="text" id="bet-name" class="c-select" style="width:100%; box-sizing:border-box; margin-bottom:10px;" placeholder="Operasyon Adı (Örn: Real Madrid MS1)">
-                        <div style="display:flex; gap:10px; margin-bottom:15px;">
-                            <input type="number" id="bet-amt" class="c-select" style="flex:1" placeholder="Miktar ($)">
-                            <input type="number" id="bet-odds" class="c-select" style="flex:1" placeholder="Oran">
-                            <button class="op-btn" style="background:var(--green); color:#000;" onclick="addPending()">İŞLEM AÇ</button>
-                        </div>
+                    <h4 style="margin:10px 0; font-size:0.75em; color:var(--gold)">YENİ OPERASYON</h4>
+                    <input type="text" id="b-name" class="c-select" style="width:100%; margin-bottom:10px;" placeholder="Maç Adı">
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
+                        <input type="number" id="b-amt" class="c-select" style="flex:1" placeholder="USDT">
+                        <input type="number" id="b-odds" class="c-select" style="flex:1" placeholder="Oran">
+                        <button onclick="addBet()" style="background:var(--green); border:none; padding:10px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-plus"></i></button>
                     </div>
-                    <h4 style="margin:15px 0 10px 0; font-size:0.75em; color:var(--gold)">BEKLEYENLER</h4>
-                    <div id="pending-list"></div>
+                    <div id="p-list"></div>
                 </div>
-                <div id="chart" class="card"></div>
+                <div id="chart"></div>
             </div>
         </div>
     </div>
@@ -120,18 +100,12 @@
         let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
         let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
 
-        const META = {
-            "SUPER LIG": "tr", "PREMIER LEAGUE": "gb-eng", "LA LIGA": "es",
-            "BUNDESLIGA": "de", "SERIE A": "it", "LIGUE 1": "fr",
-            "CHAMPIONS LEAGUE": "eu", "EUROPA LEAGUE": "eu", "CONFERENCE LEAGUE": "eu",
-            "NBA": "us", "EUROLEAGUE": "eu"
-        };
+        const FLAGS = {"tr":"🇹🇷", "gb-eng":"🏴", "es":"🇪🇸", "de":"🇩🇪", "it":"🇮🇹", "fr":"🇫🇷", "eu":"🇪🇺", "us":"🇺🇸", "nl":"🇳🇱", "pt":"🇵🇹", "br":"🇧🇷", "ar":"🇦🇷", "un":"🏳️"};
 
         function switchSport(s) {
             activeSport = s;
-            curMode = 'bulletin';
             document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-            document.getElementById(s === 'futbol' ? 'btn-f' : 'btn-b').classList.add('active');
+            document.getElementById(s==='futbol'?'btn-f':'btn-b').classList.add('active');
             document.getElementById('v-bulletin').style.display = 'block';
             document.getElementById('v-finance').style.display = 'none';
             buildFilters(); render();
@@ -146,27 +120,21 @@
             setTimeout(initChart, 100);
         }
 
-        async function loadData() {
-            try {
-                const r = await fetch('v19_rapor.json?t=' + Date.now());
-                const d = await r.json();
-                allData = d.veriler || [];
-                ligSayac = d.sayac || {};
-                buildFilters(); render();
-            } catch(e) {}
+        async function load() {
+            const r = await fetch('v19_rapor.json?t=' + Date.now());
+            const d = await r.json();
+            allData = d.veriler || []; ligSayac = d.sayac || {};
+            buildFilters(); render();
         }
 
         function buildFilters() {
             const dSel = document.getElementById('date-sel'), lSel = document.getElementById('league-sel');
             const dates = [...new Set(allData.filter(m => m.t === activeSport).map(m => m.dt))].sort();
-            dSel.innerHTML = '<option value="ALL">TÜM TARİHLER</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
-            
-            lSel.innerHTML = '<option value="ALL">TÜM LİGLER</option>';
+            dSel.innerHTML = '<option value="ALL">TARİH SEÇ</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
+            lSel.innerHTML = '<option value="ALL">LİG SEÇ</option>';
             for(let l in ligSayac) {
-                let isFutbol = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE"].includes(l);
-                if((activeSport === 'futbol' && isFutbol) || (activeSport === 'basketbol' && !isFutbol)) {
-                    lSel.innerHTML += `<option value="${l}">${l} (${ligSayac[l]})</option>`;
-                }
+                const isF = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA LIGA", "BRAZIL SERIE A", "ARGENTINA PRIMERA", "MLS"].includes(l);
+                if((activeSport==='futbol' && isF) || (activeSport==='basketbol' && !isF)) lSel.innerHTML += `<option value="${l}">${l} (${ligSayac[l]})</option>`;
             }
         }
 
@@ -174,36 +142,15 @@
             if(curMode !== 'bulletin') return;
             const area = document.getElementById('list-area'); area.innerHTML = "";
             const dVal = document.getElementById('date-sel').value, lVal = document.getElementById('league-sel').value;
-
             let filtered = allData.filter(m => m.t === activeSport && (dVal==='ALL'||m.dt===dVal) && (lVal==='ALL'||m.l===lVal));
-            
-            if(filtered.length === 0) {
-                area.innerHTML = `<div style="text-align:center; padding:50px; color:var(--muted);">Bu kategoride veya tarihte uygun maç bulunmuyor.</div>`;
-                return;
-            }
-
             const days = {};
             filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
-
             Object.keys(days).sort().forEach(day => {
-                area.innerHTML += `<div style="background:#111; color:var(--green); font-size:0.75em; font-weight:900; padding:5px 15px; margin:10px 0; border-left:4px solid var(--green)">${day}</div>`;
+                area.innerHTML += `<div style="background:#111; color:var(--green); font-size:0.7em; font-weight:900; padding:5px 15px; margin:10px 0; border-left:3px solid var(--green)">${day}</div>`;
                 const groups = {};
                 days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
-                
                 for(let lig in groups) {
-                    const flagCode = META[lig] || "un";
-                    const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
-                    const ikonColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
-                    
-                    area.innerHTML += `
-                        <div class="league-head">
-                            <div class="head-left">
-                                <span style="font-size:1.2em; color:${ikonColor}">${ikon}</span>
-                                <span>${lig}</span>
-                            </div>
-                            <img src="https://flagcdn.com/w40/${flagCode}.png" class="flag" alt="${flagCode}">
-                        </div>`;
-                        
+                    area.innerHTML += `<div class="league-head"><div>${activeSport==='futbol'?'⚽':'🏀'} ${lig}</div><img src="https://flagcdn.com/w40/${groups[lig][0].f}.png" class="flag"></div>`;
                     groups[lig].sort((a,b)=>a.tm.localeCompare(b.tm)).forEach(m => {
                         area.innerHTML += `<div class="match-row"><div class="m-time">${m.tm}</div><div class="m-teams">${m.m}</div></div>`;
                     });
@@ -211,38 +158,32 @@
             });
         }
 
-        function setManualWallet() {
-            const newVal = parseFloat(document.getElementById('manual-amt').value);
-            if(!newVal || newVal < 0) return;
-            wallet = newVal;
-            history.push(wallet);
-            localStorage.setItem('v19_w', wallet);
-            localStorage.setItem('v19_h', JSON.stringify(history));
-            updateUI(); initChart();
-            document.getElementById('manual-amt').value = '';
+        function setManual() {
+            const val = parseFloat(document.getElementById('m-amt').value);
+            if(!val) return; wallet = val; history.push(wallet); save(); updateUI(); initChart();
         }
 
-        function addPending() {
-            const name = document.getElementById('bet-name').value, amt = parseFloat(document.getElementById('bet-amt').value), odds = parseFloat(document.getElementById('bet-odds').value);
-            if(!name || !amt || !odds) return;
-            pending.push({ id: Date.now(), name, amt, odds });
-            localStorage.setItem('v19_p', JSON.stringify(pending));
-            renderPending(); document.getElementById('bet-name').value = '';
+        function addBet() {
+            const name = document.getElementById('b-name').value, amt = parseFloat(document.getElementById('b-amt').value), odds = parseFloat(document.getElementById('b-odds').value);
+            if(!name || !amt) return;
+            pending.push({ id: Date.now(), name, amt, odds }); save(); renderP(); document.getElementById('b-name').value = '';
         }
 
         function resolve(id, res) {
             const b = pending.find(x => x.id === id);
             if(res === 'win') wallet += (b.amt * b.odds) - b.amt; else wallet -= b.amt;
-            history.push(wallet); pending = pending.filter(x => x.id !== id);
-            localStorage.setItem('v19_w', wallet); localStorage.setItem('v19_h', JSON.stringify(history)); localStorage.setItem('v19_p', JSON.stringify(pending));
-            updateUI(); renderPending(); initChart();
+            history.push(wallet); pending = pending.filter(x => x.id !== id); save(); updateUI(); renderP(); if(curMode==='finance') initChart();
         }
 
-        function renderPending() {
-            const area = document.getElementById('pending-list'); area.innerHTML = "";
+        function renderP() {
+            const area = document.getElementById('p-list'); area.innerHTML = "";
             pending.forEach(b => {
-                area.innerHTML += `<div class="op-row"><span>${b.name} ($${b.amt} @${b.odds})</span><div><button class="op-btn" style="background:var(--green); color:#000; margin-right:5px;" onclick="resolve(${b.id}, 'win')">W</button><button class="op-btn" style="background:var(--red); color:#fff;" onclick="resolve(${b.id}, 'loss')">L</button></div></div>`;
+                area.innerHTML += `<div class="op-row"><span>${b.name} ($${b.amt})</span><div><button onclick="resolve(${b.id}, 'win')" style="background:var(--green); border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-weight:900;">W</button> <button onclick="resolve(${b.id}, 'loss')" style="background:var(--red); border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-weight:900; color:#fff;">L</button></div></div>`;
             });
+        }
+
+        function save() {
+            localStorage.setItem('v19_w', wallet); localStorage.setItem('v19_h', JSON.stringify(history)); localStorage.setItem('v19_p', JSON.stringify(pending));
         }
 
         function updateUI() {
@@ -250,35 +191,29 @@
             document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
         }
 
-        let chart;
         function initChart() {
-            if(chart) chart.destroy();
-            chart = new ApexCharts(document.querySelector("#chart"), {
+            new ApexCharts(document.querySelector("#chart"), {
                 series: [{ name: "USDT", data: history }],
                 chart: { type: 'area', height: 400, toolbar: false, animations: { enabled: false }, background: 'transparent' },
                 theme: { mode: 'dark' },
                 colors: [wallet >= history[0] ? '#10b981' : '#ef4444'],
                 stroke: { curve: 'straight', width: 2 },
-                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0 } },
                 xaxis: { labels: { show: false } },
-                yaxis: { tickAmount: 5, labels: { style: { colors: '#71717a' }, formatter: (val) => val.toFixed(0) + "$" } },
-                grid: { borderColor: '#1f1f23' },
                 annotations: {
                     yaxis: [
-                        { y: 500, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: 'Bariyer: $500', style: { color: '#fff', background: '#3f3f46' } } },
-                        { y: 1000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: 'Bariyer: $1K', style: { color: '#fff', background: '#3f3f46' } } },
-                        { y: 2000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: 'Bariyer: $2K', style: { color: '#fff', background: '#3f3f46' } } },
-                        { y: 5000, borderColor: '#3f3f46', strokeDashArray: 4, label: { text: 'Bariyer: $5K', style: { color: '#fff', background: '#3f3f46' } } },
-                        { y: 10000, borderColor: '#fbbf24', strokeDashArray: 0, label: { text: 'HEDEF: $10K', style: { color: '#000', background: '#fbbf24', fontWeight: 'bold' } } },
-                        { y: 50000, borderColor: '#10b981', strokeDashArray: 0, label: { text: 'HEDEF: $50K', style: { color: '#000', background: '#10b981', fontWeight: 'bold' } } },
-                        { y: 100000, borderColor: '#10b981', strokeDashArray: 0, label: { text: 'NİHAİ: $100K', style: { color: '#000', background: '#10b981', fontWeight: 'bold' } } }
+                        { y: 500, borderColor: '#333', label: { text: '500$' } },
+                        { y: 1000, borderColor: '#333', label: { text: '1K$' } },
+                        { y: 2000, borderColor: '#333', label: { text: '2K$' } },
+                        { y: 5000, borderColor: '#333', label: { text: '5K$' } },
+                        { y: 10000, borderColor: '#fbbf24', label: { text: '10K$' } },
+                        { y: 50000, borderColor: '#10b981', label: { text: '50K$' } },
+                        { y: 100000, borderColor: '#10b981', label: { text: '100K$' } }
                     ]
                 }
-            });
-            chart.render();
+            }).render();
         }
 
-        updateUI(); renderPending(); loadData();
+        updateUI(); renderP(); load();
     </script>
 </body>
 </html>
