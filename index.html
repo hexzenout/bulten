@@ -30,7 +30,7 @@
             overflow: hidden; 
         }
         
-        /* SIDEBAR (TEKLİ SEÇİM) */
+        /* SIDEBAR (SADE MENÜ İSİMLERİ) */
         .sidebar { 
             width: 260px; 
             background: #000; 
@@ -73,7 +73,7 @@
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
 
-        /* LİG AYRIMI İÇİN BELİRGİN RENK VE AÇILIR/KAPANIR TASARIM */
+        /* LİG AYRIMI: BELİRGİN LACİVERT VE AÇILIR/KAPANIR */
         .league-head { 
             background: #1e293b; 
             padding: 10px 15px; 
@@ -89,6 +89,7 @@
             transition: 0.2s;
         }
         .league-head:hover { background: #334155; }
+        .head-left { display: flex; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
         
         .league-content { 
             border: 1px solid var(--border); 
@@ -97,14 +98,14 @@
             background: #0a0a0c; 
         }
         
+        /* MAÇ SATIRI: BAYRAK MAÇIN YANINDA */
         .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
+        .match-row:last-child { border-bottom: none; }
+        .match-row:hover { background: #111; }
         .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 55px; font-weight: bold; }
-        
-        /* BAYRAK MAÇIN HEMEN YANINDA (FB - GS 🇹🇷) */
         .m-teams { font-weight: 700; flex-grow: 1; color: #fff; display: flex; align-items: center; }
-        .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 8px; display: inline-block; vertical-align: middle; }
-        
-        .chevron { transition: transform 0.3s; color: var(--muted); }
+        .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 10px; display: inline-block; }
+        .chevron { transition: transform 0.3s ease; color: var(--muted); }
 
         /* FİNANS & BORSA */
         .fin-grid { display: none; grid-template-columns: 360px 1fr; gap: 20px; }
@@ -115,7 +116,7 @@
         .op-btn { padding: 6px 10px; border: none; border-radius: 3px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
         #chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
 
-        /* 6'LI EKRAN (STREAM) CSS GERİ EKLENDİ */
+        /* 6'LI EKRAN (STREAM) EKSİKSİZ */
         .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 85vh; }
         .stream-grid.active { display: grid; }
         .stream-box { background: #000; border: 1px solid #222; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
@@ -131,11 +132,12 @@
         <div class="brand">V19 CAPITAL</div>
         
         <div class="nav-item active" id="btn-f" onclick="switchMode('futbol', this)">
-            <i class="fa-solid fa-futbol"></i> FUTBOL RADARI
+            <i class="fa-solid fa-futbol"></i> FUTBOL
         </div>
         <div class="nav-item basket" id="btn-b" onclick="switchMode('basketbol', this)">
-            <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI
+            <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET
         </div>
+        
         <div class="nav-item" onclick="switchMode('finance', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:20px;">
             <i class="fa-solid fa-chart-line"></i> USDT FİNANS & KASA
         </div>
@@ -270,7 +272,8 @@
             
             let ligHtml = '<option value="ALL">TÜM LİGLER</option>';
             for(let ligAdi in ligSayac) {
-                // Lig adının içindeki tura göre ayıklama
+                // ligAdi artık "TÜRKİYE - SÜPER LİG" şeklinde geliyor.
+                // İçindeki kelimelere göre futbol mu basket mi ayıklıyoruz:
                 let isFutbol = ["SÜPER LİG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "MLS"].some(x => ligAdi.includes(x));
                 
                 if((activeSport === 'futbol' && isFutbol) || (activeSport === 'basketbol' && !isFutbol)) {
@@ -329,7 +332,7 @@
                     const ikonColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
                     const uniqueId = `lg_${day}_${lig.replace(/\s+/g, '')}`;
                     
-                    // LİG BAŞLIĞI (AÇILIR KAPANIR)
+                    // LİG BAŞLIĞI: LACİVERT ZEMİN, AÇILIR KAPANIR
                     htmlString += `
                         <div class="league-head" onclick="toggleLeague('${uniqueId}', this)">
                             <div class="head-left">
@@ -346,7 +349,7 @@
                         htmlString += `
                         <div class="match-row">
                             <div class="m-time">${m.tm}</div>
-                            <div class="m-teams">${m.m} <img src="https://flagcdn.com/w40/${flagCode}.png" class="flag"></div>
+                            <div class="m-teams">${m.m} <img src="https://flagcdn.com/w40/${m.f}.png" class="flag"></div>
                         </div>`;
                     });
                     
