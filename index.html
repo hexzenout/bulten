@@ -12,7 +12,7 @@
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* SIDEBAR (TEKLİ SEÇİM) */
+        /* SIDEBAR */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
         .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.1em; letter-spacing: 1px; }
         .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
@@ -30,14 +30,15 @@
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
 
-        /* LİSTELEME: BAYRAK SAĞDA, İKON SOLDA */
-        .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--text); border-bottom: 1px solid #000; display: flex; align-items: center; justify-content: space-between; text-transform: uppercase; }
-        .head-left { display: flex; align-items: center; gap: 8px; }
-        .flag { width: 22px; height: 14px; object-fit: cover; border-radius: 2px; }
+        /* LİSTELEME */
+        .league-head { background: #0f0f12; padding: 8px 15px; font-weight: 800; font-size: 0.75em; color: var(--text); border-bottom: 1px solid #000; display: flex; align-items: center; text-transform: uppercase; }
         .match-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #161618; font-size: 0.8em; }
         .match-row:hover { background: #0a0a0c; }
         .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 55px; font-weight: bold; }
-        .m-teams { font-weight: 700; flex-grow: 1; color: #fff; }
+        .m-teams { font-weight: 700; flex-grow: 1; color: #fff; display: flex; align-items: center; }
+        
+        /* BAYRAK CSS GÜNCELLEMESİ */
+        .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 8px; display: inline-block; }
 
         /* FİNANS & BORSA */
         .fin-grid { display: none; grid-template-columns: 360px 1fr; gap: 20px; }
@@ -54,10 +55,10 @@
     <div class="sidebar">
         <div class="brand">V19 CAPITAL</div>
         <div class="nav-item active" id="btn-f" onclick="switchSport('futbol')">
-            <i class="fa-solid fa-futbol"></i> FUTBOL RADARI
+            <i class="fa-solid fa-futbol"></i> FUTBOL
         </div>
         <div class="nav-item basket" id="btn-b" onclick="switchSport('basketbol')">
-            <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI
+            <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET
         </div>
         <div class="nav-item" onclick="setMode('finance', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:20px;">
             <i class="fa-solid fa-chart-line"></i> USDT FİNANS & KASA
@@ -101,7 +102,6 @@
                     <h4 style="margin:10px 0; font-size:0.75em; color:var(--gold)">BEKLEYEN İŞLEMLER</h4>
                     <div id="p-list"></div>
                 </div>
-
                 <div id="chart"></div>
             </div>
         </div>
@@ -135,7 +135,7 @@
                 const r = await fetch('v19_rapor.json?t=' + Date.now());
                 const d = await r.json(); allData = d.veriler || []; ligSayac = d.sayac || {};
                 buildFilters(); render();
-            } catch(e) { document.getElementById('list-area').innerHTML = "<div style='padding:50px; text-align:center; color:#555'>VERİ BEKLENİYOR... LÜTFEN ACTIONS ÇALIŞTIRIN.</div>"; }
+            } catch(e) { document.getElementById('list-area').innerHTML = "<div style='padding:50px; text-align:center; color:#555'>VERİ BEKLENİYOR...</div>"; }
         }
 
         function buildFilters() {
@@ -167,18 +167,20 @@
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
                     const iColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
                     
-                    // NİZAMİ GÖRÜNÜM: İKON SOLDA, BAYRAK SAĞDA
+                    // BAYRAK BURADAN KALDIRILDI, SADECE İKON VE LİG ADI
                     area.innerHTML += `
                         <div class="league-head">
-                            <div class="head-left">
-                                <span style="font-size:1.2em; color:${iColor}">${ikon}</span>
-                                <span>${lig}</span>
-                            </div>
-                            <img src="https://flagcdn.com/w40/${fCode}.png" class="flag">
+                            <span style="font-size:1.2em; color:${iColor}; margin-right:8px;">${ikon}</span>
+                            <span>${lig}</span>
                         </div>`;
                         
                     groups[lig].sort((a,b)=>a.tm.localeCompare(b.tm)).forEach(m => {
-                        area.innerHTML += `<div class="match-row"><div class="m-time">${m.tm}</div><div class="m-teams">${m.m}</div></div>`;
+                        // BAYRAK MAÇIN YANINA (m.m'nin sağına) EKLENDİ
+                        area.innerHTML += `
+                        <div class="match-row">
+                            <div class="m-time">${m.tm}</div>
+                            <div class="m-teams">${m.m} <img src="https://flagcdn.com/w40/${fCode}.png" class="flag"></div>
+                        </div>`;
                     });
                 }
             });
@@ -205,33 +207,24 @@
         function renderP() {
             const area = document.getElementById('p-list'); area.innerHTML = "";
             pending.forEach(b => {
-                area.innerHTML += `<div class="op-row"><span>${b.name} ($${b.amt})</span><div><button onclick="resolve(${b.id}, 'win')" style="background:var(--green); color:#000; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-weight:900; margin-right:5px;">W</button><button onclick="resolve(${b.id}, 'loss')" style="background:var(--red); color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-weight:900;">L</button></div></div>`;
+                area.innerHTML += `<div class="op-row"><span>${b.name} ($${b.amt} @${b.odds})</span><div><button class="op-btn" style="background:var(--green); color:#000; margin-right:5px;" onclick="resolve(${b.id}, 'win')">W</button><button class="op-btn" style="background:var(--red); color:#fff;" onclick="resolve(${b.id}, 'loss')">L</button></div></div>`;
             });
         }
 
         function save() { localStorage.setItem('v19_w', wallet); localStorage.setItem('v19_h', JSON.stringify(history)); localStorage.setItem('v19_p', JSON.stringify(pending)); }
         function updateUI() { document.getElementById('w-val').innerText = wallet.toFixed(2); document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT"; }
 
-        // TRADINGVIEW / BINANCE TARZI PROFESYONEL GRAFİK
         let chart;
         function initChart() {
             if(chart) chart.destroy();
             chart = new ApexCharts(document.querySelector("#chart"), {
                 series: [{ name: "USDT", data: history }],
-                chart: { 
-                    type: 'area', height: 450, toolbar: { show: true }, background: 'transparent',
-                    animations: { enabled: true, easing: 'easeinout', speed: 800 }
-                },
-                theme: { mode: 'dark' },
-                colors: [wallet >= history[0] ? '#10b981' : '#ef4444'],
+                chart: { type: 'area', height: 450, toolbar: { show: true }, background: 'transparent', animations: { enabled: true, easing: 'easeinout', speed: 800 } },
+                theme: { mode: 'dark' }, colors: [wallet >= history[0] ? '#10b981' : '#ef4444'],
                 fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.6, opacityTo: 0.05, stops: [0, 90, 100] } },
-                dataLabels: { enabled: false },
-                stroke: { curve: 'smooth', width: 3 },
+                dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 3 },
                 xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false }, tooltip: { enabled: false } },
-                yaxis: { 
-                    opposite: true, // Eksen sağ tarafa alındı (TradingView tarzı)
-                    labels: { style: { colors: '#a1a1aa', fontSize: '11px', fontFamily: 'JetBrains Mono' }, formatter: (val) => '$' + val.toFixed(0) }
-                },
+                yaxis: { opposite: true, labels: { style: { colors: '#a1a1aa', fontSize: '11px', fontFamily: 'JetBrains Mono' }, formatter: (val) => '$' + val.toFixed(0) } },
                 grid: { borderColor: '#27272a', strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: true } } },
                 tooltip: { theme: 'dark', y: { formatter: function(val) { return "$" + val.toFixed(2) } } },
                 annotations: {
