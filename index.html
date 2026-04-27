@@ -9,23 +9,17 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;800&family=Inter:wght@400;700;900&display=swap');
         :root { 
-            --gold: #fbbf24; 
-            --green: #10b981; 
-            --red: #ef4444; 
-            --orange: #f97316; 
-            --bg: #050505; 
-            --panel: #0c0c0e; 
-            --border: #1f1f23; 
-            --text: #fff; 
-            --muted: #71717a; 
+            --gold: #fbbf24; --green: #10b981; --red: #ef4444; --orange: #f97316; 
+            --bg: #050505; --panel: #0c0c0e; --border: #1f1f23; --text: #fff; --muted: #71717a; 
         }
         
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
+        /* SIDEBAR */
         .sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
         .brand { padding: 25px 20px; font-weight: 900; color: var(--green); border-bottom: 1px solid var(--border); text-align: center; font-size: 1.1em; letter-spacing: 1px; }
         .nav-item { padding: 15px 20px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 0.85em; display: flex; align-items: center; border-bottom: 1px solid #0a0a0a; transition: 0.2s; }
-        .nav-item i { margin-right: 12px; font-size: 1.2em; }
+        .nav-item i { margin-right: 12px; font-size: 1.2em; width: 20px; text-align: center; }
         .nav-item:hover { background: #0a0a0a; color: #fff; }
         .nav-item.active { background: rgba(16,185,129,0.05); color: #fff; border-left: 3px solid var(--green); }
         .nav-item.basket.active { border-left-color: var(--orange); }
@@ -34,11 +28,11 @@
         .header { padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid var(--border); }
         .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
 
-        /* FİLTRELER */
+        /* BÜLTEN TASARIMI */
         .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: var(--panel); padding: 10px; border-radius: 6px; border: 1px solid var(--border); align-items: center; }
         .c-select { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; outline: none; cursor: pointer; }
 
-        /* ÖZEL AÇILIR KUTU (CUSTOM DROPDOWN) İÇİN CSS */
+        /* CUSTOM DROPDOWN */
         .c-dropdown { position: relative; min-width: 280px; }
         .c-drop-btn { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 0.75em; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; }
         .c-drop-btn img { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-right: 8px; vertical-align: middle; }
@@ -48,21 +42,7 @@
         .c-drop-item:hover { background: #1f1f23; }
         .c-drop-item img { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-right: 8px; }
 
-        /* LİG AYRIMI VE BÜLTEN */
-        .league-head { 
-            background: #1e293b; 
-            padding: 10px 15px; 
-            font-weight: 900; 
-            font-size: 0.75em; 
-            color: #fff; 
-            border: 1px solid #334155; 
-            border-bottom: none;
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            cursor: pointer; 
-            transition: 0.2s;
-        }
+        .league-head { background: #1e293b; padding: 10px 15px; font-weight: 900; font-size: 0.75em; color: #fff; border: 1px solid #334155; border-bottom: none; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.2s; }
         .league-head:hover { background: #334155; }
         .head-left { display: flex; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
         .league-content { border: 1px solid var(--border); border-top: none; margin-bottom: 15px; background: #0a0a0c; }
@@ -74,14 +54,37 @@
         .flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; margin-left: 10px; display: inline-block; vertical-align: middle; }
         .chevron { transition: transform 0.3s ease; color: var(--muted); }
 
-        /* FİNANS & BORSA */
-        .fin-grid { display: none; grid-template-columns: 360px 1fr; gap: 20px; }
-        .fin-grid.active { display: grid; }
+        /* YENİ FİNANS DASHBOARD YAPISI */
+        .fin-layout { display: none; flex-direction: column; gap: 20px; height: 100%; overflow-y: auto; padding-right: 10px; }
+        .fin-layout.active { display: flex; }
+        
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .kpi-card { background: var(--panel); border: 1px solid var(--border); padding: 15px 20px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; }
+        .kpi-title { font-size: 0.65em; font-weight: bold; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
+        .kpi-val { font-family: 'JetBrains Mono'; font-size: 1.8em; font-weight: 900; color: #fff; }
+        
+        .fin-middle { display: grid; grid-template-columns: 2.5fr 1fr; gap: 15px; }
         .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 8px; }
-        .w-val { font-family: 'JetBrains Mono'; font-size: 2.2em; font-weight: 900; color: var(--gold); margin: 10px 0; }
-        .op-row { background: #000; padding: 12px; border-radius: 4px; border-left: 4px solid var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75em; font-weight: bold; }
-        .op-btn { padding: 6px 10px; border: none; border-radius: 3px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
-        #chart { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+        
+        /* EXCEL STİLİ TABLO */
+        .excel-container { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; flex-grow: 1; min-height: 300px; }
+        .excel-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .excel-tabs { display: flex; gap: 10px; }
+        .e-tab { padding: 6px 12px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 4px; font-size: 0.7em; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .e-tab.active { background: #1f1f23; color: #fff; border-color: #333; }
+        
+        .table-wrapper { overflow-y: auto; flex-grow: 1; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75em; text-align: left; }
+        th { background: #111; color: var(--muted); font-weight: bold; padding: 10px 15px; position: sticky; top: 0; border-bottom: 1px solid #222; text-transform: uppercase; font-size: 0.9em; }
+        td { padding: 10px 15px; border-bottom: 1px solid #161618; font-family: 'Inter', sans-serif; color: #ddd; }
+        tr:hover td { background: #0a0a0c; }
+        .td-mono { font-family: 'JetBrains Mono'; font-weight: bold; }
+        .badge-w { background: rgba(16,185,129,0.1); color: var(--green); padding: 3px 6px; border-radius: 3px; font-size: 0.85em; font-weight: 900; }
+        .badge-l { background: rgba(239,68,68,0.1); color: var(--red); padding: 3px 6px; border-radius: 3px; font-size: 0.85em; font-weight: 900; }
+        .badge-p { background: rgba(251,191,36,0.1); color: var(--gold); padding: 3px 6px; border-radius: 3px; font-size: 0.85em; font-weight: 900; }
+
+        .op-btn { padding: 6px 12px; border: none; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 0.7em; }
+        #chart { height: 100%; min-height: 250px; }
 
         /* 6'LI EKRAN */
         .stream-grid { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 85vh; }
@@ -89,7 +92,7 @@
         .stream-box { background: #000; border: 1px solid #222; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
         .stream-header { padding: 6px; background: #0a0a0c; display: flex; gap: 5px; border-bottom: 1px solid #1f1f23; }
         .stream-input { flex: 1; background: #000; border: 1px solid #333; color: #fff; font-size: 11px; padding: 4px; border-radius: 3px; }
-        .stream-btn { background: var(--green); border: none; font-weight: bold; font-size: 10px; padding: 4px 10px; cursor: pointer; border-radius: 3px; }
+        .stream-btn { background: var(--green); border: none; font-weight: bold; font-size: 10px; padding: 4px 10px; cursor: pointer; border-radius: 3px; color:#000; }
         .stream-close { background: var(--red); color: #fff; border: none; font-size: 10px; padding: 4px 8px; cursor: pointer; border-radius: 3px; }
     </style>
 </head>
@@ -105,11 +108,12 @@
             <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET
         </div>
         
-        <div class="nav-item" onclick="switchMode('finance', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:20px;">
-            <i class="fa-solid fa-chart-line"></i> USDT FİNANS & KASA
-        </div>
-        <div class="nav-item" onclick="switchMode('stream', this)" style="color:var(--green);">
+        <div class="nav-item" onclick="switchMode('stream', this)" style="color:var(--green); border-top:1px solid #111; margin-top:20px;">
             <i class="fa-solid fa-tv"></i> 6'LI EKRAN
+        </div>
+        
+        <div class="nav-item" onclick="switchMode('finance', this)" style="color:var(--gold);">
+            <i class="fa-solid fa-chart-line"></i> USDT FİNANS
         </div>
     </div>
 
@@ -123,7 +127,6 @@
             <div id="v-bulletin">
                 <div class="filter-row">
                     <select id="date-sel" class="c-select" onchange="render()"><option value="ALL">TÜM TARİHLER</option></select>
-                    
                     <div class="c-dropdown" id="league-dropdown">
                         <div class="c-drop-btn" onclick="toggleLeagueDrop(event)">
                             <div id="league-drop-text" style="display:flex; align-items:center;">TÜM LİGLER</div>
@@ -135,29 +138,67 @@
                 <div id="list-area"></div>
             </div>
 
-            <div class="fin-grid" id="v-finance">
-                <div class="card">
-                    <div style="font-size:0.7em; font-weight:bold; color:var(--muted)">MEVCUT KASA (USDT)</div>
-                    <div class="w-val" id="w-val">100.00</div>
-                    
-                    <div style="display:flex; gap:10px; margin-bottom:20px;">
-                        <input type="number" id="m-val" class="c-select" style="flex:1" placeholder="Manuel Kasa Gir">
-                        <button onclick="setManual()" style="background:#3f3f46; color:#fff; border:none; padding:10px; border-radius:4px; font-weight:bold; cursor:pointer;">SET</button>
+            <div class="fin-layout" id="v-finance">
+                
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <span class="kpi-title">AKTİF KASA BÜYÜKLÜĞÜ</span>
+                        <span class="kpi-val" id="kpi-wallet" style="color:var(--gold)">$100.00</span>
                     </div>
+                    <div class="kpi-card">
+                        <span class="kpi-title">GERÇEKLEŞEN NET KÂR/ZARAR</span>
+                        <span class="kpi-val" id="kpi-pnl">$0.00</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-title">OPERASYON BAŞARI ORANI (W/L)</span>
+                        <span class="kpi-val" id="kpi-winrate" style="color:#fff">%0.0</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-title">RİSKTEKİ SERMAYE (BEKLEYEN)</span>
+                        <span class="kpi-val" id="kpi-risk" style="color:var(--orange)">$0.00</span>
+                    </div>
+                </div>
 
-                    <div style="border-top:1px solid #1f1f23; padding-top:15px;">
-                        <input type="text" id="b-name" class="c-select" style="width:100%; box-sizing:border-box; margin-bottom:10px;" placeholder="Maç / İşlem Adı">
-                        <div style="display:flex; gap:10px; margin-bottom:15px;">
-                            <input type="number" id="b-amt" class="c-select" style="flex:1" placeholder="Miktar ($)">
-                            <input type="number" id="b-odds" class="c-select" style="flex:1" placeholder="Oran">
-                            <button onclick="addBet()" style="background:var(--green); color:#000; border:none; padding:10px; border-radius:4px; font-weight:900; cursor:pointer;">EKLE</button>
+                <div class="fin-middle">
+                    <div class="card" style="padding:10px;">
+                        <div id="chart"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4 style="margin:0 0 15px 0; font-size:0.8em; color:var(--muted); text-transform:uppercase;">YENİ İŞLEM GİRİŞİ</h4>
+                        <input type="text" id="b-name" class="c-select" style="width:100%; box-sizing:border-box; margin-bottom:12px; padding:10px;" placeholder="Operasyon Adı (Örn: Real Madrid MS1)">
+                        <div style="display:flex; gap:10px; margin-bottom:20px;">
+                            <input type="number" id="b-amt" class="c-select" style="flex:1; padding:10px;" placeholder="Miktar ($)">
+                            <input type="number" id="b-odds" class="c-select" style="flex:1; padding:10px;" placeholder="Oran">
+                        </div>
+                        <button onclick="addBet()" style="width:100%; background:var(--green); color:#000; border:none; padding:12px; border-radius:4px; font-weight:900; cursor:pointer; font-size:0.85em; letter-spacing:1px;">İŞLEMİ KAYDET</button>
+                        
+                        <div style="margin-top:25px; padding-top:20px; border-top:1px dashed #333;">
+                            <h4 style="margin:0 0 10px 0; font-size:0.7em; color:var(--muted);">KASAYI MANUEL GÜNCELLE</h4>
+                            <div style="display:flex; gap:10px;">
+                                <input type="number" id="m-val" class="c-select" style="flex:1;" placeholder="Sıfırdan Değer Gir">
+                                <button onclick="setManual()" style="background:#3f3f46; color:#fff; border:none; padding:8px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">SET</button>
+                            </div>
                         </div>
                     </div>
-
-                    <h4 style="margin:10px 0; font-size:0.75em; color:var(--gold)">BEKLEYEN İŞLEMLER</h4>
-                    <div id="p-list"></div>
                 </div>
-                <div id="chart"></div>
+
+                <div class="excel-container">
+                    <div class="excel-header">
+                        <h3 style="margin:0; font-size:0.85em; font-weight:900; color:#fff;">DEFTER KEBİR (LEDGER)</h3>
+                        <div class="excel-tabs">
+                            <button class="e-tab active" id="tab-pend" onclick="switchTableTab('pend')">BEKLEYENLER</button>
+                            <button class="e-tab" id="tab-all" onclick="switchTableTab('all')">TÜM ZAMANLAR</button>
+                            <button class="e-tab" id="tab-month" onclick="switchTableTab('month')">BU AY</button>
+                            <button class="e-tab" id="tab-3month" onclick="switchTableTab('3month')">SON 3 AY</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="ledger-table">
+                            </table>
+                    </div>
+                </div>
+
             </div>
 
             <div id="v-stream" class="stream-grid">
@@ -183,13 +224,15 @@
         let ligSayac = {};
         let activeSport = 'futbol';
         let curMode = 'bulletin';
-        let selectedLeague = 'ALL'; // Custom dropdown için seçili lig
+        let selectedLeague = 'ALL';
+        let currentTableTab = 'pend'; // Excel tablosu aktif sekmesi
         
+        // VERİTABANI YÖNETİMİ
         let wallet = parseFloat(localStorage.getItem('v19_w')) || 100.00;
         let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
         let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
+        let ledger = JSON.parse(localStorage.getItem('v19_ledger')) || []; // Yeni Excel Defteri
 
-        // BAYRAK ÇEKMEK İÇİN ÜLKE KODU HARİTASI
         const LIG_RESIMLERI = {
             "TÜRKİYE": "tr", "İNGİLTERE": "gb-eng", "İSPANYA": "es", 
             "ALMANYA": "de", "İTALYA": "it", "FRANSA": "fr", 
@@ -197,27 +240,39 @@
             "BREZİLYA": "br", "ARJANTİN": "ar", "AMERİKA": "us", "RUSYA": "ru"
         };
 
-        // TARİH HESAPLAYICI (BUGÜN / YARIN)
+        function getFlag(ligAdi) {
+            const str = ligAdi.toUpperCase();
+            if(str.includes("TÜRKİYE") || str.includes("SUPER LIG") || str.includes("SÜPER LİG") || str.includes("BSL")) return "tr";
+            if(str.includes("İNGİLTERE") || str.includes("PREMIER") || str.includes("CHAMPIONSHIP")) return "gb-eng";
+            if(str.includes("İSPANYA") || str.includes("LA LIGA") || str.includes("LIGA ACB")) return "es";
+            if(str.includes("ALMANYA") || str.includes("BUNDESLIGA") || str.includes("BBL")) return "de";
+            if(str.includes("İTALYA") || str.includes("SERIE A") || str.includes("LEGA A")) return "it";
+            if(str.includes("FRANSA") || str.includes("LIGUE 1") || str.includes("LNB PRO A")) return "fr";
+            if(str.includes("HOLLANDA") || str.includes("EREDIVISIE")) return "nl";
+            if(str.includes("PORTEKİZ") || str.includes("PRIMEIRA")) return "pt";
+            if(str.includes("BREZİLYA") || str.includes("BRAZIL")) return "br";
+            if(str.includes("ARJANTİN") || str.includes("ARGENTINA")) return "ar";
+            if(str.includes("AMERİKA") || str.includes("MLS") || str.includes("NBA") || str.includes("WNBA") || str.includes("NCAA")) return "us";
+            if(str.includes("RUSYA") || str.includes("VTB")) return "ru";
+            if(str.includes("AVRUPA") || str.includes("CHAMPIONS") || str.includes("EUROPA") || str.includes("CONFERENCE") || str.includes("EUROLEAGUE") || str.includes("EUROCUP") || str.includes("BCL")) return "eu";
+            return "un";
+        }
+
         function formatTarih(dStr) {
             if(!dStr) return "";
             const parts = dStr.split('-');
             if(parts.length !== 3) return dStr;
-            
             const dTarget = new Date(parts[0], parts[1] - 1, parts[2]);
-            const dToday = new Date();
-            dToday.setHours(0,0,0,0);
-            
+            const dToday = new Date(); dToday.setHours(0,0,0,0);
             const diffTime = dTarget.getTime() - dToday.getTime();
             const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
             
             if (diffDays === 0) return "BUGÜN";
             if (diffDays === 1) return "YARIN";
-            
             const aylar = ["OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZİRAN","TEMMUZ","AĞUSTOS","EYLÜL","EKİM","KASIM","ARALIK"];
             return parseInt(parts[2]) + " " + aylar[parseInt(parts[1]) - 1];
         }
 
-        // ÖZEL AÇILIR KUTU İŞLEMLERİ (CUSTOM DROPDOWN)
         function toggleLeagueDrop(e) {
             e.stopPropagation();
             const list = document.getElementById('league-drop-list');
@@ -231,40 +286,34 @@
             render();
         }
 
-        // Ekranda boş bir yere tıklayınca dropdown'u kapat
         document.addEventListener('click', function(e) {
             const drop = document.getElementById('league-dropdown');
-            if(drop && !drop.contains(e.target)) {
-                document.getElementById('league-drop-list').style.display = 'none';
-            }
+            if(drop && !drop.contains(e.target)) { document.getElementById('league-drop-list').style.display = 'none'; }
         });
 
-        // SEKME DEĞİŞTİRME
         function switchMode(mode, el) {
             document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
             el.classList.add('active');
 
             if(mode === 'futbol' || mode === 'basketbol') {
-                activeSport = mode;
-                curMode = 'bulletin';
-                selectedLeague = 'ALL';
+                activeSport = mode; curMode = 'bulletin'; selectedLeague = 'ALL';
                 document.getElementById('league-drop-text').innerHTML = "TÜM LİGLER";
                 document.getElementById('v-bulletin').style.display = 'block';
-                document.getElementById('v-finance').classList.remove('active');
+                document.getElementById('v-finance').classList.remove('active'); 
                 document.getElementById('v-stream').classList.remove('active');
-                buildFilters();
-                render();
+                buildFilters(); render();
             } 
             else if(mode === 'finance') {
-                curMode = 'finance';
-                document.getElementById('v-bulletin').style.display = 'none';
+                curMode = 'finance'; 
+                document.getElementById('v-bulletin').style.display = 'none'; 
                 document.getElementById('v-stream').classList.remove('active');
-                document.getElementById('v-finance').classList.add('active');
+                document.getElementById('v-finance').classList.add('active'); 
+                updateFinanceDashboard();
                 setTimeout(initChart, 100);
             }
             else if(mode === 'stream') {
-                curMode = 'stream';
-                document.getElementById('v-bulletin').style.display = 'none';
+                curMode = 'stream'; 
+                document.getElementById('v-bulletin').style.display = 'none'; 
                 document.getElementById('v-finance').classList.remove('active');
                 document.getElementById('v-stream').classList.add('active');
             }
@@ -273,44 +322,28 @@
         async function load() {
             try {
                 const response = await fetch('v19_rapor.json?t=' + Date.now());
-                const data = await response.json();
-                allData = data.veriler || [];
-                ligSayac = data.sayac || {};
-                buildFilters();
-                render();
-            } catch(e) { 
-                document.getElementById('list-area').innerHTML = "<div style='padding:50px; text-align:center; color:#555'>VERİ BEKLENİYOR... LÜTFEN ACTIONS'I ÇALIŞTIRIN.</div>"; 
-            }
+                const data = await response.json(); allData = data.veriler || []; ligSayac = data.sayac || {};
+                buildFilters(); render();
+            } catch(e) { document.getElementById('list-area').innerHTML = "<div style='padding:50px; text-align:center; color:#555'>VERİ BEKLENİYOR...</div>"; }
         }
 
-        // FİLTRELERİ OLUŞTURMA (RESİMLİ DROPDOWN)
         function buildFilters() {
             const dSel = document.getElementById('date-sel');
             const lList = document.getElementById('league-drop-list');
             
-            // Tarihler
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const dates = [...new Set(allData.filter(m => m.t === activeSport).map(m => m.dt))].sort();
-            dates.forEach(d => {
-                dateHtml += `<option value="${d}">${formatTarih(d)}</option>`;
-            });
+            dates.forEach(d => { dateHtml += `<option value="${d}">${formatTarih(d)}</option>`; });
             dSel.innerHTML = dateHtml;
             
-            // Ligler (Resimli Özel Dropdown İçin)
             let ligHtml = `<div class="c-drop-item" onclick="selectLeague('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
-            
             for(let ligAdi in ligSayac) {
-                let isFutbol = ["SÜPER LİG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA LIGA", "BRAZIL SERIE A", "ARGENTINA PRIMERA", "MLS"].some(x => ligAdi.includes(x));
+                let isFutbol = ["LİG", "LIG", "PREMIER", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS", "EUROPA", "CONFERENCE", "CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA", "BRAZIL", "ARGENTINA", "MLS"].some(x => ligAdi.toUpperCase().includes(x));
                 
                 if((activeSport === 'futbol' && isFutbol) || (activeSport === 'basketbol' && !isFutbol)) {
-                    const ulkeIsmi = ligAdi.split(" - ")[0];
-                    const flagCode = LIG_RESIMLERI[ulkeIsmi] || "un";
+                    const flagCode = getFlag(ligAdi); 
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
-                    
-                    // Görseli ve yazıyı hazırlıyoruz
                     const displayText = `<img src="https://flagcdn.com/w40/${flagCode}.png"> <span style="color:${activeSport==='futbol'?'#fff':'var(--orange)'}; margin-right:5px;">${ikon}</span> ${ligAdi} (${ligSayac[ligAdi]})`;
-                    
-                    // Veriyi data-val ile HTML içine gömüp click fonksiyonuna gönderiyoruz
                     ligHtml += `<div class="c-drop-item" onclick="selectLeague(this.getAttribute('data-val'), this.innerHTML)" data-val="${ligAdi}">${displayText}</div>`;
                 }
             }
@@ -318,48 +351,32 @@
         }
 
         window.toggleLeague = function(id, element) {
-            const content = document.getElementById(id);
-            const icon = element.querySelector('.chevron');
-            if(content.style.display === 'none') {
-                content.style.display = 'block';
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                content.style.display = 'none';
-                icon.style.transform = 'rotate(-90deg)';
-            }
+            const content = document.getElementById(id); const icon = element.querySelector('.chevron');
+            if(content.style.display === 'none') { content.style.display = 'block'; icon.style.transform = 'rotate(0deg)'; } 
+            else { content.style.display = 'none'; icon.style.transform = 'rotate(-90deg)'; }
         };
 
-        // BÜLTENİ EKRANA ÇİZME
         function render() {
             if(curMode !== 'bulletin') return;
             const area = document.getElementById('list-area');
             const dVal = document.getElementById('date-sel').value;
-            const lVal = selectedLeague; // Özel dropdowndan gelen değer
+            const lVal = selectedLeague;
             
             let filtered = allData.filter(m => m.t === activeSport && (dVal === 'ALL' || m.dt === dVal) && (lVal === 'ALL' || m.l === lVal));
             let htmlString = "";
             const days = {};
-            
-            filtered.forEach(m => {
-                if(!days[m.dt]) days[m.dt] = [];
-                days[m.dt].push(m);
-            });
+            filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
             
             Object.keys(days).sort().forEach(day => {
                 const displayDate = formatTarih(day);
                 htmlString += `<div style="color:var(--green); font-size:0.7em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:10px; letter-spacing: 1px;">${displayDate}</div>`;
-                
-                const groups = {};
-                days[day].forEach(m => {
-                    if(!groups[m.l]) groups[m.l] = [];
-                    groups[m.l].push(m);
-                });
+                const groups = {}; days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
                 
                 for(let lig in groups) {
-                    const flagCode = groups[lig][0].f || "un";
+                    const flagCode = getFlag(lig); 
                     const ikon = activeSport === 'futbol' ? '⚽' : '🏀';
                     const ikonColor = activeSport === 'futbol' ? '#fff' : 'var(--orange)';
-                    const uniqueId = `lg_${day}_${lig.replace(/\s+/g, '')}`;
+                    const uniqueId = `lg_${day}_${lig.replace(/[^a-zA-Z0-9]/g, '')}`;
                     
                     htmlString += `
                         <div class="league-head" onclick="toggleLeague('${uniqueId}', this)">
@@ -385,56 +402,196 @@
             area.innerHTML = htmlString;
         }
 
-        // FİNANS FONKSİYONLARI
-        function setManual() {
-            const val = parseFloat(document.getElementById('m-val').value);
-            if(!val || val < 0) return;
-            wallet = val; history.push(wallet); saveData(); updateUI(); initChart();
-            document.getElementById('m-val').value = '';
+        // --- PROFESYONEL FİNANS YÖNETİMİ ---
+
+        function getTimestamp() {
+            const now = new Date();
+            return now.getTime(); // milisaniye cinsinden tam zaman
         }
 
-        function addBet() {
-            const name = document.getElementById('b-name').value;
-            const amt = parseFloat(document.getElementById('b-amt').value);
-            const odds = parseFloat(document.getElementById('b-odds').value);
-            if(!name || !amt || !odds) return;
-            pending.push({ id: Date.now(), name: name, amt: amt, odds: odds });
-            saveData(); renderPending(); document.getElementById('b-name').value = '';
+        function formatDateTr(timestamp) {
+            const d = new Date(timestamp);
+            return `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getFullYear()}`;
         }
 
-        function resolveBet(id, result) {
-            const bet = pending.find(x => x.id === id);
-            if(result === 'win') { wallet += (bet.amt * bet.odds) - bet.amt; } else { wallet -= bet.amt; }
-            history.push(wallet); pending = pending.filter(x => x.id !== id);
-            saveData(); updateUI(); renderPending();
-            if(curMode === 'finance') { initChart(); }
-        }
-
-        function renderPending() {
-            const area = document.getElementById('p-list');
-            let htmlString = "";
-            pending.forEach(b => {
-                htmlString += `
-                <div class="op-row">
-                    <span>${b.name} ($${b.amt} @${b.odds})</span>
-                    <div>
-                        <button onclick="resolveBet(${b.id}, 'win')" style="background:var(--green); color:#000; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-weight:900; margin-right:5px;">W</button>
-                        <button onclick="resolveBet(${b.id}, 'loss')" style="background:var(--red); color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-weight:900;">L</button>
-                    </div>
-                </div>`;
+        function setManual() { 
+            const val = parseFloat(document.getElementById('m-val').value); 
+            if(!val || val < 0) return; 
+            
+            const pnl = val - wallet; // Değişim farkı
+            wallet = val; 
+            history.push(wallet); 
+            
+            // Deftere manual log düş
+            ledger.unshift({
+                id: getTimestamp(), date: getTimestamp(),
+                name: "MANUEL KASA GÜNCELLEMESİ",
+                amt: 0, odds: 0, res: 'info', pnl: pnl, bal: wallet
             });
-            area.innerHTML = htmlString;
+
+            saveData(); updateFinanceDashboard(); document.getElementById('m-val').value = ''; 
+        }
+
+        function addBet() { 
+            const name = document.getElementById('b-name').value; 
+            const amt = parseFloat(document.getElementById('b-amt').value); 
+            const odds = parseFloat(document.getElementById('b-odds').value); 
+            
+            if(!name || !amt || !odds) return; 
+            
+            pending.push({ id: getTimestamp(), date: getTimestamp(), name: name, amt: amt, odds: odds }); 
+            saveData(); updateFinanceDashboard(); 
+            document.getElementById('b-name').value = ''; 
+            document.getElementById('b-amt').value = ''; 
+            document.getElementById('b-odds').value = ''; 
+        }
+
+        function resolveBet(id, result) { 
+            const bet = pending.find(x => x.id === id); 
+            let pnl = 0;
+
+            if(result === 'win') { 
+                pnl = (bet.amt * bet.odds) - bet.amt;
+                wallet += pnl; 
+            } else { 
+                pnl = -bet.amt;
+                wallet += pnl; 
+            } 
+            
+            history.push(wallet); 
+            pending = pending.filter(x => x.id !== id); 
+            
+            // İşlemi geçmiş defterine yaz (Başa ekle)
+            ledger.unshift({
+                id: bet.id, date: getTimestamp(), name: bet.name, amt: bet.amt, odds: bet.odds, res: result, pnl: pnl, bal: wallet
+            });
+
+            saveData(); updateFinanceDashboard();
+        }
+
+        function switchTableTab(tab) {
+            currentTableTab = tab;
+            document.querySelectorAll('.e-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            renderTable();
+        }
+
+        function renderTable() {
+            const table = document.getElementById('ledger-table');
+            let html = `
+                <tr>
+                    <th>Tarih</th>
+                    <th>Operasyon</th>
+                    <th>Risk ($)</th>
+                    <th>Oran</th>
+                    <th>Durum</th>
+                    <th>P&L</th>
+                    <th>Bakiye</th>
+                </tr>
+            `;
+
+            if(currentTableTab === 'pend') {
+                if(pending.length === 0) {
+                    html += `<tr><td colspan="7" style="text-align:center; padding:30px; color:#555;">Bekleyen işlem bulunmuyor.</td></tr>`;
+                } else {
+                    pending.forEach(b => {
+                        const dateStr = formatDateTr(b.date);
+                        html += `
+                        <tr>
+                            <td class="td-mono">${dateStr}</td>
+                            <td>${b.name}</td>
+                            <td class="td-mono">${b.amt.toFixed(2)}</td>
+                            <td class="td-mono">${b.odds.toFixed(2)}</td>
+                            <td><span class="badge-p">BEKLİYOR</span></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td style="text-align:right;">
+                                <button onclick="resolveBet(${b.id}, 'win')" class="op-btn" style="background:var(--green); color:#000; margin-right:5px;">W</button>
+                                <button onclick="resolveBet(${b.id}, 'loss')" class="op-btn" style="background:var(--red); color:#fff;">L</button>
+                            </td>
+                        </tr>`;
+                    });
+                }
+            } else {
+                // Zaman filtresi uygula
+                let filteredLedger = ledger;
+                const now = new Date();
+                
+                if(currentTableTab === 'month') {
+                    filteredLedger = ledger.filter(x => {
+                        const d = new Date(x.date);
+                        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+                    });
+                } else if(currentTableTab === '3month') {
+                    const threeMonthsAgo = new Date();
+                    threeMonthsAgo.setMonth(now.getMonth() - 3);
+                    filteredLedger = ledger.filter(x => new Date(x.date) >= threeMonthsAgo);
+                }
+
+                if(filteredLedger.length === 0) {
+                    html += `<tr><td colspan="7" style="text-align:center; padding:30px; color:#555;">Bu dönemde kayıtlı işlem yok.</td></tr>`;
+                } else {
+                    filteredLedger.forEach(row => {
+                        const dateStr = formatDateTr(row.date);
+                        const isWin = row.res === 'win';
+                        const isInfo = row.res === 'info';
+                        
+                        let badge = `<span class="badge-l">KAYIP</span>`;
+                        if(isWin) badge = `<span class="badge-w">KAZANÇ</span>`;
+                        if(isInfo) badge = `<span style="color:var(--muted); font-size:0.8em;">GÜNCELLEME</span>`;
+
+                        const pnlColor = row.pnl > 0 ? 'var(--green)' : (row.pnl < 0 ? 'var(--red)' : 'var(--muted)');
+                        const pnlSign = row.pnl > 0 ? '+' : '';
+
+                        html += `
+                        <tr>
+                            <td class="td-mono">${dateStr}</td>
+                            <td>${row.name}</td>
+                            <td class="td-mono">${row.amt > 0 ? row.amt.toFixed(2) : '-'}</td>
+                            <td class="td-mono">${row.odds > 0 ? row.odds.toFixed(2) : '-'}</td>
+                            <td>${badge}</td>
+                            <td class="td-mono" style="color:${pnlColor}">${pnlSign}${row.pnl.toFixed(2)}</td>
+                            <td class="td-mono">${row.bal.toFixed(2)}</td>
+                        </tr>`;
+                    });
+                }
+            }
+
+            table.innerHTML = html;
+        }
+
+        function updateFinanceDashboard() {
+            document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
+            document.getElementById('kpi-wallet').innerText = "$" + wallet.toFixed(2);
+
+            // Risk hesapla (Bekleyen toplam)
+            const activeRisk = pending.reduce((sum, bet) => sum + bet.amt, 0);
+            document.getElementById('kpi-risk').innerText = "$" + activeRisk.toFixed(2);
+
+            // Net Kar Zarar hesapla (Sıfırdan bu yana defter pnl toplamı)
+            const netPnl = ledger.reduce((sum, row) => sum + row.pnl, 0);
+            const pnlColor = netPnl >= 0 ? 'var(--green)' : 'var(--red)';
+            document.getElementById('kpi-pnl').innerText = (netPnl > 0 ? "+$" : "-$") + Math.abs(netPnl).toFixed(2);
+            document.getElementById('kpi-pnl').style.color = pnlColor;
+
+            // Win Rate Hesapla (Sadece bahisleri say, info/manuel olanları sayma)
+            const validBets = ledger.filter(x => x.res === 'win' || x.res === 'loss');
+            let winRate = 0;
+            if(validBets.length > 0) {
+                const wins = validBets.filter(x => x.res === 'win').length;
+                winRate = (wins / validBets.length) * 100;
+            }
+            document.getElementById('kpi-winrate').innerText = "%" + winRate.toFixed(1);
+
+            renderTable();
+            initChart();
         }
 
         function saveData() {
             localStorage.setItem('v19_w', wallet);
             localStorage.setItem('v19_h', JSON.stringify(history));
             localStorage.setItem('v19_p', JSON.stringify(pending));
-        }
-
-        function updateUI() {
-            document.getElementById('w-val').innerText = wallet.toFixed(2);
-            document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
+            localStorage.setItem('v19_ledger', JSON.stringify(ledger));
         }
 
         // BORSA GRAFİĞİ FONKSİYONU
@@ -442,11 +599,15 @@
         function initChart() {
             if(chart) chart.destroy();
             
+            // Sadece grafiğin div'i görünür olduğunda çiz
+            if(document.getElementById('v-finance').style.display === 'none') return;
+
             chart = new ApexCharts(document.querySelector("#chart"), {
-                series: [{ name: "USDT", data: history }],
+                series: [{ name: "KASA (USDT)", data: history }],
                 chart: { 
-                    type: 'area', height: 450, toolbar: { show: true }, background: 'transparent',
-                    animations: { enabled: true, easing: 'easeinout', speed: 800 }
+                    type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent',
+                    animations: { enabled: true, easing: 'easeinout', speed: 800 },
+                    parentHeightOffset: 0
                 },
                 theme: { mode: 'dark' },
                 colors: [wallet >= history[0] ? '#10b981' : '#ef4444'],
@@ -472,8 +633,8 @@
             chart.render();
         }
 
-        updateUI();
-        renderPending();
+        // BAŞLANGIÇ ÇAĞRILARI
+        document.getElementById('h-wallet').innerText = wallet.toFixed(2) + " USDT";
         load();
     </script>
 </body>
