@@ -1,4 +1,5 @@
 {
+    "up": "22:44",
     "veriler": [
         {
             "t": "futbol",
@@ -978,6 +979,454 @@
         },
         {
             "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "FC Utrecht - NAC Breda",
+            "dt": "2026-05-02",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "Groningen - Excelsior",
+            "dt": "2026-05-02",
+            "tm": "19:45"
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "Ajax - PSV Eindhoven",
+            "dt": "2026-05-02",
+            "tm": "21:00"
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "NEC Nijmegen - SC Telstar",
+            "dt": "2026-05-02",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "FC Volendam - Heerenveen",
+            "dt": "2026-05-03",
+            "tm": "13:15"
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "FC Zwolle - Heracles Almelo",
+            "dt": "2026-05-03",
+            "tm": "15:30"
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "Fortuna Sittard - Feyenoord",
+            "dt": "2026-05-03",
+            "tm": "15:30"
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "AZ Alkmaar - FC Twente Enschede",
+            "dt": "2026-05-03",
+            "tm": "17:45"
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "Sparta Rotterdam - Go Ahead Eagles",
+            "dt": "2026-05-03",
+            "tm": "17:45"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Sporting Lisbon - Tondela",
+            "dt": "2026-04-29",
+            "tm": "22:15"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Nacional - AVS Futebol SAD",
+            "dt": "2026-05-02",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Arouca - Santa Clara",
+            "dt": "2026-05-02",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Moreirense FC - CF Estrela",
+            "dt": "2026-05-02",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Famalicão - Benfica",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "FC Porto - Alverca",
+            "dt": "2026-05-02",
+            "tm": "22:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Casa Pia - Tondela",
+            "dt": "2026-05-03",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Braga - Estoril",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Rio Ave FC - Gil Vicente",
+            "dt": "2026-05-03",
+            "tm": "22:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Sporting Lisbon - Vitória SC",
+            "dt": "2026-05-04",
+            "tm": "22:15"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Botafogo - Remo",
+            "dt": "2026-05-02",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Vitoria - Coritiba",
+            "dt": "2026-05-03",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Palmeiras - Santos",
+            "dt": "2026-05-03",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Atletico Paranaense - Grêmio",
+            "dt": "2026-05-03",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Cruzeiro - Atletico Mineiro",
+            "dt": "2026-05-03",
+            "tm": "03:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Sao Paulo - Bahia",
+            "dt": "2026-05-03",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Flamengo - Vasco da Gama",
+            "dt": "2026-05-03",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Chapecoense - Bragantino-SP",
+            "dt": "2026-05-04",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Internacional - Fluminense",
+            "dt": "2026-05-04",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Mirassol - Corinthians",
+            "dt": "2026-05-04",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Coritiba - Internacional",
+            "dt": "2026-05-09",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Fluminense - Vitoria",
+            "dt": "2026-05-10",
+            "tm": "00:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Bahia - Cruzeiro",
+            "dt": "2026-05-10",
+            "tm": "03:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Atletico Mineiro - Botafogo",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Remo - Palmeiras",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Santos - Bragantino-SP",
+            "dt": "2026-05-11",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Mirassol - Chapecoense",
+            "dt": "2026-05-11",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Corinthians - Sao Paulo",
+            "dt": "2026-05-11",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Grêmio - Flamengo",
+            "dt": "2026-05-11",
+            "tm": "01:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Vasco da Gama - Atletico Paranaense",
+            "dt": "2026-05-11",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Velez Sarsfield BA - Union Santa Fe",
+            "dt": "2026-04-28",
+            "tm": "00:45"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Atlético Huracán - Argentinos Juniors",
+            "dt": "2026-04-28",
+            "tm": "03:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Union Santa Fe - Talleres",
+            "dt": "2026-05-03",
+            "tm": "03:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "River Plate - Atlético Tucuman",
+            "dt": "2026-05-03",
+            "tm": "03:15"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Belgrano de Cordoba - Sarmiento de Junin",
+            "dt": "2026-05-03",
+            "tm": "03:30"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Aldosivi Mar del Plata - Independiente Rivadavia",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Gimnasia La Plata - Argentinos Juniors",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Racing Club - Atlético Huracán",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Barracas Central - Banfield",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Central Córdoba - Boca Juniors",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Rosario Central - CA Tigre BA",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Gimnasia Mendoza - Defensa y Justicia",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Lanus - Deportivo Riestra",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Estudiantes de Río Cuarto - Instituto de Córdoba",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Platense - Estudiantes",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "San Lorenzo - Independiente",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Velez Sarsfield BA - Newells Old Boys",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
             "l": "AMERİKA - MLS",
             "f": "us",
             "m": "Toronto FC - San Jose Earthquakes",
@@ -1191,6 +1640,62 @@
             "m": "Real Madrid - Hapoel Tel Aviv",
             "dt": "2026-04-29",
             "tm": "21:45"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Minnesota Lynx - Nigeria",
+            "dt": "2026-04-28",
+            "tm": "03:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "New York Liberty - Connecticut Sun",
+            "dt": "2026-05-09",
+            "tm": "02:30"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Toronto Tempo - Washington Mystics",
+            "dt": "2026-05-09",
+            "tm": "02:30"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Seattle Storm - Golden State Valkyries",
+            "dt": "2026-05-09",
+            "tm": "05:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Indiana Fever - Dallas Wings",
+            "dt": "2026-05-09",
+            "tm": "20:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Las Vegas Aces - Phoenix Mercury",
+            "dt": "2026-05-09",
+            "tm": "22:30"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Portland Fire - Chicago Sky",
+            "dt": "2026-05-10",
+            "tm": "04:00"
         }
     ],
     "sayac": {
@@ -1204,10 +1709,22 @@
         "AVRUPA - EUROPA LEAGUE": 2,
         "AVRUPA - CONFERENCE LEAGUE": 2,
         "İNGİLTERE - CHAMPIONSHIP": 11,
+        "HOLLANDA - EREDIVISIE": 9,
+        "PORTEKİZ - PRIMEIRA LIGA": 10,
+        "BREZİLYA - BRAZIL SERIE A": 20,
+        "ARJANTİN - ARGENTINA PRIMERA": 17,
         "AMERİKA - MLS": 15,
         "AMERİKA - NBA": 8,
         "AVRUPA - EUROLEAGUE": 4,
+        "AMERİKA - WNBA": 7,
+        "AMERİKA - NCAA": 0,
         "TÜRKİYE - BSL": 0,
-        "İSPANYA - LIGA ACB": 0
+        "İSPANYA - LIGA ACB": 0,
+        "İTALYA - LEGA A": 0,
+        "FRANSA - LNB PRO A": 0,
+        "ALMANYA - BBL": 0,
+        "AVRUPA - EUROCUP": 0,
+        "AVRUPA - BCL": 0,
+        "RUSYA - VTB": 0
     }
 }
