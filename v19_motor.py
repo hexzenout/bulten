@@ -1,121 +1,79 @@
 import os, requests, json, time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta
 
 ODDS_API_POOL = [k.strip() for k in os.getenv("ODDS_KEYS", "").split(",") if k.strip()]
-# YENİ: Avrupa Basketbolu için 2. Motor Şifresi
-BASKET_KEY = os.getenv("BASKET_KEY", "").strip()
 
-ALTIN_FUTBOL = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "EREDIVISIE", "PRIMEIRA LIGA", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "CONFERENCE LEAGUE", "CHAMPIONSHIP", "BRAZIL", "ARGENTINA", "MLS", "WORLD CUP"]
-ALTIN_BASKET = ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"]
+# KATEGORİLEME İÇİN ANAHTAR KELİMELER (Artık taramayı kısıtlamaz, sadece rütbe takar)
+ALTIN_LIGLER = ["SUPER LIG", "PREMIER LEAGUE", "LA LIGA", "BUNDESLIGA", "SERIE A", "LIGUE 1", "CHAMPIONS LEAGUE", "EUROPA LEAGUE", "NBA", "EUROLEAGUE", "BSL", "LIGA ACB"]
+GUMUS_LIGLER = ["CHAMPIONSHIP", "EREDIVISIE", "PRIMEIRA LIGA", "BRAZIL", "ARGENTINA", "MLS", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA", "PRO A", "BBL"]
 
 class V19Intelligence:
     def __init__(self):
         self.odds_index, self.kalan_hak = 0, "500"
         self.sonuclar = []
 
-    def kategori_bul(self, lig_adi, spor_turu):
+    def get_key(self):
+        return ODDS_API_POOL[self.odds_index] if self.odds_index < len(ODDS_API_POOL) else None
+
+    def kategori_bul(self, lig_adi):
         l_up = lig_adi.upper()
-        hedef = ALTIN_BASKET if spor_turu == "basketball" else ALTIN_FUTBOL
-        return "ALTIN" if any(x in l_up for x in hedef) else "GÜMÜŞ"
-
-    # MOTOR 1: THE ODDS API (Futbol + NBA/Euroleague)
-    def veri_cek_odds(self, sport_key):
-        while self.odds_index < len(ODDS_API_POOL):
-            key = ODDS_API_POOL[self.odds_index]
-            url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds/?apiKey={key}&regions=eu&markets=h2h"
-            try:
-                r = requests.get(url, timeout=15)
-                self.kalan_hak = r.headers.get('x-requests-remaining', self.kalan_hak)
-                if r.status_code == 200: return r.json()
-                elif r.status_code in [401, 429]: self.odds_index += 1
-                else: break
-            except: break
-        return []
-
-    # MOTOR 2: API-BASKETBALL (Eksik Avrupa Ligleri İçin Özel Ayar)
-    def veri_cek_api_basket(self, league_id, season="2025-2026"):
-        if not BASKET_KEY: return []
-        url = f"https://v1.basketball.api-sports.io/games?league={league_id}&season={season}"
-        headers = {'x-apisports-key': BASKET_KEY, 'x-rapidapi-host': 'v1.basketball.api-sports.io'}
-        try:
-            r = requests.get(url, headers=headers, timeout=15)
-            if r.status_code == 200:
-                # Sadece oynanmamış maçları filtrele
-                return [g for g in r.json().get('response', []) if g['status']['short'] == 'NS']
-        except: pass
-        return []
+        if any(x in l_up for x in ALTIN_LIGLER): return "ALTIN"
+        if any(x in l_up for x in GUMUS_LIGLER): return "GÜMÜŞ"
+        return "BRONZ"
 
     def operasyon(self):
-        # 1. HEDEF: THE ODDS API
-        hedef_ligler_odds = [
-            {"key": "soccer_turkey_super_league", "n": "Super Lig", "t": "soccer"},
-            {"key": "soccer_epl", "n": "Premier League", "t": "soccer"},
-            {"key": "soccer_spain_la_liga", "n": "La Liga", "t": "soccer"},
-            {"key": "soccer_germany_bundesliga", "n": "Bundesliga", "t": "soccer"},
-            {"key": "soccer_italy_serie_a", "n": "Serie A", "t": "soccer"},
-            {"key": "soccer_france_ligue_one", "n": "Ligue 1", "t": "soccer"},
-            {"key": "soccer_uefa_champs_league", "n": "Champions League", "t": "soccer"},
-            {"key": "soccer_uefa_europa_league", "n": "Europa League", "t": "soccer"},
-            {"key": "soccer_uefa_europa_conference_league", "n": "Conference League", "t": "soccer"},
-            {"key": "soccer_efl_champ", "n": "Championship", "t": "soccer"},
-            {"key": "soccer_netherlands_eredivisie", "n": "Eredivisie", "t": "soccer"},
-            {"key": "soccer_portugal_primeira_liga", "n": "Primeira Liga", "t": "soccer"},
-            {"key": "soccer_brazil_campeonato", "n": "Serie A (Brazil)", "t": "soccer"},
-            {"key": "soccer_argentina_primera_division", "n": "Primera Division (Argentina)", "t": "soccer"},
-            {"key": "soccer_usa_mls", "n": "MLS", "t": "soccer"},
-            {"key": "basketball_nba", "n": "NBA", "t": "basketball"},
-            {"key": "basketball_euroleague", "n": "Euroleague", "t": "basketball"},
-            {"key": "basketball_eurocup", "n": "EuroCup", "t": "basketball"},
-            {"key": "basketball_ncaab", "n": "NCAA", "t": "basketball"},
-            {"key": "basketball_wnba", "n": "WNBA", "t": "basketball"}
-        ]
+        key = self.get_key()
+        if not key: return
 
-        for h in hedef_ligler_odds:
-            data = self.veri_cek_odds(h['key'])
-            if data:
-                for m in data:
-                    self.sonuclar.append({
-                        "kategori": self.kategori_bul(h['n'], h['t']),
-                        "lig": h['n'].upper(),
-                        "mac": f"{m.get('home_team')} - {m.get('away_team')}",
-                        "saat_raw": m.get('commence_time'),
-                        "uyari": "📡 RADAR AKTİF | Oranlar İzleniyor"
-                    })
-            time.sleep(1)
+        # 1. BÜLTENDEKİ TÜM SPORLARI ÇEK (SINIRLAMA YOK)
+        try:
+            sports_res = requests.get(f"https://api.the-odds-api.com/v4/sports/?apiKey={key}", timeout=10)
+            self.kalan_hak = sports_res.headers.get('x-requests-remaining', self.kalan_hak)
+            active_sports = [s for s in sports_res.json() if 'soccer' in s['key'] or 'basketball' in s['key']]
+        except:
+            active_sports = []
 
-        # 2. HEDEF: EKSİK BASKETBOL LİGLERİ İÇİN AYAR
-        hedef_ligler_basket = [
-            {"id": "2", "n": "LNB Pro A"},      {"id": "117", "n": "Liga ACB"},
-            {"id": "12", "n": "Lega A"},        {"id": "31", "n": "BSL"},
-            {"id": "1", "n": "BBL"},            {"id": "10", "n": "Heba A1"},
-            {"id": "4", "n": "VTB"},            {"id": "6", "n": "BCL"}
-        ]
-        
-        if BASKET_KEY:
-            for h in hedef_ligler_basket:
-                data = self.veri_cek_api_basket(h['id'])
-                if data:
-                    for m in data:
-                        t1, t2 = m['teams']['home']['name'], m['teams']['away']['name']
+        # 2. AKTİF OLAN HER LİGİ TEK TEK TARA
+        for s in active_sports:
+            current_key = self.get_key()
+            if not current_key: break
+            
+            url = f"https://api.the-odds-api.com/v4/sports/{s['key']}/odds/?apiKey={current_key}&regions=eu&markets=h2h"
+            try:
+                r = requests.get(url, timeout=10)
+                if r.status_code == 200:
+                    self.kalan_hak = r.headers.get('x-requests-remaining', self.kalan_hak)
+                    for m in r.json():
+                        # TSİ SAAT VE TARİHİ PYTHON'DA BETONLUYORUZ (Bug Riski Sıfırlandı)
+                        raw_time = m.get('commence_time')
+                        try:
+                            dt_utc = datetime.strptime(raw_time, "%Y-%m-%dT%H:%M:%SZ")
+                            dt_tsi = dt_utc + timedelta(hours=3) # UTC + 3 Saat
+                            tarih_tsi = dt_tsi.strftime("%Y-%m-%d")
+                            saat_tsi = dt_tsi.strftime("%H:%M")
+                        except:
+                            tarih_tsi, saat_tsi = "BİLİNMİYOR", "00:00"
+
+                        tur = "basketbol" if "basketball" in s['key'] else "futbol"
                         self.sonuclar.append({
-                            "kategori": "ALTIN",
-                            "lig": h['n'].upper(),
-                            "mac": f"{t1} - {t2}",
-                            "saat_raw": m['date'], 
-                            "uyari": "📡 2. MOTOR AKTİF | Fikstür Onaylı"
+                            "kategori": self.kategori_bul(s['title']),
+                            "lig": s['title'].upper(),
+                            "tur": tur,
+                            "mac": f"{m.get('home_team')} - {m.get('away_team')}",
+                            "tarih": tarih_tsi,
+                            "saat": saat_tsi,
+                            "uyari": "📡 Analiz Aktif"
                         })
-                time.sleep(1)
-        else:
-            self.sonuclar.append({
-                "kategori": "GÜMÜŞ", "lig": "SİSTEM UYARISI", "mac": "AVRUPA BASKETBOL EKSİK",
-                "saat_raw": datetime.now(timezone.utc).isoformat(),
-                "uyari": "BASKET_KEY eksik! LNB, ACB, BSL atlandı."
-            })
+                elif r.status_code in [401, 429]:
+                    self.odds_index += 1
+            except: pass
+            time.sleep(0.5)
 
         with open("v19_rapor.json", "w", encoding="utf-8") as f:
             json.dump({
                 "son_guncelleme": datetime.now().strftime("%d-%m-%Y %H:%M:%S"), 
-                "kalan_hak": self.kalan_hak, "veriler": self.sonuclar
+                "kalan_hak": self.kalan_hak, 
+                "veriler": self.sonuclar
             }, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__": V19Intelligence().operasyon()
