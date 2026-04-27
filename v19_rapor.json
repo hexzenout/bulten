@@ -1,25 +1,1730 @@
 {
-    "up": "21:44",
+    "up": "21:50",
+    "veriler": [
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Çaykur Rizespor - Torku Konyaspor",
+            "dt": "2026-05-01",
+            "tm": "17:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Gazişehir Gaziantep - Besiktas JK",
+            "dt": "2026-05-01",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Fenerbahce - Basaksehir",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Samsunspor - Galatasaray",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Trabzonspor - Goztepe",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Antalyaspor - Alanyaspor",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Kayserispor - Eyüpspor",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Fatih Karagümrük - Genclerbirligi SK",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SUPER LIG",
+            "f": "tr",
+            "m": "Kasimpasa SK - Kocaelispor",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Leeds United - Burnley",
+            "dt": "2026-05-01",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Brentford - West Ham United",
+            "dt": "2026-05-02",
+            "tm": "17:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Newcastle United - Brighton and Hove Albion",
+            "dt": "2026-05-02",
+            "tm": "17:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Wolverhampton Wanderers - Sunderland",
+            "dt": "2026-05-02",
+            "tm": "17:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Arsenal - Fulham",
+            "dt": "2026-05-02",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Bournemouth - Crystal Palace",
+            "dt": "2026-05-03",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Manchester United - Liverpool",
+            "dt": "2026-05-03",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Aston Villa - Tottenham Hotspur",
+            "dt": "2026-05-03",
+            "tm": "21:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Chelsea - Nottingham Forest",
+            "dt": "2026-05-04",
+            "tm": "17:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Everton - Manchester City",
+            "dt": "2026-05-04",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Liverpool - Chelsea",
+            "dt": "2026-05-09",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Fulham - Bournemouth",
+            "dt": "2026-05-09",
+            "tm": "17:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Brighton and Hove Albion - Wolverhampton Wanderers",
+            "dt": "2026-05-09",
+            "tm": "17:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Sunderland - Manchester United",
+            "dt": "2026-05-09",
+            "tm": "17:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Manchester City - Brentford",
+            "dt": "2026-05-09",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Burnley - Aston Villa",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Crystal Palace - Everton",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Nottingham Forest - Newcastle United",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "West Ham United - Arsenal",
+            "dt": "2026-05-10",
+            "tm": "18:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Tottenham Hotspur - Leeds United",
+            "dt": "2026-05-11",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Girona - Mallorca",
+            "dt": "2026-05-01",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Villarreal - Levante",
+            "dt": "2026-05-02",
+            "tm": "15:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Valencia - Atlético Madrid",
+            "dt": "2026-05-02",
+            "tm": "17:15"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Alavés - Athletic Bilbao",
+            "dt": "2026-05-02",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "CA Osasuna - Barcelona",
+            "dt": "2026-05-02",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Celta Vigo - Elche CF",
+            "dt": "2026-05-03",
+            "tm": "15:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Getafe - Rayo Vallecano",
+            "dt": "2026-05-03",
+            "tm": "17:15"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Real Betis - Oviedo",
+            "dt": "2026-05-03",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Espanyol - Real Madrid",
+            "dt": "2026-05-03",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Sevilla - Real Sociedad",
+            "dt": "2026-05-04",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Levante - CA Osasuna",
+            "dt": "2026-05-08",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Elche CF - Alavés",
+            "dt": "2026-05-09",
+            "tm": "15:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Sevilla - Espanyol",
+            "dt": "2026-05-09",
+            "tm": "17:15"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Atlético Madrid - Celta Vigo",
+            "dt": "2026-05-09",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Real Sociedad - Real Betis",
+            "dt": "2026-05-09",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Mallorca - Villarreal",
+            "dt": "2026-05-10",
+            "tm": "15:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Athletic Bilbao - Valencia",
+            "dt": "2026-05-10",
+            "tm": "17:15"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Oviedo - Getafe",
+            "dt": "2026-05-10",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Barcelona - Real Madrid",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LA LIGA",
+            "f": "es",
+            "m": "Rayo Vallecano - Girona",
+            "dt": "2026-05-11",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Bayern Munich - 1. FC Heidenheim",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Union Berlin - 1. FC Köln",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Werder Bremen - Augsburg",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Eintracht Frankfurt - Hamburger SV",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "TSG Hoffenheim - VfB Stuttgart",
+            "dt": "2026-05-02",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Bayer Leverkusen - RB Leipzig",
+            "dt": "2026-05-02",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "FC St. Pauli - FSV Mainz 05",
+            "dt": "2026-05-03",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Borussia Monchengladbach - Borussia Dortmund",
+            "dt": "2026-05-03",
+            "tm": "18:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "SC Freiburg - VfL Wolfsburg",
+            "dt": "2026-05-03",
+            "tm": "20:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Borussia Dortmund - Eintracht Frankfurt",
+            "dt": "2026-05-08",
+            "tm": "21:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Augsburg - Borussia Monchengladbach",
+            "dt": "2026-05-09",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "VfB Stuttgart - Bayer Leverkusen",
+            "dt": "2026-05-09",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "RB Leipzig - FC St. Pauli",
+            "dt": "2026-05-09",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "TSG Hoffenheim - Werder Bremen",
+            "dt": "2026-05-09",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "VfL Wolfsburg - Bayern Munich",
+            "dt": "2026-05-09",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "Hamburger SV - SC Freiburg",
+            "dt": "2026-05-10",
+            "tm": "16:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "1. FC Köln - 1. FC Heidenheim",
+            "dt": "2026-05-10",
+            "tm": "18:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BUNDESLIGA",
+            "f": "de",
+            "m": "FSV Mainz 05 - Union Berlin",
+            "dt": "2026-05-10",
+            "tm": "20:30"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Pisa - Lecce",
+            "dt": "2026-05-01",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Udinese - Torino",
+            "dt": "2026-05-02",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Como - Napoli",
+            "dt": "2026-05-02",
+            "tm": "19:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Atalanta BC - Genoa",
+            "dt": "2026-05-02",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Bologna - Cagliari",
+            "dt": "2026-05-03",
+            "tm": "13:30"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Sassuolo - AC Milan",
+            "dt": "2026-05-03",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Juventus - Hellas Verona",
+            "dt": "2026-05-03",
+            "tm": "19:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Inter Milan - Parma",
+            "dt": "2026-05-03",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Cremonese - Lazio",
+            "dt": "2026-05-04",
+            "tm": "19:30"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "AS Roma - Fiorentina",
+            "dt": "2026-05-04",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Torino - Sassuolo",
+            "dt": "2026-05-08",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Cagliari - Udinese",
+            "dt": "2026-05-09",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Lazio - Inter Milan",
+            "dt": "2026-05-09",
+            "tm": "19:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Lecce - Juventus",
+            "dt": "2026-05-09",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Hellas Verona - Como",
+            "dt": "2026-05-10",
+            "tm": "13:30"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Cremonese - Pisa",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Fiorentina - Genoa",
+            "dt": "2026-05-10",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Parma - AS Roma",
+            "dt": "2026-05-10",
+            "tm": "19:00"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "AC Milan - Atalanta BC",
+            "dt": "2026-05-10",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "SERIE A",
+            "f": "it",
+            "m": "Napoli - Bologna",
+            "dt": "2026-05-11",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Nantes - Marseille",
+            "dt": "2026-05-02",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Paris Saint Germain - Lorient",
+            "dt": "2026-05-02",
+            "tm": "18:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Metz - AS Monaco",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Nice - RC Lens",
+            "dt": "2026-05-02",
+            "tm": "22:05"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Lille - Le Havre",
+            "dt": "2026-05-03",
+            "tm": "16:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Auxerre - Angers",
+            "dt": "2026-05-03",
+            "tm": "18:15"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Paris FC - Brest",
+            "dt": "2026-05-03",
+            "tm": "18:15"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Strasbourg - Toulouse",
+            "dt": "2026-05-03",
+            "tm": "18:15"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Lyon - Rennes",
+            "dt": "2026-05-03",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "RC Lens - Nantes",
+            "dt": "2026-05-08",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "AS Monaco - Lille",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Angers - Strasbourg",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Auxerre - Nice",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Paris Saint Germain - Brest",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Le Havre - Marseille",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Metz - Lorient",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Toulouse - Lyon",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "LIGUE 1",
+            "f": "fr",
+            "m": "Rennes - Paris FC",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "Paris Saint Germain - Bayern Munich",
+            "dt": "2026-04-28",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "Atlético Madrid - Arsenal",
+            "dt": "2026-04-29",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "EUROPA LEAGUE",
+            "f": "eu",
+            "m": "Nottingham Forest - Aston Villa",
+            "dt": "2026-04-30",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "EUROPA LEAGUE",
+            "f": "eu",
+            "m": "SC Braga - SC Freiburg",
+            "dt": "2026-04-30",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Shakhtar Donetsk - Crystal Palace",
+            "dt": "2026-04-30",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Rayo Vallecano - Strasbourg",
+            "dt": "2026-04-30",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Southampton - Ipswich Town",
+            "dt": "2026-04-28",
+            "tm": "21:45"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Portsmouth - Birmingham City",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Blackburn Rovers - Leicester City",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Bristol City - Stoke City",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Swansea City - Charlton Athletic",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Watford - Coventry City",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Derby County - Sheffield United",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Hull City - Norwich City",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Wrexham AFC - Middlesbrough",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Millwall - Oxford United",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Sheffield Wednesday - West Bromwich Albion",
+            "dt": "2026-05-02",
+            "tm": "14:30"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "FC Utrecht - NAC Breda",
+            "dt": "2026-05-02",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "Groningen - Excelsior",
+            "dt": "2026-05-02",
+            "tm": "19:45"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "Ajax - PSV Eindhoven",
+            "dt": "2026-05-02",
+            "tm": "21:00"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "NEC Nijmegen - SC Telstar",
+            "dt": "2026-05-02",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "FC Volendam - Heerenveen",
+            "dt": "2026-05-03",
+            "tm": "13:15"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "FC Zwolle - Heracles Almelo",
+            "dt": "2026-05-03",
+            "tm": "15:30"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "Fortuna Sittard - Feyenoord",
+            "dt": "2026-05-03",
+            "tm": "15:30"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "AZ Alkmaar - FC Twente Enschede",
+            "dt": "2026-05-03",
+            "tm": "17:45"
+        },
+        {
+            "t": "futbol",
+            "l": "EREDIVISIE",
+            "f": "nl",
+            "m": "Sparta Rotterdam - Go Ahead Eagles",
+            "dt": "2026-05-03",
+            "tm": "17:45"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Sporting Lisbon - Tondela",
+            "dt": "2026-04-29",
+            "tm": "22:15"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Nacional - AVS Futebol SAD",
+            "dt": "2026-05-02",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Arouca - Santa Clara",
+            "dt": "2026-05-02",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Moreirense FC - CF Estrela",
+            "dt": "2026-05-02",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Famalicão - Benfica",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "FC Porto - Alverca",
+            "dt": "2026-05-02",
+            "tm": "22:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Casa Pia - Tondela",
+            "dt": "2026-05-03",
+            "tm": "17:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Braga - Estoril",
+            "dt": "2026-05-03",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Rio Ave FC - Gil Vicente",
+            "dt": "2026-05-03",
+            "tm": "22:30"
+        },
+        {
+            "t": "futbol",
+            "l": "PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Sporting Lisbon - Vitória SC",
+            "dt": "2026-05-04",
+            "tm": "22:15"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Botafogo - Remo",
+            "dt": "2026-05-02",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Vitoria - Coritiba",
+            "dt": "2026-05-03",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Palmeiras - Santos",
+            "dt": "2026-05-03",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Atletico Paranaense - Grêmio",
+            "dt": "2026-05-03",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Cruzeiro - Atletico Mineiro",
+            "dt": "2026-05-03",
+            "tm": "03:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Sao Paulo - Bahia",
+            "dt": "2026-05-03",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Flamengo - Vasco da Gama",
+            "dt": "2026-05-03",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Chapecoense - Bragantino-SP",
+            "dt": "2026-05-04",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Internacional - Fluminense",
+            "dt": "2026-05-04",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Mirassol - Corinthians",
+            "dt": "2026-05-04",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Coritiba - Internacional",
+            "dt": "2026-05-09",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Fluminense - Vitoria",
+            "dt": "2026-05-10",
+            "tm": "00:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Bahia - Cruzeiro",
+            "dt": "2026-05-10",
+            "tm": "03:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Atletico Mineiro - Botafogo",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Remo - Palmeiras",
+            "dt": "2026-05-10",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Santos - Bragantino-SP",
+            "dt": "2026-05-11",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Mirassol - Chapecoense",
+            "dt": "2026-05-11",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Corinthians - Sao Paulo",
+            "dt": "2026-05-11",
+            "tm": "00:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Grêmio - Flamengo",
+            "dt": "2026-05-11",
+            "tm": "01:30"
+        },
+        {
+            "t": "futbol",
+            "l": "BRAZIL SERIE A",
+            "f": "br",
+            "m": "Vasco da Gama - Atletico Paranaense",
+            "dt": "2026-05-11",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Velez Sarsfield BA - Union Santa Fe",
+            "dt": "2026-04-28",
+            "tm": "00:45"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Atlético Huracán - Argentinos Juniors",
+            "dt": "2026-04-28",
+            "tm": "03:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Union Santa Fe - Talleres",
+            "dt": "2026-05-03",
+            "tm": "03:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "River Plate - Atlético Tucuman",
+            "dt": "2026-05-03",
+            "tm": "03:15"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Belgrano de Cordoba - Sarmiento de Junin",
+            "dt": "2026-05-03",
+            "tm": "03:30"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Aldosivi Mar del Plata - Independiente Rivadavia",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Gimnasia La Plata - Argentinos Juniors",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Racing Club - Atlético Huracán",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Barracas Central - Banfield",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Central Córdoba - Boca Juniors",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Rosario Central - CA Tigre BA",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Gimnasia Mendoza - Defensa y Justicia",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Lanus - Deportivo Riestra",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Estudiantes de Río Cuarto - Instituto de Córdoba",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Platense - Estudiantes",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "San Lorenzo - Independiente",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Velez Sarsfield BA - Newells Old Boys",
+            "dt": "2026-05-03",
+            "tm": "23:00"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Toronto FC - San Jose Earthquakes",
+            "dt": "2026-05-02",
+            "tm": "20:00"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Sporting Kansas City - Seattle Sounders FC",
+            "dt": "2026-05-02",
+            "tm": "21:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Real Salt Lake - Portland Timbers",
+            "dt": "2026-05-02",
+            "tm": "23:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Inter Miami CF - Orlando City SC",
+            "dt": "2026-05-03",
+            "tm": "02:00"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Atlanta United FC - CF Montreal",
+            "dt": "2026-05-03",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "New England Revolution - Charlotte FC",
+            "dt": "2026-05-03",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Columbus Crew SC - Minnesota United FC",
+            "dt": "2026-05-03",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "New York Red Bulls - FC Dallas",
+            "dt": "2026-05-03",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Philadelphia Union - Nashville SC",
+            "dt": "2026-05-03",
+            "tm": "02:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Chicago Fire - FC Cincinnati",
+            "dt": "2026-05-03",
+            "tm": "03:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Houston Dynamo - Colorado Rapids",
+            "dt": "2026-05-03",
+            "tm": "03:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "San Diego FC - Los Angeles FC",
+            "dt": "2026-05-03",
+            "tm": "04:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "LA Galaxy - Vancouver Whitecaps FC",
+            "dt": "2026-05-03",
+            "tm": "05:30"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "New York City FC - D.C. United",
+            "dt": "2026-05-03",
+            "tm": "22:00"
+        },
+        {
+            "t": "futbol",
+            "l": "MLS",
+            "f": "us",
+            "m": "Austin FC - St. Louis City SC",
+            "dt": "2026-05-04",
+            "tm": "00:30"
+        },
+        {
+            "t": "basketbol",
+            "l": "NBA",
+            "f": "us",
+            "m": "Orlando Magic - Detroit Pistons",
+            "dt": "2026-04-28",
+            "tm": "03:10"
+        },
+        {
+            "t": "basketbol",
+            "l": "NBA",
+            "f": "us",
+            "m": "Phoenix Suns - Oklahoma City Thunder",
+            "dt": "2026-04-28",
+            "tm": "04:40"
+        },
+        {
+            "t": "basketbol",
+            "l": "NBA",
+            "f": "us",
+            "m": "Denver Nuggets - Minnesota Timberwolves",
+            "dt": "2026-04-28",
+            "tm": "05:40"
+        },
+        {
+            "t": "basketbol",
+            "l": "NBA",
+            "f": "us",
+            "m": "Boston Celtics - Philadelphia 76ers",
+            "dt": "2026-04-29",
+            "tm": "02:10"
+        },
+        {
+            "t": "basketbol",
+            "l": "NBA",
+            "f": "us",
+            "m": "New York Knicks - Atlanta Hawks",
+            "dt": "2026-04-29",
+            "tm": "03:10"
+        },
+        {
+            "t": "basketbol",
+            "l": "NBA",
+            "f": "us",
+            "m": "San Antonio Spurs - Portland Trail Blazers",
+            "dt": "2026-04-29",
+            "tm": "04:40"
+        },
+        {
+            "t": "basketbol",
+            "l": "NBA",
+            "f": "us",
+            "m": "Cleveland Cavaliers - Toronto Raptors",
+            "dt": "2026-04-30",
+            "tm": "02:10"
+        },
+        {
+            "t": "basketbol",
+            "l": "NBA",
+            "f": "us",
+            "m": "Los Angeles Lakers - Houston Rockets",
+            "dt": "2026-04-30",
+            "tm": "04:40"
+        },
+        {
+            "t": "basketbol",
+            "l": "EUROLEAGUE",
+            "f": "eu",
+            "m": "Fenerbahce SK - Žalgiris",
+            "dt": "2026-04-28",
+            "tm": "20:45"
+        },
+        {
+            "t": "basketbol",
+            "l": "EUROLEAGUE",
+            "f": "eu",
+            "m": "Olympiacos - AS Monaco",
+            "dt": "2026-04-28",
+            "tm": "21:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "EUROLEAGUE",
+            "f": "eu",
+            "m": "Valencia Basket - Panathinaikos",
+            "dt": "2026-04-28",
+            "tm": "21:45"
+        },
+        {
+            "t": "basketbol",
+            "l": "EUROLEAGUE",
+            "f": "eu",
+            "m": "Real Madrid - Hapoel Tel Aviv",
+            "dt": "2026-04-29",
+            "tm": "21:45"
+        },
+        {
+            "t": "basketbol",
+            "l": "WNBA",
+            "f": "us",
+            "m": "Minnesota Lynx - Nigeria",
+            "dt": "2026-04-28",
+            "tm": "03:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "WNBA",
+            "f": "us",
+            "m": "New York Liberty - Connecticut Sun",
+            "dt": "2026-05-09",
+            "tm": "02:30"
+        },
+        {
+            "t": "basketbol",
+            "l": "WNBA",
+            "f": "us",
+            "m": "Toronto Tempo - Washington Mystics",
+            "dt": "2026-05-09",
+            "tm": "02:30"
+        },
+        {
+            "t": "basketbol",
+            "l": "WNBA",
+            "f": "us",
+            "m": "Seattle Storm - Golden State Valkyries",
+            "dt": "2026-05-09",
+            "tm": "05:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "WNBA",
+            "f": "us",
+            "m": "Indiana Fever - Dallas Wings",
+            "dt": "2026-05-09",
+            "tm": "20:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "WNBA",
+            "f": "us",
+            "m": "Las Vegas Aces - Phoenix Mercury",
+            "dt": "2026-05-09",
+            "tm": "22:30"
+        },
+        {
+            "t": "basketbol",
+            "l": "WNBA",
+            "f": "us",
+            "m": "Portland Fire - Chicago Sky",
+            "dt": "2026-05-10",
+            "tm": "04:00"
+        }
+    ],
     "sayac": {
-        "SUPER LIG": 0,
-        "PREMIER LEAGUE": 0,
-        "LA LIGA": 0,
-        "BUNDESLIGA": 0,
-        "SERIE A": 0,
-        "LIGUE 1": 0,
-        "CHAMPIONS LEAGUE": 0,
-        "EUROPA LEAGUE": 0,
-        "CONFERENCE LEAGUE": 0,
-        "CHAMPIONSHIP": 0,
-        "EREDIVISIE": 0,
-        "PRIMEIRA LIGA": 0,
-        "BRAZIL SERIE A": 0,
-        "ARGENTINA PRIMERA": 0,
-        "MLS": 0,
-        "NBA": 0,
-        "EUROLEAGUE": 0,
-        "WNBA": 0,
-        "NCAA": 0
-    },
-    "veriler": []
+        "SUPER LIG": 9,
+        "PREMIER LEAGUE": 20,
+        "LA LIGA": 20,
+        "BUNDESLIGA": 18,
+        "SERIE A": 20,
+        "LIGUE 1": 18,
+        "CHAMPIONS LEAGUE": 2,
+        "EUROPA LEAGUE": 2,
+        "CONFERENCE LEAGUE": 2,
+        "CHAMPIONSHIP": 11,
+        "EREDIVISIE": 9,
+        "PRIMEIRA LIGA": 10,
+        "BRAZIL SERIE A": 20,
+        "ARGENTINA PRIMERA": 17,
+        "MLS": 15,
+        "NBA": 8,
+        "EUROLEAGUE": 4,
+        "WNBA": 7,
+        "NCAA": 0,
+        "BSL": 0,
+        "LIGA ACB": 0,
+        "LEGA A": 0,
+        "LNB PRO A": 0,
+        "BBL": 0,
+        "EUROCUP": 0,
+        "BCL": 0,
+        "VTB": 0
+    }
 }
