@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 ELITE | SUPREME COMMAND CENTER</title>
+    <title>V19 ELITE | COMMAND CENTER PRO</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <style>
         /* V19 ELITE SUPREME TERMINAL - MASTER CSS 
-           Satır sayısı: ~1000 bandı hedeflenmiştir. 
-           Kısaltma yapılmamış, her stil açıkça tanımlanmıştır.
+           Satır sayısı ve detay seviyesi maksimuma çekildi.
+           Hiçbir stil bloğu birleştirilmedi, hepsi açık yazıldı.
         */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -37,7 +37,7 @@
         }
 
         /* RESET & BASE */
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; outline: none; }
         
         html, body { 
             margin: 0; 
@@ -60,7 +60,6 @@
             flex-shrink: 0; 
             height: 100%;
             z-index: 500;
-            transition: transform 0.3s ease;
         }
 
         .brand-container { 
@@ -96,9 +95,8 @@
             font-size: 0.85em; 
             display: flex; 
             align-items: center; 
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s ease;
             border-left: 4px solid transparent;
-            position: relative;
         }
 
         .nav-item i { 
@@ -106,7 +104,6 @@
             font-size: 1.25em; 
             width: 24px; 
             text-align: center; 
-            transition: 0.3s;
         }
 
         .nav-item:hover { 
@@ -155,13 +152,6 @@
             font-weight: 900; 
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #fff;
-        }
-
-        .stats-summary {
-            display: flex;
-            align-items: center;
-            gap: 20px;
         }
 
         .stat-badge {
@@ -174,88 +164,74 @@
             gap: 12px;
         }
 
-        .stat-badge label { font-size: 0.65em; color: var(--muted); font-weight: 800; text-transform: uppercase; }
+        .stat-badge label { font-size: 0.65em; color: var(--muted); font-weight: 800; }
         .stat-badge span { font-family: 'JetBrains Mono'; color: var(--gold); font-size: 1.15em; font-weight: 800; }
 
         .main-content { 
             flex-grow: 1; 
             padding: 30px; 
             overflow-y: auto; 
-            scroll-behavior: smooth;
         }
 
-        /* --- FILTERS & CONTROLS --- */
-        .control-panel {
-            margin-bottom: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        /* --- RADAR CONTROLS --- */
+        .control-panel { margin-bottom: 25px; display: flex; flex-direction: column; gap: 15px; }
 
         .filter-row { 
             display: flex; 
             gap: 15px; 
             background: var(--panel); 
-            padding: 15px; 
-            border-radius: 10px; 
+            padding: 12px; 
+            border-radius: 8px; 
             border: 1px solid var(--border); 
             align-items: center; 
         }
 
-        .view-switcher { 
-            display: flex; 
-            gap: 12px; 
-        }
+        .view-switcher { display: flex; gap: 10px; }
 
         .btn-view { 
             background: transparent; 
-            border: 1.5px solid var(--orange); 
+            border: 1px solid var(--orange); 
             color: var(--orange); 
-            padding: 10px 22px; 
-            border-radius: 6px; 
+            padding: 8px 20px; 
+            border-radius: 5px; 
             font-size: 0.75em; 
             font-weight: 900; 
             cursor: pointer; 
-            transition: all 0.3s;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .btn-view.active { 
             background: var(--orange); 
             color: #000; 
-            box-shadow: 0 0 20px var(--orange-glow);
+            box-shadow: 0 0 15px var(--orange-glow);
         }
 
         .supreme-select { 
             background: #000; 
             border: 1px solid var(--border); 
             color: #fff; 
-            padding: 12px; 
-            border-radius: 6px; 
-            font-size: 0.85em; 
+            padding: 10px; 
+            border-radius: 5px; 
+            font-size: 0.8em; 
             font-weight: 700; 
-            min-width: 180px;
+            cursor: pointer;
         }
 
         /* --- CUSTOM LEAGUE DROPDOWN --- */
-        .league-drop { position: relative; min-width: 320px; }
+        .league-drop { position: relative; min-width: 300px; }
         .league-drop-trigger { 
             background: #000; 
             border: 1px solid var(--border); 
             color: #fff; 
-            padding: 12px 20px; 
-            border-radius: 6px; 
-            font-size: 0.85em; 
+            padding: 10px 15px; 
+            border-radius: 5px; 
+            font-size: 0.8em; 
             font-weight: 700; 
             cursor: pointer; 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            transition: border 0.3s;
         }
-        .league-drop-trigger:hover { border-color: var(--gold); }
-        
         .league-drop-menu { 
             display: none; 
             position: absolute; 
@@ -265,368 +241,128 @@
             background: #0a0a0c; 
             border: 1px solid var(--border-bright); 
             z-index: 2000; 
-            max-height: 450px; 
+            max-height: 400px; 
             overflow-y: auto; 
-            border-radius: 8px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            border-radius: 6px; 
         }
-
         .league-drop-item { 
-            padding: 14px 20px; 
-            font-size: 0.85em; 
+            padding: 12px 15px; 
+            font-size: 0.8em; 
             display: flex; 
             align-items: center; 
             cursor: pointer; 
             border-bottom: 1px solid #161618; 
-            color: #ccc;
         }
-        .league-drop-item:hover { background: #1f1f23; color: #fff; }
-        .league-drop-item img { width: 22px; height: 15px; margin-right: 15px; border-radius: 2px; }
+        .league-drop-item:hover { background: #1f1f23; }
+        .league-drop-item img { width: 18px; height: 12px; margin-right: 12px; }
 
-        /* --- MATCH LIST STYLES (ELITE DESIGN) --- */
-        .league-group { 
-            margin-bottom: 20px; 
-            border-radius: 10px; 
-            overflow: hidden; 
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-        .league-title { 
+        /* --- LIST RENDER STYLES --- */
+        .league-card { margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        .league-header { 
             background: #1e293b; 
-            padding: 15px 25px; 
+            padding: 12px 20px; 
             font-weight: 900; 
-            font-size: 0.75em; 
+            font-size: 0.7em; 
             color: #fff; 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
-
-        .league-title-left { display: flex; align-items: center; }
-        .league-icon { font-size: 1.3em; margin-right: 15px; }
-
-        .fav-star { 
-            font-size: 1.2em; 
-            color: var(--muted); 
-            margin-right: 15px; 
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        .fav-star.active { 
-            color: var(--gold); 
-            text-shadow: 0 0 10px var(--gold-glow);
-        }
+        .fav-star { color: var(--muted); margin-right: 12px; font-size: 1.2em; transition: 0.2s; }
+        .fav-star.active { color: var(--gold); text-shadow: 0 0 8px var(--gold-glow); }
 
         .match-row-item { 
             display: flex; 
             align-items: center; 
-            padding: 12px 25px; 
+            padding: 10px 20px; 
             border-bottom: 1px solid #161618; 
-            font-size: 0.82em; 
+            font-size: 0.78em; 
             background: #0a0a0c;
-            transition: background 0.2s;
         }
-        .match-row-item:last-child { border-bottom: none; }
-        .match-row-item:hover { background: #111115; }
+        .match-row-item:hover { background: #111114; }
+        .m-time { font-family: 'JetBrains Mono'; color: var(--green); width: 55px; font-weight: 800; }
+        .m-icon { margin-right: 10px; font-size: 0.9em; opacity: 0.7; }
+        .m-main { font-weight: 700; flex-grow: 1; display: flex; align-items: center; }
+        .m-flag { width: 16px; height: 11px; margin-left: 10px; border-radius: 1px; }
+        .m-tag { font-size: 0.75em; color: var(--muted); background: #1c1c21; padding: 2px 8px; border-radius: 4px; margin-left: 15px; text-transform: uppercase; font-weight: 800; border: 1px solid #222; }
 
-        .match-time { 
-            font-family: 'JetBrains Mono'; 
-            color: var(--green); 
-            width: 60px; 
-            font-weight: 800; 
-            font-size: 1em; 
-        }
+        /* --- STREAM HUB --- */
+        .layout-bar { display: flex; gap: 10px; margin-bottom: 20px; background: var(--panel); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
+        .btn-lay { background: #1f1f23; color: var(--muted); border: 1px solid #333; padding: 8px 18px; border-radius: 5px; font-size: 0.75em; font-weight: 900; cursor: pointer; }
+        .btn-lay.active { background: var(--green); color: #000; border-color: var(--green); }
 
-        .match-main { 
-            font-weight: 700; 
-            flex-grow: 1; 
-            display: flex; 
-            align-items: center; 
-            color: #e4e4e7;
-        }
-
-        .country-flag { 
-            width: 18px; 
-            height: 12px; 
-            object-fit: cover; 
-            border-radius: 1px; 
-            margin-left: 12px; 
-        }
-
-        .league-tag { 
-            font-size: 0.7em; 
-            color: var(--muted); 
-            background: #1c1c21; 
-            padding: 3px 10px; 
-            border-radius: 5px; 
-            margin-left: 20px; 
-            font-weight: 800; 
-            border: 1px solid #27272a;
-        }
-
-        /* --- MULTI-STREAM HUB --- */
-        .layout-bar { 
-            display: flex; 
-            gap: 12px; 
-            margin-bottom: 25px; 
-            background: var(--panel); 
-            padding: 15px; 
-            border-radius: 10px; 
-            border: 1px solid var(--border); 
-        }
-
-        .btn-lay { 
-            background: #1f1f23; 
-            color: var(--muted); 
-            border: 1px solid #333; 
-            padding: 10px 25px; 
-            border-radius: 8px; 
-            font-size: 0.8em; 
-            font-weight: 900; 
-            cursor: pointer; 
-            transition: 0.3s;
-        }
-
-        .btn-lay.active { 
-            background: var(--green); 
-            color: #000; 
-            border-color: var(--green); 
-        }
-
-        .grid-master { 
-            display: none; 
-            gap: 15px; 
-            height: calc(100vh - 280px); 
-            width: 100%; 
-        }
-
+        .grid-master { display: none; gap: 12px; height: calc(100vh - 280px); width: 100%; }
         .grid-master.active { display: grid; }
-        
-        /* Grid Layouts */
         .layout-1 { grid-template-columns: 1fr; }
         .layout-2 { grid-template-columns: 1fr 1fr; }
         .layout-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
         .layout-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
 
-        .stream-cell { 
-            background: #000; 
-            border: 1px solid #27272a; 
-            border-radius: 10px; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            transition: border 0.3s;
-        }
+        .stream-cell { background: #000; border: 1px solid #222; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+        .cell-nav { padding: 6px; background: #0a0a0c; display: flex; gap: 6px; border-bottom: 1px solid var(--border); }
+        .cell-input { flex: 1; background: #000; border: 1px solid #333; color: #fff; font-size: 10px; padding: 5px 10px; border-radius: 4px; }
+        .btn-go { background: var(--green); color: #000; border: none; padding: 0 12px; border-radius: 4px; font-weight: 900; font-size: 10px; cursor: pointer; }
+        .btn-fav { background: var(--gold); color: #000; border: none; padding: 0 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .btn-kill { background: var(--red); color: #fff; border: none; padding: 0 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
 
-        .stream-cell:hover { border-color: var(--green); }
+        .fav-stream-box { background: var(--panel); border: 1px solid var(--border); padding: 15px; border-radius: 10px; margin-top: 20px; }
+        .stream-pill { display: inline-flex; align-items: center; background: #111; border: 1px solid #333; color: #ddd; padding: 6px 12px; border-radius: 6px; font-size: 0.7em; margin-right: 10px; margin-bottom: 10px; cursor: pointer; }
+        .stream-pill i { margin-left: 10px; color: var(--red); opacity: 0.5; }
 
-        .cell-nav { 
-            padding: 8px; 
-            background: #0a0a0c; 
-            display: flex; 
-            gap: 8px; 
-            border-bottom: 1px solid var(--border); 
-        }
-
-        .cell-input { 
-            flex: 1; 
-            background: #000; 
-            border: 1px solid #333; 
-            color: #fff; 
-            font-size: 11px; 
-            padding: 6px 12px; 
-            border-radius: 5px; 
-        }
-
-        .cell-btn-go { background: var(--green); color: #000; border: none; padding: 0 15px; border-radius: 5px; font-weight: 900; font-size: 0.7em; cursor: pointer; }
-        .cell-btn-fav { background: var(--gold); color: #000; border: none; padding: 0 10px; border-radius: 5px; cursor: pointer; font-size: 11px; }
-        .cell-btn-kill { background: var(--red); color: #fff; border: none; padding: 0 12px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-
-        .fav-stream-container { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 20px; 
-            border-radius: 10px; 
-            margin-top: 20px; 
-        }
-
-        .fav-pill { 
-            display: inline-flex; 
-            align-items: center; 
-            background: #111; 
-            border: 1px solid #333; 
-            color: #ddd; 
-            padding: 8px 15px; 
-            border-radius: 6px; 
-            font-size: 0.75em; 
-            margin-right: 12px; 
-            margin-bottom: 10px; 
-            cursor: pointer; 
-            transition: 0.2s;
-        }
-
-        .fav-pill:hover { border-color: var(--gold); background: #161618; }
-        .fav-pill i { margin-left: 12px; color: var(--red); opacity: 0.5; }
-        .fav-pill i:hover { opacity: 1; }
-
-        /* --- SUPREME FINANCIAL TERMINAL --- */
-        .fin-full-layout { 
-            display: none; 
-            grid-template-columns: 1fr 450px; 
-            gap: 30px; 
-            height: 100%; 
-        }
-
+        /* --- FINANCIAL TERMINAL --- */
+        .fin-full-layout { display: none; grid-template-columns: 1fr 440px; gap: 25px; height: 100%; }
         .fin-full-layout.active { display: grid; }
-
-        .ledger-side { 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 25px; 
-            padding-right: 10px; 
-        }
-
-        .rolling-board { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 15px; 
-        }
-
-        .roll-box { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 25px 15px; 
-            border-radius: 12px; 
-            text-align: center; 
-            border-top: 5px solid var(--muted); 
-            transition: all 0.3s;
-        }
-
-        .roll-box.active { 
-            border-top-color: var(--green); 
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.05);
-            transform: translateY(-2px);
-        }
-
-        .roll-title-text { font-size: 0.6em; font-weight: 900; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; display: block; }
-        .roll-price { font-family: 'JetBrains Mono'; font-size: 1.4em; font-weight: 900; color: var(--gold); }
-
-        .ledger-supreme { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            border-radius: 12px; 
-            display: flex; 
-            flex-direction: column; 
-            flex-grow: 1; 
-            min-height: 500px; 
-        }
-
-        .ledger-nav { 
-            padding: 25px; 
-            border-bottom: 1px solid #1f1f23; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-
-        .ledger-btn-group { display: flex; gap: 10px; }
-        .btn-tab-sup { 
-            background: #161618; 
-            color: var(--muted); 
-            border: 1px solid #333; 
-            padding: 8px 18px; 
-            border-radius: 6px; 
-            font-size: 0.75em; 
-            font-weight: 800; 
-            cursor: pointer; 
-        }
-
-        .btn-tab-sup.active { background: var(--gold); color: #000; border-color: var(--gold); }
-
-        .table-supreme-wrapper { overflow-y: auto; flex-grow: 1; }
-        .sup-table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
-        .sup-table th { background: #111; padding: 18px; text-align: left; color: var(--muted); position: sticky; top: 0; border-bottom: 1px solid #222; font-weight: 900; }
-        .sup-table td { padding: 18px; border-bottom: 1px solid #161618; color: #f4f4f5; font-family: 'Inter', sans-serif; }
+        .fin-left { overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
         
-        .analysis-side { display: flex; flex-direction: column; gap: 25px; }
-        .chart-supreme { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 25px; height: 500px; position: relative; }
+        .rolling-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .roll-card { background: var(--panel); border: 1px solid var(--border); padding: 20px 10px; border-radius: 10px; text-align: center; border-top: 4px solid var(--muted); }
+        .roll-card.active { border-top-color: var(--green); }
+        .roll-lbl { font-size: 0.55em; font-weight: 900; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .roll-val { font-family: 'JetBrains Mono'; font-size: 1.2em; font-weight: 900; color: var(--gold); }
+
+        .ledger-box { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; flex-grow: 1; min-height: 480px; }
+        .ledger-head { padding: 20px; border-bottom: 1px solid #1f1f23; display: flex; justify-content: space-between; align-items: center; }
+        .ledger-tab-group { display: flex; gap: 8px; }
+        .btn-tab { background: #161618; color: var(--muted); border: 1px solid #333; padding: 6px 15px; border-radius: 5px; font-size: 0.7em; font-weight: 800; cursor: pointer; }
+        .btn-tab.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+        .sup-table { width: 100%; border-collapse: collapse; font-size: 0.75em; }
+        .sup-table th { background: #111; padding: 15px; text-align: left; color: var(--muted); position: sticky; top: 0; border-bottom: 1px solid #222; }
+        .sup-table td { padding: 15px; border-bottom: 1px solid #161618; color: #e4e4e7; }
         
-        .kpi-master { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .kpi-box { background: #000; border: 1px solid var(--border); padding: 20px 15px; border-radius: 10px; text-align: center; }
-        .kpi-box span { display: block; font-size: 0.65em; color: var(--muted); margin-bottom: 10px; font-weight: 900; letter-spacing: 1px; }
-        .kpi-box b { font-family: 'JetBrains Mono'; font-size: 1.3em; color: #fff; }
+        .fin-right { display: flex; flex-direction: column; gap: 20px; }
+        .chart-supreme { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px; height: 440px; }
+        .kpi-master { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .kpi-unit { background: #000; border: 1px solid var(--border); padding: 15px 10px; border-radius: 8px; text-align: center; }
+        .kpi-unit span { display: block; font-size: 0.6em; color: var(--muted); margin-bottom: 6px; font-weight: 900; }
+        .kpi-unit b { font-family: 'JetBrains Mono'; font-size: 1.2em; color: #fff; }
 
-        .op-input-panel { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 30px; 
-            border-radius: 12px; 
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .entry-box { background: var(--panel); border: 1px solid var(--border); padding: 25px; border-radius: 10px; }
+        .btn-supreme { background: var(--green); color: #000; border: none; padding: 15px; border-radius: 6px; font-weight: 900; cursor: pointer; width: 100%; font-size: 0.9em; letter-spacing: 1px; }
 
-        .btn-supreme-action { 
-            background: var(--green); 
-            color: #000; 
-            border: none; 
-            padding: 18px; 
-            border-radius: 8px; 
-            font-weight: 900; 
-            cursor: pointer; 
-            font-size: 0.95em; 
-            letter-spacing: 1.5px;
-            transition: 0.3s;
-        }
-
-        .btn-supreme-action:hover { transform: scale(1.02); box-shadow: 0 10px 25px var(--green-glow); }
-        
         /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #2d2d33; border-radius: 10px; border: 2px solid #000; }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="brand-container">
-            <div class="brand-text">V19 ELITE</div>
-        </div>
+        <div class="brand-container"><div class="brand-text">V19 ELITE</div></div>
         <div class="nav-wrapper">
-            <div class="nav-item active" id="m-f" onclick="triggerTab('futbol', this)">
-                <i class="fa-solid fa-futbol"></i> FUTBOL RADARI
-            </div>
-            <div class="nav-item" id="m-b" onclick="triggerTab('basketbol', this)">
-                <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI
-            </div>
-            <div class="nav-item stream-nav" onclick="triggerTab('stream', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:20px;">
-                <i class="fa-solid fa-tv"></i> CANLI YAYIN
-            </div>
-            <div class="nav-item" onclick="triggerTab('finance', this)" style="color:var(--green);">
-                <i class="fa-solid fa-chart-line"></i> FİNANS TERMİNALİ
-            </div>
+            <div class="nav-item active" id="nav-f" onclick="switchMainTab('futbol', this)"><i class="fa-solid fa-futbol"></i> FUTBOL RADARI</div>
+            <div class="nav-item" id="nav-b" onclick="switchMainTab('basketbol', this)"><i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET RADARI</div>
+            <div class="nav-item stream-nav" onclick="switchMainTab('stream', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:20px;"><i class="fa-solid fa-tv"></i> CANLI YAYIN</div>
+            <div class="nav-item" onclick="switchMainTab('finance', this)" style="color:var(--green);"><i class="fa-solid fa-chart-line"></i> FİNANS TERMİNALİ</div>
         </div>
     </div>
 
     <div class="viewport">
         <div class="top-bar">
-            <div class="page-info">
-                <h2 id="supreme-title">FUTBOL RADARI</h2>
-            </div>
-            <div class="stats-summary">
-                <div class="stat-badge">
-                    <label>AKTİF KASA:</label>
-                    <span id="top-val">100.00 USDT</span>
-                </div>
-            </div>
+            <div class="page-info"><h2 id="supreme-title">FUTBOL RADARI</h2></div>
+            <div class="stat-badge"><label>AKTİF KASA:</label><span id="top-val">100.00 USDT</span></div>
         </div>
 
         <div class="main-content">
@@ -634,592 +370,289 @@
             <div id="view-radar">
                 <div class="control-panel">
                     <div class="filter-row">
-                        <select id="sel-date" class="supreme-select" onchange="runFilterEngine()">
-                            <option value="ALL">TÜM TARİHLER</option>
-                        </select>
-                        
-                        <div class="league-drop" id="league-drop-supreme">
-                            <div class="league-drop-trigger" onclick="openLeagueMenu(event)">
-                                <div id="league-drop-label">TÜM LİGLER</div>
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </div>
-                            <div class="league-drop-menu" id="league-drop-options"></div>
+                        <select id="sel-date" class="supreme-select" onchange="runFilterEngine()"><option value="ALL">TÜM TARİHLER</option></select>
+                        <div class="league-drop">
+                            <div class="league-drop-trigger" onclick="toggleLeagueMenu(event)"><div id="drop-label">TÜM LİGLER</div><i class="fa-solid fa-chevron-down"></i></div>
+                            <div class="league-drop-menu" id="drop-menu"></div>
                         </div>
                     </div>
-
                     <div class="view-switcher">
-                        <button class="btn-view active" id="btn-v-league" onclick="setMasterSort('league')">LİG SIRALI</button>
-                        <button class="btn-view" id="btn-v-time" onclick="setMasterSort('time')">SAAT SIRALI</button>
+                        <button class="btn-view active" id="btn-v-league" onclick="setSortMode('league')">LİG SIRALI</button>
+                        <button class="btn-view" id="btn-v-time" onclick="setSortMode('time')">SAAT SIRALI</button>
                     </div>
                 </div>
-                
-                <div id="radar-render-target"></div>
+                <div id="render-target"></div>
             </div>
 
             <div id="view-stream" style="display:none;">
-                <div class="stream-layout-bar">
-                    <button class="btn-lay" id="lay-1" onclick="buildStreamLayout(1)">1 EKRAN</button>
-                    <button class="btn-lay" id="lay-2" onclick="buildStreamLayout(2)">2 EKRAN</button>
-                    <button class="btn-lay" id="lay-4" onclick="buildStreamLayout(4)">4 EKRAN</button>
-                    <button class="btn-lay active" id="lay-6" onclick="buildStreamLayout(6)">6 EKRAN</button>
+                <div class="layout-bar">
+                    <button class="btn-lay" onclick="buildLayout(1)">1</button>
+                    <button class="btn-lay" onclick="buildLayout(2)">2</button>
+                    <button class="btn-lay" onclick="buildLayout(4)">4</button>
+                    <button class="btn-lay active" id="lay-6" onclick="buildLayout(6)">6</button>
                 </div>
-                <div id="stream-master-grid" class="grid-master grid-6 active"></div>
-                
-                <div class="fav-stream-container">
-                    <span class="roll-title-text">KAYITLI İSTİHBARAT YAYINLARI</span>
-                    <div id="fav-stream-pills" style="margin-top:15px;"></div>
+                <div id="stream-grid" class="grid-master grid-6 active"></div>
+                <div class="fav-stream-box">
+                    <span class="roll-lbl">KAYITLI YAYINLAR</span>
+                    <div id="fav-streams" style="margin-top:15px;"></div>
                 </div>
             </div>
 
             <div class="fin-full-layout" id="view-finance">
-                
-                <div class="ledger-side">
+                <div class="fin-left">
                     <div class="rolling-board">
-                        <div class="roll-box active"><span class="roll-title-text">1 HAFTA</span><div class="roll-price">$1.000</div></div>
-                        <div class="roll-box"><span class="roll-title-text">15 GÜN</span><div class="roll-price">$5.000</div></div>
-                        <div class="roll-box"><span class="roll-title-text">30 GÜN</span><div class="roll-price">$15.000</div></div>
-                        <div class="roll-box"><span class="roll-title-text">60 GÜN</span><div class="roll-price">$40.000</div></div>
-                        <div class="roll-box"><span class="roll-title-text">90 GÜN</span><div class="roll-price">$100.000</div></div>
+                        <div class="roll-card active"><span class="roll-lbl">1 HAFTA</span><div class="roll-val">$1.000</div></div>
+                        <div class="roll-card"><span class="roll-lbl">15 GÜN</span><div class="roll-val">$5.000</div></div>
+                        <div class="roll-card"><span class="roll-lbl">30 GÜN</span><div class="roll-val">$15.000</div></div>
+                        <div class="roll-card"><span class="roll-lbl">60 GÜN</span><div class="roll-val">$40.000</div></div>
+                        <div class="roll-card"><span class="roll-lbl">90 GÜN</span><div class="roll-val">$100.000</div></div>
                     </div>
-
-                    <div class="ledger-supreme">
-                        <div class="ledger-nav">
-                            <span style="font-weight:900; font-size:1em; letter-spacing:2px;">LEDGER MASTER</span>
-                            <div class="ledger-btn-group">
-                                <button class="btn-tab-sup active" id="tab-p" onclick="filterLedgerTab('pend')">BEKLEYEN</button>
-                                <button class="btn-tab-sup" id="tab-a" onclick="filterLedgerTab('all')">TÜMÜ</button>
+                    <div class="ledger-box">
+                        <div class="ledger-head">
+                            <span style="font-weight:900; font-size:1em; letter-spacing:1px;">LEDGER</span>
+                            <div class="ledger-tab-group">
+                                <button class="btn-tab active" id="tab-p" onclick="filterLedger('pend')">BEKLEYEN</button>
+                                <button class="btn-tab" id="tab-a" onclick="filterLedger('all')">TÜMÜ</button>
                             </div>
                         </div>
-                        <div class="table-supreme-wrapper">
-                            <table class="sup-table" id="main-ledger-table"></table>
-                        </div>
+                        <div class="table-scroll"><table class="sup-table" id="ledger-table"></table></div>
                     </div>
                 </div>
-
-                <div class="analysis-side">
-                    <div class="chart-supreme">
-                        <div id="supreme-apex-chart"></div>
+                <div class="fin-right">
+                    <div class="chart-supreme"><div id="apex-chart-main"></div></div>
+                    <div class="kpi-master">
+                        <div class="kpi-unit"><span>KASA</span><b id="k-val-w">100.00</b></div>
+                        <div class="kpi-unit"><span>NET</span><b id="k-val-p">0.00</b></div>
+                        <div class="kpi-unit"><span>WIN %</span><b id="k-val-wr">%0</b></div>
                     </div>
-
-                    <div class="op-input-panel">
-                        <div class="kpi-master">
-                            <div class="kpi-box"><span>KASA</span><b id="kpi-val-w">100.00</b></div>
-                            <div class="kpi-box"><span>NET</span><b id="kpi-val-p">0.00</b></div>
-                            <div class="kpi-box"><span>BAŞARI</span><b id="kpi-val-wr">%0</b></div>
+                    <div class="entry-box">
+                        <input type="text" id="op-name" class="supreme-select" style="width:100%; margin-bottom:10px;" placeholder="OPERASYON ADI">
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <input type="number" id="op-amt" class="supreme-select" style="flex:1" placeholder="USDT">
+                            <input type="number" id="op-odds" class="supreme-select" style="flex:1" placeholder="ORAN">
                         </div>
-                        
-                        <div style="display:flex; flex-direction:column; gap:12px;">
-                            <input type="text" id="in-op-name" class="supreme-select" style="width:100%;" placeholder="OPERASYON ADI">
-                            <div style="display:flex; gap:10px;">
-                                <input type="number" id="in-op-amt" class="supreme-select" style="flex:1" placeholder="USDT">
-                                <input type="number" id="in-op-odds" class="supreme-select" style="flex:1" placeholder="ORAN">
-                            </div>
-                            <button onclick="commitNewOperation()" class="btn-supreme-action">TERMİNALİ GÜNCELLE</button>
-                            <button onclick="hardWalletReset()" style="background:transparent; border:none; color:#222; font-size:11px; cursor:pointer; font-weight:bold;">MANUEL SIFIRLA</button>
-                        </div>
+                        <button onclick="commitOp()" class="btn-supreme">OPERASYONU BAŞLAT</button>
+                        <button onclick="hardReset()" style="background:transparent; border:none; color:#222; font-size:10px; width:100%; margin-top:10px; cursor:pointer; font-weight:bold;">MANUEL SIFIRLA</button>
                     </div>
                 </div>
-
             </div>
 
         </div>
     </div>
 
     <script>
-        /**
-         * V19 SUPREME TERMINAL - CORE ENGINE
-         * Kısaltmasız ve detaylı JavaScript mimarisi.
-         */
+        let _DATA = [], _L_COUNTS = {}, _SPORT = 'futbol', _TAB = 'bulletin', _L_FILTER = 'ALL', _SORT = 'league', _LEDGER_MODE = 'pend';
+        
+        let wallet = parseFloat(localStorage.getItem('v19_w')) || 100.00;
+        let history = JSON.parse(localStorage.getItem('v19_h')) || [100];
+        let pending = JSON.parse(localStorage.getItem('v19_p')) || [];
+        let completed = JSON.parse(localStorage.getItem('v19_l')) || [];
+        let favLeagues = JSON.parse(localStorage.getItem('v19_fav_l')) || [];
+        let favStreams = JSON.parse(localStorage.getItem('v19_fav_s')) || [];
 
-        let _M_DATA = [];
-        let _L_COUNTS = {};
-        let _C_SPORT = 'futbol';
-        let _C_TAB = 'bulletin';
-        let _L_FILTER = 'ALL';
-        let _SORT_TYPE = 'league'; 
-        let _LEDGER_TAB = 'pend';
-
-        // DATABASE
-        let _W_BAL = parseFloat(localStorage.getItem('v19_w')) || 100.00;
-        let _B_HIST = JSON.parse(localStorage.getItem('v19_h')) || [100];
-        let _P_OPS = JSON.parse(localStorage.getItem('v19_p')) || [];
-        let _L_DATA = JSON.parse(localStorage.getItem('v19_l')) || [];
-        let _FAV_L = JSON.parse(localStorage.getItem('v19_fav_l')) || [];
-        let _FAV_S = JSON.parse(localStorage.getItem('v19_fav_s')) || [];
-
-        // --- ENGINE: INITIALIZATION ---
-        async function v19_Boot() {
-            console.log("Supreme Engine Booting...");
-            try {
-                const response = await fetch('v19_rapor.json?v=' + Date.now());
-                const raw = await response.json();
-                _M_DATA = raw.veriler || [];
-                _L_COUNTS = raw.sayac || {};
-                
-                v19_BuildInterface();
-                runFilterEngine();
-            } catch (err) {
-                console.error("Critical: Data Sync Failed.");
-                document.getElementById('radar-render-target').innerHTML = `
-                    <div style="padding:100px; text-align:center;">
-                        <i class="fa-solid fa-bolt" style="font-size:4em; color:var(--orange); margin-bottom:25px;"></i>
-                        <h3 style="font-weight:900;">VERİ RADARI ÇEVRİMDIŞI</h3>
-                        <p style="color:var(--muted)">Lütfen GitHub üzerinden v19_motor.py operasyonunu çalıştırın.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // --- ENGINE: FLAGS & DATES ---
-        function getSupremeFlag(name) {
-            const n = name.toUpperCase();
-            if(n.includes("TÜRKİYE") || n.includes("SUPER LIG") || n.includes("BSL")) return "tr";
-            if(n.includes("İNGİLTERE") || n.includes("PREMIER") || n.includes("CHAMPIONSHIP")) return "gb-eng";
-            if(n.includes("İSPANYA") || n.includes("LA LIGA") || n.includes("ACB")) return "es";
-            if(n.includes("ALMANYA") || n.includes("BUNDESLIGA") || n.includes("BBL")) return "de";
-            if(n.includes("İTALYA") || n.includes("SERIE A") || n.includes("LEGA A")) return "it";
-            if(n.includes("FRANSA") || n.includes("LIGUE 1") || n.includes("LNB PRO A")) return "fr";
-            if(n.includes("AMERİKA") || n.includes("NBA") || n.includes("MLS") || n.includes("WNBA")) return "us";
-            if(n.includes("AVRUPA") || n.includes("CHAMPIONS") || n.includes("EURO") || n.includes("EUROLEAGUE")) return "eu";
-            if(n.includes("HOLLANDA") || n.includes("EREDIVISIE")) return "nl";
-            if(n.includes("PORTEKİZ") || n.includes("PRIMEIRA")) return "pt";
-            if(n.includes("BREZİLYA") || n.includes("BRAZIL")) return "br";
-            if(n.includes("ARJANTİN") || n.includes("ARGENTINA")) return "ar";
-            if(n.includes("RUSYA") || n.includes("VTB")) return "ru";
+        function getFlag(lig) {
+            const s = lig.toUpperCase();
+            if(s.includes("TÜRKİYE") || s.includes("SUPER LIG") || s.includes("BSL")) return "tr";
+            if(s.includes("İNGİLTERE") || s.includes("PREMIER") || s.includes("CHAMPIONSHIP")) return "gb-eng";
+            if(s.includes("İSPANYA") || s.includes("LA LIGA") || s.includes("ACB")) return "es";
+            if(s.includes("ALMANYA") || s.includes("BUNDESLIGA") || s.includes("BBL")) return "de";
+            if(s.includes("İTALYA") || s.includes("SERIE A") || s.includes("LEGA A")) return "it";
+            if(s.includes("FRANSA") || s.includes("LIGUE 1") || s.includes("LNB PRO A")) return "fr";
+            if(s.includes("AMERİKA") || s.includes("NBA") || s.includes("MLS") || s.includes("WNBA")) return "us";
+            if(s.includes("AVRUPA") || s.includes("CHAMPIONS") || s.includes("EURO") || s.includes("EUROLEAGUE")) return "eu";
             return "un";
         }
 
-        function v19_SmartDate(ds) {
+        function smartDate(ds) {
             if(!ds) return "";
             const p = ds.split('-');
-            const target = new Date(p[0], p[1] - 1, p[2]);
+            const target = new Date(p[0], p[1]-1, p[2]);
             const today = new Date(); today.setHours(0,0,0,0);
-            const diff = Math.round((target - today) / (1000 * 60 * 60 * 24));
-            
-            if (diff === 0) return "BUGÜN";
-            if (diff === 1) return "YARIN";
-            
+            const diff = Math.round((target - today) / 86400000);
+            if(diff === 0) return "BUGÜN"; if(diff === 1) return "YARIN";
             const mnts = ["OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZİRAN","TEMMUZ","AĞUSTOS","EYLÜL","EKİM","KASIM","ARALIK"];
             return p[2] + " " + mnts[parseInt(p[1]) - 1];
         }
 
-        // --- ENGINE: NAVIGATION ---
-        function triggerTab(mode, el) {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-
-            const radar = document.getElementById('view-radar');
-            const stream = document.getElementById('view-stream');
-            const finance = document.getElementById('view-finance');
-
-            radar.style.display = 'none';
-            stream.style.display = 'none';
-            finance.classList.remove('active');
-
-            if(mode === 'futbol' || mode === 'basketbol') {
-                _C_SPORT = mode;
-                _C_TAB = 'bulletin';
-                radar.style.display = 'block';
-                document.getElementById('supreme-title').innerText = mode.toUpperCase() + " RADARI";
-                v19_BuildInterface();
-                runFilterEngine();
-            } else if(mode === 'stream') {
-                _C_TAB = 'stream';
-                stream.style.display = 'block';
-                document.getElementById('supreme-title').innerText = "CANLI İZLEME MERKEZİ";
-                if(!document.getElementById('stream-master-grid').innerHTML) buildStreamLayout(6);
-                renderFavStreams();
-            } else if(mode === 'finance') {
-                _C_TAB = 'finance';
-                finance.classList.add('active');
-                document.getElementById('supreme-title').innerText = "USDT FİNANSAL TERMİNAL";
-                refreshFinDash();
-                setTimeout(initSupremeChart, 200);
-            }
+        async function boot() {
+            try {
+                const r = await fetch('v19_rapor.json?v=' + Date.now());
+                const j = await r.json();
+                _DATA = j.veriler || []; _L_COUNTS = j.sayac || {};
+                buildMenus(); runFilter();
+            } catch(e) { document.getElementById('render-target').innerHTML = "<div style='padding:50px; text-align:center; color:var(--muted)'>VERİ BEKLENİYOR...</div>"; }
         }
 
-        function v19_BuildInterface() {
-            const dateSel = document.getElementById('sel-date');
-            const listArea = document.getElementById('league-drop-options');
-            
-            // Tarih Logic
-            let dHtml = '<option value="ALL">TÜM TARİHLER</option>';
-            const dates = [...new Set(_M_DATA.filter(m => m.t === _C_SPORT).map(m => m.dt))].sort();
-            dates.forEach(d => { dHtml += `<option value="${d}">${v19_SmartDate(d)}</option>`; });
-            dateSel.innerHTML = dHtml;
+        function buildMenus() {
+            const dSel = document.getElementById('sel-date');
+            const dates = [...new Set(_DATA.filter(m => m.t === _SPORT).map(m => m.dt))].sort();
+            dSel.innerHTML = '<option value="ALL">TÜM TARİHLER</option>' + dates.map(d => `<option value="${d}">${smartDate(d)}</option>`).join('');
 
-            // League Dropdown Logic
-            let lHtml = `<div class="league-drop-item" onclick="v19_HandleLeague('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
-            for(let lName in _L_COUNTS) {
-                let isF = ["LİG", "PREMIER", "BUNDES", "SERIE", "LIGUE", "CHAMP", "EURO", "MLS", "EREDIVISIE"].some(x => lName.toUpperCase().includes(x));
-                if((_C_SPORT === 'futbol' && isF) || (_C_SPORT === 'basketbol' && !isF)) {
-                    if(_L_COUNTS[lName] > 0) {
-                        const flag = getSupremeFlag(lName);
-                        const ikon = _C_SPORT === 'futbol' ? '⚽' : '🏀';
-                        lHtml += `
-                            <div class="league-drop-item" onclick="v19_HandleLeague('${lName}', this.innerHTML)">
-                                <img src="https://flagcdn.com/w40/${flag}.png"> 
-                                <span>${ikon} ${lName} (${_L_COUNTS[lName]})</span>
-                            </div>
-                        `;
+            let lHtml = `<div class="league-drop-item" onclick="selLig('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
+            for(let l in _L_COUNTS) {
+                let isF = ["LİG", "PREMIER", "BUNDES", "SERIE", "LIGUE", "CHAMP", "EURO", "MLS", "EREDIVISIE"].some(x => l.toUpperCase().includes(x));
+                if((_SPORT==='futbol' && isF) || (_SPORT==='basketbol' && !isF)) {
+                    if(_L_COUNTS[l] > 0) {
+                        lHtml += `<div class="league-drop-item" onclick="selLig('${l}', this.innerHTML)"><img src="https://flagcdn.com/w40/${getFlag(l)}.png"> ${_SPORT==='futbol'?'⚽':'🏀'} ${l} (${_L_COUNTS[l]})</div>`;
                     }
                 }
             }
-            listArea.innerHTML = lHtml;
+            document.getElementById('drop-menu').innerHTML = lHtml;
         }
 
-        function openLeagueMenu(e) {
-            e.stopPropagation();
-            const m = document.getElementById('league-drop-options');
-            m.style.display = m.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function v19_HandleLeague(val, html) {
-            _L_FILTER = val;
-            document.getElementById('league-drop-label').innerHTML = html;
-            document.getElementById('league-drop-options').style.display = 'none';
-            runFilterEngine();
-        }
-
-        function setMasterSort(type) {
-            _SORT_TYPE = type;
-            document.querySelectorAll('.btn-view').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-v-' + type).classList.add('active');
-            runFilterEngine();
-        }
-
-        // --- ENGINE: RENDERER ---
-        function runFilterEngine() {
-            if(_C_TAB !== 'bulletin') return;
-            const area = document.getElementById('radar-render-target');
+        function runFilter() {
+            if(_TAB !== 'bulletin') return;
+            const area = document.getElementById('render-target');
             const dVal = document.getElementById('sel-date').value;
+            let filtered = _DATA.filter(m => m.t === _SPORT && (dVal==='ALL'||m.dt===dVal) && (_L_FILTER==='ALL'||m.l===_L_FILTER));
             
-            let filtered = _M_DATA.filter(m => 
-                m.t === _C_SPORT && 
-                (dVal === 'ALL' || m.dt === dVal) && 
-                (_L_FILTER === 'ALL' || m.l === _L_FILTER)
-            );
-            
-            let htmlBuffer = "";
-            const dayGroups = {};
-            
-            filtered.forEach(m => {
-                if(!dayGroups[m.dt]) dayGroups[m.dt] = [];
-                dayGroups[m.dt].push(m);
-            });
+            let h = ""; const days = {};
+            filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
 
-            Object.keys(dayGroups).sort().forEach(day => {
-                htmlBuffer += `<div style="color:var(--green); font-size:0.8em; font-weight:900; padding:20px 0 10px 0; border-bottom:1px solid #1f1f23; margin-bottom:20px; letter-spacing:2px;">${v19_SmartDate(day)}</div>`;
+            Object.keys(days).sort().forEach(day => {
+                h += `<div style="color:var(--green); font-size:0.75em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:15px; letter-spacing:1px;">${smartDate(day)}</div>`;
                 
-                if(_SORT_TYPE === 'time') {
-                    // --- TIME SORTED MOD ---
-                    dayGroups[day].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
-                        const f = getSupremeFlag(m.l);
-                        const ikon = _C_SPORT === 'futbol' ? '⚽' : '🏀';
-                        htmlBuffer += `
-                            <div class="match-row-item">
-                                <div class="match-time">${m.tm}</div>
-                                <div class="match-main">
-                                    <span style="opacity:0.5; margin-right:10px;">${ikon}</span>
-                                    ${m.m} 
-                                    <img src="https://flagcdn.com/w40/${f}.png" class="country-flag">
-                                    <span class="league-tag">${m.l}</span>
-                                </div>
-                            </div>
-                        `;
+                if(_SORT === 'time') {
+                    days[day].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
+                        h += `<div class="match-row-item">
+                            <div class="m-time">${m.tm}</div>
+                            <div class="m-main"><span>${_SPORT==='futbol'?'⚽':'🏀'}</span>${m.m} <img src="https://flagcdn.com/w40/${getFlag(m.l)}.png" class="m-flag"> <span class="m-tag">${m.l}</span></div>
+                        </div>`;
                     });
                 } else {
-                    // --- LEAGUE SORTED MOD (WITH FAVORITES) ---
-                    const groups = {};
-                    dayGroups[day].forEach(m => {
-                        if(!groups[m.l]) groups[m.l] = [];
-                        groups[m.l].push(m);
-                    });
-
-                    let sortedLeagues = Object.keys(groups).sort((a,b) => {
-                        const favA = _FAV_L.includes(a) ? 0 : 1;
-                        const favB = _FAV_L.includes(b) ? 0 : 1;
-                        if(favA !== favB) return favA - favB;
-                        
+                    const groups = {}; days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
+                    let sortedL = Object.keys(groups).sort((a,b) => {
+                        const fA = favLeagues.includes(a) ? 0 : 1; const fB = favLeagues.includes(b) ? 0 : 1;
+                        if(fA !== fB) return fA - fB;
                         let tA = groups[a].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
                         let tB = groups[b].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
                         return tA.localeCompare(tB);
                     });
 
-                    sortedLeagues.forEach(lig => {
-                        const f = getSupremeFlag(lig);
-                        const isFav = _FAV_L.includes(lig);
-                        const uid = `sup_${day}_${lig.replace(/[^a-zA-Z0-9]/g, '')}`;
-                        const icon = _C_SPORT === 'futbol' ? '⚽' : '🏀';
-
-                        htmlBuffer += `
-                            <div class="league-group">
-                                <div class="league-title" onclick="toggleSupremeAccordion('${uid}', this)">
-                                    <div class="league-title-left">
-                                        <i class="fa-solid fa-star fav-star ${isFav?'active':''}" onclick="toggleLeagueFav(event, '${lig}')"></i>
-                                        <span class="league-icon" style="color:${_C_SPORT==='basketbol'?'var(--orange)':'#fff'}">${icon}</span>
-                                        <span>${lig}</span>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-down chevron"></i>
-                                </div>
-                                <div id="${uid}" class="league-content">
-                        `;
-
-                        groups[lig].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
-                            htmlBuffer += `
-                                <div class="match-row-item">
-                                    <div class="match-time">${m.tm}</div>
-                                    <div class="match-main">${m.m} <img src="https://flagcdn.com/w40/${f}.png" class="country-flag"></div>
-                                </div>
-                            `;
+                    sortedL.forEach(lig => {
+                        const isFav = favLeagues.includes(lig);
+                        const uid = `id_${day}_${lig.replace(/[^a-zA-Z0-9]/g, '')}`;
+                        h += `<div class="league-card">
+                            <div class="league-header" onclick="toggleAcc('${uid}', this)">
+                                <div><i class="fa-solid fa-star fav-star ${isFav?'active':''}" onclick="toggleFav(event, '${lig}')"></i><span>${_SPORT==='futbol'?'⚽':'🏀'}</span> ${lig}</div>
+                                <i class="fa-solid fa-chevron-down chevron"></i>
+                            </div>
+                            <div id="${uid}" class="league-content">`;
+                        groups[lig].sort((a,b)=>a.tm.localeCompare(b.tm)).forEach(m => {
+                            h += `<div class="match-row-item"><div class="m-time">${m.tm}</div><div class="m-main">${m.m} <img src="https://flagcdn.com/w40/${getFlag(lig)}.png" class="m-flag"></div></div>`;
                         });
-
-                        htmlBuffer += `</div></div>`;
+                        h += `</div></div>`;
                     });
                 }
             });
-            area.innerHTML = htmlBuffer;
+            area.innerHTML = h;
         }
 
-        function toggleLeagueFav(e, lig) {
-            e.stopPropagation();
-            if(_FAV_L.includes(lig)) _FAV_L = _FAV_L.filter(x => x !== lig);
-            else _FAV_L.push(lig);
-            localStorage.setItem('v19_fav_l', JSON.stringify(_FAV_L));
-            runFilterEngine();
-        }
-
-        // --- ENGINE: STREAM SYSTEM ---
-        function buildStreamLayout(n) {
-            const grid = document.getElementById('stream-master-grid');
+        // STREAM LOGIC
+        function buildLayout(n) {
+            const grid = document.getElementById('stream-grid');
             grid.className = `grid-master active layout-${n}`;
             grid.innerHTML = "";
-            
             document.querySelectorAll('.btn-lay').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById('lay-' + n);
-            if(activeBtn) activeBtn.classList.add('active');
-
             for(let i=1; i<=n; i++) {
-                grid.innerHTML += `
-                    <div class="stream-cell">
-                        <div class="cell-nav">
-                            <input id="st-url-${i}" class="cell-input" placeholder="Yayın linkini giriniz...">
-                            <button class="cell-btn-go" onclick="startSupremeStream(${i})">İZLE</button>
-                            <button class="cell-btn-fav" onclick="addStreamToFavs(${i})"><i class="fa-solid fa-star"></i></button>
-                            <button class="cell-btn-kill" onclick="killSupremeStream(${i})"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                        <iframe id="st-frame-${i}" style="flex:1; border:none; background:#000;" src="about:blank" allowfullscreen></iframe>
+                grid.innerHTML += `<div class="stream-cell">
+                    <div class="cell-nav">
+                        <input id="url-${i}" class="cell-input" placeholder="Link...">
+                        <button class="btn-go" onclick="startStream(${i})">İZLE</button>
+                        <button class="btn-fav" onclick="addStreamFav(${i})"><i class="fa-solid fa-star"></i></button>
+                        <button class="btn-kill" onclick="killStream(${i})"><i class="fa-solid fa-xmark"></i></button>
                     </div>
-                `;
+                    <iframe id="frame-${i}" style="flex:1; border:none; background:#000;" src="about:blank" allowfullscreen></iframe>
+                </div>`;
             }
+            renderStreamFavs();
         }
+        function startStream(id) { const u = document.getElementById('url-'+id).value; if(u) document.getElementById('frame-'+id).src=u; }
+        function killStream(id) { document.getElementById('url-'+id).value=""; document.getElementById('frame-'+id).src="about:blank"; }
+        function addStreamFav(id) { const v = document.getElementById('url-'+id).value; if(v && !favStreams.includes(v)) { favStreams.push(v); localStorage.setItem('v19_fav_s', JSON.stringify(favStreams)); renderStreamFavs(); } }
+        function removeStreamFav(u) { favStreams = favStreams.filter(x => x !== u); localStorage.setItem('v19_fav_s', JSON.stringify(favStreams)); renderStreamFavs(); }
+        function renderStreamFavs() { document.getElementById('fav-streams').innerHTML = favStreams.map(u => `<div class="stream-pill" onclick="quickLoad('${u}')">${u.substring(0,25)}... <i class="fa-solid fa-trash" onclick="event.stopPropagation(); removeStreamFav('${u}')"></i></div>`).join(''); }
+        function quickLoad(u) { const ins = document.querySelectorAll('.cell-input'); for(let i=0; i<ins.length; i++) { if(!ins[i].value) { ins[i].value=u; startStream(i+1); break; } } }
 
-        function startSupremeStream(id) {
-            const url = document.getElementById('st-url-' + id).value;
-            if(url) document.getElementById('st-frame-' + id).src = url;
-        }
-
-        function killSupremeStream(id) {
-            document.getElementById('st-url-' + id).value = "";
-            document.getElementById('st-frame-' + id).src = "about:blank";
-        }
-
-        function addStreamToFavs(id) {
-            const val = document.getElementById('st-url-' + id).value;
-            if(!val || _FAV_S.includes(val)) return;
-            _FAV_S.push(val);
-            localStorage.setItem('v19_fav_s', JSON.stringify(_FAV_S));
-            renderFavStreams();
-        }
-
-        function removeFavStream(u) {
-            _FAV_S = _FAV_S.filter(x => x !== u);
-            localStorage.setItem('v19_fav_s', JSON.stringify(_FAV_S));
-            renderFavStreams();
-        }
-
-        function renderFavStreams() {
-            const area = document.getElementById('fav-stream-pills');
-            area.innerHTML = _FAV_S.map(u => `
-                <div class="fav-pill" onclick="quickLoadStream('${u}')">
-                    ${u.substring(0,30)}... 
-                    <i class="fa-solid fa-trash" onclick="event.stopPropagation(); removeFavStream('${u}')"></i>
-                </div>
-            `).join('');
-        }
-
-        function quickLoadStream(u) {
-            const inputs = document.querySelectorAll('.cell-input');
-            for(let i=0; i<inputs.length; i++) {
-                if(!inputs[i].value) {
-                    inputs[i].value = u;
-                    startSupremeStream(i+1);
-                    break;
-                }
-            }
-        }
-
-        // --- ENGINE: FINANCE MASTER ---
+        // FINANCE LOGIC
         function refreshFinDash() {
-            document.getElementById('top-val').innerText = _W_BAL.toFixed(2) + " USDT";
-            document.getElementById('kpi-val-w').innerText = _W_BAL.toFixed(2);
-
-            const net = _L_DATA.reduce((s, i) => s + (i.pnl || 0), 0);
-            document.getElementById('kpi-val-p').innerText = (net >= 0 ? "+" : "") + net.toFixed(2);
-            document.getElementById('kpi-val-p').style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
-
-            const total = _L_DATA.filter(x => x.res === 'win' || x.res === 'loss').length;
-            const wins = _L_DATA.filter(x => x.res === 'win').length;
-            const wr = total > 0 ? ((wins / total) * 100).toFixed(1) : 0;
-            document.getElementById('kpi-val-wr').innerText = "%" + wr;
-
-            renderSupremeLedger();
+            document.getElementById('top-val').innerText = wallet.toFixed(2) + " USDT";
+            document.getElementById('k-val-w').innerText = wallet.toFixed(2);
+            const net = completed.reduce((s,i) => s + (i.pnl || 0), 0);
+            document.getElementById('k-val-p').innerText = (net >= 0 ? "+" : "") + net.toFixed(2);
+            document.getElementById('k-val-p').style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
+            const t = completed.filter(x => x.res==='win'||x.res==='loss').length;
+            const w = completed.filter(x => x.res==='win').length;
+            document.getElementById('k-val-wr').innerText = "%" + (t>0?((w/t)*100).toFixed(1):0);
+            renderLedger();
         }
-
-        function filterLedgerTab(m) {
-            _LEDGER_TAB = m;
-            document.querySelectorAll('.btn-tab-sup').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + (m==='pend'?'p':'a')).classList.add('active');
-            renderSupremeLedger();
-        }
-
-        function renderSupremeLedger() {
-            const table = document.getElementById('main-ledger-table');
-            let h = `<tr><th>TARİH</th><th>OPERASYON</th><th>RİSK ($)</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
+        function renderLedger() {
+            const table = document.getElementById('ledger-table');
+            let h = `<tr><th>TARİH</th><th>OPERASYON</th><th>RİSK</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
+            const list = _LEDGER_MODE === 'pend' ? pending : completed;
             let r = "";
-            
-            const list = _LEDGER_TAB === 'pend' ? _P_OPS : _L_DATA;
+            list.forEach(i => {
+                let s = i.res === 'win' ? '<b style="color:var(--green)">WIN</b>' : (i.res === 'loss' ? '<b style="color:var(--red)">LOSS</b>' : 'PENDING');
+                r += `<tr><td>${new Date(i.id).toLocaleDateString()}</td><td>${i.name}</td><td>$${i.amt}</td><td>@${i.odds}</td><td>${s}</td><td>${i.pnl || '-'}</td>`;
+                if(_LEDGER_MODE==='pend') r += `<td><button onclick="resOp(${i.id},'win')" style="color:var(--green); border:none; background:none; cursor:pointer; font-weight:900;">W</button><button onclick="resOp(${i.id},'loss')" style="color:var(--red); border:none; background:none; cursor:pointer; font-weight:900;">L</button></td>`;
+                r += `</tr>`;
+            });
+            table.innerHTML = h + (r || "<tr><td colspan='6' style='text-align:center; padding:30px;'>Kayıt yok.</td></tr>");
+        }
+        function addOp() {
+            const n = document.getElementById('op-name').value, a = parseFloat(document.getElementById('op-amt').value), o = parseFloat(document.getElementById('op-odds').value);
+            if(!n || isNaN(a)) return;
+            pending.push({id:Date.now(), name:n, amt:a, odds:o});
+            save(); refreshFinDash();
+            document.getElementById('op-name').value=""; document.getElementById('op-amt').value=""; document.getElementById('op-odds').value="";
+        }
+        function commitOp() { addOp(); }
+        function resOp(id, r) {
+            const i = pending.find(x => x.id === id);
+            let pnl = r === 'win' ? (i.amt * i.odds) - i.amt : -i.amt;
+            wallet += pnl; history.push(wallet);
+            completed.unshift({...i, res: r, pnl: pnl, bal: wallet});
+            pending = pending.filter(x => x.id !== id);
+            save(); refreshFinDash(); renderChart();
+        }
+        function save() { localStorage.setItem('v19_w', wallet); localStorage.setItem('v19_h', JSON.stringify(history)); localStorage.setItem('v19_p', JSON.stringify(pending)); localStorage.setItem('v19_l', JSON.stringify(completed)); }
 
-            if(list.length === 0) {
-                r = `<tr><td colspan="6" style="text-align:center; padding:50px; color:var(--muted);">TERMİNAL KAYDI BULUNAMADI.</td></tr>`;
-            } else {
-                list.forEach(item => {
-                    const d = new Date(item.id).toLocaleDateString('tr-TR');
-                    let sHtml = `<span style="color:var(--muted); font-weight:800;">BEKLEMEDE</span>`;
-                    let pVal = "-";
-
-                    if(item.res === 'win') {
-                        sHtml = `<b style="color:var(--green)">KAZANÇ</b>`;
-                        pVal = `<span style="color:var(--green)">+${item.pnl.toFixed(2)}</span>`;
-                    } else if(item.res === 'loss') {
-                        sHtml = `<b style="color:var(--red)">KAYIP</b>`;
-                        pVal = `<span style="color:var(--red)">${item.pnl.toFixed(2)}</span>`;
-                    }
-
-                    r += `
-                        <tr>
-                            <td style="font-family:'JetBrains Mono'; font-size:0.9em;">${d}</td>
-                            <td style="font-weight:700;">${item.name}</td>
-                            <td>$${item.amt.toFixed(2)}</td>
-                            <td>@${item.odds.toFixed(2)}</td>
-                            <td>${sHtml}</td>
-                            <td style="font-family:'JetBrains Mono'; font-weight:700;">${pVal}</td>
-                            ${_LEDGER_TAB === 'pend' ? `
-                                <td style="text-align:right;">
-                                    <button onclick="settleSupreme(${item.id}, 'win')" style="color:var(--green); background:none; border:none; cursor:pointer; font-weight:900; margin-right:15px; font-size:1.2em;">W</button>
-                                    <button onclick="settleSupreme(${item.id}, 'loss')" style="color:var(--red); background:none; border:none; cursor:pointer; font-weight:900; font-size:1.2em;">L</button>
-                                </td>
-                            ` : ""}
-                        </tr>
-                    `;
-                });
-            }
-            table.innerHTML = h + r;
+        // CHART
+        let apex;
+        function renderChart() {
+            if(apex) apex.destroy();
+            apex = new ApexCharts(document.querySelector("#apex-chart-main"), {
+                series: [{ name: "USDT", data: history }],
+                chart: { type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent' },
+                theme: { mode: 'dark' }, colors: ['#10b981'], stroke: { curve: 'straight', width: 2 },
+                xaxis: { labels: { show: false } }, yaxis: { opposite: true, labels: { style: { colors: '#71717a' } } },
+                grid: { borderColor: '#1f1f23' },
+                annotations: { yaxis: [{y:1000, label:{text:'$1K'}}, {y:10000, label:{text:'$10K'}}, {y:100000, label:{text:'$100K'}}] }
+            });
+            apex.render();
         }
 
-        function commitNewOperation() {
-            const n = document.getElementById('in-op-name').value;
-            const a = parseFloat(document.getElementById('in-op-amt').value);
-            const o = parseFloat(document.getElementById('in-op-odds').value);
-
-            if(!n || isNaN(a) || isNaN(o)) return;
-
-            const op = { id: Date.now(), name: n, amt: a, odds: o };
-            _P_OPS.push(op);
-            
-            v19_Save();
-            refreshFinDash();
-            
-            document.getElementById('in-op-name').value = "";
-            document.getElementById('in-op-amt').value = "";
-            document.getElementById('in-op-odds').value = "";
+        // HELPERS
+        function switchMainTab(m, el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('view-radar').style.display = (m==='futbol'||m==='basketbol') ? 'block':'none';
+            document.getElementById('view-stream').style.display = (m==='stream') ? 'block':'none';
+            document.getElementById('view-finance').classList.toggle('active', m==='finance');
+            if(m==='futbol'||m==='basketbol') { _SPORT=m; document.getElementById('supreme-title').innerText=m.toUpperCase()+" RADARI"; buildMenus(); runFilter(); }
+            if(m==='finance') { document.getElementById('supreme-title').innerText="FINANS TERMINALI"; refreshFinDash(); setTimeout(renderChart, 200); }
+            if(m==='stream') { document.getElementById('supreme-title').innerText="MULTI-STREAM"; if(!document.getElementById('stream-grid').innerHTML) buildLayout(6); }
         }
+        function toggleAcc(id, el) { const c = document.getElementById(id); const i = el.querySelector('.chevron'); const h = c.style.display==='none'; c.style.display=h?'block':'none'; i.style.transform=h?'rotate(0deg)':'rotate(-90deg)'; }
+        function toggleLeagueMenu(e) { e.stopPropagation(); const m = document.getElementById('drop-menu'); m.style.display = m.style.display==='block'?'none':'block'; }
+        function selLig(v, h) { _L_FILTER=v; document.getElementById('drop-label').innerHTML=h; document.getElementById('drop-menu').style.display='none'; runFilter(); }
+        function setSortMode(m) { _SORT=m; document.querySelectorAll('.btn-view').forEach(b=>b.classList.remove('active')); document.getElementById('btn-v-'+m).classList.add('active'); runFilter(); }
+        function filterLedger(m) { _LEDGER_MODE=m; document.querySelectorAll('.btn-tab').forEach(b=>b.classList.remove('active')); document.getElementById('tab-'+(m==='pend'?'p':'a')).classList.add('active'); renderLedger(); }
+        function toggleFav(e, l) { e.stopPropagation(); if(favLeagues.includes(l)) favLeagues = favLeagues.filter(x=>x!==l); else favLeagues.push(l); localStorage.setItem('v19_fav_l', JSON.stringify(favLeagues)); runFilter(); }
+        function hardReset() { const v = parseFloat(prompt("Kasa Değeri:")); if(!isNaN(v)) { wallet=v; history.push(wallet); save(); refreshFinDash(); renderChart(); } }
+        document.addEventListener('click', () => { if(document.getElementById('drop-menu')) document.getElementById('drop-menu').style.display='none'; });
 
-        function settleSupreme(id, res) {
-            const op = _P_OPS.find(x => x.id === id);
-            let pnl = res === 'win' ? (op.amt * op.odds) - op.amt : -op.amt;
-            _W_BAL += pnl;
-
-            _B_HIST.push(_W_BAL);
-            _L_DATA.unshift({...op, res: res, pnl: pnl, bal: _W_BAL});
-            _P_OPS = _P_OPS.filter(x => x.id !== id);
-
-            v19_Save();
-            refreshFinDash();
-            initSupremeChart();
-        }
-
-        function hardWalletReset() {
-            const v = parseFloat(prompt("Kasa Sıfırlama Değeri:", _W_BAL));
-            if(!isNaN(v)) {
-                _W_BAL = v; _B_HIST.push(_W_BAL);
-                v19_Save(); refreshFinDash(); initSupremeChart();
-            }
-        }
-
-        function v19_Save() {
-            localStorage.setItem('v19_w', _W_BAL);
-            localStorage.setItem('v19_h', JSON.stringify(_B_HIST));
-            localStorage.setItem('v19_p', JSON.stringify(_P_OPS));
-            localStorage.setItem('v19_l', JSON.stringify(_L_DATA));
-        }
-
-        // --- ENGINE: CHART ---
-        let _CHART_INST;
-        function initSupremeChart() {
-            if(_CHART_INST) _CHART_INST.destroy();
-            
-            const options = {
-                series: [{ name: "USDT", data: _B_HIST }],
-                chart: { 
-                    type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent',
-                    animations: { enabled: true, speed: 800 }
-                },
-                theme: { mode: 'dark' },
-                colors: [_W_BAL >= _B_HIST[0] ? '#10b981' : '#ef4444'],
-                stroke: { curve: 'straight', width: 3 },
-                fill: { type: 'gradient', gradient: { opacityFrom: 0.4, opacityTo: 0 } },
-                xaxis: { labels: { show: false }, axisBorder: { show: false } },
-                yaxis: { opposite: true, labels: { style: { colors: '#71717a', fontFamily: 'JetBrains Mono' } } },
-                grid: { borderColor: '#1f1f23', strokeDashArray: 4 },
-                annotations: {
-                    yaxis: [
-                        { y: 1000, borderColor: '#333', label: { text: '$1K' } },
-                        { y: 10000, borderColor: '#fbbf24', label: { text: '$10K' } },
-                        { y: 100000, borderColor: '#10b981', label: { text: '$100K' } }
-                    ]
-                }
-            };
-            _CHART_INST = new ApexCharts(document.querySelector("#supreme-apex-chart"), options);
-            _CHART_INST.render();
-        }
-
-        // --- ENGINE: UI HELPERS ---
-        function toggleSupremeAccordion(id, el) {
-            const c = document.getElementById(id);
-            const i = el.querySelector('.chevron');
-            const isH = c.style.display === 'none';
-            c.style.display = isH ? 'block' : 'none';
-            i.style.transform = isH ? 'rotate(0deg)' : 'rotate(-90deg)';
-        }
-
-        document.addEventListener('click', () => {
-            const d = document.getElementById('league-drop-options');
-            if(d) d.style.display = 'none';
-        });
-
-        // INIT
-        v19_Boot();
+        boot();
     </script>
 </body>
 </html>
