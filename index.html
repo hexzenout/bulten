@@ -3,60 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 ELITE | SUPREME OPERATIONAL TERMINAL</title>
+    <title>V19 ELITE | SUPREME COMMAND CENTER</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <style>
-        /* V19 ELITE - SUPREME DESIGN SYSTEM 
-           Bu bölüm terminalin görsel ağırlığını ve profesyonelliğini belirler.
-           Satır sayısı kısıtlaması olmadan tüm detaylar işlenmiştir.
+        /* V19 SUPREME STYLING SYSTEM
+           Satır sayısı kısıtlaması olmadan tüm görsel detaylar işlenmiştir.
+           Master CSS - v4.0
         */
         
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
         :root { 
             --gold: #fbbf24; 
-            --gold-alt: #d97706;
-            --gold-glow: rgba(251, 191, 36, 0.25);
+            --gold-glow: rgba(251, 191, 36, 0.3);
             --green: #10b981; 
-            --green-dark: #065f46;
-            --green-glow: rgba(16, 185, 129, 0.15);
+            --green-glow: rgba(16, 185, 129, 0.2);
             --red: #ef4444; 
             --red-glow: rgba(239, 68, 68, 0.2);
             --orange: #f97316; 
-            --orange-glow: rgba(249, 115, 22, 0.25);
+            --orange-glow: rgba(249, 115, 22, 0.3);
             --bg: #050505; 
             --panel: #0c0c0e; 
-            --panel-header: #121214;
-            --panel-light: #18181b;
+            --panel-light: #161618;
             --border: #1f1f23; 
             --border-bright: #2d2d33;
             --text: #ffffff; 
-            --text-dim: #a1a1aa;
-            --muted: #52525b;
-            --sidebar-w: 280px;
+            --muted: #71717a;
+            --sidebar-w: 260px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* RESET & SCROLLBAR */
+        /* --- BASIC RESET & SCROLLBAR --- */
         * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
         
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; border: 1px solid #000; }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
-
-        body { 
-            width: 100vw;
-            height: 100vh;
+        html, body { 
+            width: 100vw; height: 100vh;
             background-color: var(--bg);
             color: var(--text);
             font-family: 'Inter', sans-serif;
             overflow: hidden;
             display: flex;
         }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 
         /* --- SIDEBAR DESIGN --- */
         .sidebar { 
@@ -65,711 +60,324 @@
             border-right: 1px solid var(--border); 
             display: flex; 
             flex-direction: column; 
+            flex-shrink: 0; 
             height: 100%;
             z-index: 1000;
-            position: relative;
         }
 
-        .brand-zone { 
-            padding: 40px 25px; 
+        .brand-container { 
+            padding: 40px 20px; 
             border-bottom: 1px solid var(--border); 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(to bottom, #080808, #000);
+            text-align: center;
         }
 
         .brand-logo { 
             font-weight: 900; 
             color: var(--green); 
-            font-size: 1.4em; 
-            letter-spacing: 4px; 
+            font-size: 1.3em; 
+            letter-spacing: 3px; 
             text-transform: uppercase;
-            text-shadow: 0 0 20px var(--green-glow);
-        }
-        
-        .brand-sub {
-            font-size: 0.55em;
-            color: var(--muted);
-            margin-top: 8px;
-            letter-spacing: 2px;
-            font-weight: 800;
+            text-shadow: 0 0 15px var(--green-glow);
         }
 
-        .nav-scroller { 
-            padding: 20px 0; 
-            flex-grow: 1; 
-            overflow-y: auto;
-        }
+        .nav-scroller { padding: 25px 0; flex-grow: 1; display: flex; flex-direction: column; gap: 5px; }
 
         .nav-item { 
-            padding: 16px 30px; 
+            padding: 16px 25px; 
             cursor: pointer; 
             color: var(--muted); 
             font-weight: 700; 
-            font-size: 0.82em; 
+            font-size: 0.85em; 
             display: flex; 
             align-items: center; 
             transition: var(--transition);
             border-left: 4px solid transparent;
-            margin-bottom: 2px;
         }
 
-        .nav-item i { 
-            margin-right: 18px; 
-            font-size: 1.3em; 
-            width: 25px; 
-            text-align: center; 
-        }
-
-        .nav-item:hover { 
-            background: rgba(255,255,255,0.03); 
-            color: #fff; 
-            padding-left: 35px;
-        }
-
-        .nav-item.active { 
-            background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, transparent 100%);
-            color: #fff; 
-            border-left: 4px solid var(--green); 
-        }
-
-        .nav-item.basket.active { 
-            background: linear-gradient(90deg, rgba(249, 115, 22, 0.12) 0%, transparent 100%);
-            border-left-color: var(--orange); 
-        }
-
-        .nav-item.special.active {
-            background: linear-gradient(90deg, rgba(251, 191, 36, 0.12) 0%, transparent 100%);
-            border-left-color: var(--gold);
-        }
+        .nav-item i { margin-right: 18px; font-size: 1.25em; width: 22px; text-align: center; }
+        .nav-item:hover { background: #0a0a0a; color: #fff; padding-left: 30px; }
+        
+        /* Aktif Menü Kimlikleri */
+        .nav-item.active { background: rgba(16,185,129,0.08); color: #fff; border-left-color: var(--green); }
+        .nav-item.basket.active { border-left-color: var(--orange); }
+        .nav-item.stream.active { border-left-color: var(--gold); }
+        .nav-item.favs.active { border-left-color: var(--red); }
+        .nav-item.finance.active { border-left-color: var(--green); }
 
         /* --- MAIN VIEWPORT --- */
-        .main-view { 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100%;
-            overflow: hidden; 
-        }
+        .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-        .top-header { 
-            padding: 0 40px; 
+        .top-bar { 
+            padding: 0 35px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             background: #000; 
             border-bottom: 1px solid var(--border); 
-            height: 85px;
-            flex-shrink: 0;
+            min-height: 80px;
         }
 
-        .title-area h2 {
-            margin: 0; 
-            font-size: 1.15em; 
-            font-weight: 900; 
-            letter-spacing: 1px;
-            color: #fff;
-        }
-        
-        .title-area span {
-            font-size: 0.65em;
-            color: var(--muted);
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+        .page-title-box h2 { margin: 0; font-size: 1.1em; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; }
 
-        .header-stats {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .stat-pill {
+        .top-wallet-box {
             background: var(--panel);
             border: 1px solid var(--border);
             padding: 12px 20px;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            align-items: center;
+            gap: 12px;
         }
+        .top-wallet-box label { font-size: 0.6em; color: var(--muted); font-weight: 900; text-transform: uppercase; }
+        .top-wallet-box b { font-family: 'JetBrains Mono'; color: var(--gold); font-size: 1.1em; }
 
-        .stat-pill label { font-size: 0.55em; color: var(--muted); font-weight: 900; text-transform: uppercase; margin-bottom: 4px; }
-        .stat-pill b { font-family: 'JetBrains Mono'; color: var(--gold); font-size: 1.1em; }
+        .content-scroller { flex-grow: 1; padding: 30px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0a0a0c 0%, #050505 100%); }
 
-        .scrolling-content { 
-            flex-grow: 1; 
-            padding: 35px; 
-            overflow-y: auto; 
-            background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%);
-        }
-
-        /* --- RADAR CONTROLS & BUTTONS --- */
-        .radar-controls {
-            margin-bottom: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .filter-strip { 
-            display: flex; 
-            gap: 15px; 
-            background: var(--panel); 
-            padding: 15px; 
-            border-radius: 12px; 
-            border: 1px solid var(--border); 
-            align-items: center; 
-        }
-
-        .mode-switcher { 
-            display: flex; 
-            gap: 12px; 
-        }
-
-        .btn-supreme-mode { 
-            background: transparent; 
-            border: 2px solid var(--orange); 
-            color: var(--orange); 
-            padding: 10px 25px; 
-            border-radius: 8px; 
-            font-size: 0.75em; 
-            font-weight: 900; 
-            cursor: pointer; 
-            transition: var(--transition);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-supreme-mode.active { 
-            background: var(--orange); 
-            color: #000; 
-            box-shadow: 0 0 25px var(--orange-glow);
-        }
-
-        .input-supreme { 
-            background: #000; 
-            border: 1px solid var(--border); 
-            color: #fff; 
-            padding: 12px 15px; 
-            border-radius: 8px; 
-            font-size: 0.85em; 
-            font-weight: 700; 
-            cursor: pointer;
-            transition: border 0.3s;
-        }
+        /* --- RADAR CONTROLS --- */
+        .radar-controls { margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px; }
+        .filter-panel { display: flex; gap: 15px; background: var(--panel); padding: 15px; border-radius: 10px; border: 1px solid var(--border); align-items: center; }
         
-        .input-supreme:hover { border-color: var(--muted); }
-
-        /* --- CUSTOM LEAGUE DROPDOWN PRO --- */
-        .drop-wrapper { position: relative; min-width: 340px; }
-        .drop-btn { 
-            background: #000; 
-            border: 1px solid var(--border); 
-            color: #fff; 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            font-size: 0.85em; 
-            font-weight: 700; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            transition: var(--transition);
+        .sort-switcher { display: flex; gap: 10px; }
+        .btn-sort { 
+            background: transparent; border: 1.5px solid var(--orange); color: var(--orange); 
+            padding: 10px 20px; border-radius: 6px; font-size: 0.75em; font-weight: 900; 
+            cursor: pointer; text-transform: uppercase; transition: var(--transition);
         }
-        .drop-btn:hover { border-color: var(--gold); background: #050505; }
+        .btn-sort.active { background: var(--orange); color: #000; box-shadow: 0 0 15px var(--orange-glow); }
+
+        .supreme-select { 
+            background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; 
+            border-radius: 6px; font-size: 0.8em; font-weight: 700; cursor: pointer; min-width: 180px;
+        }
+
+        /* --- CUSTOM LEAGUE DROPDOWN --- */
+        .c-drop-wrapper { position: relative; min-width: 300px; }
+        .c-drop-trigger { 
+            background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 20px; 
+            border-radius: 6px; font-size: 0.8em; font-weight: 700; cursor: pointer; 
+            display: flex; align-items: center; justify-content: space-between; 
+        }
+        .c-drop-menu { 
+            display: none; position: absolute; top: 110%; left: 0; right: 0; 
+            background: #0a0a0c; border: 1px solid var(--border-bright); 
+            z-index: 2000; max-height: 400px; overflow-y: auto; border-radius: 8px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+        .c-drop-item { 
+            padding: 14px 20px; font-size: 0.85em; display: flex; align-items: center; 
+            cursor: pointer; border-bottom: 1px solid #161618; transition: 0.2s;
+        }
+        .c-drop-item:hover { background: #1f1f23; padding-left: 25px; }
+        .c-drop-item img { width: 20px; height: 14px; margin-right: 15px; border-radius: 2px; }
+
+        /* --- LIST RENDER STYLES --- */
+        .league-block { margin-bottom: 20px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+        .league-title-bar { 
+            background: #1e293b; padding: 15px 25px; font-weight: 900; font-size: 0.75em; 
+            color: #fff; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+        }
+        .league-title-bar:hover { background: #273549; }
+        .fav-star-icon { color: var(--muted); margin-right: 15px; font-size: 1.2em; cursor: pointer; transition: 0.3s; }
+        .fav-star-icon.active { color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
+
+        .match-row-box { 
+            display: flex; align-items: center; padding: 12px 25px; border-bottom: 1px solid #161618; 
+            font-size: 0.8em; background: #0a0a0c; transition: 0.2s;
+        }
+        .match-row-box:hover { background: #111115; }
+        .match-clock { font-family: 'JetBrains Mono'; color: var(--green); width: 60px; font-weight: 800; font-size: 1em; }
+        .match-ico-span { margin-right: 12px; font-size: 0.9em; opacity: 0.6; }
+        .match-teams-info { font-weight: 700; flex-grow: 1; display: flex; align-items: center; color: #f4f4f5; }
+        .match-flag-img { width: 18px; height: 12px; object-fit: cover; border-radius: 1px; margin-left: 12px; }
         
-        .drop-list-pro { 
-            display: none; 
-            position: absolute; 
-            top: 115%; 
-            left: 0; 
-            right: 0; 
-            background: #0a0a0c; 
-            border: 1px solid var(--border-bright); 
-            z-index: 5000; 
-            max-height: 450px; 
-            overflow-y: auto; 
-            border-radius: 10px; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
-            animation: slideDown 0.2s ease-out;
+        /* SAAT SIRALI ETİKET */
+        .match-league-tag { 
+            font-size: 0.72em; color: var(--muted); background: #18181b; padding: 3px 10px; 
+            border-radius: 5px; margin-left: 20px; font-weight: 800; border: 1px solid #27272a; 
         }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* --- MULTI-STREAM HUB --- */
+        .stream-layout-bar { 
+            display: flex; gap: 12px; margin-bottom: 25px; background: var(--panel); 
+            padding: 15px; border-radius: 12px; border: 1px solid var(--border); 
         }
-
-        .drop-list-item { 
-            padding: 15px 20px; 
-            font-size: 0.85em; 
-            display: flex; 
-            align-items: center; 
-            cursor: pointer; 
-            border-bottom: 1px solid #161618; 
-            color: #ddd;
-            transition: 0.2s;
+        .btn-lt-sel { 
+            background: #1f1f23; color: var(--muted); border: 1px solid #333; 
+            padding: 10px 25px; border-radius: 8px; font-size: 0.8em; font-weight: 900; 
+            cursor: pointer; transition: 0.3s;
         }
-        .drop-list-item:hover { background: #1c1c21; color: #fff; padding-left: 25px; }
-        .drop-list-item img { width: 22px; height: 15px; margin-right: 15px; border-radius: 2px; }
+        .btn-lt-sel.active { background: var(--green); color: #000; border-color: var(--green); }
 
-        /* --- MATCH RENDER ENGINE STYLES --- */
-        .league-container { margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--panel); }
+        .stream-grid-master { display: none; gap: 15px; height: calc(100vh - 300px); width: 100%; }
+        .stream-grid-master.active { display: grid; }
+        .grid-lay-1 { grid-template-columns: 1fr; }
+        .grid-lay-2 { grid-template-columns: 1fr 1fr; }
+        .grid-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .grid-lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
+
+        .stream-unit-box { background: #000; border: 1px solid #222; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+        .stream-unit-nav { padding: 8px; background: #0a0a0c; display: flex; gap: 8px; border-bottom: 1px solid var(--border); }
+        .stream-unit-input { flex: 1; background: #000; border: 1px solid #333; color: #fff; font-size: 11px; padding: 6px 12px; border-radius: 5px; }
+        .btn-st-action { background: var(--green); color: #000; border: none; padding: 0 15px; border-radius: 5px; font-weight: 900; font-size: 0.7em; cursor: pointer; }
+        .btn-st-fav { background: var(--gold); color: #000; border: none; padding: 0 10px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+        .btn-st-kill { background: var(--red); color: #fff; border: none; padding: 0 12px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+
+        .vault-container { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-top: 25px; }
+        .vault-pill { display: inline-flex; align-items: center; background: #111; border: 1px solid #333; color: #eee; padding: 8px 18px; border-radius: 8px; font-size: 0.75em; margin-right: 15px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
+        .vault-pill:hover { border-color: var(--gold); }
+        .vault-pill i { margin-left: 15px; color: var(--red); opacity: 0.4; }
+
+        /* --- FINANCIAL TERMINAL --- */
+        .fin-master-layout { display: none; grid-template-columns: 1fr 450px; gap: 30px; height: 100%; }
+        .fin-master-layout.active { display: grid; }
+        .fin-ops-side { overflow-y: auto; display: flex; flex-direction: column; gap: 25px; padding-right: 10px; }
         
-        .league-top-bar { 
-            background: #1e293b; 
-            padding: 16px 25px; 
-            font-weight: 900; 
-            font-size: 0.75em; 
-            color: #fff; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            cursor: pointer;
-            border-bottom: 1px solid #334155;
-        }
+        .rolling-display { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        .roll-segment-box { background: var(--panel); border: 1px solid var(--border); padding: 25px 15px; border-radius: 12px; text-align: center; border-top: 5px solid var(--muted); transition: 0.3s; }
+        .roll-segment-box.active { border-top-color: var(--green); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .roll-lbl-text { font-size: 0.6em; font-weight: 900; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; display: block; letter-spacing: 1.5px; }
+        .roll-target-val { font-family: 'JetBrains Mono'; font-size: 1.4em; font-weight: 900; color: var(--gold); }
 
-        .league-top-bar:hover { background: #273549; }
+        .ledger-supreme-card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; display: flex; flex-direction: column; flex-grow: 1; min-height: 500px; overflow: hidden; }
+        .ledger-supreme-top { padding: 25px 30px; border-bottom: 1px solid #1f1f23; display: flex; justify-content: space-between; align-items: center; }
+        .ledger-tab-btns { display: flex; gap: 10px; }
+        .btn-sup-tab { background: #161618; color: var(--muted); border: 1px solid #333; padding: 8px 18px; border-radius: 6px; font-size: 0.75em; font-weight: 800; cursor: pointer; }
+        .btn-sup-tab.active { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        .star-fav { 
-            font-size: 1.3em; 
-            color: var(--muted); 
-            margin-right: 18px; 
-            transition: var(--transition);
-            cursor: pointer;
-        }
-        .star-fav.active { 
-            color: var(--gold); 
-            text-shadow: 0 0 12px var(--gold-glow);
-            transform: scale(1.15);
-        }
-
-        .match-card { 
-            display: flex; 
-            align-items: center; 
-            padding: 12px 25px; 
-            border-bottom: 1px solid #161618; 
-            font-size: 0.82em; 
-            background: #0a0a0c;
-            transition: background 0.2s;
-        }
-        .match-card:last-child { border-bottom: none; }
-        .match-card:hover { background: #111116; }
-
-        .match-clock { 
-            font-family: 'JetBrains Mono'; 
-            color: var(--green); 
-            width: 65px; 
-            font-weight: 800; 
-            font-size: 1.05em; 
-        }
-
-        .match-desc { 
-            font-weight: 700; 
-            flex-grow: 1; 
-            display: flex; 
-            align-items: center; 
-            color: #f4f4f5;
-        }
-        
-        .match-icon { margin-right: 12px; opacity: 0.6; font-size: 0.9em; }
-
-        .match-flag-img { 
-            width: 18px; 
-            height: 12px; 
-            object-fit: cover; 
-            border-radius: 1px; 
-            margin-left: 12px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .match-league-label { 
-            font-size: 0.72em; 
-            color: var(--muted); 
-            background: #18181b; 
-            padding: 3px 12px; 
-            border-radius: 6px; 
-            margin-left: 25px; 
-            font-weight: 800; 
-            border: 1px solid #27272a;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- STREAMING CENTER --- */
-        .stream-toolbar { 
-            display: flex; 
-            gap: 12px; 
-            margin-bottom: 25px; 
-            background: var(--panel); 
-            padding: 15px; 
-            border-radius: 12px; 
-            border: 1px solid var(--border); 
-        }
-
-        .btn-layout-sel { 
-            background: #1f1f23; 
-            color: var(--muted); 
-            border: 1px solid #333; 
-            padding: 10px 28px; 
-            border-radius: 8px; 
-            font-size: 0.85em; 
-            font-weight: 900; 
-            cursor: pointer; 
-            transition: var(--transition);
-        }
-
-        .btn-layout-sel.active { 
-            background: var(--green); 
-            color: #000; 
-            border-color: var(--green); 
-            box-shadow: 0 0 20px var(--green-glow);
-        }
-
-        .stream-matrix { 
-            display: none; 
-            gap: 15px; 
-            height: calc(100vh - 300px); 
-            width: 100%; 
-        }
-
-        .stream-matrix.active { display: grid; }
-        
-        .lay-1 { grid-template-columns: 1fr; }
-        .lay-2 { grid-template-columns: 1fr 1fr; }
-        .lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-        .lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
-
-        .stream-slot { 
-            background: #000; 
-            border: 1px solid #27272a; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            transition: border 0.3s;
-        }
-
-        .stream-slot:hover { border-color: var(--green); }
-
-        .slot-nav { 
-            padding: 10px; 
-            background: #0a0a0c; 
-            display: flex; 
-            gap: 10px; 
-            border-bottom: 1px solid var(--border); 
-        }
-
-        .slot-input { 
-            flex: 1; 
-            background: #000; 
-            border: 1px solid #333; 
-            color: #fff; 
-            font-size: 11px; 
-            padding: 8px 15px; 
-            border-radius: 6px; 
-        }
-
-        .slot-btn-go { background: var(--green); color: #000; border: none; padding: 0 18px; border-radius: 6px; font-weight: 900; font-size: 0.75em; cursor: pointer; }
-        .slot-btn-fav { background: var(--gold); color: #000; border: none; padding: 0 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-        .slot-btn-kill { background: var(--red); color: #fff; border: none; padding: 0 15px; border-radius: 6px; cursor: pointer; font-size: 14px; }
-
-        .intelligence-vault { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 25px; 
-            border-radius: 12px; 
-            margin-top: 25px; 
-        }
-
-        .vault-pill { 
-            display: inline-flex; 
-            align-items: center; 
-            background: #111; 
-            border: 1px solid #333; 
-            color: #eee; 
-            padding: 10px 18px; 
-            border-radius: 8px; 
-            font-size: 0.75em; 
-            margin-right: 15px; 
-            margin-bottom: 12px; 
-            cursor: pointer; 
-            transition: var(--transition);
-        }
-
-        .vault-pill:hover { border-color: var(--gold); background: #161618; transform: translateY(-2px); }
-        .vault-pill i { margin-left: 15px; color: var(--red); opacity: 0.4; transition: 0.2s; }
-        .vault-pill i:hover { opacity: 1; transform: scale(1.2); }
-
-        /* --- SUPREME FINANCIAL MODULE --- */
-        .fin-terminal-grid { 
-            display: none; 
-            grid-template-columns: 1fr 480px; 
-            gap: 35px; 
-            height: 100%; 
-        }
-
-        .fin-terminal-grid.active { display: grid; }
-
-        .fin-operational-side { 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 30px; 
-            padding-right: 10px; 
-        }
-
-        .rolling-dash { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 15px; 
-        }
-
-        .roll-segment { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 30px 15px; 
-            border-radius: 15px; 
-            text-align: center; 
-            border-top: 5px solid var(--muted); 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: default;
-        }
-
-        .roll-segment.active { 
-            border-top-color: var(--green); 
-            background: linear-gradient(to bottom, rgba(16, 185, 129, 0.03), transparent);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-            transform: translateY(-5px);
-        }
-
-        .roll-label { font-size: 0.6em; font-weight: 900; color: var(--muted); text-transform: uppercase; margin-bottom: 15px; display: block; letter-spacing: 1.5px; }
-        .roll-target { font-family: 'JetBrains Mono'; font-size: 1.5em; font-weight: 900; color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
-
-        .ledger-supreme-v2 { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            border-radius: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            flex-grow: 1; 
-            min-height: 550px; 
-            overflow: hidden;
-        }
-
-        .ledger-top { 
-            padding: 25px 30px; 
-            background: var(--panel-header);
-            border-bottom: 1px solid #1f1f23; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-
-        .ledger-title { font-weight: 900; font-size: 1.1em; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
-
-        .ledger-tabs { display: flex; gap: 12px; }
-        .btn-supreme-tab { 
-            background: #000; 
-            color: var(--muted); 
-            border: 1px solid var(--border-bright); 
-            padding: 10px 22px; 
-            border-radius: 8px; 
-            font-size: 0.75em; 
-            font-weight: 800; 
-            cursor: pointer; 
-            transition: 0.3s;
-        }
-
-        .btn-supreme-tab.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 900; }
-
-        .ledger-table-container { overflow-y: auto; flex-grow: 1; background: #070708; }
-        .supreme-data-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
-        .supreme-data-table th { background: #0c0c0e; padding: 20px; text-align: left; color: var(--muted); position: sticky; top: 0; border-bottom: 1.5px solid #1f1f23; font-weight: 900; z-index: 10; }
-        .supreme-data-table td { padding: 18px 20px; border-bottom: 1px solid #141416; color: #e4e4e7; }
-        .supreme-data-table tr:hover td { background: #0f0f12; }
+        .sup-data-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        .sup-data-table th { background: #111; padding: 18px; text-align: left; color: var(--muted); position: sticky; top: 0; border-bottom: 1px solid #222; }
+        .sup-data-table td { padding: 18px 20px; border-bottom: 1px solid #161618; color: #f4f4f5; }
         
         .fin-analysis-side { display: flex; flex-direction: column; gap: 30px; }
-        .supreme-chart-box { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 25px; height: 500px; position: relative; }
+        .chart-supreme-box { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 25px; height: 500px; position: relative; }
         
-        .master-kpi-hub { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .kpi-supreme-card { background: #000; border: 1px solid var(--border); padding: 25px 15px; border-radius: 12px; text-align: center; position: relative; overflow: hidden; }
-        .kpi-supreme-card span { display: block; font-size: 0.65em; color: var(--muted); margin-bottom: 12px; font-weight: 900; letter-spacing: 1.5px; }
-        .kpi-supreme-card b { font-family: 'JetBrains Mono'; font-size: 1.5em; color: #fff; letter-spacing: -1px; }
+        .kpi-supreme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .kpi-sup-item { background: #000; border: 1px solid var(--border); padding: 20px 15px; border-radius: 10px; text-align: center; }
+        .kpi-sup-item span { display: block; font-size: 0.65em; color: var(--muted); margin-bottom: 10px; font-weight: 900; letter-spacing: 1px; }
+        .kpi-sup-item b { font-family: 'JetBrains Mono'; font-size: 1.3em; color: #fff; }
 
-        .op-input-center { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 35px; 
-            border-radius: 15px; 
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .op-action-btn { 
-            background: var(--green); 
-            color: #000; 
-            border: none; 
-            padding: 20px; 
-            border-radius: 10px; 
-            font-weight: 950; 
-            cursor: pointer; 
-            font-size: 1em; 
-            letter-spacing: 2px;
-            transition: all 0.4s;
-            text-transform: uppercase;
-        }
-
-        .op-action-btn:hover { 
-            transform: scale(1.02); 
-            box-shadow: 0 15px 35px var(--green-glow); 
-            background: #14d693;
-        }
-        
-        .manual-reset-link {
-            text-align: center;
-            color: #222;
-            font-size: 10px;
-            font-weight: 900;
-            cursor: pointer;
-            text-decoration: underline;
-            transition: 0.3s;
-        }
-        .manual-reset-link:hover { color: var(--red); }
+        .op-input-supreme { background: var(--panel); border: 1px solid var(--border); padding: 30px; border-radius: 15px; display: flex; flex-direction: column; gap: 20px; }
+        .btn-op-commit { background: var(--green); color: #000; border: none; padding: 18px; border-radius: 8px; font-weight: 950; cursor: pointer; font-size: 1em; letter-spacing: 2px; text-transform: uppercase; transition: 0.3s; }
+        .btn-op-commit:hover { transform: scale(1.02); box-shadow: 0 10px 25px var(--green-glow); }
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="brand-zone">
-            <div class="brand-logo">V19 CAPITAL</div>
-            <div class="brand-sub">SUPREME COMMAND CENTER</div>
+        <div class="brand-container">
+            <div class="brand-logo">V19 ELITE</div>
         </div>
         <nav class="nav-scroller">
-            <div class="nav-item active" id="nav-item-f" onclick="v19_SwitchTab('futbol', this)">
-                <i class="fa-solid fa-futbol"></i> FUTBOL ANALİZ
+            <div class="nav-item active" id="nav-f" onclick="switchMainTab('futbol', this)">
+                <i class="fa-solid fa-futbol"></i> FUTBOL
             </div>
-            <div class="nav-item" id="nav-item-b" onclick="v19_SwitchTab('basketbol', this)">
-                <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET ANALİZ
+            <div class="nav-item basket" id="nav-b" onclick="switchMainTab('basketbol', this)">
+                <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET
             </div>
-            <div class="nav-item stream-nav" onclick="v19_SwitchTab('stream', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:25px;">
-                <i class="fa-solid fa-satellite-dish"></i> CANLI İSTİHBARAT
+            <div class="nav-item stream" onclick="switchMainTab('stream', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:15px;">
+                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
             </div>
-            <div class="nav-item" onclick="v19_SwitchTab('finance', this)" style="color:var(--green);">
-                <i class="fa-solid fa-microchip"></i> FİNANSAL TERMİNAL
+            <div class="nav-item favs" onclick="switchMainTab('favs', this)" style="color:var(--red);">
+                <i class="fa-solid fa-star"></i> FAVORİLERİM
+            </div>
+            <div class="nav-item finance" onclick="switchMainTab('finance', this)" style="color:var(--green);">
+                <i class="fa-solid fa-microchip"></i> USDT FİNANS
             </div>
         </nav>
     </aside>
 
-    <main class="main-view">
-        <header class="top-header">
-            <div class="title-area">
-                <span id="supreme-sub-label">SİSTEM AKTİF</span>
-                <h2 id="supreme-main-title">FUTBOL RADARI</h2>
+    <main class="main-viewport">
+        <header class="top-bar">
+            <div class="page-title-box">
+                <h2 id="console-title">FUTBOL RADARI</h2>
             </div>
-            <div class="header-stats">
-                <div class="stat-pill">
-                    <label>NET SERMAYE (USDT)</label>
-                    <span id="global-wallet-display">100.00</span>
-                </div>
+            <div class="top-wallet-box">
+                <label>BAKİYE (USDT):</label>
+                <b id="global-wallet">100.00</b>
             </div>
         </header>
 
-        <section class="scrolling-content">
+        <section class="content-scroller">
             
-            <div id="v19-radar-module">
+            <div id="module-radar">
                 <div class="radar-controls">
-                    <div class="filter-strip">
-                        <select id="v19-date-sel" class="input-supreme" style="min-width: 200px;" onchange="v19_ExecuteFilter()">
+                    <div class="filter-panel">
+                        <select id="v19-date-sel" class="supreme-select" onchange="applyRadarFilters()">
                             <option value="ALL">TÜM TARİHLER</option>
                         </select>
-                        
-                        <div class="drop-wrapper">
-                            <div class="drop-btn" onclick="v19_ToggleLeagueDropdown(event)">
-                                <div id="v19-drop-label">TÜM LİGLER</div>
+                        <div class="c-drop-wrapper">
+                            <div class="c-drop-trigger" onclick="toggleLeagueMenu(event)">
+                                <div id="c-drop-label">TÜM LİGLER</div>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
-                            <div class="drop-list-pro" id="v19-drop-menu"></div>
+                            <div class="c-drop-menu" id="c-drop-options"></div>
                         </div>
                     </div>
-
-                    <div class="mode-switcher">
-                        <button class="btn-supreme-mode active" id="mode-btn-league" onclick="v19_SetSortMode('league')">LİG BAZLI SIRALAMA</button>
-                        <button class="btn-supreme-mode" id="mode-btn-time" onclick="v19_SetSortMode('time')">ZAMAN BAZLI AKIŞ</button>
+                    <div class="sort-switcher">
+                        <button class="btn-sort active" id="btn-sort-league" onclick="setMasterSort('league')">LİG SIRALI</button>
+                        <button class="btn-sort" id="btn-sort-time" onclick="setMasterSort('time')">SAAT SIRALI</button>
                     </div>
                 </div>
-                
-                <div id="v19-render-engine-output"></div>
+                <div id="radar-render-target"></div>
             </div>
 
-            <div id="v19-stream-module" style="display:none;">
-                <div class="stream-toolbar">
-                    <button class="btn-layout-sel" id="lt-1" onclick="v19_BuildMatrix(1)">1 EKRAN</button>
-                    <button class="btn-layout-sel" id="lt-2" onclick="v19_BuildMatrix(2)">2 EKRAN</button>
-                    <button class="btn-layout-sel" id="lt-4" onclick="v19_BuildMatrix(4)">4 EKRAN</button>
-                    <button class="btn-layout-sel active" id="lt-6" onclick="v19_BuildMatrix(6)">6 EKRAN</button>
+            <div id="module-favs" style="display:none;">
+                <div id="favs-render-target"></div>
+            </div>
+
+            <div id="module-stream" style="display:none;">
+                <div class="stream-layout-bar">
+                    <button class="btn-lt-sel" onclick="renderStreamMatrix(1)">1</button>
+                    <button class="btn-lt-sel" onclick="renderStreamMatrix(2)">2</button>
+                    <button class="btn-lt-sel" onclick="renderStreamMatrix(4)">4</button>
+                    <button class="btn-lt-sel active" id="lay-6-btn" onclick="renderStreamMatrix(6)">6</button>
                 </div>
-                
-                <div id="v19-matrix-grid" class="stream-matrix lay-6 active"></div>
-                
-                <div class="intelligence-vault">
-                    <span class="roll-label">KAYITLI OPERASYON YAYINLARI</span>
-                    <div id="v19-fav-stream-pills" style="margin-top:15px;"></div>
+                <div id="stream-master-grid" class="stream-grid-master grid-lay-6 active"></div>
+                <div class="vault-container">
+                    <span class="roll-lbl-text">KAYITLI OPERASYON YAYINLARIM</span>
+                    <div id="stream-vault-list" style="margin-top:15px;"></div>
                 </div>
             </div>
 
-            <div class="fin-terminal-grid" id="v19-finance-module">
-                
-                <div class="fin-operational-side">
-                    <div class="rolling-dash">
-                        <div class="roll-segment active"><span class="roll-label">1 HAFTA</span><div class="roll-target">$1.000</div></div>
-                        <div class="roll-segment"><span class="roll-label">15 GÜN</span><div class="roll-target">$5.000</div></div>
-                        <div class="roll-segment"><span class="roll-label">30 GÜN</span><div class="roll-target">$15.000</div></div>
-                        <div class="roll-segment"><span class="roll-label">60 GÜN</span><div class="roll-target">$40.000</div></div>
-                        <div class="roll-segment"><span class="roll-label">90 GÜN</span><div class="roll-target">$100.000</div></div>
+            <div class="fin-master-layout" id="module-finance">
+                <div class="fin-ops-side">
+                    <div class="rolling-display">
+                        <div class="roll-segment-box active"><span class="roll-lbl-text">1 HAFTA</span><div class="roll-target-val">$1.000</div></div>
+                        <div class="roll-segment-box"><span class="roll-lbl-text">15 GÜN</span><div class="roll-target-val">$5.000</div></div>
+                        <div class="roll-segment-box"><span class="roll-lbl-text">30 GÜN</span><div class="roll-target-val">$15.000</div></div>
+                        <div class="roll-segment-box"><span class="roll-lbl-text">60 GÜN</span><div class="roll-target-val">$40.000</div></div>
+                        <div class="roll-segment-box"><span class="roll-lbl-text">90 GÜN</span><div class="roll-target-val">$100.000</div></div>
                     </div>
-
-                    <div class="ledger-supreme-v2">
-                        <div class="ledger-top">
-                            <span class="ledger-title">OPERASYONEL LEDGER</span>
-                            <div class="ledger-tabs">
-                                <button class="btn-supreme-tab active" id="ltab-p" onclick="v19_SetLedgerView('pend')">BEKLEYENLER</button>
-                                <button class="btn-supreme-tab" id="ltab-a" onclick="v19_SetLedgerView('all')">TAM LİSTE</button>
+                    <div class="ledger-supreme-card">
+                        <div class="ledger-supreme-top">
+                            <span class="ledger-title">LEDGER MASTER</span>
+                            <div class="ledger-tab-btns">
+                                <button class="btn-sup-tab active" id="tab-p-btn" onclick="setLedgerView('pend')">BEKLEYEN</button>
+                                <button class="btn-sup-tab" id="tab-a-btn" onclick="setLedgerView('all')">TÜMÜ</button>
                             </div>
                         </div>
                         <div class="ledger-table-container">
-                            <table class="supreme-data-table" id="v19-master-ledger-table"></table>
+                            <table class="sup-data-table" id="v19-ledger-table"></table>
                         </div>
                     </div>
                 </div>
-
                 <div class="fin-analysis-side">
-                    <div class="supreme-chart-box">
-                        <div id="v19-apex-main-chart"></div>
+                    <div class="chart-supreme-box"><div id="v19-apex-chart"></div></div>
+                    <div class="kpi-supreme-grid">
+                        <div class="kpi-sup-item"><span>AKTİF KASA</span><b id="kpi-bal">100.00</b></div>
+                        <div class="kpi-sup-item"><span>NET P/L</span><b id="kpi-pnl">0.00</b></div>
+                        <div class="kpi-sup-item"><span>SUCCESS %</span><b id="kpi-wr">%0</b></div>
                     </div>
-
-                    <div class="op-input-center">
-                        <div class="master-kpi-hub">
-                            <div class="kpi-supreme-card"><span>AKTİF KASA</span><b id="kpi-w-val">100.00</b></div>
-                            <div class="kpi-supreme-card"><span>NET P/L</span><b id="kpi-p-val">0.00</b></div>
-                            <div class="kpi-supreme-card"><span>SUCCESS</span><b id="kpi-wr-val">%0</b></div>
+                    <div class="op-input-supreme">
+                        <input type="text" id="op-i-name" class="supreme-select" style="width:100%; border-color:#222;" placeholder="İŞLEM ADI">
+                        <div style="display:flex; gap:12px;">
+                            <input type="number" id="op-i-amt" class="supreme-select" style="flex:1; border-color:#222;" placeholder="TUTAR">
+                            <input type="number" id="op-i-odds" class="supreme-select" style="flex:1; border-color:#222;" placeholder="ORAN">
                         </div>
-                        
-                        <div style="display:flex; flex-direction:column; gap:15px;">
-                            <input type="text" id="op-input-name" class="input-supreme" style="width:100%; border-color:#222;" placeholder="İŞLEM ADI VEYA KODU">
-                            <div style="display:flex; gap:12px;">
-                                <input type="number" id="op-input-amt" class="input-supreme" style="flex:1; border-color:#222;" placeholder="TUTAR ($)">
-                                <input type="number" id="op-input-odds" class="input-supreme" style="flex:1; border-color:#222;" placeholder="ORAN">
-                            </div>
-                            <button onclick="v19_CommitNewOp()" class="op-action-btn">OPERASYONU BAŞLAT</button>
-                            <div class="manual-reset-link" onclick="v19_HardReset()">SİSTEMİ MANUEL OLARAK KALİBRE ET (SIFIRLA)</div>
-                        </div>
+                        <button onclick="commitNewOperation()" class="btn-op-commit">OPERASYONU BAŞLAT</button>
+                        <div style="text-align:center;"><small onclick="v19_HardReset()" style="color:#222; cursor:pointer; font-weight:900;">MANUEL SIFIRLA</small></div>
                     </div>
                 </div>
-
             </div>
 
         </section>
@@ -777,87 +385,103 @@
 
     <script>
         /**
-         * V19 SUPREME COMMAND CENTER - CORE ENGINE (v3.0)
-         * Hiçbir fonksiyon kısaltılmamış, tüm operasyonel detaylar açıkça yazılmıştır.
+         * V19 SUPREME COMMAND CENTER - FINAL ARCHIVE CORE
+         * Satır kısıtlaması olmadan, tüm operasyonel detaylar açıkça kodlanmıştır.
          */
 
-        let _GLOBAL_DATA = [];
-        let _LEAGUE_MAP = {};
-        let _ACTIVE_SPORT = 'futbol';
-        let _ACTIVE_MODULE = 'bulletin';
-        let _CURRENT_LEAGUE = 'ALL';
-        let _SORT_MODE = 'league'; 
-        let _LEDGER_MODE = 'pend';
+        let _DB_DATA = [];
+        let _LEAGUE_STATS = {};
+        let _SPORT = 'futbol';
+        let _TAB = 'bulletin';
+        let _L_FILTER = 'ALL';
+        let _SORT = 'league'; 
+        let _LED_VIEW = 'pend';
 
-        // DATABASE (LocalStorage tabanlı kalıcı bellek)
+        // PERSISTENT STORAGE
         let _WALLET = parseFloat(localStorage.getItem('v19_w')) || 100.00;
         let _HISTORY = JSON.parse(localStorage.getItem('v19_h')) || [100.00];
         let _PENDING = JSON.parse(localStorage.getItem('v19_p')) || [];
         let _LEDGER = JSON.parse(localStorage.getItem('v19_l')) || [];
-        let _FAV_LEAGUES = JSON.parse(localStorage.getItem('v19_fav_l')) || [];
-        let _FAV_STREAMS = JSON.parse(localStorage.getItem('v19_fav_s')) || [];
+        let _FAV_L = JSON.parse(localStorage.getItem('v19_fav_l')) || [];
+        let _FAV_S = JSON.parse(localStorage.getItem('v19_fav_s')) || [];
 
-        // --- ENGINE: INITIALIZATION ---
-        async function v19_Start() {
-            console.log("Terminal Engine Warming Up...");
+        // LİG HİYERARŞİSİ (PUANLAMA SİSTEMİ)
+        const HIERARCHY = {
+            "TÜRKİYE - SÜPER LİG": 1000, 
+            "İNGİLTERE - PREMIER LEAGUE": 990, 
+            "İSPANYA - LA LIGA": 980,
+            "ALMANYA - BUNDESLIGA": 970, 
+            "İTALYA - SERIE A": 960, 
+            "FRANSA - LIGUE 1": 950,
+            "AVRUPA - CHAMPIONS LEAGUE": 900, 
+            "AVRUPA - EUROPA LEAGUE": 890, 
+            "AVRUPA - CONFERENCE LEAGUE": 880,
+            "AVRUPA - EUROLEAGUE": 995, 
+            "AMERİKA - NBA": 985, 
+            "TÜRKİYE - BSL": 975
+        };
+
+        // --- CORE: INITIALIZATION ---
+        async function v19_Initialize() {
+            console.log("Supreme Terminal Syncing...");
             try {
-                // Veriyi çek ve cache kırıcı ekle
-                const r = await fetch('v19_rapor.json?ts=' + Date.now());
-                const json = await r.json();
-                _GLOBAL_DATA = json.veriler || [];
-                _LEAGUE_MAP = json.sayac || {};
+                const r = await fetch('v19_rapor.json?v=' + Date.now());
+                const j = await r.json();
+                _DB_DATA = j.veriler || [];
+                _LEAGUE_STATS = j.sayac || {};
                 
-                v19_BuildDropdowns();
-                v19_ExecuteFilter();
-                v19_RefreshWalletUI();
-            } catch (err) {
-                console.error("Critical Error: Radar data offline.");
-                v19_ShowSyncError();
+                buildFilterMenus();
+                applyRadarFilters();
+                updateGlobalWalletUI();
+            } catch (e) {
+                console.error("Critical: Data Sync Failed.");
+                document.getElementById('radar-render-target').innerHTML = "<div style='padding:100px; text-align:center; color:var(--muted); font-weight:900;'>RADAR OFFLINE - MOTORU TETİKLEYİN</div>";
             }
         }
 
-        // --- ENGINE: CORE UI FUNCTIONS ---
-        function v19_SwitchTab(target, el) {
-            // Sidebar UI update
+        // --- CORE: UI & TAB CONTROL ---
+        function switchMainTab(target, el) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
 
-            // Module visibility
-            const mRadar = document.getElementById('v19-radar-module');
-            const mStream = document.getElementById('v19-stream-module');
-            const mFinance = document.getElementById('v19-finance-module');
+            const modRadar = document.getElementById('module-radar');
+            const modFavs = document.getElementById('module-favs');
+            const modStream = document.getElementById('module-stream');
+            const modFinance = document.getElementById('module-finance');
 
-            mRadar.style.display = 'none';
-            mStream.style.display = 'none';
-            mFinance.classList.remove('active');
+            modRadar.style.display = 'none';
+            modFavs.style.display = 'none';
+            modStream.style.display = 'none';
+            modFinance.classList.remove('active');
 
             if(target === 'futbol' || target === 'basketbol') {
-                _ACTIVE_SPORT = target;
-                _ACTIVE_MODULE = 'bulletin';
-                mRadar.style.display = 'block';
-                document.getElementById('supreme-main-title').innerText = target.toUpperCase() + " RADARI";
-                document.getElementById('supreme-sub-label').innerText = "TAKTAK ANALİZ SİSTEMİ AKTİF";
-                v19_BuildDropdowns();
-                v19_ExecuteFilter();
+                _SPORT = target; _TAB = 'bulletin';
+                modRadar.style.display = 'block';
+                document.getElementById('console-title').innerText = target.toUpperCase() + " RADARI";
+                buildFilterMenus(); applyRadarFilters();
             } else if(target === 'stream') {
-                _ACTIVE_MODULE = 'stream';
-                mStream.style.display = 'block';
-                document.getElementById('supreme-main-title').innerText = "İSTİHBARAT MERKEZİ";
-                document.getElementById('supreme-sub-label').innerText = "CANLI YAYIN AKIŞLARI";
-                if(!document.getElementById('v19-matrix-grid').innerHTML) v19_BuildMatrix(6);
-                v19_RenderFavStreams();
+                _TAB = 'stream';
+                modStream.style.display = 'block';
+                document.getElementById('console-title').innerText = "CANLI YAYIN MERKEZİ";
+                if(!document.getElementById('stream-master-grid').innerHTML) renderStreamMatrix(6);
+                refreshStreamVault();
+            } else if(target === 'favs') {
+                _TAB = 'favs';
+                modFavs.style.display = 'block';
+                document.getElementById('console-title').innerText = "FAVORİ ANALİZLERİM";
+                applyRadarFilters();
             } else if(target === 'finance') {
-                _ACTIVE_MODULE = 'finance';
-                mFinance.classList.add('active');
-                document.getElementById('supreme-main-title').innerText = "FİNANSAL TERMİNAL";
-                document.getElementById('supreme-sub-label').innerText = "ROLLING VE KASA YÖNETİMİ";
-                v19_RefreshFinanceHub();
-                setTimeout(v19_RenderSupremeChart, 250);
+                _TAB = 'finance';
+                modFinance.classList.add('active');
+                document.getElementById('console-title').innerText = "USDT FİNANSAL YÖNETİM";
+                refreshFinanceDashboard();
+                setTimeout(renderApexSupremeChart, 200);
             }
         }
 
-        function v19_GetFlag(leagueName) {
-            const n = leagueName.toUpperCase();
+        // --- CORE: MAPPING & DATES ---
+        function v19_GetFlag(lName) {
+            const n = lName.toUpperCase();
             if(n.includes("TÜRKİYE") || n.includes("SUPER LIG") || n.includes("BSL")) return "tr";
             if(n.includes("İNGİLTERE") || n.includes("PREMIER") || n.includes("CHAMPIONSHIP")) return "gb-eng";
             if(n.includes("İSPANYA") || n.includes("LA LIGA") || n.includes("ACB")) return "es";
@@ -874,430 +498,353 @@
             return "un";
         }
 
-        function v19_HumanDate(str) {
-            if(!str) return "";
-            const p = str.split('-');
+        function v19_FormatDate(ds) {
+            if(!ds) return "";
+            const p = ds.split('-');
             const dObj = new Date(p[0], p[1] - 1, p[2]);
             const today = new Date(); today.setHours(0,0,0,0);
             const diff = Math.round((dObj - today) / (1000 * 60 * 60 * 24));
-            
-            if (diff === 0) return "BUGÜN";
-            if (diff === 1) return "YARIN";
-            
+            if (diff === 0) return "BUGÜN"; if (diff === 1) return "YARIN";
             const aylar = ["OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZİRAN","TEMMUZ","AĞUSTOS","EYLÜL","EKİM","KASIM","ARALIK"];
             return p[2] + " " + aylar[parseInt(p[1]) - 1];
         }
 
-        // --- ENGINE: RADAR LOGIC ---
-        function v19_BuildDropdowns() {
+        // --- RADAR: FILTER ENGINE ---
+        function buildFilterMenus() {
             const dateSel = document.getElementById('v19-date-sel');
-            const dropMenu = document.getElementById('v19-drop-menu');
+            const dropMenu = document.getElementById('c-drop-options');
             
-            // Tarih Seçenekleri
-            let dateHtml = '<option value="ALL">TÜM TAKVİM</option>';
-            const dates = [...new Set(_GLOBAL_DATA.filter(m => m.t === _ACTIVE_SPORT).map(m => m.dt))].sort();
-            dates.forEach(d => {
-                dateHtml += `<option value="${d}">${v19_HumanDate(d)}</option>`;
-            });
-            dateSel.innerHTML = dateHtml;
+            // Dates
+            let dHtml = '<option value="ALL">TÜM TARİHLER</option>';
+            const dates = [...new Set(_DB_DATA.filter(m => m.t === _SPORT).map(m => m.dt))].sort();
+            dates.forEach(d => { dHtml += `<option value="${d}">${v19_FormatDate(d)}</option>`; });
+            dateSel.innerHTML = dHtml;
 
-            // Lig Listesi
-            let ligHtml = `<div class="drop-list-item" onclick="v19_SelectLeague('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
-            for(let ligName in _LEAGUE_MAP) {
-                // ligAdi kontrolü
-                let isFutbol = ["LİG", "PREMIER", "BUNDES", "SERIE", "LIGUE", "CHAMP", "EURO", "MLS", "EREDIVISIE"].some(x => ligName.toUpperCase().includes(x));
-                if((_ACTIVE_SPORT === 'futbol' && isFutbol) || (_ACTIVE_SPORT === 'basketbol' && !isFutbol)) {
-                    if(_LEAGUE_MAP[ligName] > 0) {
-                        const flag = v19_GetFlag(ligName);
-                        const ikon = _ACTIVE_SPORT === 'futbol' ? '⚽' : '🏀';
-                        ligHtml += `
-                            <div class="drop-list-item" onclick="v19_SelectLeague('${ligName}', this.innerHTML)">
-                                <img src="https://flagcdn.com/w40/${flag}.png"> 
-                                <span>${ikon} ${ligName} (${_LEAGUE_MAP[ligName]})</span>
-                            </div>
-                        `;
-                    }
+            // Leagues (Custom Select)
+            let lHtml = `<div class="c-drop-item" onclick="handleLeagueSelect('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
+            for(let lName in _LEAGUE_STATS) {
+                // Strict Basket/Futbol separation
+                let isBasket = ["NBA", "EUROLEAGUE", "WNBA", "NCAA", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB"].some(x => lName.toUpperCase().includes(x));
+                let correctSport = (_SPORT === 'basketbol' && isBasket) || (_SPORT === 'futbol' && !isBasket);
+                
+                if(correctSport && _LEAGUE_STATS[lName] > 0) {
+                    const flag = v19_GetFlag(lName);
+                    const icon = _SPORT === 'futbol' ? '⚽' : '🏀';
+                    lHtml += `
+                        <div class="c-drop-item" onclick="handleLeagueSelect('${lName}', this.innerHTML)">
+                            <img src="https://flagcdn.com/w40/${flag}.png"> 
+                            <span>${icon} ${lName} (${_LEAGUE_STATS[lName]})</span>
+                        </div>
+                    `;
                 }
             }
-            dropMenu.innerHTML = ligHtml;
+            dropMenu.innerHTML = lHtml;
         }
 
-        function v19_ToggleLeagueDropdown(e) {
-            e.stopPropagation();
-            const m = document.getElementById('v19-drop-menu');
-            m.style.display = m.style.display === 'block' ? 'none' : 'block';
+        function toggleLeagueMenu(e) { e.stopPropagation(); const m = document.getElementById('c-drop-options'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
+        
+        function handleLeagueSelect(val, html) {
+            _L_FILTER = val;
+            document.getElementById('c-drop-label').innerHTML = html;
+            document.getElementById('c-drop-options').style.display = 'none';
+            applyRadarFilters();
         }
 
-        function v19_SelectLeague(val, html) {
-            _CURRENT_LEAGUE = val;
-            document.getElementById('v19-drop-label').innerHTML = html;
-            document.getElementById('v19-drop-menu').style.display = 'none';
-            v19_ExecuteFilter();
+        function setMasterSort(mode) {
+            _SORT = mode;
+            document.querySelectorAll('.btn-sort').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-sort-' + mode).classList.add('active');
+            applyRadarFilters();
         }
 
-        function v19_SetSortMode(mode) {
-            _SORT_MODE = mode;
-            document.querySelectorAll('.btn-supreme-mode').forEach(b => b.classList.remove('active'));
-            document.getElementById('mode-btn-' + mode).classList.add('active');
-            v19_ExecuteFilter();
-        }
-
-        function v19_ExecuteFilter() {
-            if(_ACTIVE_MODULE !== 'bulletin') return;
-            const target = document.getElementById('v19-render-engine-output');
+        function applyRadarFilters() {
+            const targetID = (_TAB === 'favs') ? 'favs-render-target' : 'radar-render-target';
+            const area = document.getElementById(targetID);
+            if(!area) return;
+            
             const dateVal = document.getElementById('v19-date-sel').value;
             
-            let filtered = _GLOBAL_DATA.filter(m => 
-                m.t === _ACTIVE_SPORT && 
-                (dateVal === 'ALL' || m.dt === dateVal) && 
-                (_CURRENT_LEAGUE === 'ALL' || m.l === _CURRENT_LEAGUE)
-            );
-            
-            let output = "";
-            const days = {};
-            
-            filtered.forEach(m => {
-                if(!days[m.dt]) days[m.dt] = [];
-                days[m.dt].push(m);
+            let filtered = _DB_DATA.filter(m => {
+                let isBasket = ["NBA", "EUROLEAGUE", "WNBA", "NCAA", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB"].some(x => m.l.toUpperCase().includes(x));
+                let sportCheck = (_SPORT === 'basketbol' && isBasket) || (_SPORT === 'futbol' && !isBasket);
+                let dateCheck = (dateVal === 'ALL' || m.dt === dateVal);
+                let leagueCheck = (_L_FILTER === 'ALL' || m.l === _L_FILTER);
+                
+                if(_TAB === 'favs') return _FAV_L.includes(m.l) && dateCheck;
+                return sportCheck && dateCheck && leagueCheck;
             });
+            
+            let buffer = "";
+            const days = {};
+            filtered.forEach(m => { if(!days[m.dt]) days[m.dt] = []; days[m.dt].push(m); });
 
             Object.keys(days).sort().forEach(day => {
-                output += `<div style="color:var(--green); font-size:0.75em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:15px; letter-spacing:2px;">${v19_HumanDate(day)}</div>`;
+                buffer += `<div style="color:var(--green); font-size:0.75em; font-weight:900; padding:15px 0 5px 0; border-bottom:1px solid #1f1f23; margin-bottom:15px; letter-spacing:1px;">${v19_FormatDate(day)}</div>`;
                 
-                if(_SORT_MODE === 'time') {
-                    // --- KRONOLOJİK AKIŞ ---
+                if(_SORT === 'time') {
+                    // SAAT SIRALI MOD (KOMPAKT)
                     days[day].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
-                        const f = v19_GetFlag(m.l);
-                        const ikon = _ACTIVE_SPORT === 'futbol' ? '⚽' : '🏀';
-                        output += `
-                            <div class="match-card">
+                        const icon = _SPORT === 'futbol' ? '⚽' : '🏀';
+                        buffer += `
+                            <div class="match-row-box">
                                 <div class="match-clock">${m.tm}</div>
-                                <div class="match-desc">
-                                    <span class="match-icon">${ikon}</span>
+                                <div class="match-teams-info">
+                                    <span class="match-ico-span">${icon}</span>
                                     ${m.m} 
-                                    <img src="https://flagcdn.com/w40/${f}.png" class="match-flag-img">
-                                    <span class="match-league-label">${m.l}</span>
+                                    <img src="https://flagcdn.com/w40/${v19_GetFlag(m.l)}.png" class="match-flag-img">
+                                    <span class="match-league-tag">${m.l}</span>
                                 </div>
                             </div>
                         `;
                     });
                 } else {
-                    // --- LİG GRUPLU (FAVORİ DESTEKLİ) ---
+                    // LİG SIRALI MOD (HIYERARŞİ VE FAVORİ DESTEKLİ)
                     const groups = {};
-                    days[day].forEach(m => {
-                        if(!groups[m.l]) groups[m.l] = [];
-                        groups[m.l].push(m);
-                    });
+                    days[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
 
                     let sortedLigs = Object.keys(groups).sort((a,b) => {
-                        const favA = _FAV_LEAGUES.includes(a) ? 0 : 1;
-                        const favB = _FAV_LEAGUES.includes(b) ? 0 : 1;
-                        if(favA !== favB) return favA - favB;
-                        
-                        let timeA = groups[a].reduce((m, x) => x.tm < m ? x.tm : m, "23:59");
-                        let timeB = groups[b].reduce((m, x) => x.tm < m ? x.tm : m, "23:59");
-                        return timeA.localeCompare(timeB);
+                        // 1. Favori
+                        const fA = _FAV_L.includes(a) ? 0 : 1; const fB = _FAV_L.includes(b) ? 0 : 1;
+                        if(fA !== fB) return fA - fB;
+                        // 2. Hiyerarşi (Puanlama)
+                        const pA = HIERARCHY[a] || 0; const pB = HIERARCHY[b] || 0;
+                        if(pA !== pB) return pB - pA;
+                        // 3. Saat
+                        let tA = groups[a].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
+                        let tB = groups[b].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
+                        return tA.localeCompare(tB);
                     });
 
                     sortedLigs.forEach(lig => {
                         const flag = v19_GetFlag(lig);
-                        const isFav = _FAV_LEAGUES.includes(lig);
-                        const uid = `sec_${day}_${lig.replace(/[^a-zA-Z0-9]/g, '')}`;
-                        const icon = _ACTIVE_SPORT === 'futbol' ? '⚽' : '🏀';
+                        const isFav = _FAV_L.includes(lig);
+                        const uid = `id_${day}_${lig.replace(/[^a-zA-Z0-9]/g, '')}`;
+                        const icon = _SPORT === 'futbol' ? '⚽' : '🏀';
 
-                        output += `
-                            <div class="league-container">
-                                <div class="league-top-bar" onclick="v19_ToggleAccordion('${uid}', this)">
+                        buffer += `
+                            <div class="league-block">
+                                <div class="league-title-bar" onclick="v19_ToggleAcc('${uid}')">
                                     <div style="display:flex; align-items:center;">
-                                        <i class="fa-solid fa-star star-fav ${isFav?'active':''}" onclick="v19_ToggleFavLeague(event, '${lig}')"></i>
-                                        <span style="color:${_ACTIVE_SPORT==='basketbol'?'var(--orange)':'#fff'}; font-size:1.2em; margin-right:12px;">${icon}</span>
+                                        <i class="fa-solid fa-star fav-star-icon ${isFav?'active':''}" onclick="toggleLeagueFav(event, '${lig}')"></i>
+                                        <span style="font-size:1.2em; margin-right:12px;">${icon}</span>
                                         <span>${lig}</span>
                                     </div>
                                     <i class="fa-solid fa-chevron-down chevron"></i>
                                 </div>
-                                <div id="${uid}" class="league-content">
+                                <div id="${uid}" class="league-content" style="display:block;">
                         `;
 
                         groups[lig].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
-                            output += `
-                                <div class="match-card">
+                            buffer += `
+                                <div class="match-row-box">
                                     <div class="match-clock">${m.tm}</div>
-                                    <div class="match-desc">${m.m} <img src="https://flagcdn.com/w40/${flag}.png" class="match-flag-img"></div>
+                                    <div class="match-teams-info">${m.m} <img src="https://flagcdn.com/w40/${flag}.png" class="match-flag-img"></div>
                                 </div>
                             `;
                         });
-
-                        output += `</div></div>`;
+                        buffer += `</div></div>`;
                     });
                 }
             });
-            target.innerHTML = output;
+            area.innerHTML = buffer || "<div style='text-align:center; padding:50px; color:var(--muted);'>RADARDA VERİ YOK.</div>";
         }
 
-        // --- ENGINE: STREAMING CONTROL ---
-        function v19_BuildMatrix(n) {
-            const grid = document.getElementById('v19-matrix-grid');
-            grid.className = `stream-matrix active lay-${n}`;
+        function toggleLeagueFav(e, l) {
+            e.stopPropagation();
+            if(_FAV_L.includes(l)) _FAV_L = _FAV_L.filter(x => x !== l);
+            else _FAV_L.push(l);
+            localStorage.setItem('v19_fav_l', JSON.stringify(_FAV_L));
+            applyRadarFilters();
+        }
+
+        // --- STREAM: COMMAND CENTER ---
+        function renderStreamMatrix(num) {
+            const grid = document.getElementById('stream-master-grid');
+            grid.className = `stream-grid-master active grid-lay-${num}`;
             grid.innerHTML = "";
             
-            document.querySelectorAll('.btn-layout-sel').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById('lt-' + n);
-            if(activeBtn) activeBtn.classList.add('active');
+            document.querySelectorAll('.btn-lt-sel').forEach(b => b.classList.remove('active'));
+            if(num === 6) document.getElementById('lay-6-btn').classList.add('active');
 
-            for(let i=1; i<=n; i++) {
+            for(let i=1; i<=num; i++) {
                 grid.innerHTML += `
-                    <div class="stream-slot">
-                        <div class="slot-nav">
-                            <input id="input-st-${i}" class="slot-input" placeholder="HLS/M3U8 veya Iframe linki...">
-                            <button class="slot-btn-go" onclick="v19_FireStream(${i})">İZLE</button>
-                            <button class="slot-btn-fav" onclick="v19_AddStreamToVault(${i})"><i class="fa-solid fa-star"></i></button>
-                            <button class="slot-btn-kill" onclick="v19_KillStream(${i})"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="stream-unit-box">
+                        <div class="stream-unit-nav">
+                            <input id="st-in-${i}" class="stream-unit-input" placeholder="Yayın URL...">
+                            <button class="btn-st-fav" onclick="addStreamToVault(${i})"><i class="fa-solid fa-star"></i></button>
+                            <button class="btn-st-kill" onclick="killStreamUnit(${i})"><i class="fa-solid fa-xmark"></i></button>
+                            <button class="btn-st-action" onclick="fireStream(${i})">İZLE</button>
                         </div>
-                        <iframe id="iframe-st-${i}" style="flex:1; border:none; background:#000;" src="about:blank" allowfullscreen></iframe>
+                        <iframe id="st-fr-${i}" style="flex:1; border:none; background:#000;" src="about:blank" allowfullscreen></iframe>
                     </div>
                 `;
             }
         }
 
-        function v19_FireStream(id) {
-            const u = document.getElementById('input-st-' + id).value;
-            if(u) document.getElementById('iframe-st-' + id).src = u;
+        function fireStream(id) {
+            const url = document.getElementById('st-in-' + id).value;
+            if(url) document.getElementById('st-fr-' + id).src = url;
         }
 
-        function v19_KillStream(id) {
-            document.getElementById('input-st-' + id).value = "";
-            document.getElementById('iframe-st-' + id).src = "about:blank";
+        function killStreamUnit(id) {
+            document.getElementById('st-in-' + id).value = "";
+            document.getElementById('st-fr-' + id).src = "about:blank";
         }
 
-        function v19_AddStreamToVault(id) {
-            const val = document.getElementById('input-st-' + id).value;
-            if(!val || _FAV_STREAMS.includes(val)) return;
-            _FAV_STREAMS.push(val);
-            localStorage.setItem('v19_fav_s', JSON.stringify(_FAV_STREAMS));
-            v19_RenderFavStreams();
+        function addStreamToVault(id) {
+            const url = document.getElementById('st-in-' + id).value;
+            if(url && !_FAV_S.includes(url)) {
+                _FAV_S.push(url);
+                localStorage.setItem('v19_fav_s', JSON.stringify(_FAV_S));
+                refreshStreamVault();
+            }
         }
 
-        function v19_RemoveFavStream(u) {
-            _FAV_STREAMS = _FAV_STREAMS.filter(x => x !== u);
-            localStorage.setItem('v19_fav_s', JSON.stringify(_FAV_STREAMS));
-            v19_RenderFavStreams();
-        }
-
-        function v19_RenderFavStreams() {
-            const area = document.getElementById('v19-fav-stream-pills');
-            area.innerHTML = _FAV_STREAMS.map(u => `
-                <div class="vault-pill" onclick="v19_QuickLoadStream('${u}')">
-                    ${u.substring(0,35)}... 
-                    <i class="fa-solid fa-trash" onclick="event.stopPropagation(); v19_RemoveFavStream('${u}')"></i>
+        function refreshStreamVault() {
+            const area = document.getElementById('stream-vault-list');
+            area.innerHTML = _FAV_S.map(u => `
+                <div class="vault-pill" onclick="loadFromVault('${u}')">
+                    ${u.substring(0,30)}... 
+                    <i class="fa-solid fa-trash" onclick="event.stopPropagation(); removeVaultStream('${u}')"></i>
                 </div>
             `).join('');
         }
 
-        function v19_QuickLoadStream(u) {
-            const inputs = document.querySelectorAll('.slot-input');
+        function removeVaultStream(u) {
+            _FAV_S = _FAV_S.filter(x => x !== u);
+            localStorage.setItem('v19_fav_s', JSON.stringify(_FAV_S));
+            refreshStreamVault();
+        }
+
+        function loadFromVault(u) {
+            const inputs = document.querySelectorAll('.stream-unit-input');
             for(let i=0; i<inputs.length; i++) {
                 if(!inputs[i].value) {
                     inputs[i].value = u;
-                    v19_FireStream(i+1);
-                    break;
+                    fireStream(i+1); break;
                 }
             }
         }
 
-        // --- ENGINE: FINANCIAL TERMINAL ---
-        function v19_RefreshFinanceHub() {
-            v19_RefreshWalletUI();
+        // --- FINANCE: HUB & LEDGER ---
+        function refreshFinanceDashboard() {
+            updateGlobalWalletUI();
             
             const net = _LEDGER.reduce((s, i) => s + (i.pnl || 0), 0);
-            document.getElementById('kpi-p-val').innerText = (net >= 0 ? "+" : "") + net.toFixed(2);
-            document.getElementById('kpi-p-val').style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
+            document.getElementById('kpi-pnl').innerText = (net >= 0 ? "+" : "") + net.toFixed(2);
+            document.getElementById('kpi-pnl').style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
 
-            const total = _LEDGER.filter(x => x.res === 'win' || x.res === 'loss').length;
+            const tot = _LEDGER.filter(x => x.res === 'win' || x.res === 'loss').length;
             const wins = _LEDGER.filter(x => x.res === 'win').length;
-            const successRate = total > 0 ? ((wins / total) * 100).toFixed(1) : 0;
-            document.getElementById('kpi-wr-val').innerText = "%" + successRate;
+            document.getElementById('kpi-wr').innerText = "%" + (tot > 0 ? ((wins / tot) * 100).toFixed(1) : 0);
 
-            v19_RenderLedgerTable();
+            renderLedgerDataTable();
         }
 
-        function v19_SetLedgerView(mode) {
-            _LEDGER_MODE = mode;
-            document.querySelectorAll('.btn-supreme-tab').forEach(b => b.classList.remove('active'));
-            document.getElementById('ltab-' + (mode==='pend'?'p':'a')).classList.add('active');
-            v19_RenderLedgerTable();
+        function setLedgerView(mode) {
+            _LED_VIEW = mode;
+            document.getElementById('tab-p-btn').classList.toggle('active', mode==='pend');
+            document.getElementById('tab-a-btn').classList.toggle('active', mode==='all');
+            renderLedgerDataTable();
         }
 
-        function v19_RenderLedgerTable() {
-            const table = document.getElementById('v19-master-ledger-table');
-            let header = `<tr><th>TARİH</th><th>OPERASYON</th><th>RİSK ($)</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
+        function renderLedgerDataTable() {
+            const table = document.getElementById('v19-ledger-table');
+            let h = `<tr><th>TARİH</th><th>OPERASYON</th><th>MİKTAR</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
             let rows = "";
-            
-            const list = _LEDGER_MODE === 'pend' ? _PENDING : _LEDGER;
+            const list = _LED_VIEW === 'pend' ? _PENDING : _LEDGER;
 
             if(list.length === 0) {
-                rows = `<tr><td colspan="6" style="text-align:center; padding:60px; color:var(--muted); font-weight:800; letter-spacing:1px;">KAYITLI OPERASYON BULUNAMADI</td></tr>`;
+                rows = `<tr><td colspan="6" style="text-align:center; padding:50px; color:var(--muted);">KAYIT BULUNAMADI.</td></tr>`;
             } else {
                 list.forEach(item => {
                     const date = new Date(item.id).toLocaleDateString('tr-TR');
-                    let badge = `<span style="color:var(--muted); font-weight:900;">PENDING</span>`;
-                    let pnlVal = "-";
-
-                    if(item.res === 'win') {
-                        badge = `<b style="color:var(--green)">WIN</b>`;
-                        pnlVal = `<span style="color:var(--green); font-weight:800;">+${item.pnl.toFixed(2)}</span>`;
-                    } else if(item.res === 'loss') {
-                        badge = `<b style="color:var(--red)">LOSS</b>`;
-                        pnlVal = `<span style="color:var(--red); font-weight:800;">${item.pnl.toFixed(2)}</span>`;
-                    }
+                    let status = `<span style="color:var(--muted);">BEKLEYEN</span>`;
+                    if(item.res === 'win') status = `<b style="color:var(--green)">KAZANÇ</b>`;
+                    if(item.res === 'loss') status = `<b style="color:var(--red)">KAYIP</b>`;
 
                     rows += `
                         <tr>
-                            <td style="font-family:'JetBrains Mono'; font-size:0.95em;">${date}</td>
-                            <td style="font-weight:800; color:#fff;">${item.name}</td>
-                            <td style="font-family:'JetBrains Mono'; font-weight:700;">$${item.amt.toFixed(2)}</td>
-                            <td style="font-family:'JetBrains Mono'; color:var(--gold);">@${item.odds.toFixed(2)}</td>
-                            <td>${badge}</td>
-                            <td style="font-family:'JetBrains Mono';">${pnlVal}</td>
-                            ${_LEDGER_MODE === 'pend' ? `
+                            <td style="font-family:'JetBrains Mono';">${date}</td>
+                            <td style="font-weight:800;">${item.name}</td>
+                            <td>$${item.amt}</td>
+                            <td>@${item.odds}</td>
+                            <td>${status}</td>
+                            <td style="font-family:'JetBrains Mono';">${item.pnl ? (item.pnl>0?'+':'')+item.pnl.toFixed(2) : '-'}</td>
+                            ${_LED_VIEW === 'pend' ? `
                                 <td style="text-align:right;">
-                                    <button onclick="v19_SettleOp(${item.id}, 'win')" style="color:var(--green); background:none; border:none; cursor:pointer; font-weight:900; margin-right:15px; font-size:1.3em;">W</button>
-                                    <button onclick="v19_SettleOp(${item.id}, 'loss')" style="color:var(--red); background:none; border:none; cursor:pointer; font-weight:900; font-size:1.3em;">L</button>
+                                    <button onclick="settleOp(${item.id}, 'win')" style="color:var(--green); background:none; border:none; cursor:pointer; font-weight:900; margin-right:15px;">W</button>
+                                    <button onclick="settleOp(${item.id}, 'loss')" style="color:var(--red); background:none; border:none; cursor:pointer; font-weight:900;">L</button>
                                 </td>
                             ` : ""}
                         </tr>
                     `;
                 });
             }
-            table.innerHTML = header + rows;
+            table.innerHTML = h + rows;
         }
 
-        function v19_CommitNewOp() {
-            const n = document.getElementById('op-input-name').value;
-            const a = parseFloat(document.getElementById('op-input-amt').value);
-            const o = parseFloat(document.getElementById('op-input-odds').value);
-
+        function commitNewOperation() {
+            const n = document.getElementById('op-i-name').value;
+            const a = parseFloat(document.getElementById('op-i-amt').value);
+            const o = parseFloat(document.getElementById('op-i-odds').value);
             if(!n || isNaN(a) || isNaN(o)) return;
 
             const op = { id: Date.now(), name: n, amt: a, odds: o };
             _PENDING.push(op);
-            
-            v19_DB_Save();
-            v19_RefreshFinanceHub();
-            
-            document.getElementById('op-input-name').value = "";
-            document.getElementById('op-input-amt').value = "";
-            document.getElementById('op-input-odds').value = "";
+            v19_SaveDB(); refreshFinanceDashboard();
+            document.getElementById('op-i-name').value = "";
+            document.getElementById('op-i-amt').value = "";
+            document.getElementById('op-i-odds').value = "";
         }
 
-        function v19_SettleOp(id, res) {
+        function settleOp(id, res) {
             const op = _PENDING.find(x => x.id === id);
             let pnl = res === 'win' ? (op.amt * op.odds) - op.amt : -op.amt;
-            _WALLET += pnl;
-
-            _HISTORY.push(_WALLET);
+            _WALLET += pnl; _HISTORY.push(_WALLET);
             _LEDGER.unshift({...op, res: res, pnl: pnl, bal: _WALLET});
             _PENDING = _PENDING.filter(x => x.id !== id);
-
-            v19_DB_Save();
-            v19_RefreshFinanceHub();
-            v19_RenderSupremeChart();
+            v19_SaveDB(); refreshFinanceDashboard(); renderApexSupremeChart();
         }
 
-        function v19_RefreshWalletUI() {
-            document.getElementById('global-wallet-display').innerText = _WALLET.toFixed(2);
-            document.getElementById('kpi-w-val').innerText = _WALLET.toFixed(2);
+        function updateGlobalWalletUI() {
+            document.getElementById('top-val').innerText = _WALLET.toFixed(2) + " USDT";
+            document.getElementById('global-wallet').innerText = _WALLET.toFixed(2);
+            document.getElementById('kpi-bal').innerText = _WALLET.toFixed(2);
         }
 
-        function v19_DB_Save() {
+        function v19_SaveDB() {
             localStorage.setItem('v19_w', _WALLET);
             localStorage.setItem('v19_h', JSON.stringify(_HISTORY));
             localStorage.setItem('v19_p', JSON.stringify(_PENDING));
             localStorage.setItem('v19_l', JSON.stringify(_LEDGER));
         }
 
-        function v19_HardReset() {
-            const pass = prompt("DİKKAT: Tüm veriler silinecek. Yeni başlangıç bakiyesi girin:");
-            if(pass && !isNaN(parseFloat(pass))) {
-                _WALLET = parseFloat(pass);
-                _HISTORY = [_WALLET];
-                _PENDING = [];
-                _LEDGER = [];
-                v19_DB_Save();
-                location.reload();
-            }
-        }
-
-        // --- ENGINE: CHART VISUALIZER ---
-        let _CHART_POINTER;
-        function v19_RenderSupremeChart() {
-            if(_CHART_POINTER) _CHART_POINTER.destroy();
-            
+        // --- CHART: VISUALIZER ---
+        let _CHART_OBJ;
+        function renderApexSupremeChart() {
+            if(_CHART_OBJ) _CHART_OBJ.destroy();
             const config = {
                 series: [{ name: "USDT", data: _HISTORY }],
-                chart: { 
-                    type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent',
-                    animations: { enabled: true, speed: 600, easing: 'easeinout' }
-                },
+                chart: { type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent', animations: { enabled: true, speed: 600 } },
                 theme: { mode: 'dark' },
                 colors: [_WALLET >= _HISTORY[0] ? '#10b981' : '#ef4444'],
-                stroke: { curve: 'straight', width: 4 },
-                fill: { type: 'gradient', gradient: { opacityFrom: 0.5, opacityTo: 0.02 } },
-                xaxis: { labels: { show: false }, axisBorder: { show: false } },
-                yaxis: { 
-                    opposite: true, 
-                    labels: { style: { colors: '#71717a', fontSize: '11px', fontFamily: 'JetBrains Mono' }, formatter: (v) => '$' + v.toFixed(0) } 
-                },
-                grid: { borderColor: '#1f1f23', strokeDashArray: 5 },
-                annotations: {
-                    yaxis: [
-                        { y: 1000, borderColor: '#333', label: { text: 'GOAL $1K', style: { background: '#333' } } },
-                        { y: 10000, borderColor: '#fbbf24', label: { text: 'GOAL $10K', style: { color: '#000', background: '#fbbf24' } } },
-                        { y: 100000, borderColor: '#10b981', label: { text: 'GOAL $100K', style: { color: '#000', background: '#10b981' } } }
-                    ]
-                }
+                stroke: { curve: 'straight', width: 3 },
+                xaxis: { labels: { show: false } },
+                yaxis: { opposite: true, labels: { style: { colors: '#71717a', fontSize: '10px' } } },
+                grid: { borderColor: '#1f1f23', strokeDashArray: 4 }
             };
-            _CHART_POINTER = new ApexCharts(document.querySelector("#v19-apex-main-chart"), config);
-            _CHART_POINTER.render();
+            _CHART_OBJ = new ApexCharts(document.querySelector("#v19-apex-chart"), config);
+            _CHART_OBJ.render();
         }
 
-        // --- ENGINE: UI HELPERS ---
-        function v19_ToggleAccordion(id, el) {
-            const content = document.getElementById(id);
-            const icon = el.querySelector('.chevron');
-            const isH = content.style.display === 'none';
-            content.style.display = isH ? 'block' : 'none';
-            icon.style.transform = isH ? 'rotate(0deg)' : 'rotate(-90deg)';
-        }
+        // --- HELPERS ---
+        function v19_ToggleAcc(id) { const c = document.getElementById(id); c.style.display = c.style.display === 'none' ? 'block' : 'none'; }
+        function v19_HardReset() { if(confirm("TÜM VERİLER SİLİNSİN Mİ?")) { localStorage.clear(); location.reload(); } }
+        document.addEventListener('click', () => { if(document.getElementById('c-drop-options')) document.getElementById('c-drop-options').style.display='none'; });
 
-        function v19_ToggleFavLeague(e, l) {
-            e.stopPropagation();
-            if(_FAV_LEAGUES.includes(l)) _FAV_LEAGUES = _FAV_LEAGUES.filter(x => x !== l);
-            else _FAV_LEAGUES.push(l);
-            localStorage.setItem('v19_fav_l', JSON.stringify(_FAV_LEAGUES));
-            v19_ExecuteFilter();
-        }
-
-        function v19_ShowSyncError() {
-            document.getElementById('v19-render-engine-output').innerHTML = `
-                <div style="padding:150px 0; text-align:center;">
-                    <div style="font-size:5em; color:#1a1a1a; position:relative;">
-                        <i class="fa-solid fa-cloud-slash"></i>
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size:0.3em; color:var(--orange); position:absolute; bottom:20px; right:40%;"></i>
-                    </div>
-                    <h2 style="margin-top:30px; font-weight:900; letter-spacing:2px;">BAĞLANTI HATASI</h2>
-                    <p style="color:var(--muted); font-size:0.9em; margin-top:10px;">Veri radarı v19_rapor.json dosyasına ulaşamıyor.</p>
-                    <button onclick="location.reload()" style="margin-top:30px; background:var(--green); border:none; padding:12px 30px; border-radius:8px; font-weight:900; cursor:pointer;">SİSTEMİ YENİDEN BAŞLAT</button>
-                </div>
-            `;
-        }
-
-        document.addEventListener('click', () => {
-            const d = document.getElementById('v19-drop-menu');
-            if(d) d.style.display = 'none';
-        });
-
-        // KICKSTART
-        v19_Start();
+        // BOOT
+        v19_Initialize();
     </script>
 </body>
 </html>
