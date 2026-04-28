@@ -10,9 +10,9 @@
     
     <style>
         /* ==========================================================================
-           V19 SUPREME STYLING SYSTEM v11.0
+           V19 SUPREME STYLING SYSTEM v12.0
            FULL ARCHIVE - NO COMPRESSION - MAXIMUM DETAIL
-           Tüm CSS tanımlamaları, animasyonlar ve grid yapıları açıkça yazılmıştır.
+           Bütün stiller, animasyonlar ve mimari kurallar açıkça yazılmıştır.
            ========================================================================== */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -345,7 +345,7 @@
             max-height: 500px; 
             overflow-y: auto; 
             border-radius: 12px; 
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+            box-shadow: 0 40px 80px rgba(0,0,0,1);
             animation: slideIn 0.25s ease-out;
         }
 
@@ -363,7 +363,7 @@
             border-bottom: 1px solid #161618; 
             color: #dddddd;
             transition: 0.2s;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .league-drop-item:last-child { border-bottom: none; }
@@ -516,7 +516,7 @@
             background: #18181b; 
             padding: 5px 15px; 
             border-radius: 6px; 
-            margin-left: auto; /* Sağa yaslar */
+            margin-left: auto; /* Etiketi tamamen sağa yaslar */
             font-weight: 900; 
             border: 1px solid #2d2d30; 
             letter-spacing: 1px;
@@ -526,12 +526,12 @@
         /* ==========================================================================
            MULTI-STREAM INTELLIGENCE HUB
            ========================================================================== */
-        .st-controls-bar { 
+        .stream-controls-bar { 
             display: flex; 
             gap: 15px; 
             margin-bottom: 30px; 
             background: var(--panel); 
-            padding: 20px; 
+            padding: 18px; 
             border-radius: 14px; 
             border: 1px solid var(--border); 
         }
@@ -540,7 +540,7 @@
             background: #1f1f23; 
             color: var(--muted); 
             border: 2px solid #333; 
-            padding: 14px 35px; 
+            padding: 12px 32px; 
             border-radius: 10px; 
             font-size: 0.9em; 
             font-weight: 950; 
@@ -557,14 +557,14 @@
             box-shadow: 0 0 25px var(--green-glow);
         }
 
-        .matrix-grid-master { 
+        .stream-master-grid { 
             display: none; 
             gap: 20px; 
             height: calc(100vh - 350px); 
             width: 100%; 
         }
 
-        .matrix-grid-master.active { display: grid; }
+        .stream-master-grid.active { display: grid; }
         
         /* Strict Grid Definitions */
         .m-lay-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
@@ -572,7 +572,7 @@
         .m-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
         .m-lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
 
-        .matrix-unit { 
+        .stream-box-unit { 
             background: #000000; 
             border: 2px solid #27272a; 
             border-radius: 15px; 
@@ -582,9 +582,9 @@
             transition: border 0.4s;
         }
 
-        .matrix-unit:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
+        .stream-box-unit:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
 
-        .matrix-nav { 
+        .stream-box-nav { 
             padding: 12px; 
             background: #0a0a0c; 
             display: flex; 
@@ -593,7 +593,7 @@
             align-items: center;
         }
 
-        .matrix-input { 
+        .stream-box-input { 
             flex: 1; 
             background: #000000; 
             border: 1.5px solid #333; 
@@ -603,34 +603,13 @@
             border-radius: 8px; 
         }
 
-        .matrix-input:focus { border-color: var(--green); }
+        .stream-box-input:focus { border-color: var(--green); }
 
-        .btn-matrix-go { 
-            background: var(--green); 
-            color: #000000; 
-            border: none; 
-            padding: 0 22px; 
-            border-radius: 8px; 
-            font-weight: 950; 
-            font-size: 0.8em; 
-            cursor: pointer; 
-            transition: 0.2s;
-        }
+        .btn-cell-fire { background: var(--green); color: #000000; border: none; padding: 0 22px; border-radius: 8px; font-weight: 950; font-size: 0.8em; cursor: pointer; transition: 0.2s; }
+        .btn-cell-fire:hover { background: #14d693; }
 
-        .btn-matrix-go:hover { background: #14d693; }
-
-        .btn-matrix-kill { 
-            background: var(--red); 
-            color: #ffffff; 
-            border: none; 
-            padding: 0 18px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 18px; 
-            transition: 0.3s; 
-        }
-
-        .btn-matrix-kill:hover { background: #ff0000; transform: rotate(90deg); }
+        .btn-cell-kill { background: var(--red); color: #ffffff; border: none; padding: 0 18px; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-cell-kill:hover { background: #ff0000; transform: rotate(90deg); }
 
         /* ==========================================================================
            SUPREME FINANCIAL CONSOLE
@@ -652,13 +631,13 @@
             padding-right: 15px; 
         }
         
-        .rolling-grand-grid { 
+        .rolling-grand-panel { 
             display: grid; 
             grid-template-columns: repeat(5, 1fr); 
             gap: 18px; 
         }
 
-        .rolling-box-seg { 
+        .rolling-card-segment { 
             background: var(--panel); 
             border: 1.5px solid var(--border); 
             padding: 35px 15px; 
@@ -666,16 +645,17 @@
             text-align: center; 
             border-top: 6px solid var(--muted); 
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
 
-        .rolling-box-seg.active { 
+        .rolling-card-segment.active { 
             border-top-color: var(--green); 
             background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); 
             box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
             transform: translateY(-8px);
         }
 
-        .rolling-box-seg label { 
+        .rolling-card-segment label { 
             font-size: 0.65em; 
             font-weight: 950; 
             color: var(--muted); 
@@ -685,7 +665,7 @@
             letter-spacing: 2px; 
         }
 
-        .rolling-box-seg b { 
+        .rolling-card-segment b { 
             font-family: 'JetBrains Mono'; 
             font-size: 1.6em; 
             font-weight: 950; 
@@ -719,7 +699,7 @@
             font-size: 1.2em; 
             letter-spacing: 3px; 
             text-transform: uppercase; 
-            color: #ffffff; 
+            color: #fff; 
         }
 
         .ledger-tabs-container { display: flex; gap: 15px; }
@@ -746,13 +726,13 @@
 
         .ledger-table-scroller { overflow-y: auto; flex-grow: 1; background: #070709; }
 
-        .supreme-data-table { 
+        .supreme-ledger-table { 
             width: 100%; 
             border-collapse: collapse; 
             font-size: 0.9em; 
         }
 
-        .supreme-data-table th { 
+        .supreme-ledger-table th { 
             background: #0c0c0e; 
             padding: 24px 20px; 
             text-align: left; 
@@ -767,14 +747,14 @@
             letter-spacing: 1px;
         }
 
-        .supreme-data-table td { 
+        .supreme-ledger-table td { 
             padding: 20px; 
             border-bottom: 1px solid #121214; 
             color: #e4e4e9; 
             font-weight: 500;
         }
 
-        .supreme-data-table tr:hover td { background: #0f0f12; }
+        .supreme-ledger-table tr:hover td { background: #0f0f12; }
         
         .finance-right-pane { display: flex; flex-direction: column; gap: 35px; }
 
@@ -945,18 +925,18 @@
                     <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6 EKRAN</button>
                 </div>
                 
-                <div id="omega-matrix-grid" class="matrix-grid-master m-lay-6 active"></div>
+                <div id="omega-matrix-grid" class="stream-master-grid m-lay-6 active"></div>
             </div>
 
             <div class="fin-terminal-wrapper" id="omega-finance-block">
                 
                 <div class="fin-scroller-pane">
                     <div class="rolling-grand-grid">
-                        <div class="rolling-card-segment active"><label>1 HAFTA</label><b>$1.000</b></div>
-                        <div class="rolling-card-segment"><label>15 GÜN</label><b>$5.000</b></div>
-                        <div class="rolling-card-segment"><label>30 GÜN</label><b>$15.000</b></div>
-                        <div class="rolling-card-segment"><label>60 GÜN</label><b>$40.000</b></div>
-                        <div class="rolling-card-segment"><label>90 GÜN</label><b>$100.000</b></div>
+                        <div class="rolling-card-segment active"><label>1 HAFTA</label><div class="rolling-target"><b>$1.000</b></div></div>
+                        <div class="rolling-card-segment"><label>15 GÜN</label><div class="rolling-target"><b>$5.000</b></div></div>
+                        <div class="rolling-card-segment"><label>30 GÜN</label><div class="rolling-target"><b>$15.000</b></div></div>
+                        <div class="rolling-card-segment"><label>60 GÜN</label><div class="rolling-target"><b>$40.000</b></div></div>
+                        <div class="rolling-card-segment"><label>90 GÜN</label><div class="rolling-target"><b>$100.000</b></div></div>
                     </div>
 
                     <div class="ledger-supreme-pro">
@@ -980,9 +960,9 @@
 
                     <div class="op-input-supreme-box">
                         <div class="global-kpi-hub">
-                            <div class="kpi-card-supreme"><span>KASA</span><b id="kpi-w-val">100.00</b></div>
-                            <div class="kpi-card-supreme"><span>NET P/L</span><b id="kpi-p-val">0.00</b></div>
-                            <div class="kpi-card-supreme"><span>SUCCESS</span><b id="kpi-wr-val">%0</b></div>
+                            <div class="kpi-card-supreme"><span>AKTİF KASA</span><b id="kpi-val-w">100.00</b></div>
+                            <div class="kpi-card-supreme"><span>NET P/L</span><b id="kpi-val-p">0.00</b></div>
+                            <div class="kpi-card-supreme"><span>SUCCESS</span><b id="kpi-val-wr">%0</b></div>
                         </div>
                         
                         <div style="display:flex; flex-direction:column; gap:15px;">
@@ -1081,9 +1061,9 @@
         }
 
         // --- UTILITY FUNCTIONS ---
+        // BASKETBOL VE FUTBOL İZOLASYON KONTROLÜ
         function omega_IsBasketballLeague(leagueName) {
             const up = leagueName.toUpperCase();
-            // Kesin basketbol izolasyon kuralı
             return ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"].some(x => up.includes(x));
         }
 
@@ -1120,9 +1100,10 @@
             return p[2] + " " + months[parseInt(p[1]) - 1];
         }
 
+        // Favori Maçları Kusursuz Tanımak İçin Benzersiz Kimlik Üretici
         function omega_GenerateMatchID(matchObj) {
-            // Favoriler için güvenli kimlik üretici (HTML bozulmasını engeller)
-            return `${matchObj.dt}_${matchObj.tm}_${matchObj.m.replace(/[^a-zA-Z0-9]/g, '')}`;
+            if(!matchObj || !matchObj.m || !matchObj.tm) return "err_id_" + Math.random();
+            return (matchObj.dt + "_" + matchObj.tm + "_" + matchObj.m).replace(/[^a-zA-Z0-9]/g, '_');
         }
 
         // --- NAVIGATION CONTROLLER ---
@@ -1196,7 +1177,7 @@
                     const matchCount = _LEAGUE_STATS_DB[ligName] || 0;
                     leagueHtml += `
                         <div class="league-drop-item" onclick="omega_HandleDropdownSelection('${ligName}', this.innerHTML)">
-                            <img src="https://flagcdn.com/w40/${omega_GetFlag(ligName)}.png"> 
+                            <img src="https://flagcdn.com/w40/${omega_GetFlagCode(ligName)}.png"> 
                             <span>🏀 ${ligName} (${matchCount})</span>
                         </div>
                     `;
@@ -1207,7 +1188,7 @@
                     if(!omega_IsBasketballLeague(lName) && _LEAGUE_STATS_DB[lName] > 0) {
                         leagueHtml += `
                             <div class="league-drop-item" onclick="omega_HandleDropdownSelection('${lName}', this.innerHTML)">
-                                <img src="https://flagcdn.com/w40/${omega_GetFlag(lName)}.png"> 
+                                <img src="https://flagcdn.com/w40/${omega_GetFlagCode(lName)}.png"> 
                                 <span>⚽ ${lName} (${_LEAGUE_STATS_DB[lName]})</span>
                             </div>
                         `;
@@ -1225,7 +1206,7 @@
 
         function omega_HandleDropdownSelection(val, htmlContent) {
             _ACTIVE_LEAGUE_FILTER = val;
-            document.getElementById('drop-label-text').innerHTML = htmlContent;
+            document.getElementById('drop-text-label').innerHTML = htmlContent;
             document.getElementById('drop-menu-list').style.display = 'none';
             omega_ExecuteRadarFilter();
         }
@@ -1239,7 +1220,7 @@
 
         // --- RADAR MODULE: CORE RENDERER ---
         function omega_ExecuteRadarFilter() {
-            const targetID = (_ACTIVE_TAB === 'favs') ? 'favs-render-target' : 'radar-render-target';
+            const targetID = (_ACTIVE_TAB === 'favs') ? 'favs-render-output' : 'radar-render-output';
             const renderArea = document.getElementById(targetID);
             
             if(!renderArea) return;
@@ -1276,15 +1257,14 @@
                 
                 if(_ACTIVE_SORT_MODE === 'time') {
                     // --- SAAT SIRALI AKIŞ (KOMPAKT NİZAM) ---
-                    dayGroups = groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm));
+                    let dayGroupsSorted = groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm));
                     
-                    dayGroups.forEach(m => {
+                    dayGroupsSorted.forEach(m => {
                         const mID = omega_GenerateMatchID(m);
                         const isFav = _FAV_MATCHES.includes(mID);
                         const sportIcon = _ACTIVE_SPORT === 'futbol' ? '⚽' : '🏀';
-                        const flagCode = omega_GetFlag(m.l);
+                        const flagCode = omega_GetFlagCode(m.l);
                         
-                        // Kırmızı tırnak hatasını önlemek için güvenli parametre geçişi
                         finalHtmlBuffer += `
                             <div class="match-row-pro compact-mode-row">
                                 <div class="match-clock-sup">${m.tm}</div>
@@ -1319,7 +1299,7 @@
                     });
 
                     sortedLeagues.forEach(ligName => {
-                        const flagCode = omega_GetFlag(ligName);
+                        const flagCode = omega_GetFlagCode(ligName);
                         const accID = `acc_${day}_${ligName.replace(/[^a-zA-Z0-9]/g, '')}`;
                         const sportIcon = _ACTIVE_SPORT === 'futbol' ? '⚽' : '🏀';
 
@@ -1383,7 +1363,7 @@
         // --- MULTI-STREAM HUB CONTROLLER ---
         function omega_BuildStreamMatrix(numScreens) {
             const gridContainer = document.getElementById('omega-matrix-grid');
-            gridContainer.className = `matrix-grid-master active m-lay-${numScreens}`; 
+            gridContainer.className = `stream-master-grid active m-lay-${numScreens}`; 
             gridContainer.innerHTML = "";
             
             document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
@@ -1392,11 +1372,11 @@
 
             for(let i=1; i<=numScreens; i++) {
                 gridContainer.innerHTML += `
-                    <div class="matrix-unit">
-                        <div class="matrix-nav">
-                            <input id="stream-input-${i}" class="matrix-input" placeholder="HLS/M3U8 veya Web URL...">
-                            <button class="btn-matrix-kill" onclick="omega_TerminateStreamUnit(${i})"><i class="fa-solid fa-xmark"></i></button>
-                            <button class="btn-matrix-go" onclick="omega_LaunchStreamUnit(${i})">İZLE</button>
+                    <div class="stream-box-unit">
+                        <div class="stream-box-nav">
+                            <input id="stream-input-${i}" class="stream-box-input" placeholder="HLS/M3U8 veya Web URL...">
+                            <button class="btn-cell-kill" onclick="omega_TerminateStreamUnit(${i})"><i class="fa-solid fa-xmark"></i></button>
+                            <button class="btn-cell-fire" onclick="omega_LaunchStreamUnit(${i})">İZLE</button>
                         </div>
                         <iframe id="stream-frame-${i}" style="flex:1; border:none; background:#000000;" src="about:blank" allowfullscreen></iframe>
                     </div>`;
