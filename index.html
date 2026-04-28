@@ -240,33 +240,6 @@
             letter-spacing: 3px;
         }
 
-        .header-wallet {
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 15px 30px; 
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center; 
-            gap: 20px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-        }
-
-        .header-wallet label { 
-            font-size: 0.65em; 
-            color: var(--muted); 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-        }
-
-        .header-wallet b { 
-            font-family: 'JetBrains Mono'; 
-            color: var(--gold); 
-            font-size: 1.3em; 
-            font-weight: 950; 
-            text-shadow: 0 0 10px var(--gold-glow);
-        }
-
         .main-scroll-box { 
             flex-grow: 1; 
             padding: 40px; 
@@ -345,7 +318,7 @@
             max-height: 500px; 
             overflow-y: auto; 
             border-radius: 12px; 
-            box-shadow: 0 40px 80px rgba(0,0,0,1);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
             animation: slideIn 0.25s ease-out;
         }
 
@@ -363,7 +336,7 @@
             border-bottom: 1px solid #161618; 
             color: #dddddd;
             transition: 0.2s;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .league-drop-item:last-child { border-bottom: none; }
@@ -516,7 +489,7 @@
             background: #18181b; 
             padding: 5px 15px; 
             border-radius: 6px; 
-            margin-left: auto; /* Etiketi tamamen sağa yaslar */
+            margin-left: auto; /* Sağa yaslar */
             font-weight: 900; 
             border: 1px solid #2d2d30; 
             letter-spacing: 1px;
@@ -526,7 +499,7 @@
         /* ==========================================================================
            MULTI-STREAM INTELLIGENCE HUB
            ========================================================================== */
-        .stream-controls-bar { 
+        .st-controls-bar { 
             display: flex; 
             gap: 15px; 
             margin-bottom: 30px; 
@@ -540,7 +513,7 @@
             background: #1f1f23; 
             color: var(--muted); 
             border: 2px solid #333; 
-            padding: 12px 32px; 
+            padding: 14px 35px; 
             border-radius: 10px; 
             font-size: 0.9em; 
             font-weight: 950; 
@@ -557,14 +530,14 @@
             box-shadow: 0 0 25px var(--green-glow);
         }
 
-        .stream-master-grid { 
+        .matrix-grid-master { 
             display: none; 
             gap: 20px; 
             height: calc(100vh - 350px); 
             width: 100%; 
         }
 
-        .stream-master-grid.active { display: grid; }
+        .matrix-grid-master.active { display: grid; }
         
         /* Strict Grid Definitions */
         .m-lay-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
@@ -572,7 +545,7 @@
         .m-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
         .m-lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
 
-        .stream-box-unit { 
+        .matrix-unit { 
             background: #000000; 
             border: 2px solid #27272a; 
             border-radius: 15px; 
@@ -582,9 +555,9 @@
             transition: border 0.4s;
         }
 
-        .stream-box-unit:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
+        .matrix-unit:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
 
-        .stream-box-nav { 
+        .matrix-nav { 
             padding: 12px; 
             background: #0a0a0c; 
             display: flex; 
@@ -593,7 +566,7 @@
             align-items: center;
         }
 
-        .stream-box-input { 
+        .matrix-input { 
             flex: 1; 
             background: #000000; 
             border: 1.5px solid #333; 
@@ -603,13 +576,34 @@
             border-radius: 8px; 
         }
 
-        .stream-box-input:focus { border-color: var(--green); }
+        .matrix-input:focus { border-color: var(--green); }
 
-        .btn-cell-fire { background: var(--green); color: #000000; border: none; padding: 0 22px; border-radius: 8px; font-weight: 950; font-size: 0.8em; cursor: pointer; transition: 0.2s; }
-        .btn-cell-fire:hover { background: #14d693; }
+        .btn-matrix-go { 
+            background: var(--green); 
+            color: #000000; 
+            border: none; 
+            padding: 0 22px; 
+            border-radius: 8px; 
+            font-weight: 950; 
+            font-size: 0.8em; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
 
-        .btn-cell-kill { background: var(--red); color: #ffffff; border: none; padding: 0 18px; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
-        .btn-cell-kill:hover { background: #ff0000; transform: rotate(90deg); }
+        .btn-matrix-go:hover { background: #14d693; }
+
+        .btn-matrix-kill { 
+            background: var(--red); 
+            color: #ffffff; 
+            border: none; 
+            padding: 0 18px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 18px; 
+            transition: 0.3s; 
+        }
+
+        .btn-matrix-kill:hover { background: #ff0000; transform: rotate(90deg); }
 
         /* ==========================================================================
            SUPREME FINANCIAL CONSOLE
@@ -631,13 +625,13 @@
             padding-right: 15px; 
         }
         
-        .rolling-grand-panel { 
+        .rolling-grand-grid { 
             display: grid; 
             grid-template-columns: repeat(5, 1fr); 
             gap: 18px; 
         }
 
-        .rolling-card-segment { 
+        .rolling-box-seg { 
             background: var(--panel); 
             border: 1.5px solid var(--border); 
             padding: 35px 15px; 
@@ -645,17 +639,16 @@
             text-align: center; 
             border-top: 6px solid var(--muted); 
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
 
-        .rolling-card-segment.active { 
+        .rolling-box-seg.active { 
             border-top-color: var(--green); 
             background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); 
             box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
             transform: translateY(-8px);
         }
 
-        .rolling-card-segment label { 
+        .rolling-box-seg label { 
             font-size: 0.65em; 
             font-weight: 950; 
             color: var(--muted); 
@@ -665,7 +658,7 @@
             letter-spacing: 2px; 
         }
 
-        .rolling-card-segment b { 
+        .rolling-box-seg b { 
             font-family: 'JetBrains Mono'; 
             font-size: 1.6em; 
             font-weight: 950; 
@@ -699,7 +692,7 @@
             font-size: 1.2em; 
             letter-spacing: 3px; 
             text-transform: uppercase; 
-            color: #fff; 
+            color: #ffffff; 
         }
 
         .ledger-tabs-container { display: flex; gap: 15px; }
@@ -726,13 +719,13 @@
 
         .ledger-table-scroller { overflow-y: auto; flex-grow: 1; background: #070709; }
 
-        .supreme-ledger-table { 
+        .supreme-data-table { 
             width: 100%; 
             border-collapse: collapse; 
             font-size: 0.9em; 
         }
 
-        .supreme-ledger-table th { 
+        .supreme-data-table th { 
             background: #0c0c0e; 
             padding: 24px 20px; 
             text-align: left; 
@@ -747,14 +740,14 @@
             letter-spacing: 1px;
         }
 
-        .supreme-ledger-table td { 
+        .supreme-data-table td { 
             padding: 20px; 
             border-bottom: 1px solid #121214; 
             color: #e4e4e9; 
             font-weight: 500;
         }
 
-        .supreme-ledger-table tr:hover td { background: #0f0f12; }
+        .supreme-data-table tr:hover td { background: #0f0f12; }
         
         .finance-right-pane { display: flex; flex-direction: column; gap: 35px; }
 
@@ -880,11 +873,7 @@
                 <h2 id="supreme-main-title">FUTBOL RADARI</h2>
                 <span>STATUS: SYSTEM ONLINE</span>
             </div>
-            <div class="header-wallet">
-                <label>OPERASYONEL KASA (USDT)</label>
-                <b id="top-wallet-display">100.00</b>
-            </div>
-        </header>
+            </header>
 
         <section class="main-scroll-box">
             
@@ -925,18 +914,18 @@
                     <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6 EKRAN</button>
                 </div>
                 
-                <div id="omega-matrix-grid" class="stream-master-grid m-lay-6 active"></div>
+                <div id="omega-matrix-grid" class="matrix-grid-master m-lay-6 active"></div>
             </div>
 
             <div class="fin-terminal-wrapper" id="omega-finance-block">
                 
                 <div class="fin-scroller-pane">
                     <div class="rolling-grand-grid">
-                        <div class="rolling-card-segment active"><label>1 HAFTA</label><div class="rolling-target"><b>$1.000</b></div></div>
-                        <div class="rolling-card-segment"><label>15 GÜN</label><div class="rolling-target"><b>$5.000</b></div></div>
-                        <div class="rolling-card-segment"><label>30 GÜN</label><div class="rolling-target"><b>$15.000</b></div></div>
-                        <div class="rolling-card-segment"><label>60 GÜN</label><div class="rolling-target"><b>$40.000</b></div></div>
-                        <div class="rolling-card-segment"><label>90 GÜN</label><div class="rolling-target"><b>$100.000</b></div></div>
+                        <div class="rolling-card-segment active"><label>1 HAFTA</label><b>$1.000</b></div>
+                        <div class="rolling-card-segment"><label>15 GÜN</label><b>$5.000</b></div>
+                        <div class="rolling-card-segment"><label>30 GÜN</label><b>$15.000</b></div>
+                        <div class="rolling-card-segment"><label>60 GÜN</label><b>$40.000</b></div>
+                        <div class="rolling-card-segment"><label>90 GÜN</label><b>$100.000</b></div>
                     </div>
 
                     <div class="ledger-supreme-pro">
@@ -960,7 +949,7 @@
 
                     <div class="op-input-supreme-box">
                         <div class="global-kpi-hub">
-                            <div class="kpi-card-supreme"><span>AKTİF KASA</span><b id="kpi-val-w">100.00</b></div>
+                            <div class="kpi-card-supreme"><span>KASA</span><b id="kpi-val-w">100.00</b></div>
                             <div class="kpi-card-supreme"><span>NET P/L</span><b id="kpi-val-p">0.00</b></div>
                             <div class="kpi-card-supreme"><span>SUCCESS</span><b id="kpi-val-wr">%0</b></div>
                         </div>
@@ -1061,9 +1050,9 @@
         }
 
         // --- UTILITY FUNCTIONS ---
-        // BASKETBOL VE FUTBOL İZOLASYON KONTROLÜ
         function omega_IsBasketballLeague(leagueName) {
             const up = leagueName.toUpperCase();
+            // Kesin basketbol izolasyon kuralı
             return ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"].some(x => up.includes(x));
         }
 
@@ -1100,10 +1089,10 @@
             return p[2] + " " + months[parseInt(p[1]) - 1];
         }
 
-        // Favori Maçları Kusursuz Tanımak İçin Benzersiz Kimlik Üretici
         function omega_GenerateMatchID(matchObj) {
+            // Favoriler için güvenli kimlik üretici (HTML bozulmasını engeller)
             if(!matchObj || !matchObj.m || !matchObj.tm) return "err_id_" + Math.random();
-            return (matchObj.dt + "_" + matchObj.tm + "_" + matchObj.m).replace(/[^a-zA-Z0-9]/g, '_');
+            return `${matchObj.dt}_${matchObj.tm}_${matchObj.m.replace(/[^a-zA-Z0-9]/g, '')}`;
         }
 
         // --- NAVIGATION CONTROLLER ---
@@ -1124,7 +1113,7 @@
                 _ACTIVE_TAB = 'bulletin';
                 
                 document.getElementById('omega-radar-block').style.display = 'block';
-                document.getElementById('supreme-main-title').innerText = targetModule.toUpperCase();
+                document.getElementById('supreme-main-title').innerText = targetModule.toUpperCase() + " RADARI";
                 
                 omega_BuildUIComponents();
                 omega_ExecuteRadarFilter();
@@ -1138,7 +1127,7 @@
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
-                document.getElementById('supreme-main-title').innerText = "CANLI YAYIN";
+                document.getElementById('supreme-main-title').innerText = "CANLI YAYIN MERKEZİ";
                 
                 // Initialize matrix if empty
                 if(!document.getElementById('omega-matrix-grid').innerHTML) {
@@ -1148,7 +1137,7 @@
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
                 document.getElementById('v19-finance-block').classList.add('active');
-                document.getElementById('supreme-main-title').innerText = "USDT FİNANS";
+                document.getElementById('supreme-main-title').innerText = "USDT FİNANSAL YÖNETİM";
                 
                 omega_RefreshFinanceDashboard();
                 setTimeout(omega_RenderApexSupremeChart, 250);
@@ -1363,7 +1352,7 @@
         // --- MULTI-STREAM HUB CONTROLLER ---
         function omega_BuildStreamMatrix(numScreens) {
             const gridContainer = document.getElementById('omega-matrix-grid');
-            gridContainer.className = `stream-master-grid active m-lay-${numScreens}`; 
+            gridContainer.className = `matrix-grid-master active m-lay-${numScreens}`; 
             gridContainer.innerHTML = "";
             
             document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
@@ -1372,11 +1361,11 @@
 
             for(let i=1; i<=numScreens; i++) {
                 gridContainer.innerHTML += `
-                    <div class="stream-box-unit">
-                        <div class="stream-box-nav">
-                            <input id="stream-input-${i}" class="stream-box-input" placeholder="HLS/M3U8 veya Web URL...">
-                            <button class="btn-cell-kill" onclick="omega_TerminateStreamUnit(${i})"><i class="fa-solid fa-xmark"></i></button>
-                            <button class="btn-cell-fire" onclick="omega_LaunchStreamUnit(${i})">İZLE</button>
+                    <div class="matrix-unit">
+                        <div class="matrix-nav">
+                            <input id="stream-input-${i}" class="matrix-input" placeholder="HLS/M3U8 veya Web URL...">
+                            <button class="btn-matrix-kill" onclick="omega_TerminateStreamUnit(${i})"><i class="fa-solid fa-xmark"></i></button>
+                            <button class="btn-matrix-go" onclick="omega_LaunchStreamUnit(${i})">İZLE</button>
                         </div>
                         <iframe id="stream-frame-${i}" style="flex:1; border:none; background:#000000;" src="about:blank" allowfullscreen></iframe>
                     </div>`;
@@ -1395,7 +1384,8 @@
 
         // --- SUPREME FINANCE CONTROLLER ---
         function omega_RefreshFinanceDashboard() {
-            omega_UpdateGlobalWalletUI();
+            // Sadece finans sekmesindeki kasa görünümünü güncelle
+            document.getElementById('kpi-val-w').innerText = _WALLET_BALANCE.toFixed(2);
             
             const netProfit = _COMPLETED_LEDGER.reduce((sum, item) => sum + (item.pnl || 0), 0);
             document.getElementById('kpi-val-p').innerText = (netProfit >= 0 ? "+" : "") + netProfit.toFixed(2);
@@ -1508,9 +1498,10 @@
             omega_RenderApexSupremeChart();
         }
 
+        // İptal edilen top-wallet-display artık yok, sadece kpi-val-w kalıyor
         function omega_UpdateGlobalWalletUI() { 
-            document.getElementById('top-wallet-display').innerText = _WALLET_BALANCE.toFixed(2); 
-            document.getElementById('kpi-val-w').innerText = _WALLET_BALANCE.toFixed(2); 
+            const kpiVal = document.getElementById('kpi-val-w');
+            if(kpiVal) kpiVal.innerText = _WALLET_BALANCE.toFixed(2); 
         }
 
         function omega_HardSystemReset() { 
