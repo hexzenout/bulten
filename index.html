@@ -154,11 +154,11 @@
         
         .center-wrapper { 
             width: 100%; 
-            max-width: 1000px; 
+            max-width: 1000px; /* Dinamik olarak JS ile 1400px olacak (Sadece Stream'de) */
             padding: 30px 20px; 
             display: flex; 
             flex-direction: column; 
-            transition: max-width 0.3s;
+            transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Akıcı genişleme */
         }
         
         body.dev-mode .center-wrapper { max-width: 100%; padding: 15px; }
@@ -245,17 +245,18 @@
 
         .btn-dev-ekran:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold-glow); }
 
+        /* KAYDIRMA ENGELİ KALDIRILDI */
         .stream-master-grid { 
             display: none; 
             gap: 15px; 
             width: 100%; 
-            height: auto; /* SABİT YÜKSEKLİK SİLİNDİ - SAYFA ÖZGÜRCE KAYABİLİR */
-            padding-bottom: 50px; /* ALTTAN RAHATLATICI BOŞLUK */
+            height: auto !important; /* SAYFA ÖZGÜRCE AŞAĞI KAYSIN */
+            min-height: 500px;
+            padding-bottom: 50px; 
         }
 
         .stream-master-grid.active { display: grid; }
         
-        /* SATIR (ROW) KISITLAMALARI SİLİNDİ - YÜKSEKLİK OTOMATİK HESAPLANACAK */
         .m-lay-1 { grid-template-columns: 1fr; } 
         .m-lay-2 { grid-template-columns: 1fr 1fr; }
         .m-lay-4 { grid-template-columns: 1fr 1fr; } 
@@ -270,13 +271,13 @@
             flex-direction: column; 
             width: 100%;
             height: auto; 
-            aspect-ratio: 16 / 9; /* MÜKEMMEL SİNEMA/YOUTUBE ORANI - KIRMIZI KUTU BOYUTU */
+            aspect-ratio: 16 / 9; /* MÜKEMMEL SİNEMA/YOUTUBE ORANI (Kare olmayı engeller) */
         }
 
         .matrix-nav { padding: 8px; background: #1a1a1a; display: flex; gap: 8px; border-bottom: 1px solid #272727; align-items: center; }
 
         /* ==========================================================================
-           FINANCE & KASA YÖNETİMİ
+           FINANCE & KASA YÖNETİMİ (ELITE REVİZYONU - 4 KPI, KAPSÜLLER)
            ========================================================================== */
         .fin-terminal-wrapper { display: none; grid-template-columns: 1.2fr 1fr; gap: 30px; width: 100%; }
         .fin-terminal-wrapper.active { display: grid; }
@@ -286,51 +287,98 @@
         .rolling-box-btn:hover { border-top-color: var(--gold); background: #222; transform: translateY(-2px); }
         .rolling-box-btn label { font-size: 0.65em; font-weight: 700; color: var(--muted); display: block; margin-bottom: 5px; }
         .rolling-box-btn b { color: var(--gold); font-size: 1em; font-family: 'JetBrains Mono'; font-weight: 800; }
+        
         .finance-right-pane { display: flex; flex-direction: column; gap: 20px; overflow: hidden; }
-        .global-kpi-hub { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .kpi-card-supreme { background: #161616; border: 1px solid var(--border); padding: 15px; border-radius: 10px; text-align: center; }
-        .kpi-card-supreme span { font-size: 0.6em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 5px; font-weight: 800; }
-        .kpi-card-supreme b { font-size: 1.4em; color: #fff; font-family: 'JetBrains Mono'; }
+        
+        /* 4 SÜTUNLU YENİ KPI SİSTEMİ */
+        .global-kpi-hub { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .kpi-card-supreme { background: #161616; border: 1px solid var(--border); padding: 15px 10px; border-radius: 10px; text-align: center; }
+        .kpi-card-supreme span { font-size: 0.55em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 5px; font-weight: 800; }
+        .kpi-card-supreme b { font-size: 1.3em; color: #fff; font-family: 'JetBrains Mono'; }
+        
         .op-input-box { background: #161616; border: 1px solid var(--border); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 12px; border-bottom: 3px solid var(--green); width: 100%; box-sizing: border-box; }
         .btn-op-fire { background: var(--green); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 0.9em; letter-spacing: 1px; transition: 0.2s; }
         .btn-op-fire:hover { background: #14d693; }
+        
         .supreme-data-table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
         .supreme-data-table th { background: #161616; padding: 12px; text-align: left; color: var(--muted); border-bottom: 1px solid #333; font-weight: 700; }
         .supreme-data-table td { padding: 10px 12px; border-bottom: 1px solid #222; color: #e4e4e9; font-family: 'JetBrains Mono'; }
 
         /* ==========================================================================
-           MODALLAR
+           MODALLAR & KAPSÜL EXCEL YAPISI
            ========================================================================== */
         .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .custom-modal-overlay.show-modal { opacity: 1; pointer-events: all; }
+        
         .modal-header { padding: 20px 30px; background: #0f0f0f; border-bottom: 1px solid var(--border-bright); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .modal-header h2 { color: var(--gold); font-size: 1.4em; font-weight: 900; letter-spacing: 2px; margin:0; }
-        .btn-modal-back { background: #272727; color: #fff; border: 1px solid #3f3f3f; padding: 8px 20px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.8em; transition: 0.2s; }
+        .btn-modal-back { background: #272727; color: #fff; border: 1px solid #3f3f3f; padding: 8px 20px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.8em; transition: 0.2s; flex-shrink:0; }
         .btn-modal-back:hover { background: var(--red); border-color: var(--red); }
+        
+        /* EXCEL PROGRESS BAR */
+        .progress-bar-container { background: #222; height: 10px; border-radius: 5px; margin: 0 40px; flex-grow: 1; position: relative; overflow: hidden; }
+        .progress-bar-fill { background: var(--gold); height: 100%; width: 0%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+
         .modal-config-bar { padding: 15px 30px; background: #111; border-bottom: 1px solid var(--border); display: flex; gap: 15px; align-items: center; flex-shrink: 0; }
-        .modal-body-wrapper { flex-grow: 1; overflow-y: auto; padding: 20px 30px; }
-        .excel-table { width: 100%; border-collapse: collapse; min-width: 1200px; }
-        .excel-table th, .excel-table td { border: 1px solid #272727; padding: 6px; text-align: center; vertical-align: top; }
-        .excel-table th { background: #1a1a1a; color: var(--muted); font-size: 0.7em; letter-spacing: 1px; padding: 10px; text-transform: uppercase; }
-        .excel-table td.day-col { vertical-align: middle; font-weight: 800; color: var(--gold); background: #000; width: 70px; font-size: 0.85em; }
-        .excel-table td.bal-col { vertical-align: middle; font-weight: 800; color: #fff; background: #000; width: 110px; font-family: 'JetBrains Mono'; font-size: 1em; }
-        .op-slot { background: #050505; border: 1px solid #222; padding: 6px; border-radius: 6px; display: flex; flex-direction: column; gap: 4px; min-width: 90px; }
-        .op-slot-inputs { display: flex; gap: 4px; }
-        .op-slot-inputs input { width: 50%; background: #161616; border: 1px solid #333; color: #fff; font-size: 0.8em; padding: 4px; text-align: center; border-radius: 4px; font-weight: bold; }
-        .op-actions { display: flex; gap: 4px; }
-        .btn-slot-w { background: var(--green-dark); color: #fff; border: none; flex: 1; padding: 4px; border-radius: 4px; font-weight: 800; cursor: pointer; font-size: 0.7em; }
-        .btn-slot-l { background: #7f1d1d; color: #fff; border: none; flex: 1; padding: 4px; border-radius: 4px; font-weight: 800; cursor: pointer; font-size: 0.7em; }
-        .slot-resolved { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 50px; border-radius: 6px; position: relative; font-family: 'JetBrains Mono'; }
-        .slot-resolved.win { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--green); color: var(--green); }
-        .slot-resolved.loss { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--red); color: var(--red); }
-        .btn-undo { position: absolute; top: 2px; right: 2px; background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 0.8em; }
+        .modal-body-wrapper { flex-grow: 1; overflow-y: auto; padding: 30px; }
+        
+        /* KAPSÜL SİSTEMİ (Yeni Excel Tasarımı) */
+        .day-row-capsule { 
+            background: #121212; border: 1px solid #2a2a2a; padding: 15px 20px; 
+            border-radius: 12px; display: flex; align-items: center; gap: 20px; 
+            margin-bottom: 15px; transition: 0.3s; 
+        }
+        .day-row-capsule:hover { border-color: #3f3f3f; }
+        .day-info { min-width: 90px; text-align: left; border-right: 1px solid #333; padding-right: 15px; }
+        .day-info h3 { color: var(--gold); font-size: 1.1em; font-weight: 900; margin: 0; }
+        .day-info span { font-size: 0.7em; color: var(--muted); }
+        
+        .capsule-container { display: flex; flex-wrap: wrap; gap: 8px; flex-grow: 1; }
+        
+        .kapsul { 
+            background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 8px; 
+            width: 105px; display: flex; flex-direction: column; gap: 6px; position: relative; transition: 0.2s; 
+        }
+        .kapsul.win { border-color: var(--green); background: rgba(16, 185, 129, 0.08); }
+        .kapsul.loss { border-color: var(--red); background: rgba(239, 68, 68, 0.08); }
+        
+        .k-inputs { display: flex; gap: 4px; }
+        .k-inputs input { 
+            width: 50%; background: transparent; border: none; border-bottom: 1px solid #444; 
+            color: #fff; font-size: 0.75em; text-align: center; padding-bottom: 2px; 
+            font-family: 'JetBrains Mono'; font-weight: bold; outline: none; 
+        }
+        .k-inputs input:focus { border-bottom-color: var(--gold); }
+        
+        .k-actions { display: flex; gap: 4px; }
+        .k-btn { border: none; border-radius: 4px; font-weight: 800; font-size: 0.7em; padding: 4px 0; cursor: pointer; flex: 1; transition: 0.2s; }
+        .k-btn.w { background: var(--green-dark); color: #fff; }
+        .k-btn.l { background: #7f1d1d; color: #fff; }
+        .k-btn:hover { filter: brightness(1.2); }
+        
+        .k-result { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 40px; }
+        .k-result b { font-family: 'JetBrains Mono'; font-size: 0.9em; }
+        .k-result span { font-size: 0.75em; font-weight: 800; margin-top: 2px; }
+        .kapsul.win .k-result { color: var(--green); }
+        .kapsul.loss .k-result { color: var(--red); }
+        
+        .k-undo { 
+            position: absolute; top: -6px; right: -6px; background: #222; color: #fff; 
+            border: 1px solid #444; border-radius: 50%; width: 18px; height: 18px; 
+            font-size: 0.6em; cursor: pointer; display: flex; align-items: center; 
+            justify-content: center; opacity: 0; transition: 0.2s; z-index: 10;
+        }
+        .kapsul:hover .k-undo { opacity: 1; }
+        
+        .day-result { min-width: 100px; text-align: right; font-family: 'JetBrains Mono'; font-size: 1.1em; font-weight: bold; color: #fff; }
+
     </style>
 </head>
 <body>
 
     <header class="top-status-bar">
         <div class="header-controls">
-            <button class="small-menu-btn" id="menu-trigger-btn" onclick="omega_ToggleSidebar()" title="Menüyü Aç">
+            <button class="small-menu-btn" id="menu-trigger-btn" onclick="omega_ToggleSidebar(event)">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="header-title-box">
@@ -451,7 +499,7 @@
                     <div class="finance-right-pane">
                         <div class="global-kpi-hub">
                             <div class="kpi-card-supreme">
-                                <span>KASA</span>
+                                <span>ANA KASA</span>
                                 <b id="kpi-val-w">100.00</b>
                             </div>
                             <div class="kpi-card-supreme">
@@ -459,8 +507,12 @@
                                 <b id="kpi-val-p">0.00</b>
                             </div>
                             <div class="kpi-card-supreme">
-                                <span>SUCCESS</span>
-                                <b id="kpi-val-wr">%0</b>
+                                <span>AÇIK RİSK</span>
+                                <b id="kpi-val-risk">0.00</b>
+                            </div>
+                            <div class="kpi-card-supreme">
+                                <span>ROI</span>
+                                <b id="kpi-val-roi">%0</b>
                             </div>
                         </div>
                         <div id="omega-apex-chart-main" style="height:250px; background:#161616; border-radius:10px; border:1px solid #272727; padding:10px;"></div>
@@ -483,38 +535,31 @@
     <div id="rolling-excel-overlay" class="custom-modal-overlay">
         <div class="modal-header">
             <h2 id="excel-modal-title">ROLLING EXCEL</h2>
+            <div class="progress-bar-container">
+                <div id="excel-progress-bar" class="progress-bar-fill"></div>
+            </div>
             <button type="button" class="btn-modal-back" onclick="omega_CloseRollingExcel()">KAPAT</button>
         </div>
         <div class="modal-config-bar">
             <div class="config-item">
                 <label>BAŞLANGIÇ:</label>
-                <input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()">
+                <input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()" style="background:transparent; border:none; border-bottom:1px solid #444; color:var(--green); font-family:'JetBrains Mono'; font-size:1em; font-weight:800; padding:2px; width:60px; text-align:center;">
             </div>
             <div class="config-item">
                 <label>HEDEF:</label>
-                <span class="display-val" id="excel-target-bal">$1000</span>
+                <span class="display-val" id="excel-target-bal" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$1000</span>
             </div>
             <div class="config-item">
                 <label>GÜNCEL:</label>
-                <span class="display-val" id="excel-current-bal">$100</span>
+                <span class="display-val" id="excel-current-bal" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$100</span>
             </div>
             <div class="config-item" style="margin-left:auto;">
                 <label>P/L:</label>
-                <span id="excel-pnl" class="display-val">$0.00</span>
+                <span id="excel-pnl" class="display-val" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$0.00</span>
             </div>
         </div>
         <div class="modal-body-wrapper">
-            <table class="excel-table">
-                <thead>
-                    <tr>
-                        <th>GÜN</th>
-                        <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
-                        <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
-                        <th>GÜN SONU</th>
-                    </tr>
-                </thead>
-                <tbody id="excel-table-body"></tbody>
-            </table>
+            <div id="excel-body-content" style="display: flex; flex-direction: column;"></div>
         </div>
     </div>
 
@@ -636,6 +681,11 @@
             if(s.includes("ALMANYA")) return "de"; 
             if(s.includes("İTALYA")) return "it"; 
             if(s.includes("FRANSA")) return "fr"; 
+            if(s.includes("HOLLANDA")) return "nl"; 
+            if(s.includes("PORTEKİZ")) return "pt"; 
+            if(s.includes("BREZİLYA")) return "br"; 
+            if(s.includes("ARJANTİN")) return "ar"; 
+            if(s.includes("RUSYA")) return "ru"; 
             if(s.includes("AMERİKA") || s.includes("NBA")) return "us"; 
             if(s.includes("AVRUPA")) return "eu"; 
             return "un"; 
@@ -661,7 +711,8 @@
         }
 
         // --- 7. ARAYÜZ ETKİLEŞİMLERİ (AKILLI KAPANMA EKLENDİ) ---
-        function omega_ToggleSidebar() { 
+        function omega_ToggleSidebar(e) { 
+            if(e) e.stopPropagation();
             const menu = document.getElementById('main-dropdown-nav'); 
             if(menu) menu.classList.toggle('active-menu'); 
         }
@@ -709,6 +760,14 @@
             document.getElementById('omega-favs-block').style.display = 'none';
             document.getElementById('omega-stream-block').style.display = 'none';
             document.getElementById('v19-finance-block').classList.remove('active');
+
+            // KIRMIZI ÇİZGİ BÜYÜKLÜĞÜ İÇİN DİNAMİK GENİŞLEME (Sadece Stream Modunda)
+            const centerWrapper = document.querySelector('.center-wrapper');
+            if(targetModule === 'stream') {
+                centerWrapper.style.maxWidth = '1400px'; 
+            } else {
+                centerWrapper.style.maxWidth = '1000px'; 
+            }
 
             const titleElem = document.getElementById('active-module-name');
             
@@ -1056,7 +1115,7 @@
             document.getElementById('s-fr-' + id).src = "about:blank"; 
         }
 
-        // --- 11. ROLLING EXCEL MİMARİSİ ---
+        // --- 11. ROLLING EXCEL MİMARİSİ (ELITE KAPSÜL REVİZYONU) ---
         function omega_OpenRollingExcel(days) {
             _ACTIVE_EXCEL_DAYS = days;
             
@@ -1092,21 +1151,27 @@
         }
 
         function omega_RenderExcelTable() {
-            const tbody = document.getElementById('excel-table-body');
+            const wrapper = document.getElementById('excel-body-content');
             const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
             let runningBalance = currentPlan.startBal;
             let totalProfit = 0;
-
             let htmlBuffer = "";
 
             for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
                 const dayOps = currentPlan.ops[day] || [];
-                htmlBuffer += `<tr><td class="day-col">GÜN ${day}</td>`;
+                
+                htmlBuffer += `
+                <div class="day-row-capsule">
+                    <div class="day-info">
+                        <h3>GÜN ${day}</h3>
+                        <span>Sonuç</span>
+                    </div>
+                    <div class="capsule-container">
+                `;
 
                 for (let slot = 0; slot < 10; slot++) {
                     if (dayOps[slot]) {
                         const op = dayOps[slot];
-                        const statusClass = op.res === 'win' ? 'win' : 'loss';
                         const sign = op.res === 'win' ? '+' : '-';
                         const pnl = op.res === 'win' ? (op.amt * op.odds) - op.amt : op.amt;
                         
@@ -1114,39 +1179,47 @@
                         else { runningBalance -= pnl; totalProfit -= pnl; }
 
                         htmlBuffer += `
-                            <td>
-                                <div class="slot-resolved ${statusClass}">
-                                    <button class="btn-undo" onclick="omega_UndoExcelOp(${day}, ${slot})" title="İptal Et"><i class="fa-solid fa-xmark"></i></button>
-                                    <span style="font-weight:900; color:#fff;">$${op.amt} x ${op.odds}</span>
-                                    <span style="font-size:0.85em; font-weight:800; margin-top:3px;">${sign}$${pnl.toFixed(2)}</span>
+                            <div class="kapsul ${op.res}">
+                                <button class="k-undo" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al"><i class="fa-solid fa-xmark"></i></button>
+                                <div class="k-result">
+                                    <b>$${op.amt} x ${op.odds}</b>
+                                    <span>${sign}$${pnl.toFixed(2)}</span>
                                 </div>
-                            </td>`;
+                            </div>`;
                     } else {
                         htmlBuffer += `
-                            <td>
-                                <div class="op-slot">
-                                    <div class="op-slot-inputs">
-                                        <input type="number" id="e-a-${day}-${slot}" placeholder="$">
-                                        <input type="number" id="e-o-${day}-${slot}" placeholder="Oran">
-                                    </div>
-                                    <div class="op-actions">
-                                        <button class="btn-slot-w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">W</button>
-                                        <button class="btn-slot-l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">L</button>
-                                    </div>
+                            <div class="kapsul">
+                                <div class="k-inputs">
+                                    <input type="number" id="e-a-${day}-${slot}" placeholder="$">
+                                    <input type="number" id="e-o-${day}-${slot}" placeholder="Oran">
                                 </div>
-                            </td>`;
+                                <div class="k-actions">
+                                    <button class="k-btn w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">W</button>
+                                    <button class="k-btn l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">L</button>
+                                </div>
+                            </div>`;
                     }
                 }
-                htmlBuffer += `<td class="bal-col">$${runningBalance.toFixed(2)}</td></tr>`;
+                
+                htmlBuffer += `
+                    </div>
+                    <div class="day-result">$${runningBalance.toFixed(2)}</div>
+                </div>`;
             }
 
-            tbody.innerHTML = htmlBuffer;
+            wrapper.innerHTML = htmlBuffer;
 
             document.getElementById('excel-current-bal').innerText = `$${runningBalance.toFixed(2)}`;
             
             const pnlElement = document.getElementById('excel-pnl');
             pnlElement.innerText = (totalProfit >= 0 ? "+" : "") + "$" + totalProfit.toFixed(2);
             pnlElement.style.color = totalProfit >= 0 ? 'var(--green)' : 'var(--red)';
+            
+            // Progress Bar Güncellemesi
+            const target = ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS];
+            const progressPercentage = Math.min((runningBalance / target) * 100, 100);
+            const progressBar = document.getElementById('excel-progress-bar');
+            if(progressBar) progressBar.style.width = progressPercentage + "%";
             
             omega_SaveRollingDB();
         }
@@ -1178,7 +1251,7 @@
             }
         }
 
-        // --- 12. SUPREME FINANCE KONTROLCÜSÜ ---
+        // --- 12. SUPREME FINANCE KONTROLCÜSÜ (ELITE REVİZYONU EKLENDİ) ---
         function omega_RefreshFinanceDashboard() {
             const kpiValW = document.getElementById('kpi-val-w');
             if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
@@ -1195,6 +1268,19 @@
             const winRate = totalResolved > 0 ? ((winsOnly / totalResolved) * 100).toFixed(1) : 0;
             const kpiWr = document.getElementById('kpi-val-wr');
             if (kpiWr) kpiWr.innerText = "%" + winRate;
+
+            // YENİ EKLENEN KPI'LAR: AÇIK RİSK ve ROI
+            const activeRisk = _PENDING_OPS.reduce((sum, item) => sum + item.amt, 0);
+            const kpiRisk = document.getElementById('kpi-val-risk');
+            if (kpiRisk) kpiRisk.innerText = activeRisk.toFixed(2);
+
+            const initialBalance = _BALANCE_HISTORY[0] || 100;
+            const currentRoi = ((_WALLET_BALANCE - initialBalance) / initialBalance * 100).toFixed(1);
+            const kpiRoi = document.getElementById('kpi-val-roi');
+            if (kpiRoi) {
+                kpiRoi.innerText = "%" + currentRoi;
+                kpiRoi.style.color = currentRoi >= 0 ? 'var(--green)' : 'var(--red)';
+            }
             
             omega_RenderSupremeLedgerTable();
         }
@@ -1213,7 +1299,7 @@
             } else {
                 combinedList.forEach(item => {
                     const dateStr = new Date(item.id).toLocaleDateString('tr-TR');
-                    let statusBadge = `<span style="color:var(--muted); font-weight:800;">BEKLEMEDE</span>`;
+                    let statusBadge = `<span style="color:var(--gold); font-weight:800;"><i class="fa-solid fa-hourglass-half"></i> BEKLEMEDE</span>`;
                     let pnlDisplay = "-";
                     let actionButtons = "";
 
@@ -1224,11 +1310,11 @@
                                 <button onclick="omega_ResolveOperation(${item.id}, 'loss')" style="color:var(--red); background:none; border:none; cursor:pointer; font-weight:900; font-size:1.1em;">L</button>
                             </td>`;
                     } else if(item.res === 'win') {
-                        statusBadge = `<b style="color:var(--green)">KAZANÇ</b>`;
+                        statusBadge = `<b style="color:var(--green)"><i class="fa-solid fa-check"></i> KAZANÇ</b>`;
                         pnlDisplay = `<span style="color:var(--green); font-weight:800;">+${item.pnl.toFixed(2)}</span>`;
                         actionButtons = `<td>-</td>`;
                     } else if(item.res === 'loss') {
-                        statusBadge = `<b style="color:var(--red)">KAYIP</b>`;
+                        statusBadge = `<b style="color:var(--red)"><i class="fa-solid fa-xmark"></i> KAYIP</b>`;
                         pnlDisplay = `<span style="color:var(--red); font-weight:800;">${item.pnl.toFixed(2)}</span>`;
                         actionButtons = `<td>-</td>`;
                     }
