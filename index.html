@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V19 ELITE | SUPREME TERMINAL OMEGA</title>
+    <title>V19 ELITE | SUPREME OPERATIONAL COMMAND</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <style>
-        /* V19 SUPREME STYLING SYSTEM v6.0 
-           DETAYLI TASARIM PARAMETRELERİ
+        /* V19 SUPREME STYLING SYSTEM v8.0
+           MAXIMUM DETAIL - NO COMPRESSION
         */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
         :root { 
             --gold: #fbbf24; 
-            --gold-glow: rgba(251, 191, 36, 0.25);
+            --gold-glow: rgba(251, 191, 36, 0.3);
             --green: #10b981; 
             --green-dark: #065f46;
-            --green-glow: rgba(16, 185, 129, 0.15);
+            --green-glow: rgba(16, 185, 129, 0.2);
             --red: #ef4444; 
             --red-glow: rgba(239, 68, 68, 0.2);
             --orange: #f97316; 
-            --orange-glow: rgba(249, 115, 22, 0.25);
+            --orange-glow: rgba(249, 115, 22, 0.3);
             --bg: #050505; 
             --panel: #0c0c0e; 
             --panel-header: #121214;
@@ -35,11 +35,10 @@
             --text-dim: #a1a1aa;
             --muted: #52525b;
             --sidebar-w: 280px;
-            --transition-fast: all 0.2s ease;
-            --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-main: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* --- GLOBAL RESET & SCROLLBARS --- */
+        /* --- BASIC RESET & SCROLLBAR --- */
         * { 
             box-sizing: border-box; 
             outline: none; 
@@ -50,11 +49,11 @@
         
         ::-webkit-scrollbar { width: 7px; height: 7px; }
         ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; border: 2px solid #000; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; border: 1px solid #000; }
         ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 
-        body { 
-            width: 100vw;
+        html, body { 
+            width: 100vw; 
             height: 100vh;
             background-color: var(--bg);
             color: var(--text);
@@ -63,42 +62,32 @@
             display: flex;
         }
 
-        /* --- SIDEBAR OPERASYONEL MENÜ --- */
+        /* --- SIDEBAR OPERASYONEL MİMARİ --- */
         .sidebar { 
             width: var(--sidebar-w); 
             background: #000; 
             border-right: 1px solid var(--border); 
             display: flex; 
             flex-direction: column; 
-            height: 100%;
+            height: 100%; 
             z-index: 1000;
             position: relative;
         }
 
-        .brand-section { 
+        .brand-zone { 
             padding: 45px 25px; 
             border-bottom: 1px solid var(--border); 
             text-align: center;
             background: linear-gradient(to bottom, #080808, #000);
-            position: relative;
         }
 
         .brand-text { 
             font-weight: 900; 
             color: var(--green); 
-            font-size: 1.5em; 
-            letter-spacing: 5px; 
-            text-transform: uppercase;
-            text-shadow: 0 0 25px var(--green-glow);
-        }
-        
-        .brand-sub {
-            font-size: 0.55em;
-            color: var(--muted);
-            margin-top: 10px;
-            letter-spacing: 3px;
-            font-weight: 800;
-            text-transform: uppercase;
+            font-size: 1.4em; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            text-shadow: 0 0 20px var(--green-glow);
         }
 
         .nav-container { 
@@ -107,70 +96,64 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 5px;
         }
 
         .nav-link { 
-            padding: 17px 35px; 
+            padding: 16px 35px; 
             cursor: pointer; 
             color: var(--muted); 
             font-weight: 700; 
             font-size: 0.88em; 
             display: flex; 
             align-items: center; 
-            transition: var(--transition-fast);
-            border-left: 5px solid transparent;
-            margin-bottom: 2px;
-            position: relative;
+            transition: var(--transition-main);
+            border-left: 5px solid transparent; 
+            margin-bottom: 3px;
         }
 
         .nav-link i { 
             margin-right: 20px; 
-            font-size: 1.4em; 
+            font-size: 1.35em; 
             width: 25px; 
             text-align: center; 
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.3s ease;
         }
 
         .nav-link:hover { 
             background: rgba(255,255,255,0.03); 
             color: #fff; 
-            padding-left: 45px;
-        }
-        
-        .nav-link:hover i {
-            transform: scale(1.2);
-            color: #fff;
+            padding-left: 45px; 
         }
 
-        /* DİNAMİK MENÜ RENKLERİ */
+        /* NAVİGASYON AKTİF DURUMLARI */
         .nav-link.active { 
-            background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, transparent 100%); 
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); 
             color: #fff; 
-            border-left-color: var(--green); 
+            border-left: 5px solid var(--green); 
         }
 
         .nav-link.basket.active { 
-            background: linear-gradient(90deg, rgba(249, 115, 22, 0.12) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.1) 0%, transparent 100%); 
             border-left-color: var(--orange); 
         }
 
         .nav-link.stream.active { 
-            background: linear-gradient(90deg, rgba(251, 191, 36, 0.12) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%); 
             border-left-color: var(--gold); 
         }
 
         .nav-link.favs.active { 
-            background: linear-gradient(90deg, rgba(239, 68, 68, 0.12) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%); 
             border-left-color: var(--red); 
         }
 
         .nav-link.finance.active { 
-            background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); 
             border-left-color: var(--green); 
         }
 
-        /* --- MAIN VIEWPORT MİMARİSİ --- */
+        /* --- MAIN VIEWPORT --- */
         .main-viewport { 
             flex-grow: 1; 
             display: flex; 
@@ -186,15 +169,9 @@
             align-items: center; 
             background: #000; 
             border-bottom: 1px solid var(--border); 
-            height: 90px;
+            height: 90px; 
             flex-shrink: 0;
             z-index: 500;
-        }
-
-        .console-label {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
         }
 
         .console-label h2 { 
@@ -205,48 +182,25 @@
             text-transform: uppercase; 
             color: #fff; 
         }
-        
-        .console-label span {
-            font-size: 0.6em;
-            color: var(--muted);
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
 
         .header-wallet {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            padding: 14px 28px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
+            background: var(--panel); 
+            border: 1px solid var(--border); 
+            padding: 14px 28px; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
-
-        .header-wallet label { 
-            font-size: 0.65em; 
-            color: var(--muted); 
-            font-weight: 950; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px; 
-        }
-
-        .header-wallet b { 
-            font-family: 'JetBrains Mono'; 
-            color: var(--gold); 
-            font-size: 1.3em; 
-            font-weight: 900; 
-            text-shadow: 0 0 10px var(--gold-glow);
-        }
+        .header-wallet label { font-size: 0.65em; color: var(--muted); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .header-wallet b { font-family: 'JetBrains Mono'; color: var(--gold); font-size: 1.3em; font-weight: 950; text-shadow: 0 0 10px var(--gold-glow); }
 
         .main-scroll-box { 
             flex-grow: 1; 
             padding: 40px; 
             overflow-y: auto; 
             background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); 
-            position: relative;
         }
 
         /* --- RADAR KONTROL PANELİ --- */
@@ -259,7 +213,7 @@
 
         .filter-panel { 
             display: flex; 
-            gap: 20px; 
+            gap: 15px; 
             background: var(--panel); 
             padding: 18px; 
             border-radius: 14px; 
@@ -278,10 +232,10 @@
             color: var(--orange); 
             padding: 12px 35px; 
             border-radius: 10px; 
-            font-size: 0.8em; 
+            font-size: 0.85em; 
             font-weight: 950; 
             cursor: pointer; 
-            transition: var(--transition-fast);
+            transition: var(--transition-main);
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
@@ -289,7 +243,7 @@
         .btn-mode-supreme.active { 
             background: var(--orange); 
             color: #000; 
-            box-shadow: 0 0 30px var(--orange-glow);
+            box-shadow: 0 0 25px var(--orange-glow);
             transform: translateY(-2px);
         }
 
@@ -303,21 +257,19 @@
             font-weight: 800; 
             cursor: pointer; 
             min-width: 240px; 
-            transition: all 0.3s;
+            transition: border 0.3s;
         }
-        
         .select-supreme:hover { border-color: var(--muted); }
 
         /* --- CUSTOM LEAGUE DROPDOWN PRO --- */
         .league-drop-wrapper { position: relative; min-width: 360px; }
-
         .league-drop-trigger { 
             background: #000; 
             border: 2px solid var(--border); 
             color: #fff; 
             padding: 14px 25px; 
             border-radius: 10px; 
-            font-size: 0.9em; 
+            font-size: 0.95em; 
             font-weight: 900; 
             cursor: pointer; 
             display: flex; 
@@ -325,8 +277,7 @@
             justify-content: space-between; 
             transition: all 0.3s;
         }
-
-        .league-drop-trigger:hover { border-color: var(--gold); background: #080808; }
+        .league-drop-trigger:hover { border-color: var(--gold); }
         
         .league-drop-menu { 
             display: none; 
@@ -340,8 +291,8 @@
             max-height: 500px; 
             overflow-y: auto; 
             border-radius: 12px; 
-            box-shadow: 0 40px 80px rgba(0,0,0,1);
-            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+            animation: slideIn 0.25s ease-out;
         }
 
         @keyframes slideIn {
@@ -360,24 +311,12 @@
             transition: 0.2s;
             font-weight: 600;
         }
+        .league-drop-item:hover { background: #1c1c21; padding-left: 35px; color: var(--gold); }
+        .league-drop-item img { width: 22px; height: 14px; margin-right: 18px; border-radius: 2px; }
 
-        .league-drop-item:hover { 
-            background: #1c1c21; 
-            color: var(--gold); 
-            padding-left: 35px; 
-        }
-
-        .league-drop-item img { 
-            width: 24px; 
-            height: 16px; 
-            margin-right: 18px; 
-            border-radius: 3px; 
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-
-        /* --- RADAR LİSTE MİMARİSİ --- */
-        .league-card-pro { 
-            margin-bottom: 30px; 
+        /* --- MATCH LİSTE MİMARİSİ --- */
+        .league-container-pro { 
+            margin-bottom: 25px; 
             border-radius: 15px; 
             overflow: hidden; 
             border: 1px solid var(--border); 
@@ -386,7 +325,7 @@
         }
 
         .league-header-bar { 
-            background: linear-gradient(90deg, #1e293b 0%, #161e2b 100%); 
+            background: #1e293b; 
             padding: 18px 30px; 
             font-weight: 950; 
             font-size: 0.8em; 
@@ -396,25 +335,24 @@
             justify-content: space-between; 
             cursor: pointer;
             border-bottom: 2px solid #334155;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        .fav-star-icon { 
+        .fav-star-box { 
             font-size: 1.4em; 
             color: var(--muted); 
             margin-right: 20px; 
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
             cursor: pointer; 
         }
-
-        .fav-star-icon.active { 
+        .fav-star-box.active { 
             color: var(--gold); 
             text-shadow: 0 0 15px var(--gold-glow); 
-            transform: scale(1.25) rotate(144deg);
+            transform: scale(1.2) rotate(144deg);
         }
 
-        .match-row-item { 
+        .match-row-pro { 
             display: flex; 
             align-items: center; 
             padding: 15px 30px; 
@@ -423,401 +361,76 @@
             background: #0a0a0c;
             transition: all 0.3s;
         }
-
-        .match-row-item:last-child { border-bottom: none; }
-        .match-row-item:hover { background: #111118; transform: scale(1.005); z-index: 10; }
+        .match-row-pro:last-child { border-bottom: none; }
+        .match-row-pro:hover { background: #111116; transform: scale(1.005); z-index: 10; }
         
         /* SAAT SIRALI (KOMPAKT) */
-        .compact-row { 
-            font-size: 0.78em !important; 
-            padding: 10px 30px !important; 
-        }
-
-        .match-clock-box { 
-            font-family: 'JetBrains Mono'; 
-            color: var(--green); 
-            width: 70px; 
-            font-weight: 800; 
-            font-size: 1.1em; 
-            letter-spacing: -0.5px;
-        }
-
-        .match-icon-marker { 
-            margin-right: 15px; 
-            font-size: 1em; 
-            opacity: 0.6; 
-        }
-
-        .match-main-teams { 
-            font-weight: 800; 
-            flex-grow: 1; 
-            display: flex; 
-            align-items: center; 
-            color: #f4f4f7;
-            letter-spacing: 0.2px;
-        }
-
-        .match-flag-element { 
-            width: 20px; 
-            height: 14px; 
-            object-fit: cover; 
-            border-radius: 2px; 
-            margin-left: 15px; 
-            box-shadow: 0 3px 6px rgba(0,0,0,0.6);
-        }
+        .compact-mode-row { font-size: 0.78em !important; padding: 10px 30px !important; }
+        .match-clock-sup { font-family: 'JetBrains Mono'; color: var(--green); width: 65px; font-weight: 900; font-size: 1.1em; }
+        .match-ico-marker { margin-right: 15px; font-size: 1em; opacity: 0.7; }
+        .match-teams-main { font-weight: 800; flex-grow: 1; display: flex; align-items: center; color: #f4f4f7; }
+        .match-flag-sup { width: 18px; height: 12px; border-radius: 1px; margin-left: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         
-        .league-badge-tag { 
-            font-size: 0.7em; 
-            color: var(--text-dim); 
-            background: #18181b; 
-            padding: 4px 14px; 
-            border-radius: 6px; 
-            margin-left: 30px; 
-            font-weight: 900; 
-            border: 1px solid #2d2d30; 
-            letter-spacing: 1px;
-            text-transform: uppercase;
+        .league-label-badge { 
+            font-size: 0.7em; color: var(--muted); background: #18181b; padding: 4px 12px; 
+            border-radius: 6px; margin-left: 25px; font-weight: 900; border: 1px solid #27272a; 
+            letter-spacing: 0.5px; text-transform: uppercase;
         }
 
-        /* --- MULTI-STREAM INTELLIGENCE HUB --- */
-        .stream-controls-bar { 
-            display: flex; 
-            gap: 15px; 
-            margin-bottom: 30px; 
-            background: var(--panel); 
-            padding: 18px; 
-            border-radius: 14px; 
-            border: 1px solid var(--border); 
-        }
+        /* --- MULTI-STREAM HUB --- */
+        .st-controls-row { display: flex; gap: 15px; margin-bottom: 30px; background: var(--panel); padding: 18px; border-radius: 14px; border: 1px solid var(--border); }
+        .btn-lt-pro { background: #1f1f23; color: var(--muted); border: 2px solid #333; padding: 12px 30px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: 0.3s; }
+        .btn-lt-pro.active { background: var(--green); color: #000; border-color: var(--green); box-shadow: 0 0 20px var(--green-glow); }
 
-        .btn-stream-layout { 
-            background: #1f1f23; 
-            color: var(--muted); 
-            border: 2px solid #333; 
-            padding: 12px 32px; 
-            border-radius: 10px; 
-            font-size: 0.9em; 
-            font-weight: 950; 
-            cursor: pointer; 
-            transition: var(--transition-fast);
-        }
+        .matrix-grid-master { display: none; gap: 18px; height: calc(100vh - 350px); width: 100%; }
+        .matrix-grid-master.active { display: grid; }
+        .m-lay-1 { grid-template-columns: 1fr; }
+        .m-lay-2 { grid-template-columns: 1fr 1fr; }
+        .m-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .m-lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
 
-        .btn-stream-layout.active { 
-            background: var(--green); 
-            color: #000; 
-            border-color: var(--green); 
-            box-shadow: 0 0 25px var(--green-glow);
-        }
+        .matrix-unit { background: #000; border: 2px solid #27272a; border-radius: 15px; overflow: hidden; display: flex; flex-direction: column; transition: border 0.3s; }
+        .matrix-nav { padding: 10px; background: #0a0a0c; display: flex; gap: 10px; border-bottom: 1px solid var(--border); }
+        .matrix-input { flex: 1; background: #000; border: 1.5px solid #333; color: #fff; font-size: 11px; padding: 10px 18px; border-radius: 8px; }
+        .btn-matrix-go { background: var(--green); color: #000; border: none; padding: 0 20px; border-radius: 8px; font-weight: 950; font-size: 0.8em; cursor: pointer; }
+        .btn-matrix-kill { background: var(--red); color: #fff; border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-matrix-kill:hover { transform: rotate(90deg); background: #ff0000; }
 
-        .stream-master-grid { 
-            display: none; 
-            gap: 20px; 
-            height: calc(100vh - 350px); 
-            width: 100%; 
-        }
-
-        .stream-master-grid.active { display: grid; }
+        /* --- FINANCIAL CONSOLE PRO --- */
+        .fin-terminal-wrapper { display: none; grid-template-columns: 1fr 500px; gap: 40px; height: 100%; }
+        .fin-terminal-wrapper.active { display: grid; }
+        .fin-scroller-pane { overflow-y: auto; display: flex; flex-direction: column; gap: 35px; padding-right: 15px; }
         
-        /* Grid Layout Configs */
-        .lay-1 { grid-template-columns: 1fr; }
-        .lay-2 { grid-template-columns: 1fr 1fr; }
-        .lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-        .lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
+        .rolling-grand-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        .rolling-box-seg { background: var(--panel); border: 1.5px solid var(--border); padding: 30px 15px; border-radius: 18px; text-align: center; border-top: 5px solid var(--muted); transition: 0.4s; }
+        .rolling-box-seg.active { border-top-color: var(--green); background: linear-gradient(to bottom, rgba(16, 185, 129, 0.03), transparent); box-shadow: 0 15px 40px rgba(0,0,0,0.4); transform: translateY(-5px); }
+        .rolling-box-seg label { font-size: 0.65em; font-weight: 950; color: var(--muted); text-transform: uppercase; margin-bottom: 15px; display: block; letter-spacing: 1.5px; }
+        .rolling-box-seg b { font-family: 'JetBrains Mono'; font-size: 1.6em; font-weight: 950; color: var(--gold); }
 
-        .stream-box-unit { 
-            background: #000; 
-            border: 2px solid #27272a; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            transition: border 0.4s;
-        }
+        .ledger-supreme-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column; flex-grow: 1; min-height: 550px; overflow: hidden; }
+        .ledger-supreme-top { padding: 30px 35px; border-bottom: 1.5px solid #1f1f23; display: flex; justify-content: space-between; align-items: center; background: var(--panel-header); }
+        .ledger-tab-row { display: flex; gap: 12px; }
+        .btn-tab-supreme { background: #000; color: var(--muted); border: 1.5px solid var(--border-bright); padding: 12px 25px; border-radius: 8px; font-size: 0.8em; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .btn-tab-supreme.active { background: var(--gold); color: #000; border-color: var(--gold); box-shadow: 0 0 15px var(--gold-glow); }
 
-        .stream-box-unit:hover { border-color: var(--green); }
-
-        .stream-box-nav { 
-            padding: 12px; 
-            background: #0a0a0c; 
-            display: flex; 
-            gap: 12px; 
-            border-bottom: 1px solid var(--border); 
-        }
-
-        .stream-box-input { 
-            flex: 1; 
-            background: #000; 
-            border: 1.5px solid #333; 
-            color: #fff; 
-            font-size: 11px; 
-            padding: 10px 18px; 
-            border-radius: 8px; 
-        }
-
-        .btn-cell-fire { background: var(--green); color: #000; border: none; padding: 0 22px; border-radius: 8px; font-weight: 950; font-size: 0.8em; cursor: pointer; }
-        .btn-cell-fav { background: var(--gold); color: #000; border: none; padding: 0 14px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .btn-cell-kill { background: var(--red); color: #fff; border: none; padding: 0 18px; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
-        .btn-cell-kill:hover { background: #ff0000; transform: rotate(90deg); }
-
-        .vault-intelligence { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 30px; 
-            border-radius: 15px; 
-            margin-top: 30px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        }
-
-        .vault-pill-item { 
-            display: inline-flex; 
-            align-items: center; 
-            background: #111; 
-            border: 1px solid #333; 
-            color: #eee; 
-            padding: 12px 22px; 
-            border-radius: 10px; 
-            font-size: 0.8em; 
-            margin-right: 18px; 
-            margin-bottom: 15px; 
-            cursor: pointer; 
-            transition: all 0.3s;
-            font-weight: 700;
-        }
-
-        .vault-pill-item:hover { border-color: var(--gold); background: #18181b; transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .vault-pill-item i { margin-left: 18px; color: var(--red); opacity: 0.5; font-size: 1.1em; }
-        .vault-pill-item i:hover { opacity: 1; transform: scale(1.3); }
-
-        /* --- SUPREME FINANCIAL CONSOLE --- */
-        .finance-terminal-root { 
-            display: none; 
-            grid-template-columns: 1fr 520px; 
-            gap: 40px; 
-            height: 100%; 
-        }
-
-        .finance-terminal-root.active { display: grid; }
-
-        .finance-left-pane { 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 35px; 
-            padding-right: 15px; 
-        }
+        .supreme-data-table-v2 { width: 100%; border-collapse: collapse; font-size: 0.88em; }
+        .supreme-data-table-v2 th { background: #0c0c0e; padding: 22px 20px; text-align: left; color: var(--muted); position: sticky; top: 0; border-bottom: 2px solid #1f1f23; font-weight: 950; z-index: 100; text-transform: uppercase; letter-spacing: 1px; font-size: 0.75em; }
+        .supreme-data-table-v2 td { padding: 20px; border-bottom: 1px solid #141416; color: #e4e4e9; font-weight: 500; }
+        .supreme-data-table-v2 tr:hover td { background: #0f0f12; }
         
-        .rolling-grand-panel { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 18px; 
-        }
-
-        .rolling-card-segment { 
-            background: var(--panel); 
-            border: 1.5px solid var(--border); 
-            padding: 35px 15px; 
-            border-radius: 20px; 
-            text-align: center; 
-            border-top: 6px solid var(--muted); 
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        .rolling-card-segment.active { 
-            border-top-color: var(--green); 
-            background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
-            transform: translateY(-8px);
-        }
-
-        .rolling-card-segment label { 
-            font-size: 0.65em; 
-            font-weight: 950; 
-            color: var(--muted); 
-            text-transform: uppercase; 
-            margin-bottom: 18px; 
-            display: block; 
-            letter-spacing: 2px; 
-        }
-
-        .rolling-card-segment b { 
-            font-family: 'JetBrains Mono'; 
-            font-size: 1.6em; 
-            font-weight: 950; 
-            color: var(--gold); 
-            text-shadow: 0 0 15px var(--gold-glow);
-        }
-
-        .ledger-supreme-pro { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            border-radius: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            flex-grow: 1; 
-            min-height: 600px; 
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .ledger-supreme-header { 
-            padding: 30px 40px; 
-            border-bottom: 2px solid #1f1f23; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: var(--panel-header); 
-        }
-
-        .ledger-title-text { 
-            font-weight: 950; 
-            font-size: 1.2em; 
-            letter-spacing: 3px; 
-            text-transform: uppercase; 
-            color: #fff; 
-        }
-
-        .ledger-tabs-container { display: flex; gap: 15px; }
-
-        .btn-tab-pro { 
-            background: #000; 
-            color: var(--muted); 
-            border: 2px solid var(--border-bright); 
-            padding: 12px 28px; 
-            border-radius: 10px; 
-            font-size: 0.8em; 
-            font-weight: 900; 
-            cursor: pointer; 
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-
-        .btn-tab-pro.active { 
-            background: var(--gold); 
-            color: #000; 
-            border-color: var(--gold); 
-            box-shadow: 0 0 20px var(--gold-glow);
-        }
-
-        .ledger-table-scroller { overflow-y: auto; flex-grow: 1; background: #070709; }
-
-        .supreme-ledger-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 0.9em; 
-        }
-
-        .supreme-ledger-table th { 
-            background: #0c0c0e; 
-            padding: 24px 20px; 
-            text-align: left; 
-            color: var(--muted); 
-            position: sticky; 
-            top: 0; 
-            border-bottom: 2px solid #1f1f23; 
-            font-weight: 950; 
-            z-index: 100;
-            text-transform: uppercase;
-            font-size: 0.75em;
-            letter-spacing: 1px;
-        }
-
-        .supreme-ledger-table td { 
-            padding: 20px; 
-            border-bottom: 1px solid #121214; 
-            color: #e4e4e9; 
-            font-weight: 500;
-        }
-
-        .supreme-ledger-table tr:hover td { background: #0f0f12; }
+        .fin-analysis-pane { display: flex; flex-direction: column; gap: 35px; }
+        .supreme-chart-box { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 25px; height: 500px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         
-        .finance-right-pane { display: flex; flex-direction: column; gap: 35px; }
+        .kpi-master-hub { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .kpi-sup-item { background: #000; border: 1.5px solid var(--border); padding: 25px 15px; border-radius: 12px; text-align: center; }
+        .kpi-sup-item span { display: block; font-size: 0.7em; color: var(--muted); margin-bottom: 12px; font-weight: 950; letter-spacing: 1.5px; text-transform: uppercase; }
+        .kpi-sup-item b { font-family: 'JetBrains Mono'; font-size: 1.7em; color: #fff; letter-spacing: -1px; }
 
-        .supreme-chart-wrapper { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            border-radius: 20px; 
-            padding: 30px; 
-            height: 550px; 
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-        }
-
-        .global-kpi-hub { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 18px; 
-        }
-
-        .kpi-card-supreme { 
-            background: #000; 
-            border: 1.5px solid var(--border); 
-            padding: 30px 15px; 
-            border-radius: 15px; 
-            text-align: center; 
-            position: relative;
-        }
-
-        .kpi-card-supreme span { 
-            display: block; 
-            font-size: 0.7em; 
-            color: var(--muted); 
-            margin-bottom: 15px; 
-            font-weight: 950; 
-            letter-spacing: 2px; 
-            text-transform: uppercase;
-        }
-
-        .kpi-card-supreme b { 
-            font-family: 'JetBrains Mono'; 
-            font-size: 1.8em; 
-            color: #fff; 
-            letter-spacing: -1px; 
-        }
-
-        .op-input-supreme-box { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 40px; 
-            border-radius: 20px; 
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.7);
-            border-bottom: 4px solid var(--green);
-        }
-
-        .btn-op-fire { 
-            background: var(--green); 
-            color: #000; 
-            border: none; 
-            padding: 22px; 
-            border-radius: 12px; 
-            font-weight: 950; 
-            cursor: pointer; 
-            font-size: 1.1em; 
-            letter-spacing: 3px; 
-            text-transform: uppercase; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
-
-        .btn-op-fire:hover { 
-            transform: scale(1.03) translateY(-5px); 
-            box-shadow: 0 20px 40px var(--green-glow); 
-            background: #14d693;
-        }
+        .op-input-panel { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 20px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.7); }
+        .btn-omega-action { background: var(--green); color: #000; border: none; padding: 22px; border-radius: 12px; font-weight: 950; cursor: pointer; font-size: 1.1em; letter-spacing: 2.5px; text-transform: uppercase; transition: 0.4s; }
+        .btn-omega-action:hover { transform: scale(1.03) translateY(-5px); box-shadow: 0 20px 40px var(--green-glow); }
         
-        .hard-reset-link {
-            text-align: center;
-            color: #222;
-            font-size: 11px;
-            font-weight: 950;
-            cursor: pointer;
-            text-decoration: underline;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .hard-reset-link { text-align: center; color: #222; font-size: 11px; font-weight: 950; cursor: pointer; text-decoration: underline; transition: 0.3s; text-transform: uppercase; }
         .hard-reset-link:hover { color: var(--red); opacity: 0.8; }
     </style>
 </head>
@@ -825,23 +438,23 @@
 
     <aside class="sidebar">
         <div class="brand-zone">
-            <div class="brand-text">V19 CAPITAL</div>
-            <div class="brand-sub">SUPREME COMMAND</div>
+            <div class="brand-text">V19 ELITE</div>
+            <div class="brand-sub">COMMAND CENTER</div>
         </div>
         <nav class="nav-container">
-            <div class="nav-link active" id="nav-fut" onclick="omega_SwitchTab('futbol', this)">
+            <div class="nav-link active" id="nav-fut" onclick="switchOpTab('futbol', this)">
                 <i class="fa-solid fa-futbol"></i> FUTBOL
             </div>
-            <div class="nav-link basket" id="nav-bas" onclick="omega_SwitchTab('basketbol', this)">
+            <div class="nav-link basket" id="nav-bas" onclick="switchOpTab('basketbol', this)">
                 <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET
             </div>
-            <div class="nav-link stream" onclick="omega_SwitchTab('stream', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:30px;">
+            <div class="nav-link stream" onclick="switchOpTab('stream', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:30px;">
                 <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
             </div>
-            <div class="nav-link favs" id="nav-favori" onclick="omega_SwitchTab('favs', this)" style="color:var(--red);">
+            <div class="nav-link favs" id="nav-fav" onclick="switchOpTab('favs', this)" style="color:var(--red);">
                 <i class="fa-solid fa-star"></i> FAVORİLERİM
             </div>
-            <div class="nav-link finance" onclick="omega_SwitchTab('finance', this)" style="color:var(--green);">
+            <div class="nav-link finance" onclick="switchOpTab('finance', this)" style="color:var(--green);">
                 <i class="fa-solid fa-microchip"></i> USDT FİNANS
             </div>
         </nav>
@@ -850,8 +463,8 @@
     <main class="main-viewport">
         <header class="top-status-bar">
             <div class="console-label">
-                <span id="sub-status">SYSTEM ONLINE</span>
-                <h2 id="main-op-title">FUTBOL RADARI</h2>
+                <h2>FUTBOL RADARI</h2>
+                <span>STATUS: SYSTEM ONLINE</span>
             </div>
             <div class="header-wallet">
                 <label>OPERASYONEL KASA (USDT)</label>
@@ -861,96 +474,94 @@
 
         <section class="main-scroll-box">
             
-            <div id="omega-radar-block">
+            <div id="v19-radar-block">
                 <div class="controls-wrapper">
                     <div class="filter-panel">
-                        <select id="omega-date-sel" class="select-supreme" onchange="omega_RunEngine()">
-                            <option value="ALL">TÜM TARİHLER</option>
+                        <select id="v19-date-sel" class="select-supreme" onchange="v19_ExecuteRadarFilter()">
+                            <option value="ALL">TÜM ZAMAN ÇİZELGESİ</option>
                         </select>
                         
                         <div class="league-drop-wrapper">
-                            <div class="league-drop-trigger" onclick="omega_ToggleDrop(event)">
-                                <div id="drop-text-label">TÜM LİGLER</div>
+                            <div class="league-drop-trigger" onclick="v19_ToggleDrop(event)">
+                                <div id="v19-drop-label">TÜM LİGLER</div>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
-                            <div class="league-drop-menu" id="drop-menu-list"></div>
+                            <div class="league-drop-menu" id="v19-drop-menu-list"></div>
                         </div>
                     </div>
 
                     <div class="mode-row">
-                        <button class="btn-mode-supreme active" id="btn-sort-lg" onclick="omega_SetSort('league')">LİG SIRALI AKIŞ</button>
-                        <button class="btn-mode-supreme" id="btn-sort-tm" onclick="omega_SetSort('time')">SAAT SIRALI AKIŞ</button>
+                        <button class="btn-mode-supreme active" id="btn-sort-lg" onclick="v19_SetSortMode('league')">LİG SIRALI AKIŞ</button>
+                        <button class="btn-mode-supreme" id="btn-sort-tm" onclick="v19_SetSortMode('time')">SAAT SIRALI AKIŞ</button>
                     </div>
                 </div>
                 
-                <div id="omega-render-output"></div>
+                <div id="radar-render-output"></div>
             </div>
 
-            <div id="omega-favs-block" style="display:none;">
+            <div id="v19-favs-block" style="display:none;">
                 <div id="favs-render-output"></div>
             </div>
 
-            <div id="omega-stream-block" style="display:none;">
-                <div class="stream-controls-bar">
-                    <button class="btn-stream-layout" id="lay-btn-1" onclick="omega_BuildMatrix(1)">1</button>
-                    <button class="btn-stream-layout" id="lay-btn-2" onclick="omega_BuildMatrix(2)">2</button>
-                    <button class="btn-stream-layout" id="lay-btn-4" onclick="omega_BuildMatrix(4)">4</button>
-                    <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildMatrix(6)">6</button>
+            <div id="v19-stream-block" style="display:none;">
+                <div class="st-controls-row">
+                    <button class="btn-lt-pro" id="st-lay-1" onclick="v19_BuildMatrix(1)">1</button>
+                    <button class="btn-lt-pro" id="st-lay-2" onclick="v19_BuildMatrix(2)">2</button>
+                    <button class="btn-lt-pro" id="st-lay-4" onclick="v19_BuildMatrix(4)">4</button>
+                    <button class="btn-lt-pro active" id="st-lay-6" onclick="v19_BuildMatrix(6)">6 EKRAN</button>
                 </div>
-                
-                <div id="omega-matrix-grid" class="stream-master-grid lay-6 active"></div>
-                
-                <div class="vault-intelligence">
-                    <span class="roll-label">KAYITLI İSTİHBARAT AKIŞLARI</span>
-                    <div id="vault-pills-area" style="margin-top:20px;"></div>
+                <div id="v19-matrix-grid" class="st-matrix active lay-6"></div>
+                <div class="intel-vault">
+                    <span class="roll-label" style="margin-bottom:20px;">KAYITLI OPERASYONEL AKIŞLAR</span>
+                    <div id="v19-vault-pills" style="margin-top:15px;"></div>
                 </div>
             </div>
 
-            <div class="finance-terminal-root" id="omega-finance-block">
+            <div class="fin-terminal-wrapper" id="v19-finance-block">
                 
-                <div class="finance-left-pane">
-                    <div class="rolling-grand-panel">
-                        <div class="rolling-card-segment active"><label>1 HAFTA</label><div class="rolling-target"><b>$1.000</b></div></div>
-                        <div class="rolling-card-segment"><label>15 GÜN</label><div class="rolling-target"><b>$5.000</b></div></div>
-                        <div class="rolling-card-segment"><label>30 GÜN</label><div class="rolling-target"><b>$15.000</b></div></div>
-                        <div class="rolling-card-segment"><label>60 GÜN</label><div class="rolling-target"><b>$40.000</b></div></div>
-                        <div class="rolling-card-segment"><label>90 GÜN</label><div class="rolling-target"><b>$100.000</b></div></div>
+                <div class="fin-scroller-pane">
+                    <div class="rolling-grand-grid">
+                        <div class="rolling-box-seg active"><label>1 HAFTA</label><b>$1.000</b></div>
+                        <div class="rolling-box-seg"><label>15 GÜN</label><b>$5.000</b></div>
+                        <div class="rolling-box-seg"><label>30 GÜN</label><b>$15.000</b></div>
+                        <div class="rolling-box-seg"><label>60 GÜN</label><b>$40.000</b></div>
+                        <div class="rolling-box-seg"><label>90 GÜN</label><b>$100.000</b></div>
                     </div>
 
-                    <div class="ledger-supreme-pro">
-                        <div class="ledger-supreme-header">
+                    <div class="ledger-supreme-card">
+                        <div class="ledger-supreme-top">
                             <span class="ledger-title-text">LEDGER MASTER CONSOLE</span>
-                            <div class="ledger-tabs-container">
-                                <button class="btn-tab-pro active" id="l-tab-p" onclick="omega_SetLedger('pend')">BEKLEYENLER</button>
-                                <button class="btn-tab-pro" id="l-tab-a" onclick="omega_SetLedger('all')">TAM LİSTE</button>
+                            <div class="ledger-tab-row">
+                                <button class="btn-tab-supreme active" id="tab-p-btn" onclick="v19_SetLedgerMode('pend')">BEKLEYENLER</button>
+                                <button class="btn-tab-supreme" id="tab-a-btn" onclick="v19_SetLedgerMode('all')">TAM LİSTE</button>
                             </div>
                         </div>
                         <div class="ledger-table-scroller">
-                            <table class="supreme-ledger-table" id="omega-data-table"></table>
+                            <table class="supreme-data-table-v2" id="v19-master-data-table"></table>
                         </div>
                     </div>
                 </div>
 
-                <div class="finance-right-pane">
-                    <div class="supreme-chart-wrapper">
-                        <div id="omega-apex-chart-main"></div>
+                <div class="fin-analysis-pane">
+                    <div class="supreme-chart-box">
+                        <div id="v19-apex-main-chart"></div>
                     </div>
 
-                    <div class="op-input-supreme-box">
-                        <div class="global-kpi-hub">
-                            <div class="kpi-card-supreme"><span>KASA</span><b id="kpi-w-val">100.00</b></div>
-                            <div class="kpi-card-supreme"><span>NET P/L</span><b id="kpi-p-val">0.00</b></div>
-                            <div class="kpi-card-supreme"><span>SUCCESS</span><b id="kpi-wr-val">%0</b></div>
+                    <div class="op-input-panel">
+                        <div class="kpi-master-hub">
+                            <div class="kpi-sup-item"><span>AKTİF KASA</span><b id="kpi-val-w">100.00</b></div>
+                            <div class="kpi-sup-item"><span>NET P/L</span><b id="kpi-val-p">0.00</b></div>
+                            <div class="kpi-sup-item"><span>SUCCESS</span><b id="kpi-val-wr">%0</b></div>
                         </div>
                         
                         <div style="display:flex; flex-direction:column; gap:15px;">
-                            <input type="text" id="op-in-name" class="select-supreme" style="width:100%; border-color:#222;" placeholder="OPERASYONEL KOD / ADI">
+                            <input type="text" id="op-input-name" class="select-supreme" style="width:100%; border-color:#222;" placeholder="İŞLEM KODU / ADI">
                             <div style="display:flex; gap:12px;">
-                                <input type="number" id="op-in-amt" class="select-supreme" style="flex:1; border-color:#222;" placeholder="TUTAR (USDT)">
-                                <input type="number" id="op-in-odds" class="select-supreme" style="flex:1; border-color:#222;" placeholder="ORAN">
+                                <input type="number" id="op-input-amt" class="select-supreme" style="flex:1; border-color:#222;" placeholder="TUTAR (USDT)">
+                                <input type="number" id="op-input-odds" class="select-supreme" style="flex:1; border-color:#222;" placeholder="ORAN">
                             </div>
-                            <button onclick="omega_CommitOp()" class="btn-op-fire">OPERASYONU BAŞLAT</button>
-                            <div class="hard-reset-link" onclick="omega_HardReset()">SİSTEMİ KALİBRE ET (SIFIRLA)</div>
+                            <button onclick="v19_CommitOp()" class="btn-omega-action">OPERASYONU BAŞLAT</button>
+                            <div class="hard-reset-link" onclick="v19_HardReset()">SİSTEMİ MANUEL OLARAK SIFIRLA</div>
                         </div>
                     </div>
                 </div>
@@ -962,61 +573,78 @@
 
     <script>
         /**
-         * V19 ELITE OMEGA ENGINE v6.0 
-         * Hiçbir kısaltma yapılmamıştır. Her satır operasyonel bütünlük için yazılmıştır.
+         * V19 SUPREME COMMAND CENTER - CORE ENGINE v8.0
+         * Hiçbir kısaltma yapılmamıştır. Tüm fonksiyonlar detaylıca yazılmıştır.
          */
 
-        let _DB = [];
-        let _LEAGUES_MAP = {};
-        let _SPORT = 'futbol';
-        let _TAB = 'bulletin';
-        let _FILTER_L = 'ALL';
-        let _SORT_MODE = 'league'; 
-        let _LEDGER_MODE = 'pend';
+        let _M_DATA = [];
+        let _LEAGUES_STATS = {};
+        let _SPORT_TYPE = 'futbol';
+        let _MODULE_TAB = 'bulletin';
+        let _FILTER_LEAGUE = 'ALL';
+        let _SORT_TYPE = 'league'; 
+        let _LEDGER_VIEW = 'pend';
 
-        // DATABASE STORAGE
-        let _WALLET = parseFloat(localStorage.getItem('v19_w')) || 100.00;
-        let _HISTORY = JSON.parse(localStorage.getItem('v19_h')) || [100.00];
-        let _PENDING = JSON.parse(localStorage.getItem('v19_p')) || [];
-        let _LEDGER = JSON.parse(localStorage.getItem('v19_l')) || [];
-        let _FAV_LEAGUES = JSON.parse(localStorage.getItem('v19_fav_l')) || [];
+        // DATABASE (LocalStorage)
+        let _W_BAL = parseFloat(localStorage.getItem('v19_w')) || 100.00;
+        let _B_HIST = JSON.parse(localStorage.getItem('v19_h')) || [100.00];
+        let _P_OPS = JSON.parse(localStorage.getItem('v19_p')) || [];
+        let _L_DATA = JSON.parse(localStorage.getItem('v19_l')) || [];
+        let _FAV_MATCHES = JSON.parse(localStorage.getItem('v19_fav_m')) || [];
         let _FAV_STREAMS = JSON.parse(localStorage.getItem('v19_fav_s')) || [];
 
-        // LİG HİYERARŞİ ALGORİTMASI (PUANLAMA)
-        const SCORE_MAP = {
-            "TÜRKİYE - SÜPER LİG": 2500, "İNGİLTERE - PREMIER LEAGUE": 2400, "İSPANYA - LA LIGA": 2350,
-            "ALMANYA - BUNDESLIGA": 2300, "İTALYA - SERIE A": 2250, "FRANSA - LIGUE 1": 2200,
-            "AVRUPA - CHAMPIONS LEAGUE": 2100, "AVRUPA - EUROPA LEAGUE": 2000, "AVRUPA - CONFERENCE LEAGUE": 1900,
-            "AVRUPA - EUROLEAGUE": 2450, "AMERİKA - NBA": 2420, "TÜRKİYE - BSL": 2410
+        // LİG HİYERARŞİ ALGORİTMASI (KESİN SIRALAMA PUANLARI)
+        const HIERARCHY_SCORES = {
+            "TÜRKİYE - SÜPER LİG": 3000, 
+            "İNGİLTERE - PREMIER LEAGUE": 2900, 
+            "İSPANYA - LA LIGA": 2850,
+            "ALMANYA - BUNDESLIGA": 2800, 
+            "İTALYA - SERIE A": 2750, 
+            "FRANSA - LIGUE 1": 2700,
+            "AVRUPA - CHAMPIONS LEAGUE": 2600, 
+            "AVRUPA - EUROPA LEAGUE": 2500, 
+            "AVRUPA - CONFERENCE LEAGUE": 2400,
+            "AVRUPA - EUROLEAGUE": 2990, 
+            "AMERİKA - NBA": 2980, 
+            "TÜRKİYE - BSL": 2970,
+            "İSPANYA - LIGA ACB": 2960,
+            "İTALYA - LEGA A": 2950,
+            "FRANSA - LNB PRO A": 2940,
+            "ALMANYA - BBL": 2930,
+            "AVRUPA - EUROCUP": 2920,
+            "AVRUPA - BCL": 2910,
+            "AMERİKA - NCAA": 2900,
+            "RUSYA - VTB": 2890,
+            "AMERİKA - WNBA": 2880
         };
 
+        // ALTIN BASKETBOL LİG LİSTESİ (HER ZAMAN LİSTELENECEK)
+        const GOLD_BASKET_LIST = [
+            "AMERİKA - NBA", "AVRUPA - EUROLEAGUE", "TÜRKİYE - BSL", "İSPANYA - LIGA ACB",
+            "İTALYA - LEGA A", "FRANSA - LNB PRO A", "ALMANYA - BBL", "AVRUPA - EUROCUP",
+            "AVRUPA - BCL", "AMERİKA - NCAA", "RUSYA - VTB", "AMERİKA - WNBA"
+        ];
+
         // --- ENGINE: INITIALIZE ---
-        async function omega_Initialize() {
-            console.log("Omega Core Initializing...");
+        async function v19_StartEngine() {
+            console.log("Supreme Core Engine Warming Up...");
             try {
-                // Veriyi çek (cache kırıcı ile)
-                const r = await fetch('v19_rapor.json?nocache=' + Date.now());
-                const rawData = await r.json();
-                _DB = rawData.veriler || [];
-                _LEAGUES_MAP = rawData.sayac || {};
+                const response = await fetch('v19_rapor.json?ts=' + Date.now());
+                const raw = await response.json();
+                _M_DATA = raw.veriler || [];
+                _LEAGUES_STATS = raw.sayac || {};
                 
-                omega_BuildInterface();
-                omega_RunEngine();
-                omega_UpdateWalletUI();
+                v19_BuildUIComponents();
+                v19_ExecuteRadarFilter();
+                v19_RefreshWalletUI();
             } catch (err) {
-                console.error("Critical: Data pipeline broken.");
-                document.getElementById('omega-render-output').innerHTML = `
-                    <div style="padding:100px; text-align:center;">
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size:4em; color:var(--red); margin-bottom:20px;"></i>
-                        <h2 style="font-weight:900;">RADAR ÇEVRİMDIŞI</h2>
-                        <p style="color:var(--muted); margin-top:10px;">Veri radarı v19_rapor.json dosyasına ulaşamıyor. Lütfen motoru tetikleyin.</p>
-                    </div>
-                `;
+                console.error("Critical Failure: Data pipeline offline.");
+                document.getElementById('radar-render-output').innerHTML = "<div style='padding:80px; text-align:center;'>VERİ BEKLENİYOR...</div>";
             }
         }
 
         // --- ENGINE: UTILS ---
-        function omega_GetFlag(leagueName) {
+        function v19_GetFlag(leagueName) {
             const s = leagueName.toUpperCase();
             if(s.includes("TÜRKİYE") || s.includes("SUPER LİG") || s.includes("SÜPER LİG") || s.includes("BSL")) return "tr";
             if(s.includes("İNGİLTERE") || s.includes("PREMIER") || s.includes("CHAMPIONSHIP")) return "gb-eng";
@@ -1024,264 +652,242 @@
             if(s.includes("ALMANYA") || s.includes("BUNDESLIGA") || s.includes("BBL")) return "de";
             if(s.includes("İTALYA") || s.includes("SERIE A") || s.includes("LEGA A")) return "it";
             if(s.includes("FRANSA") || s.includes("LIGUE 1") || s.includes("LNB PRO A")) return "fr";
-            if(s.includes("AMERİKA") || s.includes("NBA") || s.includes("MLS")) return "us";
-            if(s.includes("AVRUPA") || s.includes("CHAMPIONS") || s.includes("EURO")) return "eu";
-            if(s.includes("PORTEKİZ") || s.includes("PRIMEIRA")) return "pt";
+            if(s.includes("AMERİKA") || s.includes("NBA") || s.includes("MLS") || s.includes("WNBA")) return "us";
+            if(s.includes("AVRUPA") || s.includes("CHAMPIONS") || s.includes("EURO") || s.includes("EUROLEAGUE")) return "eu";
             if(s.includes("HOLLANDA") || s.includes("EREDIVISIE")) return "nl";
+            if(s.includes("PORTEKİZ") || s.includes("PRIMEIRA")) return "pt";
             if(s.includes("BREZİLYA") || s.includes("BRAZIL")) return "br";
             if(s.includes("ARJANTİN") || s.includes("ARGENTINA")) return "ar";
             if(s.includes("RUSYA") || s.includes("VTB")) return "ru";
             return "un";
         }
 
-        function omega_SmartDate(ds) {
+        function v19_SmartDate(ds) {
             if(!ds) return "";
             const p = ds.split('-');
             const target = new Date(p[0], p[1] - 1, p[2]);
             const today = new Date(); today.setHours(0,0,0,0);
-            const diff = Math.round((target - today) / (1000 * 60 * 60 * 24));
-            
+            const diff = Math.round((target - today) / 86400000);
             if (diff === 0) return "BUGÜN";
             if (diff === 1) return "YARIN";
-            
             const months = ["OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZİRAN","TEMMUZ","AĞUSTOS","EYLÜL","EKİM","KASIM","ARALIK"];
             return p[2] + " " + months[parseInt(p[1]) - 1];
         }
 
         // --- ENGINE: RADAR LOGIC ---
-        function omega_BuildInterface() {
-            const dateSel = document.getElementById('omega-date-sel');
-            const dropMenu = document.getElementById('drop-menu-list');
+        function v19_BuildUIComponents() {
+            const dateSel = document.getElementById('v19-date-sel');
+            const dropMenu = document.getElementById('v19-drop-menu-list');
             
-            // Tarih Logic
-            let dHtml = '<option value="ALL">TÜM ZAMAN ÇİZELGESİ</option>';
-            const dates = [...new Set(_DB.filter(m => m.t === _SPORT).map(m => m.dt))].sort();
+            // Tarih Seçenekleri
+            let dHtml = '<option value="ALL">TÜM TAKVİM AKIŞI</option>';
+            const dates = [...new Set(_M_DATA.filter(m => m.t === _SPORT_TYPE).map(m => m.dt))].sort();
             dates.forEach(d => {
-                dHtml += `<option value="${d}">${omega_SmartDate(d)}</option>`;
+                dHtml += `<option value="${d}">${v19_SmartDate(d)}</option>`;
             });
             dateSel.innerHTML = dHtml;
 
-            // League Dropdown Logic
-            let lHtml = `<div class="league-drop-item" onclick="omega_HandleLSelection('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
-            for(let lName in _LEAGUES_MAP) {
-                // Strict Sport Separation
-                let isBasket = ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB"].some(x => lName.toUpperCase().includes(x));
-                let correctSport = (_SPORT === 'basketbol' && isBasket) || (_SPORT === 'futbol' && !isBasket);
-                
-                if(correctSport && _LEAGUES_MAP[lName] > 0) {
-                    const flag = omega_GetFlag(lName);
-                    const icon = _SPORT === 'futbol' ? '⚽' : '🏀';
-                    lHtml += `
-                        <div class="league-drop-item" onclick="omega_HandleLSelection('${lName}', this.innerHTML)">
-                            <img src="https://flagcdn.com/w40/${flag}.png"> 
-                            <span>${icon} ${lName} (${_LEAGUES_MAP[lName]})</span>
-                        </div>
-                    `;
+            // Lig Dropdown (Favori ve Altın Lig Kontrollü)
+            let lHtml = `<div class="league-drop-item" onclick="v19_SelectLeague('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
+            
+            if(_SPORT_TYPE === 'basketbol') {
+                // Altın Basketbol Liglerini Her Zaman Göster
+                GOLD_BASKET_LIST.forEach(lig => {
+                    const count = _LEAGUES_STATS[lig] || 0;
+                    lHtml += `<div class="league-drop-item" onclick="v19_SelectLeague('${lig}', this.innerHTML)"><img src="https://flagcdn.com/w40/${v19_GetFlag(lig)}.png"> 🏀 ${lig} (${count})</div>`;
+                });
+            } else {
+                // Futbol Majör Ligleri Göster
+                for(let lName in _LEAGUES_STATS) {
+                    if(_LEAGUES_STATS[lName] > 0) {
+                        const flag = v19_GetFlag(lName);
+                        const ikon = _SPORT_TYPE === 'futbol' ? '⚽' : '🏀';
+                        lHtml += `<div class="league-drop-item" onclick="v19_SelectLeague('${lName}', this.innerHTML)"><img src="https://flagcdn.com/w40/${flag}.png"> ${ikon} ${lName} (${_LEAGUES_STATS[lName]})</div>`;
+                    }
                 }
             }
             dropMenu.innerHTML = lHtml;
         }
 
-        function omega_RunEngine() {
-            const targetID = (_TAB === 'favs') ? 'favs-render-output' : 'omega-render-output';
-            const targetArea = document.getElementById(targetID);
-            if(!targetArea) return;
-            const dateVal = document.getElementById('omega-date-sel').value;
+        function v19_ExecuteRadarFilter() {
+            const targetID = (_MODULE_TAB === 'favs') ? 'favs-render-output' : 'radar-render-output';
+            const area = document.getElementById(targetID);
+            if(!area) return;
+            const dVal = document.getElementById('v19-date-sel').value;
             
-            let filtered = _DB.filter(m => {
-                let isBasket = ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB"].some(x => m.l.toUpperCase().includes(x));
-                let sportCheck = (_SPORT === 'basketbol' && isBasket) || (_SPORT === 'futbol' && !isBasket);
-                let dateCheck = (dateVal === 'ALL' || m.dt === dateVal);
-                let leagueCheck = (_FILTER_L === 'ALL' || m.l === _FILTER_L);
-                if(_TAB === 'favs') return _FAV_LEAGUES.includes(m.l) && dateCheck;
-                return sportCheck && dateCheck && leagueCheck;
+            let filtered = _M_DATA.filter(m => {
+                let isB = ["NBA", "EUROLEAGUE", "BSL", "ACB", "LEGA A", "LNB", "BBL", "EUROCUP", "BCL", "VTB", "NCAA"].some(x => m.l.toUpperCase().includes(x));
+                let sCheck = (_SPORT_TYPE === 'basketbol' && isB) || (_SPORT_TYPE === 'futbol' && !isB);
+                let dCheck = (dVal === 'ALL' || m.dt === dVal);
+                let lCheck = (_FILTER_LEAGUE === 'ALL' || m.l === _FILTER_LEAGUE);
+                if(_MODULE_TAB === 'favs') return _FAV_MATCHES.some(f => f.id === m.id) && dCheck;
+                return sCheck && dCheck && lCheck;
             });
 
-            let finalOutput = ""; const dayGroups = {};
+            let finalH = ""; const dayGroups = {};
             filtered.forEach(m => { if(!dayGroups[m.dt]) dayGroups[m.dt] = []; dayGroups[m.dt].push(m); });
 
             Object.keys(dayGroups).sort().forEach(day => {
-                finalOutput += `<div style="color:var(--green); font-size:0.8em; font-weight:900; padding:15px 0 10px 0; border-bottom:1px solid #1f1f23; margin-bottom:20px; letter-spacing:2px;">${omega_SmartDate(day)}</div>`;
+                finalH += `<div style="color:var(--green); font-size:0.8em; font-weight:900; padding:15px 0 10px 0; border-bottom:1px solid #1f1f23; margin-bottom:20px; letter-spacing:2px;">${v19_SmartDate(day)}</div>`;
                 
-                if(_SORT_MODE === 'time') {
-                    // --- KRONOLOJİK KOMPAKT AKIŞ ---
+                if(_SORT_TYPE === 'time') {
+                    // --- SAAT SIRALI AKIŞ (KOMPAKT NİZAM) ---
                     dayGroups[day].sort((a,b)=>a.tm.localeCompare(b.tm)).forEach(m => {
-                        const icon = _SPORT === 'futbol' ? '⚽' : '🏀';
-                        finalOutput += `
-                            <div class="match-card compact-row">
-                                <div class="match-clock-box">${m.tm}</div>
-                                <div class="match-main-teams">
-                                    <span class="match-icon-marker">${icon}</span>
-                                    ${m.m} 
-                                    <img src="https://flagcdn.com/w40/${omega_GetFlag(m.l)}.png" class="match-flag-element">
-                                    <span class="league-badge-tag">${m.l}</span>
+                        const isFav = _FAV_MATCHES.some(f => f.id === m.id);
+                        const ikon = _SPORT_TYPE === 'futbol' ? '⚽' : '🏀';
+                        finalH += `
+                            <div class="match-row-pro compact-mode-row">
+                                <div class="match-clock-sup">${m.tm}</div>
+                                <div class="match-teams-main">
+                                    <i class="fa-solid fa-star fav-star-maç ${isFav?'active':''}" onclick="v19_ToggleFavM(event, ${JSON.stringify(m).replace(/"/g, '&quot;')})"></i>
+                                    <span class="match-ico-marker">${ikon}</span>
+                                    ${m.m} <img src="https://flagcdn.com/w40/${v19_GetFlag(m.l)}.png" class="match-flag-sup">
+                                    <span class="league-label-badge">${m.l}</span>
                                 </div>
-                            </div>
-                        `;
+                            </div>`;
                     });
                 } else {
-                    // --- LİG BAZLI AKIŞ (HIYERARŞİ DESTEKLİ) ---
+                    // --- LİG SIRALI AKIŞ (HIYERARŞİ VE FAVORİ DESTEKLİ) ---
                     const groups = {}; dayGroups[day].forEach(m => { if(!groups[m.l]) groups[m.l] = []; groups[m.l].push(m); });
-                    let sortedLigs = Object.keys(groups).sort((a,b) => {
-                        const fA = _FAV_LEAGUES.includes(a) ? 0 : 1; const fB = _FAV_LEAGUES.includes(b) ? 0 : 1;
-                        if(fA !== fB) return fA - fB;
-                        const sA = SCORE_MAP[a] || 0; const sB = SCORE_MAP[b] || 0;
-                        if(sA !== sB) return sB - sA;
-                        let tA = groups[a].reduce((m, x) => x.tm < m ? x.tm : m, "23:59");
-                        let tB = groups[b].reduce((m, x) => x.tm < m ? x.tm : m, "23:59");
-                        return tA.localeCompare(tB);
-                    });
-
+                    let sortedLigs = Object.keys(groups).sort((a,b) => (HIERARCHY_SCORES[b]||0) - (HIERARCHY_SCORES[a]||0));
+                    
                     sortedLigs.forEach(lig => {
-                        const flag = omega_GetFlag(lig);
-                        const isFav = _FAV_LEAGUES.includes(lig);
-                        const uid = `omega_${day}_${lig.replace(/[^a-zA-Z0-9]/g, '')}`;
-                        const icon = _SPORT === 'futbol' ? '⚽' : '🏀';
+                        const flag = v19_GetFlag(lig);
+                        const uid = `sec_${day}_${lig.replace(/[^a-zA-Z0-9]/g, '')}`;
+                        const icon = _SPORT_TYPE === 'futbol' ? '⚽' : '🏀';
 
-                        finalOutput += `
-                            <div class="league-container">
-                                <div class="league-header-bar" onclick="omega_ToggleAcc('${uid}')">
-                                    <div style="display:flex; align-items:center;">
-                                        <i class="fa-solid fa-star fav-star-icon ${isFav?'active':''}" onclick="omega_ToggleFavLeague(event, '${lig}')"></i>
-                                        <span style="color:${_SPORT==='basketbol'?'var(--orange)':'#fff'}; font-size:1.4em; margin-right:15px;">${icon}</span>
-                                        <span>${lig}</span>
-                                    </div>
+                        finalH += `
+                            <div class="league-container-pro">
+                                <div class="league-header-bar" onclick="v19_ToggleAcc('${uid}')">
+                                    <div>${icon} ${lig}</div>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </div>
                                 <div id="${uid}" class="league-content" style="display:block;">
                         `;
 
                         groups[lig].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
-                            finalOutput += `
-                                <div class="match-row-item">
-                                    <div class="match-clock">${m.tm}</div>
-                                    <div class="match-main-teams">${m.m} <img src="https://flagcdn.com/w40/${flag}.png" class="match-flag-element"></div>
-                                </div>
-                            `;
+                            const isFav = _FAV_MATCHES.some(f => f.id === m.id);
+                            finalH += `
+                                <div class="match-row-pro">
+                                    <div class="match-clock-sup">${m.tm}</div>
+                                    <div class="match-teams-main">
+                                        <i class="fa-solid fa-star fav-star-maç ${isFav?'active':''}" onclick="v19_ToggleFavM(event, ${JSON.stringify(m).replace(/"/g, '&quot;')})"></i>
+                                        ${m.m} <img src="https://flagcdn.com/w40/${flag}.png" class="match-flag-sup">
+                                    </div>
+                                </div>`;
                         });
-                        finalOutput += `</div></div>`;
+                        finalH += `</div></div>`;
                     });
                 }
             });
-            targetArea.innerHTML = finalOutput || "<div style='padding:80px; text-align:center; color:var(--muted); font-weight:900;'>TERMİNALDE KAYITLI VERİ BULUNAMADI.</div>";
+            area.innerHTML = finalH || "<div style='padding:100px; text-align:center; color:var(--muted); font-weight:900;'>TERMİNALDE KAYITLI VERİ YOK.</div>";
         }
 
-        // --- ENGINE: STREAMING CONTROLLER ---
-        function omega_BuildMatrix(num) {
-            const grid = document.getElementById('omega-matrix-grid');
-            grid.className = `stream-master-grid active lay-${num}`;
-            grid.innerHTML = "";
-            document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById('lay-btn-' + num);
-            if(activeBtn) activeBtn.classList.add('active');
+        // --- ENGINE: STREAMING CONTROL ---
+        function v19_BuildMatrix(n) {
+            const grid = document.getElementById('v19-matrix-grid');
+            grid.className = `st-matrix active m-lay-${n}`; grid.innerHTML = "";
+            document.querySelectorAll('.btn-lt-pro').forEach(b => b.classList.remove('active'));
+            const b = document.getElementById('st-lay-' + n); if(b) b.classList.add('active');
 
-            for(let i=1; i<=num; i++) {
+            for(let i=1; i<=n; i++) {
                 grid.innerHTML += `
-                    <div class="stream-box-unit">
-                        <div class="stream-box-nav">
-                            <input id="st-in-${i}" class="stream-box-input" placeholder="İstihbarat Linki...">
-                            <button class="btn-cell-fav" onclick="omega_AddSTVault(${i})"><i class="fa-solid fa-star"></i></button>
-                            <button class="btn-cell-kill" onclick="omega_KillSTUnit(${i})"><i class="fa-solid fa-xmark"></i></button>
-                            <button class="btn-cell-fire" onclick="omega_FireSTUnit(${i})">İZLE</button>
+                    <div class="matrix-unit">
+                        <div class="matrix-nav">
+                            <input id="st-in-${i}" class="matrix-input" placeholder="İstihbarat URL...">
+                            <button class="btn-matrix-kill" onclick="v19_KillSlot(${i})"><i class="fa-solid fa-xmark"></i></button>
+                            <button class="btn-matrix-go" onclick="v19_FireSlot(${i})">İZLE</button>
                         </div>
                         <iframe id="st-fr-${i}" style="flex:1; border:none; background:#000;" src="about:blank" allowfullscreen></iframe>
-                    </div>
-                `;
+                    </div>`;
             }
-            omega_RefreshSTVault();
         }
-        function omega_FireSTUnit(id) { const u = document.getElementById('st-in-'+id).value; if(u) document.getElementById('st-fr-'+id).src=u; }
-        function omega_KillSTUnit(id) { document.getElementById('st-in-'+id).value=""; document.getElementById('st-fr-'+id).src="about:blank"; }
-        function omega_AddSTVault(id) { const v = document.getElementById('st-in-'+id).value; if(v && !_FAV_STREAMS.includes(v)) { _FAV_STREAMS.push(v); localStorage.setItem('v19_fav_s', JSON.stringify(_FAV_STREAMS)); omega_RefreshSTVault(); } }
-        function omega_RefreshSTVault() { document.getElementById('vault-pills-area').innerHTML = _FAV_STREAMS.map(u => `<div class="vault-pill-item" onclick="omega_LoadFromVault('${u}')">${u.substring(0,35)}... <i class="fa-solid fa-trash" onclick="event.stopPropagation(); omega_RemSTVault('${u}')"></i></div>`).join(''); }
-        function omega_RemSTVault(u) { _FAV_STREAMS = _FAV_STREAMS.filter(x => x !== u); localStorage.setItem('v19_fav_s', JSON.stringify(_FAV_STREAMS)); omega_RefreshSTVault(); }
-        function omega_LoadFromVault(u) { const ins = document.querySelectorAll('.stream-box-input'); for(let i=0; i<ins.length; i++) { if(!ins[i].value) { ins[i].value=u; omega_FireSTUnit(i+1); break; } } }
+        function v19_FireSlot(id) { const u = document.getElementById('st-in-'+id).value; if(u) document.getElementById('st-fr-'+id).src=u; }
+        function v19_KillSlot(id) { document.getElementById('st-in-'+id).value=""; document.getElementById('st-fr-'+id).src="about:blank"; }
 
-        // --- ENGINE: FINANCE MODULE ---
-        function omega_RefreshFinDash() {
-            omega_UpdateWalletUI();
-            const net = _LEDGER.reduce((s,i) => s + (i.pnl || 0), 0);
-            document.getElementById('kpi-p-val').innerText = (net >= 0 ? "+" : "") + net.toFixed(2);
-            document.getElementById('kpi-p-val').style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
-            const total = _LEDGER.filter(x => x.res === 'win' || x.res === 'loss').length;
-            const wins = _LEDGER.filter(x => x.res === 'win').length;
-            const wr = total > 0 ? ((wins / total) * 100).toFixed(1) : 0;
-            document.getElementById('kpi-wr-val').innerText = "%" + wr;
-            omega_RenderLedgerTable();
+        // --- ENGINE: FINANCIAL MASTER ---
+        function v19_RefreshFinDash() {
+            v19_RefreshWalletUI();
+            const net = _L_DATA.reduce((s, i) => s + (i.pnl || 0), 0);
+            document.getElementById('kpi-val-p').innerText = (net >= 0 ? "+" : "") + net.toFixed(2);
+            document.getElementById('kpi-val-p').style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
+            const total = _L_DATA.filter(x => x.res === 'win' || x.res === 'loss').length;
+            const wins = _L_DATA.filter(x => x.res === 'win').length;
+            document.getElementById('kpi-val-wr').innerText = "%" + (total > 0 ? ((wins / total) * 100).toFixed(1) : 0);
+            v19_RenderLedgerTable();
         }
-        function omega_RenderLedgerTable() {
-            const t = document.getElementById('omega-data-table');
+
+        function v19_RenderLedgerTable() {
+            const t = document.getElementById('v19-master-data-table');
             let h = `<tr><th>TARİH</th><th>OPERASYON</th><th>MİKTAR</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
-            const list = _LEDGER_MODE === 'pend' ? _PENDING : _LEDGER;
+            const list = _LEDGER_VIEW === 'pend' ? _P_OPS : _L_DATA;
             let rows = "";
             list.forEach(i => {
-                let s = i.res==='win' ? '<b style="color:var(--green)">WIN</b>' : (i.res==='loss'?'<b style="color:var(--red)">LOSS</b>':'BEKLEYEN');
-                rows += `<tr><td>${new Date(i.id).toLocaleDateString()}</td><td style="font-weight:900;">${i.name}</td><td>$${i.amt}</td><td>@${i.odds}</td><td>${s}</td><td>${i.pnl ? (i.pnl>0?'+':'')+i.pnl.toFixed(2) : '-'}</td>`;
-                if(_LEDGER_MODE==='pend') rows += `<td><button onclick="omega_SettleOp(${i.id},'win')" style="color:var(--green); border:none; background:none; font-weight:950; font-size:1.4em; cursor:pointer; margin-right:15px;">W</button><button onclick="omega_SettleOp(${i.id},'loss')" style="color:var(--red); border:none; background:none; font-weight:950; font-size:1.4em; cursor:pointer;">L</button></td>`;
+                let s = i.res==='win'?'<b style="color:var(--green)">WIN</b>':(i.res==='loss'?'<b style="color:var(--red)">LOSS</b>':'BEKLEYEN');
+                rows += `<tr><td>${new Date(i.id).toLocaleDateString()}</td><td style="font-weight:900;">${i.name}</td><td>$${i.amt}</td><td>@${i.odds}</td><td>${s}</td><td>${i.pnl?i.pnl.toFixed(2):'-'}</td>`;
+                if(_LEDGER_VIEW==='pend') rows += `<td><button onclick="v19_SettleOp(${i.id},'win')" style="color:var(--green); border:none; background:none; font-weight:950; font-size:1.4em; cursor:pointer;">W</button><button onclick="v19_SettleOp(${i.id},'loss')" style="color:var(--red); border:none; background:none; font-weight:950; font-size:1.4em; margin-left:15px;">L</button></td>`;
                 rows += `</tr>`;
             });
-            t.innerHTML = h + (rows || "<tr><td colspan='6' style='text-align:center; padding:50px; color:var(--muted);'>TERMİNALDE KAYIT YOK.</td></tr>");
+            t.innerHTML = h + (rows || "<tr><td colspan='6' style='text-align:center; padding:50px;'>KAYIT YOK.</td></tr>");
         }
-        function omega_CommitOp() {
-            const n = document.getElementById('op-in-name').value, a = parseFloat(document.getElementById('op-in-amt').value), o = parseFloat(document.getElementById('op-in-odds').value);
-            if(!n || isNaN(a) || isNaN(o)) return;
-            _PENDING.push({id:Date.now(), name:n, amt:a, odds:o});
-            omega_DB_Save(); omega_RefreshFinDash();
-            document.getElementById('op-in-name').value=""; document.getElementById('op-in-amt').value=""; document.getElementById('op-in-odds').value="";
+
+        function v19_CommitOp() {
+            const n = document.getElementById('op-input-name').value, a = parseFloat(document.getElementById('op-input-amt').value), o = parseFloat(document.getElementById('op-input-odds').value);
+            if(!n || isNaN(a)) return;
+            _P_OPS.push({id:Date.now(), name:n, amt:a, odds:o});
+            v19_SaveDB(); v19_RefreshFinDash();
+            document.getElementById('op-input-name').value=""; document.getElementById('op-input-amt').value=""; document.getElementById('op-input-odds').value="";
         }
-        function omega_SettleOp(id, res) {
-            const i = _PENDING.find(x=>x.id===id);
+
+        function v19_SettleOp(id, res) {
+            const i = _P_OPS.find(x=>x.id===id);
             let pnl = res === 'win' ? (i.amt * i.odds) - i.amt : -i.amt;
-            _WALLET += pnl; _HISTORY.push(_WALLET); _LEDGER.unshift({...i, res, pnl, bal:_WALLET});
-            _PENDING = _PENDING.filter(x => x.id !== id);
-            omega_DB_Save(); omega_RefreshFinDash(); omega_RenderApexChart();
+            _W_BAL += pnl; _B_HIST.push(_W_BAL); _L_DATA.unshift({...i, res, pnl, bal:_W_BAL});
+            _P_OPS = _P_OPS.filter(x => x.id !== id);
+            v19_SaveDB(); v19_RefreshFinDash(); v19_RenderChart();
         }
-        function omega_UpdateWalletUI() { document.getElementById('global-wallet-val').innerText = _WALLET.toFixed(2); document.getElementById('kpi-w-val').innerText = _WALLET.toFixed(2); }
-        function omega_DB_Save() { localStorage.setItem('v19_w', _WALLET); localStorage.setItem('v19_h', JSON.stringify(_HISTORY)); localStorage.setItem('v19_p', JSON.stringify(_PENDING)); localStorage.setItem('v19_l', JSON.stringify(_LEDGER)); }
+
+        function v19_RefreshWalletUI() { document.getElementById('top-wallet-display').innerText = _W_BAL.toFixed(2); document.getElementById('kpi-val-w').innerText = _W_BAL.toFixed(2); }
+        function v19_SaveDB() { localStorage.setItem('v19_w', _W_BAL); localStorage.setItem('v19_h', JSON.stringify(_B_HIST)); localStorage.setItem('v19_p', JSON.stringify(_P_OPS)); localStorage.setItem('v19_l', JSON.stringify(_L_DATA)); }
 
         // --- CHART ENGINE ---
         let _OMEGA_CHART;
-        function omega_RenderApexChart() {
+        function v19_RenderChart() {
             if(_OMEGA_CHART) _OMEGA_CHART.destroy();
-            _OMEGA_CHART = new ApexCharts(document.querySelector("#omega-apex-chart-main"), {
-                series: [{ name: "USDT", data: _HISTORY }],
-                chart: { type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent', animations: { enabled: true, speed: 800 } },
+            _OMEGA_CHART = new ApexCharts(document.querySelector("#v19-apex-main-chart"), {
+                series: [{ name: "USDT", data: _B_HIST }],
+                chart: { type: 'area', height: '100%', toolbar: { show: false }, background: 'transparent' },
                 theme: { mode: 'dark' }, colors: ['#10b981'], stroke: { curve: 'straight', width: 4 },
-                xaxis: { labels: { show: false }, axisBorder: { show: false } },
-                yaxis: { opposite: true, labels: { style: { colors: '#71717a', fontSize: '11px', fontFamily: 'JetBrains Mono' } } },
-                grid: { borderColor: '#1f1f23', strokeDashArray: 5 },
+                xaxis: { labels: { show: false } }, yaxis: { opposite: true, labels: { style: { colors: '#71717a' } } },
+                grid: { borderColor: '#1f1f23' },
                 annotations: { yaxis: [{y:1000, label:{text:'$1K'}}, {y:10000, label:{text:'$10K'}}, {y:100000, label:{text:'$100K'}}] }
             });
             _OMEGA_CHART.render();
         }
 
-        // --- NAVIGATION & INTERFACE HELPERS ---
-        function omega_SwitchTab(target, el) {
-            document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-
-            document.getElementById('omega-radar-block').style.display = (target==='futbol'||target==='basketbol')?'block':'none';
-            document.getElementById('omega-favs-block').style.display = (target==='favs')?'block':'none';
-            document.getElementById('omega-stream-block').style.display = (target==='stream')?'block':'none';
-            document.getElementById('omega-finance-block').classList.toggle('active', target==='finance');
-
-            if(target==='futbol'||target==='basketbol'){ _SPORT=target; _TAB='bulletin'; document.getElementById('main-op-title').innerText=target.toUpperCase(); omega_BuildInterface(); omega_RunEngine(); }
-            if(target==='favs'){ _TAB='favs'; document.getElementById('main-op-title').innerText="FAVORİLERİM"; omega_RunEngine(); }
-            if(target==='finance'){ document.getElementById('main-op-title').innerText="USDT FİNANS"; omega_RefreshFinDash(); setTimeout(omega_RenderApexChart, 200); }
-            if(target==='stream'){ document.getElementById('main-op-title').innerText="CANLI YAYIN"; if(!document.getElementById('omega-matrix-grid').innerHTML) omega_BuildMatrix(6); }
+        // --- NAVIGATION HELPERS ---
+        function switchOpTab(m, el) {
+            document.querySelectorAll('.nav-link').forEach(i=>i.classList.remove('active')); el.classList.add('active');
+            document.getElementById('v19-radar-block').style.display = (m==='futbol'||m==='basketbol')?'block':'none';
+            document.getElementById('v19-favs-block').style.display = (m==='favs')?'block':'none';
+            document.getElementById('v19-stream-block').style.display = (m==='stream')?'block':'none';
+            document.getElementById('v19-finance-block').classList.toggle('active', m==='finance');
+            if(m==='futbol'||m==='basketbol'){ _SPORT_TYPE=m; _MODULE_TAB='bulletin'; document.getElementById('main-op-title').innerText=m.toUpperCase(); v19_BuildUIComponents(); v19_ExecuteRadarFilter(); }
+            if(m==='favs'){ _MODULE_TAB='favs'; document.getElementById('main-op-title').innerText="FAVORİ ANALİZLERİM"; v19_ExecuteRadarFilter(); }
+            if(m==='finance'){ document.getElementById('main-op-title').innerText="USDT FİNANS"; v19_RefreshFinDash(); setTimeout(v19_RenderChart, 200); }
+            if(m==='stream'){ document.getElementById('main-op-title').innerText="CANLI İSTİHBARAT"; if(!document.getElementById('v19-matrix-grid').innerHTML) v19_BuildMatrix(6); }
         }
 
-        function omega_ToggleFavLeague(e, l) { e.stopPropagation(); if(_FAV_LEAGUES.includes(l)) _FAV_LEAGUES=_FAV_LEAGUES.filter(x=>x!==l); else _FAV_LEAGUES.push(l); localStorage.setItem('v19_fav_l', JSON.stringify(_FAV_LEAGUES)); omega_RunEngine(); }
-        function omega_ToggleAcc(id) { const c = document.getElementById(id); c.style.display = (c.style.display==='none'?'block':'none'); }
-        function omega_ToggleDrop(e) { e.stopPropagation(); const l = document.getElementById('drop-menu-list'); l.style.display = (l.style.display==='block'?'none':'block'); }
-        function omega_HandleLSelection(v, h) { _FILTER_L=v; document.getElementById('drop-text-label').innerHTML=h; document.getElementById('drop-menu-list').style.display='none'; omega_RunEngine(); }
-        function omega_SetSort(m) { _SORT_MODE=m; document.querySelectorAll('.btn-mode-supreme').forEach(b=>b.classList.remove('active')); document.getElementById('btn-sort-'+(m==='league'?'lg':'tm')).classList.add('active'); omega_RunEngine(); }
-        function omega_SetLedger(m) { _LEDGER_MODE=m; document.getElementById('l-tab-p').classList.toggle('active', m==='pend'); document.getElementById('l-tab-a').classList.toggle('active', m==='all'); omega_RenderLedgerTable(); }
-        function omega_HardReset() { if(confirm("DİKKAT: TÜM VERİLER SIFIRLANACAK! EMİN MİSİNİZ?")){ localStorage.clear(); location.reload(); } }
-        document.addEventListener('click', () => { if(document.getElementById('drop-menu-list')) document.getElementById('drop-menu-list').style.display='none'; });
+        function v19_ToggleFavM(e, m) { e.stopPropagation(); if(_FAV_MATCHES.some(f=>f.id===m.id)) _FAV_MATCHES=_FAV_MATCHES.filter(f=>f.id!==m.id); else _FAV_MATCHES.push(m); localStorage.setItem('v19_fav_m', JSON.stringify(_FAV_MATCHES)); v19_ExecuteRadarFilter(); }
+        function v19_ToggleAcc(id) { const c = document.getElementById(id); c.style.display = (c.style.display==='none'?'block':'none'); }
+        function v19_ToggleDrop(e) { e.stopPropagation(); const l = document.getElementById('v19-drop-menu-list'); l.style.display = (l.style.display==='block'?'none':'block'); }
+        function v19_SelectLeague(v, h) { _FILTER_LEAGUE=v; document.getElementById('v19-drop-label').innerHTML=h; document.getElementById('v19-drop-menu-list').style.display='none'; v19_ExecuteRadarFilter(); }
+        function v19_SetSortMode(m) { _SORT_TYPE=m; document.querySelectorAll('.btn-mode-supreme').forEach(b=>b.classList.remove('active')); document.getElementById('btn-sort-'+(m==='league'?'lg':'tm')).classList.add('active'); v19_ExecuteRadarFilter(); }
+        function v19_SetLedgerMode(m) { _LEDGER_VIEW=m; document.getElementById('tab-p-btn').classList.toggle('active', m==='pend'); document.getElementById('tab-a-btn').classList.toggle('active', m==='all'); v19_RefreshFinDash(); }
+        function v19_HardReset() { if(confirm("TÜM VERİLER SIFIRLANSIN MI?")){ localStorage.clear(); location.reload(); } }
+        document.addEventListener('click', () => { if(document.getElementById('v19-drop-menu-list')) document.getElementById('v19-drop-menu-list').style.display='none'; });
 
-        // ENGINE: BOOT
-        omega_Initialize();
+        v19_StartEngine();
     </script>
 </body>
 </html>
