@@ -248,9 +248,9 @@
         .stream-master-grid { 
             display: none; 
             gap: 15px; 
-            /* YÜKSEKLİK (HEIGHT) SİLİNDİ - SAYFA ÖZGÜRCE AŞAĞI KAYSIN DİYE */
             width: 100%; 
-            padding-bottom: 40px; /* ALTTAN BİRAZ BOŞLUK */
+            height: auto; /* SABİT YÜKSEKLİK SİLİNDİ - SAYFA ÖZGÜRCE KAYABİLİR */
+            padding-bottom: 50px; /* ALTTAN RAHATLATICI BOŞLUK */
         }
 
         .stream-master-grid.active { display: grid; }
@@ -268,8 +268,9 @@
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
-            aspect-ratio: 16 / 9; /* MÜKEMMEL YOUTUBE SİNEMA ORANI (Kare olmayı engeller) */
-            height: auto; /* Kendini sütuna göre mükemmel ayarlar ve scroll barı tetikler */
+            width: 100%;
+            height: auto; 
+            aspect-ratio: 16 / 9; /* MÜKEMMEL SİNEMA/YOUTUBE ORANI - KIRMIZI KUTU BOYUTU */
         }
 
         .matrix-nav { padding: 8px; background: #1a1a1a; display: flex; gap: 8px; border-bottom: 1px solid #272727; align-items: center; }
@@ -671,9 +672,8 @@
             if(menu) menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; 
         }
 
-        // AKILLI MENÜ KAPANMA SİSTEMİ (Yeni Eklenti)
+        // AKILLI MENÜ KAPANMA SİSTEMİ
         document.addEventListener('click', (event) => {
-            // LİG MENÜSÜ KAPATMA (Eski kodun)
             const dropMenu = document.getElementById('drop-menu-list');
             const dropTrigger = document.getElementById('drop-trigger');
             if (dropMenu && dropMenu.style.display === 'block') {
@@ -682,7 +682,6 @@
                 }
             }
 
-            // YENİ: HAMBURGER MENÜ BOŞLUĞA TIKLAYINCA KAPATMA
             const accordionMenu = document.getElementById('main-dropdown-nav');
             const menuBtn = document.getElementById('menu-trigger-btn');
             if (accordionMenu && accordionMenu.classList.contains('active-menu')) {
