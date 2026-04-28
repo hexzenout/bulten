@@ -10,7 +10,7 @@
     
     <style>
         /* ==========================================================================
-           V19 SUPREME STYLING SYSTEM v22.0 (YOUTUBE MASTER ARCHIVE)
+           V19 SUPREME STYLING SYSTEM v23.0 (CENTERED LAYOUT & OVERLAY MENU)
            ========================================================================== */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -20,11 +20,8 @@
             --gold-glow: rgba(251, 191, 36, 0.3);
             --green: #10b981; 
             --green-dark: #065f46;
-            --green-glow: rgba(16, 185, 129, 0.2);
             --red: #ef4444; 
-            --red-glow: rgba(239, 68, 68, 0.2);
             --orange: #f97316; 
-            --orange-glow: rgba(249, 115, 22, 0.3);
             --blue-accent: #3b82f6;
             
             --bg: #0f0f0f; 
@@ -59,109 +56,146 @@
            HEADER & TOP STATUS BAR
            ========================================================================== */
         .top-status-bar { 
-            width: 100%; padding: 0 30px; display: flex; align-items: center; 
-            background: #000000; border-bottom: 1px solid var(--border-bright); 
-            height: 65px; flex-shrink: 0; z-index: 8000;
+            width: 100%; padding: 0 25px; display: flex; align-items: center; 
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-bright); 
+            height: 60px; flex-shrink: 0; z-index: 8000; position: relative;
         }
 
-        .header-controls { display: flex; align-items: center; gap: 20px; }
+        .header-controls { display: flex; align-items: center; gap: 15px; }
 
+        /* KÜÇÜLTÜLMÜŞ, YOUTUBE TARZI HAMBURGER BUTONU */
         .small-menu-btn {
-            background: transparent; border: 1px solid var(--border-bright); color: var(--muted);
-            font-size: 1.3em; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: var(--transition-fast);
+            background: transparent; border: none; color: var(--text);
+            font-size: 1.2em; padding: 8px 12px; border-radius: 50%; cursor: pointer; transition: var(--transition-fast);
         }
-        .small-menu-btn:hover { color: var(--gold); border-color: var(--gold); background: rgba(251, 191, 36, 0.1); }
+        .small-menu-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
-        .header-title-box { display: flex; align-items: center; font-size: 1.1em; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
-        .home-link { color: var(--gold); text-decoration: none; margin-right: 8px; transition: var(--transition-fast); }
-        .home-link:hover { color: #fff; text-shadow: 0 0 10px var(--gold-glow); }
-        .module-name { color: var(--text); margin-left: 5px; }
+        /* ZARİF BAŞLIK YAPISI */
+        .header-title-box { display: flex; align-items: center; font-size: 0.95em; font-weight: 700; letter-spacing: 0.5px; }
+        .home-link { color: var(--text); text-decoration: none; margin-right: 8px; transition: var(--transition-fast); display: flex; align-items: center; gap: 8px;}
+        .home-link i { font-size: 1.1em; color: var(--gold); }
+        .home-link:hover { color: var(--gold); }
+        .module-name { color: var(--muted); margin-left: 5px; font-weight: 500;}
 
         /* ==========================================================================
-           AŞAĞI DOĞRU AÇILAN AKORDEON MENÜ
+           AŞAĞI AÇILAN ZARİF MENÜ (OVERLAY PENCERE)
            ========================================================================== */
         .accordion-menu {
-            width: 100%; background: #08080a; max-height: 0; overflow: hidden; flex-shrink: 0; 
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-bottom 0.4s ease;
-            display: flex; justify-content: flex-start; z-index: 7000; border-bottom: 0px solid transparent;
+            position: absolute;
+            top: 65px;
+            left: 20px;
+            width: 250px;
+            background: #161616;
+            border: 1px solid var(--border-bright);
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            z-index: 9999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
         }
 
-        .accordion-menu.active-menu { max-height: 400px; border-bottom: 2px solid var(--green); }
+        .accordion-menu.active-menu {
+            max-height: 500px;
+            opacity: 1;
+            padding: 10px;
+        }
 
-        .nav-container { padding: 15px 30px; display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 400px; }
+        .nav-container { display: flex; flex-direction: column; gap: 4px; width: 100%; }
 
         .nav-link { 
-            padding: 12px 20px; cursor: pointer; color: var(--muted); font-weight: 800; font-size: 0.9em; 
-            display: flex; align-items: center; transition: var(--transition-smooth);
-            border: 1px solid transparent; border-radius: 8px;
+            padding: 10px 15px; cursor: pointer; color: var(--text); font-weight: 500; font-size: 0.85em; 
+            display: flex; align-items: center; transition: var(--transition-fast);
+            border-radius: 8px;
         }
-        .nav-link i { margin-right: 15px; font-size: 1.2em; width: 25px; text-align: center; transition: 0.3s;}
-        .nav-link:hover { background: #161616; color: #ffffff; transform: translateX(5px); border-color: #333; }
-        .nav-link:hover i { transform: scale(1.2); }
-
-        .nav-link.active { background: rgba(16, 185, 129, 0.1); color: #ffffff; border-color: var(--green); box-shadow: inset 0 0 15px var(--green-glow); }
-        .nav-link.basket.active { background: rgba(249, 115, 22, 0.1); border-color: var(--orange); box-shadow: inset 0 0 15px var(--orange-glow); }
-        .nav-link.stream.active { background: rgba(251, 191, 36, 0.1); border-color: var(--gold); box-shadow: inset 0 0 15px var(--gold-glow); }
-        .nav-link.favs.active { background: rgba(239, 68, 68, 0.1); border-color: var(--red); box-shadow: inset 0 0 15px var(--red-glow); }
-        .nav-link.finance.active { background: rgba(16, 185, 129, 0.1); border-color: var(--green); box-shadow: inset 0 0 15px var(--green-glow); }
+        .nav-link i { margin-right: 15px; font-size: 1.2em; width: 25px; text-align: center; color: var(--muted); transition: 0.2s;}
+        .nav-link:hover { background: rgba(255, 255, 255, 0.1); }
+        
+        .nav-link.active { background: rgba(255, 255, 255, 0.15); font-weight: 700; }
+        .nav-link.active i { color: var(--text); }
+        .nav-link.basket.active i { color: var(--orange); }
+        .nav-link.stream.active i { color: var(--gold); }
+        .nav-link.favs.active i { color: var(--red); }
+        .nav-link.finance.active i { color: var(--green); }
 
         /* ==========================================================================
-           ANA EKRAN (MAIN VIEWPORT & SCROLL)
+           ANA EKRAN & ORTALANMIŞ BÜLTEN (CENTERED WRAPPER)
            ========================================================================== */
         .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        .main-scroll-box { flex-grow: 1; padding: 30px 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); }
+        
+        .main-scroll-box { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            background: #0f0f0f;
+            display: flex;
+            justify-content: center; /* İÇERİĞİ EKRANIN ORTASINA HİZALAR */
+        }
 
-        body.dev-mode .main-scroll-box { padding: 15px; }
-        body.dev-mode .stream-controls-bar { padding: 10px 20px; margin-bottom: 15px; }
+        /* İŞTE BÜLTENİ ORTALAYAN VE DARALTAN ANA KUTU */
+        .center-wrapper {
+            width: 100%;
+            max-width: 950px; /* BÜLTENİN GENİŞLİĞİ BURADAN KONTROL EDİLİR */
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* DEV EKRAN MODU (CANLI YAYIN İÇİN) */
+        body.dev-mode .center-wrapper { max-width: 100%; padding: 15px; }
         body.dev-mode .stream-master-grid { height: calc(100vh - 120px); }
 
         /* ==========================================================================
            RADAR KONTROL PANELİ
            ========================================================================== */
         .controls-wrapper { margin-bottom: 25px; display: flex; flex-direction: column; gap: 15px; }
-        .filter-panel { display: flex; gap: 15px; align-items: center; background: #161616; padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        .filter-panel { display: flex; gap: 15px; align-items: center; background: #161616; padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border); }
 
-        .select-supreme { background: #272727; border: 1px solid #3f3f3f; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85em; font-weight: 600; cursor: pointer; min-width: 220px; }
+        .select-supreme { background: #272727; border: 1px solid #3f3f3f; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 0.85em; font-weight: 600; cursor: pointer; min-width: 200px; }
         
-        .league-drop-wrapper { position: relative; min-width: 350px; }
-        .league-drop-trigger { background: #272727; border: 1px solid #3f3f3f; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85em; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+        .league-drop-wrapper { position: relative; min-width: 300px; }
+        .league-drop-trigger { background: #272727; border: 1px solid #3f3f3f; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 0.85em; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
         .league-drop-menu { display: none; position: absolute; top: 115%; left: 0; right: 0; background: #282828; border: 1px solid #3f3f3f; z-index: 5000; max-height: 400px; overflow-y: auto; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        .league-drop-item { padding: 12px 20px; font-size: 0.85em; display: flex; align-items: center; cursor: pointer; color: #fff; border-bottom: 1px solid #333; }
+        .league-drop-item { padding: 12px 16px; font-size: 0.85em; display: flex; align-items: center; cursor: pointer; color: #fff; border-bottom: 1px solid #333; }
         .league-drop-item:last-child { border-bottom: none; }
         .league-drop-item:hover { background: #3f3f3f; color: var(--gold); }
-        .league-drop-item img { width: 22px; height: 14px; margin-right: 15px; border-radius: 2px; }
+        .league-drop-item img { width: 20px; height: 13px; margin-right: 12px; border-radius: 2px; }
 
-        .mode-row { display: flex; gap: 12px; }
+        .mode-row { display: flex; gap: 10px; }
         .btn-mode-supreme { background: #272727; border: 1px solid transparent; color: var(--muted); padding: 10px 25px; border-radius: 8px; font-size: 0.8em; font-weight: 700; cursor: pointer; transition: 0.2s; letter-spacing: 1px; text-transform: uppercase; }
         .btn-mode-supreme.active { background: #fff; color: #000; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
 
         /* ==========================================================================
-           MATCH RENDER ENGINE
+           MATCH RENDER ENGINE (RESİMDEKİ GİBİ LİG BAŞLIKLI TASARIM)
            ========================================================================== */
-        .league-container-pro { margin-bottom: 25px; border-radius: 12px; overflow: hidden; background: #161616; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .league-header-bar { background: #272727; padding: 15px 25px; font-weight: 800; font-size: 0.8em; color: #fff; display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-transform: uppercase; }
-        .match-row-pro { display: flex; align-items: center; padding: 12px 25px; border-bottom: 1px solid #1f1f1f; font-size: 0.9em; transition: 0.2s; }
-        .match-row-pro:last-child { border-bottom: none; }
+        .league-container-pro { margin-bottom: 15px; border-radius: 10px; overflow: hidden; background: #161616; border: 1px solid var(--border); }
+        
+        .league-header-bar { 
+            background: #212121; padding: 12px 20px; font-weight: 800; font-size: 0.75em; color: #fff; 
+            display: flex; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #2a2a2a;
+        }
+        
+        .match-row-pro { display: flex; align-items: center; padding: 12px 20px; font-size: 0.85em; transition: 0.2s; }
         .match-row-pro:hover { background: #222; }
         
-        .match-clock-sup { font-family: 'JetBrains Mono'; color: var(--green); width: 65px; font-weight: 800; font-size: 1.05em; }
+        .match-clock-sup { font-family: 'JetBrains Mono'; color: var(--green); width: 60px; font-weight: 800; font-size: 1.05em; }
         .match-teams-main { font-weight: 600; flex-grow: 1; display: flex; align-items: center; gap: 12px; color: #eee; }
-        .match-flag-sup { width: 20px; border-radius: 2px; }
-        .fav-star-box { font-size: 1.3em; color: #333; cursor: pointer; margin-right: 20px; transition: 0.2s; }
+        .match-flag-sup { width: 18px; border-radius: 2px; }
+        .fav-star-box { font-size: 1.2em; color: #333; cursor: pointer; margin-right: 15px; transition: 0.2s; }
         .fav-star-box.active { color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
-        
-        .compact-mode-row { font-size: 0.8em !important; padding: 10px 25px !important; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 5px; background: #161616; }
-        .league-label-badge { font-size: 0.75em; color: var(--muted); background: #272727; padding: 5px 12px; border-radius: 6px; margin-left: auto; font-weight: 800; }
 
         /* ==========================================================================
            CANLI YAYIN MERKEZİ
            ========================================================================== */
-        .stream-controls-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: #161616; padding: 15px 25px; border-radius: 12px; border: 1px solid var(--border); }
-        .layout-btn-group { display: flex; gap: 15px; }
-        .btn-stream-layout { background: #272727; color: var(--muted); border: 1px solid #333; padding: 10px 30px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .stream-controls-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #161616; padding: 12px 20px; border-radius: 10px; border: 1px solid var(--border); }
+        .layout-btn-group { display: flex; gap: 10px; }
+        .btn-stream-layout { background: #272727; color: var(--muted); border: 1px solid #333; padding: 8px 25px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 0.8em; }
         .btn-stream-layout.active { background: var(--green); color: #000; border-color: var(--green); box-shadow: 0 0 15px var(--green-glow); }
-        .btn-channel-mgr { background: #272727; color: #fff; border: 1px solid #3f3f3f; padding: 10px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        .btn-dev-ekran { background: rgba(251, 191, 36, 0.1); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        .btn-channel-mgr { background: #272727; color: #fff; border: 1px solid #3f3f3f; padding: 8px 15px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 0.8em; }
+        .btn-dev-ekran { background: rgba(251, 191, 36, 0.1); color: var(--gold); border: 1px solid var(--gold); padding: 8px 15px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8em; }
 
         .stream-master-grid { display: none; gap: 15px; height: calc(100vh - 250px); width: 100%; }
         .stream-master-grid.active { display: grid; }
@@ -170,76 +204,78 @@
         .m-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
         .m-lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
 
-        .matrix-unit { background: #000; border: 1px solid #272727; border-radius: 15px; overflow: hidden; display: flex; flex-direction: column; }
-        .matrix-nav { padding: 10px; background: #1a1a1a; display: flex; gap: 10px; border-bottom: 1px solid #272727; align-items: center; }
+        .matrix-unit { background: #000; border: 1px solid #272727; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+        .matrix-nav { padding: 8px; background: #1a1a1a; display: flex; gap: 8px; border-bottom: 1px solid #272727; align-items: center; }
 
         /* ==========================================================================
            FINANCE & EXCEL MODÜLLERİ
            ========================================================================== */
-        .fin-terminal-wrapper { display: none; grid-template-columns: 1fr 500px; gap: 40px; height: 100%; }
+        .fin-terminal-wrapper { display: none; grid-template-columns: 1fr 400px; gap: 30px; height: 100%; }
         .fin-terminal-wrapper.active { display: grid; }
-        .fin-scroller-pane { overflow-y: auto; display: flex; flex-direction: column; gap: 25px; padding-right:10px; }
+        .fin-scroller-pane { overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-right:10px; }
         
-        .rolling-grand-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-        .rolling-box-btn { background: #161616; border: 1.5px solid #272727; padding: 25px 15px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; border-top: 4px solid var(--muted); }
-        .rolling-box-btn:hover { border-top-color: var(--gold); background: #222; transform: translateY(-5px); }
-        .rolling-box-btn label { font-size: 0.65em; font-weight: 800; color: var(--muted); display: block; margin-bottom: 8px; }
-        .rolling-box-btn b { color: var(--gold); font-size: 1.2em; display: block; font-family: 'JetBrains Mono'; font-weight: 900;}
+        .rolling-grand-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .rolling-box-btn { background: #161616; border: 1px solid #272727; padding: 15px 10px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.2s; border-top: 3px solid var(--muted); }
+        .rolling-box-btn:hover { border-top-color: var(--gold); background: #222; transform: translateY(-2px); }
+        .rolling-box-btn label { font-size: 0.65em; font-weight: 700; color: var(--muted); display: block; margin-bottom: 5px; }
+        .rolling-box-btn b { color: var(--gold); font-size: 1.1em; font-family: 'JetBrains Mono'; font-weight: 800;}
 
-        .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.98); z-index: 9999; display: none; flex-direction: column; backdrop-filter: blur(20px); }
-        .modal-header { padding: 25px 40px; background: #0f0f0f; border-bottom: 2px solid var(--border-bright); display: flex; justify-content: space-between; align-items: center; }
-        .btn-modal-back { background: var(--red); color: #fff; border: none; padding: 12px 30px; border-radius: 10px; font-weight: 900; cursor: pointer; font-size: 0.9em; letter-spacing: 1px; }
+        .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: none; flex-direction: column; backdrop-filter: blur(10px); }
+        .modal-header { padding: 20px 30px; background: #0f0f0f; border-bottom: 1px solid var(--border-bright); display: flex; justify-content: space-between; align-items: center; }
+        .btn-modal-back { background: #272727; color: #fff; border: 1px solid #3f3f3f; padding: 8px 20px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.8em; }
+        .btn-modal-back:hover { background: var(--red); border-color: var(--red); }
 
-        .excel-table-wrapper { flex-grow: 1; overflow: auto; padding: 30px; }
-        .excel-table { width: 100%; border-collapse: collapse; min-width: 1500px; }
-        .excel-table th, .excel-table td { border: 1px solid #272727; padding: 8px; text-align: center; vertical-align: top; }
-        .excel-table th { background: #1a1a1a; color: var(--muted); font-size: 0.7em; letter-spacing: 1px; padding: 15px; text-transform: uppercase; }
-        .excel-table td.day-col { vertical-align: middle; font-weight: 900; color: var(--gold); background: #000; width: 80px; font-size: 0.9em; }
-        .excel-table td.bal-col { vertical-align: middle; font-weight: 900; color: #fff; background: #000; width: 130px; font-family: 'JetBrains Mono'; font-size: 1.1em; }
+        .excel-table-wrapper { flex-grow: 1; overflow: auto; padding: 20px; }
+        .excel-table { width: 100%; border-collapse: collapse; min-width: 1200px; }
+        .excel-table th, .excel-table td { border: 1px solid #272727; padding: 6px; text-align: center; vertical-align: top; }
+        .excel-table th { background: #1a1a1a; color: var(--muted); font-size: 0.7em; letter-spacing: 1px; padding: 10px; text-transform: uppercase; }
+        .excel-table td.day-col { vertical-align: middle; font-weight: 800; color: var(--gold); background: #000; width: 70px; font-size: 0.85em; }
+        .excel-table td.bal-col { vertical-align: middle; font-weight: 800; color: #fff; background: #000; width: 110px; font-family: 'JetBrains Mono'; font-size: 1em; }
 
-        .op-slot { background: #050505; border: 1px solid #222; padding: 8px; border-radius: 8px; display: flex; flex-direction: column; gap: 6px; min-width: 110px; }
+        .op-slot { background: #050505; border: 1px solid #222; padding: 6px; border-radius: 6px; display: flex; flex-direction: column; gap: 4px; min-width: 90px; }
         .op-slot-inputs { display: flex; gap: 4px; }
-        .op-slot-inputs input { width: 50%; background: #161616; border: 1px solid #333; color: #fff; font-size: 0.85em; padding: 6px; text-align: center; border-radius: 4px; font-weight: bold; }
+        .op-slot-inputs input { width: 50%; background: #161616; border: 1px solid #333; color: #fff; font-size: 0.8em; padding: 4px; text-align: center; border-radius: 4px; font-weight: bold; }
         .op-actions { display: flex; gap: 4px; }
-        .btn-slot-w { background: var(--green-dark); color: #fff; border: 1px solid var(--green); flex: 1; padding: 6px; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 0.8em; }
-        .btn-slot-l { background: #7f1d1d; color: #fff; border: 1px solid var(--red); flex: 1; padding: 6px; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 0.8em; }
+        .btn-slot-w { background: var(--green-dark); color: #fff; border: none; flex: 1; padding: 4px; border-radius: 4px; font-weight: 800; cursor: pointer; font-size: 0.7em; }
+        .btn-slot-l { background: #7f1d1d; color: #fff; border: none; flex: 1; padding: 4px; border-radius: 4px; font-weight: 800; cursor: pointer; font-size: 0.7em; }
 
-        .slot-resolved { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 60px; border-radius: 8px; position: relative; font-family: 'JetBrains Mono'; }
+        .slot-resolved { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 50px; border-radius: 6px; position: relative; font-family: 'JetBrains Mono'; }
         .slot-resolved.win { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--green); color: var(--green); }
         .slot-resolved.loss { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--red); color: var(--red); }
-        .btn-undo { position: absolute; top: 4px; right: 4px; background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 0.9em; }
+        .btn-undo { position: absolute; top: 2px; right: 2px; background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 0.8em; }
 
-        .global-kpi-hub { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;}
-        .kpi-card-supreme { background: #161616; border: 1px solid var(--border); padding: 20px; border-radius: 15px; text-align: center; }
-        .kpi-card-supreme span { font-size: 0.65em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 10px; letter-spacing: 1px; font-weight: 800; }
-        .kpi-card-supreme b { font-size: 1.6em; color: #fff; font-family: 'JetBrains Mono'; }
+        /* KPI & CHART */
+        .global-kpi-hub { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;}
+        .kpi-card-supreme { background: #161616; border: 1px solid var(--border); padding: 15px; border-radius: 10px; text-align: center; }
+        .kpi-card-supreme span { font-size: 0.6em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 5px; font-weight: 700; }
+        .kpi-card-supreme b { font-size: 1.4em; color: #fff; font-family: 'JetBrains Mono'; }
         
-        .op-input-box { background: #161616; border: 1px solid var(--border); padding: 30px; border-radius: 20px; display: flex; flex-direction: column; gap: 15px; border-bottom: 4px solid var(--green); }
-        .btn-op-fire { background: var(--green); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 1em; letter-spacing: 1px; transition: 0.3s; }
+        .op-input-box { background: #161616; border: 1px solid var(--border); padding: 20px; border-radius: 10px; display: flex; flex-direction: column; gap: 10px; border-bottom: 3px solid var(--green); }
+        .btn-op-fire { background: var(--green); color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.85em; letter-spacing: 1px; transition: 0.2s; }
         
-        .supreme-data-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
-        .supreme-data-table th { background: #161616; padding: 15px; text-align: left; color: var(--muted); border-bottom: 1px solid #333; font-weight: 800; }
-        .supreme-data-table td { padding: 12px 15px; border-bottom: 1px solid #222; color: #e4e4e9; font-family: 'JetBrains Mono'; }
+        .supreme-data-table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
+        .supreme-data-table th { background: #161616; padding: 12px; text-align: left; color: var(--muted); border-bottom: 1px solid #333; font-weight: 700; }
+        .supreme-data-table td { padding: 10px 12px; border-bottom: 1px solid #222; color: #e4e4e9; font-family: 'JetBrains Mono'; }
         
-        .modal-config-bar { padding: 15px 40px; background: #111; border-bottom: 1px solid var(--border); display: flex; gap: 20px; align-items: center; }
-        .config-item { display: flex; align-items: center; gap: 10px; background: #000; padding: 10px 15px; border-radius: 8px; border: 1px solid #222; }
-        .config-item label { color: var(--muted); font-weight: 800; font-size: 0.7em; }
-        .config-item input { background: transparent; border: none; border-bottom: 1px solid var(--border-bright); color: var(--green); font-family: 'JetBrains Mono'; font-size: 1.1em; font-weight: 900; padding: 4px; width: 80px; text-align: center; }
-        .config-item .display-val { font-family: 'JetBrains Mono'; font-size: 1.2em; font-weight: 900; color: #fff; }
+        .modal-config-bar { padding: 15px 30px; background: #111; border-bottom: 1px solid var(--border); display: flex; gap: 15px; align-items: center; }
+        .config-item { display: flex; align-items: center; gap: 8px; background: #000; padding: 8px 12px; border-radius: 6px; border: 1px solid #222; }
+        .config-item label { color: var(--muted); font-weight: 700; font-size: 0.7em; }
+        .config-item input { background: transparent; border: none; border-bottom: 1px solid var(--border-bright); color: var(--green); font-family: 'JetBrains Mono'; font-size: 1em; font-weight: 800; padding: 2px; width: 60px; text-align: center; }
+        .config-item .display-val { font-family: 'JetBrains Mono'; font-size: 1.1em; font-weight: 800; color: #fff; }
     </style>
 </head>
 <body>
 
     <header class="top-status-bar">
         <div class="header-controls">
-            <button class="small-menu-btn" id="menu-trigger-btn" onclick="omega_ToggleSidebar()" title="Menüyü Aç/Kapat">
+            <button class="small-menu-btn" id="menu-trigger-btn" onclick="omega_ToggleSidebar()" title="Menüyü Aç">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="header-title-box">
                 <a href="https://hexzenout.github.io/bulten/" class="home-link">
-                    <i class="fa-solid fa-house" style="margin-right:5px"></i> ANA SAYFA
+                    <i class="fa-solid fa-house"></i> ANA SAYFA
                 </a>
-                <span class="module-name" id="active-module-name">/ FUTBOL ⚽</span>
+                <span class="module-name" id="active-module-name">/ FUTBOL</span>
             </div>
         </div>
     </header>
@@ -247,19 +283,19 @@
     <nav class="accordion-menu" id="main-dropdown-nav">
         <div class="nav-container">
             <div class="nav-link active" id="nav-futbol" onclick="omega_SwitchMainTab('futbol', this)">
-                <i class="fa-solid fa-futbol"></i> FUTBOL BÜLTENİ
+                <i class="fa-solid fa-futbol"></i> FUTBOL
             </div>
             <div class="nav-link basket" id="nav-basketbol" onclick="omega_SwitchMainTab('basketbol', this)">
-                <i class="fa-solid fa-basketball"></i> BASKETBOL BÜLTENİ
+                <i class="fa-solid fa-basketball"></i> BASKETBOL
             </div>
             <div class="nav-link stream" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)">
-                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN MERKEZİ
+                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
             </div>
             <div class="nav-link favs" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
-                <i class="fa-solid fa-star"></i> FAVORİ ANALİZLERİM
+                <i class="fa-solid fa-star"></i> FAVORİLERİM
             </div>
             <div class="nav-link finance" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
-                <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ & EXCEL
+                <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
             </div>
         </div>
     </nav>
@@ -267,100 +303,114 @@
     <main class="main-viewport">
         <section class="main-scroll-box">
             
-            <div id="omega-radar-block">
-                <div class="controls-wrapper">
-                    <div class="filter-panel">
-                        <select id="v19-date-select" class="select-supreme" onchange="omega_ExecuteRadarFilter()">
-                            <option value="ALL">TÜM TARİHLER</option>
-                        </select>
-                        <div class="league-drop-wrapper">
-                            <div class="league-drop-trigger" id="drop-trigger" onclick="omega_ToggleLeagueDrop(event)">
-                                <div id="drop-text-label">TÜM LİGLER</div>
-                                <i class="fa-solid fa-chevron-down"></i>
+            <div class="center-wrapper">
+                
+                <div id="omega-radar-block">
+                    <div class="controls-wrapper">
+                        <div class="filter-panel">
+                            <select id="v19-date-select" class="select-supreme" onchange="omega_ExecuteRadarFilter()">
+                                <option value="ALL">TÜM TARİHLER</option>
+                            </select>
+                            <div class="league-drop-wrapper">
+                                <div class="league-drop-trigger" id="drop-trigger" onclick="omega_ToggleLeagueDrop(event)">
+                                    <div id="drop-text-label">TÜM LİGLER</div>
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                                <div class="league-drop-menu" id="drop-menu-list"></div>
                             </div>
-                            <div class="league-drop-menu" id="drop-menu-list"></div>
+                        </div>
+                        <div class="mode-row">
+                            <button class="btn-mode-supreme active" id="btn-sort-league" onclick="omega_SetSortMode('league')">LİG SIRALI AKIŞ</button>
+                            <button class="btn-mode-supreme" id="btn-sort-time" onclick="omega_SetSortMode('time')">SAAT SIRALI AKIŞ</button>
                         </div>
                     </div>
-                    <div class="mode-row">
-                        <button class="btn-mode-supreme active" id="btn-sort-league" onclick="omega_SetSortMode('league')">LİG SIRALI AKIŞ</button>
-                        <button class="btn-mode-supreme" id="btn-sort-time" onclick="omega_SetSortMode('time')">SAAT SIRALI AKIŞ</button>
-                    </div>
+                    <div id="radar-render-output"></div>
                 </div>
-                <div id="radar-render-output"></div>
-            </div>
 
-            <div id="omega-favs-block" style="display:none;"><div id="favs-render-output"></div></div>
+                <div id="omega-favs-block" style="display:none;"><div id="favs-render-output"></div></div>
 
-            <div id="omega-stream-block" style="display:none;">
-                <div class="stream-controls-bar">
-                    <div class="layout-btn-group">
-                        <button class="btn-stream-layout" id="lay-btn-1" onclick="omega_BuildStreamMatrix(1)">1 EKRAN</button>
-                        <button class="btn-stream-layout" id="lay-btn-2" onclick="omega_BuildStreamMatrix(2)">2 EKRAN</button>
-                        <button class="btn-stream-layout" id="lay-btn-4" onclick="omega_BuildStreamMatrix(4)">4 EKRAN</button>
-                        <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6 EKRAN</button>
-                    </div>
-                    <div style="display:flex; gap:12px;">
-                        <button class="btn-channel-mgr" onclick="omega_OpenChannelManager()">KANAL LİSTESİ</button>
-                        <button class="btn-dev-ekran" id="btn-theater-mode" onclick="omega_ToggleDevEkran()">DEV EKRAN</button>
-                    </div>
-                </div>
-                <div id="omega-matrix-grid" class="stream-master-grid m-lay-6 active"></div>
-            </div>
-
-            <div class="fin-terminal-wrapper" id="v19-finance-block">
-                <div class="fin-scroller-pane">
-                    <div class="rolling-grand-grid">
-                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(7)"><label>7 GÜN</label><b>ROLLING</b></div>
-                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(15)"><label>15 GÜN</label><b>ROLLING</b></div>
-                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(30)"><label>30 GÜN</label><b>ROLLING</b></div>
-                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(60)"><label>60 GÜN</label><b>ROLLING</b></div>
-                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(90)"><label>90 GÜN</label><b>ROLLING</b></div>
-                    </div>
-                    <div class="ledger-supreme-pro" style="background:#161616;">
-                        <div style="padding:20px; font-weight:800; color:var(--gold); border-bottom:1px solid #272727;">OPERASYON GEÇMİŞİ</div>
-                        <div style="overflow-y:auto; max-height:400px;"><table class="supreme-data-table" id="omega-data-table"></table></div>
-                    </div>
-                </div>
-                <div class="finance-right-pane">
-                    <div class="global-kpi-hub">
-                        <div class="kpi-card-supreme"><span>KASA</span><b id="kpi-val-w">100.00</b></div>
-                        <div class="kpi-card-supreme"><span>NET P/L</span><b id="kpi-val-p">0.00</b></div>
-                        <div class="kpi-card-supreme"><span>%</span><b id="kpi-val-wr">%0</b></div>
-                    </div>
-                    <div id="omega-apex-chart-main" style="height:300px; background:#161616; border-radius:15px; border:1px solid #272727; padding:15px;"></div>
-                    <div class="op-input-box">
-                        <input type="text" id="op-in-name" class="select-supreme" style="width:100%" placeholder="İŞLEM KODU / ADI">
+                <div id="omega-stream-block" style="display:none;">
+                    <div class="stream-controls-bar">
+                        <div class="layout-btn-group">
+                            <button class="btn-stream-layout" id="lay-btn-1" onclick="omega_BuildStreamMatrix(1)">1</button>
+                            <button class="btn-stream-layout" id="lay-btn-2" onclick="omega_BuildStreamMatrix(2)">2</button>
+                            <button class="btn-stream-layout" id="lay-btn-4" onclick="omega_BuildStreamMatrix(4)">4</button>
+                            <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6</button>
+                        </div>
                         <div style="display:flex; gap:10px;">
-                            <input type="number" id="op-in-amt" class="select-supreme" style="flex:1" placeholder="USDT">
-                            <input type="number" id="op-in-odds" class="select-supreme" style="flex:1" placeholder="ORAN">
+                            <button class="btn-channel-mgr" onclick="omega_OpenChannelManager()">KANAL LİSTESİ</button>
+                            <button class="btn-dev-ekran" id="btn-theater-mode" onclick="omega_ToggleDevEkran()">DEV EKRAN</button>
                         </div>
-                        <button class="btn-op-fire" onclick="omega_CommitNewOperation()">İŞLEMİ BAŞLAT</button>
+                    </div>
+                    <div id="omega-matrix-grid" class="stream-master-grid m-lay-6 active"></div>
+                </div>
+
+                <div class="fin-terminal-wrapper" id="v19-finance-block">
+                    <div class="fin-scroller-pane">
+                        <div class="rolling-grand-grid">
+                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(7)"><label>7 GÜN</label><b>ROLLING</b></div>
+                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(15)"><label>15 GÜN</label><b>ROLLING</b></div>
+                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(30)"><label>30 GÜN</label><b>ROLLING</b></div>
+                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(60)"><label>60 GÜN</label><b>ROLLING</b></div>
+                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(90)"><label>90 GÜN</label><b>ROLLING</b></div>
+                        </div>
+                        <div class="ledger-supreme-pro" style="background:#161616;">
+                            <div style="padding:15px 20px; font-weight:800; color:var(--gold); border-bottom:1px solid #272727; font-size:0.85em;">OPERASYON GEÇMİŞİ</div>
+                            <div style="overflow-y:auto; max-height:350px;">
+                                <table class="supreme-data-table" id="omega-data-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="finance-right-pane">
+                        <div class="global-kpi-hub">
+                            <div class="kpi-card-supreme"><span>KASA</span><b id="kpi-val-w">100.00</b></div>
+                            <div class="kpi-card-supreme"><span>NET P/L</span><b id="kpi-val-p">0.00</b></div>
+                            <div class="kpi-card-supreme"><span>SUCCESS</span><b id="kpi-val-wr">%0</b></div>
+                        </div>
+                        <div id="omega-apex-chart-main" style="height:250px; background:#161616; border-radius:10px; border:1px solid #272727; padding:10px;"></div>
+                        
+                        <div class="op-input-box">
+                            <input type="text" id="op-in-name" class="select-supreme" style="width:100%" placeholder="İŞLEM KODU / ADI">
+                            <div style="display:flex; gap:10px;">
+                                <input type="number" id="op-in-amt" class="select-supreme" style="flex:1" placeholder="USDT">
+                                <input type="number" id="op-in-odds" class="select-supreme" style="flex:1" placeholder="ORAN">
+                            </div>
+                            <button class="btn-op-fire" onclick="omega_CommitNewOperation()">İŞLEMİ BAŞLAT</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+
+            </div> </section>
     </main>
 
     <div id="rolling-excel-overlay" class="custom-modal-overlay">
-        <div class="modal-header"><h2 id="excel-modal-title">ROLLING EXCEL</h2><button class="btn-modal-back" onclick="omega_CloseRollingExcel()">GERİ DÖN</button></div>
+        <div class="modal-header">
+            <h2 id="excel-modal-title">ROLLING EXCEL</h2>
+            <button class="btn-modal-back" onclick="omega_CloseRollingExcel()">KAPAT</button>
+        </div>
         <div class="modal-config-bar">
             <div class="config-item"><label>BAŞLANGIÇ:</label><input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()"></div>
             <div class="config-item"><label>HEDEF:</label><span class="display-val" id="excel-target-bal">$1000</span></div>
             <div class="config-item"><label>GÜNCEL:</label><span class="display-val" id="excel-current-bal">$100</span></div>
             <div class="config-item" style="margin-left:auto;"><label>P/L:</label><span id="excel-pnl" class="display-val">$0.00</span></div>
         </div>
-        <div class="excel-table-wrapper"><table class="excel-table"><thead><tr><th>GÜN</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>GÜN SONU</th></tr></thead><tbody id="excel-table-body"></tbody></table></div>
+        <div class="modal-body-wrapper">
+            <table class="excel-table">
+                <thead><tr><th>GÜN</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>GÜN SONU</th></tr></thead>
+                <tbody id="excel-table-body"></tbody>
+            </table>
+        </div>
     </div>
 
     <div id="channel-manager-overlay" class="custom-modal-overlay">
-        <div class="modal-header"><h2>KANAL LİSTESİ YÖNETİMİ</h2><button class="btn-modal-back" onclick="omega_CloseChannelManager()">GERİ DÖN</button></div>
+        <div class="modal-header"><h2>KANAL LİSTESİ YÖNETİMİ</h2><button class="btn-modal-back" onclick="omega_CloseChannelManager()">KAPAT</button></div>
         <div class="modal-body-wrapper">
-            <div style="display:flex; gap:12px; margin-bottom:25px; background:#161616; padding:20px; border-radius:12px; border:1px solid #272727;">
+            <div style="display:flex; gap:10px; margin-bottom:20px; background:#161616; padding:15px; border-radius:10px; border:1px solid #272727;">
                 <input type="text" id="new-ch-name" class="select-supreme" placeholder="Kanal Adı">
                 <input type="text" id="new-ch-url" class="select-supreme" style="flex:1" placeholder="Yayın URL (M3U8 / EMBED)">
-                <button class="btn-op-fire" onclick="omega_AddCustomChannel()" style="padding:0 30px; margin:0;">LİSTEYE EKLE</button>
+                <button class="btn-op-fire" onclick="omega_AddCustomChannel()" style="padding:0 25px; margin:0;">EKLE</button>
             </div>
-            <table class="supreme-data-table"><tbody id="channel-table-body"></tbody></table>
+            <table class="supreme-data-table" style="width:100%; border-collapse:collapse;"><tbody id="channel-table-body"></tbody></table>
         </div>
     </div>
     <script>
@@ -433,8 +483,9 @@
 
         // --- 5. ANA MOTOR BAŞLATICI (BOOTSTRAP) ---
         async function omega_InitializeEngine() {
-            console.log("V22 Supreme Engine Booting...");
+            console.log("V23 Supreme Engine Booting...");
             try {
+                // nocache parametresi ile her zaman en taze veriyi alır
                 const response = await fetch('v19_rapor.json?nocache=' + Date.now());
                 const data = await response.json();
                 
@@ -451,7 +502,7 @@
                     <div style="padding:150px 0; text-align:center;">
                         <i class="fa-solid fa-triangle-exclamation" style="font-size:4em; color:var(--red); margin-bottom:20px;"></i>
                         <h2 style="font-weight:900; letter-spacing:2px; color:#fff;">RADAR ÇEVRİMDIŞI</h2>
-                        <p style="color:var(--muted); margin-top:10px; font-size:0.9em;">v19_rapor.json dosyasına ulaşılamıyor. Lütfen veri motorunu tetikleyin.</p>
+                        <p style="color:var(--muted); margin-top:10px; font-size:0.9em;">v19_rapor.json dosyasına ulaşılamıyor.</p>
                     </div>
                 `;
             }
@@ -665,6 +716,7 @@
                 finalHtmlBuffer += `<div style="color:var(--gold); font-size:0.85em; font-weight:900; margin:25px 0 15px 0; letter-spacing:1px; text-transform:uppercase;">${omega_FormatHumanDate(day)}</div>`;
                 
                 if(_ACTIVE_SORT_MODE === 'time') {
+                    // SAAT SIRALI AKIŞ - RESİMDEKİ GİBİ LİG BAŞLIKLI
                     let dayGroupsSorted = groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm));
                     
                     dayGroupsSorted.forEach(m => {
@@ -673,17 +725,23 @@
                         const flagCode = omega_GetFlagCode(m.l);
                         
                         finalHtmlBuffer += `
-                            <div class="match-row-pro compact-mode-row">
-                                <i class="fa-solid fa-star fav-star-box ${isFav?'active':''}" onclick="omega_ToggleFavoriteMatch(event, '${mID}')"></i>
-                                <div class="match-clock-sup">${m.tm}</div>
-                                <div class="match-teams-main">
-                                    ${m.m} 
-                                    <span class="league-label-badge">${m.l}</span>
+                            <div class="league-container-pro" style="margin-bottom: 12px; border-radius: 8px;">
+                                <div class="league-header-bar" style="padding: 10px 20px; font-size: 0.7em; background: #1f1f1f; border-bottom: 1px solid #2a2a2a; color: var(--muted);">
+                                    <div style="display:flex; align-items:center;">
+                                        <img src="https://flagcdn.com/w40/${flagCode}.png" style="width:16px; border-radius:2px; margin-right:12px;">
+                                        <span>${m.l}</span>
+                                    </div>
+                                </div>
+                                <div class="match-row-pro" style="padding: 12px 20px;">
+                                    <i class="fa-solid fa-star fav-star-box ${isFav?'active':''}" onclick="omega_ToggleFavoriteMatch(event, '${mID}')"></i>
+                                    <div class="match-clock-sup" style="width: 60px;">${m.tm}</div>
+                                    <div class="match-teams-main">${m.m}</div>
                                 </div>
                             </div>`;
                     });
                     
                 } else {
+                    // LİG SIRALI AKIŞ
                     const leagueGroups = {}; 
                     groupedByDay[day].forEach(m => { 
                         if(!leagueGroups[m.l]) leagueGroups[m.l] = []; 
