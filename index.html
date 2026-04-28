@@ -12,7 +12,7 @@
         /* ==========================================================================
            V19 SUPREME STYLING SYSTEM v15.0 (FINAL OMEGA)
            FULL ARCHIVE - NO COMPRESSION - MAXIMUM DETAIL
-           Menü aşağı açılır (dropdown) şekilde yeniden dizayn edildi.
+           Tüm modüller, Excel tablosu, URL Routing ve Kanal Yönetim Merkezleri dahil.
            ========================================================================== */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -70,7 +70,7 @@
             font-family: 'Inter', sans-serif;
             overflow: hidden;
             display: flex;
-            flex-direction: column; /* DİKKAT: Artık satır değil, sütun dizilimi */
+            flex-direction: column; 
         }
 
         /* ==========================================================================
@@ -90,110 +90,52 @@
             position: relative;
         }
 
-        .console-info-group {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
+        .console-info-group { display: flex; align-items: center; gap: 25px; }
 
         .sidebar-toggle-btn {
-            font-size: 2em;
-            color: var(--green);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            background: rgba(16, 185, 129, 0.1);
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid var(--green-glow);
+            font-size: 2em; color: var(--green); cursor: pointer; transition: var(--transition-smooth);
+            background: rgba(16, 185, 129, 0.1); padding: 10px 15px; border-radius: 8px; border: 1px solid var(--green-glow);
         }
-        .sidebar-toggle-btn:hover { 
-            color: #fff; 
-            background: var(--green); 
-            box-shadow: 0 0 20px var(--green-glow); 
-            transform: scale(1.05); 
-        }
+        .sidebar-toggle-btn:hover { color: #fff; background: var(--green); box-shadow: 0 0 20px var(--green-glow); transform: scale(1.05); }
 
-        .brand-zone-header {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .brand-text-header { 
-            font-weight: 900; 
-            color: var(--gold); 
-            font-size: 1.4em; 
-            letter-spacing: 4px; 
-            text-transform: uppercase; 
-            text-shadow: 0 0 15px var(--gold-glow);
-        }
-        .brand-subtext-header {
-            font-size: 0.6em;
-            color: var(--muted);
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        .brand-zone-header { display: flex; flex-direction: column; gap: 4px; }
+        .brand-text-header { font-weight: 900; color: var(--gold); font-size: 1.4em; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 15px var(--gold-glow); }
+        .brand-subtext-header { font-size: 0.6em; color: var(--muted); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
 
         .console-info { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
         .console-info h2 { margin: 0; font-size: 1.25em; font-weight: 950; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; text-align: right; }
         .console-info span { font-size: 0.65em; color: var(--green); font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 10px var(--green-glow); }
 
         /* ==========================================================================
-           DROPDOWN AŞAĞI AÇILIR MENÜ (YENİ MİMARİ)
+           DROPDOWN AŞAĞI AÇILIR MENÜ (SİDEBAR) - ALT ALTA DİZİLİM
            ========================================================================== */
         .sidebar { 
-            position: absolute;
-            top: 90px; /* Header yüksekliği kadar aşağıda */
-            left: 0;
-            width: 100%;
-            background: rgba(8, 8, 10, 0.98);
-            backdrop-filter: blur(15px);
-            z-index: 7000;
-            border-bottom: 2px solid var(--green);
-            max-height: 0; /* Kapalı başlangıç */
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: absolute; top: 90px; left: 0; width: 100%;
+            background: rgba(8, 8, 10, 0.98); backdrop-filter: blur(15px); z-index: 7000;
+            border-bottom: 2px solid var(--green); max-height: 0; overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 30px 60px rgba(0,0,0,0.9);
         }
 
-        .sidebar.active-dropdown {
-            max-height: 400px; /* Açık durum (İçerik kadar uzar) */
-        }
+        .sidebar.active-dropdown { max-height: 800px; } /* Açık durumu */
 
         .nav-container { 
-            padding: 20px 45px; 
+            padding: 25px 45px; 
             display: flex;
-            flex-direction: row; /* Yan yana dizilim */
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
+            flex-direction: column; /* ALT ALTA DİZİLİM (DİKEY) */
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto; /* Menüyü ortalar */
         }
 
         .nav-link { 
-            padding: 20px 40px; 
-            cursor: pointer; 
-            color: var(--muted); 
-            font-weight: 800; 
-            font-size: 0.9em; 
-            display: flex; 
-            align-items: center; 
-            transition: var(--transition-smooth);
-            border: 2px solid #222;
-            border-radius: 12px;
-            background: #000;
+            padding: 18px 30px; cursor: pointer; color: var(--muted); font-weight: 800; font-size: 0.95em; 
+            display: flex; align-items: center; transition: var(--transition-smooth);
+            border: 2px solid #222; border-radius: 12px; background: #000;
         }
 
-        .nav-link i { 
-            margin-right: 15px; 
-            font-size: 1.5em; 
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .nav-link:hover { 
-            border-color: var(--muted);
-            color: #ffffff; 
-            transform: translateY(-3px);
-        }
+        .nav-link i { margin-right: 20px; font-size: 1.4em; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .nav-link:hover { border-color: var(--muted); color: #ffffff; transform: translateX(10px); }
         .nav-link:hover i { transform: scale(1.2); }
 
         /* NAVİGASYON AKTİF DURUMLARI */
@@ -206,30 +148,15 @@
         /* ==========================================================================
            MAIN VIEWPORT & SCROLLER
            ========================================================================== */
-        .main-viewport { 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            position: relative;
-            z-index: 100;
-        }
-
-        .main-scroll-box { 
-            flex-grow: 1; 
-            padding: 40px 60px; 
-            overflow-y: auto; 
-            background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); 
-            transition: var(--transition-smooth); 
-        }
+        .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 100; }
+        .main-scroll-box { flex-grow: 1; padding: 40px 60px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); transition: var(--transition-smooth); }
 
         /* ==========================================================================
            DEV EKRAN (THEATER MODE) BİLEŞENLERİ
            ========================================================================== */
-        /* Dev ekrana geçince üst menü GİZLENMEZ. Sadece scroll box'un paddingi düşer ve matrix yüksekliği artar. */
         body.dev-mode .main-scroll-box { padding: 15px; }
         body.dev-mode .stream-controls-bar { padding: 10px 20px; margin-bottom: 15px; }
-        body.dev-mode .stream-master-grid { height: calc(100vh - 180px); }
+        body.dev-mode .stream-master-grid { height: calc(100vh - 160px); }
 
         /* ==========================================================================
            RADAR KONTROL PANELİ
@@ -289,7 +216,6 @@
         .match-row-pro:last-child { border-bottom: none; }
         .match-row-pro:hover { background: #111118; transform: scale(1.005); z-index: 10; border-left: 2px solid var(--green); }
         
-        /* FAVORİ YILDIZ */
         .fav-star-box { font-size: 1.4em; color: var(--border-bright); margin-right: 20px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: pointer; }
         .fav-star-box:hover { color: var(--muted); transform: scale(1.1); }
         .fav-star-box.active { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); transform: scale(1.25); }
@@ -298,7 +224,6 @@
         .match-teams-main { font-weight: 800; flex-grow: 1; display: flex; align-items: center; color: #f4f4f7; letter-spacing: 0.2px; }
         .match-flag-sup { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; margin-left: 18px; box-shadow: 0 3px 8px rgba(0,0,0,0.6); }
 
-        /* SAAT SIRALI (KOMPAKT) MOD */
         .compact-mode-row { font-size: 0.78em !important; padding: 10px 30px !important; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 5px; }
         .match-ico-marker { margin-right: 15px; font-size: 1.1em; opacity: 0.6; }
         .league-label-badge { 
@@ -308,7 +233,7 @@
         }
 
         /* ==========================================================================
-           MULTI-STREAM INTELLIGENCE HUB
+           MULTI-STREAM INTELLIGENCE HUB (DEV EKRAN & KANAL YÖNETİMİ)
            ========================================================================== */
         .stream-controls-bar { 
             display: flex; justify-content: space-between; align-items: center;
@@ -327,9 +252,15 @@
 
         .btn-dev-ekran {
             background: rgba(251, 191, 36, 0.1); color: var(--gold); border: 2px solid var(--gold);
-            padding: 14px 35px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: 0.3s;
+            padding: 14px 25px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: 0.3s;
         }
         .btn-dev-ekran:hover { background: var(--gold); color: #000; box-shadow: 0 0 25px var(--gold-glow); }
+
+        .btn-channel-mgr {
+            background: rgba(16, 185, 129, 0.1); color: var(--green); border: 2px solid var(--green);
+            padding: 14px 25px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: 0.3s;
+        }
+        .btn-channel-mgr:hover { background: var(--green); color: #000; box-shadow: 0 0 25px var(--green-glow); }
 
         /* YAYIN GRID MİMARİSİ (Yükseklik otomatik ayarlanır) */
         .stream-master-grid { display: none; gap: 20px; height: calc(100vh - 280px); width: 100%; transition: height 0.4s ease; }
@@ -342,17 +273,24 @@
 
         .matrix-unit { background: #000000; border: 2px solid #27272a; border-radius: 15px; overflow: hidden; display: flex; flex-direction: column; transition: border 0.4s; position: relative; }
         .matrix-unit:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
-        .matrix-nav { padding: 12px; background: #0a0a0c; display: flex; gap: 12px; border-bottom: 1px solid var(--border); align-items: center; }
-        .matrix-input { flex: 1; background: #000000; border: 1.5px solid #333; color: #ffffff; font-size: 11px; padding: 10px 18px; border-radius: 8px; }
+        .matrix-nav { padding: 12px; background: #0a0a0c; display: flex; gap: 8px; border-bottom: 1px solid var(--border); align-items: center; }
+        
+        .matrix-channel-select {
+            background: #111; border: 1.5px solid #333; color: var(--gold); padding: 8px; border-radius: 6px; 
+            font-size: 11px; font-weight: 900; outline: none; cursor: pointer; max-width: 140px;
+        }
+        .matrix-channel-select:focus { border-color: var(--gold); }
+
+        .matrix-input { flex: 1; background: #000000; border: 1.5px solid #333; color: #ffffff; font-size: 11px; padding: 10px 12px; border-radius: 6px; }
         .matrix-input:focus { border-color: var(--green); }
         
-        .btn-matrix-go { background: var(--green); color: #000000; border: none; padding: 0 22px; border-radius: 8px; font-weight: 950; font-size: 0.8em; cursor: pointer; transition: 0.2s; }
+        .btn-matrix-go { background: var(--green); color: #000000; border: none; padding: 0 15px; border-radius: 6px; font-weight: 950; font-size: 0.8em; cursor: pointer; transition: 0.2s; }
         .btn-matrix-go:hover { background: #14d693; }
         
-        .btn-matrix-pip { background: #111; border: 1px solid #333; color: var(--blue-accent); padding: 0 15px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.3s; }
+        .btn-matrix-pip { background: #111; border: 1px solid #333; color: var(--blue-accent); padding: 0 12px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.3s; }
         .btn-matrix-pip:hover { border-color: var(--blue-accent); background: rgba(59, 130, 246, 0.1); }
 
-        .btn-matrix-kill { background: var(--red); color: #ffffff; border: none; padding: 0 18px; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-matrix-kill { background: var(--red); color: #ffffff; border: none; padding: 0 15px; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.3s; }
         .btn-matrix-kill:hover { background: #ff0000; transform: rotate(90deg); }
 
         /* ==========================================================================
@@ -405,7 +343,7 @@
         .hard-reset-link:hover { color: var(--red); opacity: 0.8; }
 
         /* ==========================================================================
-           YENİ: ROLLING EXCEL MODAL (KOMPAKT NİZAM)
+           YENİ: KANAL YÖNETİM MERKEZİ & ROLLING EXCEL MODALLARI
            ========================================================================== */
         .rolling-modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -559,7 +497,10 @@
                         <button class="btn-stream-layout" id="lay-btn-4" onclick="omega_BuildStreamMatrix(4)">4 EKRAN</button>
                         <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6 EKRAN</button>
                     </div>
-                    <div>
+                    <div style="display:flex; gap:15px;">
+                        <button class="btn-channel-mgr" onclick="omega_OpenChannelManager()">
+                            <i class="fa-solid fa-list"></i> KANAL YÖNETİMİ
+                        </button>
                         <button class="btn-dev-ekran" id="btn-theater-mode" onclick="omega_ToggleDevEkran()">
                             <i class="fa-solid fa-expand"></i> DEV EKRAN
                         </button>
@@ -637,6 +578,35 @@
             </div>
 
         </section>
+
+        <div id="channel-manager-overlay" class="rolling-modal-overlay">
+            <div class="excel-header">
+                <h2 style="color:var(--green); text-shadow: 0 0 20px var(--green-glow);">KANAL YÖNETİM MERKEZİ</h2>
+                <button class="excel-close-btn" onclick="omega_CloseChannelManager()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="excel-config-bar" style="justify-content: flex-start;">
+                <div style="display:flex; gap:15px; width: 100%; max-width:1000px;">
+                    <input type="text" id="new-ch-name" class="select-supreme" style="flex:1;" placeholder="Kanal Adı (Örn: Bein 1)">
+                    <input type="text" id="new-ch-url" class="select-supreme" style="flex:2;" placeholder="Yayın Bağlantısı (M3U8 / URL)...">
+                    <button class="btn-op-fire" style="padding:14px 40px; margin:0;" onclick="omega_AddCustomChannel()">EKLE</button>
+                </div>
+            </div>
+
+            <div class="excel-table-wrapper">
+                <table class="supreme-data-table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="width:25%">KANAL ADI</th>
+                            <th style="width:60%">KAYNAK URL</th>
+                            <th style="width:15%; text-align:right;">İŞLEM</th>
+                        </tr>
+                    </thead>
+                    <tbody id="channel-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
 
         <div id="rolling-excel-overlay" class="rolling-modal-overlay">
             <div class="excel-header">
@@ -717,31 +687,19 @@
         let _PENDING_OPS = JSON.parse(localStorage.getItem('v19_p')) || [];
         let _COMPLETED_LEDGER = JSON.parse(localStorage.getItem('v19_l')) || [];
         let _FAV_MATCHES = JSON.parse(localStorage.getItem('v19_fav_m')) || [];
+        
         let _ROLLING_DB = JSON.parse(localStorage.getItem('v19_rolling')) || {};
+        let _CHANNELS_DB = JSON.parse(localStorage.getItem('v19_channels')) || []; // YENİ: KANAL LİSTESİ
 
         // --- HIERARCHY & RULES ---
         const HIERARCHY_SCORES = {
-            "TÜRKİYE - SÜPER LİG": 4000, 
-            "İNGİLTERE - PREMIER LEAGUE": 3900, 
-            "İSPANYA - LA LIGA": 3800,
-            "ALMANYA - BUNDESLIGA": 3700, 
-            "İTALYA - SERIE A": 3600, 
-            "FRANSA - LIGUE 1": 3500,
-            "AVRUPA - CHAMPIONS LEAGUE": 3400, 
-            "AVRUPA - EUROPA LEAGUE": 3300, 
-            "AVRUPA - CONFERENCE LEAGUE": 3200,
-            "AVRUPA - EUROLEAGUE": 4900, 
-            "AMERİKA - NBA": 4800, 
-            "TÜRKİYE - BSL": 4700,
-            "İSPANYA - LIGA ACB": 4600,
-            "İTALYA - LEGA A": 4500,
-            "FRANSA - LNB PRO A": 4400,
-            "ALMANYA - BBL": 4300,
-            "AVRUPA - EUROCUP": 4200,
-            "AVRUPA - BCL": 4100,
-            "AMERİKA - NCAA": 4000,
-            "RUSYA - VTB": 3900,
-            "AMERİKA - WNBA": 3800
+            "TÜRKİYE - SÜPER LİG": 4000, "İNGİLTERE - PREMIER LEAGUE": 3900, "İSPANYA - LA LIGA": 3800,
+            "ALMANYA - BUNDESLIGA": 3700, "İTALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
+            "AVRUPA - CHAMPIONS LEAGUE": 3400, "AVRUPA - EUROPA LEAGUE": 3300, "AVRUPA - CONFERENCE LEAGUE": 3200,
+            "AVRUPA - EUROLEAGUE": 4900, "AMERİKA - NBA": 4800, "TÜRKİYE - BSL": 4700,
+            "İSPANYA - LIGA ACB": 4600, "İTALYA - LEGA A": 4500, "FRANSA - LNB PRO A": 4400,
+            "ALMANYA - BBL": 4300, "AVRUPA - EUROCUP": 4200, "AVRUPA - BCL": 4100,
+            "AMERİKA - NCAA": 4000, "RUSYA - VTB": 3900, "AMERİKA - WNBA": 3800
         };
 
         const GOLD_BASKET_LIST = [
@@ -751,11 +709,7 @@
         ];
 
         const ROLLING_TARGETS = {
-            7: 1000,
-            15: 5000,
-            30: 15000,
-            60: 40000,
-            90: 100000
+            7: 1000, 15: 5000, 30: 15000, 60: 40000, 90: 100000
         };
 
         // --- URL ROUTING (HISTORY API) ---
@@ -786,7 +740,6 @@
                 }
             }
         });
-
 
         // --- ENGINE BOOTSTRAP ---
         async function omega_InitializeEngine() {
@@ -901,6 +854,7 @@
                 document.getElementById('omega-stream-block').style.display = 'block';
                 document.getElementById('supreme-main-title').innerText = "CANLI YAYIN MERKEZİ";
                 
+                // Initialize matrix if empty
                 if(!document.getElementById('omega-matrix-grid').innerHTML) {
                     omega_BuildStreamMatrix(6);
                 }
@@ -920,7 +874,6 @@
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
             
-            // VERİ TABANINI DOĞRU FİLTRELEME İLE TARİHLERİ ÇEK
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
@@ -1112,7 +1065,83 @@
             contentBox.style.display = (contentBox.style.display === 'none' ? 'block' : 'none'); 
         }
 
-        // --- MULTI-STREAM HUB CONTROLLER (DEV EKRAN YÖNETİMİ) ---
+        // ==========================================================================
+        // YENİ: KANAL YÖNETİM MERKEZİ
+        // ==========================================================================
+        function omega_OpenChannelManager() {
+            document.getElementById('channel-manager-overlay').style.display = 'flex';
+            omega_RenderChannelTable();
+        }
+
+        function omega_CloseChannelManager() {
+            document.getElementById('channel-manager-overlay').style.display = 'none';
+        }
+
+        function omega_AddCustomChannel() {
+            const chName = document.getElementById('new-ch-name').value;
+            const chUrl = document.getElementById('new-ch-url').value;
+
+            if(!chName || !chUrl) {
+                alert("Lütfen kanal adı ve URL girin.");
+                return;
+            }
+
+            _CHANNELS_DB.push({ id: Date.now(), name: chName, url: chUrl });
+            localStorage.setItem('v19_channels', JSON.stringify(_CHANNELS_DB));
+            
+            document.getElementById('new-ch-name').value = "";
+            document.getElementById('new-ch-url').value = "";
+            
+            omega_RenderChannelTable();
+            omega_UpdateMatrixDropdowns();
+        }
+
+        function omega_DeleteCustomChannel(id) {
+            _CHANNELS_DB = _CHANNELS_DB.filter(ch => ch.id !== id);
+            localStorage.setItem('v19_channels', JSON.stringify(_CHANNELS_DB));
+            omega_RenderChannelTable();
+            omega_UpdateMatrixDropdowns();
+        }
+
+        function omega_RenderChannelTable() {
+            const tbody = document.getElementById('channel-table-body');
+            let rowsHtml = "";
+
+            if(_CHANNELS_DB.length === 0) {
+                rowsHtml = `<tr><td colspan="3" style="text-align:center; padding:30px; color:var(--muted);">Kayıtlı kanal bulunamadı.</td></tr>`;
+            } else {
+                _CHANNELS_DB.forEach(ch => {
+                    rowsHtml += `
+                        <tr>
+                            <td style="font-weight:900; color:var(--gold);">${ch.name}</td>
+                            <td style="font-family:'JetBrains Mono'; font-size:0.85em; color:var(--muted); word-break:break-all;">${ch.url}</td>
+                            <td style="text-align:right;">
+                                <button onclick="omega_DeleteCustomChannel(${ch.id})" style="background:var(--red); border:none; padding:8px 15px; border-radius:6px; color:#fff; cursor:pointer; font-weight:bold;">SİL</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tbody.innerHTML = rowsHtml;
+        }
+
+        function omega_UpdateMatrixDropdowns() {
+            let optionsHtml = `<option value="">Kanal Seç...</option>`;
+            _CHANNELS_DB.forEach(ch => {
+                optionsHtml += `<option value="${ch.url}">${ch.name}</option>`;
+            });
+
+            document.querySelectorAll('.matrix-channel-select').forEach(selectElem => {
+                const prevVal = selectElem.value;
+                selectElem.innerHTML = optionsHtml;
+                selectElem.value = prevVal; // Eski seçimi korumaya çalış
+            });
+        }
+
+
+        // ==========================================================================
+        // MULTI-STREAM HUB CONTROLLER (DEV EKRAN YÖNETİMİ)
+        // ==========================================================================
         function omega_ToggleDevEkran() {
             _IS_DEV_EKRAN = !_IS_DEV_EKRAN;
             const btn = document.getElementById('btn-theater-mode');
@@ -1148,10 +1177,19 @@
             const clickedBtn = document.getElementById('lay-btn-' + numScreens);
             if(clickedBtn) clickedBtn.classList.add('active');
 
+            // Kanal Listesi Seçeneklerini Hazırla
+            let optionsHtml = `<option value="">Kanal Seç...</option>`;
+            _CHANNELS_DB.forEach(ch => {
+                optionsHtml += `<option value="${ch.url}">${ch.name}</option>`;
+            });
+
             for(let i=1; i<=numScreens; i++) {
                 gridContainer.innerHTML += `
                     <div class="matrix-unit">
                         <div class="matrix-nav">
+                            <select id="stream-sel-${i}" class="matrix-channel-select" onchange="omega_LoadChannelToInput(${i})">
+                                ${optionsHtml}
+                            </select>
                             <input id="stream-input-${i}" class="matrix-input" placeholder="HLS/M3U8 veya Web URL...">
                             <button class="btn-matrix-pip" onclick="omega_FullscreenIframe(${i})" title="Tam Ekran İzle"><i class="fa-solid fa-maximize"></i></button>
                             <button class="btn-matrix-kill" onclick="omega_TerminateStreamUnit(${i})" title="Kapat"><i class="fa-solid fa-xmark"></i></button>
@@ -1162,12 +1200,22 @@
             }
         }
         
+        function omega_LoadChannelToInput(id) {
+            const selectElem = document.getElementById('stream-sel-' + id);
+            const inputElem = document.getElementById('stream-input-' + id);
+            if(selectElem.value) {
+                inputElem.value = selectElem.value;
+                omega_LaunchStreamUnit(id); // Otomatik başlat
+            }
+        }
+
         function omega_LaunchStreamUnit(id) { 
             const url = document.getElementById('stream-input-' + id).value; 
             if(url) document.getElementById('stream-frame-' + id).src = url; 
         }
         
         function omega_TerminateStreamUnit(id) { 
+            document.getElementById('stream-sel-' + id).value = ""; 
             document.getElementById('stream-input-' + id).value = ""; 
             document.getElementById('stream-frame-' + id).src = "about:blank"; 
         }
@@ -1324,9 +1372,6 @@
 
         // --- SUPREME FINANCE CONTROLLER ---
         function omega_RefreshFinanceDashboard() {
-            const kpiValW = document.getElementById('kpi-val-w');
-            if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
-            
             const netProfit = _COMPLETED_LEDGER.reduce((sum, item) => sum + (item.pnl || 0), 0);
             const kpiPnl = document.getElementById('kpi-val-p');
             if (kpiPnl) {
@@ -1351,7 +1396,7 @@
         }
 
         function omega_RenderSupremeLedgerTable() {
-            const tableElement = document.getElementById('v19-master-data-table');
+            const tableElement = document.getElementById('omega-data-table');
             if(!tableElement) return;
 
             let headerHtml = `<tr><th>TARİH</th><th>OPERASYON KODU</th><th>RİSK ($)</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
