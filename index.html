@@ -10,8 +10,8 @@
     
     <style>
         /* ==========================================================================
-           V19 SUPREME STYLING SYSTEM v13.0 (FINAL)
-           FULL ARCHIVE - NO COMPRESSION - MAXIMUM DETAIL
+           V19 SUPREME STYLING SYSTEM v13.0 (FINAL ARCHIVE)
+           Tüm modüller, Excel tablosu, animasyonlar ve grid yapıları açıkça yazılmıştır.
            ========================================================================== */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -43,7 +43,6 @@
             --sidebar-w: 280px;
             --transition-fast: all 0.2s ease;
             --transition-main: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* --- GLOBAL RESET & SCROLLBAR --- */
@@ -143,15 +142,9 @@
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .nav-link:hover { 
-            background: rgba(255,255,255,0.02); 
-            color: #ffffff; 
-            padding-left: 45px; 
-        }
-
+        .nav-link:hover { background: rgba(255,255,255,0.02); color: #ffffff; padding-left: 45px; }
         .nav-link:hover i { transform: scale(1.15); }
 
-        /* --- NAVİGASYON AKTİF DURUMLARI --- */
         .nav-link.active { background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); color: #ffffff; border-left: 5px solid var(--green); }
         .nav-link.basket.active { background: linear-gradient(90deg, rgba(249, 115, 22, 0.1) 0%, transparent 100%); border-left-color: var(--orange); }
         .nav-link.stream.active { background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%); border-left-color: var(--gold); }
@@ -185,14 +178,7 @@
         .console-info h2 { margin: 0; font-size: 1.25em; font-weight: 950; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; }
         .console-info span { font-size: 0.65em; color: var(--muted); font-weight: 800; letter-spacing: 3px; }
 
-        .header-wallet {
-            background: var(--panel); border: 1px solid var(--border); padding: 14px 28px; border-radius: 12px; 
-            display: flex; align-items: center; gap: 15px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-        }
-        .header-wallet label { font-size: 0.65em; color: var(--muted); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-        .header-wallet b { font-family: 'JetBrains Mono'; color: var(--gold); font-size: 1.3em; font-weight: 950; text-shadow: 0 0 10px var(--gold-glow); }
-
-        .main-scroll-box { flex-grow: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); }
+        .main-scroll-box { flex-grow: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); position: relative; }
 
         /* ==========================================================================
            RADAR KONTROL PANELİ
@@ -207,12 +193,11 @@
         }
         .select-supreme:hover { border-color: var(--muted); }
 
-        /* --- CUSTOM LEAGUE DROPDOWN PRO --- */
         .league-drop-wrapper { position: relative; min-width: 380px; }
         .league-drop-trigger { 
             background: #000000; border: 2px solid var(--border); color: #ffffff; padding: 14px 25px; 
-            border-radius: 10px; font-size: 0.9em; font-weight: 900; cursor: pointer; 
-            display: flex; align-items: center; justify-content: space-between; transition: var(--transition-fast);
+            border-radius: 10px; font-size: 0.9em; font-weight: 900; cursor: pointer; display: flex; 
+            align-items: center; justify-content: space-between; transition: var(--transition-fast);
         }
         .league-drop-trigger:hover { border-color: var(--gold); background: #050505; }
         
@@ -228,7 +213,6 @@
         .league-drop-item:hover { background: #1c1c21; color: var(--gold); padding-left: 35px; }
         .league-drop-item img { width: 24px; height: 16px; margin-right: 18px; border-radius: 3px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
-        /* --- SIRALAMA BUTONLARI --- */
         .mode-row { display: flex; gap: 15px; }
         .btn-mode-supreme { 
             background: transparent; border: 2.5px solid var(--orange); color: var(--orange); padding: 14px 40px; 
@@ -252,7 +236,6 @@
         .match-row-pro:last-child { border-bottom: none; }
         .match-row-pro:hover { background: #111118; transform: scale(1.005); z-index: 10; border-left: 2px solid var(--green); }
         
-        /* FAVORİ YILDIZ (MAÇ YANINDA) */
         .fav-star-box { font-size: 1.4em; color: var(--border-bright); margin-right: 20px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: pointer; }
         .fav-star-box:hover { color: var(--muted); transform: scale(1.1); }
         .fav-star-box.active { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); transform: scale(1.25); }
@@ -261,7 +244,6 @@
         .match-teams-main { font-weight: 800; flex-grow: 1; display: flex; align-items: center; color: #f4f4f7; letter-spacing: 0.2px; }
         .match-flag-sup { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; margin-left: 18px; box-shadow: 0 3px 8px rgba(0,0,0,0.6); }
 
-        /* SAAT SIRALI (KOMPAKT) MOD */
         .compact-mode-row { font-size: 0.78em !important; padding: 10px 30px !important; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 5px; }
         .match-ico-marker { margin-right: 15px; font-size: 1.1em; opacity: 0.6; }
         .league-label-badge { 
@@ -284,7 +266,6 @@
         .stream-master-grid { display: none; gap: 20px; height: calc(100vh - 350px); width: 100%; }
         .stream-master-grid.active { display: grid; }
         
-        /* Strict Grid Definitions */
         .m-lay-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
         .m-lay-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
         .m-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
@@ -308,11 +289,19 @@
         .fin-terminal-wrapper.active { display: grid; }
         .fin-scroller-pane { overflow-y: auto; display: flex; flex-direction: column; gap: 35px; padding-right: 15px; }
         
+        /* OMEGA ROLLING BUTONLARI */
         .rolling-grand-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
-        .rolling-box-seg { background: var(--panel); border: 1.5px solid var(--border); padding: 35px 15px; border-radius: 20px; text-align: center; border-top: 6px solid var(--muted); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .rolling-box-seg.active { border-top-color: var(--green); background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); box-shadow: 0 25px 50px rgba(0,0,0,0.6); transform: translateY(-8px); }
-        .rolling-box-seg label { font-size: 0.65em; font-weight: 950; color: var(--muted); text-transform: uppercase; margin-bottom: 18px; display: block; letter-spacing: 2px; }
-        .rolling-box-seg b { font-family: 'JetBrains Mono'; font-size: 1.6em; font-weight: 950; color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
+        .rolling-box-btn { 
+            background: var(--panel); border: 1.5px solid var(--border); padding: 30px 15px; 
+            border-radius: 20px; text-align: center; border-top: 6px solid var(--muted); 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
+        }
+        .rolling-box-btn:hover { 
+            border-top-color: var(--green); background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: translateY(-8px); 
+        }
+        .rolling-box-btn label { font-size: 0.7em; font-weight: 950; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; display: block; letter-spacing: 2px; cursor: pointer; }
+        .rolling-box-btn b { font-family: 'JetBrains Mono'; font-size: 1.4em; font-weight: 950; color: var(--gold); }
 
         .ledger-supreme-pro { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column; flex-grow: 1; min-height: 600px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
         .ledger-supreme-header { padding: 30px 40px; border-bottom: 2px solid #1f1f23; display: flex; justify-content: space-between; align-items: center; background: var(--panel-header); }
@@ -342,6 +331,79 @@
         
         .hard-reset-link { text-align: center; color: #222222; font-size: 11px; font-weight: 950; cursor: pointer; text-decoration: underline; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .hard-reset-link:hover { color: var(--red); opacity: 0.8; }
+
+        /* ==========================================================================
+           ROLLING EXCEL MODAL (YENİ SİSTEM)
+           ========================================================================== */
+        .rolling-modal-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.95); z-index: 6000;
+            display: none; flex-direction: column; backdrop-filter: blur(10px);
+        }
+
+        .excel-header {
+            padding: 25px 40px; background: #0a0a0c; border-bottom: 2px solid var(--border-bright);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .excel-header h2 { color: var(--gold); font-size: 1.5em; font-weight: 950; letter-spacing: 3px; text-shadow: 0 0 15px var(--gold-glow); margin:0; }
+        .excel-close-btn { background: transparent; border: none; color: var(--muted); font-size: 2em; cursor: pointer; transition: 0.3s; }
+        .excel-close-btn:hover { color: var(--red); transform: rotate(90deg); }
+
+        .excel-config-bar {
+            padding: 20px 40px; background: #111; border-bottom: 1px solid var(--border);
+            display: flex; gap: 30px; align-items: center;
+        }
+
+        .config-item { display: flex; align-items: center; gap: 15px; }
+        .config-item label { color: var(--muted); font-weight: 900; font-size: 0.8em; letter-spacing: 1px; }
+        .config-item input { background: #000; border: 1.5px solid var(--border-bright); color: var(--green); font-family: 'JetBrains Mono'; font-size: 1.2em; font-weight: 900; padding: 10px 15px; border-radius: 8px; width: 150px; }
+        .config-item .display-val { font-family: 'JetBrains Mono'; font-size: 1.5em; font-weight: 900; color: #fff; }
+
+        .excel-table-wrapper { flex-grow: 1; overflow: auto; padding: 30px 40px; }
+
+        .excel-table { width: 100%; border-collapse: collapse; min-width: 1800px; }
+        .excel-table th, .excel-table td { border: 1px solid var(--border-bright); padding: 15px; text-align: center; vertical-align: top; }
+        .excel-table th { background: #161618; color: var(--muted); font-weight: 900; font-size: 0.8em; letter-spacing: 1px; }
+        .excel-table td.day-col { background: #0a0a0c; font-weight: 950; font-size: 1.1em; color: var(--gold); vertical-align: middle; width: 100px; }
+        .excel-table td.bal-col { background: #0a0a0c; font-family: 'JetBrains Mono'; font-weight: 900; color: #fff; vertical-align: middle; width: 150px; font-size: 1.1em; }
+
+        .op-slot {
+            background: #000; border: 1px solid #222; border-radius: 8px; padding: 12px;
+            display: flex; flex-direction: column; gap: 8px; min-width: 140px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        .op-slot input {
+            background: #111; border: 1px solid #333; color: #fff; font-family: 'JetBrains Mono';
+            padding: 8px; border-radius: 4px; font-size: 0.9em; text-align: center; font-weight: bold;
+        }
+        .op-slot input:focus { border-color: var(--gold); }
+
+        .op-actions { display: flex; gap: 8px; margin-top: 5px; }
+        .btn-slot-w { background: var(--green-dark); color: #fff; border: 1px solid var(--green); flex: 1; padding: 8px; border-radius: 4px; font-weight: 950; cursor: pointer; transition: 0.2s; }
+        .btn-slot-w:hover { background: var(--green); color: #000; }
+        .btn-slot-l { background: #7f1d1d; color: #fff; border: 1px solid var(--red); flex: 1; padding: 8px; border-radius: 4px; font-weight: 950; cursor: pointer; transition: 0.2s; }
+        .btn-slot-l:hover { background: var(--red); }
+
+        .slot-resolved {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; padding: 10px; border-radius: 8px; position: relative; font-family: 'JetBrains Mono';
+        }
+        .slot-resolved.win { background: rgba(16, 185, 129, 0.1); border: 1.5px solid var(--green); }
+        .slot-resolved.loss { background: rgba(239, 68, 68, 0.1); border: 1.5px solid var(--red); }
+        
+        .res-text { font-weight: 900; font-size: 1.1em; margin-bottom: 5px; }
+        .slot-resolved.win .res-text { color: var(--green); }
+        .slot-resolved.loss .res-text { color: var(--red); }
+        
+        .res-detail { font-size: 0.7em; color: var(--muted); }
+        
+        .btn-undo {
+            position: absolute; top: 5px; right: 5px; background: transparent; border: none;
+            color: var(--muted); cursor: pointer; font-size: 0.9em; transition: 0.2s;
+        }
+        .btn-undo:hover { color: var(--gold); transform: rotate(-45deg); }
+
     </style>
 </head>
 <body>
@@ -377,11 +439,7 @@
                 <h2 id="supreme-main-title">FUTBOL RADARI</h2>
                 <span>STATUS: SYSTEM ONLINE</span>
             </div>
-            <div class="header-wallet">
-                <label>OPERASYONEL KASA (USDT)</label>
-                <b id="top-wallet-display">100.00</b>
-            </div>
-        </header>
+            </header>
 
         <section class="main-scroll-box">
             
@@ -394,7 +452,7 @@
                         
                         <div class="league-drop-wrapper">
                             <div class="league-drop-trigger" onclick="omega_ToggleDropdown(event)">
-                                <div id="drop-label-text">TÜM LİGLER</div>
+                                <div id="drop-text-label">TÜM LİGLER</div>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
                             <div class="league-drop-menu" id="drop-menu-list"></div>
@@ -402,8 +460,8 @@
                     </div>
 
                     <div class="mode-row">
-                        <button class="btn-mode-supreme active" id="btn-sort-lg" onclick="omega_SetSortMode('league')">LİG SIRALI AKIŞ</button>
-                        <button class="btn-mode-supreme" id="btn-sort-tm" onclick="omega_SetSortMode('time')">SAAT SIRALI AKIŞ</button>
+                        <button class="btn-mode-supreme active" id="btn-sort-league" onclick="omega_SetSortMode('league')">LİG SIRALI AKIŞ</button>
+                        <button class="btn-mode-supreme" id="btn-sort-time" onclick="omega_SetSortMode('time')">SAAT SIRALI AKIŞ</button>
                     </div>
                 </div>
                 
@@ -422,18 +480,34 @@
                     <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6 EKRAN</button>
                 </div>
                 
-                <div id="omega-matrix-grid" class="stream-master-grid m-lay-6 active"></div>
+                <div id="omega-matrix-grid" class="matrix-grid-master m-lay-6 active"></div>
             </div>
 
             <div class="fin-terminal-wrapper" id="v19-finance-block">
                 
                 <div class="fin-scroller-pane">
+                    
                     <div class="rolling-grand-grid">
-                        <div class="rolling-card-segment active"><label>1 HAFTA</label><b>$1.000</b></div>
-                        <div class="rolling-card-segment"><label>15 GÜN</label><b>$5.000</b></div>
-                        <div class="rolling-card-segment"><label>30 GÜN</label><b>$15.000</b></div>
-                        <div class="rolling-card-segment"><label>60 GÜN</label><b>$40.000</b></div>
-                        <div class="rolling-card-segment"><label>90 GÜN</label><b>$100.000</b></div>
+                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(7)">
+                            <label>1 HAFTA (7 GÜN)</label>
+                            <b>EXCEL AÇ</b>
+                        </div>
+                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(15)">
+                            <label>15 GÜN</label>
+                            <b>EXCEL AÇ</b>
+                        </div>
+                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(30)">
+                            <label>30 GÜN</label>
+                            <b>EXCEL AÇ</b>
+                        </div>
+                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(60)">
+                            <label>60 GÜN</label>
+                            <b>EXCEL AÇ</b>
+                        </div>
+                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(90)">
+                            <label>90 GÜN</label>
+                            <b>EXCEL AÇ</b>
+                        </div>
                     </div>
 
                     <div class="ledger-supreme-pro">
@@ -445,7 +519,7 @@
                             </div>
                         </div>
                         <div class="ledger-table-scroller">
-                            <table class="supreme-data-table" id="v19-master-table"></table>
+                            <table class="supreme-data-table" id="omega-data-table"></table>
                         </div>
                     </div>
                 </div>
@@ -477,6 +551,46 @@
             </div>
 
         </section>
+
+        <div id="rolling-excel-overlay" class="rolling-modal-overlay">
+            <div class="excel-header">
+                <h2 id="excel-modal-title">7 GÜNLÜK ROLLING EXCEL</h2>
+                <button class="excel-close-btn" onclick="omega_CloseRollingExcel()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="excel-config-bar">
+                <div class="config-item">
+                    <label>BAŞLANGIÇ BAKİYESİ:</label>
+                    <input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()">
+                </div>
+                <div class="config-item" style="margin-left:auto;">
+                    <label>GÜNCEL KASA:</label>
+                    <span class="display-val" id="excel-current-bal">$100.00</span>
+                </div>
+            </div>
+            <div class="excel-table-wrapper">
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th>GÜN</th>
+                            <th>İŞLEM 1</th>
+                            <th>İŞLEM 2</th>
+                            <th>İŞLEM 3</th>
+                            <th>İŞLEM 4</th>
+                            <th>İŞLEM 5</th>
+                            <th>İŞLEM 6</th>
+                            <th>İŞLEM 7</th>
+                            <th>İŞLEM 8</th>
+                            <th>İŞLEM 9</th>
+                            <th>İŞLEM 10</th>
+                            <th>GÜN SONU</th>
+                        </tr>
+                    </thead>
+                    <tbody id="excel-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
     </main>
 
     <script>
@@ -489,6 +603,8 @@
         let _ACTIVE_LEAGUE_FILTER = 'ALL';
         let _ACTIVE_SORT_MODE = 'league'; 
         let _ACTIVE_LEDGER_TAB = 'pend';
+        
+        let _ACTIVE_EXCEL_DAYS = 7;
 
         // --- LOCALSTORAGE PERSISTENT DATABASE ---
         let _WALLET_BALANCE = parseFloat(localStorage.getItem('v19_w')) || 100.00;
@@ -496,9 +612,11 @@
         let _PENDING_OPS = JSON.parse(localStorage.getItem('v19_p')) || [];
         let _COMPLETED_LEDGER = JSON.parse(localStorage.getItem('v19_l')) || [];
         let _FAV_MATCHES = JSON.parse(localStorage.getItem('v19_fav_m')) || [];
+        
+        // Yeni: Rolling Veritabanı
+        let _ROLLING_DB = JSON.parse(localStorage.getItem('v19_rolling')) || {};
 
         // --- HIERARCHY & RULES ---
-        // Puanlama Algoritması (Büyük ligler her zaman üstte)
         const HIERARCHY_SCORES = {
             "TÜRKİYE - SÜPER LİG": 4000, 
             "İNGİLTERE - PREMIER LEAGUE": 3900, 
@@ -523,7 +641,6 @@
             "AMERİKA - WNBA": 3800
         };
 
-        // Altın Basketbol Listesi (Maç olmasa bile dropdown'da listelenecek)
         const GOLD_BASKET_LIST = [
             "AMERİKA - NBA", "AVRUPA - EUROLEAGUE", "TÜRKİYE - BSL", "İSPANYA - LIGA ACB",
             "İTALYA - LEGA A", "FRANSA - LNB PRO A", "ALMANYA - BBL", "AVRUPA - EUROCUP",
@@ -543,7 +660,7 @@
                 
                 omega_BuildUIComponents();
                 omega_ExecuteRadarFilter();
-                omega_UpdateGlobalWalletUI();
+                omega_RefreshFinanceDashboard(); // Güncel kasa verileri buradan yüklenir
                 
             } catch (err) {
                 console.error("Critical: Data Sync Failure.", err);
@@ -560,7 +677,6 @@
         // --- UTILITY FUNCTIONS ---
         function omega_IsBasketballLeague(leagueName) {
             const up = leagueName.toUpperCase();
-            // Kesin basketbol izolasyon kuralı
             return ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"].some(x => up.includes(x));
         }
 
@@ -589,7 +705,6 @@
             const today = new Date(); today.setHours(0,0,0,0);
             
             const diffDays = Math.round((dObj - today) / 86400000);
-            
             if (diffDays === 0) return "BUGÜN";
             if (diffDays === 1) return "YARIN";
             
@@ -598,24 +713,20 @@
         }
 
         function omega_GenerateMatchID(matchObj) {
-            // Favoriler için güvenli kimlik üretici (HTML bozulmasını engeller)
             if(!matchObj || !matchObj.m || !matchObj.tm) return "err_id_" + Math.random();
             return `${matchObj.dt}_${matchObj.tm}_${matchObj.m.replace(/[^a-zA-Z0-9]/g, '')}`;
         }
 
         // --- NAVIGATION CONTROLLER ---
         function omega_SwitchMainTab(targetModule, clickedElement) {
-            // Sidebar UI update
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
             clickedElement.classList.add('active');
 
-            // Hide all modules
             document.getElementById('omega-radar-block').style.display = 'none';
             document.getElementById('omega-favs-block').style.display = 'none';
             document.getElementById('omega-stream-block').style.display = 'none';
             document.getElementById('v19-finance-block').classList.remove('active');
 
-            // Routing Logic
             if(targetModule === 'futbol' || targetModule === 'basketbol') {
                 _ACTIVE_SPORT = targetModule;
                 _ACTIVE_TAB = 'bulletin';
@@ -637,7 +748,6 @@
                 document.getElementById('omega-stream-block').style.display = 'block';
                 document.getElementById('supreme-main-title').innerText = "CANLI YAYIN MERKEZİ";
                 
-                // Initialize matrix if empty
                 if(!document.getElementById('omega-matrix-grid').innerHTML) {
                     omega_BuildStreamMatrix(6);
                 }
@@ -657,7 +767,6 @@
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
             
-            // 1. Build Dates
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => m.t === _ACTIVE_SPORT).map(m => m.dt))].sort();
             uniqueDates.forEach(d => {
@@ -665,11 +774,9 @@
             });
             dateSelectElement.innerHTML = dateHtml;
 
-            // 2. Build Leagues
             let leagueHtml = `<div class="league-drop-item" onclick="omega_HandleDropdownSelection('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
             
             if(_ACTIVE_SPORT === 'basketbol') {
-                // BASKETBOL: Altın Ligleri zorunlu ekle (Maç olmasa bile 0 olarak görünür)
                 GOLD_BASKET_LIST.forEach(ligName => {
                     const matchCount = _LEAGUE_STATS_DB[ligName] || 0;
                     leagueHtml += `
@@ -680,7 +787,6 @@
                     `;
                 });
             } else {
-                // FUTBOL: Basketbol liglerini filtreleyerek sadece futbol liglerini ekle
                 for(let lName in _LEAGUE_STATS_DB) {
                     if(!omega_IsBasketballLeague(lName) && _LEAGUE_STATS_DB[lName] > 0) {
                         leagueHtml += `
@@ -703,7 +809,7 @@
 
         function omega_HandleDropdownSelection(val, htmlContent) {
             _ACTIVE_LEAGUE_FILTER = val;
-            document.getElementById('drop-label-text').innerHTML = htmlContent;
+            document.getElementById('drop-text-label').innerHTML = htmlContent;
             document.getElementById('drop-menu-list').style.display = 'none';
             omega_ExecuteRadarFilter();
         }
@@ -724,7 +830,6 @@
             
             const selectedDate = document.getElementById('v19-date-select').value;
             
-            // MASTER FILTER ALGORITHM
             let filteredData = _MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
                 const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
@@ -732,7 +837,6 @@
                 const leagueMatch = (_ACTIVE_LEAGUE_FILTER === 'ALL' || m.l === _ACTIVE_LEAGUE_FILTER);
                 
                 if(_ACTIVE_TAB === 'favs') {
-                    // Favoriler sekmesindeysek sadece favori ID'sine sahip olanları getir
                     const mID = omega_GenerateMatchID(m);
                     return _FAV_MATCHES.includes(mID) && dateMatch;
                 }
@@ -743,7 +847,6 @@
             let finalHtmlBuffer = ""; 
             const groupedByDay = {};
             
-            // Tarihe Göre Grupla
             filteredData.forEach(m => { 
                 if(!groupedByDay[m.dt]) groupedByDay[m.dt] = []; 
                 groupedByDay[m.dt].push(m); 
@@ -753,7 +856,6 @@
                 finalHtmlBuffer += `<div style="color:var(--green); font-size:0.8em; font-weight:900; padding:15px 0 10px 0; border-bottom:1px solid #1f1f23; margin-bottom:20px; letter-spacing:2px;">${omega_FormatHumanDate(day)}</div>`;
                 
                 if(_ACTIVE_SORT_MODE === 'time') {
-                    // --- SAAT SIRALI AKIŞ (KOMPAKT NİZAM) ---
                     let dayGroupsSorted = groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm));
                     
                     dayGroupsSorted.forEach(m => {
@@ -776,20 +878,17 @@
                     });
                     
                 } else {
-                    // --- LİG BAZLI AKIŞ (HIYERARŞİ DESTEKLİ) ---
                     const leagueGroups = {}; 
                     groupedByDay[day].forEach(m => { 
                         if(!leagueGroups[m.l]) leagueGroups[m.l] = []; 
                         leagueGroups[m.l].push(m); 
                     });
                     
-                    // Ligleri Hiyerarşiye Göre Sırala
                     let sortedLeagues = Object.keys(leagueGroups).sort((a,b) => {
                         const scoreA = HIERARCHY_SCORES[a] || 0; 
                         const scoreB = HIERARCHY_SCORES[b] || 0;
                         if(scoreA !== scoreB) return scoreB - scoreA;
                         
-                        // Puan eşitse en erken maça göre sırala
                         let timeA = leagueGroups[a].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
                         let timeB = leagueGroups[b].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
                         return timeA.localeCompare(timeB);
@@ -847,8 +946,6 @@
                 _FAV_MATCHES.push(matchID);
             }
             localStorage.setItem('v19_fav_m', JSON.stringify(_FAV_MATCHES));
-            
-            // Eğer favoriler sekmesindeyse listeyi hemen güncelle
             omega_ExecuteRadarFilter();
         }
 
@@ -860,7 +957,7 @@
         // --- MULTI-STREAM HUB CONTROLLER ---
         function omega_BuildStreamMatrix(numScreens) {
             const gridContainer = document.getElementById('omega-matrix-grid');
-            gridContainer.className = `stream-master-grid active m-lay-${numScreens}`; 
+            gridContainer.className = `matrix-grid-master active m-lay-${numScreens}`; 
             gridContainer.innerHTML = "";
             
             document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
@@ -890,18 +987,170 @@
             document.getElementById('stream-frame-' + id).src = "about:blank"; 
         }
 
+        // ==========================================================================
+        // YENİ: ROLLING EXCEL MİMARİSİ (10 İŞLEM / GÜN)
+        // ==========================================================================
+        
+        function omega_OpenRollingExcel(days) {
+            _ACTIVE_EXCEL_DAYS = days;
+            
+            // Eğer veritabanında bu gün sayısına ait obje yoksa yarat
+            if(!_ROLLING_DB[days]) {
+                _ROLLING_DB[days] = { startBal: 100, ops: {} };
+            }
+            
+            document.getElementById('excel-modal-title').innerText = `${days} GÜNLÜK ROLLING EXCEL`;
+            document.getElementById('excel-start-bal').value = _ROLLING_DB[days].startBal;
+            
+            document.getElementById('rolling-excel-overlay').style.display = 'flex';
+            omega_RenderExcelTable();
+        }
+
+        function omega_CloseRollingExcel() {
+            document.getElementById('rolling-excel-overlay').style.display = 'none';
+        }
+
+        function omega_UpdateExcelConfig() {
+            const newBal = parseFloat(document.getElementById('excel-start-bal').value);
+            if(!isNaN(newBal)) {
+                _ROLLING_DB[_ACTIVE_EXCEL_DAYS].startBal = newBal;
+                omega_SaveRollingDB();
+                omega_RenderExcelTable(); // Tabloyu yeni bakiye ile hesapla ve çiz
+            }
+        }
+
+        function omega_SaveRollingDB() {
+            localStorage.setItem('v19_rolling', JSON.stringify(_ROLLING_DB));
+        }
+
+        function omega_RenderExcelTable() {
+            const tbody = document.getElementById('excel-table-body');
+            tbody.innerHTML = '';
+            
+            const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+            let runningBalance = currentPlan.startBal;
+
+            for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
+                // Bu güne ait işlemler dizisi (yoksa boş oluştur)
+                const dayOps = currentPlan.ops[day] || [];
+                
+                let tr = document.createElement('tr');
+                
+                // Gün Hücresi
+                let tdDay = document.createElement('td');
+                tdDay.className = 'day-col';
+                tdDay.innerText = `GÜN ${day}`;
+                tr.appendChild(tdDay);
+
+                // 10 İşlem Hücresi
+                for (let slot = 0; slot < 10; slot++) {
+                    let tdOp = document.createElement('td');
+                    let slotHTML = "";
+
+                    if (dayOps[slot]) {
+                        // İşlem Yapılmış (Kazanmış veya Kaybetmiş)
+                        const op = dayOps[slot];
+                        const statusClass = op.res === 'win' ? 'win' : 'loss';
+                        const sign = op.res === 'win' ? '+' : '-';
+                        const pnl = op.res === 'win' ? (op.amt * op.odds) - op.amt : op.amt;
+                        
+                        // Kasayı Güncelle
+                        if (op.res === 'win') runningBalance += pnl;
+                        else runningBalance -= pnl;
+
+                        slotHTML = `
+                            <div class="slot-resolved ${statusClass}">
+                                <button class="btn-undo" onclick="omega_UndoExcelOp(${day}, ${slot})"><i class="fa-solid fa-rotate-left"></i></button>
+                                <span class="res-text">$${op.amt} x ${op.odds}</span>
+                                <span class="res-detail">${sign}$${pnl.toFixed(2)}</span>
+                            </div>
+                        `;
+                    } else {
+                        // Boş Slot - Girdi Formu
+                        // Sadece aktif bakiye varsa ve bir önceki slot doluysa form göster (Excel akışı)
+                        // Veya kullanıcı her zaman giriş yapabilsin diye açık tut
+                        slotHTML = `
+                            <div class="op-slot">
+                                <input type="number" id="ex-amt-${day}-${slot}" placeholder="Miktar">
+                                <input type="number" id="ex-odds-${day}-${slot}" placeholder="Oran">
+                                <div class="op-actions">
+                                    <button class="btn-slot-w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">W</button>
+                                    <button class="btn-slot-l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">L</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    tdOp.innerHTML = slotHTML;
+                    tr.appendChild(tdOp);
+                }
+
+                // Gün Sonu Kasası Hücresi
+                let tdBal = document.createElement('td');
+                tdBal.className = 'bal-col';
+                tdBal.innerText = `$${runningBalance.toFixed(2)}`;
+                tr.appendChild(tdBal);
+
+                tbody.appendChild(tr);
+            }
+
+            // Üst Bar Güncel Kasayı Yenile
+            document.getElementById('excel-current-bal').innerText = `$${runningBalance.toFixed(2)}`;
+        }
+
+        function omega_ResolveExcelOp(day, slot, result) {
+            const amtInput = document.getElementById(`ex-amt-${day}-${slot}`).value;
+            const oddsInput = document.getElementById(`ex-odds-${day}-${slot}`).value;
+            
+            const amt = parseFloat(amtInput);
+            const odds = parseFloat(oddsInput);
+
+            if (isNaN(amt) || isNaN(odds)) {
+                alert("Lütfen miktar ve oran değerlerini eksiksiz girin.");
+                return;
+            }
+
+            const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+            if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+            
+            // İlgili slota kaydet
+            currentPlan.ops[day][slot] = { amt: amt, odds: odds, res: result };
+            
+            omega_SaveRollingDB();
+            omega_RenderExcelTable();
+        }
+
+        function omega_UndoExcelOp(day, slot) {
+            // Silme (Geri alma) işlemi
+            const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+            if (currentPlan.ops[day] && currentPlan.ops[day][slot]) {
+                // Diziden silerken boşluk (null) bırakmalıyız ki diğer slotlar kaymasın
+                // Array splice yapmak yerine delete yapıp veya null eşitleyip tablo renderinde atlayabiliriz
+                // En temizi sonradan girenleri korumak için slot'u direkt splice edip diziyi sıkıştırmak.
+                currentPlan.ops[day].splice(slot, 1);
+                omega_SaveRollingDB();
+                omega_RenderExcelTable();
+            }
+        }
+
+
         // --- SUPREME FINANCE CONTROLLER ---
         function omega_RefreshFinanceDashboard() {
-            omega_UpdateGlobalWalletUI();
+            // Sağ taraftaki ana KPI kısımlarını günceller
+            const kpiValW = document.getElementById('kpi-val-w');
+            if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
             
             const netProfit = _COMPLETED_LEDGER.reduce((sum, item) => sum + (item.pnl || 0), 0);
-            document.getElementById('kpi-val-p').innerText = (netProfit >= 0 ? "+" : "") + netProfit.toFixed(2);
-            document.getElementById('kpi-val-p').style.color = netProfit >= 0 ? 'var(--green)' : 'var(--red)';
+            const kpiPnl = document.getElementById('kpi-val-p');
+            if (kpiPnl) {
+                kpiPnl.innerText = (netProfit >= 0 ? "+" : "") + netProfit.toFixed(2);
+                kpiPnl.style.color = netProfit >= 0 ? 'var(--green)' : 'var(--red)';
+            }
             
             const totalResolved = _COMPLETED_LEDGER.filter(x => x.res === 'win' || x.res === 'loss').length;
             const winsOnly = _COMPLETED_LEDGER.filter(x => x.res === 'win').length;
             const winRate = totalResolved > 0 ? ((winsOnly / totalResolved) * 100).toFixed(1) : 0;
-            document.getElementById('kpi-val-wr').innerText = "%" + winRate;
+            const kpiWr = document.getElementById('kpi-val-wr');
+            if (kpiWr) kpiWr.innerText = "%" + winRate;
             
             omega_RenderSupremeLedgerTable();
         }
@@ -914,7 +1163,9 @@
         }
 
         function omega_RenderSupremeLedgerTable() {
-            const tableElement = document.getElementById('v19-master-table');
+            const tableElement = document.getElementById('v19-master-data-table');
+            if(!tableElement) return;
+
             let headerHtml = `<tr><th>TARİH</th><th>OPERASYON KODU</th><th>RİSK ($)</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
             let rowsHtml = "";
             
@@ -1006,8 +1257,8 @@
         }
 
         function omega_UpdateGlobalWalletUI() { 
-            document.getElementById('top-wallet-display').innerText = _WALLET_BALANCE.toFixed(2); 
-            document.getElementById('kpi-val-w').innerText = _WALLET_BALANCE.toFixed(2); 
+            const kpiVal = document.getElementById('kpi-val-w');
+            if(kpiVal) kpiVal.innerText = _WALLET_BALANCE.toFixed(2); 
         }
 
         function omega_HardSystemReset() { 
