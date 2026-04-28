@@ -10,7 +10,7 @@
     
     <style>
         /* ==========================================================================
-           V19 SUPREME STYLING SYSTEM v12.0
+           V19 SUPREME STYLING SYSTEM v13.0 (FINAL)
            FULL ARCHIVE - NO COMPRESSION - MAXIMUM DETAIL
            ========================================================================== */
         
@@ -211,8 +211,8 @@
         .league-drop-wrapper { position: relative; min-width: 380px; }
         .league-drop-trigger { 
             background: #000000; border: 2px solid var(--border); color: #ffffff; padding: 14px 25px; 
-            border-radius: 10px; font-size: 0.9em; font-weight: 900; cursor: pointer; display: flex; 
-            align-items: center; justify-content: space-between; transition: var(--transition-fast);
+            border-radius: 10px; font-size: 0.9em; font-weight: 900; cursor: pointer; 
+            display: flex; align-items: center; justify-content: space-between; transition: var(--transition-fast);
         }
         .league-drop-trigger:hover { border-color: var(--gold); background: #050505; }
         
@@ -252,6 +252,7 @@
         .match-row-pro:last-child { border-bottom: none; }
         .match-row-pro:hover { background: #111118; transform: scale(1.005); z-index: 10; border-left: 2px solid var(--green); }
         
+        /* FAVORİ YILDIZ (MAÇ YANINDA) */
         .fav-star-box { font-size: 1.4em; color: var(--border-bright); margin-right: 20px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: pointer; }
         .fav-star-box:hover { color: var(--muted); transform: scale(1.1); }
         .fav-star-box.active { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); transform: scale(1.25); }
@@ -264,8 +265,9 @@
         .compact-mode-row { font-size: 0.78em !important; padding: 10px 30px !important; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 5px; }
         .match-ico-marker { margin-right: 15px; font-size: 1.1em; opacity: 0.6; }
         .league-label-badge { 
-            font-size: 0.75em; color: var(--text-dim); background: #18181b; padding: 5px 15px; border-radius: 6px; 
-            margin-left: auto; font-weight: 900; border: 1px solid #2d2d30; letter-spacing: 1px; text-transform: uppercase;
+            font-size: 0.75em; color: var(--text-dim); background: #18181b; padding: 5px 15px; 
+            border-radius: 6px; margin-left: auto; font-weight: 900; border: 1px solid #2d2d30; 
+            letter-spacing: 1px; text-transform: uppercase;
         }
 
         /* ==========================================================================
@@ -281,6 +283,8 @@
 
         .stream-master-grid { display: none; gap: 20px; height: calc(100vh - 350px); width: 100%; }
         .stream-master-grid.active { display: grid; }
+        
+        /* Strict Grid Definitions */
         .m-lay-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
         .m-lay-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
         .m-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
@@ -373,23 +377,27 @@
                 <h2 id="supreme-main-title">FUTBOL RADARI</h2>
                 <span>STATUS: SYSTEM ONLINE</span>
             </div>
-            </header>
+            <div class="header-wallet">
+                <label>OPERASYONEL KASA (USDT)</label>
+                <b id="top-wallet-display">100.00</b>
+            </div>
+        </header>
 
         <section class="main-scroll-box">
             
             <div id="omega-radar-block">
                 <div class="controls-wrapper">
                     <div class="filter-panel">
-                        <select id="omega-date-select" class="select-supreme" onchange="omega_ExecuteRadarFilter()">
+                        <select id="v19-date-select" class="select-supreme" onchange="omega_ExecuteRadarFilter()">
                             <option value="ALL">TÜM ZAMAN ÇİZELGESİ</option>
                         </select>
                         
                         <div class="league-drop-wrapper">
                             <div class="league-drop-trigger" onclick="omega_ToggleDropdown(event)">
-                                <div id="omega-drop-label">TÜM LİGLER</div>
+                                <div id="drop-label-text">TÜM LİGLER</div>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
-                            <div class="league-drop-menu" id="omega-drop-menu"></div>
+                            <div class="league-drop-menu" id="drop-menu-list"></div>
                         </div>
                     </div>
 
@@ -399,11 +407,11 @@
                     </div>
                 </div>
                 
-                <div id="omega-radar-output"></div>
+                <div id="radar-render-output"></div>
             </div>
 
             <div id="omega-favs-block" style="display:none;">
-                <div id="omega-fav-output"></div>
+                <div id="favs-render-output"></div>
             </div>
 
             <div id="omega-stream-block" style="display:none;">
@@ -414,10 +422,10 @@
                     <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6 EKRAN</button>
                 </div>
                 
-                <div id="omega-stream-grid" class="matrix-grid-master m-lay-6 active"></div>
+                <div id="omega-matrix-grid" class="stream-master-grid m-lay-6 active"></div>
             </div>
 
-            <div class="fin-terminal-wrapper" id="omega-finance-block">
+            <div class="fin-terminal-wrapper" id="v19-finance-block">
                 
                 <div class="fin-scroller-pane">
                     <div class="rolling-grand-grid">
@@ -437,7 +445,7 @@
                             </div>
                         </div>
                         <div class="ledger-table-scroller">
-                            <table class="supreme-data-table" id="omega-ledger-table"></table>
+                            <table class="supreme-data-table" id="v19-master-table"></table>
                         </div>
                     </div>
                 </div>
@@ -449,7 +457,7 @@
 
                     <div class="op-input-supreme-box">
                         <div class="global-kpi-hub">
-                            <div class="kpi-card-supreme"><span>AKTİF KASA</span><b id="kpi-val-w">100.00</b></div>
+                            <div class="kpi-card-supreme"><span>KASA</span><b id="kpi-val-w">100.00</b></div>
                             <div class="kpi-card-supreme"><span>NET P/L</span><b id="kpi-val-p">0.00</b></div>
                             <div class="kpi-card-supreme"><span>SUCCESS</span><b id="kpi-val-wr">%0</b></div>
                         </div>
@@ -490,6 +498,7 @@
         let _FAV_MATCHES = JSON.parse(localStorage.getItem('v19_fav_m')) || [];
 
         // --- HIERARCHY & RULES ---
+        // Puanlama Algoritması (Büyük ligler her zaman üstte)
         const HIERARCHY_SCORES = {
             "TÜRKİYE - SÜPER LİG": 4000, 
             "İNGİLTERE - PREMIER LEAGUE": 3900, 
@@ -514,6 +523,7 @@
             "AMERİKA - WNBA": 3800
         };
 
+        // Altın Basketbol Listesi (Maç olmasa bile dropdown'da listelenecek)
         const GOLD_BASKET_LIST = [
             "AMERİKA - NBA", "AVRUPA - EUROLEAGUE", "TÜRKİYE - BSL", "İSPANYA - LIGA ACB",
             "İTALYA - LEGA A", "FRANSA - LNB PRO A", "ALMANYA - BBL", "AVRUPA - EUROCUP",
@@ -524,6 +534,7 @@
         async function omega_InitializeEngine() {
             console.log("V19 Supreme Engine Booting...");
             try {
+                // Cache Kırıcı (nocache) ile veriyi güvenli çek
                 const response = await fetch('v19_rapor.json?nocache=' + Date.now());
                 const rawData = await response.json();
                 
@@ -532,11 +543,11 @@
                 
                 omega_BuildUIComponents();
                 omega_ExecuteRadarFilter();
-                omega_RefreshFinanceDashboard();
+                omega_UpdateGlobalWalletUI();
                 
             } catch (err) {
                 console.error("Critical: Data Sync Failure.", err);
-                document.getElementById('omega-radar-output').innerHTML = `
+                document.getElementById('radar-render-output').innerHTML = `
                     <div style="padding:150px 0; text-align:center;">
                         <i class="fa-solid fa-triangle-exclamation" style="font-size:4em; color:var(--red); margin-bottom:20px;"></i>
                         <h2 style="font-weight:900; letter-spacing:2px; color:#fff;">RADAR ÇEVRİMDIŞI</h2>
@@ -549,6 +560,7 @@
         // --- UTILITY FUNCTIONS ---
         function omega_IsBasketballLeague(leagueName) {
             const up = leagueName.toUpperCase();
+            // Kesin basketbol izolasyon kuralı
             return ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"].some(x => up.includes(x));
         }
 
@@ -577,6 +589,7 @@
             const today = new Date(); today.setHours(0,0,0,0);
             
             const diffDays = Math.round((dObj - today) / 86400000);
+            
             if (diffDays === 0) return "BUGÜN";
             if (diffDays === 1) return "YARIN";
             
@@ -585,20 +598,24 @@
         }
 
         function omega_GenerateMatchID(matchObj) {
+            // Favoriler için güvenli kimlik üretici (HTML bozulmasını engeller)
             if(!matchObj || !matchObj.m || !matchObj.tm) return "err_id_" + Math.random();
             return `${matchObj.dt}_${matchObj.tm}_${matchObj.m.replace(/[^a-zA-Z0-9]/g, '')}`;
         }
 
         // --- NAVIGATION CONTROLLER ---
         function omega_SwitchMainTab(targetModule, clickedElement) {
+            // Sidebar UI update
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
             clickedElement.classList.add('active');
 
+            // Hide all modules
             document.getElementById('omega-radar-block').style.display = 'none';
             document.getElementById('omega-favs-block').style.display = 'none';
             document.getElementById('omega-stream-block').style.display = 'none';
             document.getElementById('v19-finance-block').classList.remove('active');
 
+            // Routing Logic
             if(targetModule === 'futbol' || targetModule === 'basketbol') {
                 _ACTIVE_SPORT = targetModule;
                 _ACTIVE_TAB = 'bulletin';
@@ -620,7 +637,8 @@
                 document.getElementById('omega-stream-block').style.display = 'block';
                 document.getElementById('supreme-main-title').innerText = "CANLI YAYIN MERKEZİ";
                 
-                if(!document.getElementById('omega-stream-grid').innerHTML) {
+                // Initialize matrix if empty
+                if(!document.getElementById('omega-matrix-grid').innerHTML) {
                     omega_BuildStreamMatrix(6);
                 }
                 
@@ -636,9 +654,10 @@
 
         // --- RADAR MODULE: UI BUILDERS ---
         function omega_BuildUIComponents() {
-            const dateSelectElement = document.getElementById('omega-date-select');
-            const dropdownMenuArea = document.getElementById('omega-drop-menu');
+            const dateSelectElement = document.getElementById('v19-date-select');
+            const dropdownMenuArea = document.getElementById('drop-menu-list');
             
+            // 1. Build Dates
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => m.t === _ACTIVE_SPORT).map(m => m.dt))].sort();
             uniqueDates.forEach(d => {
@@ -646,9 +665,11 @@
             });
             dateSelectElement.innerHTML = dateHtml;
 
+            // 2. Build Leagues
             let leagueHtml = `<div class="league-drop-item" onclick="omega_HandleDropdownSelection('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
             
             if(_ACTIVE_SPORT === 'basketbol') {
+                // BASKETBOL: Altın Ligleri zorunlu ekle (Maç olmasa bile 0 olarak görünür)
                 GOLD_BASKET_LIST.forEach(ligName => {
                     const matchCount = _LEAGUE_STATS_DB[ligName] || 0;
                     leagueHtml += `
@@ -659,6 +680,7 @@
                     `;
                 });
             } else {
+                // FUTBOL: Basketbol liglerini filtreleyerek sadece futbol liglerini ekle
                 for(let lName in _LEAGUE_STATS_DB) {
                     if(!omega_IsBasketballLeague(lName) && _LEAGUE_STATS_DB[lName] > 0) {
                         leagueHtml += `
@@ -675,14 +697,14 @@
 
         function omega_ToggleDropdown(e) {
             e.stopPropagation();
-            const menu = document.getElementById('omega-drop-menu');
+            const menu = document.getElementById('drop-menu-list');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
         function omega_HandleDropdownSelection(val, htmlContent) {
             _ACTIVE_LEAGUE_FILTER = val;
-            document.getElementById('omega-drop-label').innerHTML = htmlContent;
-            document.getElementById('omega-drop-menu').style.display = 'none';
+            document.getElementById('drop-label-text').innerHTML = htmlContent;
+            document.getElementById('drop-menu-list').style.display = 'none';
             omega_ExecuteRadarFilter();
         }
 
@@ -695,13 +717,14 @@
 
         // --- RADAR MODULE: CORE RENDERER ---
         function omega_ExecuteRadarFilter() {
-            const targetID = (_ACTIVE_TAB === 'favs') ? 'omega-fav-output' : 'omega-radar-output';
+            const targetID = (_ACTIVE_TAB === 'favs') ? 'favs-render-output' : 'radar-render-output';
             const renderArea = document.getElementById(targetID);
             
             if(!renderArea) return;
             
-            const selectedDate = document.getElementById('omega-date-select').value;
+            const selectedDate = document.getElementById('v19-date-select').value;
             
+            // MASTER FILTER ALGORITHM
             let filteredData = _MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
                 const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
@@ -709,6 +732,7 @@
                 const leagueMatch = (_ACTIVE_LEAGUE_FILTER === 'ALL' || m.l === _ACTIVE_LEAGUE_FILTER);
                 
                 if(_ACTIVE_TAB === 'favs') {
+                    // Favoriler sekmesindeysek sadece favori ID'sine sahip olanları getir
                     const mID = omega_GenerateMatchID(m);
                     return _FAV_MATCHES.includes(mID) && dateMatch;
                 }
@@ -719,6 +743,7 @@
             let finalHtmlBuffer = ""; 
             const groupedByDay = {};
             
+            // Tarihe Göre Grupla
             filteredData.forEach(m => { 
                 if(!groupedByDay[m.dt]) groupedByDay[m.dt] = []; 
                 groupedByDay[m.dt].push(m); 
@@ -728,7 +753,7 @@
                 finalHtmlBuffer += `<div style="color:var(--green); font-size:0.8em; font-weight:900; padding:15px 0 10px 0; border-bottom:1px solid #1f1f23; margin-bottom:20px; letter-spacing:2px;">${omega_FormatHumanDate(day)}</div>`;
                 
                 if(_ACTIVE_SORT_MODE === 'time') {
-                    // SAAT SIRALI AKIŞ
+                    // --- SAAT SIRALI AKIŞ (KOMPAKT NİZAM) ---
                     let dayGroupsSorted = groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm));
                     
                     dayGroupsSorted.forEach(m => {
@@ -751,18 +776,20 @@
                     });
                     
                 } else {
-                    // LİG BAZLI AKIŞ
+                    // --- LİG BAZLI AKIŞ (HIYERARŞİ DESTEKLİ) ---
                     const leagueGroups = {}; 
                     groupedByDay[day].forEach(m => { 
                         if(!leagueGroups[m.l]) leagueGroups[m.l] = []; 
                         leagueGroups[m.l].push(m); 
                     });
                     
+                    // Ligleri Hiyerarşiye Göre Sırala
                     let sortedLeagues = Object.keys(leagueGroups).sort((a,b) => {
                         const scoreA = HIERARCHY_SCORES[a] || 0; 
                         const scoreB = HIERARCHY_SCORES[b] || 0;
                         if(scoreA !== scoreB) return scoreB - scoreA;
                         
+                        // Puan eşitse en erken maça göre sırala
                         let timeA = leagueGroups[a].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
                         let timeB = leagueGroups[b].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
                         return timeA.localeCompare(timeB);
@@ -820,6 +847,8 @@
                 _FAV_MATCHES.push(matchID);
             }
             localStorage.setItem('v19_fav_m', JSON.stringify(_FAV_MATCHES));
+            
+            // Eğer favoriler sekmesindeyse listeyi hemen güncelle
             omega_ExecuteRadarFilter();
         }
 
@@ -830,8 +859,8 @@
 
         // --- MULTI-STREAM HUB CONTROLLER ---
         function omega_BuildStreamMatrix(numScreens) {
-            const gridContainer = document.getElementById('omega-stream-grid');
-            gridContainer.className = `matrix-grid-master active m-lay-${numScreens}`; 
+            const gridContainer = document.getElementById('omega-matrix-grid');
+            gridContainer.className = `stream-master-grid active m-lay-${numScreens}`; 
             gridContainer.innerHTML = "";
             
             document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
@@ -863,7 +892,7 @@
 
         // --- SUPREME FINANCE CONTROLLER ---
         function omega_RefreshFinanceDashboard() {
-            document.getElementById('kpi-val-w').innerText = _WALLET_BALANCE.toFixed(2);
+            omega_UpdateGlobalWalletUI();
             
             const netProfit = _COMPLETED_LEDGER.reduce((sum, item) => sum + (item.pnl || 0), 0);
             document.getElementById('kpi-val-p').innerText = (netProfit >= 0 ? "+" : "") + netProfit.toFixed(2);
@@ -885,7 +914,7 @@
         }
 
         function omega_RenderSupremeLedgerTable() {
-            const tableElement = document.getElementById('omega-ledger-table');
+            const tableElement = document.getElementById('v19-master-table');
             let headerHtml = `<tr><th>TARİH</th><th>OPERASYON KODU</th><th>RİSK ($)</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
             let rowsHtml = "";
             
@@ -976,6 +1005,11 @@
             omega_RenderApexSupremeChart();
         }
 
+        function omega_UpdateGlobalWalletUI() { 
+            document.getElementById('top-wallet-display').innerText = _WALLET_BALANCE.toFixed(2); 
+            document.getElementById('kpi-val-w').innerText = _WALLET_BALANCE.toFixed(2); 
+        }
+
         function omega_HardSystemReset() { 
             const newBal = prompt("DİKKAT: Terminal veritabanı silinecek! Yeni başlangıç bakiyesini girin:", _WALLET_BALANCE);
             if(newBal && !isNaN(parseFloat(newBal))) {
@@ -1034,7 +1068,7 @@
 
         // Kapatma Eventleri
         document.addEventListener('click', () => { 
-            const dMenu = document.getElementById('omega-drop-menu'); 
+            const dMenu = document.getElementById('drop-menu-list'); 
             if(dMenu) dMenu.style.display = 'none'; 
         });
 
