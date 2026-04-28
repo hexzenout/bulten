@@ -1,3 +1,912 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V26 ELITE | SUPREME COMMAND CENTER OMEGA</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <style>
+        /* ==========================================================================
+           V26 SUPREME STYLING SYSTEM (PERFORMANCE, ELEGANT UI & CENTERED GRID)
+           ========================================================================== */
+        
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+        /* --- GLOBAL COLOR VARIABLES --- */
+        :root { 
+            --gold: #fbbf24; 
+            --gold-glow: rgba(251, 191, 36, 0.3);
+            
+            --green: #10b981; 
+            --green-dark: #065f46; 
+            --green-glow: rgba(16, 185, 129, 0.2);
+            
+            --red: #ef4444; 
+            --red-glow: rgba(239, 68, 68, 0.2);
+            
+            --orange: #f97316; 
+            --orange-glow: rgba(249, 115, 22, 0.3);
+            
+            --blue-accent: #3b82f6;
+            
+            --bg: #0f0f0f; 
+            --panel: #161616; 
+            --border: #272727; 
+            --border-bright: #3f3f3f;
+            
+            --text: #f1f1f1; 
+            --muted: #aaaaaa;
+            
+            --transition-fast: all 0.2s ease;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- GLOBAL RESET & SCROLLBAR --- */
+        * { 
+            box-sizing: border-box; 
+            outline: none; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-font-smoothing: antialiased; 
+        }
+
+        ::-webkit-scrollbar { 
+            width: 8px; 
+            height: 8px; 
+        }
+
+        ::-webkit-scrollbar-track { 
+            background: #000; 
+        }
+
+        ::-webkit-scrollbar-thumb { 
+            background: #3f3f46; 
+            border-radius: 10px; 
+        }
+
+        html, body { 
+            width: 100vw; 
+            height: 100vh; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        /* ==========================================================================
+           HEADER (SABİT ALTIN ANA SAYFA VE DİNAMİK BAŞLIKLAR)
+           ========================================================================== */
+        .top-status-bar { 
+            width: 100%; 
+            padding: 0 25px; 
+            display: flex; 
+            align-items: center; 
+            background: rgba(15, 15, 15, 0.95); 
+            backdrop-filter: blur(10px); 
+            border-bottom: 1px solid var(--border-bright); 
+            height: 60px; 
+            flex-shrink: 0; 
+            z-index: 8000; 
+            position: relative; 
+        }
+
+        .header-controls { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+
+        .small-menu-btn {
+            background: transparent; 
+            border: none; 
+            color: var(--text);
+            font-size: 1.3em; 
+            padding: 8px 12px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            transition: var(--transition-fast);
+        }
+
+        .small-menu-btn:hover { 
+            background: rgba(255, 255, 255, 0.1); 
+        }
+
+        .header-title-box { 
+            display: flex; 
+            align-items: center; 
+            font-size: 0.95em; 
+            font-weight: 700; 
+            letter-spacing: 0.5px; 
+        }
+        
+        .home-link { 
+            color: var(--gold) !important; 
+            text-decoration: none; 
+            transition: var(--transition-fast); 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+        }
+
+        .home-link i { 
+            font-size: 1.1em; 
+            color: var(--gold); 
+        }
+
+        .home-link:hover { 
+            text-shadow: 0 0 15px var(--gold-glow); 
+        }
+        
+        .module-name { 
+            margin-left: 6px; 
+            font-weight: 800; 
+            text-transform: uppercase;
+        }
+
+        /* ==========================================================================
+           OVERLAY MENÜ (ZARİF AÇILIŞ - BÜLTENİ İTMEZ)
+           ========================================================================== */
+        .accordion-menu {
+            position: absolute; 
+            top: 60px; 
+            left: 20px; 
+            width: 260px;
+            background: #161616; 
+            border: 1px solid var(--border-bright); 
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            max-height: 0; 
+            opacity: 0; 
+            overflow: hidden; 
+            z-index: 9999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; 
+            flex-direction: column;
+        }
+
+        .accordion-menu.active-menu { 
+            max-height: 500px; 
+            opacity: 1; 
+            padding: 10px; 
+        }
+
+        .nav-container { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+            width: 100%; 
+        }
+
+        .nav-link { 
+            padding: 12px 15px; 
+            cursor: pointer; 
+            color: var(--text); 
+            font-weight: 500; 
+            font-size: 0.9em; 
+            display: flex; 
+            align-items: center; 
+            transition: var(--transition-fast); 
+            border-radius: 8px;
+        }
+
+        .nav-link i { 
+            margin-right: 15px; 
+            font-size: 1.2em; 
+            width: 25px; 
+            text-align: center; 
+            transition: 0.2s;
+        }
+
+        .nav-link:hover { 
+            background: rgba(255, 255, 255, 0.1); 
+        }
+        
+        .nav-link.active { 
+            background: rgba(255, 255, 255, 0.15); 
+            font-weight: 700; 
+        }
+        
+        #nav-home i { color: var(--gold); }
+        #nav-futbol i { color: var(--green); }
+        #nav-basketbol i { color: var(--orange); }
+        #nav-stream i { color: var(--gold); }
+        #nav-favs i { color: var(--red); }
+        #nav-finance i { color: var(--green); }
+
+        /* ==========================================================================
+           ANA EKRAN (ORTALANMIŞ BÜLTEN)
+           ========================================================================== */
+        .main-viewport { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            position: relative; 
+        }
+
+        .main-scroll-box { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            background: #0f0f0f; 
+            display: flex; 
+            justify-content: center; 
+        }
+
+        .center-wrapper { 
+            width: 100%; 
+            max-width: 1000px; 
+            padding: 30px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            transition: max-width 0.3s;
+        }
+        
+        body.dev-mode .center-wrapper { 
+            max-width: 100%; 
+            padding: 15px; 
+        }
+
+        body.dev-mode .stream-master-grid { 
+            height: calc(100vh - 100px); 
+        }
+
+        /* ==========================================================================
+           RADAR KONTROL PANELİ
+           ========================================================================== */
+        .controls-wrapper { 
+            margin-bottom: 25px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+        }
+
+        .filter-panel { 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+            background: #161616; 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border); 
+        }
+
+        .select-supreme { 
+            background: #272727; 
+            border: 1px solid #3f3f3f; 
+            color: #fff; 
+            padding: 10px 16px; 
+            border-radius: 8px; 
+            font-size: 0.85em; 
+            font-weight: 600; 
+            cursor: pointer; 
+            min-width: 200px; 
+        }
+        
+        .league-drop-wrapper { 
+            position: relative; 
+            min-width: 300px; 
+        }
+
+        .league-drop-trigger { 
+            background: #272727; 
+            border: 1px solid #3f3f3f; 
+            color: #fff; 
+            padding: 10px 16px; 
+            border-radius: 8px; 
+            font-size: 0.85em; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+
+        .league-drop-menu { 
+            display: none; 
+            position: absolute; 
+            top: 115%; 
+            left: 0; 
+            right: 0; 
+            background: #282828; 
+            border: 1px solid #3f3f3f; 
+            z-index: 5000; 
+            max-height: 400px; 
+            overflow-y: auto; 
+            border-radius: 12px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
+        }
+
+        .league-drop-item { 
+            padding: 12px 16px; 
+            font-size: 0.85em; 
+            display: flex; 
+            align-items: center; 
+            cursor: pointer; 
+            color: #fff; 
+            border-bottom: 1px solid #333; 
+        }
+
+        .league-drop-item:last-child { 
+            border-bottom: none; 
+        }
+
+        .league-drop-item:hover { 
+            background: #3f3f3f; 
+            color: var(--gold); 
+        }
+
+        .league-drop-item img { 
+            width: 20px; 
+            height: 13px; 
+            margin-right: 12px; 
+            border-radius: 2px; 
+        }
+
+        .mode-row { 
+            display: flex; 
+            gap: 10px; 
+        }
+
+        .btn-mode-supreme { 
+            background: #272727; 
+            border: 1px solid transparent; 
+            color: var(--muted); 
+            padding: 10px 25px; 
+            border-radius: 8px; 
+            font-size: 0.8em; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+        }
+
+        .btn-mode-supreme.active { 
+            background: #fff; 
+            color: #000; 
+            box-shadow: 0 0 15px rgba(255,255,255,0.2); 
+        }
+
+        /* ==========================================================================
+           MATCH RENDER ENGINE
+           ========================================================================== */
+        .league-container-pro { 
+            margin-bottom: 15px; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            background: #161616; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        }
+
+        .league-header-bar { 
+            background: #212121; 
+            padding: 12px 20px; 
+            font-weight: 800; 
+            font-size: 0.75em; 
+            color: #fff; 
+            display: flex; 
+            align-items: center; 
+            text-transform: uppercase; 
+            border-bottom: 1px solid #2a2a2a; 
+        }
+        
+        .match-row-pro { 
+            display: flex; 
+            align-items: center; 
+            padding: 12px 20px; 
+            font-size: 0.85em; 
+            transition: 0.2s; 
+            border-bottom: 1px solid #1f1f1f;
+        }
+
+        .match-row-pro:last-child { 
+            border-bottom: none; 
+        }
+
+        .match-row-pro:hover { 
+            background: #222; 
+        }
+        
+        .match-clock-sup { 
+            font-family: 'JetBrains Mono'; 
+            color: var(--green); 
+            width: 60px; 
+            font-weight: 800; 
+            font-size: 1.05em; 
+        }
+
+        .match-teams-main { 
+            font-weight: 600; 
+            flex-grow: 1; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            color: #eee; 
+        }
+
+        .match-flag-sup { 
+            width: 18px; 
+            border-radius: 2px; 
+        }
+
+        .fav-star-box { 
+            font-size: 1.2em; 
+            color: #333; 
+            cursor: pointer; 
+            margin-right: 15px; 
+            transition: 0.2s; 
+        }
+
+        .fav-star-box.active { 
+            color: var(--gold); 
+            text-shadow: 0 0 10px var(--gold-glow); 
+        }
+
+        /* ==========================================================================
+           CANLI YAYIN MERKEZİ
+           ========================================================================== */
+        .stream-controls-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            background: #161616; 
+            padding: 12px 20px; 
+            border-radius: 10px; 
+            border: 1px solid var(--border); 
+        }
+
+        .layout-btn-group { 
+            display: flex; 
+            gap: 10px; 
+        }
+
+        .btn-stream-layout { 
+            background: #272727; 
+            color: var(--muted); 
+            border: 1px solid #3f3f3f; 
+            padding: 10px 25px; 
+            border-radius: 6px; 
+            font-weight: 800; 
+            font-size: 0.9em; 
+            cursor: pointer; 
+            transition: 0.2s; 
+        }
+
+        .btn-stream-layout.active { 
+            background: var(--green); 
+            color: #000; 
+            border-color: var(--green); 
+            box-shadow: 0 0 15px var(--green-glow); 
+        }
+
+        .btn-channel-mgr { 
+            background: #272727; 
+            color: #fff; 
+            border: 1px solid #3f3f3f; 
+            padding: 10px 20px; 
+            border-radius: 6px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            font-size: 0.85em; 
+        }
+
+        .btn-dev-ekran { 
+            background: rgba(251, 191, 36, 0.1); 
+            color: var(--gold); 
+            border: 1px solid var(--gold); 
+            padding: 10px 20px; 
+            border-radius: 6px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 0.85em; 
+            transition: 0.2s;
+        }
+
+        .btn-dev-ekran:hover { 
+            background: var(--gold); 
+            color: #000; 
+            box-shadow: 0 0 15px var(--gold-glow); 
+        }
+
+        .stream-master-grid { 
+            display: none; 
+            gap: 15px; 
+            height: calc(100vh - 220px); 
+            width: 100%; 
+            transition: height 0.3s; 
+        }
+
+        .stream-master-grid.active { 
+            display: grid; 
+        }
+
+        .m-lay-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; } 
+        .m-lay-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+        .m-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; } 
+        .m-lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
+
+        .matrix-unit { 
+            background: #000; 
+            border: 1px solid #272727; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .matrix-nav { 
+            padding: 8px; 
+            background: #1a1a1a; 
+            display: flex; 
+            gap: 8px; 
+            border-bottom: 1px solid #272727; 
+            align-items: center; 
+        }
+
+        /* ==========================================================================
+           FINANCE & KASA YÖNETİMİ
+           ========================================================================== */
+        .fin-terminal-wrapper { 
+            display: none; 
+            grid-template-columns: 1.2fr 1fr; 
+            gap: 30px; 
+            width: 100%; 
+        }
+
+        .fin-terminal-wrapper.active { 
+            display: grid; 
+        }
+
+        .fin-scroller-pane { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            overflow: hidden;
+        }
+        
+        .rolling-grand-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 10px; 
+        }
+
+        .rolling-box-btn { 
+            background: #161616; 
+            border: 1px solid #272727; 
+            padding: 15px 10px; 
+            border-radius: 10px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            border-top: 3px solid var(--muted); 
+        }
+
+        .rolling-box-btn:hover { 
+            border-top-color: var(--gold); 
+            background: #222; 
+            transform: translateY(-2px); 
+        }
+
+        .rolling-box-btn label { 
+            font-size: 0.65em; 
+            font-weight: 700; 
+            color: var(--muted); 
+            display: block; 
+            margin-bottom: 5px; 
+        }
+
+        .rolling-box-btn b { 
+            color: var(--gold); 
+            font-size: 1em; 
+            font-family: 'JetBrains Mono'; 
+            font-weight: 800;
+        }
+
+        .finance-right-pane { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            overflow: hidden; 
+        }
+
+        .global-kpi-hub { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+        }
+
+        .kpi-card-supreme { 
+            background: #161616; 
+            border: 1px solid var(--border); 
+            padding: 15px; 
+            border-radius: 10px; 
+            text-align: center; 
+        }
+
+        .kpi-card-supreme span { 
+            font-size: 0.6em; 
+            color: var(--muted); 
+            text-transform: uppercase; 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 800; 
+        }
+
+        .kpi-card-supreme b { 
+            font-size: 1.4em; 
+            color: #fff; 
+            font-family: 'JetBrains Mono'; 
+        }
+        
+        .op-input-box { 
+            background: #161616; 
+            border: 1px solid var(--border); 
+            padding: 20px; 
+            border-radius: 12px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            border-bottom: 3px solid var(--green); 
+            width: 100%; 
+            box-sizing: border-box;
+        }
+
+        .btn-op-fire { 
+            background: var(--green); 
+            color: #000; 
+            border: none; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            font-size: 0.9em; 
+            letter-spacing: 1px; 
+            transition: 0.2s; 
+        }
+
+        .btn-op-fire:hover { 
+            background: #14d693; 
+        }
+
+        .supreme-data-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 0.8em; 
+        }
+
+        .supreme-data-table th { 
+            background: #161616; 
+            padding: 12px; 
+            text-align: left; 
+            color: var(--muted); 
+            border-bottom: 1px solid #333; 
+            font-weight: 700; 
+        }
+
+        .supreme-data-table td { 
+            padding: 10px 12px; 
+            border-bottom: 1px solid #222; 
+            color: #e4e4e9; 
+            font-family: 'JetBrains Mono'; 
+        }
+
+        /* ==========================================================================
+           MODALLAR (ŞIK AÇILIŞ VE SCROLL)
+           ========================================================================== */
+        .custom-modal-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 9999; 
+            display: flex; 
+            flex-direction: column; 
+            backdrop-filter: blur(10px); 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease; 
+        }
+
+        .custom-modal-overlay.show-modal { 
+            opacity: 1; 
+            pointer-events: all; 
+        }
+
+        .modal-header { 
+            padding: 20px 30px; 
+            background: #0f0f0f; 
+            border-bottom: 1px solid var(--border-bright); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-shrink: 0;
+        }
+
+        .modal-header h2 { 
+            color: var(--gold); 
+            font-size: 1.4em; 
+            font-weight: 900; 
+            letter-spacing: 2px; 
+            margin:0; 
+        }
+
+        .btn-modal-back { 
+            background: #272727; 
+            color: #fff; 
+            border: 1px solid #3f3f3f; 
+            padding: 8px 20px; 
+            border-radius: 6px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            font-size: 0.8em; 
+            transition: 0.2s;
+        }
+
+        .btn-modal-back:hover { 
+            background: var(--red); 
+            border-color: var(--red); 
+        }
+
+        .modal-config-bar { 
+            padding: 15px 30px; 
+            background: #111; 
+            border-bottom: 1px solid var(--border); 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+            flex-shrink: 0;
+        }
+
+        .modal-body-wrapper { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            padding: 20px 30px; 
+        }
+
+        .excel-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            min-width: 1200px; 
+        }
+
+        .excel-table th, .excel-table td { 
+            border: 1px solid #272727; 
+            padding: 6px; 
+            text-align: center; 
+            vertical-align: top; 
+        }
+
+        .excel-table th { 
+            background: #1a1a1a; 
+            color: var(--muted); 
+            font-size: 0.7em; 
+            letter-spacing: 1px; 
+            padding: 10px; 
+            text-transform: uppercase; 
+        }
+
+        .excel-table td.day-col { 
+            vertical-align: middle; 
+            font-weight: 800; 
+            color: var(--gold); 
+            background: #000; 
+            width: 70px; 
+            font-size: 0.85em; 
+        }
+
+        .excel-table td.bal-col { 
+            vertical-align: middle; 
+            font-weight: 800; 
+            color: #fff; 
+            background: #000; 
+            width: 110px; 
+            font-family: 'JetBrains Mono'; 
+            font-size: 1em; 
+        }
+
+        .op-slot { 
+            background: #050505; 
+            border: 1px solid #222; 
+            padding: 6px; 
+            border-radius: 6px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+            min-width: 90px; 
+        }
+
+        .op-slot-inputs { 
+            display: flex; 
+            gap: 4px; 
+        }
+
+        .op-slot-inputs input { 
+            width: 50%; 
+            background: #161616; 
+            border: 1px solid #333; 
+            color: #fff; 
+            font-size: 0.8em; 
+            padding: 4px; 
+            text-align: center; 
+            border-radius: 4px; 
+            font-weight: bold; 
+        }
+
+        .op-actions { 
+            display: flex; 
+            gap: 4px; 
+        }
+
+        .btn-slot-w { 
+            background: var(--green-dark); 
+            color: #fff; 
+            border: none; 
+            flex: 1; 
+            padding: 4px; 
+            border-radius: 4px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            font-size: 0.7em; 
+        }
+
+        .btn-slot-l { 
+            background: #7f1d1d; 
+            color: #fff; 
+            border: none; 
+            flex: 1; 
+            padding: 4px; 
+            border-radius: 4px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            font-size: 0.7em; 
+        }
+
+        .slot-resolved { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100%; 
+            min-height: 50px; 
+            border-radius: 6px; 
+            position: relative; 
+            font-family: 'JetBrains Mono'; 
+        }
+
+        .slot-resolved.win { 
+            background: rgba(16, 185, 129, 0.15); 
+            border: 1px solid var(--green); 
+            color: var(--green); 
+        }
+
+        .slot-resolved.loss { 
+            background: rgba(239, 68, 68, 0.15); 
+            border: 1px solid var(--red); 
+            color: var(--red); 
+        }
+
+        .btn-undo { 
+            position: absolute; 
+            top: 2px; 
+            right: 2px; 
+            background: transparent; 
+            border: none; 
+            color: var(--muted); 
+            cursor: pointer; 
+            font-size: 0.8em; 
+        }
+    </style>
+</head>
 <body>
 
     <header class="top-status-bar">
@@ -41,6 +950,7 @@
 
     <main class="main-viewport">
         <section class="main-scroll-box">
+            
             <div class="center-wrapper">
                 
                 <div id="omega-radar-block">
@@ -118,6 +1028,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="finance-right-pane">
                         <div class="global-kpi-hub">
                             <div class="kpi-card-supreme">
@@ -156,21 +1067,21 @@
             <button type="button" class="btn-modal-back" onclick="omega_CloseRollingExcel()">KAPAT</button>
         </div>
         <div class="modal-config-bar">
-            <div class="config-item" style="display:flex; align-items:center; gap:8px; background:#000; padding:8px 12px; border-radius:6px; border:1px solid #222;">
-                <label style="color:var(--muted); font-weight:700; font-size:0.7em;">BAŞLANGIÇ:</label>
-                <input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()" style="background:transparent; border:none; border-bottom:1px solid var(--border-bright); color:var(--green); font-family:'JetBrains Mono'; font-size:1em; font-weight:800; padding:2px; width:60px; text-align:center;">
+            <div class="config-item">
+                <label>BAŞLANGIÇ:</label>
+                <input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()">
             </div>
-            <div class="config-item" style="display:flex; align-items:center; gap:8px; background:#000; padding:8px 12px; border-radius:6px; border:1px solid #222;">
-                <label style="color:var(--muted); font-weight:700; font-size:0.7em;">HEDEF:</label>
-                <span class="display-val" id="excel-target-bal" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$1000</span>
+            <div class="config-item">
+                <label>HEDEF:</label>
+                <span class="display-val" id="excel-target-bal">$1000</span>
             </div>
-            <div class="config-item" style="display:flex; align-items:center; gap:8px; background:#000; padding:8px 12px; border-radius:6px; border:1px solid #222;">
-                <label style="color:var(--muted); font-weight:700; font-size:0.7em;">GÜNCEL:</label>
-                <span class="display-val" id="excel-current-bal" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$100</span>
+            <div class="config-item">
+                <label>GÜNCEL:</label>
+                <span class="display-val" id="excel-current-bal">$100</span>
             </div>
-            <div class="config-item" style="display:flex; align-items:center; gap:8px; background:#000; padding:8px 12px; border-radius:6px; border:1px solid #222; margin-left:auto;">
-                <label style="color:var(--muted); font-weight:700; font-size:0.7em;">P/L:</label>
-                <span id="excel-pnl" class="display-val" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$0.00</span>
+            <div class="config-item" style="margin-left:auto;">
+                <label>P/L:</label>
+                <span id="excel-pnl" class="display-val">$0.00</span>
             </div>
         </div>
         <div class="modal-body-wrapper">
@@ -206,6 +1117,7 @@
     </div>
 
     <script>
+        // --- 1. KÜRESEL SİSTEM DEĞİŞKENLERİ ---
         let _MASTER_DB = [];
         let _LEAGUE_STATS_DB = {};
         
@@ -225,6 +1137,7 @@
         let _ROLLING_DB = JSON.parse(localStorage.getItem('v19_rolling')) || {};
         let _CHANNELS_DB = JSON.parse(localStorage.getItem('v19_channels')) || []; 
 
+        // --- 2. HİYERARŞİ VE KURAL SETLERİ ---
         const HIERARCHY_SCORES = {
             "TÜRKİYE - SÜPER LİG": 4000, "İNGİLTERE - PREMIER LEAGUE": 3900, "İSPANYA - LA LIGA": 3800,
             "ALMANYA - BUNDESLIGA": 3700, "İTALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
@@ -245,6 +1158,7 @@
             7: 1000, 15: 5000, 30: 15000, 60: 40000, 90: 100000
         };
 
+        // --- 3. URL YÖNLENDİRME (ROUTING) ---
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash.replace('#', '') || 'futbol';
             const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'finance'];
@@ -264,6 +1178,7 @@
             }
         });
 
+        // --- 4. MOTOR BAŞLATICI ---
         async function omega_InitializeEngine() {
             try {
                 const response = await fetch('v19_rapor.json?nocache=' + Date.now());
@@ -286,6 +1201,7 @@
             }
         }
 
+        // --- 5. ARAÇLAR ---
         function omega_IsBasketballLeague(l) { 
             return ["NBA", "EUROLEAGUE", "BSL", "ACB", "LEGA A", "LNB", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"].some(x => l.toUpperCase().includes(x)); 
         }
@@ -322,6 +1238,7 @@
             return `${m.dt}_${m.tm}_${m.m.replace(/[^a-zA-Z0-9]/g, '')}`; 
         }
 
+        // --- 6. ARAYÜZ ETKİLEŞİMLERİ ---
         function omega_ToggleSidebar() { 
             const menu = document.getElementById('main-dropdown-nav'); 
             if(menu) menu.classList.toggle('active-menu'); 
@@ -392,6 +1309,7 @@
             }
         }
 
+        // --- 7. RADAR FİLTRE VE LİSTELEME ---
         function omega_BuildUIComponents() {
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
@@ -469,6 +1387,7 @@
                 finalHtmlBuffer += `<div style="color:var(--gold); font-size:0.85em; font-weight:900; margin:25px 0 15px 0; letter-spacing:1px; text-transform:uppercase;">${omega_FormatHumanDate(day)}</div>`;
                 
                 if(_ACTIVE_SORT_MODE === 'time') {
+                    // SAAT SIRALI AKIŞ (LİG BAŞLIKLI)
                     let dayGroupsSorted = groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm));
                     
                     dayGroupsSorted.forEach(m => {
@@ -493,6 +1412,7 @@
                     });
                     
                 } else {
+                    // LİG SIRALI AKIŞ
                     const leagueGroups = {}; 
                     groupedByDay[day].forEach(m => { 
                         if(!leagueGroups[m.l]) leagueGroups[m.l] = []; 
@@ -558,7 +1478,7 @@
             omega_ExecuteRadarFilter();
         }
 
-        // --- 9. KANAL YÖNETİM MERKEZİ ---
+        // --- 8. KANAL YÖNETİMİ MODÜLÜ ---
         function omega_OpenChannelManager() {
             document.getElementById('channel-manager-overlay').style.display = 'flex';
             setTimeout(() => { document.getElementById('channel-manager-overlay').classList.add('show-modal'); }, 10);
@@ -628,14 +1548,13 @@
             });
         }
 
-        // --- 10. MULTI-STREAM YAYIN MATRİSİ ---
+        // --- 9. CANLI YAYIN MATRİSİ KONTROLCÜSÜ ---
         function omega_ToggleDevEkran() {
             _IS_DEV_EKRAN = !_IS_DEV_EKRAN;
             const btn = document.getElementById('btn-theater-mode');
             if(_IS_DEV_EKRAN) {
                 document.body.classList.add('dev-mode');
                 btn.innerHTML = 'KÜÇÜLT';
-                
                 const topMenu = document.getElementById('main-dropdown-nav');
                 if(topMenu) topMenu.classList.remove('active-menu');
             } else {
@@ -682,7 +1601,7 @@
                             <button onclick="omega_FullscreenIframe(${i})" style="background:#272727; color:var(--blue-accent); border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-expand"></i></button>
                             <button onclick="omega_TerminateStreamUnit(${i})" style="background:var(--red); color:#fff; border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
                         </div>
-                        <iframe id="s-fr-${i}" style="flex:1; border:none; background:#000000;" src="about:blank" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write;" allowfullscreen></iframe>
+                        <iframe id="s-fr-${i}" style="flex:1; border:none; background:#000000;" src="about:blank" allow="autoplay; fullscreen; picture-in-picture;" allowfullscreen></iframe>
                     </div>`;
             }
         }
@@ -707,7 +1626,7 @@
             document.getElementById('s-fr-' + id).src = "about:blank"; 
         }
 
-        // --- 11. ROLLING EXCEL MİMARİSİ (KASMA ÇÖZÜLDÜ) ---
+        // --- 10. ROLLING EXCEL MİMARİSİ (KASMA VE SCROLL ÇÖZÜLDÜ) ---
         function omega_OpenRollingExcel(days) {
             _ACTIVE_EXCEL_DAYS = days;
             
@@ -746,7 +1665,7 @@
             const tbody = document.getElementById('excel-table-body');
             const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
             let runningBalance = currentPlan.startBal;
-            let totalProfit = 0, winCount = 0, lossCount = 0, totalOps = 0;
+            let totalProfit = 0;
 
             let htmlBuffer = "";
 
@@ -761,9 +1680,8 @@
                         const sign = op.res === 'win' ? '+' : '-';
                         const pnl = op.res === 'win' ? (op.amt * op.odds) - op.amt : op.amt;
                         
-                        if (op.res === 'win') { runningBalance += pnl; totalProfit += pnl; winCount++; } 
-                        else { runningBalance -= pnl; totalProfit -= pnl; lossCount++; }
-                        totalOps++;
+                        if (op.res === 'win') { runningBalance += pnl; totalProfit += pnl; } 
+                        else { runningBalance -= pnl; totalProfit -= pnl; }
 
                         htmlBuffer += `
                             <td>
@@ -830,7 +1748,7 @@
             }
         }
 
-        // --- 12. SUPREME FINANCE KONTROLCÜSÜ (KASA YÖNETİMİ) ---
+        // --- 11. SUPREME FINANCE KONTROLCÜSÜ (KASA YÖNETİMİ) ---
         function omega_RefreshFinanceDashboard() {
             const kpiValW = document.getElementById('kpi-val-w');
             if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
@@ -906,10 +1824,7 @@
             const opAmt = parseFloat(document.getElementById('op-in-amt').value);
             const opOdds = parseFloat(document.getElementById('op-in-odds').value);
 
-            if(!opName || isNaN(opAmt) || isNaN(opOdds)) {
-                alert("Lütfen tüm alanları doldurun.");
-                return;
-            }
+            if(!opName || isNaN(opAmt) || isNaN(opOdds)) return;
 
             const newOp = { id: Date.now(), name: opName, amt: opAmt, odds: opOdds };
             _PENDING_OPS.push(newOp);
@@ -956,7 +1871,7 @@
             localStorage.setItem('v19_l', JSON.stringify(_COMPLETED_LEDGER)); 
         }
 
-        // --- 13. APEX CHARTS MOTORU ---
+        // --- 12. APEX CHARTS MOTORU ---
         let _SUPREME_CHART_INSTANCE;
         function omega_RenderApexSupremeChart() {
             const chartDiv = document.querySelector("#omega-apex-chart-main");
