@@ -1,5 +1,5 @@
 {
-    "up": "23:39",
+    "up": "00:30",
     "veriler": [
         {
             "t": "futbol",
@@ -1293,17 +1293,9 @@
             "t": "futbol",
             "l": "ARJANTİN - ARGENTINA PRIMERA",
             "f": "ar",
-            "m": "Velez Sarsfield BA - Union Santa Fe",
-            "dt": "2026-04-28",
-            "tm": "00:45"
-        },
-        {
-            "t": "futbol",
-            "l": "ARJANTİN - ARGENTINA PRIMERA",
-            "f": "ar",
             "m": "Atlético Huracán - Argentinos Juniors",
             "dt": "2026-04-28",
-            "tm": "03:00"
+            "tm": "03:03"
         },
         {
             "t": "futbol",
@@ -1551,7 +1543,7 @@
             "f": "us",
             "m": "Orlando Magic - Detroit Pistons",
             "dt": "2026-04-28",
-            "tm": "03:10"
+            "tm": "03:07"
         },
         {
             "t": "basketbol",
@@ -1645,9 +1637,25 @@
             "t": "basketbol",
             "l": "AMERİKA - WNBA",
             "f": "us",
-            "m": "Minnesota Lynx - Nigeria",
-            "dt": "2026-04-28",
-            "tm": "03:10"
+            "m": "Chicago Sky - Atlanta Dream",
+            "dt": "2026-04-30",
+            "tm": "02:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Toronto Tempo - Connecticut Sun",
+            "dt": "2026-04-30",
+            "tm": "02:00"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Seattle Storm - Portland Fire",
+            "dt": "2026-04-30",
+            "tm": "05:00"
         },
         {
             "t": "basketbol",
@@ -1712,11 +1720,11 @@
         "HOLLANDA - EREDIVISIE": 9,
         "PORTEKİZ - PRIMEIRA LIGA": 10,
         "BREZİLYA - BRAZIL SERIE A": 20,
-        "ARJANTİN - ARGENTINA PRIMERA": 17,
+        "ARJANTİN - ARGENTINA PRIMERA": 16,
         "AMERİKA - MLS": 15,
         "AMERİKA - NBA": 8,
         "AVRUPA - EUROLEAGUE": 4,
-        "AMERİKA - WNBA": 7,
+        "AMERİKA - WNBA": 9,
         "AMERİKA - NCAA": 0,
         "TÜRKİYE - BSL": 0,
         "İSPANYA - LIGA ACB": 0,
