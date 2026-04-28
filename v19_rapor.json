@@ -1,5 +1,5 @@
 {
-    "up": "00:30",
+    "up": "07:56",
     "veriler": [
         {
             "t": "futbol",
@@ -1293,14 +1293,6 @@
             "t": "futbol",
             "l": "ARJANTİN - ARGENTINA PRIMERA",
             "f": "ar",
-            "m": "Atlético Huracán - Argentinos Juniors",
-            "dt": "2026-04-28",
-            "tm": "03:03"
-        },
-        {
-            "t": "futbol",
-            "l": "ARJANTİN - ARGENTINA PRIMERA",
-            "f": "ar",
             "m": "Union Santa Fe - Talleres",
             "dt": "2026-05-03",
             "tm": "03:00"
@@ -1541,30 +1533,6 @@
             "t": "basketbol",
             "l": "AMERİKA - NBA",
             "f": "us",
-            "m": "Orlando Magic - Detroit Pistons",
-            "dt": "2026-04-28",
-            "tm": "03:07"
-        },
-        {
-            "t": "basketbol",
-            "l": "AMERİKA - NBA",
-            "f": "us",
-            "m": "Phoenix Suns - Oklahoma City Thunder",
-            "dt": "2026-04-28",
-            "tm": "04:40"
-        },
-        {
-            "t": "basketbol",
-            "l": "AMERİKA - NBA",
-            "f": "us",
-            "m": "Denver Nuggets - Minnesota Timberwolves",
-            "dt": "2026-04-28",
-            "tm": "05:40"
-        },
-        {
-            "t": "basketbol",
-            "l": "AMERİKA - NBA",
-            "f": "us",
             "m": "Boston Celtics - Philadelphia 76ers",
             "dt": "2026-04-29",
             "tm": "02:10"
@@ -1597,9 +1565,25 @@
             "t": "basketbol",
             "l": "AMERİKA - NBA",
             "f": "us",
+            "m": "Detroit Pistons - Orlando Magic",
+            "dt": "2026-04-30",
+            "tm": "02:10"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NBA",
+            "f": "us",
             "m": "Los Angeles Lakers - Houston Rockets",
             "dt": "2026-04-30",
             "tm": "04:40"
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NBA",
+            "f": "us",
+            "m": "Minnesota Timberwolves - Denver Nuggets",
+            "dt": "2026-05-01",
+            "tm": "05:10"
         },
         {
             "t": "basketbol",
@@ -1720,9 +1704,9 @@
         "HOLLANDA - EREDIVISIE": 9,
         "PORTEKİZ - PRIMEIRA LIGA": 10,
         "BREZİLYA - BRAZIL SERIE A": 20,
-        "ARJANTİN - ARGENTINA PRIMERA": 16,
+        "ARJANTİN - ARGENTINA PRIMERA": 15,
         "AMERİKA - MLS": 15,
-        "AMERİKA - NBA": 8,
+        "AMERİKA - NBA": 7,
         "AVRUPA - EUROLEAGUE": 4,
         "AMERİKA - WNBA": 9,
         "AMERİKA - NCAA": 0,
