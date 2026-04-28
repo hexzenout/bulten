@@ -11,7 +11,7 @@
     <style>
         /* ==========================================================================
            V19 SUPREME STYLING SYSTEM v19.0 (FINAL OMEGA ARCHIVE)
-           Tüm mimari hatalar giderildi. Menü aşağı itmeli ve sol köşeye alındı.
+           Tüm hatalar giderildi. Akordeon Menü (İtmeli) ve Dinamik Başlık aktif.
            ========================================================================== */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -32,17 +32,14 @@
             --bg: #050505; 
             --panel: #0c0c0e; 
             --panel-header: #121214;
-            --panel-light: #18181b;
             
             --border: #1f1f23; 
             --border-bright: #2d2d33;
             
             --text: #ffffff; 
-            --text-dim: #a1a1aa;
             --muted: #52525b;
             
             --transition-fast: all 0.2s ease;
-            --transition-main: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --transition-smooth: all 0.3s ease;
         }
 
@@ -53,7 +50,6 @@
             margin: 0; 
             padding: 0; 
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
         
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -69,7 +65,7 @@
             font-family: 'Inter', sans-serif;
             overflow: hidden;
             display: flex;
-            flex-direction: column; /* Sütun dizilimi - Üstten Alta */
+            flex-direction: column; /* Üstten alta dizilim */
         }
 
         /* ==========================================================================
@@ -79,81 +75,97 @@
             width: 100%;
             padding: 0 40px; 
             display: flex; 
-            justify-content: space-between; 
             align-items: center; 
             background: #000000; 
-            border-bottom: 1px solid var(--border); 
-            height: 80px; 
+            border-bottom: 1px solid var(--border-bright); 
+            height: 70px; 
             flex-shrink: 0;
             z-index: 8000;
         }
 
-        .console-info-group { display: flex; align-items: center; gap: 20px; }
-
-        /* KÜÇÜK HAMBURGER BUTONU */
-        .sidebar-toggle-btn {
-            font-size: 1.4em; 
-            color: var(--muted); 
-            cursor: pointer; 
-            transition: var(--transition-smooth);
-            background: transparent; 
-            padding: 5px; 
-            border: none;
-        }
-        .sidebar-toggle-btn:hover { color: var(--gold); transform: scale(1.1); }
-        
-        .console-info h2 { 
-            margin: 0; font-size: 1.1em; font-weight: 950; letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff; 
-            display: flex; align-items: center; gap: 10px;
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
-        .header-home-link {
+        /* KÜÇÜK, ŞIK HAMBURGER BUTONU */
+        .small-menu-btn {
+            background: transparent;
+            border: 1px solid var(--border-bright);
+            color: var(--muted);
+            font-size: 1.2em;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        .small-menu-btn:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        /* DİNAMİK ANA SAYFA BAŞLIĞI */
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2em;
+            font-weight: 950;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .home-link {
             color: var(--gold);
             text-decoration: none;
             transition: var(--transition-fast);
         }
-        .header-home-link:hover { color: #fff; text-shadow: 0 0 10px var(--gold-glow); }
-        .active-module-title { color: var(--text); }
+        .home-link:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+        .module-name {
+            color: var(--text);
+        }
 
         /* ==========================================================================
-           AŞAĞI AÇILAN (PUSH DOWN) KOMPAKT SOL MENÜ
+           AKORDEON AŞAĞI AÇILIR MENÜ (PUSH-DOWN)
            ========================================================================== */
-        .dropdown-sidebar {
-            width: 280px;
-            background: #050505;
-            border-right: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            border-bottom-right-radius: 12px;
+        .accordion-menu {
+            width: 100%;
+            background: #08080a;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease;
-            align-self: flex-start; /* Sadece sol köşeyi kaplar */
-            box-shadow: 10px 10px 30px rgba(0,0,0,0.8);
+            transition: max-height 0.4s ease, border-bottom 0.4s ease;
+            display: flex;
+            flex-direction: column;
             z-index: 7000;
         }
 
-        .dropdown-sidebar.active-menu {
-            max-height: 500px; /* İçeriğe göre açılır ve ana ekranı aşağı iter */
+        .accordion-menu.active-menu {
+            max-height: 400px; /* Menü öğelerine göre açılır */
+            border-bottom: 2px solid var(--green);
         }
 
         .nav-container { 
+            padding: 15px 40px; 
             display: flex;
-            flex-direction: column; /* Linkler alt alta */
-            padding: 15px;
-            gap: 8px;
+            flex-direction: column; /* Alt alta dizilim */
+            gap: 5px;
+            max-width: 600px;
         }
 
         .nav-link { 
-            padding: 14px 20px; cursor: pointer; color: var(--muted); font-weight: 800; font-size: 0.85em; 
+            padding: 14px 20px; cursor: pointer; color: var(--muted); font-weight: 800; font-size: 0.9em; 
             display: flex; align-items: center; transition: var(--transition-smooth);
             border: 1px solid transparent; border-radius: 8px; background: transparent;
         }
 
-        .nav-link i { margin-right: 15px; font-size: 1.2em; transition: transform 0.3s ease; width: 25px; text-align: center;}
-        .nav-link:hover { background: #111; color: #ffffff; border-color: #333; }
+        .nav-link i { margin-right: 15px; font-size: 1.2em; width: 25px; text-align: center; transition: 0.3s;}
+        .nav-link:hover { background: #111; color: #ffffff; border-color: #333; transform: translateX(5px); }
         .nav-link:hover i { transform: scale(1.2); }
 
-        /* NAVİGASYON AKTİF DURUMLARI */
         .nav-link.active { background: rgba(16, 185, 129, 0.1); color: #ffffff; border-color: var(--green); box-shadow: inset 0 0 15px var(--green-glow); }
         .nav-link.basket.active { background: rgba(249, 115, 22, 0.1); border-color: var(--orange); box-shadow: inset 0 0 15px var(--orange-glow); }
         .nav-link.stream.active { background: rgba(251, 191, 36, 0.1); border-color: var(--gold); box-shadow: inset 0 0 15px var(--gold-glow); }
@@ -164,7 +176,7 @@
            MAIN VIEWPORT & SCROLLER
            ========================================================================== */
         .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 100; width: 100%; }
-        .main-scroll-box { flex-grow: 1; padding: 30px 50px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); transition: var(--transition-smooth); }
+        .main-scroll-box { flex-grow: 1; padding: 30px 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); transition: var(--transition-smooth); }
 
         /* DEV EKRAN MODU */
         body.dev-mode .main-scroll-box { padding: 15px; }
@@ -184,7 +196,6 @@
         }
         .select-supreme:hover { border-color: var(--muted); }
 
-        /* --- CUSTOM LEAGUE DROPDOWN PRO --- */
         .league-drop-wrapper { position: relative; min-width: 380px; }
         .league-drop-trigger { 
             background: #000000; border: 2px solid var(--border); color: #ffffff; padding: 14px 25px; 
@@ -205,7 +216,6 @@
         .league-drop-item:hover { background: #1c1c21; color: var(--gold); padding-left: 35px; }
         .league-drop-item img { width: 24px; height: 16px; margin-right: 18px; border-radius: 3px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
-        /* --- SIRALAMA BUTONLARI --- */
         .mode-row { display: flex; gap: 15px; }
         .btn-mode-supreme { 
             background: transparent; border: 2.5px solid var(--orange); color: var(--orange); padding: 14px 40px; 
@@ -229,7 +239,6 @@
         .match-row-pro:last-child { border-bottom: none; }
         .match-row-pro:hover { background: #111118; transform: scale(1.005); z-index: 10; border-left: 2px solid var(--green); }
         
-        /* FAVORİ YILDIZ (MAÇ YANINDA) */
         .fav-star-box { font-size: 1.4em; color: var(--border-bright); margin-right: 20px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: pointer; }
         .fav-star-box:hover { color: var(--muted); transform: scale(1.1); }
         .fav-star-box.active { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); transform: scale(1.25); }
@@ -238,7 +247,6 @@
         .match-teams-main { font-weight: 800; flex-grow: 1; display: flex; align-items: center; color: #f4f4f7; letter-spacing: 0.2px; }
         .match-flag-sup { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; margin-left: 18px; box-shadow: 0 3px 8px rgba(0,0,0,0.6); }
 
-        /* SAAT SIRALI (KOMPAKT) MOD */
         .compact-mode-row { font-size: 0.78em !important; padding: 10px 30px !important; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 5px; }
         .match-ico-marker { margin-right: 15px; font-size: 1.1em; opacity: 0.6; }
         .league-label-badge { 
@@ -248,7 +256,7 @@
         }
 
         /* ==========================================================================
-           MULTI-STREAM INTELLIGENCE HUB (DEV EKRAN & KANAL YÖNETİMİ)
+           MULTI-STREAM INTELLIGENCE HUB & KANAL YÖNETİMİ
            ========================================================================== */
         .stream-controls-bar { 
             display: flex; justify-content: space-between; align-items: center;
@@ -257,27 +265,16 @@
         }
 
         .layout-btn-group { display: flex; gap: 15px; }
-
-        .btn-stream-layout { 
-            background: #1f1f23; color: var(--muted); border: 2px solid #333; padding: 14px 35px; 
-            border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: var(--transition-fast);
-        }
+        .btn-stream-layout { background: #1f1f23; color: var(--muted); border: 2px solid #333; padding: 14px 35px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: var(--transition-fast); }
         .btn-stream-layout:hover { border-color: var(--muted); color: #fff; }
         .btn-stream-layout.active { background: var(--green); color: #000000; border-color: var(--green); box-shadow: 0 0 25px var(--green-glow); }
 
-        .btn-dev-ekran {
-            background: rgba(251, 191, 36, 0.1); color: var(--gold); border: 2px solid var(--gold);
-            padding: 14px 25px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: 0.3s;
-        }
+        .btn-dev-ekran { background: rgba(251, 191, 36, 0.1); color: var(--gold); border: 2px solid var(--gold); padding: 14px 25px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: 0.3s; }
         .btn-dev-ekran:hover { background: var(--gold); color: #000; box-shadow: 0 0 25px var(--gold-glow); }
 
-        .btn-channel-mgr {
-            background: rgba(16, 185, 129, 0.1); color: var(--green); border: 2px solid var(--green);
-            padding: 14px 25px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: 0.3s;
-        }
+        .btn-channel-mgr { background: rgba(16, 185, 129, 0.1); color: var(--green); border: 2px solid var(--green); padding: 14px 25px; border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: 0.3s; }
         .btn-channel-mgr:hover { background: var(--green); color: #000; box-shadow: 0 0 25px var(--green-glow); }
 
-        /* YAYIN GRID MİMARİSİ */
         .stream-master-grid { display: none; gap: 20px; height: calc(100vh - 280px); width: 100%; transition: height 0.4s ease; }
         .stream-master-grid.active { display: grid; }
         
@@ -290,76 +287,46 @@
         .matrix-unit:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
         .matrix-nav { padding: 12px; background: #0a0a0c; display: flex; gap: 8px; border-bottom: 1px solid var(--border); align-items: center; }
         
-        .matrix-channel-select {
-            background: #111; border: 1.5px solid #333; color: var(--gold); padding: 8px; border-radius: 6px; 
-            font-size: 11px; font-weight: 900; outline: none; cursor: pointer; max-width: 140px;
-        }
+        .matrix-channel-select { background: #111; border: 1.5px solid #333; color: var(--gold); padding: 8px; border-radius: 6px; font-size: 11px; font-weight: 900; outline: none; cursor: pointer; max-width: 140px; }
         .matrix-channel-select:focus { border-color: var(--gold); }
-
         .matrix-input { flex: 1; background: #000000; border: 1.5px solid #333; color: #ffffff; font-size: 11px; padding: 10px 12px; border-radius: 6px; }
         .matrix-input:focus { border-color: var(--green); }
         
         .btn-matrix-go { background: var(--green); color: #000000; border: none; padding: 0 15px; border-radius: 6px; font-weight: 950; font-size: 0.8em; cursor: pointer; transition: 0.2s; }
         .btn-matrix-go:hover { background: #14d693; }
-        
         .btn-matrix-pip { background: #111; border: 1px solid #333; color: var(--blue-accent); padding: 0 12px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.3s; }
         .btn-matrix-pip:hover { border-color: var(--blue-accent); background: rgba(59, 130, 246, 0.1); }
-
         .btn-matrix-kill { background: var(--red); color: #ffffff; border: none; padding: 0 15px; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.3s; }
         .btn-matrix-kill:hover { background: #ff0000; transform: rotate(90deg); }
 
         /* ==========================================================================
-           MODAL & OVERLAY YÖNETİMİ (KANAL & EXCEL)
+           MODAL & OVERLAY YÖNETİMİ (KANAL YÖNETİMİ VE EXCEL)
            ========================================================================== */
         .custom-modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.98); z-index: 9999;
-            display: none; flex-direction: column; backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.95); z-index: 9999;
+            display: none; flex-direction: column; backdrop-filter: blur(10px);
         }
 
-        .modal-header {
-            padding: 25px 45px; background: #0a0a0c; border-bottom: 2px solid var(--border-bright);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
+        .modal-header { padding: 25px 45px; background: #0a0a0c; border-bottom: 2px solid var(--border-bright); display: flex; justify-content: space-between; align-items: center; }
         .modal-header h2 { color: var(--gold); font-size: 1.6em; font-weight: 950; letter-spacing: 3px; text-shadow: 0 0 20px var(--gold-glow); margin:0; }
         
-        .btn-modal-back {
-            background: rgba(239, 68, 68, 0.1); border: 2px solid var(--red); color: var(--red);
-            padding: 12px 25px; border-radius: 8px; font-size: 0.9em; font-weight: 900; cursor: pointer; transition: 0.3s;
-        }
+        .btn-modal-back { background: rgba(239, 68, 68, 0.1); border: 2px solid var(--red); color: var(--red); padding: 12px 25px; border-radius: 8px; font-size: 0.9em; font-weight: 900; cursor: pointer; transition: 0.3s; }
         .btn-modal-back:hover { background: var(--red); color: #fff; box-shadow: 0 0 15px var(--red-glow); }
 
-        .modal-config-bar {
-            padding: 20px 45px; background: #111; border-bottom: 1px solid var(--border);
-            display: flex; gap: 20px; align-items: center; justify-content: flex-start; flex-wrap: wrap;
-        }
-
-        .config-item { display: flex; align-items: center; gap: 12px; background: #000; padding: 12px 20px; border-radius: 10px; border: 1px solid #222; }
-        .config-item label { color: var(--muted); font-weight: 900; font-size: 0.7em; letter-spacing: 1px; text-transform: uppercase; }
-        .config-item input { background: transparent; border: none; border-bottom: 1.5px solid var(--border-bright); color: var(--green); font-family: 'JetBrains Mono'; font-size: 1.2em; font-weight: 900; padding: 5px; width: 90px; text-align: center; }
-        .config-item input:focus { border-color: var(--gold); }
-        .config-item .display-val { font-family: 'JetBrains Mono'; font-size: 1.3em; font-weight: 900; color: #fff; }
-
+        .modal-config-bar { padding: 20px 45px; background: #111; border-bottom: 1px solid var(--border); display: flex; gap: 20px; align-items: center; justify-content: flex-start; flex-wrap: wrap; }
         .modal-body-wrapper { flex-grow: 1; overflow: auto; padding: 30px 45px; }
 
         /* ==========================================================================
-           SUPREME FINANCIAL CONSOLE
+           SUPREME FINANCIAL CONSOLE (KASA YÖNETİMİ)
            ========================================================================== */
         .fin-terminal-wrapper { display: none; grid-template-columns: 1fr 520px; gap: 40px; height: 100%; }
         .fin-terminal-wrapper.active { display: grid; }
         .fin-scroller-pane { overflow-y: auto; display: flex; flex-direction: column; gap: 35px; padding-right: 15px; }
         
         .rolling-grand-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
-        .rolling-box-btn { 
-            background: var(--panel); border: 1.5px solid var(--border); padding: 30px 15px; 
-            border-radius: 20px; text-align: center; border-top: 6px solid var(--muted); 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
-        }
-        .rolling-box-btn:hover { 
-            border-top-color: var(--green); background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5); transform: translateY(-8px); 
-        }
+        .rolling-box-btn { background: var(--panel); border: 1.5px solid var(--border); padding: 30px 15px; border-radius: 20px; text-align: center; border-top: 6px solid var(--muted); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        .rolling-box-btn:hover { border-top-color: var(--green); background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); box-shadow: 0 15px 40px rgba(0,0,0,0.5); transform: translateY(-8px); }
         .rolling-box-btn label { font-size: 0.65em; font-weight: 950; color: var(--muted); text-transform: uppercase; margin-bottom: 18px; display: block; letter-spacing: 2px; cursor: pointer; }
         .rolling-box-btn b { font-family: 'JetBrains Mono'; font-size: 1.4em; font-weight: 950; color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
 
@@ -395,6 +362,12 @@
         /* ==========================================================================
            EXCEL TABLO MİMARİSİ
            ========================================================================== */
+        .config-item { display: flex; align-items: center; gap: 12px; background: #000; padding: 12px 20px; border-radius: 10px; border: 1px solid #222; }
+        .config-item label { color: var(--muted); font-weight: 900; font-size: 0.7em; letter-spacing: 1px; text-transform: uppercase; }
+        .config-item input { background: transparent; border: none; border-bottom: 1.5px solid var(--border-bright); color: var(--green); font-family: 'JetBrains Mono'; font-size: 1.2em; font-weight: 900; padding: 5px; width: 90px; text-align: center; }
+        .config-item input:focus { border-color: var(--gold); }
+        .config-item .display-val { font-family: 'JetBrains Mono'; font-size: 1.3em; font-weight: 900; color: #fff; }
+
         .excel-table { width: 100%; border-collapse: collapse; min-width: 1400px; font-size: 0.85em; }
         .excel-table th, .excel-table td { border: 1px solid #1f1f23; padding: 4px; text-align: center; vertical-align: top; }
         .excel-table th { background: #161618; color: var(--muted); font-weight: 900; font-size: 0.7em; letter-spacing: 1px; padding: 12px 5px; }
@@ -428,23 +401,18 @@
 <body>
 
     <header class="top-status-bar">
-        <div class="console-info-group">
-            <button class="sidebar-toggle-btn" onclick="omega_ToggleSidebar()" title="Menüyü Aç/Kapat">
+        <div class="header-controls">
+            <button class="small-menu-btn" onclick="omega_ToggleSidebar()" title="Menüyü Aç/Kapat">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <div class="console-info">
-                <h2>
-                    <a href="https://hexzenout.github.io/bulten/" class="header-home-link">
-                        <i class="fa-solid fa-house"></i> ANA SAYFA
-                    </a> 
-                    <span style="color:var(--muted); margin:0 5px;">/</span> 
-                    <span id="active-module-name" class="active-module-title">FUTBOL ⚽</span>
-                </h2>
+            <div class="header-title-box">
+                <a href="https://hexzenout.github.io/bulten/" class="home-link">ANA SAYFA</a>
+                <span id="active-module-name" class="module-name">FUTBOL ⚽</span>
             </div>
         </div>
     </header>
 
-    <nav class="top-dropdown-menu" id="main-dropdown-nav">
+    <nav class="accordion-menu" id="main-dropdown-nav">
         <div class="nav-container">
             <div class="nav-link active" id="nav-futbol" onclick="omega_SwitchMainTab('futbol', this)">
                 <i class="fa-solid fa-futbol"></i> FUTBOL
@@ -720,7 +688,7 @@
             7: 1000, 15: 5000, 30: 15000, 60: 40000, 90: 100000
         };
 
-        // --- URL ROUTING (HISTORY API) # GERİ EKLENDİ ---
+        // --- URL ROUTING (HISTORY API) # ---
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash.replace('#', '');
             const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'finance'];
@@ -818,7 +786,7 @@
             return `${matchObj.dt}_${matchObj.tm}_${matchObj.m.replace(/[^a-zA-Z0-9]/g, '')}`;
         }
 
-        // --- NAVIGATION CONTROLLER & SIDEBAR ---
+        // --- NAVIGATION CONTROLLER & SIDEBAR (AKORDEON MENU) ---
         function omega_ToggleSidebar() {
             document.getElementById('main-dropdown-nav').classList.toggle('active-menu');
         }
@@ -841,6 +809,7 @@
             document.getElementById('omega-stream-block').style.display = 'none';
             document.getElementById('v19-finance-block').classList.remove('active');
 
+            // DİNAMİK BAŞLIK DEĞİŞİMİ
             const titleElem = document.getElementById('active-module-name');
             if(targetModule === 'futbol' || targetModule === 'basketbol') {
                 _ACTIVE_SPORT = targetModule;
@@ -882,7 +851,7 @@
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
             
-            // HAYALET YAZI (TÜM TARİHLER) ONARILDI: JS ve HTML senkronize edildi.
+            // HAYALET YAZI DÜZELTİLDİ (HTML ile senkronize edildi)
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
@@ -937,7 +906,7 @@
         function omega_SetSortMode(mode) {
             _ACTIVE_SORT_MODE = mode;
             document.querySelectorAll('.btn-mode-supreme').forEach(b => b.classList.remove('active'));
-            // DÜZELTME: id'ler btn-sort-league ve btn-sort-time
+            // ID düzeltmesi (Hata yok edildi)
             document.getElementById('btn-sort-' + mode).classList.add('active');
             omega_ExecuteRadarFilter();
         }
@@ -1552,12 +1521,6 @@
             _SUPREME_CHART_INSTANCE = new ApexCharts(document.querySelector("#omega-apex-chart-main"), chartOptions);
             _SUPREME_CHART_INSTANCE.render();
         }
-
-        // Kapatma Eventleri
-        document.addEventListener('click', () => { 
-            const dMenu = document.getElementById('drop-menu-list'); 
-            if(dMenu) dMenu.style.display = 'none'; 
-        });
 
     </script>
 </body>
