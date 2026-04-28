@@ -15,36 +15,27 @@
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-        /* --- GLOBAL COLOR VARIABLES --- */
         :root { 
             --gold: #fbbf24; 
             --gold-glow: rgba(251, 191, 36, 0.3);
-            
             --green: #10b981; 
             --green-dark: #065f46; 
             --green-glow: rgba(16, 185, 129, 0.2);
-            
             --red: #ef4444; 
             --red-glow: rgba(239, 68, 68, 0.2);
-            
             --orange: #f97316; 
             --orange-glow: rgba(249, 115, 22, 0.3);
-            
             --blue-accent: #3b82f6;
-            
             --bg: #0f0f0f; 
             --panel: #161616; 
             --border: #272727; 
             --border-bright: #3f3f3f;
-            
             --text: #f1f1f1; 
             --muted: #aaaaaa;
-            
             --transition-fast: all 0.2s ease;
             --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* --- GLOBAL RESET & SCROLLBAR --- */
         * { 
             box-sizing: border-box; 
             outline: none; 
@@ -449,7 +440,7 @@
         }
 
         /* ==========================================================================
-           CANLI YAYIN MERKEZİ
+           CANLI YAYIN MERKEZİ ("1 EKRAN" VB. TASARIM KORUNDU)
            ========================================================================== */
         .stream-controls-bar { 
             display: flex; 
@@ -470,13 +461,14 @@
         .btn-stream-layout { 
             background: #272727; 
             color: var(--muted); 
-            border: 1px solid #3f3f3f; 
-            padding: 10px 25px; 
+            border: 1px solid #333; 
+            padding: 8px 20px; 
             border-radius: 6px; 
             font-weight: 800; 
-            font-size: 0.9em; 
+            font-size: 1em; 
             cursor: pointer; 
             transition: 0.2s; 
+            font-family: 'JetBrains Mono'; 
         }
 
         .btn-stream-layout.active { 
@@ -490,23 +482,23 @@
             background: #272727; 
             color: #fff; 
             border: 1px solid #3f3f3f; 
-            padding: 10px 20px; 
+            padding: 8px 15px; 
             border-radius: 6px; 
             font-weight: 700; 
             cursor: pointer; 
             transition: 0.2s; 
-            font-size: 0.85em; 
+            font-size: 0.8em; 
         }
 
         .btn-dev-ekran { 
             background: rgba(251, 191, 36, 0.1); 
             color: var(--gold); 
             border: 1px solid var(--gold); 
-            padding: 10px 20px; 
+            padding: 8px 15px; 
             border-radius: 6px; 
             font-weight: 700; 
             cursor: pointer; 
-            font-size: 0.85em; 
+            font-size: 0.8em; 
             transition: 0.2s;
         }
 
@@ -552,7 +544,7 @@
         }
 
         /* ==========================================================================
-           FINANCE & KASA YÖNETİMİ
+           FINANCE & KASA YÖNETİMİ (KAYMA KORUMALI)
            ========================================================================== */
         .fin-terminal-wrapper { 
             display: none; 
@@ -699,7 +691,7 @@
         }
 
         /* ==========================================================================
-           MODALLAR (ŞIK AÇILIŞ VE SCROLL)
+           MODALLAR (ŞIK AÇILIŞ VE KESİN SCROLL)
            ========================================================================== */
         .custom-modal-overlay { 
             position: fixed; 
@@ -907,216 +899,7 @@
         }
     </style>
 </head>
-<body>
-
-    <header class="top-status-bar">
-        <div class="header-controls">
-            <button class="small-menu-btn" id="menu-trigger-btn" onclick="omega_ToggleSidebar()" title="Menüyü Aç">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="header-title-box">
-                <a href="https://hexzenout.github.io/bulten/" class="home-link">
-                    <i class="fa-solid fa-house"></i> ANA SAYFA
-                </a>
-                <span class="module-name" id="active-module-name">
-                    <span style="color:var(--green)">/ FUTBOL</span>
-                </span>
-            </div>
-        </div>
-    </header>
-
-    <nav class="accordion-menu" id="main-dropdown-nav">
-        <div class="nav-container">
-            <div class="nav-link" id="nav-home" onclick="window.location.href='https://hexzenout.github.io/bulten/'">
-                <i class="fa-solid fa-house"></i> ANA SAYFA
-            </div>
-            <div class="nav-link active" id="nav-futbol" onclick="omega_SwitchMainTab('futbol', this)">
-                <i class="fa-solid fa-futbol"></i> FUTBOL
-            </div>
-            <div class="nav-link basket" id="nav-basketbol" onclick="omega_SwitchMainTab('basketbol', this)">
-                <i class="fa-solid fa-basketball"></i> BASKETBOL
-            </div>
-            <div class="nav-link stream" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)">
-                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
-            </div>
-            <div class="nav-link favs" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
-                <i class="fa-solid fa-star"></i> FAVORİLERİM
-            </div>
-            <div class="nav-link finance" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
-                <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
-            </div>
-        </div>
-    </nav>
-
-    <main class="main-viewport">
-        <section class="main-scroll-box">
-            
-            <div class="center-wrapper">
-                
-                <div id="omega-radar-block">
-                    <div class="controls-wrapper">
-                        <div class="filter-panel">
-                            <select id="v19-date-select" class="select-supreme" onchange="omega_ExecuteRadarFilter()">
-                                <option value="ALL">TÜM TARİHLER</option>
-                            </select>
-                            <div class="league-drop-wrapper">
-                                <div class="league-drop-trigger" id="drop-trigger" onclick="omega_ToggleLeagueDrop(event)">
-                                    <div id="drop-text-label">TÜM LİGLER</div>
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </div>
-                                <div class="league-drop-menu" id="drop-menu-list"></div>
-                            </div>
-                        </div>
-                        <div class="mode-row">
-                            <button class="btn-mode-supreme active" id="btn-sort-league" onclick="omega_SetSortMode('league')">LİG SIRALI AKIŞ</button>
-                            <button class="btn-mode-supreme" id="btn-sort-time" onclick="omega_SetSortMode('time')">SAAT SIRALI AKIŞ</button>
-                        </div>
-                    </div>
-                    <div id="radar-render-output"></div>
-                </div>
-
-                <div id="omega-favs-block" style="display:none;">
-                    <div id="favs-render-output"></div>
-                </div>
-
-                <div id="omega-stream-block" style="display:none;">
-                    <div class="stream-controls-bar">
-                        <div class="layout-btn-group">
-                            <button class="btn-stream-layout" id="lay-btn-1" onclick="omega_BuildStreamMatrix(1)">1</button>
-                            <button class="btn-stream-layout" id="lay-btn-2" onclick="omega_BuildStreamMatrix(2)">2</button>
-                            <button class="btn-stream-layout" id="lay-btn-4" onclick="omega_BuildStreamMatrix(4)">4</button>
-                            <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6</button>
-                        </div>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn-channel-mgr" onclick="omega_OpenChannelManager()">KANAL LİSTESİ</button>
-                            <button class="btn-dev-ekran" id="btn-theater-mode" onclick="omega_ToggleDevEkran()">DEV EKRAN</button>
-                        </div>
-                    </div>
-                    <div id="omega-matrix-grid" class="stream-master-grid m-lay-6 active"></div>
-                </div>
-
-                <div class="fin-terminal-wrapper" id="v19-finance-block">
-                    <div class="fin-scroller-pane">
-                        <div class="rolling-grand-grid">
-                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(7)">
-                                <label>7 GÜN</label>
-                                <b>ROLLING</b>
-                            </div>
-                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(15)">
-                                <label>15 GÜN</label>
-                                <b>ROLLING</b>
-                            </div>
-                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(30)">
-                                <label>30 GÜN</label>
-                                <b>ROLLING</b>
-                            </div>
-                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(60)">
-                                <label>60 GÜN</label>
-                                <b>ROLLING</b>
-                            </div>
-                            <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(90)">
-                                <label>90 GÜN</label>
-                                <b>ROLLING</b>
-                            </div>
-                        </div>
-                        <div class="ledger-supreme-pro" style="background:#161616;">
-                            <div style="padding:15px 20px; font-weight:800; color:var(--gold); border-bottom:1px solid #272727; font-size:0.85em;">
-                                OPERASYON GEÇMİŞİ
-                            </div>
-                            <div style="overflow-y:auto; max-height:400px;">
-                                <table class="supreme-data-table" id="omega-data-table"></table>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="finance-right-pane">
-                        <div class="global-kpi-hub">
-                            <div class="kpi-card-supreme">
-                                <span>KASA</span>
-                                <b id="kpi-val-w">100.00</b>
-                            </div>
-                            <div class="kpi-card-supreme">
-                                <span>NET P/L</span>
-                                <b id="kpi-val-p">0.00</b>
-                            </div>
-                            <div class="kpi-card-supreme">
-                                <span>SUCCESS</span>
-                                <b id="kpi-val-wr">%0</b>
-                            </div>
-                        </div>
-                        <div id="omega-apex-chart-main" style="height:250px; background:#161616; border-radius:10px; border:1px solid #272727; padding:10px;"></div>
-                        
-                        <div class="op-input-box">
-                            <input type="text" id="op-in-name" class="select-supreme" style="width:100%" placeholder="İŞLEM KODU / ADI">
-                            <div style="display:flex; gap:10px;">
-                                <input type="number" id="op-in-amt" class="select-supreme" style="flex:1" placeholder="USDT">
-                                <input type="number" id="op-in-odds" class="select-supreme" style="flex:1" placeholder="ORAN">
-                            </div>
-                            <button class="btn-op-fire" onclick="omega_CommitNewOperation()">İŞLEMİ BAŞLAT</button>
-                        </div>
-                    </div>
-                </div>
-
-            </div> 
-        </section>
-    </main>
-
-    <div id="rolling-excel-overlay" class="custom-modal-overlay">
-        <div class="modal-header">
-            <h2 id="excel-modal-title">ROLLING EXCEL</h2>
-            <button type="button" class="btn-modal-back" onclick="omega_CloseRollingExcel()">KAPAT</button>
-        </div>
-        <div class="modal-config-bar">
-            <div class="config-item">
-                <label>BAŞLANGIÇ:</label>
-                <input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()">
-            </div>
-            <div class="config-item">
-                <label>HEDEF:</label>
-                <span class="display-val" id="excel-target-bal">$1000</span>
-            </div>
-            <div class="config-item">
-                <label>GÜNCEL:</label>
-                <span class="display-val" id="excel-current-bal">$100</span>
-            </div>
-            <div class="config-item" style="margin-left:auto;">
-                <label>P/L:</label>
-                <span id="excel-pnl" class="display-val">$0.00</span>
-            </div>
-        </div>
-        <div class="modal-body-wrapper">
-            <table class="excel-table">
-                <thead>
-                    <tr>
-                        <th>GÜN</th>
-                        <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
-                        <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
-                        <th>GÜN SONU</th>
-                    </tr>
-                </thead>
-                <tbody id="excel-table-body"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="channel-manager-overlay" class="custom-modal-overlay">
-        <div class="modal-header">
-            <h2>KANAL LİSTESİ YÖNETİMİ</h2>
-            <button type="button" class="btn-modal-back" onclick="omega_CloseChannelManager()">KAPAT</button>
-        </div>
-        <div class="modal-body-wrapper">
-            <div style="display:flex; gap:10px; margin-bottom:20px; background:#161616; padding:15px; border-radius:10px; border:1px solid #272727;">
-                <input type="text" id="new-ch-name" class="select-supreme" placeholder="Kanal Adı">
-                <input type="text" id="new-ch-url" class="select-supreme" style="flex:1" placeholder="Yayın URL (M3U8 / EMBED)">
-                <button class="btn-op-fire" onclick="omega_AddCustomChannel()" style="padding:0 25px; margin:0;">EKLE</button>
-            </div>
-            <table class="supreme-data-table" style="width:100%; border-collapse:collapse;">
-                <tbody id="channel-table-body"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <script>
+<script>
         // --- 1. KÜRESEL SİSTEM DEĞİŞKENLERİ ---
         let _MASTER_DB = [];
         let _LEAGUE_STATS_DB = {};
@@ -1128,6 +911,7 @@
         let _ACTIVE_EXCEL_DAYS = 7;
         let _IS_DEV_EKRAN = false;
 
+        // --- 2. LOCALSTORAGE (KALICI HAFIZA) VERİTABANI BAĞLANTILARI ---
         let _WALLET_BALANCE = parseFloat(localStorage.getItem('v19_w')) || 100.0;
         let _BALANCE_HISTORY = JSON.parse(localStorage.getItem('v19_h')) || [100.0];
         let _PENDING_OPS = JSON.parse(localStorage.getItem('v19_p')) || [];
@@ -1137,7 +921,7 @@
         let _ROLLING_DB = JSON.parse(localStorage.getItem('v19_rolling')) || {};
         let _CHANNELS_DB = JSON.parse(localStorage.getItem('v19_channels')) || []; 
 
-        // --- 2. HİYERARŞİ VE KURAL SETLERİ ---
+        // --- 3. HİYERARŞİ VE KURAL SETLERİ ---
         const HIERARCHY_SCORES = {
             "TÜRKİYE - SÜPER LİG": 4000, "İNGİLTERE - PREMIER LEAGUE": 3900, "İSPANYA - LA LIGA": 3800,
             "ALMANYA - BUNDESLIGA": 3700, "İTALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
@@ -1158,7 +942,7 @@
             7: 1000, 15: 5000, 30: 15000, 60: 40000, 90: 100000
         };
 
-        // --- 3. URL YÖNLENDİRME (ROUTING) ---
+        // --- 4. URL YÖNLENDİRME (ROUTING) ---
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash.replace('#', '') || 'futbol';
             const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'finance'];
@@ -1178,7 +962,7 @@
             }
         });
 
-        // --- 4. MOTOR BAŞLATICI ---
+        // --- 5. MOTOR BAŞLATICI ---
         async function omega_InitializeEngine() {
             try {
                 const response = await fetch('v19_rapor.json?nocache=' + Date.now());
@@ -1201,7 +985,7 @@
             }
         }
 
-        // --- 5. ARAÇLAR ---
+        // --- 6. ARAÇLAR ---
         function omega_IsBasketballLeague(l) { 
             return ["NBA", "EUROLEAGUE", "BSL", "ACB", "LEGA A", "LNB", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"].some(x => l.toUpperCase().includes(x)); 
         }
@@ -1238,7 +1022,7 @@
             return `${m.dt}_${m.tm}_${m.m.replace(/[^a-zA-Z0-9]/g, '')}`; 
         }
 
-        // --- 6. ARAYÜZ ETKİLEŞİMLERİ ---
+        // --- 7. ARAYÜZ ETKİLEŞİMLERİ ---
         function omega_ToggleSidebar() { 
             const menu = document.getElementById('main-dropdown-nav'); 
             if(menu) menu.classList.toggle('active-menu'); 
@@ -1309,7 +1093,7 @@
             }
         }
 
-        // --- 7. RADAR FİLTRE VE LİSTELEME ---
+        // --- 8. RADAR FİLTRE VE LİSTELEME ---
         function omega_BuildUIComponents() {
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
@@ -1387,7 +1171,7 @@
                 finalHtmlBuffer += `<div style="color:var(--gold); font-size:0.85em; font-weight:900; margin:25px 0 15px 0; letter-spacing:1px; text-transform:uppercase;">${omega_FormatHumanDate(day)}</div>`;
                 
                 if(_ACTIVE_SORT_MODE === 'time') {
-                    // SAAT SIRALI AKIŞ (LİG BAŞLIKLI)
+                    // SAAT SIRALI AKIŞ - YENİ LİG BAŞLIKLI NİZAM
                     let dayGroupsSorted = groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm));
                     
                     dayGroupsSorted.forEach(m => {
@@ -1478,7 +1262,7 @@
             omega_ExecuteRadarFilter();
         }
 
-        // --- 8. KANAL YÖNETİMİ MODÜLÜ ---
+        // --- 9. KANAL YÖNETİM MERKEZİ ---
         function omega_OpenChannelManager() {
             document.getElementById('channel-manager-overlay').style.display = 'flex';
             setTimeout(() => { document.getElementById('channel-manager-overlay').classList.add('show-modal'); }, 10);
@@ -1548,13 +1332,14 @@
             });
         }
 
-        // --- 9. CANLI YAYIN MATRİSİ KONTROLCÜSÜ ---
+        // --- 10. MULTI-STREAM YAYIN MATRİSİ ---
         function omega_ToggleDevEkran() {
             _IS_DEV_EKRAN = !_IS_DEV_EKRAN;
             const btn = document.getElementById('btn-theater-mode');
             if(_IS_DEV_EKRAN) {
                 document.body.classList.add('dev-mode');
                 btn.innerHTML = 'KÜÇÜLT';
+                
                 const topMenu = document.getElementById('main-dropdown-nav');
                 if(topMenu) topMenu.classList.remove('active-menu');
             } else {
@@ -1626,7 +1411,7 @@
             document.getElementById('s-fr-' + id).src = "about:blank"; 
         }
 
-        // --- 10. ROLLING EXCEL MİMARİSİ (KASMA VE SCROLL ÇÖZÜLDÜ) ---
+        // --- 11. ROLLING EXCEL MİMARİSİ (METİN TABANLI, SIFIR KASMA) ---
         function omega_OpenRollingExcel(days) {
             _ACTIVE_EXCEL_DAYS = days;
             
@@ -1748,7 +1533,7 @@
             }
         }
 
-        // --- 11. SUPREME FINANCE KONTROLCÜSÜ (KASA YÖNETİMİ) ---
+        // --- 12. SUPREME FINANCE KONTROLCÜSÜ ---
         function omega_RefreshFinanceDashboard() {
             const kpiValW = document.getElementById('kpi-val-w');
             if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
@@ -1871,7 +1656,7 @@
             localStorage.setItem('v19_l', JSON.stringify(_COMPLETED_LEDGER)); 
         }
 
-        // --- 12. APEX CHARTS MOTORU ---
+        // --- 13. APEX CHARTS MOTORU ---
         let _SUPREME_CHART_INSTANCE;
         function omega_RenderApexSupremeChart() {
             const chartDiv = document.querySelector("#omega-apex-chart-main");
@@ -1910,7 +1695,6 @@
             _SUPREME_CHART_INSTANCE = new ApexCharts(chartDiv, chartOptions);
             _SUPREME_CHART_INSTANCE.render();
         }
-
     </script>
 </body>
 </html>
