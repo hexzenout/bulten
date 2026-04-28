@@ -10,8 +10,8 @@
     
     <style>
         /* ==========================================================================
-           V19 SUPREME STYLING SYSTEM v19.0 (FINAL OMEGA ARCHIVE)
-           Tüm hatalar giderildi. Akordeon Menü (İtmeli) ve Dinamik Başlık aktif.
+           V19 SUPREME STYLING SYSTEM v20.0 (FINAL OMEGA ARCHIVE)
+           Tüm mimari hatalar giderildi. Akordeon Menü (İtmeli) ve Dinamik Başlık aktif.
            ========================================================================== */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -65,7 +65,7 @@
             font-family: 'Inter', sans-serif;
             overflow: hidden;
             display: flex;
-            flex-direction: column; /* Üstten alta dizilim */
+            flex-direction: column; /* Üstten alta dizilim (Akordeon itmesi için şart) */
         }
 
         /* ==========================================================================
@@ -78,7 +78,7 @@
             align-items: center; 
             background: #000000; 
             border-bottom: 1px solid var(--border-bright); 
-            height: 70px; 
+            height: 75px; 
             flex-shrink: 0;
             z-index: 8000;
         }
@@ -94,9 +94,9 @@
             background: transparent;
             border: 1px solid var(--border-bright);
             color: var(--muted);
-            font-size: 1.2em;
-            padding: 8px 14px;
-            border-radius: 6px;
+            font-size: 1.3em;
+            padding: 8px 15px;
+            border-radius: 8px;
             cursor: pointer;
             transition: var(--transition-fast);
         }
@@ -104,14 +104,14 @@
             color: var(--gold);
             border-color: var(--gold);
             background: rgba(251, 191, 36, 0.1);
+            transform: scale(1.05);
         }
 
         /* DİNAMİK ANA SAYFA BAŞLIĞI */
         .header-title-box {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.2em;
+            font-size: 1.25em;
             font-weight: 950;
             letter-spacing: 1.5px;
             text-transform: uppercase;
@@ -120,6 +120,7 @@
             color: var(--gold);
             text-decoration: none;
             transition: var(--transition-fast);
+            margin-right: 8px;
         }
         .home-link:hover {
             color: #fff;
@@ -127,6 +128,7 @@
         }
         .module-name {
             color: var(--text);
+            margin-left: 8px;
         }
 
         /* ==========================================================================
@@ -144,26 +146,26 @@
         }
 
         .accordion-menu.active-menu {
-            max-height: 400px; /* Menü öğelerine göre açılır */
+            max-height: 500px; /* İçeriğe göre açılır ve ana ekranı aşağı iter */
             border-bottom: 2px solid var(--green);
         }
 
         .nav-container { 
-            padding: 15px 40px; 
+            padding: 20px 40px; 
             display: flex;
             flex-direction: column; /* Alt alta dizilim */
-            gap: 5px;
-            max-width: 600px;
+            gap: 6px;
+            max-width: 400px; /* Menü öğeleri çok uzamasın diye sınırlandırıldı */
         }
 
         .nav-link { 
-            padding: 14px 20px; cursor: pointer; color: var(--muted); font-weight: 800; font-size: 0.9em; 
+            padding: 14px 25px; cursor: pointer; color: var(--muted); font-weight: 800; font-size: 0.95em; 
             display: flex; align-items: center; transition: var(--transition-smooth);
             border: 1px solid transparent; border-radius: 8px; background: transparent;
         }
 
         .nav-link i { margin-right: 15px; font-size: 1.2em; width: 25px; text-align: center; transition: 0.3s;}
-        .nav-link:hover { background: #111; color: #ffffff; border-color: #333; transform: translateX(5px); }
+        .nav-link:hover { background: #111; color: #ffffff; border-color: #333; transform: translateX(8px); }
         .nav-link:hover i { transform: scale(1.2); }
 
         .nav-link.active { background: rgba(16, 185, 129, 0.1); color: #ffffff; border-color: var(--green); box-shadow: inset 0 0 15px var(--green-glow); }
@@ -176,7 +178,7 @@
            MAIN VIEWPORT & SCROLLER
            ========================================================================== */
         .main-viewport { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 100; width: 100%; }
-        .main-scroll-box { flex-grow: 1; padding: 30px 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); transition: var(--transition-smooth); }
+        .main-scroll-box { flex-grow: 1; padding: 30px 50px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); transition: var(--transition-smooth); }
 
         /* DEV EKRAN MODU */
         body.dev-mode .main-scroll-box { padding: 15px; }
@@ -196,6 +198,7 @@
         }
         .select-supreme:hover { border-color: var(--muted); }
 
+        /* --- CUSTOM LEAGUE DROPDOWN PRO --- */
         .league-drop-wrapper { position: relative; min-width: 380px; }
         .league-drop-trigger { 
             background: #000000; border: 2px solid var(--border); color: #ffffff; padding: 14px 25px; 
@@ -216,6 +219,7 @@
         .league-drop-item:hover { background: #1c1c21; color: var(--gold); padding-left: 35px; }
         .league-drop-item img { width: 24px; height: 16px; margin-right: 18px; border-radius: 3px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
+        /* --- SIRALAMA BUTONLARI --- */
         .mode-row { display: flex; gap: 15px; }
         .btn-mode-supreme { 
             background: transparent; border: 2.5px solid var(--orange); color: var(--orange); padding: 14px 40px; 
@@ -402,12 +406,14 @@
 
     <header class="top-status-bar">
         <div class="header-controls">
-            <button class="small-menu-btn" onclick="omega_ToggleSidebar()" title="Menüyü Aç/Kapat">
+            <button class="small-menu-btn" id="menu-trigger-btn" onclick="omega_ToggleSidebar()" title="Menüyü Aç/Kapat">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="header-title-box">
-                <a href="https://hexzenout.github.io/bulten/" class="home-link">ANA SAYFA</a>
-                <span id="active-module-name" class="module-name">FUTBOL ⚽</span>
+                <a href="https://hexzenout.github.io/bulten/" class="home-link">
+                    <i class="fa-solid fa-house"></i> ANA SAYFA
+                </a>
+                <span class="module-name" id="active-module-name">/ FUTBOL ⚽</span>
             </div>
         </div>
     </header>
@@ -444,7 +450,7 @@
                         </select>
                         
                         <div class="league-drop-wrapper">
-                            <div class="league-drop-trigger" onclick="omega_ToggleLeagueDrop(event)">
+                            <div class="league-drop-trigger" id="drop-trigger-btn" onclick="omega_ToggleLeagueDropdown(event)">
                                 <div id="drop-text-label">TÜM LİGLER</div>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
@@ -688,7 +694,7 @@
             7: 1000, 15: 5000, 30: 15000, 60: 40000, 90: 100000
         };
 
-        // --- URL ROUTING (HISTORY API) # ---
+        // --- URL ROUTING (HISTORY API) ---
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash.replace('#', '');
             const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'finance'];
@@ -786,16 +792,19 @@
             return `${matchObj.dt}_${matchObj.tm}_${matchObj.m.replace(/[^a-zA-Z0-9]/g, '')}`;
         }
 
-        // --- NAVIGATION CONTROLLER & SIDEBAR (AKORDEON MENU) ---
+        // --- NAVIGATION CONTROLLER & SIDEBAR ---
         function omega_ToggleSidebar() {
-            document.getElementById('main-dropdown-nav').classList.toggle('active-menu');
+            const nav = document.getElementById('main-dropdown-nav');
+            if(nav) nav.classList.toggle('active-menu');
         }
 
         function omega_SwitchMainTab(targetModule, clickedElement, updateHistory = true) {
             omega_CloseRollingExcel();
             omega_CloseChannelManager();
             
-            document.getElementById('main-dropdown-nav').classList.remove('active-menu');
+            // Eğer dropdown açıksa sekmeye basınca geri kapansın
+            const nav = document.getElementById('main-dropdown-nav');
+            if(nav) nav.classList.remove('active-menu');
 
             if (updateHistory) {
                 history.pushState({ tab: targetModule }, '', '#' + targetModule);
@@ -809,14 +818,14 @@
             document.getElementById('omega-stream-block').style.display = 'none';
             document.getElementById('v19-finance-block').classList.remove('active');
 
-            // DİNAMİK BAŞLIK DEĞİŞİMİ
             const titleElem = document.getElementById('active-module-name');
+            
             if(targetModule === 'futbol' || targetModule === 'basketbol') {
                 _ACTIVE_SPORT = targetModule;
                 _ACTIVE_TAB = 'bulletin';
                 
                 document.getElementById('omega-radar-block').style.display = 'block';
-                titleElem.innerText = targetModule === 'futbol' ? "FUTBOL ⚽" : "BASKETBOL 🏀";
+                titleElem.innerText = targetModule === 'futbol' ? "/ FUTBOL ⚽" : "/ BASKETBOL 🏀";
                 
                 omega_BuildUIComponents();
                 omega_ExecuteRadarFilter();
@@ -824,13 +833,13 @@
             } else if(targetModule === 'favs') {
                 _ACTIVE_TAB = 'favs';
                 document.getElementById('omega-favs-block').style.display = 'block';
-                titleElem.innerText = "FAVORİLERİM ⭐";
+                titleElem.innerText = "/ FAVORİ ANALİZLERİM ⭐";
                 omega_ExecuteRadarFilter();
                 
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
-                titleElem.innerText = "CANLI YAYIN 📺";
+                titleElem.innerText = "/ CANLI YAYIN MERKEZİ 📺";
                 
                 if(!document.getElementById('omega-matrix-grid').innerHTML) {
                     omega_BuildStreamMatrix(6);
@@ -839,7 +848,7 @@
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
                 document.getElementById('v19-finance-block').classList.add('active');
-                titleElem.innerText = "KASA YÖNETİMİ 💼";
+                titleElem.innerText = "/ KASA YÖNETİMİ 💼";
                 
                 omega_RefreshFinanceDashboard();
                 setTimeout(omega_RenderApexSupremeChart, 250);
@@ -851,7 +860,6 @@
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
             
-            // HAYALET YAZI DÜZELTİLDİ (HTML ile senkronize edildi)
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
@@ -890,11 +898,28 @@
             dropdownMenuArea.innerHTML = leagueHtml;
         }
 
-        function omega_ToggleLeagueDrop(e) {
+        // ==========================================================================
+        // YENİ: TÜM LİGLER DROPDOWN & KÜRESEL TIKLAMA YAKALAYICI (BOŞLUĞA BASINCA KAPANMA)
+        // ==========================================================================
+        function omega_ToggleLeagueDropdown(e) {
             e.stopPropagation();
             const menu = document.getElementById('drop-menu-list');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            if(menu) {
+                menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+            }
         }
+
+        document.addEventListener('click', (event) => {
+            const dropMenu = document.getElementById('drop-menu-list');
+            const dropTrigger = document.getElementById('drop-trigger-btn');
+            
+            // Eğer dropdown açıksa ve tıklanan yer menünün/butonun kendisi değilse menüyü kapat.
+            if (dropMenu && dropMenu.style.display === 'block') {
+                if (dropTrigger && !dropTrigger.contains(event.target) && !dropMenu.contains(event.target)) {
+                    dropMenu.style.display = 'none';
+                }
+            }
+        });
 
         function omega_HandleLeagueSelection(val, htmlContent) {
             _ACTIVE_LEAGUE_FILTER = val;
@@ -903,10 +928,13 @@
             omega_ExecuteRadarFilter();
         }
 
+        // ==========================================================================
+        // YENİ: SIRALAMA BUTONLARI ONARILDI
+        // ==========================================================================
         function omega_SetSortMode(mode) {
             _ACTIVE_SORT_MODE = mode;
             document.querySelectorAll('.btn-mode-supreme').forEach(b => b.classList.remove('active'));
-            // ID düzeltmesi (Hata yok edildi)
+            // Doğru ID'ye (btn-sort-league / btn-sort-time) active classı ekler
             document.getElementById('btn-sort-' + mode).classList.add('active');
             omega_ExecuteRadarFilter();
         }
@@ -1027,7 +1055,6 @@
             `;
         }
 
-        // --- FAVORITES CONTROLLER ---
         function omega_ToggleFavoriteMatch(event, matchID) {
             event.stopPropagation();
             if(_FAV_MATCHES.includes(matchID)) {
@@ -1127,7 +1154,8 @@
             if(_IS_DEV_EKRAN) {
                 document.body.classList.add('dev-mode');
                 btn.innerHTML = '<i class="fa-solid fa-compress"></i> KÜÇÜLT';
-                document.getElementById('main-dropdown-nav').classList.remove('active-menu');
+                const nav = document.getElementById('main-dropdown-nav');
+                if(nav) nav.classList.remove('active-menu');
             } else {
                 document.body.classList.remove('dev-mode');
                 btn.innerHTML = '<i class="fa-solid fa-expand"></i> DEV EKRAN';
