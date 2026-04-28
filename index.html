@@ -12,7 +12,6 @@
         /* ==========================================================================
            V19 SUPREME STYLING SYSTEM v12.0
            FULL ARCHIVE - NO COMPRESSION - MAXIMUM DETAIL
-           Bütün stiller, animasyonlar ve mimari kurallar açıkça yazılmıştır.
            ========================================================================== */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -57,24 +56,10 @@
             -moz-osx-font-smoothing: grayscale;
         }
         
-        ::-webkit-scrollbar { 
-            width: 8px; 
-            height: 8px; 
-        }
-        
-        ::-webkit-scrollbar-track { 
-            background: #000000; 
-        }
-        
-        ::-webkit-scrollbar-thumb { 
-            background: #27272a; 
-            border-radius: 10px; 
-            border: 2px solid #000000; 
-        }
-        
-        ::-webkit-scrollbar-thumb:hover { 
-            background: #3f3f46; 
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #000000; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; border: 2px solid #000000; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 
         html, body { 
             width: 100vw; 
@@ -164,36 +149,14 @@
             padding-left: 45px; 
         }
 
-        .nav-link:hover i {
-            transform: scale(1.15);
-        }
+        .nav-link:hover i { transform: scale(1.15); }
 
         /* --- NAVİGASYON AKTİF DURUMLARI --- */
-        .nav-link.active { 
-            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); 
-            color: #ffffff; 
-            border-left: 5px solid var(--green); 
-        }
-
-        .nav-link.basket.active { 
-            background: linear-gradient(90deg, rgba(249, 115, 22, 0.1) 0%, transparent 100%); 
-            border-left-color: var(--orange); 
-        }
-
-        .nav-link.stream.active { 
-            background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%); 
-            border-left-color: var(--gold); 
-        }
-
-        .nav-link.favs.active { 
-            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%); 
-            border-left-color: var(--red); 
-        }
-
-        .nav-link.finance.active { 
-            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); 
-            border-left-color: var(--green); 
-        }
+        .nav-link.active { background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); color: #ffffff; border-left: 5px solid var(--green); }
+        .nav-link.basket.active { background: linear-gradient(90deg, rgba(249, 115, 22, 0.1) 0%, transparent 100%); border-left-color: var(--orange); }
+        .nav-link.stream.active { background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%); border-left-color: var(--gold); }
+        .nav-link.favs.active { background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%); border-left-color: var(--red); }
+        .nav-link.finance.active { background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); border-left-color: var(--green); }
 
         /* ==========================================================================
            MAIN VIEWPORT & HEADER
@@ -218,625 +181,162 @@
             z-index: 500;
         }
 
-        .console-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+        .console-info { display: flex; flex-direction: column; gap: 6px; }
+        .console-info h2 { margin: 0; font-size: 1.25em; font-weight: 950; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; }
+        .console-info span { font-size: 0.65em; color: var(--muted); font-weight: 800; letter-spacing: 3px; }
 
-        .console-info h2 { 
-            margin: 0; 
-            font-size: 1.25em; 
-            font-weight: 950; 
-            letter-spacing: 2px; 
-            text-transform: uppercase; 
-            color: #ffffff; 
+        .header-wallet {
+            background: var(--panel); border: 1px solid var(--border); padding: 14px 28px; border-radius: 12px; 
+            display: flex; align-items: center; gap: 15px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
+        .header-wallet label { font-size: 0.65em; color: var(--muted); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .header-wallet b { font-family: 'JetBrains Mono'; color: var(--gold); font-size: 1.3em; font-weight: 950; text-shadow: 0 0 10px var(--gold-glow); }
 
-        .console-info span {
-            font-size: 0.65em;
-            color: var(--muted);
-            font-weight: 800;
-            letter-spacing: 3px;
-        }
-
-        .main-scroll-box { 
-            flex-grow: 1; 
-            padding: 40px; 
-            overflow-y: auto; 
-            background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); 
-        }
+        .main-scroll-box { flex-grow: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); }
 
         /* ==========================================================================
            RADAR KONTROL PANELİ
            ========================================================================== */
-        .controls-wrapper { 
-            margin-bottom: 35px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 20px; 
-        }
-
-        .filter-panel { 
-            display: flex; 
-            gap: 20px; 
-            background: var(--panel); 
-            padding: 20px; 
-            border-radius: 14px; 
-            border: 1px solid var(--border); 
-            align-items: center; 
-        }
+        .controls-wrapper { margin-bottom: 35px; display: flex; flex-direction: column; gap: 20px; }
+        .filter-panel { display: flex; gap: 20px; background: var(--panel); padding: 20px; border-radius: 14px; border: 1px solid var(--border); align-items: center; }
 
         .select-supreme { 
-            background: #000000; 
-            border: 2px solid var(--border); 
-            color: #ffffff; 
-            padding: 14px 22px; 
-            border-radius: 10px; 
-            font-size: 0.9em; 
-            font-weight: 800; 
-            cursor: pointer; 
-            min-width: 250px; 
-            transition: border 0.3s;
-            appearance: none;
+            background: #000000; border: 2px solid var(--border); color: #ffffff; padding: 14px 22px; 
+            border-radius: 10px; font-size: 0.9em; font-weight: 800; cursor: pointer; min-width: 250px; 
+            transition: border 0.3s; appearance: none;
         }
-        
         .select-supreme:hover { border-color: var(--muted); }
 
         /* --- CUSTOM LEAGUE DROPDOWN PRO --- */
         .league-drop-wrapper { position: relative; min-width: 380px; }
-
         .league-drop-trigger { 
-            background: #000000; 
-            border: 2px solid var(--border); 
-            color: #ffffff; 
-            padding: 14px 25px; 
-            border-radius: 10px; 
-            font-size: 0.9em; 
-            font-weight: 900; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            transition: var(--transition-fast);
+            background: #000000; border: 2px solid var(--border); color: #ffffff; padding: 14px 25px; 
+            border-radius: 10px; font-size: 0.9em; font-weight: 900; cursor: pointer; display: flex; 
+            align-items: center; justify-content: space-between; transition: var(--transition-fast);
         }
-
-        .league-drop-trigger:hover { 
-            border-color: var(--gold); 
-            background: #050505; 
-        }
+        .league-drop-trigger:hover { border-color: var(--gold); background: #050505; }
         
         .league-drop-menu { 
-            display: none; 
-            position: absolute; 
-            top: 120%; 
-            left: 0; 
-            right: 0; 
-            background: #0a0a0c; 
-            border: 1px solid var(--border-bright); 
-            z-index: 5000; 
-            max-height: 500px; 
-            overflow-y: auto; 
-            border-radius: 12px; 
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
-            animation: slideIn 0.25s ease-out;
+            display: none; position: absolute; top: 120%; left: 0; right: 0; background: #0a0a0c; 
+            border: 1px solid var(--border-bright); z-index: 5000; max-height: 500px; overflow-y: auto; 
+            border-radius: 12px; box-shadow: 0 40px 80px rgba(0,0,0,0.9); animation: slideIn 0.25s ease-out;
         }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .league-drop-item { 
-            padding: 16px 25px; 
-            font-size: 0.9em; 
-            display: flex; 
-            align-items: center; 
-            cursor: pointer; 
-            border-bottom: 1px solid #161618; 
-            color: #dddddd;
-            transition: 0.2s;
-            font-weight: 700;
-        }
-
+        .league-drop-item { padding: 16px 25px; font-size: 0.9em; display: flex; align-items: center; cursor: pointer; border-bottom: 1px solid #161618; color: #dddddd; transition: 0.2s; font-weight: 700; }
         .league-drop-item:last-child { border-bottom: none; }
-
-        .league-drop-item:hover { 
-            background: #1c1c21; 
-            color: var(--gold); 
-            padding-left: 35px; 
-        }
-
-        .league-drop-item img { 
-            width: 24px; 
-            height: 16px; 
-            margin-right: 18px; 
-            border-radius: 3px; 
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
+        .league-drop-item:hover { background: #1c1c21; color: var(--gold); padding-left: 35px; }
+        .league-drop-item img { width: 24px; height: 16px; margin-right: 18px; border-radius: 3px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
         /* --- SIRALAMA BUTONLARI --- */
         .mode-row { display: flex; gap: 15px; }
-
         .btn-mode-supreme { 
-            background: transparent; 
-            border: 2.5px solid var(--orange); 
-            color: var(--orange); 
-            padding: 14px 40px; 
-            border-radius: 10px; 
-            font-size: 0.85em; 
-            font-weight: 950; 
-            cursor: pointer; 
-            transition: var(--transition-main);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            background: transparent; border: 2.5px solid var(--orange); color: var(--orange); padding: 14px 40px; 
+            border-radius: 10px; font-size: 0.85em; font-weight: 950; cursor: pointer; transition: var(--transition-main);
+            text-transform: uppercase; letter-spacing: 1.5px;
         }
-
-        .btn-mode-supreme.active { 
-            background: var(--orange); 
-            color: #000000; 
-            box-shadow: 0 0 30px var(--orange-glow);
-            transform: translateY(-2px);
-        }
+        .btn-mode-supreme.active { background: var(--orange); color: #000000; box-shadow: 0 0 30px var(--orange-glow); transform: translateY(-2px); }
 
         /* ==========================================================================
            MATCH RENDER ENGINE STYLES
            ========================================================================== */
-        
-        .league-container-pro { 
-            margin-bottom: 30px; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            border: 1px solid var(--border); 
-            background: var(--panel); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
+        .league-container-pro { margin-bottom: 30px; border-radius: 15px; overflow: hidden; border: 1px solid var(--border); background: var(--panel); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .league-header-bar { 
-            background: linear-gradient(90deg, #1e293b 0%, #161e2b 100%); 
-            padding: 18px 30px; 
-            font-weight: 950; 
-            font-size: 0.8em; 
-            color: #ffffff; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            cursor: pointer;
-            border-bottom: 2px solid #334155;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            transition: background 0.3s;
+            background: linear-gradient(90deg, #1e293b 0%, #161e2b 100%); padding: 18px 30px; font-weight: 950; 
+            font-size: 0.8em; color: #ffffff; display: flex; align-items: center; justify-content: space-between; 
+            cursor: pointer; border-bottom: 2px solid #334155; letter-spacing: 1.5px; text-transform: uppercase; transition: background 0.3s;
         }
-
         .league-header-bar:hover { background: #273549; }
 
-        /* MAÇ SATIRLARI */
-        .match-row-pro { 
-            display: flex; 
-            align-items: center; 
-            padding: 15px 30px; 
-            border-bottom: 1px solid #141416; 
-            font-size: 0.9em; 
-            background: #0a0a0c;
-            transition: all 0.3s;
-        }
-
+        .match-row-pro { display: flex; align-items: center; padding: 15px 30px; border-bottom: 1px solid #141416; font-size: 0.9em; background: #0a0a0c; transition: all 0.3s; }
         .match-row-pro:last-child { border-bottom: none; }
         .match-row-pro:hover { background: #111118; transform: scale(1.005); z-index: 10; border-left: 2px solid var(--green); }
         
-        /* FAVORİ YILDIZ (MAÇ YANINDA) */
-        .fav-star-box { 
-            font-size: 1.4em; 
-            color: var(--border-bright); 
-            margin-right: 20px; 
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
-            cursor: pointer; 
-        }
-
+        .fav-star-box { font-size: 1.4em; color: var(--border-bright); margin-right: 20px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: pointer; }
         .fav-star-box:hover { color: var(--muted); transform: scale(1.1); }
+        .fav-star-box.active { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); transform: scale(1.25); }
 
-        .fav-star-box.active { 
-            color: var(--gold); 
-            text-shadow: 0 0 15px var(--gold-glow); 
-            transform: scale(1.25);
-        }
+        .match-clock-sup { font-family: 'JetBrains Mono'; color: var(--green); width: 75px; font-weight: 900; font-size: 1.1em; letter-spacing: -0.5px; }
+        .match-teams-main { font-weight: 800; flex-grow: 1; display: flex; align-items: center; color: #f4f4f7; letter-spacing: 0.2px; }
+        .match-flag-sup { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; margin-left: 18px; box-shadow: 0 3px 8px rgba(0,0,0,0.6); }
 
-        .match-clock-sup { 
-            font-family: 'JetBrains Mono'; 
-            color: var(--green); 
-            width: 75px; 
-            font-weight: 900; 
-            font-size: 1.1em; 
-            letter-spacing: -0.5px;
-        }
-
-        .match-teams-main { 
-            font-weight: 800; 
-            flex-grow: 1; 
-            display: flex; 
-            align-items: center; 
-            color: #f4f4f7;
-            letter-spacing: 0.2px;
-        }
-
-        .match-flag-sup { 
-            width: 22px; 
-            height: 15px; 
-            object-fit: cover; 
-            border-radius: 2px; 
-            margin-left: 18px; 
-            box-shadow: 0 3px 8px rgba(0,0,0,0.6);
-        }
-
-        /* --- SAAT SIRALI (KOMPAKT) MOD --- */
-        .compact-mode-row { 
-            font-size: 0.78em !important; 
-            padding: 10px 30px !important; 
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            margin-bottom: 5px;
-        }
-
-        .match-ico-marker { 
-            margin-right: 15px; 
-            font-size: 1.1em; 
-            opacity: 0.6; 
-        }
-        
+        /* SAAT SIRALI (KOMPAKT) MOD */
+        .compact-mode-row { font-size: 0.78em !important; padding: 10px 30px !important; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 5px; }
+        .match-ico-marker { margin-right: 15px; font-size: 1.1em; opacity: 0.6; }
         .league-label-badge { 
-            font-size: 0.75em; 
-            color: var(--text-dim); 
-            background: #18181b; 
-            padding: 5px 15px; 
-            border-radius: 6px; 
-            margin-left: auto; /* Sağa yaslar */
-            font-weight: 900; 
-            border: 1px solid #2d2d30; 
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-size: 0.75em; color: var(--text-dim); background: #18181b; padding: 5px 15px; border-radius: 6px; 
+            margin-left: auto; font-weight: 900; border: 1px solid #2d2d30; letter-spacing: 1px; text-transform: uppercase;
         }
 
         /* ==========================================================================
            MULTI-STREAM INTELLIGENCE HUB
            ========================================================================== */
-        .st-controls-bar { 
-            display: flex; 
-            gap: 15px; 
-            margin-bottom: 30px; 
-            background: var(--panel); 
-            padding: 18px; 
-            border-radius: 14px; 
-            border: 1px solid var(--border); 
-        }
-
+        .st-controls-bar { display: flex; gap: 15px; margin-bottom: 30px; background: var(--panel); padding: 18px; border-radius: 14px; border: 1px solid var(--border); }
         .btn-stream-layout { 
-            background: #1f1f23; 
-            color: var(--muted); 
-            border: 2px solid #333; 
-            padding: 14px 35px; 
-            border-radius: 10px; 
-            font-size: 0.9em; 
-            font-weight: 950; 
-            cursor: pointer; 
-            transition: var(--transition-fast);
+            background: #1f1f23; color: var(--muted); border: 2px solid #333; padding: 14px 35px; 
+            border-radius: 10px; font-size: 0.9em; font-weight: 950; cursor: pointer; transition: var(--transition-fast);
         }
-
         .btn-stream-layout:hover { border-color: var(--muted); color: #fff; }
+        .btn-stream-layout.active { background: var(--green); color: #000000; border-color: var(--green); box-shadow: 0 0 25px var(--green-glow); }
 
-        .btn-stream-layout.active { 
-            background: var(--green); 
-            color: #000000; 
-            border-color: var(--green); 
-            box-shadow: 0 0 25px var(--green-glow);
-        }
-
-        .matrix-grid-master { 
-            display: none; 
-            gap: 20px; 
-            height: calc(100vh - 350px); 
-            width: 100%; 
-        }
-
-        .matrix-grid-master.active { display: grid; }
-        
-        /* Strict Grid Definitions */
+        .stream-master-grid { display: none; gap: 20px; height: calc(100vh - 350px); width: 100%; }
+        .stream-master-grid.active { display: grid; }
         .m-lay-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
         .m-lay-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
         .m-lay-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
         .m-lay-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
 
-        .matrix-unit { 
-            background: #000000; 
-            border: 2px solid #27272a; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            transition: border 0.4s;
-        }
-
+        .matrix-unit { background: #000000; border: 2px solid #27272a; border-radius: 15px; overflow: hidden; display: flex; flex-direction: column; transition: border 0.4s; }
         .matrix-unit:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
-
-        .matrix-nav { 
-            padding: 12px; 
-            background: #0a0a0c; 
-            display: flex; 
-            gap: 12px; 
-            border-bottom: 1px solid var(--border); 
-            align-items: center;
-        }
-
-        .matrix-input { 
-            flex: 1; 
-            background: #000000; 
-            border: 1.5px solid #333; 
-            color: #ffffff; 
-            font-size: 11px; 
-            padding: 10px 18px; 
-            border-radius: 8px; 
-        }
-
+        .matrix-nav { padding: 12px; background: #0a0a0c; display: flex; gap: 12px; border-bottom: 1px solid var(--border); align-items: center; }
+        .matrix-input { flex: 1; background: #000000; border: 1.5px solid #333; color: #ffffff; font-size: 11px; padding: 10px 18px; border-radius: 8px; }
         .matrix-input:focus { border-color: var(--green); }
-
-        .btn-matrix-go { 
-            background: var(--green); 
-            color: #000000; 
-            border: none; 
-            padding: 0 22px; 
-            border-radius: 8px; 
-            font-weight: 950; 
-            font-size: 0.8em; 
-            cursor: pointer; 
-            transition: 0.2s;
-        }
-
+        
+        .btn-matrix-go { background: var(--green); color: #000000; border: none; padding: 0 22px; border-radius: 8px; font-weight: 950; font-size: 0.8em; cursor: pointer; transition: 0.2s; }
         .btn-matrix-go:hover { background: #14d693; }
-
-        .btn-matrix-kill { 
-            background: var(--red); 
-            color: #ffffff; 
-            border: none; 
-            padding: 0 18px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 18px; 
-            transition: 0.3s; 
-        }
-
+        .btn-matrix-kill { background: var(--red); color: #ffffff; border: none; padding: 0 18px; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
         .btn-matrix-kill:hover { background: #ff0000; transform: rotate(90deg); }
 
         /* ==========================================================================
            SUPREME FINANCIAL CONSOLE
            ========================================================================== */
-        .fin-terminal-wrapper { 
-            display: none; 
-            grid-template-columns: 1fr 520px; 
-            gap: 40px; 
-            height: 100%; 
-        }
-
+        .fin-terminal-wrapper { display: none; grid-template-columns: 1fr 520px; gap: 40px; height: 100%; }
         .fin-terminal-wrapper.active { display: grid; }
-
-        .fin-scroller-pane { 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 35px; 
-            padding-right: 15px; 
-        }
+        .fin-scroller-pane { overflow-y: auto; display: flex; flex-direction: column; gap: 35px; padding-right: 15px; }
         
-        .rolling-grand-grid { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 18px; 
-        }
+        .rolling-grand-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+        .rolling-box-seg { background: var(--panel); border: 1.5px solid var(--border); padding: 35px 15px; border-radius: 20px; text-align: center; border-top: 6px solid var(--muted); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .rolling-box-seg.active { border-top-color: var(--green); background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); box-shadow: 0 25px 50px rgba(0,0,0,0.6); transform: translateY(-8px); }
+        .rolling-box-seg label { font-size: 0.65em; font-weight: 950; color: var(--muted); text-transform: uppercase; margin-bottom: 18px; display: block; letter-spacing: 2px; }
+        .rolling-box-seg b { font-family: 'JetBrains Mono'; font-size: 1.6em; font-weight: 950; color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
 
-        .rolling-box-seg { 
-            background: var(--panel); 
-            border: 1.5px solid var(--border); 
-            padding: 35px 15px; 
-            border-radius: 20px; 
-            text-align: center; 
-            border-top: 6px solid var(--muted); 
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .rolling-box-seg.active { 
-            border-top-color: var(--green); 
-            background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
-            transform: translateY(-8px);
-        }
-
-        .rolling-box-seg label { 
-            font-size: 0.65em; 
-            font-weight: 950; 
-            color: var(--muted); 
-            text-transform: uppercase; 
-            margin-bottom: 18px; 
-            display: block; 
-            letter-spacing: 2px; 
-        }
-
-        .rolling-box-seg b { 
-            font-family: 'JetBrains Mono'; 
-            font-size: 1.6em; 
-            font-weight: 950; 
-            color: var(--gold); 
-            text-shadow: 0 0 15px var(--gold-glow);
-        }
-
-        .ledger-supreme-pro { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            border-radius: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            flex-grow: 1; 
-            min-height: 600px; 
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .ledger-supreme-header { 
-            padding: 30px 40px; 
-            border-bottom: 2px solid #1f1f23; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: var(--panel-header); 
-        }
-
-        .ledger-title-text { 
-            font-weight: 950; 
-            font-size: 1.2em; 
-            letter-spacing: 3px; 
-            text-transform: uppercase; 
-            color: #ffffff; 
-        }
-
+        .ledger-supreme-pro { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column; flex-grow: 1; min-height: 600px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .ledger-supreme-header { padding: 30px 40px; border-bottom: 2px solid #1f1f23; display: flex; justify-content: space-between; align-items: center; background: var(--panel-header); }
+        .ledger-title-text { font-weight: 950; font-size: 1.2em; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; }
+        
         .ledger-tabs-container { display: flex; gap: 15px; }
-
-        .btn-tab-pro { 
-            background: #000000; 
-            color: var(--muted); 
-            border: 2px solid var(--border-bright); 
-            padding: 12px 28px; 
-            border-radius: 10px; 
-            font-size: 0.8em; 
-            font-weight: 900; 
-            cursor: pointer; 
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-
-        .btn-tab-pro.active { 
-            background: var(--gold); 
-            color: #000000; 
-            border-color: var(--gold); 
-            box-shadow: 0 0 20px var(--gold-glow);
-        }
+        .btn-tab-pro { background: #000000; color: var(--muted); border: 2px solid var(--border-bright); padding: 12px 28px; border-radius: 10px; font-size: 0.8em; font-weight: 900; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-tab-pro.active { background: var(--gold); color: #000000; border-color: var(--gold); box-shadow: 0 0 20px var(--gold-glow); }
 
         .ledger-table-scroller { overflow-y: auto; flex-grow: 1; background: #070709; }
-
-        .supreme-data-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 0.9em; 
-        }
-
-        .supreme-data-table th { 
-            background: #0c0c0e; 
-            padding: 24px 20px; 
-            text-align: left; 
-            color: var(--muted); 
-            position: sticky; 
-            top: 0; 
-            border-bottom: 2px solid #1f1f23; 
-            font-weight: 950; 
-            z-index: 100;
-            text-transform: uppercase;
-            font-size: 0.75em;
-            letter-spacing: 1px;
-        }
-
-        .supreme-data-table td { 
-            padding: 20px; 
-            border-bottom: 1px solid #121214; 
-            color: #e4e4e9; 
-            font-weight: 500;
-        }
-
+        .supreme-data-table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+        .supreme-data-table th { background: #0c0c0e; padding: 24px 20px; text-align: left; color: var(--muted); position: sticky; top: 0; border-bottom: 2px solid #1f1f23; font-weight: 950; z-index: 100; text-transform: uppercase; font-size: 0.75em; letter-spacing: 1px; }
+        .supreme-data-table td { padding: 20px; border-bottom: 1px solid #121214; color: #e4e4e9; font-weight: 500; }
         .supreme-data-table tr:hover td { background: #0f0f12; }
         
         .finance-right-pane { display: flex; flex-direction: column; gap: 35px; }
-
-        .supreme-chart-wrapper { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            border-radius: 20px; 
-            padding: 30px; 
-            height: 550px; 
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-        }
-
-        .global-kpi-hub { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 18px; 
-        }
-
-        .kpi-card-supreme { 
-            background: #000000; 
-            border: 1.5px solid var(--border); 
-            padding: 30px 15px; 
-            border-radius: 15px; 
-            text-align: center; 
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        .kpi-card-supreme span { 
-            display: block; 
-            font-size: 0.7em; 
-            color: var(--muted); 
-            margin-bottom: 15px; 
-            font-weight: 950; 
-            letter-spacing: 2px; 
-            text-transform: uppercase;
-        }
-
-        .kpi-card-supreme b { 
-            font-family: 'JetBrains Mono'; 
-            font-size: 1.8em; 
-            color: #ffffff; 
-            letter-spacing: -1px; 
-        }
-
-        .op-input-supreme-box { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 40px; 
-            border-radius: 20px; 
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.7);
-            border-bottom: 4px solid var(--green);
-        }
-
-        .btn-op-fire { 
-            background: var(--green); 
-            color: #000000; 
-            border: none; 
-            padding: 22px; 
-            border-radius: 12px; 
-            font-weight: 950; 
-            cursor: pointer; 
-            font-size: 1.1em; 
-            letter-spacing: 3px; 
-            text-transform: uppercase; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
-
-        .btn-op-fire:hover { 
-            transform: scale(1.03) translateY(-5px); 
-            box-shadow: 0 20px 40px var(--green-glow); 
-            background: #14d693;
-        }
+        .supreme-chart-wrapper { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; height: 550px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
         
-        .hard-reset-link {
-            text-align: center;
-            color: #222222;
-            font-size: 11px;
-            font-weight: 950;
-            cursor: pointer;
-            text-decoration: underline;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .global-kpi-hub { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .kpi-card-supreme { background: #000000; border: 1.5px solid var(--border); padding: 30px 15px; border-radius: 15px; text-align: center; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .kpi-card-supreme span { display: block; font-size: 0.7em; color: var(--muted); margin-bottom: 15px; font-weight: 950; letter-spacing: 2px; text-transform: uppercase; }
+        .kpi-card-supreme b { font-family: 'JetBrains Mono'; font-size: 1.8em; color: #ffffff; letter-spacing: -1px; }
+
+        .op-input-supreme-box { background: var(--panel); border: 1px solid var(--border); padding: 40px; border-radius: 20px; display: flex; flex-direction: column; gap: 25px; box-shadow: 0 30px 70px rgba(0,0,0,0.7); border-bottom: 4px solid var(--green); }
+        .btn-op-fire { background: var(--green); color: #000000; border: none; padding: 22px; border-radius: 12px; font-weight: 950; cursor: pointer; font-size: 1.1em; letter-spacing: 3px; text-transform: uppercase; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .btn-op-fire:hover { transform: scale(1.03) translateY(-5px); box-shadow: 0 20px 40px var(--green-glow); background: #14d693; }
+        
+        .hard-reset-link { text-align: center; color: #222222; font-size: 11px; font-weight: 950; cursor: pointer; text-decoration: underline; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .hard-reset-link:hover { color: var(--red); opacity: 0.8; }
     </style>
 </head>
@@ -880,30 +380,30 @@
             <div id="omega-radar-block">
                 <div class="controls-wrapper">
                     <div class="filter-panel">
-                        <select id="omega-date-sel" class="select-supreme" onchange="omega_ExecuteRadarFilter()">
+                        <select id="omega-date-select" class="select-supreme" onchange="omega_ExecuteRadarFilter()">
                             <option value="ALL">TÜM ZAMAN ÇİZELGESİ</option>
                         </select>
                         
                         <div class="league-drop-wrapper">
                             <div class="league-drop-trigger" onclick="omega_ToggleDropdown(event)">
-                                <div id="drop-text-label">TÜM LİGLER</div>
+                                <div id="omega-drop-label">TÜM LİGLER</div>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
-                            <div class="league-drop-menu" id="drop-menu-list"></div>
+                            <div class="league-drop-menu" id="omega-drop-menu"></div>
                         </div>
                     </div>
 
                     <div class="mode-row">
-                        <button class="btn-mode-supreme active" id="btn-sort-league" onclick="omega_SetSortMode('league')">LİG SIRALI AKIŞ</button>
-                        <button class="btn-mode-supreme" id="btn-sort-time" onclick="omega_SetSortMode('time')">SAAT SIRALI AKIŞ</button>
+                        <button class="btn-mode-supreme active" id="btn-sort-lg" onclick="omega_SetSortMode('league')">LİG SIRALI AKIŞ</button>
+                        <button class="btn-mode-supreme" id="btn-sort-tm" onclick="omega_SetSortMode('time')">SAAT SIRALI AKIŞ</button>
                     </div>
                 </div>
                 
-                <div id="radar-render-output"></div>
+                <div id="omega-radar-output"></div>
             </div>
 
             <div id="omega-favs-block" style="display:none;">
-                <div id="favs-render-output"></div>
+                <div id="omega-fav-output"></div>
             </div>
 
             <div id="omega-stream-block" style="display:none;">
@@ -914,7 +414,7 @@
                     <button class="btn-stream-layout active" id="lay-btn-6" onclick="omega_BuildStreamMatrix(6)">6 EKRAN</button>
                 </div>
                 
-                <div id="omega-matrix-grid" class="matrix-grid-master m-lay-6 active"></div>
+                <div id="omega-stream-grid" class="matrix-grid-master m-lay-6 active"></div>
             </div>
 
             <div class="fin-terminal-wrapper" id="omega-finance-block">
@@ -937,7 +437,7 @@
                             </div>
                         </div>
                         <div class="ledger-table-scroller">
-                            <table class="supreme-data-table" id="omega-data-table"></table>
+                            <table class="supreme-data-table" id="omega-ledger-table"></table>
                         </div>
                     </div>
                 </div>
@@ -949,7 +449,7 @@
 
                     <div class="op-input-supreme-box">
                         <div class="global-kpi-hub">
-                            <div class="kpi-card-supreme"><span>KASA</span><b id="kpi-val-w">100.00</b></div>
+                            <div class="kpi-card-supreme"><span>AKTİF KASA</span><b id="kpi-val-w">100.00</b></div>
                             <div class="kpi-card-supreme"><span>NET P/L</span><b id="kpi-val-p">0.00</b></div>
                             <div class="kpi-card-supreme"><span>SUCCESS</span><b id="kpi-val-wr">%0</b></div>
                         </div>
@@ -990,7 +490,6 @@
         let _FAV_MATCHES = JSON.parse(localStorage.getItem('v19_fav_m')) || [];
 
         // --- HIERARCHY & RULES ---
-        // 1. Puanlama Algoritması (Büyük ligler her zaman üstte)
         const HIERARCHY_SCORES = {
             "TÜRKİYE - SÜPER LİG": 4000, 
             "İNGİLTERE - PREMIER LEAGUE": 3900, 
@@ -1015,7 +514,6 @@
             "AMERİKA - WNBA": 3800
         };
 
-        // 2. Altın Basketbol Listesi (Maç olmasa bile dropdown'da listelenecek)
         const GOLD_BASKET_LIST = [
             "AMERİKA - NBA", "AVRUPA - EUROLEAGUE", "TÜRKİYE - BSL", "İSPANYA - LIGA ACB",
             "İTALYA - LEGA A", "FRANSA - LNB PRO A", "ALMANYA - BBL", "AVRUPA - EUROCUP",
@@ -1026,7 +524,6 @@
         async function omega_InitializeEngine() {
             console.log("V19 Supreme Engine Booting...");
             try {
-                // Cache Kırıcı (nocache) ile veriyi güvenli çek
                 const response = await fetch('v19_rapor.json?nocache=' + Date.now());
                 const rawData = await response.json();
                 
@@ -1035,11 +532,11 @@
                 
                 omega_BuildUIComponents();
                 omega_ExecuteRadarFilter();
-                omega_UpdateGlobalWalletUI();
+                omega_RefreshFinanceDashboard();
                 
             } catch (err) {
                 console.error("Critical: Data Sync Failure.", err);
-                document.getElementById('radar-render-target').innerHTML = `
+                document.getElementById('omega-radar-output').innerHTML = `
                     <div style="padding:150px 0; text-align:center;">
                         <i class="fa-solid fa-triangle-exclamation" style="font-size:4em; color:var(--red); margin-bottom:20px;"></i>
                         <h2 style="font-weight:900; letter-spacing:2px; color:#fff;">RADAR ÇEVRİMDIŞI</h2>
@@ -1052,7 +549,6 @@
         // --- UTILITY FUNCTIONS ---
         function omega_IsBasketballLeague(leagueName) {
             const up = leagueName.toUpperCase();
-            // Kesin basketbol izolasyon kuralı
             return ["NBA", "EUROLEAGUE", "BSL", "LIGA ACB", "LEGA A", "LNB PRO A", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"].some(x => up.includes(x));
         }
 
@@ -1081,7 +577,6 @@
             const today = new Date(); today.setHours(0,0,0,0);
             
             const diffDays = Math.round((dObj - today) / 86400000);
-            
             if (diffDays === 0) return "BUGÜN";
             if (diffDays === 1) return "YARIN";
             
@@ -1090,24 +585,20 @@
         }
 
         function omega_GenerateMatchID(matchObj) {
-            // Favoriler için güvenli kimlik üretici (HTML bozulmasını engeller)
             if(!matchObj || !matchObj.m || !matchObj.tm) return "err_id_" + Math.random();
             return `${matchObj.dt}_${matchObj.tm}_${matchObj.m.replace(/[^a-zA-Z0-9]/g, '')}`;
         }
 
         // --- NAVIGATION CONTROLLER ---
         function omega_SwitchMainTab(targetModule, clickedElement) {
-            // Sidebar UI update
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
             clickedElement.classList.add('active');
 
-            // Hide all modules
             document.getElementById('omega-radar-block').style.display = 'none';
             document.getElementById('omega-favs-block').style.display = 'none';
             document.getElementById('omega-stream-block').style.display = 'none';
             document.getElementById('v19-finance-block').classList.remove('active');
 
-            // Routing Logic
             if(targetModule === 'futbol' || targetModule === 'basketbol') {
                 _ACTIVE_SPORT = targetModule;
                 _ACTIVE_TAB = 'bulletin';
@@ -1129,8 +620,7 @@
                 document.getElementById('omega-stream-block').style.display = 'block';
                 document.getElementById('supreme-main-title').innerText = "CANLI YAYIN MERKEZİ";
                 
-                // Initialize matrix if empty
-                if(!document.getElementById('omega-matrix-grid').innerHTML) {
+                if(!document.getElementById('omega-stream-grid').innerHTML) {
                     omega_BuildStreamMatrix(6);
                 }
                 
@@ -1146,10 +636,9 @@
 
         // --- RADAR MODULE: UI BUILDERS ---
         function omega_BuildUIComponents() {
-            const dateSelectElement = document.getElementById('v19-date-sel');
-            const dropdownMenuArea = document.getElementById('drop-menu-list');
+            const dateSelectElement = document.getElementById('omega-date-select');
+            const dropdownMenuArea = document.getElementById('omega-drop-menu');
             
-            // 1. Build Dates
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => m.t === _ACTIVE_SPORT).map(m => m.dt))].sort();
             uniqueDates.forEach(d => {
@@ -1157,11 +646,9 @@
             });
             dateSelectElement.innerHTML = dateHtml;
 
-            // 2. Build Leagues
             let leagueHtml = `<div class="league-drop-item" onclick="omega_HandleDropdownSelection('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
             
             if(_ACTIVE_SPORT === 'basketbol') {
-                // BASKETBOL: Altın Ligleri zorunlu ekle (Maç olmasa bile 0 olarak görünür)
                 GOLD_BASKET_LIST.forEach(ligName => {
                     const matchCount = _LEAGUE_STATS_DB[ligName] || 0;
                     leagueHtml += `
@@ -1172,7 +659,6 @@
                     `;
                 });
             } else {
-                // FUTBOL: Basketbol liglerini filtreleyerek sadece futbol liglerini ekle
                 for(let lName in _LEAGUE_STATS_DB) {
                     if(!omega_IsBasketballLeague(lName) && _LEAGUE_STATS_DB[lName] > 0) {
                         leagueHtml += `
@@ -1189,14 +675,14 @@
 
         function omega_ToggleDropdown(e) {
             e.stopPropagation();
-            const menu = document.getElementById('drop-menu-list');
+            const menu = document.getElementById('omega-drop-menu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
         function omega_HandleDropdownSelection(val, htmlContent) {
             _ACTIVE_LEAGUE_FILTER = val;
-            document.getElementById('drop-text-label').innerHTML = htmlContent;
-            document.getElementById('drop-menu-list').style.display = 'none';
+            document.getElementById('omega-drop-label').innerHTML = htmlContent;
+            document.getElementById('omega-drop-menu').style.display = 'none';
             omega_ExecuteRadarFilter();
         }
 
@@ -1209,14 +695,13 @@
 
         // --- RADAR MODULE: CORE RENDERER ---
         function omega_ExecuteRadarFilter() {
-            const targetID = (_ACTIVE_TAB === 'favs') ? 'favs-render-output' : 'radar-render-output';
+            const targetID = (_ACTIVE_TAB === 'favs') ? 'omega-fav-output' : 'omega-radar-output';
             const renderArea = document.getElementById(targetID);
             
             if(!renderArea) return;
             
-            const selectedDate = document.getElementById('v19-date-sel').value;
+            const selectedDate = document.getElementById('omega-date-select').value;
             
-            // MASTER FILTER ALGORITHM
             let filteredData = _MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
                 const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
@@ -1224,7 +709,6 @@
                 const leagueMatch = (_ACTIVE_LEAGUE_FILTER === 'ALL' || m.l === _ACTIVE_LEAGUE_FILTER);
                 
                 if(_ACTIVE_TAB === 'favs') {
-                    // Favoriler sekmesindeysek sadece favori ID'sine sahip olanları getir
                     const mID = omega_GenerateMatchID(m);
                     return _FAV_MATCHES.includes(mID) && dateMatch;
                 }
@@ -1235,7 +719,6 @@
             let finalHtmlBuffer = ""; 
             const groupedByDay = {};
             
-            // Tarihe Göre Grupla
             filteredData.forEach(m => { 
                 if(!groupedByDay[m.dt]) groupedByDay[m.dt] = []; 
                 groupedByDay[m.dt].push(m); 
@@ -1245,7 +728,7 @@
                 finalHtmlBuffer += `<div style="color:var(--green); font-size:0.8em; font-weight:900; padding:15px 0 10px 0; border-bottom:1px solid #1f1f23; margin-bottom:20px; letter-spacing:2px;">${omega_FormatHumanDate(day)}</div>`;
                 
                 if(_ACTIVE_SORT_MODE === 'time') {
-                    // --- SAAT SIRALI AKIŞ (KOMPAKT NİZAM) ---
+                    // SAAT SIRALI AKIŞ
                     let dayGroupsSorted = groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm));
                     
                     dayGroupsSorted.forEach(m => {
@@ -1268,20 +751,18 @@
                     });
                     
                 } else {
-                    // --- LİG BAZLI AKIŞ (HIYERARŞİ DESTEKLİ) ---
+                    // LİG BAZLI AKIŞ
                     const leagueGroups = {}; 
                     groupedByDay[day].forEach(m => { 
                         if(!leagueGroups[m.l]) leagueGroups[m.l] = []; 
                         leagueGroups[m.l].push(m); 
                     });
                     
-                    // Ligleri Hiyerarşiye Göre Sırala
                     let sortedLeagues = Object.keys(leagueGroups).sort((a,b) => {
                         const scoreA = HIERARCHY_SCORES[a] || 0; 
                         const scoreB = HIERARCHY_SCORES[b] || 0;
                         if(scoreA !== scoreB) return scoreB - scoreA;
                         
-                        // Puan eşitse en erken maça göre sırala
                         let timeA = leagueGroups[a].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
                         let timeB = leagueGroups[b].reduce((min, x) => x.tm < min ? x.tm : min, "23:59");
                         return timeA.localeCompare(timeB);
@@ -1339,8 +820,6 @@
                 _FAV_MATCHES.push(matchID);
             }
             localStorage.setItem('v19_fav_m', JSON.stringify(_FAV_MATCHES));
-            
-            // Eğer favoriler sekmesindeyse listeyi hemen güncelle
             omega_ExecuteRadarFilter();
         }
 
@@ -1351,7 +830,7 @@
 
         // --- MULTI-STREAM HUB CONTROLLER ---
         function omega_BuildStreamMatrix(numScreens) {
-            const gridContainer = document.getElementById('omega-matrix-grid');
+            const gridContainer = document.getElementById('omega-stream-grid');
             gridContainer.className = `matrix-grid-master active m-lay-${numScreens}`; 
             gridContainer.innerHTML = "";
             
@@ -1384,7 +863,6 @@
 
         // --- SUPREME FINANCE CONTROLLER ---
         function omega_RefreshFinanceDashboard() {
-            // Sadece finans sekmesindeki kasa görünümünü güncelle
             document.getElementById('kpi-val-w').innerText = _WALLET_BALANCE.toFixed(2);
             
             const netProfit = _COMPLETED_LEDGER.reduce((sum, item) => sum + (item.pnl || 0), 0);
@@ -1407,7 +885,7 @@
         }
 
         function omega_RenderSupremeLedgerTable() {
-            const tableElement = document.getElementById('v19-master-data-table');
+            const tableElement = document.getElementById('omega-ledger-table');
             let headerHtml = `<tr><th>TARİH</th><th>OPERASYON KODU</th><th>RİSK ($)</th><th>ORAN</th><th>DURUM</th><th>P/L</th></tr>`;
             let rowsHtml = "";
             
@@ -1498,12 +976,6 @@
             omega_RenderApexSupremeChart();
         }
 
-        // İptal edilen top-wallet-display artık yok, sadece kpi-val-w kalıyor
-        function omega_UpdateGlobalWalletUI() { 
-            const kpiVal = document.getElementById('kpi-val-w');
-            if(kpiVal) kpiVal.innerText = _WALLET_BALANCE.toFixed(2); 
-        }
-
         function omega_HardSystemReset() { 
             const newBal = prompt("DİKKAT: Terminal veritabanı silinecek! Yeni başlangıç bakiyesini girin:", _WALLET_BALANCE);
             if(newBal && !isNaN(parseFloat(newBal))) {
@@ -1562,7 +1034,7 @@
 
         // Kapatma Eventleri
         document.addEventListener('click', () => { 
-            const dMenu = document.getElementById('drop-menu-list'); 
+            const dMenu = document.getElementById('omega-drop-menu'); 
             if(dMenu) dMenu.style.display = 'none'; 
         });
 
