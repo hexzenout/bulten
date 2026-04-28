@@ -10,8 +10,9 @@
     
     <style>
         /* ==========================================================================
-           V19 SUPREME STYLING SYSTEM v14.0 (FINAL ARCHIVE)
-           Tüm modüller, Excel tablosu, URL Routing ve DEV Ekran yapıları açıkça yazılmıştır.
+           V19 SUPREME STYLING SYSTEM v15.0 (FINAL OMEGA)
+           FULL ARCHIVE - NO COMPRESSION - MAXIMUM DETAIL
+           Menü aşağı açılır (dropdown) şekilde yeniden dizayn edildi.
            ========================================================================== */
         
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -41,7 +42,6 @@
             --text-dim: #a1a1aa;
             --muted: #52525b;
             
-            --sidebar-w: 280px;
             --transition-fast: all 0.2s ease;
             --transition-main: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --transition-smooth: all 0.3s ease;
@@ -70,117 +70,24 @@
             font-family: 'Inter', sans-serif;
             overflow: hidden;
             display: flex;
+            flex-direction: column; /* DİKKAT: Artık satır değil, sütun dizilimi */
         }
 
         /* ==========================================================================
-           SIDEBAR OPERASYONEL MİMARİ
+           HEADER & TOP STATUS BAR
            ========================================================================== */
-        .sidebar { 
-            width: var(--sidebar-w); 
-            background: #000000; 
-            border-right: 1px solid var(--border); 
-            display: flex; 
-            flex-direction: column; 
-            height: 100%; 
-            z-index: 1000;
-            position: relative;
-            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
-            transition: margin-left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .sidebar.collapsed {
-            margin-left: calc(var(--sidebar-w) * -1);
-        }
-
-        .brand-zone { 
-            padding: 45px 25px; 
-            border-bottom: 1px solid var(--border); 
-            text-align: center;
-            background: linear-gradient(to bottom, #080808, #000000);
-            position: relative;
-        }
-
-        .brand-text { 
-            font-weight: 900; 
-            color: var(--green); 
-            font-size: 1.5em; 
-            letter-spacing: 5px; 
-            text-transform: uppercase; 
-            text-shadow: 0 0 25px var(--green-glow);
-        }
-
-        .brand-subtext {
-            font-size: 0.55em;
-            color: var(--muted);
-            margin-top: 12px;
-            letter-spacing: 3px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .nav-container { 
-            padding: 30px 0; 
-            flex-grow: 1; 
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .nav-link { 
-            padding: 18px 35px; 
-            cursor: pointer; 
-            color: var(--muted); 
-            font-weight: 700; 
-            font-size: 0.88em; 
-            display: flex; 
-            align-items: center; 
-            transition: var(--transition-smooth);
-            border-left: 5px solid transparent; 
-            margin-bottom: 2px;
-            position: relative;
-        }
-
-        .nav-link i { 
-            margin-right: 22px; 
-            font-size: 1.4em; 
-            width: 25px; 
-            text-align: center; 
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .nav-link:hover { background: rgba(255,255,255,0.02); color: #ffffff; padding-left: 45px; }
-        .nav-link:hover i { transform: scale(1.15); }
-
-        .nav-link.active { background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); color: #ffffff; border-left: 5px solid var(--green); }
-        .nav-link.basket.active { background: linear-gradient(90deg, rgba(249, 115, 22, 0.1) 0%, transparent 100%); border-left-color: var(--orange); }
-        .nav-link.stream.active { background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%); border-left-color: var(--gold); }
-        .nav-link.favs.active { background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%); border-left-color: var(--red); }
-        .nav-link.finance.active { background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%); border-left-color: var(--green); }
-
-        /* ==========================================================================
-           MAIN VIEWPORT & HEADER
-           ========================================================================== */
-        .main-viewport { 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            position: relative;
-            transition: var(--transition-smooth);
-        }
-
         .top-status-bar { 
-            padding: 0 45px; 
+            width: 100%;
+            padding: 0 35px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             background: #000000; 
-            border-bottom: 1px solid var(--border); 
+            border-bottom: 2px solid var(--border-bright); 
             height: 90px; 
             flex-shrink: 0;
-            z-index: 500;
-            transition: var(--transition-smooth);
+            z-index: 8000;
+            position: relative;
         }
 
         .console-info-group {
@@ -190,28 +97,139 @@
         }
 
         .sidebar-toggle-btn {
-            font-size: 1.8em;
+            font-size: 2em;
             color: var(--green);
             cursor: pointer;
             transition: var(--transition-smooth);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--green-glow);
         }
-        .sidebar-toggle-btn:hover { color: #fff; transform: scale(1.1); }
+        .sidebar-toggle-btn:hover { 
+            color: #fff; 
+            background: var(--green); 
+            box-shadow: 0 0 20px var(--green-glow); 
+            transform: scale(1.05); 
+        }
 
-        .console-info { display: flex; flex-direction: column; gap: 6px; }
-        .console-info h2 { margin: 0; font-size: 1.25em; font-weight: 950; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; }
-        .console-info span { font-size: 0.65em; color: var(--muted); font-weight: 800; letter-spacing: 3px; }
+        .brand-zone-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .brand-text-header { 
+            font-weight: 900; 
+            color: var(--gold); 
+            font-size: 1.4em; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            text-shadow: 0 0 15px var(--gold-glow);
+        }
+        .brand-subtext-header {
+            font-size: 0.6em;
+            color: var(--muted);
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
 
-        .main-scroll-box { flex-grow: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); transition: var(--transition-smooth); }
+        .console-info { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+        .console-info h2 { margin: 0; font-size: 1.25em; font-weight: 950; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; text-align: right; }
+        .console-info span { font-size: 0.65em; color: var(--green); font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 10px var(--green-glow); }
 
         /* ==========================================================================
-           DEV EKRAN (YOUTUBE THEATER MODE) BİLEŞENLERİ
+           DROPDOWN AŞAĞI AÇILIR MENÜ (YENİ MİMARİ)
            ========================================================================== */
-        body.dev-mode .sidebar { margin-left: calc(var(--sidebar-w) * -1); }
-        body.dev-mode .top-status-bar { display: none; }
+        .sidebar { 
+            position: absolute;
+            top: 90px; /* Header yüksekliği kadar aşağıda */
+            left: 0;
+            width: 100%;
+            background: rgba(8, 8, 10, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 7000;
+            border-bottom: 2px solid var(--green);
+            max-height: 0; /* Kapalı başlangıç */
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+        }
+
+        .sidebar.active-dropdown {
+            max-height: 400px; /* Açık durum (İçerik kadar uzar) */
+        }
+
+        .nav-container { 
+            padding: 20px 45px; 
+            display: flex;
+            flex-direction: row; /* Yan yana dizilim */
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .nav-link { 
+            padding: 20px 40px; 
+            cursor: pointer; 
+            color: var(--muted); 
+            font-weight: 800; 
+            font-size: 0.9em; 
+            display: flex; 
+            align-items: center; 
+            transition: var(--transition-smooth);
+            border: 2px solid #222;
+            border-radius: 12px;
+            background: #000;
+        }
+
+        .nav-link i { 
+            margin-right: 15px; 
+            font-size: 1.5em; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .nav-link:hover { 
+            border-color: var(--muted);
+            color: #ffffff; 
+            transform: translateY(-3px);
+        }
+        .nav-link:hover i { transform: scale(1.2); }
+
+        /* NAVİGASYON AKTİF DURUMLARI */
+        .nav-link.active { background: rgba(16, 185, 129, 0.1); color: #ffffff; border-color: var(--green); box-shadow: 0 10px 20px var(--green-glow); }
+        .nav-link.basket.active { background: rgba(249, 115, 22, 0.1); border-color: var(--orange); box-shadow: 0 10px 20px var(--orange-glow); }
+        .nav-link.stream.active { background: rgba(251, 191, 36, 0.1); border-color: var(--gold); box-shadow: 0 10px 20px var(--gold-glow); }
+        .nav-link.favs.active { background: rgba(239, 68, 68, 0.1); border-color: var(--red); box-shadow: 0 10px 20px var(--red-glow); }
+        .nav-link.finance.active { background: rgba(16, 185, 129, 0.1); border-color: var(--green); box-shadow: 0 10px 20px var(--green-glow); }
+
+        /* ==========================================================================
+           MAIN VIEWPORT & SCROLLER
+           ========================================================================== */
+        .main-viewport { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            position: relative;
+            z-index: 100;
+        }
+
+        .main-scroll-box { 
+            flex-grow: 1; 
+            padding: 40px 60px; 
+            overflow-y: auto; 
+            background: radial-gradient(circle at 50% 0%, #0c0c0e 0%, #050505 100%); 
+            transition: var(--transition-smooth); 
+        }
+
+        /* ==========================================================================
+           DEV EKRAN (THEATER MODE) BİLEŞENLERİ
+           ========================================================================== */
+        /* Dev ekrana geçince üst menü GİZLENMEZ. Sadece scroll box'un paddingi düşer ve matrix yüksekliği artar. */
         body.dev-mode .main-scroll-box { padding: 15px; }
         body.dev-mode .stream-controls-bar { padding: 10px 20px; margin-bottom: 15px; }
-        body.dev-mode .intel-vault { display: none; } /* Max alan için favori yayınları gizle */
-        body.dev-mode .stream-master-grid { height: calc(100vh - 90px); }
+        body.dev-mode .stream-master-grid { height: calc(100vh - 180px); }
 
         /* ==========================================================================
            RADAR KONTROL PANELİ
@@ -271,7 +289,7 @@
         .match-row-pro:last-child { border-bottom: none; }
         .match-row-pro:hover { background: #111118; transform: scale(1.005); z-index: 10; border-left: 2px solid var(--green); }
         
-        /* FAVORİ YILDIZ (MAÇ YANINDA) */
+        /* FAVORİ YILDIZ */
         .fav-star-box { font-size: 1.4em; color: var(--border-bright); margin-right: 20px; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: pointer; }
         .fav-star-box:hover { color: var(--muted); transform: scale(1.1); }
         .fav-star-box.active { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); transform: scale(1.25); }
@@ -290,7 +308,7 @@
         }
 
         /* ==========================================================================
-           MULTI-STREAM INTELLIGENCE HUB (DEV EKRAN DESTEKLİ)
+           MULTI-STREAM INTELLIGENCE HUB
            ========================================================================== */
         .stream-controls-bar { 
             display: flex; justify-content: space-between; align-items: center;
@@ -313,7 +331,7 @@
         }
         .btn-dev-ekran:hover { background: var(--gold); color: #000; box-shadow: 0 0 25px var(--gold-glow); }
 
-        /* YAYIN GRID MİMARİSİ (ESNEK YÜKSEKLİK) */
+        /* YAYIN GRID MİMARİSİ (Yükseklik otomatik ayarlanır) */
         .stream-master-grid { display: none; gap: 20px; height: calc(100vh - 280px); width: 100%; transition: height 0.4s ease; }
         .stream-master-grid.active { display: grid; }
         
@@ -337,12 +355,6 @@
         .btn-matrix-kill { background: var(--red); color: #ffffff; border: none; padding: 0 18px; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
         .btn-matrix-kill:hover { background: #ff0000; transform: rotate(90deg); }
 
-        .intel-vault { background: var(--panel); border: 1px solid var(--border); padding: 25px; border-radius: 12px; margin-top: 25px; }
-        .vault-item { display: inline-flex; align-items: center; background: #111; border: 1px solid #333; color: #eee; padding: 10px 18px; border-radius: 8px; font-size: 0.75em; margin-right: 15px; margin-bottom: 12px; cursor: pointer; transition: 0.3s; font-weight: 700; }
-        .vault-item:hover { border-color: var(--gold); transform: translateY(-3px); }
-        .vault-item i { margin-left: 15px; color: var(--red); opacity: 0.5; font-size: 1.2em; }
-        .vault-item i:hover { opacity: 1; transform: scale(1.3); }
-
         /* ==========================================================================
            SUPREME FINANCIAL CONSOLE
            ========================================================================== */
@@ -358,10 +370,10 @@
         }
         .rolling-box-btn:hover { 
             border-top-color: var(--green); background: linear-gradient(to bottom, rgba(16, 185, 129, 0.04), #0c0c0e); 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5); transform: translateY(-8px); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6); transform: translateY(-8px); 
         }
-        .rolling-box-btn label { font-size: 0.65em; font-weight: 950; color: var(--muted); text-transform: uppercase; margin-bottom: 15px; display: block; letter-spacing: 2px; cursor: pointer; }
-        .rolling-box-btn b { font-family: 'JetBrains Mono'; font-size: 1.4em; font-weight: 950; color: var(--gold); }
+        .rolling-box-btn label { font-size: 0.65em; font-weight: 950; color: var(--muted); text-transform: uppercase; margin-bottom: 18px; display: block; letter-spacing: 2px; cursor: pointer; }
+        .rolling-box-btn b { font-family: 'JetBrains Mono'; font-size: 1.6em; font-weight: 950; color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
 
         .ledger-supreme-pro { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column; flex-grow: 1; min-height: 600px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
         .ledger-supreme-header { padding: 30px 40px; border-bottom: 2px solid #1f1f23; display: flex; justify-content: space-between; align-items: center; background: var(--panel-header); }
@@ -423,7 +435,7 @@
 
         .excel-table-wrapper { flex-grow: 1; overflow: auto; padding: 30px 45px; }
 
-        /* TEK EKRANA SIĞACAK KOMPAKT TABLO TASARIMI */
+        /* TABLOYU DARALTMAK İÇİN MİNİMALİST TASARIM */
         .excel-table { width: 100%; border-collapse: collapse; min-width: 1400px; font-size: 0.85em; }
         .excel-table th, .excel-table td { border: 1px solid #1f1f23; padding: 4px; text-align: center; vertical-align: top; }
         .excel-table th { background: #161618; color: var(--muted); font-weight: 900; font-size: 0.7em; letter-spacing: 1px; padding: 12px 5px; }
@@ -473,11 +485,21 @@
 </head>
 <body>
 
-    <aside class="sidebar" id="main-sidebar">
-        <div class="brand-zone">
-            <div class="brand-text">V19 CAPITAL</div>
-            <div class="brand-subtext">SUPREME COMMAND CENTER</div>
+    <header class="top-status-bar">
+        <div class="console-info-group">
+            <i class="fa-solid fa-bars sidebar-toggle-btn" onclick="omega_ToggleSidebar()" title="Operasyonel Menüyü Aç/Kapat"></i>
+            <div class="brand-zone-header">
+                <div class="brand-text-header">V19 CAPITAL</div>
+                <div class="brand-subtext-header">SUPREME COMMAND CENTER</div>
+            </div>
         </div>
+        <div class="console-info">
+            <h2 id="supreme-main-title">FUTBOL RADARI</h2>
+            <span>STATUS: SYSTEM ONLINE</span>
+        </div>
+    </header>
+
+    <aside class="sidebar" id="main-sidebar">
         <nav class="nav-container">
             <div class="nav-link active" id="nav-futbol" onclick="omega_SwitchMainTab('futbol', this)">
                 <i class="fa-solid fa-futbol"></i> FUTBOL
@@ -485,7 +507,7 @@
             <div class="nav-link basket" id="nav-basketbol" onclick="omega_SwitchMainTab('basketbol', this)">
                 <i class="fa-solid fa-basketball" style="color:var(--orange)"></i> BASKET
             </div>
-            <div class="nav-link stream" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)" style="color:var(--gold); border-top:1px solid #111; margin-top:30px;">
+            <div class="nav-link stream" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)" style="color:var(--gold);">
                 <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
             </div>
             <div class="nav-link favs" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)" style="color:var(--red);">
@@ -498,17 +520,6 @@
     </aside>
 
     <main class="main-viewport">
-        
-        <header class="top-status-bar">
-            <div class="console-info-group">
-                <i class="fa-solid fa-bars sidebar-toggle-btn" onclick="omega_ToggleSidebar()" title="Menüyü Gizle/Göster"></i>
-                <div class="console-info">
-                    <h2 id="supreme-main-title">FUTBOL RADARI</h2>
-                    <span>STATUS: SYSTEM ONLINE</span>
-                </div>
-            </div>
-            </header>
-
         <section class="main-scroll-box">
             
             <div id="omega-radar-block">
@@ -706,7 +717,6 @@
         let _PENDING_OPS = JSON.parse(localStorage.getItem('v19_p')) || [];
         let _COMPLETED_LEDGER = JSON.parse(localStorage.getItem('v19_l')) || [];
         let _FAV_MATCHES = JSON.parse(localStorage.getItem('v19_fav_m')) || [];
-        
         let _ROLLING_DB = JSON.parse(localStorage.getItem('v19_rolling')) || {};
 
         // --- HIERARCHY & RULES ---
@@ -766,7 +776,6 @@
             }
         });
 
-        // Link yönlendirmeleri için (İleri/Geri tuşları)
         window.addEventListener('popstate', (e) => {
             if(e.state && e.state.tab) {
                 const targetModule = e.state.tab;
@@ -850,14 +859,15 @@
 
         // --- NAVIGATION CONTROLLER & SIDEBAR ---
         function omega_ToggleSidebar() {
-            document.getElementById('main-sidebar').classList.toggle('collapsed');
+            document.getElementById('main-sidebar').classList.toggle('active-dropdown');
         }
 
         function omega_SwitchMainTab(targetModule, clickedElement, updateHistory = true) {
-            // Excel tablosu açıksa önce onu kapat (Auto-close)
             omega_CloseRollingExcel();
+            
+            // Eğer dropdown açıksa sekmeye basınca geri kapansın
+            document.getElementById('main-sidebar').classList.remove('active-dropdown');
 
-            // Push State to URL (Routing)
             if (updateHistory) {
                 history.pushState({ tab: targetModule }, '', '#' + targetModule);
             }
@@ -891,7 +901,6 @@
                 document.getElementById('omega-stream-block').style.display = 'block';
                 document.getElementById('supreme-main-title').innerText = "CANLI YAYIN MERKEZİ";
                 
-                // Initialize matrix if empty
                 if(!document.getElementById('omega-matrix-grid').innerHTML) {
                     omega_BuildStreamMatrix(6);
                 }
@@ -911,8 +920,13 @@
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
             
+            // VERİ TABANINI DOĞRU FİLTRELEME İLE TARİHLERİ ÇEK
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
-            const uniqueDates = [...new Set(_MASTER_DB.filter(m => m.t === _ACTIVE_SPORT).map(m => m.dt))].sort();
+            const uniqueDates = [...new Set(_MASTER_DB.filter(m => {
+                const isBasket = omega_IsBasketballLeague(m.l);
+                return (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
+            }).map(m => m.dt))].sort();
+            
             uniqueDates.forEach(d => {
                 dateHtml += `<option value="${d}">${omega_FormatHumanDate(d)}</option>`;
             });
@@ -1098,15 +1112,15 @@
             contentBox.style.display = (contentBox.style.display === 'none' ? 'block' : 'none'); 
         }
 
-        // --- MULTI-STREAM HUB CONTROLLER ---
+        // --- MULTI-STREAM HUB CONTROLLER (DEV EKRAN YÖNETİMİ) ---
         function omega_ToggleDevEkran() {
             _IS_DEV_EKRAN = !_IS_DEV_EKRAN;
             const btn = document.getElementById('btn-theater-mode');
             if(_IS_DEV_EKRAN) {
                 document.body.classList.add('dev-mode');
                 btn.innerHTML = '<i class="fa-solid fa-compress"></i> KÜÇÜLT';
-                // Eğer sol menü açıksa, dev ekrana geçerken onu da kapatalım
-                document.getElementById('main-sidebar').classList.add('collapsed');
+                // Dev ekrana geçince açık dropdown varsa kapa
+                document.getElementById('main-sidebar').classList.remove('active-dropdown');
             } else {
                 document.body.classList.remove('dev-mode');
                 btn.innerHTML = '<i class="fa-solid fa-expand"></i> DEV EKRAN';
@@ -1139,8 +1153,8 @@
                     <div class="matrix-unit">
                         <div class="matrix-nav">
                             <input id="stream-input-${i}" class="matrix-input" placeholder="HLS/M3U8 veya Web URL...">
-                            <button class="btn-matrix-pip" onclick="omega_FullscreenIframe(${i})" title="Tam Ekran Modu"><i class="fa-solid fa-maximize"></i></button>
-                            <button class="btn-matrix-kill" onclick="omega_TerminateStreamUnit(${i})"><i class="fa-solid fa-xmark"></i></button>
+                            <button class="btn-matrix-pip" onclick="omega_FullscreenIframe(${i})" title="Tam Ekran İzle"><i class="fa-solid fa-maximize"></i></button>
+                            <button class="btn-matrix-kill" onclick="omega_TerminateStreamUnit(${i})" title="Kapat"><i class="fa-solid fa-xmark"></i></button>
                             <button class="btn-matrix-go" onclick="omega_LaunchStreamUnit(${i})">İZLE</button>
                         </div>
                         <iframe id="stream-frame-${i}" style="flex:1; border:none; background:#000000;" src="about:blank" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write;" allowfullscreen></iframe>
@@ -1159,21 +1173,18 @@
         }
 
         // ==========================================================================
-        // ROLLING EXCEL MİMARİSİ (10 İŞLEM / GÜN)
+        // YENİ: ROLLING EXCEL MİMARİSİ (10 İŞLEM / GÜN)
         // ==========================================================================
         
         function omega_OpenRollingExcel(days) {
             _ACTIVE_EXCEL_DAYS = days;
             
-            // Veritabanı yoksa yarat
             if(!_ROLLING_DB[days]) {
                 _ROLLING_DB[days] = { startBal: 100, ops: {} };
             }
             
             document.getElementById('excel-modal-title').innerText = `${days} GÜNLÜK ROLLING EXCEL`;
             document.getElementById('excel-start-bal').value = _ROLLING_DB[days].startBal;
-            
-            // Hedef bakiyeyi ayarla
             document.getElementById('excel-target-bal').innerText = "$" + ROLLING_TARGETS[days].toLocaleString();
             
             document.getElementById('rolling-excel-overlay').style.display = 'flex';
@@ -1212,19 +1223,16 @@
                 const dayOps = currentPlan.ops[day] || [];
                 let tr = document.createElement('tr');
                 
-                // GÜN SÜTUNU
                 let tdDay = document.createElement('td');
                 tdDay.className = 'day-col';
                 tdDay.innerText = `GÜN ${day}`;
                 tr.appendChild(tdDay);
 
-                // 10 İŞLEM SLOTU SÜTUNLARI
                 for (let slot = 0; slot < 10; slot++) {
                     let tdOp = document.createElement('td');
                     let slotHTML = "";
 
                     if (dayOps[slot]) {
-                        // ÇÖZÜLMÜŞ İŞLEM (W / L)
                         const op = dayOps[slot];
                         const statusClass = op.res === 'win' ? 'win' : 'loss';
                         const sign = op.res === 'win' ? '+' : '-';
@@ -1249,7 +1257,6 @@
                             </div>
                         `;
                     } else {
-                        // BOŞ GİRDİ SLOTU
                         slotHTML = `
                             <div class="op-slot">
                                 <div class="op-slot-inputs">
@@ -1267,7 +1274,6 @@
                     tr.appendChild(tdOp);
                 }
 
-                // GÜN SONU KASASI SÜTUNU
                 let tdBal = document.createElement('td');
                 tdBal.className = 'bal-col';
                 tdBal.innerText = `$${runningBalance.toFixed(2)}`;
@@ -1276,7 +1282,6 @@
                 tbody.appendChild(tr);
             }
 
-            // Üst Bar (Config) Metriklerini Güncelle
             document.getElementById('excel-current-bal').innerText = `$${runningBalance.toFixed(2)}`;
             
             const pnlElement = document.getElementById('excel-pnl');
@@ -1302,7 +1307,6 @@
             const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
             if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
             
-            // İşlemi kaydet
             currentPlan.ops[day][slot] = { amt: amt, odds: odds, res: result };
             
             omega_SaveRollingDB();
@@ -1320,6 +1324,8 @@
 
         // --- SUPREME FINANCE CONTROLLER ---
         function omega_RefreshFinanceDashboard() {
+            const kpiValW = document.getElementById('kpi-val-w');
+            if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
             
             const netProfit = _COMPLETED_LEDGER.reduce((sum, item) => sum + (item.pnl || 0), 0);
             const kpiPnl = document.getElementById('kpi-val-p');
@@ -1438,11 +1444,6 @@
             omega_RenderApexSupremeChart();
         }
 
-        function omega_UpdateGlobalWalletUI() { 
-            const kpiVal = document.getElementById('kpi-val-w');
-            if(kpiVal) kpiVal.innerText = _WALLET_BALANCE.toFixed(2); 
-        }
-
         function omega_HardSystemReset() { 
             const newBal = prompt("DİKKAT: Terminal veritabanı silinecek! Yeni başlangıç bakiyesini girin:", _WALLET_BALANCE);
             if(newBal && !isNaN(parseFloat(newBal))) {
@@ -1505,8 +1506,6 @@
             if(dMenu) dMenu.style.display = 'none'; 
         });
 
-        // KICKSTART
-        // URL routing DOMContentLoaded event listener içinden tetiklenir (Yukarıda).
     </script>
 </body>
 </html>
