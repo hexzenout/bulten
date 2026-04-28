@@ -160,6 +160,8 @@
             flex-direction: column; 
             transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        
+        body.dev-mode .center-wrapper { max-width: 100%; padding: 15px; }
 
         /* ==========================================================================
            RADAR KONTROL PANELİ
@@ -194,7 +196,7 @@
         .fav-star-box.active { color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
 
         /* ==========================================================================
-           CANLI YAYIN MERKEZİ (ÖZGÜR KAYDIRMA, SIMETRİ VE ÖZEL BOYUTLANDIRMA)
+           CANLI YAYIN MERKEZİ (ÖZGÜR KAYDIRMA + ORAN DÜZELTMELERİ)
            ========================================================================== */
         .stream-controls-bar { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -211,7 +213,7 @@
         }
         .btn-stream-layout.active { background: var(--green); color: #000; border-color: var(--green); box-shadow: 0 0 15px var(--green-glow); }
 
-        /* DEV EKRAN YERİNE ALTIN RENKLİ KANAL LİSTESİ BUTONU */
+        /* KANAL LİSTESİ BUTONU */
         .btn-channel-mgr { 
             background: rgba(251, 191, 36, 0.1); color: var(--gold); border: 1px solid var(--gold); 
             padding: 8px 20px; border-radius: 6px; font-weight: 800; cursor: pointer; 
@@ -224,7 +226,7 @@
         }
         .stream-master-grid.active { display: grid; }
         
-        /* 1 ve 4 Ekran için çok hafif merkezî küçültme (max-width) */
+        /* 1 ve 4 Ekran için hafif kısıtlama, 2 ve 6 serbest */
         .m-lay-1 { grid-template-columns: 1fr; max-width: 1300px; margin: 0 auto; } 
         .m-lay-2 { grid-template-columns: 1fr 1fr; }
         .m-lay-4 { grid-template-columns: 1fr 1fr; max-width: 1500px; margin: 0 auto; } 
@@ -232,8 +234,15 @@
 
         .matrix-unit { 
             background: #000; border: 1px solid #272727; border-radius: 10px; overflow: hidden; 
-            display: flex; flex-direction: column; width: 100%; height: auto; aspect-ratio: 16 / 9; 
+            display: flex; flex-direction: column; width: 100%; height: auto; transition: 0.3s;
         }
+
+        /* YENİ: EKRAN MODUNA GÖRE ÖZEL BOYUTLANDIRMA (Aşağıya doğru uzatma) */
+        .m-lay-1 .matrix-unit { aspect-ratio: 16 / 9; } /* Kusursuz geniş ekran */
+        .m-lay-4 .matrix-unit { aspect-ratio: 16 / 9; } /* Kusursuz geniş ekran */
+        .m-lay-2 .matrix-unit { aspect-ratio: 16 / 11.5; } /* Çok yatay olmasın diye aşağı doğru uzatıldı */
+        .m-lay-6 .matrix-unit { aspect-ratio: 16 / 11; } /* Çok yatay olmasın diye hafif uzatıldı */
+
         .matrix-nav { padding: 8px; background: #1a1a1a; display: flex; gap: 8px; border-bottom: 1px solid #272727; align-items: center; }
 
         /* ==========================================================================
