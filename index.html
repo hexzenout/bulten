@@ -197,7 +197,7 @@
         .fav-star-box.active { color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
 
         /* ==========================================================================
-           CANLI YAYIN MERKEZİ
+           CANLI YAYIN MERKEZİ 
            ========================================================================== */
         .stream-controls-bar { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -270,7 +270,7 @@
         .supreme-data-table td { padding: 10px 12px; border-bottom: 1px solid #222; color: #e4e4e9; font-family: 'JetBrains Mono'; }
 
         /* ==========================================================================
-           MODALLAR
+           MODALLAR & KAPSÜL EXCEL YAPISI
            ========================================================================== */
         .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .custom-modal-overlay.show-modal { opacity: 1; pointer-events: all; }
@@ -556,17 +556,19 @@
         let _ACTIVE_LEAGUE_FILTER = 'ALL';
         let _ACTIVE_SORT_MODE = 'league'; 
         let _ACTIVE_EXCEL_DAYS = 7;
-        let _IS_DEV_EKRAN = false;
-
-        // --- 2. LOCALSTORAGE (KALICI HAFIZA) VERİTABANI BAĞLANTILARI ---
+        
+        // HAFIZA SİSTEMİ (LOCALSTORAGE BAĞLANTILARI)
         let _WALLET_BALANCE = parseFloat(localStorage.getItem('v19_w')) || 100.0;
         let _BALANCE_HISTORY = JSON.parse(localStorage.getItem('v19_h')) || [100.0];
         let _PENDING_OPS = JSON.parse(localStorage.getItem('v19_p')) || [];
         let _COMPLETED_LEDGER = JSON.parse(localStorage.getItem('v19_l')) || [];
         let _FAV_MATCHES = JSON.parse(localStorage.getItem('v19_fav_m')) || [];
-        
         let _ROLLING_DB = JSON.parse(localStorage.getItem('v19_rolling')) || {};
         let _CHANNELS_DB = JSON.parse(localStorage.getItem('v19_channels')) || []; 
+        
+        // CANLI YAYIN HAFIZASI
+        let _ACTIVE_LAYOUT = parseInt(localStorage.getItem('v19_layout')) || 6;
+        let _ACTIVE_STREAMS = JSON.parse(localStorage.getItem('v19_streams')) || ["","","","","",""];
 
         // --- 3. HİYERARŞİ VE KURAL SETLERİ ---
         const HIERARCHY_SCORES = {
@@ -729,6 +731,8 @@
             const centerWrapper = document.querySelector('.center-wrapper');
             if(targetModule === 'stream') {
                 centerWrapper.style.maxWidth = '1800px'; 
+                // YAYIN HAFIZASINI YÜKLE
+                omega_BuildStreamMatrix(_ACTIVE_LAYOUT);
             } else {
                 centerWrapper.style.maxWidth = '1000px'; 
             }
@@ -751,9 +755,6 @@
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
                 titleElem.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
-                if(!document.getElementById('omega-matrix-grid').innerHTML) {
-                    omega_BuildStreamMatrix(6);
-                }
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
                 document.getElementById('v19-finance-block').classList.add('active');
@@ -1000,7 +1001,7 @@
             });
         }
 
-        // --- 10. MULTI-STREAM YAYIN MATRİSİ ---
+        // --- 10. MULTI-STREAM YAYIN MATRİSİ (HAFIZALI & YETKİLİ) ---
         function omega_FullscreenIframe(id) {
             const iframe = document.getElementById('s-fr-' + id);
             if (!iframe) return;
@@ -1014,6 +1015,9 @@
         }
 
         function omega_BuildStreamMatrix(numScreens) {
+            _ACTIVE_LAYOUT = numScreens;
+            localStorage.setItem('v19_layout', numScreens);
+
             const gridContainer = document.getElementById('omega-matrix-grid');
             gridContainer.className = `stream-master-grid active m-lay-${numScreens}`; 
             gridContainer.innerHTML = "";
@@ -1028,18 +1032,21 @@
             });
 
             for(let i=1; i<=numScreens; i++) {
+                // HAFIZADAN YAYINI ÇEK
+                let savedUrl = _ACTIVE_STREAMS[i-1] || "";
+                
                 gridContainer.innerHTML += `
                     <div class="matrix-unit">
                         <div class="matrix-nav">
                             <select id="s-sel-${i}" class="matrix-channel-select select-supreme" style="padding:6px; min-width:120px; font-size:11px" onchange="omega_LoadChannelToInput(${i})">
                                 ${optionsHtml}
                             </select>
-                            <input id="s-in-${i}" style="flex:1; background:#000; border:1px solid #333; color:#fff; padding:8px; border-radius:4px; font-size:11px;" placeholder="Yayın URL...">
+                            <input id="s-in-${i}" value="${savedUrl}" style="flex:1; background:#000; border:1px solid #333; color:#fff; padding:8px; border-radius:4px; font-size:11px;" placeholder="Yayın URL...">
                             <button onclick="omega_LaunchStreamUnit(${i})" style="background:var(--green); border:none; padding:0 12px; border-radius:4px; font-weight:800; cursor:pointer;">İZLE</button>
                             <button onclick="omega_FullscreenIframe(${i})" style="background:#272727; color:var(--blue-accent); border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-expand"></i></button>
                             <button onclick="omega_TerminateStreamUnit(${i})" style="background:var(--red); color:#fff; border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
                         </div>
-                        <iframe id="s-fr-${i}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="flex:1; border:none; background:#000000;" src="about:blank" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>
+                        <iframe id="s-fr-${i}" style="flex:1; border:none; background:#000000;" src="${savedUrl || 'about:blank'}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>
                     </div>`;
             }
         }
@@ -1055,13 +1062,21 @@
 
         function omega_LaunchStreamUnit(id) { 
             const url = document.getElementById('s-in-' + id).value; 
-            if(url) document.getElementById('s-fr-' + id).src = url; 
+            if(url) {
+                document.getElementById('s-fr-' + id).src = url; 
+                // HAFIZAYA KAYDET
+                _ACTIVE_STREAMS[id-1] = url;
+                localStorage.setItem('v19_streams', JSON.stringify(_ACTIVE_STREAMS));
+            }
         }
         
         function omega_TerminateStreamUnit(id) { 
             document.getElementById('s-sel-' + id).value = ""; 
             document.getElementById('s-in-' + id).value = ""; 
             document.getElementById('s-fr-' + id).src = "about:blank"; 
+            // HAFIZADAN SİL
+            _ACTIVE_STREAMS[id-1] = "";
+            localStorage.setItem('v19_streams', JSON.stringify(_ACTIVE_STREAMS));
         }
 
         // --- 11. ROLLING EXCEL MİMARİSİ (ELITE KAPSÜL REVİZYONU) ---
@@ -1200,7 +1215,7 @@
             }
         }
 
-        // --- 12. SUPREME FINANCE KONTROLCÜSÜ (ELITE REVİZYONU EKLENDİ) ---
+        // --- 12. SUPREME FINANCE KONTROLCÜSÜ ---
         function omega_RefreshFinanceDashboard() {
             const kpiValW = document.getElementById('kpi-val-w');
             if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
@@ -1218,7 +1233,6 @@
             const kpiWr = document.getElementById('kpi-val-wr');
             if (kpiWr) kpiWr.innerText = "%" + winRate;
 
-            // YENİ EKLENEN KPI'LAR: AÇIK RİSK ve ROI
             const activeRisk = _PENDING_OPS.reduce((sum, item) => sum + item.amt, 0);
             const kpiRisk = document.getElementById('kpi-val-risk');
             if (kpiRisk) kpiRisk.innerText = activeRisk.toFixed(2);
