@@ -731,7 +731,6 @@
             const centerWrapper = document.querySelector('.center-wrapper');
             if(targetModule === 'stream') {
                 centerWrapper.style.maxWidth = '1800px'; 
-                // YAYIN HAFIZASINI YÜKLE
                 omega_BuildStreamMatrix(_ACTIVE_LAYOUT);
             } else {
                 centerWrapper.style.maxWidth = '1000px'; 
@@ -1049,9 +1048,7 @@
                         <iframe id="s-fr-${i}" 
                             style="flex:1; border:none; background:#000000;" 
                             src="${savedUrl || 'about:blank'}" 
-                            sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation"
                             allow="autoplay; fullscreen; picture-in-picture; encrypted-media; clipboard-read; clipboard-write; web-share" 
-                            referrerpolicy="no-referrer"
                             allowfullscreen>
                         </iframe>
                     </div>`;
