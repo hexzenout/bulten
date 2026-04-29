@@ -1000,7 +1000,7 @@
             });
         }
 
-        // --- 10. MULTI-STREAM YAYIN MATRİSİ (HAFIZALI & YETKİLİ) ---
+        // --- 10. MULTI-STREAM YAYIN MATRİSİ (YOUTUBE OTOMATİK DÖNÜŞTÜRÜCÜ EKLENDİ) ---
         function omega_FullscreenIframe(id) {
             const iframe = document.getElementById('s-fr-' + id);
             if (!iframe) return;
@@ -1031,7 +1031,6 @@
             });
 
             for(let i=1; i<=numScreens; i++) {
-                // HAFIZADAN YAYINI ÇEK
                 let savedUrl = _ACTIVE_STREAMS[i-1] || "";
                 
                 gridContainer.innerHTML += `
@@ -1065,10 +1064,18 @@
         }
 
         function omega_LaunchStreamUnit(id) { 
-            const url = document.getElementById('s-in-' + id).value; 
+            let url = document.getElementById('s-in-' + id).value; 
             if(url) {
+                
+                // YOUTUBE OTOMATİK DÖNÜŞTÜRÜCÜ MOTORU
+                const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/);
+                if (ytMatch && ytMatch[1]) {
+                    // Bulunan 11 haneli YouTube ID'sini Embed linkine çevir
+                    url = "https://www.youtube.com/embed/" + ytMatch[1] + "?autoplay=1";
+                    document.getElementById('s-in-' + id).value = url; // Kutudaki yazıyı da temizle
+                }
+
                 document.getElementById('s-fr-' + id).src = url; 
-                // HAFIZAYA KAYDET
                 _ACTIVE_STREAMS[id-1] = url;
                 localStorage.setItem('v19_streams', JSON.stringify(_ACTIVE_STREAMS));
             }
@@ -1078,7 +1085,6 @@
             document.getElementById('s-sel-' + id).value = ""; 
             document.getElementById('s-in-' + id).value = ""; 
             document.getElementById('s-fr-' + id).src = "about:blank"; 
-            // HAFIZADAN SİL
             _ACTIVE_STREAMS[id-1] = "";
             localStorage.setItem('v19_streams', JSON.stringify(_ACTIVE_STREAMS));
         }
@@ -1219,7 +1225,7 @@
             }
         }
 
-        // --- 12. SUPREME FINANCE KONTROLCÜSÜ (ELITE REVİZYONU EKLENDİ) ---
+        // --- 12. SUPREME FINANCE KONTROLCÜSÜ ---
         function omega_RefreshFinanceDashboard() {
             const kpiValW = document.getElementById('kpi-val-w');
             if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
@@ -1237,7 +1243,6 @@
             const kpiWr = document.getElementById('kpi-val-wr');
             if (kpiWr) kpiWr.innerText = "%" + winRate;
 
-            // YENİ EKLENEN KPI'LAR: AÇIK RİSK ve ROI
             const activeRisk = _PENDING_OPS.reduce((sum, item) => sum + item.amt, 0);
             const kpiRisk = document.getElementById('kpi-val-risk');
             if (kpiRisk) kpiRisk.innerText = activeRisk.toFixed(2);
