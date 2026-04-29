@@ -270,7 +270,7 @@
         .supreme-data-table td { padding: 10px 12px; border-bottom: 1px solid #222; color: #e4e4e9; font-family: 'JetBrains Mono'; }
 
         /* ==========================================================================
-           MODALLAR & KAPSÜL EXCEL YAPISI
+           MODALLAR
            ========================================================================== */
         .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .custom-modal-overlay.show-modal { opacity: 1; pointer-events: all; }
@@ -1046,7 +1046,14 @@
                             <button onclick="omega_FullscreenIframe(${i})" style="background:#272727; color:var(--blue-accent); border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-expand"></i></button>
                             <button onclick="omega_TerminateStreamUnit(${i})" style="background:var(--red); color:#fff; border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
                         </div>
-                        <iframe id="s-fr-${i}" style="flex:1; border:none; background:#000000;" src="${savedUrl || 'about:blank'}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>
+                        <iframe id="s-fr-${i}" 
+                            style="flex:1; border:none; background:#000000;" 
+                            src="${savedUrl || 'about:blank'}" 
+                            sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation"
+                            allow="autoplay; fullscreen; picture-in-picture; encrypted-media; clipboard-read; clipboard-write; web-share" 
+                            referrerpolicy="no-referrer"
+                            allowfullscreen>
+                        </iframe>
                     </div>`;
             }
         }
@@ -1215,7 +1222,7 @@
             }
         }
 
-        // --- 12. SUPREME FINANCE KONTROLCÜSÜ ---
+        // --- 12. SUPREME FINANCE KONTROLCÜSÜ (ELITE REVİZYONU EKLENDİ) ---
         function omega_RefreshFinanceDashboard() {
             const kpiValW = document.getElementById('kpi-val-w');
             if (kpiValW) kpiValW.innerText = _WALLET_BALANCE.toFixed(2);
@@ -1233,6 +1240,7 @@
             const kpiWr = document.getElementById('kpi-val-wr');
             if (kpiWr) kpiWr.innerText = "%" + winRate;
 
+            // YENİ EKLENEN KPI'LAR: AÇIK RİSK ve ROI
             const activeRisk = _PENDING_OPS.reduce((sum, item) => sum + item.amt, 0);
             const kpiRisk = document.getElementById('kpi-val-risk');
             if (kpiRisk) kpiRisk.innerText = activeRisk.toFixed(2);
