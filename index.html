@@ -573,7 +573,7 @@
         // --- 3. HİYERARŞİ VE KURAL SETLERİ ---
         const HIERARCHY_SCORES = {
             "TÜRKİYE - SÜPER LİG": 4000, "İNGİLTERE - PREMIER LEAGUE": 3900, "İSPANYA - LA LIGA": 3800,
-            "ALMANYA - BUNDESLIGA": 3700, "İTALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
+            "ALMANYA - BUNDESLIGA": 3700, "İITALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
             "AVRUPA - CHAMPIONS LEAGUE": 3400, "AVRUPA - EUROPA LEAGUE": 3300, "AVRUPA - CONFERENCE LEAGUE": 3200,
             "AVRUPA - EUROLEAGUE": 4900, "AMERİKA - NBA": 4800, "TÜRKİYE - BSL": 4700,
             "İSPANYA - LIGA ACB": 4600, "İTALYA - LEGA A": 4500, "FRANSA - LNB PRO A": 4400,
@@ -768,17 +768,31 @@
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
             
+            // Bugünü hesapla (Gece 00:00 itibarıyla sıfırla)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
+            
+            // Veritabanındaki tarihleri filtrele (Geçmişi yoksay)
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
                 return (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
-            }).map(m => m.dt))].sort();
+            }).map(m => m.dt))]
+            .filter(d => {
+                const p = d.split('-');
+                const matchDate = new Date(p[0], p[1] - 1, p[2]);
+                // SADECE BUGÜN VE GELECEKTEKİ MAÇLARI KABUL ET
+                return matchDate >= today; 
+            }).sort();
             
+            // Filtrelenmiş tarihleri menüye ekle
             uniqueDates.forEach(d => {
                 dateHtml += `<option value="${d}">${omega_FormatHumanDate(d)}</option>`;
             });
             dateSelectElement.innerHTML = dateHtml;
 
+            // Lig listesini oluştur
             let leagueHtml = `<div class="league-drop-item" onclick="omega_HandleLeagueSelection('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
             const statsArray = _ACTIVE_SPORT === 'basketbol' ? GOLD_BASKET_LIST : Object.keys(_LEAGUE_STATS_DB).filter(l => !omega_IsBasketballLeague(l));
             
