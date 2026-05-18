@@ -388,6 +388,34 @@
 
         @media (max-width: 1150px) { .live-center-shell { grid-template-columns:1fr; } .watch-list { grid-template-columns:1fr; } }
 
+
+        /* ================= V12 ADVANCED CHART + ALARMS ================= */
+        .crypto-v12-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px;padding:10px;background:#080808;border:1px solid #252525;border-radius:14px}
+        .chart-tool-btn{border:1px solid #333;background:#151515;color:#d6d6d6;border-radius:10px;padding:8px 10px;font-size:.72em;font-weight:950;cursor:pointer;font-family:'JetBrains Mono';transition:.15s}
+        .chart-tool-btn:hover{border-color:#555;background:#202020}
+        .chart-tool-btn.active{background:var(--gold);border-color:var(--gold);color:#171000}
+        .chart-tool-btn.green{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.35);color:var(--green)}
+        .chart-tool-btn.red{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35);color:#ff9a9a}
+        .chart-tool-btn.blue{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.35);color:#93c5fd}
+        .crypto-v12-chart-wrap{position:relative}
+        .crypto-v12-hint{position:absolute;left:18px;top:18px;z-index:2;background:rgba(0,0,0,.72);border:1px solid #333;color:#ddd;border-radius:10px;padding:8px 10px;font-size:.72em;font-weight:850;display:none;pointer-events:none}
+        .crypto-v12-hint.show{display:block}
+        .crypto-v12-alarm-box{margin-top:14px;background:#080808;border:1px solid #292929;border-radius:16px;padding:12px}
+        .crypto-v12-alarm-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+        .crypto-v12-alarm-head b{color:#fff;font-size:.84em;text-transform:uppercase;letter-spacing:.55px}
+        .crypto-v12-alarm-head span{color:#888;font-size:.68em;font-weight:850}
+        .alarm-v12-grid{display:grid;grid-template-columns:1fr .8fr 1fr;gap:8px}
+        .alarm-v12-grid input,.alarm-v12-grid select{background:#0b0b0b;border:1px solid #333;color:#fff;border-radius:10px;padding:10px 9px;font-family:'JetBrains Mono';font-size:.78em;width:100%}
+        .alarm-v12-list{display:flex;flex-direction:column;gap:7px;margin-top:10px;max-height:170px;overflow:auto}
+        .alarm-v12-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;background:#101010;border:1px solid #252525;border-radius:11px;padding:9px}
+        .alarm-v12-row b{font-family:'JetBrains Mono';font-size:.82em;color:var(--gold)}
+        .alarm-v12-row span{font-size:.68em;color:#aaa;font-weight:850}
+        .alarm-v12-row button{border:none;background:#2a2a2a;color:#ddd;border-radius:8px;padding:7px 9px;font-weight:950;cursor:pointer}
+        .alarm-v12-row.hit{border-color:rgba(16,185,129,.45);background:rgba(16,185,129,.06)}
+        .alarm-v12-row.hit b{color:var(--green)}
+        @media(max-width:720px){.alarm-v12-grid{grid-template-columns:1fr}.crypto-v12-toolbar{gap:6px}.chart-tool-btn{font-size:.68em;padding:8px}}
+
+
     
         /* ================= V10 CLEAN SPLIT + HISTORICAL CRYPTO ================= */
         .accordion-menu.active-menu { max-height: 760px; }
@@ -624,7 +652,21 @@
                                 </div>
                             </div>
                             <div class="crypto-v10-timeframes" id="crypto-v10-timeframes"></div>
-                            <canvas id="crypto-v10-chart" width="1200" height="520" class="crypto-v10-canvas"></canvas>
+                            <div class="crypto-v12-toolbar">
+                                <button class="chart-tool-btn" onclick="omega_V12Zoom(0.72)"><i class="fa-solid fa-magnifying-glass-plus"></i> Yakınlaştır</button>
+                                <button class="chart-tool-btn" onclick="omega_V12Zoom(1.38)"><i class="fa-solid fa-magnifying-glass-minus"></i> Uzaklaştır</button>
+                                <button class="chart-tool-btn" onclick="omega_V12Pan(-0.25)"><i class="fa-solid fa-arrow-left"></i> Geri</button>
+                                <button class="chart-tool-btn" onclick="omega_V12Pan(0.25)">İleri <i class="fa-solid fa-arrow-right"></i></button>
+                                <button class="chart-tool-btn" onclick="omega_V12ResetView()"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
+                                <button class="chart-tool-btn" id="tool-hline" onclick="omega_V12SetDrawMode('hline')"><i class="fa-solid fa-grip-lines"></i> Yatay Çizgi</button>
+                                <button class="chart-tool-btn" id="tool-trend" onclick="omega_V12SetDrawMode('trend')"><i class="fa-solid fa-slash"></i> Trend Çizgisi</button>
+                                <button class="chart-tool-btn blue" id="tool-ma" onclick="omega_V12ToggleMA()">MA20</button>
+                                <button class="chart-tool-btn red" onclick="omega_V12UndoDrawing()"><i class="fa-solid fa-eraser"></i> Son Çizimi Sil</button>
+                            </div>
+                            <div class="crypto-v12-chart-wrap">
+                                <div class="crypto-v12-hint" id="crypto-v12-hint">Çizim için grafiğe tıkla.</div>
+                                <canvas id="crypto-v10-chart" width="1200" height="520" class="crypto-v10-canvas"></canvas>
+                            </div>
                             <div class="crypto-v10-chart-caption" id="crypto-v10-caption">Grafik yükleniyor.</div>
                         </div>
 
@@ -674,6 +716,25 @@
                             <div class="crypto-v10-actions">
                                 <button class="terminal-v10-btn gold" onclick="omega_V10RefreshCrypto(true)">GRAFİĞİ YENİLE</button>
                                 <button class="terminal-v10-btn" onclick="omega_V10UseLiveAsEntry()">CANLIYI GİRİŞ YAP</button>
+                            </div>
+
+
+
+                            <div class="crypto-v12-alarm-box">
+                                <div class="crypto-v12-alarm-head">
+                                    <div><b><i class="fa-solid fa-bell"></i> Sınırsız Alarm</b><br><span>Seçili coin/parite için fiyat alarmı kur. Tarayıcı açıkken canlı kontrol eder.</span></div>
+                                    <button class="chart-tool-btn green" onclick="omega_V12RequestNotify()">Bildirim İzni</button>
+                                </div>
+                                <div class="alarm-v12-grid">
+                                    <input id="v12-alarm-price" type="number" placeholder="Alarm fiyatı" step="0.00000001">
+                                    <select id="v12-alarm-dir"><option value="above">Üstüne çıkarsa</option><option value="below">Altına düşerse</option></select>
+                                    <input id="v12-alarm-note" type="text" placeholder="Not: TP1, Stop, fırsat...">
+                                </div>
+                                <div class="crypto-v10-actions" style="margin-top:9px;grid-template-columns:1fr 1fr;">
+                                    <button class="terminal-v10-btn gold" onclick="omega_V12AddAlarm()">ALARM EKLE</button>
+                                    <button class="terminal-v10-btn" onclick="omega_V12ClearHitAlarms()">ÇALANLARI TEMİZLE</button>
+                                </div>
+                                <div class="alarm-v12-list" id="v12-alarm-list"></div>
                             </div>
 
                             <div class="crypto-v10-metrics">
@@ -2741,6 +2802,267 @@
                 if(_ACTIVE_TAB === 'crypto') omega_V10RefreshCrypto(false);
             }, 8000);
         }
+
+
+
+        /* ================= V12 ADVANCED CHART CONTROLS + ALARMS ================= */
+        let _V12_VIEW_START = 0;
+        let _V12_VIEW_END = 1;
+        let _V12_DRAW_MODE = null;
+        let _V12_PENDING_TREND = null;
+        let _V12_DRAWINGS = JSON.parse(localStorage.getItem('v12_crypto_drawings') || '[]');
+        let _V12_ALARMS = JSON.parse(localStorage.getItem('v12_crypto_alarms') || '[]');
+        let _V12_SHOW_MA = localStorage.getItem('v12_show_ma') !== '0';
+        let _V12_AUTO_FIT = true;
+
+        function omega_V12SaveDrawings(){ localStorage.setItem('v12_crypto_drawings', JSON.stringify(_V12_DRAWINGS)); }
+        function omega_V12SaveAlarms(){ localStorage.setItem('v12_crypto_alarms', JSON.stringify(_V12_ALARMS)); }
+
+        function omega_V12SymbolKey(plan){ return `${plan.exchange}:${plan.symbol}${plan.quote}`.toUpperCase(); }
+
+        function omega_V12VisibleCandles(){
+            const candles = _V10_CANDLES || [];
+            if(!candles.length) return [];
+            const n = candles.length;
+            const start = Math.max(0, Math.floor(_V12_VIEW_START * (n-1)));
+            const end = Math.min(n, Math.max(start+8, Math.ceil(_V12_VIEW_END * n)));
+            return candles.slice(start, end);
+        }
+
+        function omega_V12Zoom(factor){
+            const center = (_V12_VIEW_START + _V12_VIEW_END) / 2;
+            const width = Math.min(1, Math.max(0.06, (_V12_VIEW_END - _V12_VIEW_START) * factor));
+            _V12_VIEW_START = Math.max(0, center - width/2);
+            _V12_VIEW_END = Math.min(1, center + width/2);
+            if(_V12_VIEW_END - _V12_VIEW_START < width){
+                if(_V12_VIEW_START === 0) _V12_VIEW_END = Math.min(1, width);
+                if(_V12_VIEW_END === 1) _V12_VIEW_START = Math.max(0, 1-width);
+            }
+            _V12_AUTO_FIT = false;
+            omega_V10DrawChart();
+        }
+
+        function omega_V12Pan(frac){
+            const width = _V12_VIEW_END - _V12_VIEW_START;
+            let shift = width * frac;
+            let ns = _V12_VIEW_START + shift, ne = _V12_VIEW_END + shift;
+            if(ns < 0){ ne -= ns; ns = 0; }
+            if(ne > 1){ ns -= (ne-1); ne = 1; }
+            _V12_VIEW_START = Math.max(0, ns);
+            _V12_VIEW_END = Math.min(1, ne);
+            _V12_AUTO_FIT = false;
+            omega_V10DrawChart();
+        }
+
+        function omega_V12ResetView(){
+            _V12_VIEW_START = 0; _V12_VIEW_END = 1; _V12_AUTO_FIT = true; _V12_PENDING_TREND = null;
+            omega_V10DrawChart();
+        }
+
+        function omega_V12SetDrawMode(mode){
+            _V12_DRAW_MODE = _V12_DRAW_MODE === mode ? null : mode;
+            _V12_PENDING_TREND = null;
+            document.querySelectorAll('.chart-tool-btn').forEach(b=>b.classList.remove('active'));
+            const btn = document.getElementById(mode === 'hline' ? 'tool-hline' : 'tool-trend');
+            if(_V12_DRAW_MODE && btn) btn.classList.add('active');
+            const hint = document.getElementById('crypto-v12-hint');
+            if(hint){ hint.textContent = _V12_DRAW_MODE === 'trend' ? 'Trend çizgisi için iki noktaya tıkla.' : (_V12_DRAW_MODE === 'hline' ? 'Yatay fiyat çizgisi için grafiğe tıkla.' : ''); hint.classList.toggle('show', !!_V12_DRAW_MODE); }
+        }
+
+        function omega_V12ToggleMA(){
+            _V12_SHOW_MA = !_V12_SHOW_MA;
+            localStorage.setItem('v12_show_ma', _V12_SHOW_MA ? '1' : '0');
+            const b = document.getElementById('tool-ma');
+            if(b) b.classList.toggle('active', _V12_SHOW_MA);
+            omega_V10DrawChart();
+        }
+
+        function omega_V12UndoDrawing(){
+            _V12_DRAWINGS.pop(); omega_V12SaveDrawings(); omega_V10DrawChart();
+        }
+
+        function omega_V12AttachCanvasEvents(){
+            const canvas = document.getElementById('crypto-v10-chart');
+            if(!canvas || canvas.dataset.v12Bound) return;
+            canvas.dataset.v12Bound = '1';
+            canvas.addEventListener('click', (ev)=>{
+                if(!_V12_DRAW_MODE) return;
+                const rect = canvas.getBoundingClientRect();
+                const xPx = (ev.clientX - rect.left) * (canvas.width / rect.width);
+                const yPx = (ev.clientY - rect.top) * (canvas.height / rect.height);
+                const conv = omega_V12ChartConverters();
+                if(!conv) return;
+                const price = conv.priceForY(yPx);
+                const timeIndex = conv.indexForX(xPx);
+                const plan = omega_V10GetPlan();
+                const key = omega_V12SymbolKey(plan);
+                if(_V12_DRAW_MODE === 'hline'){
+                    _V12_DRAWINGS.push({type:'hline', key, price, label:'Çizgi'});
+                    omega_V12SaveDrawings();
+                    omega_V12SetDrawMode(null);
+                    omega_V10DrawChart();
+                } else if(_V12_DRAW_MODE === 'trend'){
+                    if(!_V12_PENDING_TREND){
+                        _V12_PENDING_TREND = {x1:timeIndex, y1:price};
+                        const hint = document.getElementById('crypto-v12-hint');
+                        if(hint) hint.textContent = 'İkinci noktaya tıkla.';
+                    } else {
+                        _V12_DRAWINGS.push({type:'trend', key, x1:_V12_PENDING_TREND.x1, y1:_V12_PENDING_TREND.y1, x2:timeIndex, y2:price});
+                        _V12_PENDING_TREND = null;
+                        omega_V12SaveDrawings();
+                        omega_V12SetDrawMode(null);
+                        omega_V10DrawChart();
+                    }
+                }
+            });
+            canvas.addEventListener('wheel', (ev)=>{ ev.preventDefault(); omega_V12Zoom(ev.deltaY < 0 ? 0.82 : 1.18); }, {passive:false});
+        }
+
+        function omega_V12ChartConverters(){
+            const canvas = document.getElementById('crypto-v10-chart');
+            if(!canvas) return null;
+            const w = canvas.width, h = canvas.height;
+            const candles = omega_V12VisibleCandles();
+            const plan = omega_V10GetPlan();
+            const levels = [];
+            if(plan.entry) levels.push(plan.entry); if(plan.stop) levels.push(plan.stop); if(plan.liq) levels.push(plan.liq); if(_V10_PRICE) levels.push(_V10_PRICE); plan.tps.forEach(tp=>levels.push(tp.price));
+            const all = [...candles.flatMap(c => [c.high,c.low]), ...levels].filter(Boolean);
+            if(all.length < 2 || !candles.length) return null;
+            const min = Math.min(...all), max = Math.max(...all), pad = (max-min)*0.08 || 1, lo = min-pad, hi=max+pad;
+            return {
+                yFor:v => h - ((v - lo)/(hi-lo))*(h-44)-22,
+                priceForY:y => lo + ((h - y - 22)/(h-44))*(hi-lo),
+                xForIndex:i => 20 + (i/(candles.length-1 || 1))*(w-40),
+                indexForX:x => Math.round(((x-20)/(w-40))*(candles.length-1 || 1)),
+                candles, lo, hi
+            };
+        }
+
+        function omega_V12DrawMA(ctx, conv){
+            if(!_V12_SHOW_MA || !conv || conv.candles.length < 21) return;
+            ctx.strokeStyle = 'rgba(251,191,36,.82)'; ctx.lineWidth = 2; ctx.beginPath();
+            conv.candles.forEach((c,i)=>{
+                if(i < 19) return;
+                const avg = conv.candles.slice(i-19, i+1).reduce((s,x)=>s+x.close,0)/20;
+                const x = conv.xForIndex(i), y = conv.yFor(avg);
+                if(i===19) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+            });
+            ctx.stroke();
+        }
+
+        function omega_V12DrawUserDrawings(ctx, conv){
+            if(!conv) return;
+            const plan = omega_V10GetPlan(); const key = omega_V12SymbolKey(plan);
+            const drawings = _V12_DRAWINGS.filter(d => d.key === key);
+            drawings.forEach(d=>{
+                ctx.strokeStyle = 'rgba(255,255,255,.72)'; ctx.fillStyle='rgba(255,255,255,.78)'; ctx.lineWidth=1.5; ctx.setLineDash([4,4]);
+                if(d.type === 'hline'){
+                    const y = conv.yFor(d.price); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(1200,y); ctx.stroke();
+                    ctx.font='12px JetBrains Mono, monospace'; ctx.fillText(`ÇİZİM ${omega_V10FormatPrice(d.price)}`, 1010, y-6);
+                } else if(d.type === 'trend'){
+                    const x1 = conv.xForIndex(d.x1), y1 = conv.yFor(d.y1), x2 = conv.xForIndex(d.x2), y2 = conv.yFor(d.y2);
+                    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+                }
+                ctx.setLineDash([]);
+            });
+        }
+
+        function omega_V12RequestNotify(){
+            if(!('Notification' in window)) { omega_ShowFinanceToast && omega_ShowFinanceToast('Bu tarayıcı bildirim desteklemiyor.'); return; }
+            Notification.requestPermission().then(p => { if(omega_ShowFinanceToast) omega_ShowFinanceToast(p === 'granted' ? 'Bildirim izni verildi.' : 'Bildirim izni verilmedi.'); });
+        }
+
+        function omega_V12AddAlarm(){
+            const price = parseFloat(document.getElementById('v12-alarm-price')?.value);
+            const dir = document.getElementById('v12-alarm-dir')?.value || 'above';
+            const note = (document.getElementById('v12-alarm-note')?.value || '').trim();
+            if(!price || price <= 0){ if(omega_ShowFinanceToast) omega_ShowFinanceToast('Alarm için geçerli fiyat gir.'); return; }
+            const plan = omega_V10GetPlan();
+            _V12_ALARMS.push({id:Date.now(), key:omega_V12SymbolKey(plan), symbol:`${plan.symbol}${plan.quote}`, exchange:plan.exchange, dir, price, note, hit:false, created:new Date().toISOString()});
+            omega_V12SaveAlarms(); omega_V12RenderAlarms();
+            const pe=document.getElementById('v12-alarm-price'); if(pe) pe.value='';
+            if(omega_ShowFinanceToast) omega_ShowFinanceToast('Alarm eklendi.');
+        }
+
+        function omega_V12DeleteAlarm(id){ _V12_ALARMS = _V12_ALARMS.filter(a=>a.id!==id); omega_V12SaveAlarms(); omega_V12RenderAlarms(); }
+        function omega_V12ClearHitAlarms(){ _V12_ALARMS = _V12_ALARMS.filter(a=>!a.hit); omega_V12SaveAlarms(); omega_V12RenderAlarms(); }
+
+        function omega_V12RenderAlarms(){
+            const box = document.getElementById('v12-alarm-list'); if(!box) return;
+            const plan = omega_V10GetPlan(); const key = omega_V12SymbolKey(plan);
+            const list = _V12_ALARMS.filter(a=>a.key===key);
+            if(!list.length){ box.innerHTML = '<div class="alarm-v12-row"><span>Bu sembol için alarm yok.</span><span></span><span></span></div>'; return; }
+            box.innerHTML = list.map(a=>`<div class="alarm-v12-row ${a.hit?'hit':''}"><div><b>${a.dir==='above'?'ÜST':'ALT'} ${omega_V10FormatPrice(a.price)}</b><br><span>${a.note || a.symbol} ${a.hit?'· ÇALDI':'· aktif'}</span></div><span>${a.exchange.toUpperCase()}</span><button onclick="omega_V12DeleteAlarm(${a.id})">SİL</button></div>`).join('');
+        }
+
+        function omega_V12CheckAlarms(){
+            if(!_V10_PRICE) return;
+            const plan = omega_V10GetPlan(); const key = omega_V12SymbolKey(plan);
+            let changed=false;
+            _V12_ALARMS.forEach(a=>{
+                if(a.key !== key || a.hit) return;
+                const hit = a.dir === 'above' ? _V10_PRICE >= a.price : _V10_PRICE <= a.price;
+                if(hit){
+                    a.hit = true; a.hitAt = new Date().toISOString(); changed=true;
+                    const msg = `${a.symbol} ${a.dir==='above'?'üstüne çıktı':'altına düştü'}: ${omega_V10FormatPrice(a.price)}`;
+                    if(omega_ShowFinanceToast) omega_ShowFinanceToast('ALARM: ' + msg);
+                    if('Notification' in window && Notification.permission === 'granted') new Notification('Kasa Terminal Alarm', {body: msg});
+                }
+            });
+            if(changed){ omega_V12SaveAlarms(); omega_V12RenderAlarms(); }
+        }
+
+        const _V10DrawChartOriginal = omega_V10DrawChart;
+        omega_V10DrawChart = function(){
+            const canvas = document.getElementById('crypto-v10-chart');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,w,h);
+            const plan = omega_V10GetPlan();
+            const candles = omega_V12VisibleCandles();
+            const levels = [];
+            if(plan.entry) levels.push({v:plan.entry, c:'rgba(251,191,36,.9)', label:'GİRİŞ'});
+            if(plan.stop) levels.push({v:plan.stop, c:'rgba(239,68,68,.9)', label:'STOP'});
+            if(plan.liq) levels.push({v:plan.liq, c:'rgba(249,115,22,.9)', label:'LİQ'});
+            if(_V10_PRICE) levels.push({v:_V10_PRICE, c:'rgba(59,130,246,.95)', label:'CANLI'});
+            plan.tps.forEach(tp => levels.push({v:tp.price, c:'rgba(16,185,129,.9)', label:`TP${tp.index}`}));
+            const all = [...candles.flatMap(c => [c.high,c.low]), ...levels.map(l=>l.v)].filter(Boolean);
+            if(all.length < 2) return;
+            const min = Math.min(...all), max = Math.max(...all);
+            const pad = (max-min)*0.08 || 1; const lo = min-pad, hi=max+pad;
+            const yFor = v => h - ((v-lo)/(hi-lo))*(h-44)-22;
+            ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.lineWidth=1;
+            for(let i=0;i<6;i++){ const y=22+i*(h-44)/5; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+            const cw = Math.max(2, (w-40)/(candles.length||1)*0.58);
+            candles.forEach((c,i)=>{
+                const x=20+(i/(candles.length-1||1))*(w-40);
+                const yO=yFor(c.open), yC=yFor(c.close), yH=yFor(c.high), yL=yFor(c.low);
+                const up=c.close>=c.open; ctx.strokeStyle=up?'#10b981':'#ef4444'; ctx.fillStyle=up?'rgba(16,185,129,.72)':'rgba(239,68,68,.72)';
+                ctx.beginPath(); ctx.moveTo(x,yH); ctx.lineTo(x,yL); ctx.stroke();
+                ctx.fillRect(x-cw/2, Math.min(yO,yC), cw, Math.max(2,Math.abs(yC-yO)));
+            });
+            const conv = omega_V12ChartConverters();
+            omega_V12DrawMA(ctx, conv);
+            omega_V12DrawUserDrawings(ctx, conv);
+            levels.forEach(l=>{
+                const y=yFor(l.v); ctx.strokeStyle=l.c; ctx.lineWidth=1.4; ctx.setLineDash([7,5]); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); ctx.setLineDash([]);
+                ctx.fillStyle='#080808'; ctx.fillRect(8, Math.max(6,y-18), 132, 18); ctx.fillStyle=l.c; ctx.font='12px JetBrains Mono, monospace'; ctx.fillText(`${l.label} ${omega_V10FormatPrice(l.v)}`,12,Math.max(18,y-5));
+            });
+            const cap=document.getElementById('crypto-v10-caption'); if(cap) cap.textContent=`Grafik: ${candles.length}/${(_V10_CANDLES||[]).length} mum · Zoom tekerlekle, çizim araçları üst menüde · ${new Date().toLocaleTimeString('tr-TR')}`;
+        };
+
+        const _V10RefreshOriginal = omega_V10RefreshCrypto;
+        omega_V10RefreshCrypto = async function(force=false){
+            await _V10RefreshOriginal(force);
+            if(force || _V12_AUTO_FIT){ _V12_VIEW_START = 0; _V12_VIEW_END = 1; }
+            omega_V12AttachCanvasEvents();
+            omega_V12RenderAlarms();
+            omega_V12CheckAlarms();
+            const ma = document.getElementById('tool-ma'); if(ma) ma.classList.toggle('active', _V12_SHOW_MA);
+            omega_V10DrawChart();
+        };
 
         function omega_RenderLivePageMirror() {
             const target = document.getElementById('live-watch-list-page');
