@@ -1,40 +1,7 @@
 {
-    "up": "01:30:49",
-    "mode": "live_scores",
-    "live": [],
-    "count": 0,
-    "logs": [
-        "[2026-05-19 01:30:39] LIVE SCORE MOTOR BAŞLADI",
-        "[2026-05-19 01:30:40] Key limit/auth | status=403 | key#1 değişiyor",
-        "[2026-05-19 01:30:40] Key limit/auth | status=403 | key#2 değişiyor",
-        "[2026-05-19 01:30:40] Key limit/auth | status=403 | key#3 değişiyor",
-        "[2026-05-19 01:30:41] Key limit/auth | status=403 | key#4 değişiyor",
-        "[2026-05-19 01:30:41] Key limit/auth | status=403 | key#5 değişiyor",
-        "[2026-05-19 01:30:41] Key limit/auth | status=403 | key#6 değişiyor",
-        "[2026-05-19 01:30:42] Key limit/auth | status=403 | key#7 değişiyor",
-        "[2026-05-19 01:30:42] Key limit/auth | status=403 | key#8 değişiyor",
-        "[2026-05-19 01:30:42] Key limit/auth | status=403 | key#9 değişiyor",
-        "[2026-05-19 01:30:43] Key limit/auth | status=403 | key#10 değişiyor",
-        "[2026-05-19 01:30:43] Key limit/auth | status=403 | key#11 değişiyor",
-        "[2026-05-19 01:30:43] Key limit/auth | status=403 | key#12 değişiyor",
-        "[2026-05-19 01:30:44] Key limit/auth | status=403 | key#13 değişiyor",
-        "[2026-05-19 01:30:44] Key limit/auth | status=403 | key#14 değişiyor",
-        "[2026-05-19 01:30:44] Key limit/auth | status=403 | key#15 değişiyor",
-        "[2026-05-19 01:30:45] Key limit/auth | status=403 | key#16 değişiyor",
-        "[2026-05-19 01:30:45] Key limit/auth | status=403 | key#17 değişiyor",
-        "[2026-05-19 01:30:45] Key limit/auth | status=403 | key#18 değişiyor",
-        "[2026-05-19 01:30:46] Key limit/auth | status=403 | key#19 değişiyor",
-        "[2026-05-19 01:30:46] Key limit/auth | status=403 | key#20 değişiyor",
-        "[2026-05-19 01:30:46] Key limit/auth | status=403 | key#21 değişiyor",
-        "[2026-05-19 01:30:47] Key limit/auth | status=403 | key#22 değişiyor",
-        "[2026-05-19 01:30:47] Key limit/auth | status=403 | key#23 değişiyor",
-        "[2026-05-19 01:30:47] Key limit/auth | status=403 | key#24 değişiyor",
-        "[2026-05-19 01:30:48] Key limit/auth | status=403 | key#25 değişiyor",
-        "[2026-05-19 01:30:48] Key limit/auth | status=403 | key#26 değişiyor",
-        "[2026-05-19 01:30:48] Key limit/auth | status=403 | key#27 değişiyor",
-        "[2026-05-19 01:30:49] Key limit/auth | status=403 | key#28 değişiyor",
-        "[2026-05-19 01:30:49] Key limit/auth | status=403 | key#29 değişiyor",
-        "[2026-05-19 01:30:49] Key limit/auth | status=403 | key#30 değişiyor",
-        "[2026-05-19 01:30:49] Tüm RAPID_KEYS tükendi"
-    ]
+  "up": "02:02",
+  "matches": [],
+  "logs": [
+    "key#1 OK live=0"
+  ]
 }
