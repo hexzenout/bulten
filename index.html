@@ -236,6 +236,36 @@
         .barrier-pill.next { color:#1b1300; background:var(--gold); box-shadow:0 0 14px rgba(251,191,36,.14); }
         .finance-actions { grid-template-columns:1fr 1fr; }
         @media (max-width: 680px) { .finance-actions { grid-template-columns:1fr; } .mini-actions { min-width:140px; } }
+
+        /* ================= KASA UX V4 - SADE TERMINAL ================= */
+        .finance-plan-card .finance-card-body { padding:14px; }
+        .simple-plan-help { margin-top:10px; color:#8d8d8d; font-size:.72em; line-height:1.45; font-weight:700; }
+        .simple-plan-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px; }
+        .simple-plan-grid .finance-field label { font-size:.58em; color:#aaa; }
+        .plan-summary-clean { margin-top:12px; display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+        .plan-metric { background:#0b0b0b; border:1px solid #2d2d2d; border-radius:12px; padding:11px; min-height:72px; }
+        .plan-metric span { display:block; color:#929292; font-size:.58em; text-transform:uppercase; font-weight:950; letter-spacing:.7px; margin-bottom:7px; }
+        .plan-metric b { display:block; color:#fff; font-family:'JetBrains Mono'; font-size:1.12em; font-weight:950; }
+        .plan-metric.main { border-color:rgba(251,191,36,.55); box-shadow:inset 0 0 0 1px rgba(251,191,36,.08); }
+        .plan-metric.main b { color:var(--gold); }
+        .plan-metric.good b { color:var(--green); }
+        .finance-actions { grid-template-columns:1fr 1fr !important; }
+        .finance-actions .btn-finance { min-height:42px; }
+        .btn-finance.gold, .btn-finance.green { font-size:.78em; }
+        .trade-table th:nth-child(3), .trade-table td:nth-child(3) { min-width:260px; }
+        .trade-table th:nth-child(4), .trade-table td:nth-child(4), .trade-table th:nth-child(5), .trade-table td:nth-child(5) { min-width:115px; }
+        .mini-actions { min-width:190px; }
+        .mini-actions .w, .mini-actions .l { font-size:.72em; min-height:38px; }
+        .mini-actions .w::before { content:'✓ '; }
+        .mini-actions .l::before { content:'✕ '; }
+        .status-pending { color:#fbd36a; }
+        .status-empty { color:#777; }
+        .finance-toast { position:fixed; right:20px; bottom:20px; background:#111; border:1px solid #333; color:#fff; padding:12px 14px; border-radius:12px; box-shadow:0 18px 40px rgba(0,0,0,.45); z-index:12000; font-size:.82em; font-weight:850; opacity:0; transform:translateY(10px); transition:.22s; pointer-events:none; }
+        .finance-toast.show { opacity:1; transform:translateY(0); }
+        .rolling-target-input { background:#050505; border:1px solid #444; color:var(--gold); font-family:'JetBrains Mono'; font-size:1em; font-weight:900; padding:5px 8px; width:100px; border-radius:8px; text-align:center; }
+        .modal-config-bar .config-item label { color:#aaa; font-size:.65em; font-weight:950; margin-right:6px; }
+        @media (max-width: 680px) { .simple-plan-grid, .plan-summary-clean { grid-template-columns:1fr; } .mini-actions { min-width:150px; } }
+
         .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .custom-modal-overlay.show-modal { opacity: 1; pointer-events: all; }
         .modal-header { padding: 20px 30px; background: #0f0f0f; border-bottom: 1px solid var(--border-bright); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
@@ -394,9 +424,9 @@
                             </div>
                         </div>
 
-                        <div class="finance-card">
+                        <div class="finance-card finance-plan-card">
                             <div class="finance-card-head">
-                                <div><h3><i class="fa-solid fa-sliders"></i> Planlayıcı</h3><span>Önce modu seç, sonra stake hesapla</span></div>
+                                <div><h3><i class="fa-solid fa-sliders"></i> Basit Kasa Planı</h3><span>Önce hesapla, sonra tabloya uygula</span></div>
                             </div>
                             <div class="finance-card-body">
                                 <div class="finance-tabs">
@@ -405,36 +435,43 @@
                                 </div>
 
                                 <div class="finance-tab-panel active" id="finance-panel-bet">
-                                    <div class="finance-form-grid">
-                                        <div class="finance-field"><label>Başlangıç Kasa</label><input id="finance-start-bank" class="finance-input" type="number" value="100" onchange="omega_UpdateFinanceSettings()"></div>
+                                    <div class="simple-plan-grid">
                                         <div class="finance-field"><label>Güncel Kasa</label><input id="finance-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankroll()"></div>
-                                        <div class="finance-field"><label>Günlük Hedef %</label><input id="finance-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateFinanceSettings()"></div>
-                                        <div class="finance-field"><label>İşlem Sayısı</label><input id="finance-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateFinanceSettings()"></div>
-                                        <div class="finance-field"><label>Kasayı Kaça Böl?</label><input id="finance-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <div class="finance-field"><label>Kasayı Kaça Böleyim?</label><input id="finance-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <div class="finance-field"><label>Günde Kaç İşlem?</label><input id="finance-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateFinanceSettings()"></div>
                                         <div class="finance-field"><label>Oran</label><input id="finance-default-odds" class="finance-input" type="number" value="1.30" step="0.01" onchange="omega_UpdateFinanceSettings()"></div>
-                                        <div class="finance-field"><label>Risk Modeli</label><select id="finance-risk-model" class="finance-select" onchange="omega_UpdateFinanceSettings()"><option value="target">Hedefe göre</option><option value="split">Kasayı seçtiğim parçaya böl</option><option value="equal">İşlem sayısına eşit böl</option><option value="percent">Kasanın %2'si</option></select></div>
+                                        <div class="finance-field"><label>Günlük Hedef %</label><input id="finance-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <input id="finance-start-bank" type="hidden" value="100">
+                                        <select id="finance-risk-model" style="display:none"><option value="split" selected>Kasayı böl</option></select>
                                     </div>
                                 </div>
 
                                 <div class="finance-tab-panel" id="finance-panel-crypto">
-                                    <div class="finance-form-grid">
-                                        <div class="finance-field"><label>Başlangıç Kasa</label><input id="crypto-start-bank" class="finance-input" type="number" value="100" onchange="omega_UpdateCryptoSettings()"></div>
+                                    <div class="simple-plan-grid">
                                         <div class="finance-field"><label>Güncel Kasa</label><input id="crypto-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankrollFromCrypto()"></div>
-                                        <div class="finance-field"><label>Günlük Hedef %</label><input id="crypto-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateCryptoSettings()"></div>
-                                        <div class="finance-field"><label>İşlem Sayısı</label><input id="crypto-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateCryptoSettings()"></div>
-                                        <div class="finance-field"><label>Kasayı Kaça Böl?</label><input id="crypto-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateCryptoSettings()"></div>
-                                        <div class="finance-field"><label>TP %</label><input id="crypto-tp-pct" class="finance-input" type="number" value="1" step="0.1" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Kasayı Kaça Böleyim?</label><input id="crypto-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Günde Kaç İşlem?</label><input id="crypto-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Kâr Al %</label><input id="crypto-tp-pct" class="finance-input" type="number" value="1" step="0.1" onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>Kaldıraç</label><input id="crypto-leverage" class="finance-input" type="number" value="10" step="1" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Günlük Hedef %</label><input id="crypto-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <input id="crypto-start-bank" type="hidden" value="100">
                                     </div>
                                 </div>
 
-                                <div class="strategy-result" id="finance-strategy-result">Hesaplama bekleniyor.</div>
+                                <div class="plan-summary-clean" id="finance-strategy-result">
+                                    <div class="plan-metric main"><span>Önerilen Tutar</span><b>$0.00</b></div>
+                                    <div class="plan-metric"><span>İşlem Başı Kâr</span><b>$0.00</b></div>
+                                    <div class="plan-metric"><span>Günlük Hedef</span><b>$0.00</b></div>
+                                    <div class="plan-metric good"><span>Model</span><b>Hazır</b></div>
+                                </div>
+
                                 <div class="finance-actions">
                                     <button class="btn-finance gold" onclick="omega_CalculateStakePlan()">HESAPLA</button>
                                     <button class="btn-finance green" onclick="omega_ApplyStakeToEmptySlots()">20 ALANA UYGULA</button>
                                     <button class="btn-finance" onclick="omega_ClearTodaySlots()">GÜNÜ TEMİZLE</button>
                                     <button class="btn-finance red" onclick="omega_ResetFinanceAll()">SIFIRLA</button>
                                 </div>
+                                <div class="simple-plan-help">Not: “20 alana uygula” kazandı/kaybetti olarak kapanmamış bütün satırlara önerilen tutarı yazar. Maç, coin veya işlem notunu günlük tabloda “İşlem / Not” alanına yazabilirsin.</div>
                             </div>
                         </div>
                     </div>
@@ -484,7 +521,7 @@
         </div>
         <div class="modal-config-bar">
             <div class="config-item"><label>BAŞLANGIÇ:</label><input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()" style="background:transparent; border:none; border-bottom:1px solid #444; color:var(--green); font-family:'JetBrains Mono'; font-size:1em; font-weight:800; padding:2px; width:60px; text-align:center;"></div>
-            <div class="config-item"><label>HEDEF:</label><span id="excel-target-bal" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$1000</span></div>
+            <div class="config-item"><label>HEDEF:</label><input type="number" id="excel-target-bal-input" class="rolling-target-input" value="1000" onchange="omega_UpdateExcelConfig()"></div>
             <div class="config-item"><label>GÜNCEL:</label><span id="excel-current-bal" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$100</span></div>
             <div class="config-item" style="margin-left:auto;"><label>P/L:</label><span id="excel-pnl" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$0.00</span></div>
         </div>
@@ -1033,10 +1070,12 @@
 
         function omega_OpenRollingExcel(days) {
             _ACTIVE_EXCEL_DAYS = days;
-            if(!_ROLLING_DB[days]) _ROLLING_DB[days] = { startBal: 100, ops: {} };
-            document.getElementById('excel-modal-title').innerHTML = `${days} GÜNLÜK ROLLING EXCEL`;
+            if(!_ROLLING_DB[days]) _ROLLING_DB[days] = { startBal: 100, targetBal: ROLLING_TARGETS[days], ops: {} };
+            if(!_ROLLING_DB[days].targetBal) _ROLLING_DB[days].targetBal = ROLLING_TARGETS[days];
+            document.getElementById('excel-modal-title').innerHTML = `${days} GÜNLÜK ROLLING`;
             document.getElementById('excel-start-bal').value = _ROLLING_DB[days].startBal;
-            document.getElementById('excel-target-bal').innerText = "$" + ROLLING_TARGETS[days].toLocaleString();
+            const targetInput = document.getElementById('excel-target-bal-input');
+            if(targetInput) targetInput.value = _ROLLING_DB[days].targetBal;
             document.getElementById('rolling-excel-overlay').style.display = 'flex';
             setTimeout(() => { document.getElementById('rolling-excel-overlay').classList.add('show-modal'); }, 10);
             omega_RenderExcelTable();
@@ -1049,11 +1088,12 @@
 
         function omega_UpdateExcelConfig() {
             const newBal = parseFloat(document.getElementById('excel-start-bal').value);
-            if(!isNaN(newBal)) {
-                _ROLLING_DB[_ACTIVE_EXCEL_DAYS].startBal = newBal;
-                omega_SaveRollingDB();
-                omega_RenderExcelTable();
-            }
+            const newTarget = parseFloat(document.getElementById('excel-target-bal-input')?.value);
+            if(!_ROLLING_DB[_ACTIVE_EXCEL_DAYS]) _ROLLING_DB[_ACTIVE_EXCEL_DAYS] = { startBal: 100, targetBal: ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS], ops: {} };
+            if(!isNaN(newBal)) _ROLLING_DB[_ACTIVE_EXCEL_DAYS].startBal = newBal;
+            if(!isNaN(newTarget) && newTarget > 0) _ROLLING_DB[_ACTIVE_EXCEL_DAYS].targetBal = newTarget;
+            omega_SaveRollingDB();
+            omega_RenderExcelTable();
         }
 
         function omega_SaveRollingDB() {
@@ -1108,7 +1148,8 @@
             const pnlElement = document.getElementById('excel-pnl');
             pnlElement.innerText = (totalProfit >= 0 ? "+" : "") + "$" + totalProfit.toFixed(2);
             pnlElement.style.color = totalProfit >= 0 ? 'var(--green)' : 'var(--red)';
-            const progressPercentage = Math.min((runningBalance / ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS]) * 100, 100);
+            const targetBal = currentPlan.targetBal || ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS];
+            const progressPercentage = Math.min((runningBalance / targetBal) * 100, 100);
             const progressBar = document.getElementById('excel-progress-bar');
             if(progressBar) progressBar.style.width = progressPercentage + "%";
             omega_SaveRollingDB();
@@ -1280,33 +1321,42 @@
             return { mode:'bet', bank, targetProfit, count, splitCount, odds, stake, stakeByTarget, stakeBySplit, riskModel:_FINANCE_SETTINGS.riskModel };
         }
 
+        function omega_FinanceToast(msg) {
+            let t = document.getElementById('finance-toast');
+            if(!t) {
+                t = document.createElement('div');
+                t.id = 'finance-toast';
+                t.className = 'finance-toast';
+                document.body.appendChild(t);
+            }
+            t.innerText = msg;
+            t.classList.add('show');
+            clearTimeout(window.__financeToastTimer);
+            window.__financeToastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
         function omega_CalculateStakePlan() {
             const r = omega_CalculateRecommendedStake();
+            window.__lastFinancePlan = r;
             const box = document.getElementById('finance-strategy-result');
             if(!box) return r.stake;
+            let perProfit, label, detail;
             if(r.mode === 'crypto') {
-                const perProfit = r.stake * r.profitRate;
-                const targetProfitPerTrade = r.stakeByTarget * r.profitRate;
-                box.innerHTML = `
-                    <div class="plan-line"><span class="plan-label">Mod</span><span class="plan-val">KRİPTO</span></div>
-                    <div class="plan-line"><span class="plan-label">Kasa / Bölüm</span><span class="plan-val">$${r.bank.toFixed(2)} / ${r.splitCount} parça</span></div>
-                    <div class="plan-line"><span class="plan-label">Önerilen marjin</span><span class="plan-val">$${r.stake.toFixed(2)}</span></div>
-                    <div class="plan-line"><span class="plan-label">TP ve kaldıraç</span><span class="plan-val">%${r.tpPct} · ${r.lev}x</span></div>
-                    <div class="plan-line"><span class="plan-label">İşlem başı hedef kâr</span><span class="plan-val">$${perProfit.toFixed(2)}</span></div>
-                    <div class="plan-line"><span class="plan-label">Günlük hedefe göre gereken marjin</span><span class="plan-val">$${r.stakeByTarget.toFixed(2)}</span></div>
-                `;
+                perProfit = r.stake * r.profitRate;
+                label = 'MARJİN';
+                detail = `%${r.tpPct} TP · ${r.lev}x`;
             } else {
-                const perProfit = r.stake * (r.odds - 1);
-                const modelText = r.riskModel === 'split' ? `${r.splitCount} parçaya böl` : r.riskModel === 'equal' ? 'İşlem sayısına böl' : r.riskModel === 'percent' ? 'Kasanın %2si' : 'Hedefe göre';
-                box.innerHTML = `
-                    <div class="plan-line"><span class="plan-label">Mod</span><span class="plan-val">BAHİS</span></div>
-                    <div class="plan-line"><span class="plan-label">Kasa / Model</span><span class="plan-val">$${r.bank.toFixed(2)} · ${modelText}</span></div>
-                    <div class="plan-line"><span class="plan-label">Önerilen stake</span><span class="plan-val">$${r.stake.toFixed(2)}</span></div>
-                    <div class="plan-line"><span class="plan-label">Oran / İşlem sayısı</span><span class="plan-val">@${r.odds.toFixed(2)} · ${r.count} işlem</span></div>
-                    <div class="plan-line"><span class="plan-label">İşlem başı kâr</span><span class="plan-val">$${perProfit.toFixed(2)}</span></div>
-                    <div class="plan-line"><span class="plan-label">Günlük hedefe göre gereken stake</span><span class="plan-val">$${r.stakeByTarget.toFixed(2)}</span></div>
-                `;
+                perProfit = r.stake * (r.odds - 1);
+                label = 'STAKE';
+                detail = `${r.splitCount} parçaya böl · @${r.odds.toFixed(2)}`;
             }
+            box.innerHTML = `
+                <div class="plan-metric main"><span>Önerilen ${label}</span><b>$${r.stake.toFixed(2)}</b></div>
+                <div class="plan-metric"><span>İşlem Başı Kâr</span><b>$${perProfit.toFixed(2)}</b></div>
+                <div class="plan-metric"><span>Günlük Hedef</span><b>$${r.targetProfit.toFixed(2)}</b></div>
+                <div class="plan-metric good"><span>Model</span><b>${detail}</b></div>
+            `;
+            omega_FinanceToast('Plan hesaplandı. İstersen 20 alana uygula.');
             return r.stake;
         }
 
@@ -1314,17 +1364,24 @@
 
         function omega_ApplyStakeToEmptySlots() {
             const r = omega_CalculateRecommendedStake();
+            window.__lastFinancePlan = r;
             const slots = omega_GetTodaySlots();
+            let applied = 0;
             slots.forEach((slot, idx) => {
-                if(slot.status === 'empty') {
+                if(slot.status !== 'win' && slot.status !== 'loss') {
                     slot.type = _FINANCE_MODE;
-                    slot.name = slot.name || `${_FINANCE_MODE === 'crypto' ? 'CRYPTO' : 'BAHİS'} #${idx+1}`;
+                    if(!slot.name) slot.name = '';
                     slot.stake = Number(r.stake.toFixed(2));
                     slot.odds = Number(r.odds.toFixed(4));
                     slot.status = 'pending';
+                    applied++;
                 }
             });
-            omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard();
+            omega_SaveFinanceAll();
+            omega_RenderDailyTradeGrid();
+            omega_RefreshFinanceDashboard();
+            omega_CalculateStakePlan();
+            omega_FinanceToast(`${applied} satıra önerilen tutar yazıldı.`);
         }
 
         function omega_StatusText(status) {
@@ -1338,7 +1395,7 @@
         function omega_RenderDailyTradeGrid() {
             const grid = document.getElementById('daily-trade-grid'); if(!grid) return;
             const slots = omega_GetTodaySlots();
-            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Tür</th><th>İşlem Adı</th><th>Tutar</th><th>Oran / Katsayı</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
+            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Tür</th><th>İşlem / Not</th><th>Tutar</th><th>Oran / Çarpan</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
             slots.forEach((slot, idx) => {
                 const pnl = Number(slot.pnl || 0);
                 const pnlClass = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
@@ -1347,12 +1404,12 @@
                 html += `<tr>
                     <td style="font-family:'JetBrains Mono'; color:var(--muted); font-weight:900;">${idx+1}</td>
                     <td><select class="${typeCls}" onchange="omega_UpdateSlot(${idx}, 'type', this.value)"><option value="bet" ${slot.type === 'bet' ? 'selected' : ''}>BAHİS</option><option value="crypto" ${slot.type === 'crypto' ? 'selected' : ''}>KRİPTO</option></select></td>
-                    <td><input type="text" value="${slot.name || ''}" placeholder="Örn: Arsenal / BTC Long" onchange="omega_UpdateSlot(${idx}, 'name', this.value)"></td>
+                    <td><input type="text" value="${slot.name || ''}" placeholder="Maç adı, coin veya işlem notu" onchange="omega_UpdateSlot(${idx}, 'name', this.value)"></td>
                     <td><input class="slot-money-input" type="number" value="${slot.stake || ''}" placeholder="0.00" onchange="omega_UpdateSlot(${idx}, 'stake', this.value)"></td>
                     <td><input class="slot-odds-input" type="number" value="${slot.odds || ''}" step="0.01" placeholder="1.30" onchange="omega_UpdateSlot(${idx}, 'odds', this.value)"></td>
                     <td><span class="status-badge ${statusCls}">${omega_StatusText(slot.status)}</span></td>
                     <td class="${pnlClass}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</td>
-                    <td><div class="mini-actions"><button class="w" onclick="omega_ResolveDailySlot(${idx}, 'win')">KAZANDI</button><button class="l" onclick="omega_ResolveDailySlot(${idx}, 'loss')">KAYBETTİ</button><button class="r" onclick="omega_ResetDailySlot(${idx})">SIFIRLA</button></div></td>
+                    <td><div class="mini-actions"><button class="w" onclick="omega_ResolveDailySlot(${idx}, 'win')">KAZANDI</button><button class="l" onclick="omega_ResolveDailySlot(${idx}, 'loss')">KAYBETTİ</button><button class="r" onclick="omega_ResetDailySlot(${idx})">TEMİZLE</button></div></td>
                 </tr>`;
             });
             html += `</tbody></table>`;
@@ -1471,7 +1528,7 @@
                 theme:{ mode:'dark' },
                 colors:['#fbbf24', '#10b981'],
                 stroke:{ width:[4,0], curve:'straight' },
-                plotOptions:{ bar:{ columnWidth:'42%', borderRadius:3, colors:{ ranges:[{ from:-999999999, to:-0.01, color:'#ef4444' }, { from:0, to:999999999, color:'#10b981' }] } } },
+                plotOptions:{ bar:{ columnWidth:'42%', borderRadius:3, colors:{ ranges:[{ from:-999999999, to:-0.01, color:'#ef4444' }, { from:-0.009, to:0.009, color:'#fbbf24' }, { from:0.01, to:999999999, color:'#10b981' }] } } },
                 fill:{ opacity:[1,.42], type:['solid','solid'] },
                 annotations,
                 labels,
