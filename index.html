@@ -237,6 +237,27 @@
         .finance-actions { grid-template-columns:1fr 1fr; }
         @media (max-width: 680px) { .finance-actions { grid-template-columns:1fr; } .mini-actions { min-width:140px; } }
 
+
+
+        /* ================= CANLI KRİPTO TAKİP V5 ================= */
+        .crypto-market-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px; }
+        .crypto-live-pill { display:inline-flex; align-items:center; gap:7px; padding:6px 9px; border:1px solid #303030; border-radius:999px; background:#0b0b0b; color:#d6d6d6; font-size:.68em; font-weight:900; font-family:'JetBrains Mono'; }
+        .crypto-live-pill.ok { color:var(--green); border-color:rgba(16,185,129,.35); background:rgba(16,185,129,.06); }
+        .crypto-live-pill.err { color:#ff9a9a; border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.06); }
+        .live-cell { min-width:210px; }
+        .live-track-card { display:grid; grid-template-columns:1fr 98px; gap:9px; align-items:center; background:#080808; border:1px solid #282828; border-radius:12px; padding:9px; }
+        .live-track-main b { display:block; color:#fff; font-family:'JetBrains Mono'; font-size:.84em; margin-bottom:3px; }
+        .live-track-main span { display:block; color:#aaa; font-size:.64em; font-weight:850; line-height:1.35; }
+        .live-pnl-pos { color:var(--green) !important; }
+        .live-pnl-neg { color:var(--red) !important; }
+        .sparkline { width:98px; height:42px; background:#050505; border:1px solid #222; border-radius:8px; }
+        .slot-symbol-row { display:grid; grid-template-columns:74px 74px 1fr 72px; gap:5px; min-width:315px; }
+        .slot-symbol-row select, .slot-symbol-row input { min-width:0; }
+        .slot-mini-input { background:#0a0a0a; border:1px solid #303030; color:#fff; padding:8px 7px; border-radius:8px; font-family:'JetBrains Mono'; font-size:.74em; width:100%; }
+        .slot-mini-input:focus { border-color:var(--blue-accent); }
+        .crypto-plan-note { margin-top:10px; color:#8f8f8f; font-size:.68em; font-weight:750; line-height:1.5; }
+        @media (max-width:900px){ .live-cell { min-width:260px; } .slot-symbol-row { min-width:360px; } }
+
         /* ================= KASA UX V4 - SADE TERMINAL ================= */
         .finance-plan-card .finance-card-body { padding:14px; }
         .simple-plan-help { margin-top:10px; color:#8d8d8d; font-size:.72em; line-height:1.45; font-weight:700; }
@@ -454,8 +475,14 @@
                                         <div class="finance-field"><label>Kâr Al %</label><input id="crypto-tp-pct" class="finance-input" type="number" value="1" step="0.1" onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>Kaldıraç</label><input id="crypto-leverage" class="finance-input" type="number" value="10" step="1" onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>Günlük Hedef %</label><input id="crypto-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Borsa</label><select id="crypto-default-exchange" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="binance">Binance</option><option value="okx">OKX</option></select></div>
+                                        <div class="finance-field"><label>Parite</label><select id="crypto-default-quote" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="USDT">USDT</option><option value="USDC">USDC</option></select></div>
+                                        <div class="finance-field"><label>Varsayılan Coin</label><input id="crypto-default-symbol" list="crypto-symbol-list" class="finance-input" value="BTC" placeholder="BTC, ETH, SOL..." onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Yön</label><select id="crypto-default-side" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="long">LONG</option><option value="short">SHORT</option></select></div>
                                         <input id="crypto-start-bank" type="hidden" value="100">
                                     </div>
+                                    <datalist id="crypto-symbol-list"></datalist>
+                                    <div class="crypto-plan-note">Satırda coin sembolünü manuel yazabilirsin. Örnek: BTC, ETH, SOL, PEPE. Sistem seçtiğin borsaya ve USDT/USDC paritesine göre canlı fiyat + mini grafik çeker.</div>
                                 </div>
 
                                 <div class="plan-summary-clean" id="finance-strategy-result">
@@ -761,6 +788,7 @@
                 titleElem.innerHTML = '<span style="color:var(--green)">/ KASA YÖNETİMİ</span>';
                 omega_RefreshFinanceDashboard();
                 setTimeout(omega_RenderApexSupremeChart, 250);
+                setTimeout(() => { omega_RenderDailyTradeGrid(); omega_RefreshCryptoLive(true); }, 450);
             }
         }
 
@@ -1183,6 +1211,10 @@
         let _FINANCE_MODE = localStorage.getItem('v27_finance_mode') || 'bet';
         let _FINANCE_SETTINGS = JSON.parse(localStorage.getItem(FINANCE_SETTINGS_KEY) || '{}');
         let _DAILY_SLOTS = JSON.parse(localStorage.getItem(FINANCE_DAILY_KEY) || '{}');
+        const CRYPTO_TOP_SYMBOLS = ['BTC','ETH','BNB','SOL','XRP','DOGE','ADA','TRX','AVAX','LINK','TON','SHIB','SUI','DOT','BCH','LTC','UNI','NEAR','APT','ICP','ETC','XLM','HBAR','FIL','ARB','OP','INJ','ATOM','IMX','VET','TIA','SEI','AAVE','ALGO','GRT','RUNE','MKR','QNT','FTM','LDO','JUP','PYTH','WIF','PEPE','BONK','FLOKI','ENA','ORDI','TAO','RENDER','FET','AGIX','WLD','SAND','MANA','AXS','GALA','CHZ','APE','DYDX','SNX','CRV','COMP','SUSHI','YFI','CAKE','1INCH','ZRX','BAT','ENJ','ROSE','KAVA','KSM','EGLD','XTZ','MINA','IOTA','FLOW','KAS','STX','CFX','BLUR','STRK','MANTA','ZK','ZRO','NOT','TURBO','MEW','PENDLE','ETHFI','AEVO','W','ALT','PIXEL','PORTAL','ARKM','CYBER','SAGA','DYM','OMNI','ACE','NTRN','BIGTIME','MEME','GMT','LPT','SSV','GMX','MAGIC','MASK','API3','ANKR','SKL','CKB','RVN','QTUM','ONT','ZIL','ONE','HOT','CELO','ICX','IOST','DASH','ZEC','WAVES','KNC','BAND','STORJ','COTI','OCEAN','IO','JASMY','TWT','ILV','METIS','ALICE','LRC','RSR','DENT','ACH','SPELL','PEOPLE','HIGH','CELR','ONG','PHA','ID','EDU','RDNT','HOOK','LQTY','C98'];
+        let _CRYPTO_LIVE_CACHE = {};
+        let _CRYPTO_REFRESHING = false;
+        let _CRYPTO_TIMER = null;
 
         function omega_TodayKey() {
             const d = new Date();
@@ -1201,12 +1233,16 @@
                 cryptoTargetPct: 30,
                 cryptoTradeCount: 20,
                 cryptoTpPct: 1,
-                cryptoLeverage: 10
+                cryptoLeverage: 10,
+                cryptoDefaultExchange: 'binance',
+                cryptoDefaultQuote: 'USDT',
+                cryptoDefaultSymbol: 'BTC',
+                cryptoDefaultSide: 'long'
             };
         }
 
         function omega_NewSlot(i) {
-            return { id: Date.now()+i, index:i+1, type:_FINANCE_MODE, name:'', stake:'', odds:_FINANCE_SETTINGS.defaultOdds || 1.30, status:'empty', pnl:0 };
+            return { id: Date.now()+i, index:i+1, type:_FINANCE_MODE, name:'', stake:'', odds:_FINANCE_SETTINGS.defaultOdds || 1.30, status:'empty', pnl:0, exchange:_FINANCE_SETTINGS.cryptoDefaultExchange || 'binance', quote:_FINANCE_SETTINGS.cryptoDefaultQuote || 'USDT', symbol:_FINANCE_SETTINGS.cryptoDefaultSymbol || 'BTC', side:_FINANCE_SETTINGS.cryptoDefaultSide || 'long', entry:'' };
         }
 
         function omega_EnsureFinanceSettings() {
@@ -1240,6 +1276,11 @@
             omega_SetVal('crypto-split-count', _FINANCE_SETTINGS.cryptoSplitCount);
             omega_SetVal('crypto-tp-pct', _FINANCE_SETTINGS.cryptoTpPct);
             omega_SetVal('crypto-leverage', _FINANCE_SETTINGS.cryptoLeverage);
+            omega_SetVal('crypto-default-symbol', _FINANCE_SETTINGS.cryptoDefaultSymbol || 'BTC');
+            const exSel = document.getElementById('crypto-default-exchange'); if(exSel) exSel.value = _FINANCE_SETTINGS.cryptoDefaultExchange || 'binance';
+            const qSel = document.getElementById('crypto-default-quote'); if(qSel) qSel.value = _FINANCE_SETTINGS.cryptoDefaultQuote || 'USDT';
+            const sideSel = document.getElementById('crypto-default-side'); if(sideSel) sideSel.value = _FINANCE_SETTINGS.cryptoDefaultSide || 'long';
+            omega_RenderCryptoSymbolDatalist();
             const todayLabel = document.getElementById('finance-today-label');
             if(todayLabel) todayLabel.innerText = new Date().toLocaleDateString('tr-TR', { weekday:'long', day:'2-digit', month:'long' }).toUpperCase();
             omega_SetFinanceMode(_FINANCE_MODE, false);
@@ -1273,7 +1314,11 @@
             _FINANCE_SETTINGS.cryptoSplitCount = Math.min(100, Math.max(1, parseInt(document.getElementById('crypto-split-count')?.value) || 20));
             _FINANCE_SETTINGS.cryptoTpPct = parseFloat(document.getElementById('crypto-tp-pct')?.value) || 1;
             _FINANCE_SETTINGS.cryptoLeverage = parseFloat(document.getElementById('crypto-leverage')?.value) || 1;
-            omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RefreshFinanceDashboard();
+            _FINANCE_SETTINGS.cryptoDefaultExchange = document.getElementById('crypto-default-exchange')?.value || 'binance';
+            _FINANCE_SETTINGS.cryptoDefaultQuote = document.getElementById('crypto-default-quote')?.value || 'USDT';
+            _FINANCE_SETTINGS.cryptoDefaultSymbol = (document.getElementById('crypto-default-symbol')?.value || 'BTC').toUpperCase().replace(/[^A-Z0-9]/g,'');
+            _FINANCE_SETTINGS.cryptoDefaultSide = document.getElementById('crypto-default-side')?.value || 'long';
+            omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RefreshFinanceDashboard(); omega_RenderDailyTradeGrid(); omega_RefreshCryptoLive(true);
         }
 
         function omega_SetCurrentBankroll() {
@@ -1373,6 +1418,13 @@
                     if(!slot.name) slot.name = '';
                     slot.stake = Number(r.stake.toFixed(2));
                     slot.odds = Number(r.odds.toFixed(4));
+                    if(_FINANCE_MODE === 'crypto') {
+                        slot.exchange = _FINANCE_SETTINGS.cryptoDefaultExchange || 'binance';
+                        slot.quote = _FINANCE_SETTINGS.cryptoDefaultQuote || 'USDT';
+                        slot.symbol = (_FINANCE_SETTINGS.cryptoDefaultSymbol || 'BTC').toUpperCase();
+                        slot.side = _FINANCE_SETTINGS.cryptoDefaultSide || 'long';
+                        slot.entry = slot.entry || '';
+                    }
                     slot.status = 'pending';
                     applied++;
                 }
@@ -1392,21 +1444,178 @@
         }
         function omega_TypeText(type) { return type === 'crypto' ? 'KRİPTO' : 'BAHİS'; }
 
+
+        function omega_RenderCryptoSymbolDatalist() {
+            const dl = document.getElementById('crypto-symbol-list');
+            if(!dl || dl.dataset.ready === '1') return;
+            dl.innerHTML = CRYPTO_TOP_SYMBOLS.map(s => `<option value="${s}"></option>`).join('');
+            dl.dataset.ready = '1';
+        }
+
+        function omega_CryptoInst(slot) {
+            const symbol = String(slot.symbol || 'BTC').toUpperCase().replace(/[^A-Z0-9]/g,'') || 'BTC';
+            const quote = slot.quote || 'USDT';
+            const exchange = slot.exchange || 'binance';
+            if(exchange === 'okx') return `${symbol}-${quote}`;
+            return `${symbol}${quote}`;
+        }
+
+        function omega_CryptoCacheKey(slot) {
+            return `${slot.exchange || 'binance'}:${slot.symbol || 'BTC'}:${slot.quote || 'USDT'}`;
+        }
+
+        function omega_BuildCryptoLiveCell(slot, idx) {
+            const key = omega_CryptoCacheKey(slot);
+            const data = _CRYPTO_LIVE_CACHE[key];
+            const price = data && data.price ? Number(data.price) : null;
+            const entry = parseFloat(slot.entry);
+            const stake = parseFloat(slot.stake);
+            const side = slot.side || 'long';
+            let pnlText = 'Giriş bekleniyor';
+            let pnlCls = '';
+            if(price && !isNaN(entry) && entry > 0 && !isNaN(stake) && stake > 0) {
+                const change = side === 'short' ? (entry - price) / entry : (price - entry) / entry;
+                const pnl = stake * change;
+                pnlText = `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} · ${(change*100).toFixed(2)}%`;
+                pnlCls = pnl >= 0 ? 'live-pnl-pos' : 'live-pnl-neg';
+            }
+            const status = data && data.error ? `<span class="crypto-live-pill err">Veri yok</span>` : `<span class="crypto-live-pill ok">Canlı</span>`;
+            return `<div class="live-track-card" id="live-card-${idx}">
+                <div class="live-track-main">
+                    <b>${slot.symbol || 'BTC'}/${slot.quote || 'USDT'} · ${(slot.exchange || 'binance').toUpperCase()}</b>
+                    <span>Fiyat: ${price ? '$' + omega_FormatCryptoPrice(price) : 'yükleniyor'} ${status}</span>
+                    <span class="${pnlCls}">${pnlText}</span>
+                </div>
+                <canvas class="sparkline" id="spark-${idx}" width="196" height="84"></canvas>
+            </div>`;
+        }
+
+        function omega_FormatCryptoPrice(price) {
+            price = Number(price);
+            if(price >= 1000) return price.toLocaleString('en-US', {maximumFractionDigits:2});
+            if(price >= 1) return price.toFixed(4);
+            return price.toPrecision(5);
+        }
+
+        async function omega_FetchCryptoMarket(slot) {
+            const exchange = slot.exchange || 'binance';
+            const key = omega_CryptoCacheKey(slot);
+            try {
+                if(exchange === 'okx') {
+                    const inst = omega_CryptoInst(slot);
+                    const [tickerRes, candleRes] = await Promise.all([
+                        fetch(`https://www.okx.com/api/v5/market/ticker?instId=${encodeURIComponent(inst)}`),
+                        fetch(`https://www.okx.com/api/v5/market/candles?instId=${encodeURIComponent(inst)}&bar=1m&limit=30`)
+                    ]);
+                    const ticker = await tickerRes.json();
+                    const candles = await candleRes.json();
+                    const price = Number(ticker?.data?.[0]?.last);
+                    const closes = (candles?.data || []).map(x => Number(x[4])).filter(Boolean).reverse();
+                    if(!price) throw new Error('OKX fiyat yok');
+                    _CRYPTO_LIVE_CACHE[key] = { price, closes, ts: Date.now() };
+                } else {
+                    const inst = omega_CryptoInst(slot);
+                    const [tickerRes, candleRes] = await Promise.all([
+                        fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${encodeURIComponent(inst)}`),
+                        fetch(`https://api.binance.com/api/v3/klines?symbol=${encodeURIComponent(inst)}&interval=1m&limit=30`)
+                    ]);
+                    const ticker = await tickerRes.json();
+                    const candles = await candleRes.json();
+                    const price = Number(ticker?.price);
+                    const closes = Array.isArray(candles) ? candles.map(x => Number(x[4])).filter(Boolean) : [];
+                    if(!price) throw new Error('Binance fiyat yok');
+                    _CRYPTO_LIVE_CACHE[key] = { price, closes, ts: Date.now() };
+                }
+            } catch(e) {
+                _CRYPTO_LIVE_CACHE[key] = { error:true, message:e.message, closes:[], ts:Date.now() };
+            }
+        }
+
+        async function omega_RefreshCryptoLive(force=false) {
+            if(_CRYPTO_REFRESHING) return;
+            const slots = omega_GetTodaySlots().filter(s => s.type === 'crypto' && s.symbol);
+            if(slots.length === 0) return;
+            _CRYPTO_REFRESHING = true;
+            const uniq = [];
+            const seen = new Set();
+            slots.forEach(s => { const k=omega_CryptoCacheKey(s); if(!seen.has(k)){ seen.add(k); uniq.push(s); } });
+            for(const slot of uniq.slice(0, 12)) {
+                const old = _CRYPTO_LIVE_CACHE[omega_CryptoCacheKey(slot)];
+                if(force || !old || Date.now() - old.ts > 20000) await omega_FetchCryptoMarket(slot);
+            }
+            _CRYPTO_REFRESHING = false;
+            omega_RenderDailyTradeGrid();
+        }
+
+        function omega_DrawAllCryptoSparklines() {
+            const slots = omega_GetTodaySlots();
+            slots.forEach((slot, idx) => {
+                if(slot.type !== 'crypto') return;
+                const canvas = document.getElementById('spark-' + idx);
+                const data = _CRYPTO_LIVE_CACHE[omega_CryptoCacheKey(slot)];
+                if(canvas) omega_DrawSparkline(canvas, data?.closes || []);
+            });
+        }
+
+        function omega_DrawSparkline(canvas, values) {
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,w,h);
+            if(!values || values.length < 2) {
+                ctx.strokeStyle = '#333'; ctx.beginPath(); ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke(); return;
+            }
+            const min = Math.min(...values), max = Math.max(...values);
+            const range = max - min || 1;
+            const up = values[values.length-1] >= values[0];
+            ctx.strokeStyle = up ? '#10b981' : '#ef4444';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            values.forEach((v,i) => {
+                const x = (i/(values.length-1))*w;
+                const y = h - ((v-min)/range)*(h-10) - 5;
+                if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+            });
+            ctx.stroke();
+            ctx.strokeStyle = 'rgba(251,191,36,.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke();
+        }
+
+        function omega_StartCryptoTimer() {
+            if(_CRYPTO_TIMER) return;
+            _CRYPTO_TIMER = setInterval(() => {
+                if(_ACTIVE_TAB === 'finance') omega_RefreshCryptoLive(false);
+            }, 25000);
+            setTimeout(() => omega_RefreshCryptoLive(true), 400);
+        }
+
         function omega_RenderDailyTradeGrid() {
             const grid = document.getElementById('daily-trade-grid'); if(!grid) return;
+            omega_RenderCryptoSymbolDatalist();
             const slots = omega_GetTodaySlots();
-            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Tür</th><th>İşlem / Not</th><th>Tutar</th><th>Oran / Çarpan</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
+            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Tür</th><th>İşlem / Not</th><th>Tutar</th><th>Oran / Çarpan</th><th>Canlı Takip</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
             slots.forEach((slot, idx) => {
                 const pnl = Number(slot.pnl || 0);
                 const pnlClass = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
                 const typeCls = slot.type === 'crypto' ? 'slot-type-crypto' : 'slot-type-bet';
                 const statusCls = slot.status === 'win' ? 'status-win' : slot.status === 'loss' ? 'status-loss' : slot.status === 'pending' ? 'status-pending' : 'status-empty';
+                const liveHtml = slot.type === 'crypto' ? omega_BuildCryptoLiveCell(slot, idx) : `<span class="crypto-live-pill">Skor modülü sonra</span>`;
+                const nameHtml = slot.type === 'crypto' ? `
+                    <div class="slot-symbol-row">
+                        <select class="slot-mini-input" onchange="omega_UpdateSlot(${idx}, 'exchange', this.value)"><option value="binance" ${slot.exchange !== 'okx' ? 'selected' : ''}>Binance</option><option value="okx" ${slot.exchange === 'okx' ? 'selected' : ''}>OKX</option></select>
+                        <select class="slot-mini-input" onchange="omega_UpdateSlot(${idx}, 'quote', this.value)"><option value="USDT" ${(slot.quote || 'USDT') === 'USDT' ? 'selected' : ''}>USDT</option><option value="USDC" ${(slot.quote || 'USDT') === 'USDC' ? 'selected' : ''}>USDC</option></select>
+                        <input class="slot-mini-input" list="crypto-symbol-list" value="${slot.symbol || ''}" placeholder="BTC" onchange="omega_UpdateSlot(${idx}, 'symbol', this.value)">
+                        <select class="slot-mini-input" onchange="omega_UpdateSlot(${idx}, 'side', this.value)"><option value="long" ${(slot.side || 'long') === 'long' ? 'selected' : ''}>LONG</option><option value="short" ${slot.side === 'short' ? 'selected' : ''}>SHORT</option></select>
+                    </div>
+                    <input type="text" value="${slot.name || ''}" placeholder="Not: BTC breakout, ETH long..." onchange="omega_UpdateSlot(${idx}, 'name', this.value)" style="margin-top:6px;">
+                    <input class="slot-mini-input" type="number" value="${slot.entry || ''}" placeholder="Giriş fiyatı" onchange="omega_UpdateSlot(${idx}, 'entry', this.value)" style="margin-top:6px;">
+                ` : `<input type="text" value="${slot.name || ''}" placeholder="Maç adı veya bahis notu" onchange="omega_UpdateSlot(${idx}, 'name', this.value)">`;
                 html += `<tr>
                     <td style="font-family:'JetBrains Mono'; color:var(--muted); font-weight:900;">${idx+1}</td>
                     <td><select class="${typeCls}" onchange="omega_UpdateSlot(${idx}, 'type', this.value)"><option value="bet" ${slot.type === 'bet' ? 'selected' : ''}>BAHİS</option><option value="crypto" ${slot.type === 'crypto' ? 'selected' : ''}>KRİPTO</option></select></td>
-                    <td><input type="text" value="${slot.name || ''}" placeholder="Maç adı, coin veya işlem notu" onchange="omega_UpdateSlot(${idx}, 'name', this.value)"></td>
+                    <td>${nameHtml}</td>
                     <td><input class="slot-money-input" type="number" value="${slot.stake || ''}" placeholder="0.00" onchange="omega_UpdateSlot(${idx}, 'stake', this.value)"></td>
                     <td><input class="slot-odds-input" type="number" value="${slot.odds || ''}" step="0.01" placeholder="1.30" onchange="omega_UpdateSlot(${idx}, 'odds', this.value)"></td>
+                    <td class="live-cell">${liveHtml}</td>
                     <td><span class="status-badge ${statusCls}">${omega_StatusText(slot.status)}</span></td>
                     <td class="${pnlClass}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</td>
                     <td><div class="mini-actions"><button class="w" onclick="omega_ResolveDailySlot(${idx}, 'win')">KAZANDI</button><button class="l" onclick="omega_ResolveDailySlot(${idx}, 'loss')">KAYBETTİ</button><button class="r" onclick="omega_ResetDailySlot(${idx})">TEMİZLE</button></div></td>
@@ -1414,14 +1623,28 @@
             });
             html += `</tbody></table>`;
             grid.innerHTML = html;
+            omega_DrawAllCryptoSparklines();
+            omega_StartCryptoTimer();
         }
 
         function omega_UpdateSlot(index, field, value) {
             const slots = omega_GetTodaySlots(); if(!slots[index]) return;
-            if(['stake','odds'].includes(field)) value = parseFloat(value) || '';
+            if(['stake','odds','entry'].includes(field)) value = parseFloat(value) || '';
+            if(['symbol'].includes(field)) value = String(value || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
             slots[index][field] = value;
-            if(slots[index].status === 'empty' && (slots[index].stake || slots[index].name)) slots[index].status = 'pending';
-            omega_SaveFinanceAll(); omega_RefreshFinanceDashboard();
+            if(field === 'type' && value === 'crypto') {
+                slots[index].exchange = slots[index].exchange || _FINANCE_SETTINGS.cryptoDefaultExchange || 'binance';
+                slots[index].quote = slots[index].quote || _FINANCE_SETTINGS.cryptoDefaultQuote || 'USDT';
+                slots[index].symbol = slots[index].symbol || _FINANCE_SETTINGS.cryptoDefaultSymbol || 'BTC';
+                slots[index].side = slots[index].side || _FINANCE_SETTINGS.cryptoDefaultSide || 'long';
+            }
+            if(slots[index].status === 'empty' && (slots[index].stake || slots[index].name || slots[index].symbol)) slots[index].status = 'pending';
+            omega_SaveFinanceAll();
+            omega_RefreshFinanceDashboard();
+            if(['type','exchange','quote','symbol','side','entry'].includes(field)) {
+                omega_RenderDailyTradeGrid();
+                omega_RefreshCryptoLive(true);
+            }
         }
 
         function omega_ResolveDailySlot(index, result) {
