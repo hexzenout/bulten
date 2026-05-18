@@ -2,7 +2,7 @@ name: Update Live Scores
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -11,25 +11,20 @@ permissions:
 jobs:
   update-live-scores:
     runs-on: ubuntu-latest
-
     steps:
       - name: Repository indir
         uses: actions/checkout@v4
-
       - name: Python kur
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: Paketleri kur
         run: pip install -r requirements.txt
-
       - name: Canlı skor motorunu çalıştır
         env:
           RAPID_KEYS: ${{ secrets.RAPID_KEYS }}
         run: python live_score_motor.py
-
-      - name: Canlı skor JSON commit et
+      - name: Canlı skor verisini commit et
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
