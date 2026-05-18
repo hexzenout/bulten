@@ -479,39 +479,67 @@
         function omega_SwitchMainTab(targetModule, clickedElement, updateHistory = true) {
             omega_CloseRollingExcel();
             omega_CloseChannelManager();
+
             const topMenu = document.getElementById('main-dropdown-nav');
             if(topMenu) topMenu.classList.remove('active-menu');
+
             if (updateHistory) history.pushState({ tab: targetModule }, '', '#' + targetModule);
+
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
             if(clickedElement) clickedElement.classList.add('active');
+
             document.getElementById('omega-radar-block').style.display = 'none';
             document.getElementById('omega-favs-block').style.display = 'none';
             document.getElementById('omega-stream-block').style.display = 'none';
             document.getElementById('v19-finance-block').classList.remove('active');
+
             const centerWrapper = document.querySelector('.center-wrapper');
+
             if(targetModule === 'stream') {
                 centerWrapper.style.maxWidth = '1800px';
                 omega_BuildStreamMatrix(_ACTIVE_LAYOUT);
             } else {
                 centerWrapper.style.maxWidth = '1000px';
             }
+
             const titleElem = document.getElementById('active-module-name');
+
             if(targetModule === 'futbol' || targetModule === 'basketbol') {
+                const sportChanged = _ACTIVE_SPORT !== targetModule;
+
                 _ACTIVE_SPORT = targetModule;
                 _ACTIVE_TAB = 'bulletin';
+
+                if (sportChanged) {
+                    _ACTIVE_LEAGUE_FILTER = 'ALL';
+
+                    const dateSelect = document.getElementById('v19-date-select');
+                    if (dateSelect) dateSelect.value = 'ALL';
+
+                    const dropLabel = document.getElementById('drop-text-label');
+                    if (dropLabel) dropLabel.innerHTML = 'TÜM LİGLER';
+                }
+
                 document.getElementById('omega-radar-block').style.display = 'block';
-                titleElem.innerHTML = targetModule === 'futbol' ? '<span style="color:var(--green)">/ FUTBOL</span>' : '<span style="color:var(--orange)">/ BASKETBOL</span>';
+
+                titleElem.innerHTML = targetModule === 'futbol'
+                    ? '<span style="color:var(--green)">/ FUTBOL</span>'
+                    : '<span style="color:var(--orange)">/ BASKETBOL</span>';
+
                 omega_BuildUIComponents();
                 omega_ExecuteRadarFilter();
+
             } else if(targetModule === 'favs') {
                 _ACTIVE_TAB = 'favs';
                 document.getElementById('omega-favs-block').style.display = 'block';
                 titleElem.innerHTML = '<span style="color:var(--red)">/ FAVORİLERİM</span>';
                 omega_ExecuteRadarFilter();
+
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
                 titleElem.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
+
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
                 document.getElementById('v19-finance-block').classList.add('active');
@@ -524,24 +552,38 @@
         function omega_BuildUIComponents() {
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
+            if (!dateSelectElement || !dropdownMenuArea) return;
+
+            const previousDate = dateSelectElement.value || 'ALL';
+            let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
+
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
-            const uniqueDates = [...new Set(_MASTER_DB.filter(m => {
-                const isBasket = omega_IsBasketballLeague(m.l);
-                return (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
-            }).map(m => m.dt))].filter(d => {
-                const p = d.split('-');
-                const matchDate = new Date(p[0], p[1] - 1, p[2]);
-                return matchDate >= today;
-            }).sort();
-            uniqueDates.forEach(d => {
-                dateHtml += `<option value="${d}">${omega_FormatHumanDate(d)}</option>`;
-            });
+
+            // Bugün dahil 10 günlük sabit tarih listesi
+            for (let i = 0; i < 10; i++) {
+                const d = new Date(today);
+                d.setDate(today.getDate() + i);
+
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const value = `${y}-${m}-${day}`;
+
+                dateHtml += `<option value="${value}">${omega_FormatHumanDate(value)}</option>`;
+            }
+
             dateSelectElement.innerHTML = dateHtml;
 
+            const stillExists = [...dateSelectElement.options].some(opt => opt.value === previousDate);
+            dateSelectElement.value = stillExists ? previousDate : 'ALL';
+
             let leagueHtml = `<div class="league-drop-item" onclick="omega_HandleLeagueSelection('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
-            const statsArray = _ACTIVE_SPORT === 'basketbol' ? GOLD_BASKET_LIST : Object.keys(_LEAGUE_STATS_DB).filter(l => !omega_IsBasketballLeague(l));
+
+            const statsArray = _ACTIVE_SPORT === 'basketbol'
+                ? GOLD_BASKET_LIST
+                : Object.keys(_LEAGUE_STATS_DB).filter(l => !omega_IsBasketballLeague(l));
+
             statsArray.forEach(ligName => {
                 const matchCount = _LEAGUE_STATS_DB[ligName] || 0;
                 leagueHtml += `
@@ -550,6 +592,7 @@
                         <span>${ligName} (${matchCount})</span>
                     </div>`;
             });
+
             dropdownMenuArea.innerHTML = leagueHtml;
         }
 
