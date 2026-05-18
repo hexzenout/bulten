@@ -573,7 +573,7 @@
         // --- 3. HİYERARŞİ VE KURAL SETLERİ ---
         const HIERARCHY_SCORES = {
             "TÜRKİYE - SÜPER LİG": 4000, "İNGİLTERE - PREMIER LEAGUE": 3900, "İSPANYA - LA LIGA": 3800,
-            "ALMANYA - BUNDESLIGA": 3700, "İITALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
+            "ALMANYA - BUNDESLIGA": 3700, "İTALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
             "AVRUPA - CHAMPIONS LEAGUE": 3400, "AVRUPA - EUROPA LEAGUE": 3300, "AVRUPA - CONFERENCE LEAGUE": 3200,
             "AVRUPA - EUROLEAGUE": 4900, "AMERİKA - NBA": 4800, "TÜRKİYE - BSL": 4700,
             "İSPANYA - LIGA ACB": 4600, "İTALYA - LEGA A": 4500, "FRANSA - LNB PRO A": 4400,
@@ -830,17 +830,26 @@
             
             const selectedDate = document.getElementById('v19-date-select').value;
             
+            // GEÇMİŞİ EKRANDAN DA SİLEN ZAMAN KONTROLÜ
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
             let filteredData = _MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
                 const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
                 const dateMatch = (selectedDate === 'ALL' || m.dt === selectedDate);
                 const leagueMatch = (_ACTIVE_LEAGUE_FILTER === 'ALL' || m.l === _ACTIVE_LEAGUE_FILTER);
                 
+                // MAÇIN TARİHİNİ KONTROL ET
+                const p = m.dt.split('-');
+                const matchDate = new Date(p[0], p[1] - 1, p[2]);
+                const isNotPast = matchDate >= today;
+                
                 if(_ACTIVE_TAB === 'favs') {
                     const mID = omega_GenerateMatchID(m);
-                    return _FAV_MATCHES.includes(mID) && dateMatch;
+                    return _FAV_MATCHES.includes(mID) && dateMatch && isNotPast;
                 }
-                return sportMatch && dateMatch && leagueMatch;
+                return sportMatch && dateMatch && leagueMatch && isNotPast;
             });
 
             let finalHtmlBuffer = ""; 
