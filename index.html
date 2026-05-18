@@ -659,10 +659,18 @@
             return "un"; 
         }
 
+        function omega_ParseDate(dtStr) {
+            if(!dtStr) return new Date(0);
+            const p = dtStr.includes('-') ? dtStr.split('-') : dtStr.split('.');
+            if(p[0].length === 4) {
+                return new Date(p[0], p[1] - 1, p[2]);
+            }
+            return new Date(p[2], p[1] - 1, p[0]);
+        }
+
         function omega_FormatHumanDate(ds) { 
             if(!ds) return ""; 
-            const p = ds.split('-'); 
-            const dObj = new Date(p[0], p[1] - 1, p[2]); 
+            const dObj = omega_ParseDate(ds); 
             const today = new Date(); 
             today.setHours(0,0,0,0); 
             
@@ -671,7 +679,7 @@
             if(diff === 1) return "YARIN"; 
             
             const months = ["OCAK","ŞUBAT","MART","NİSAN","MAYIS","HAZİRAN","TEMMUZ","AĞUSTOS","EYLÜL","EKİM","KASIM","ARALIK"]; 
-            return p[2] + " " + months[parseInt(p[1]) - 1]; 
+            return dObj.getDate() + " " + months[dObj.getMonth()]; 
         }
 
         function omega_GenerateMatchID(m) { 
@@ -768,13 +776,10 @@
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
             
-            // Bugünü hesapla
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
-            
-            // DİNAMİK CANLI SAYAÇ (Sadece güncel maçları sayar)
             let activeLeagueStats = {};
             
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => {
@@ -782,16 +787,14 @@
                 const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
                 
                 if (sportMatch) {
-                    const p = m.dt.split('-');
-                    const matchDate = new Date(p[0], p[1] - 1, p[2]);
-                    // EĞER MAÇ GEÇMİŞTE DEĞİLSE SAYACA EKLE
+                    const matchDate = omega_ParseDate(m.dt);
                     if (matchDate >= today) {
                         activeLeagueStats[m.l] = (activeLeagueStats[m.l] || 0) + 1;
                         return true;
                     }
                 }
                 return false;
-            }).map(m => m.dt))].sort();
+            }).map(m => m.dt))].sort((a,b) => omega_ParseDate(a) - omega_ParseDate(b));
             
             uniqueDates.forEach(d => {
                 dateHtml += `<option value="${d}">${omega_FormatHumanDate(d)}</option>`;
@@ -800,12 +803,12 @@
 
             let leagueHtml = `<div class="league-drop-item" onclick="omega_HandleLeagueSelection('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
             
-            // Sadece içinde aktif maç olan ligleri menüye ekle
-            const statsArray = _ACTIVE_SPORT === 'basketbol' ? Object.keys(activeLeagueStats).filter(l => GOLD_BASKET_LIST.some(g => l.toUpperCase().includes(g))) : Object.keys(activeLeagueStats).filter(l => !omega_IsBasketballLeague(l));
+            const statsArray = _ACTIVE_SPORT === 'basketbol' 
+                ? Object.keys(activeLeagueStats).filter(l => GOLD_BASKET_LIST.some(g => l.toUpperCase().includes(g))) 
+                : Object.keys(activeLeagueStats).filter(l => !omega_IsBasketballLeague(l));
             
             statsArray.forEach(ligName => {
                 const matchCount = activeLeagueStats[ligName] || 0;
-                // Eğer ligde güncel maç varsa menüde göster
                 if (matchCount > 0) {
                     leagueHtml += `
                         <div class="league-drop-item" onclick="omega_HandleLeagueSelection('${ligName}', this.innerHTML)">
@@ -840,7 +843,6 @@
             
             const selectedDate = document.getElementById('v19-date-select').value;
             
-            // GEÇMİŞİ EKRANDAN DA SİLEN ZAMAN KONTROLÜ
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
@@ -850,9 +852,7 @@
                 const dateMatch = (selectedDate === 'ALL' || m.dt === selectedDate);
                 const leagueMatch = (_ACTIVE_LEAGUE_FILTER === 'ALL' || m.l === _ACTIVE_LEAGUE_FILTER);
                 
-                // MAÇIN TARİHİNİ KONTROL ET
-                const p = m.dt.split('-');
-                const matchDate = new Date(p[0], p[1] - 1, p[2]);
+                const matchDate = omega_ParseDate(m.dt);
                 const isNotPast = matchDate >= today;
                 
                 if(_ACTIVE_TAB === 'favs') {
@@ -870,7 +870,7 @@
                 groupedByDay[m.dt].push(m); 
             });
 
-            Object.keys(groupedByDay).sort().forEach(day => {
+            Object.keys(groupedByDay).sort((a,b) => omega_ParseDate(a) - omega_ParseDate(b)).forEach(day => {
                 finalHtmlBuffer += `<div style="color:var(--gold); font-size:0.85em; font-weight:900; margin:25px 0 15px 0; letter-spacing:1px; text-transform:uppercase;">${omega_FormatHumanDate(day)}</div>`;
                 
                 if(_ACTIVE_SORT_MODE === 'time') {
@@ -947,7 +947,7 @@
             renderArea.innerHTML = finalHtmlBuffer || `
                 <div style="padding:80px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:15px;">
                     <i class="fa-solid fa-radar" style="font-size:3em; color:var(--border-bright);"></i>
-                    <span style="color:var(--muted); font-weight:800; letter-spacing:1px; font-size:1em;">KAYIT BULUNAMADI.</span>
+                    <span style="color:var(--muted); font-weight:800; letter-spacing:1px; font-size:1em;">GÜNCEL MAÇ BULUNAMADI. LÜTFEN PYTHON VERİ BOTUNU ÇALIŞTIRIN.</span>
                 </div>
             `;
         }
