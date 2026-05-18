@@ -830,18 +830,26 @@
             
             const selectedDate = document.getElementById('v19-date-select').value;
             
-            let filteredData = _MASTER_DB.filter(m => {
-                const isBasket = omega_IsBasketballLeague(m.l);
-                const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
-                const dateMatch = (selectedDate === 'ALL' || m.dt === selectedDate);
-                const leagueMatch = (_ACTIVE_LEAGUE_FILTER === 'ALL' || m.l === _ACTIVE_LEAGUE_FILTER);
-                
-                if(_ACTIVE_TAB === 'favs') {
-                    const mID = omega_GenerateMatchID(m);
-                    return _FAV_MATCHES.includes(mID) && dateMatch;
-                }
-                return sportMatch && dateMatch && leagueMatch;
-            });
+            const todayMidnight = new Date();
+todayMidnight.setHours(0, 0, 0, 0);
+
+let filteredData = _MASTER_DB.filter(m => {
+    const isBasket = omega_IsBasketballLeague(m.l);
+    const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
+    const dateMatch = (selectedDate === 'ALL' || m.dt === selectedDate);
+    const leagueMatch = (_ACTIVE_LEAGUE_FILTER === 'ALL' || m.l === _ACTIVE_LEAGUE_FILTER);
+
+    // Geçmiş günleri filtrele (bugün dahil göster, dün ve öncesi çıkar)
+    const p = m.dt.split('-');
+    const matchDate = new Date(p[0], p[1] - 1, p[2]);
+    const notPast = matchDate >= todayMidnight;
+
+    if(_ACTIVE_TAB === 'favs') {
+        const mID = omega_GenerateMatchID(m);
+        return _FAV_MATCHES.includes(mID) && dateMatch && notPast;
+    }
+    return sportMatch && dateMatch && leagueMatch && notPast;
+});
 
             let finalHtmlBuffer = ""; 
             const groupedByDay = {};
