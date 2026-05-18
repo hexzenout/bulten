@@ -115,63 +115,77 @@
         .matrix-nav { padding: 8px; background: #1a1a1a; display: flex; gap: 8px; border-bottom: 1px solid #272727; align-items: center; }
 
 
-        /* ================= KASA PRO TERMINAL ================= */
-        .fin-terminal-wrapper { display:none; width:100%; gap:18px; flex-direction:column; }
+        /* ================= KASA SIMPLE TERMINAL V2 ================= */
+        .fin-terminal-wrapper { display:none; width:100%; flex-direction:column; gap:16px; }
         .fin-terminal-wrapper.active { display:flex; }
-        .finance-pro-shell { display:grid; grid-template-columns: 1.05fr 1.25fr; gap:18px; width:100%; }
-        .finance-pro-card { background:linear-gradient(180deg,#171717,#111); border:1px solid var(--border); border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.25); overflow:hidden; }
-        .finance-card-head { padding:16px 18px; border-bottom:1px solid #282828; display:flex; align-items:center; justify-content:space-between; gap:12px; }
-        .finance-card-head h3 { margin:0; color:#fff; font-size:.86em; letter-spacing:1px; font-weight:900; text-transform:uppercase; }
-        .finance-card-head span { color:var(--muted); font-size:.72em; font-weight:700; }
+        .finance-clean-hero { background:#121212; border:1px solid #2a2a2a; border-radius:18px; padding:18px; display:flex; align-items:center; justify-content:space-between; gap:18px; box-shadow:0 14px 35px rgba(0,0,0,.22); }
+        .finance-clean-title h2 { margin:0 0 6px 0; font-size:1.05em; letter-spacing:1px; font-weight:950; color:#fff; }
+        .finance-clean-title p { margin:0; color:var(--muted); font-size:.78em; font-weight:650; }
+        .finance-clean-balance { text-align:right; }
+        .finance-clean-balance label { color:var(--muted); font-size:.62em; letter-spacing:1px; text-transform:uppercase; font-weight:950; display:block; margin-bottom:5px; }
+        .finance-clean-balance b { font-family:'JetBrains Mono'; font-size:2em; color:#fff; }
+        .finance-kpi-row { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; }
+        .kpi-card-supreme { background:#141414; border:1px solid #292929; padding:14px 12px; border-radius:14px; min-height:72px; }
+        .kpi-card-supreme span { font-size:.56em; color:var(--muted); text-transform:uppercase; display:block; margin-bottom:7px; font-weight:950; letter-spacing:.8px; }
+        .kpi-card-supreme b { font-size:1.08em; color:#fff; font-family:'JetBrains Mono'; font-weight:950; }
+        .finance-main-grid { display:grid; grid-template-columns: 1.1fr .9fr; gap:16px; align-items:start; }
+        .finance-card { background:#121212; border:1px solid #2a2a2a; border-radius:18px; overflow:hidden; box-shadow:0 12px 30px rgba(0,0,0,.18); }
+        .finance-card-head { padding:15px 16px; border-bottom:1px solid #262626; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        .finance-card-head h3 { margin:0; color:#fff; font-size:.84em; letter-spacing:.7px; font-weight:950; text-transform:uppercase; }
+        .finance-card-head span { color:var(--muted); font-size:.7em; font-weight:750; }
         .finance-card-body { padding:16px; }
-        .global-kpi-hub { display:grid; grid-template-columns: repeat(6, 1fr); gap:10px; }
-        .kpi-card-supreme { background:#121212; border:1px solid #292929; padding:14px 10px; border-radius:14px; text-align:center; min-height:74px; }
-        .kpi-card-supreme span { font-size:.55em; color:var(--muted); text-transform:uppercase; display:block; margin-bottom:7px; font-weight:900; letter-spacing:.8px; }
-        .kpi-card-supreme b { font-size:1.18em; color:#fff; font-family:'JetBrains Mono'; font-weight:900; }
-        .finance-control-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+        .finance-tabs { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:8px; background:#0d0d0d; border:1px solid #292929; border-radius:14px; }
+        .finance-tab { background:transparent; color:var(--muted); border:none; padding:12px 10px; border-radius:10px; font-size:.8em; font-weight:950; cursor:pointer; transition:.18s; letter-spacing:.5px; }
+        .finance-tab.active { background:#fff; color:#000; box-shadow:0 6px 16px rgba(255,255,255,.08); }
+        .finance-tab-panel { display:none; }
+        .finance-tab-panel.active { display:block; }
+        .finance-form-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px; }
         .finance-field { display:flex; flex-direction:column; gap:6px; }
-        .finance-field label { color:var(--muted); font-size:.62em; text-transform:uppercase; font-weight:900; letter-spacing:.8px; }
-        .finance-input, .finance-select { background:#0b0b0b; border:1px solid #303030; color:#fff; padding:11px 12px; border-radius:10px; font-family:'JetBrains Mono'; font-size:.86em; width:100%; }
-        .finance-input:focus, .finance-select:focus { border-color:var(--gold); box-shadow:0 0 0 2px rgba(251,191,36,.08); }
-        .strategy-result { margin-top:12px; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.25); border-radius:12px; padding:12px; font-size:.82em; color:#f5f5f5; line-height:1.55; }
+        .finance-field label { color:var(--muted); font-size:.62em; text-transform:uppercase; font-weight:950; letter-spacing:.8px; }
+        .finance-input, .finance-select { background:#0a0a0a; border:1px solid #303030; color:#fff; padding:11px 12px; border-radius:10px; font-family:'JetBrains Mono'; font-size:.86em; width:100%; }
+        .finance-input:focus, .finance-select:focus { border-color:#555; box-shadow:0 0 0 2px rgba(255,255,255,.05); }
+        .strategy-result { margin-top:12px; background:#0c0c0c; border:1px solid #2c2c2c; border-radius:14px; padding:13px; font-size:.82em; color:#ddd; line-height:1.6; }
         .strategy-result b { color:var(--gold); font-family:'JetBrains Mono'; }
-        .finance-btn-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
-        .btn-finance { border:1px solid #333; background:#202020; color:#fff; padding:10px 13px; border-radius:10px; font-weight:900; font-size:.72em; cursor:pointer; transition:.2s; text-transform:uppercase; letter-spacing:.6px; }
-        .btn-finance:hover { transform:translateY(-1px); border-color:#555; background:#2a2a2a; }
-        .btn-finance.green { background:var(--green); color:#001b10; border-color:var(--green); }
-        .btn-finance.gold { background:var(--gold); color:#171000; border-color:var(--gold); }
-        .btn-finance.red { background:rgba(239,68,68,.12); color:#ff8a8a; border-color:rgba(239,68,68,.45); }
-        .finance-mode-tabs { display:flex; gap:8px; }
-        .finance-tab { background:#191919; color:var(--muted); border:1px solid #303030; padding:9px 13px; border-radius:999px; font-size:.72em; font-weight:900; cursor:pointer; }
-        .finance-tab.active { background:#fff; color:#000; border-color:#fff; }
-        .daily-trade-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
-        .trade-slot { background:#111; border:1px solid #292929; border-radius:14px; padding:11px; display:flex; flex-direction:column; gap:8px; position:relative; }
-        .trade-slot.win { border-color:rgba(16,185,129,.55); background:rgba(16,185,129,.07); }
-        .trade-slot.loss { border-color:rgba(239,68,68,.55); background:rgba(239,68,68,.07); }
-        .trade-slot.pending { border-color:rgba(251,191,36,.38); }
-        .slot-top { display:flex; align-items:center; justify-content:space-between; font-size:.7em; color:var(--muted); font-weight:900; }
-        .slot-badge { font-family:'JetBrains Mono'; color:#fff; }
-        .trade-slot input, .trade-slot select { background:#080808; border:1px solid #303030; color:#fff; border-radius:8px; padding:7px 8px; font-size:.75em; font-family:'JetBrains Mono'; width:100%; }
-        .slot-actions { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; }
-        .slot-actions button { border:none; border-radius:7px; padding:7px 0; cursor:pointer; font-size:.68em; font-weight:900; }
-        .slot-actions .w { background:var(--green-dark); color:#fff; }
-        .slot-actions .l { background:#7f1d1d; color:#fff; }
-        .slot-actions .r { background:#272727; color:#ddd; }
-        .slot-pnl { font-family:'JetBrains Mono'; font-size:.82em; font-weight:900; text-align:right; }
-        .slot-pnl.pos { color:var(--green); }
-        .slot-pnl.neg { color:var(--red); }
-        .ledger-panel-scroll { overflow:auto; max-height:390px; }
+        .finance-actions { display:grid; grid-template-columns:1.2fr 1.2fr 1fr; gap:8px; margin-top:12px; }
+        .btn-finance { border:1px solid #333; background:#1d1d1d; color:#fff; padding:11px 12px; border-radius:10px; font-weight:950; font-size:.72em; cursor:pointer; transition:.18s; text-transform:uppercase; letter-spacing:.55px; }
+        .btn-finance:hover { background:#292929; border-color:#555; }
+        .btn-finance.green { background:var(--green); color:#00170d; border-color:var(--green); }
+        .btn-finance.gold { background:var(--gold); color:#1b1300; border-color:var(--gold); }
+        .btn-finance.red { background:rgba(239,68,68,.12); color:#ff9a9a; border-color:rgba(239,68,68,.4); }
+        .balance-chart-wrap { position:relative; }
+        #omega-apex-chart-main { height:315px; background:#0d0d0d; border-radius:14px; border:1px solid #292929; padding:10px; }
+        .barrier-strip { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+        .barrier-pill { padding:7px 10px; border-radius:999px; border:1px solid #303030; background:#151515; color:var(--muted); font-size:.68em; font-weight:950; font-family:'JetBrains Mono'; }
+        .barrier-pill.done { color:#00170d; background:var(--green); border-color:var(--green); }
+        .barrier-pill.next { color:#1b1300; background:var(--gold); border-color:var(--gold); }
+        .progress-line { height:8px; background:#242424; border-radius:999px; overflow:hidden; margin-top:12px; }
+        .progress-line-fill { height:100%; background:var(--green); width:0%; transition:.3s; }
+        .progress-caption { color:var(--muted); font-size:.72em; margin-top:8px; font-weight:800; }
+        .trade-table-wrap { overflow:auto; max-height:560px; border:1px solid #272727; border-radius:14px; }
+        .trade-table { width:100%; border-collapse:collapse; font-size:.78em; min-width:760px; }
+        .trade-table th { position:sticky; top:0; z-index:2; background:#181818; color:var(--muted); padding:10px; text-align:left; font-size:.72em; letter-spacing:.5px; text-transform:uppercase; border-bottom:1px solid #2b2b2b; }
+        .trade-table td { padding:8px; border-bottom:1px solid #222; color:#eee; }
+        .trade-table tr:hover td { background:#171717; }
+        .trade-table input, .trade-table select { width:100%; background:#090909; border:1px solid #303030; color:#fff; border-radius:8px; padding:7px 8px; font-family:'JetBrains Mono'; font-size:.8em; }
+        .mini-actions { display:flex; gap:5px; }
+        .mini-actions button { border:none; border-radius:7px; padding:7px 9px; font-size:.7em; font-weight:950; cursor:pointer; }
+        .mini-actions .w { background:var(--green-dark); color:#fff; }
+        .mini-actions .l { background:#7f1d1d; color:#fff; }
+        .mini-actions .r { background:#252525; color:#ddd; }
+        .pnl-pos { color:var(--green); font-family:'JetBrains Mono'; font-weight:950; }
+        .pnl-neg { color:var(--red); font-family:'JetBrains Mono'; font-weight:950; }
+        .finance-secondary-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+        .ledger-panel-scroll { overflow:auto; max-height:360px; }
         .supreme-data-table { width:100%; border-collapse:collapse; font-size:.78em; }
-        .supreme-data-table th { background:#141414; padding:11px; text-align:left; color:var(--muted); border-bottom:1px solid #333; font-weight:900; white-space:nowrap; }
-        .supreme-data-table td { padding:10px 11px; border-bottom:1px solid #222; color:#e4e4e9; font-family:'JetBrains Mono'; }
-        .rolling-grand-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
-        .rolling-box-btn { background:#121212; border:1px solid #292929; padding:13px 10px; border-radius:12px; text-align:center; cursor:pointer; transition:.2s; border-top:3px solid var(--muted); }
-        .rolling-box-btn:hover { border-top-color:var(--gold); background:#202020; transform:translateY(-2px); }
-        .rolling-box-btn label { font-size:.6em; font-weight:900; color:var(--muted); display:block; margin-bottom:5px; }
-        .rolling-box-btn b { color:var(--gold); font-size:.9em; font-family:'JetBrains Mono'; font-weight:900; }
-        #omega-apex-chart-main { height:280px; background:#111; border-radius:14px; border:1px solid #292929; padding:10px; }
-        @media (max-width: 1150px) { .finance-pro-shell { grid-template-columns:1fr; } .global-kpi-hub { grid-template-columns:repeat(3,1fr); } .daily-trade-grid { grid-template-columns:repeat(2,1fr); } }
-        @media (max-width: 640px) { .global-kpi-hub { grid-template-columns:repeat(2,1fr); } .finance-control-grid { grid-template-columns:1fr; } .daily-trade-grid { grid-template-columns:1fr; } .rolling-grand-grid { grid-template-columns:repeat(2,1fr); } }
+        .supreme-data-table th { background:#151515; padding:10px; text-align:left; color:var(--muted); border-bottom:1px solid #333; font-weight:950; white-space:nowrap; }
+        .supreme-data-table td { padding:9px 10px; border-bottom:1px solid #222; color:#e4e4e9; font-family:'JetBrains Mono'; }
+        .rolling-grand-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+        .rolling-box-btn { background:#151515; border:1px solid #292929; padding:12px 8px; border-radius:12px; text-align:center; cursor:pointer; transition:.18s; }
+        .rolling-box-btn:hover { border-color:var(--gold); background:#1f1f1f; }
+        .rolling-box-btn label { font-size:.58em; font-weight:950; color:var(--muted); display:block; margin-bottom:5px; }
+        .rolling-box-btn b { color:var(--gold); font-size:.84em; font-family:'JetBrains Mono'; font-weight:950; }
+        @media (max-width: 1150px) { .finance-main-grid, .finance-secondary-grid { grid-template-columns:1fr; } .finance-kpi-row { grid-template-columns:repeat(3,1fr); } }
+        @media (max-width: 680px) { .finance-clean-hero { flex-direction:column; align-items:flex-start; } .finance-clean-balance { text-align:left; } .finance-kpi-row { grid-template-columns:repeat(2,1fr); } .finance-form-grid, .finance-actions { grid-template-columns:1fr; } .rolling-grand-grid { grid-template-columns:repeat(2,1fr); } }
         .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .custom-modal-overlay.show-modal { opacity: 1; pointer-events: all; }
         .modal-header { padding: 20px 30px; background: #0f0f0f; border-bottom: 1px solid var(--border-bright); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
@@ -297,7 +311,18 @@
 
 
                 <div class="fin-terminal-wrapper" id="v19-finance-block">
-                    <div class="global-kpi-hub">
+                    <div class="finance-clean-hero">
+                        <div class="finance-clean-title">
+                            <h2><i class="fa-solid fa-wallet"></i> KASA TERMINAL</h2>
+                            <p>Basit görünüm. Bahis ve kripto ayrı sekmeler. Bakiye, P/L ve hedef bariyerleri tek ekranda.</p>
+                        </div>
+                        <div class="finance-clean-balance">
+                            <label>Güncel Bakiye</label>
+                            <b id="finance-hero-balance">$100.00</b>
+                        </div>
+                    </div>
+
+                    <div class="finance-kpi-row">
                         <div class="kpi-card-supreme"><span>GÜNCEL KASA</span><b id="kpi-val-w">100.00</b></div>
                         <div class="kpi-card-supreme"><span>GÜNLÜK P/L</span><b id="kpi-day-pnl">0.00</b></div>
                         <div class="kpi-card-supreme"><span>TOPLAM P/L</span><b id="kpi-val-p">0.00</b></div>
@@ -306,68 +331,86 @@
                         <div class="kpi-card-supreme"><span>ROI</span><b id="kpi-val-roi">%0</b></div>
                     </div>
 
-                    <div class="finance-pro-shell">
-                        <div style="display:flex; flex-direction:column; gap:18px;">
-                            <div class="finance-pro-card">
-                                <div class="finance-card-head">
-                                    <div><h3><i class="fa-solid fa-sliders"></i> Kasa Ayarları</h3><span>Bahis + kripto ortak bankroll</span></div>
-                                    <div class="finance-mode-tabs">
-                                        <button class="finance-tab active" id="finance-tab-bet" onclick="omega_SetFinanceMode('bet')">BAHİS</button>
-                                        <button class="finance-tab" id="finance-tab-crypto" onclick="omega_SetFinanceMode('crypto')">KRİPTO</button>
-                                    </div>
+                    <div class="finance-main-grid">
+                        <div class="finance-card">
+                            <div class="finance-card-head">
+                                <div><h3><i class="fa-solid fa-chart-line"></i> Bakiye Grafiği</h3><span>Borsa ekranı mantığında kasa eğrisi ve bariyerler</span></div>
+                            </div>
+                            <div class="finance-card-body balance-chart-wrap">
+                                <div id="omega-apex-chart-main"></div>
+                                <div class="progress-line"><div class="progress-line-fill" id="barrier-progress-fill"></div></div>
+                                <div class="progress-caption" id="barrier-progress-text">Bariyer hesaplanıyor.</div>
+                                <div class="barrier-strip" id="finance-barrier-strip"></div>
+                            </div>
+                        </div>
+
+                        <div class="finance-card">
+                            <div class="finance-card-head">
+                                <div><h3><i class="fa-solid fa-sliders"></i> Planlayıcı</h3><span>Önce modu seç, sonra stake hesapla</span></div>
+                            </div>
+                            <div class="finance-card-body">
+                                <div class="finance-tabs">
+                                    <button class="finance-tab active" id="finance-tab-bet" onclick="omega_SetFinanceMode('bet')"><i class="fa-solid fa-ticket"></i> BAHİS</button>
+                                    <button class="finance-tab" id="finance-tab-crypto" onclick="omega_SetFinanceMode('crypto')"><i class="fa-brands fa-bitcoin"></i> KRİPTO</button>
                                 </div>
-                                <div class="finance-card-body">
-                                    <div class="finance-control-grid">
+
+                                <div class="finance-tab-panel active" id="finance-panel-bet">
+                                    <div class="finance-form-grid">
                                         <div class="finance-field"><label>Başlangıç Kasa</label><input id="finance-start-bank" class="finance-input" type="number" value="100" onchange="omega_UpdateFinanceSettings()"></div>
                                         <div class="finance-field"><label>Güncel Kasa</label><input id="finance-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankroll()"></div>
                                         <div class="finance-field"><label>Günlük Hedef %</label><input id="finance-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateFinanceSettings()"></div>
                                         <div class="finance-field"><label>İşlem Sayısı</label><input id="finance-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateFinanceSettings()"></div>
-                                        <div class="finance-field"><label>Varsayılan Oran</label><input id="finance-default-odds" class="finance-input" type="number" value="1.30" step="0.01" onchange="omega_UpdateFinanceSettings()"></div>
-                                        <div class="finance-field"><label>Risk Modeli</label><select id="finance-risk-model" class="finance-select" onchange="omega_UpdateFinanceSettings()"><option value="target">Hedefe göre</option><option value="equal">Kasayı eşit böl</option><option value="percent">Kasa yüzdesi</option></select></div>
-                                    </div>
-                                    <div class="strategy-result" id="finance-strategy-result">Hesaplama bekleniyor.</div>
-                                    <div class="finance-btn-row">
-                                        <button class="btn-finance gold" onclick="omega_CalculateStakePlan()">STAKE HESAPLA</button>
-                                        <button class="btn-finance green" onclick="omega_ApplyStakeToEmptySlots()">BOŞ 20 ALANA UYGULA</button>
-                                        <button class="btn-finance" onclick="omega_ClearTodaySlots()">GÜNÜ TEMİZLE</button>
-                                        <button class="btn-finance red" onclick="omega_ResetFinanceAll()">TÜM KASAYI SIFIRLA</button>
+                                        <div class="finance-field"><label>Oran</label><input id="finance-default-odds" class="finance-input" type="number" value="1.30" step="0.01" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <div class="finance-field"><label>Risk Modeli</label><select id="finance-risk-model" class="finance-select" onchange="omega_UpdateFinanceSettings()"><option value="target">Hedefe göre</option><option value="equal">Kasayı eşit böl</option><option value="percent">Kasanın %2'si</option></select></div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="finance-pro-card">
-                                <div class="finance-card-head"><div><h3><i class="fa-solid fa-chart-area"></i> Kasa Grafiği</h3><span>Güncel bankroll eğrisi</span></div></div>
-                                <div class="finance-card-body"><div id="omega-apex-chart-main"></div></div>
-                            </div>
-
-                            <div class="finance-pro-card">
-                                <div class="finance-card-head"><div><h3><i class="fa-solid fa-layer-group"></i> Rolling Planlar</h3><span>Eski rolling sistemi korunur</span></div></div>
-                                <div class="finance-card-body">
-                                    <div class="rolling-grand-grid">
-                                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(7)"><label>7 GÜN</label><b>ROLLING</b></div>
-                                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(15)"><label>15 GÜN</label><b>ROLLING</b></div>
-                                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(30)"><label>30 GÜN</label><b>ROLLING</b></div>
-                                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(60)"><label>60 GÜN</label><b>ROLLING</b></div>
-                                        <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(90)"><label>90 GÜN</label><b>ROLLING</b></div>
+                                <div class="finance-tab-panel" id="finance-panel-crypto">
+                                    <div class="finance-form-grid">
+                                        <div class="finance-field"><label>Başlangıç Kasa</label><input id="crypto-start-bank" class="finance-input" type="number" value="100" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Güncel Kasa</label><input id="crypto-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankrollFromCrypto()"></div>
+                                        <div class="finance-field"><label>Günlük Hedef %</label><input id="crypto-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>İşlem Sayısı</label><input id="crypto-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>TP %</label><input id="crypto-tp-pct" class="finance-input" type="number" value="1" step="0.1" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Kaldıraç</label><input id="crypto-leverage" class="finance-input" type="number" value="10" step="1" onchange="omega_UpdateCryptoSettings()"></div>
                                     </div>
+                                </div>
+
+                                <div class="strategy-result" id="finance-strategy-result">Hesaplama bekleniyor.</div>
+                                <div class="finance-actions">
+                                    <button class="btn-finance gold" onclick="omega_CalculateStakePlan()">HESAPLA</button>
+                                    <button class="btn-finance green" onclick="omega_ApplyStakeToEmptySlots()">20 ALANA UYGULA</button>
+                                    <button class="btn-finance" onclick="omega_ClearTodaySlots()">GÜNÜ TEMİZLE</button>
+                                    <button class="btn-finance red" onclick="omega_ResetFinanceAll()">SIFIRLA</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div style="display:flex; flex-direction:column; gap:18px;">
-                            <div class="finance-pro-card">
-                                <div class="finance-card-head">
-                                    <div><h3><i class="fa-solid fa-table-cells"></i> Günlük 20 İşlem Masası</h3><span id="finance-today-label">Bugün</span></div>
-                                    <button class="btn-finance" onclick="omega_AddManualOperationFromTop()">MANUEL EKLE</button>
-                                </div>
-                                <div class="finance-card-body">
-                                    <div class="daily-trade-grid" id="daily-trade-grid"></div>
-                                </div>
-                            </div>
+                    <div class="finance-card">
+                        <div class="finance-card-head">
+                            <div><h3><i class="fa-solid fa-table-cells"></i> Günlük 20 İşlem</h3><span id="finance-today-label">Bugün</span></div>
+                        </div>
+                        <div class="finance-card-body">
+                            <div class="trade-table-wrap" id="daily-trade-grid"></div>
+                        </div>
+                    </div>
 
-                            <div class="finance-pro-card">
-                                <div class="finance-card-head"><div><h3><i class="fa-solid fa-clock-rotate-left"></i> Operasyon Geçmişi</h3><span>Son işlemler</span></div></div>
-                                <div class="ledger-panel-scroll"><table class="supreme-data-table" id="omega-data-table"></table></div>
+                    <div class="finance-secondary-grid">
+                        <div class="finance-card">
+                            <div class="finance-card-head"><div><h3><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</h3><span>Son işlemler</span></div></div>
+                            <div class="ledger-panel-scroll"><table class="supreme-data-table" id="omega-data-table"></table></div>
+                        </div>
+                        <div class="finance-card">
+                            <div class="finance-card-head"><div><h3><i class="fa-solid fa-layer-group"></i> Rolling</h3><span>Hızlı hedef planları</span></div></div>
+                            <div class="finance-card-body">
+                                <div class="rolling-grand-grid">
+                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(7)"><label>7 GÜN</label><b>ROLLING</b></div>
+                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(15)"><label>15 GÜN</label><b>ROLLING</b></div>
+                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(30)"><label>30 GÜN</label><b>ROLLING</b></div>
+                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(60)"><label>60 GÜN</label><b>ROLLING</b></div>
+                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(90)"><label>90 GÜN</label><b>ROLLING</b></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1040,19 +1083,17 @@
         }
 
 
-        // ================= KASA PRO TERMINAL JS =================
-        const FINANCE_SETTINGS_KEY = 'v26_finance_settings';
-        const FINANCE_DAILY_KEY = 'v26_finance_daily_slots';
-        let _FINANCE_MODE = localStorage.getItem('v26_finance_mode') || 'bet';
+        // ================= KASA SIMPLE TERMINAL V2 JS =================
+        const FINANCE_SETTINGS_KEY = 'v27_finance_settings';
+        const FINANCE_DAILY_KEY = 'v27_finance_daily_slots';
+        const FINANCE_BARRIERS = [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
+        let _FINANCE_MODE = localStorage.getItem('v27_finance_mode') || 'bet';
         let _FINANCE_SETTINGS = JSON.parse(localStorage.getItem(FINANCE_SETTINGS_KEY) || '{}');
         let _DAILY_SLOTS = JSON.parse(localStorage.getItem(FINANCE_DAILY_KEY) || '{}');
 
         function omega_TodayKey() {
             const d = new Date();
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
         }
 
         function omega_DefaultFinanceSettings() {
@@ -1061,44 +1102,61 @@
                 targetPct: 30,
                 tradeCount: 20,
                 defaultOdds: 1.30,
-                riskModel: 'target'
+                riskModel: 'target',
+                cryptoTargetPct: 30,
+                cryptoTradeCount: 20,
+                cryptoTpPct: 1,
+                cryptoLeverage: 10
             };
+        }
+
+        function omega_NewSlot(i) {
+            return { id: Date.now()+i, index:i+1, type:_FINANCE_MODE, name:'', stake:'', odds:_FINANCE_SETTINGS.defaultOdds || 1.30, status:'empty', pnl:0 };
         }
 
         function omega_EnsureFinanceSettings() {
             _FINANCE_SETTINGS = { ...omega_DefaultFinanceSettings(), ..._FINANCE_SETTINGS };
-            if (!_DAILY_SLOTS[omega_TodayKey()]) {
-                _DAILY_SLOTS[omega_TodayKey()] = Array.from({length:20}, (_,i) => ({ id: Date.now()+i, index:i+1, type:'bet', name:'', stake:'', odds:_FINANCE_SETTINGS.defaultOdds, leverage:'', entry:'', exit:'', status:'empty', pnl:0 }));
-            }
-        }
-
-        function omega_LoadFinanceInputs() {
-            omega_EnsureFinanceSettings();
-            const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
-            setVal('finance-start-bank', _FINANCE_SETTINGS.startBank);
-            setVal('finance-current-bank', _WALLET_BALANCE.toFixed(2));
-            setVal('finance-target-pct', _FINANCE_SETTINGS.targetPct);
-            setVal('finance-trade-count', _FINANCE_SETTINGS.tradeCount);
-            setVal('finance-default-odds', _FINANCE_SETTINGS.defaultOdds);
-            const rm = document.getElementById('finance-risk-model'); if(rm) rm.value = _FINANCE_SETTINGS.riskModel;
-            const todayLabel = document.getElementById('finance-today-label');
-            if(todayLabel) todayLabel.innerText = new Date().toLocaleDateString('tr-TR', { weekday:'long', day:'2-digit', month:'long' }).toUpperCase();
-            omega_SetFinanceMode(_FINANCE_MODE, false);
+            if (!_DAILY_SLOTS[omega_TodayKey()]) _DAILY_SLOTS[omega_TodayKey()] = Array.from({length:20}, (_,i) => omega_NewSlot(i));
         }
 
         function omega_SaveFinanceAll() {
             localStorage.setItem(FINANCE_SETTINGS_KEY, JSON.stringify(_FINANCE_SETTINGS));
             localStorage.setItem(FINANCE_DAILY_KEY, JSON.stringify(_DAILY_SLOTS));
-            localStorage.setItem('v26_finance_mode', _FINANCE_MODE);
+            localStorage.setItem('v27_finance_mode', _FINANCE_MODE);
             omega_PersistData();
+        }
+
+        function omega_SetVal(id, val) { const el = document.getElementById(id); if(el) el.value = val; }
+        function omega_Text(id, val, color) { const el = document.getElementById(id); if(el){ el.innerText = val; if(color) el.style.color = color; } }
+
+        function omega_LoadFinanceInputs() {
+            omega_EnsureFinanceSettings();
+            omega_SetVal('finance-start-bank', _FINANCE_SETTINGS.startBank);
+            omega_SetVal('finance-current-bank', Number(_WALLET_BALANCE || 0).toFixed(2));
+            omega_SetVal('finance-target-pct', _FINANCE_SETTINGS.targetPct);
+            omega_SetVal('finance-trade-count', _FINANCE_SETTINGS.tradeCount);
+            omega_SetVal('finance-default-odds', _FINANCE_SETTINGS.defaultOdds);
+            const rm = document.getElementById('finance-risk-model'); if(rm) rm.value = _FINANCE_SETTINGS.riskModel;
+            omega_SetVal('crypto-start-bank', _FINANCE_SETTINGS.startBank);
+            omega_SetVal('crypto-current-bank', Number(_WALLET_BALANCE || 0).toFixed(2));
+            omega_SetVal('crypto-target-pct', _FINANCE_SETTINGS.cryptoTargetPct);
+            omega_SetVal('crypto-trade-count', _FINANCE_SETTINGS.cryptoTradeCount);
+            omega_SetVal('crypto-tp-pct', _FINANCE_SETTINGS.cryptoTpPct);
+            omega_SetVal('crypto-leverage', _FINANCE_SETTINGS.cryptoLeverage);
+            const todayLabel = document.getElementById('finance-today-label');
+            if(todayLabel) todayLabel.innerText = new Date().toLocaleDateString('tr-TR', { weekday:'long', day:'2-digit', month:'long' }).toUpperCase();
+            omega_SetFinanceMode(_FINANCE_MODE, false);
         }
 
         function omega_SetFinanceMode(mode, refresh = true) {
             _FINANCE_MODE = mode;
             document.querySelectorAll('.finance-tab').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.finance-tab-panel').forEach(x => x.classList.remove('active'));
             const tab = document.getElementById('finance-tab-' + mode);
+            const panel = document.getElementById('finance-panel-' + mode);
             if(tab) tab.classList.add('active');
-            if(refresh) { omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_CalculateStakePlan(); }
+            if(panel) panel.classList.add('active');
+            if(refresh) { omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RenderDailyTradeGrid(); }
         }
 
         function omega_UpdateFinanceSettings() {
@@ -1107,229 +1165,196 @@
             _FINANCE_SETTINGS.tradeCount = Math.min(20, Math.max(1, parseInt(document.getElementById('finance-trade-count')?.value) || 20));
             _FINANCE_SETTINGS.defaultOdds = parseFloat(document.getElementById('finance-default-odds')?.value) || 1.30;
             _FINANCE_SETTINGS.riskModel = document.getElementById('finance-risk-model')?.value || 'target';
-            if (_BALANCE_HISTORY.length === 0) _BALANCE_HISTORY = [_FINANCE_SETTINGS.startBank];
-            omega_SaveFinanceAll();
-            omega_RenderDailyTradeGrid();
-            omega_CalculateStakePlan();
-            omega_RefreshFinanceDashboard();
+            omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RefreshFinanceDashboard();
+        }
+
+        function omega_UpdateCryptoSettings() {
+            _FINANCE_SETTINGS.startBank = parseFloat(document.getElementById('crypto-start-bank')?.value) || _FINANCE_SETTINGS.startBank || 100;
+            _FINANCE_SETTINGS.cryptoTargetPct = parseFloat(document.getElementById('crypto-target-pct')?.value) || 0;
+            _FINANCE_SETTINGS.cryptoTradeCount = Math.min(20, Math.max(1, parseInt(document.getElementById('crypto-trade-count')?.value) || 20));
+            _FINANCE_SETTINGS.cryptoTpPct = parseFloat(document.getElementById('crypto-tp-pct')?.value) || 1;
+            _FINANCE_SETTINGS.cryptoLeverage = parseFloat(document.getElementById('crypto-leverage')?.value) || 1;
+            omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RefreshFinanceDashboard();
         }
 
         function omega_SetCurrentBankroll() {
             const val = parseFloat(document.getElementById('finance-current-bank')?.value);
             if(isNaN(val) || val < 0) return;
             _WALLET_BALANCE = val;
-            if(_BALANCE_HISTORY.length === 0) _BALANCE_HISTORY.push(val);
-            else _BALANCE_HISTORY[_BALANCE_HISTORY.length - 1] = val;
-            omega_SaveFinanceAll();
-            omega_RefreshFinanceDashboard();
-            omega_RenderApexSupremeChart();
+            if(_BALANCE_HISTORY.length === 0) _BALANCE_HISTORY.push(val); else _BALANCE_HISTORY[_BALANCE_HISTORY.length - 1] = val;
+            omega_SaveFinanceAll(); omega_RefreshFinanceDashboard(); omega_RenderApexSupremeChart();
+        }
+        function omega_SetCurrentBankrollFromCrypto() {
+            const val = parseFloat(document.getElementById('crypto-current-bank')?.value);
+            if(isNaN(val) || val < 0) return;
+            _WALLET_BALANCE = val;
+            if(_BALANCE_HISTORY.length === 0) _BALANCE_HISTORY.push(val); else _BALANCE_HISTORY[_BALANCE_HISTORY.length - 1] = val;
+            omega_SaveFinanceAll(); omega_RefreshFinanceDashboard(); omega_RenderApexSupremeChart();
         }
 
         function omega_CalculateRecommendedStake() {
             omega_EnsureFinanceSettings();
-            const bank = _WALLET_BALANCE || 0;
-            const targetProfit = bank * (_FINANCE_SETTINGS.targetPct / 100);
+            const bank = Number(_WALLET_BALANCE || 0);
+            if(_FINANCE_MODE === 'crypto') {
+                const targetProfit = bank * ((_FINANCE_SETTINGS.cryptoTargetPct || 0) / 100);
+                const count = Math.max(1, _FINANCE_SETTINGS.cryptoTradeCount || 20);
+                const tpPct = Math.max(.01, _FINANCE_SETTINGS.cryptoTpPct || 1);
+                const lev = Math.max(1, _FINANCE_SETTINGS.cryptoLeverage || 1);
+                const profitRate = (tpPct / 100) * lev;
+                const stake = targetProfit / count / profitRate;
+                const syntheticOdds = 1 + profitRate;
+                return { mode:'crypto', bank, targetProfit, count, odds:syntheticOdds, stake, tpPct, lev, profitRate };
+            }
+            const targetProfit = bank * ((_FINANCE_SETTINGS.targetPct || 0) / 100);
             const count = Math.max(1, _FINANCE_SETTINGS.tradeCount || 20);
             const odds = Math.max(1.01, _FINANCE_SETTINGS.defaultOdds || 1.30);
             let stake = 0;
             if(_FINANCE_SETTINGS.riskModel === 'equal') stake = bank / count;
             else if(_FINANCE_SETTINGS.riskModel === 'percent') stake = bank * 0.02;
             else stake = targetProfit / count / (odds - 1);
-            return { bank, targetProfit, count, odds, stake };
+            return { mode:'bet', bank, targetProfit, count, odds, stake };
         }
 
         function omega_CalculateStakePlan() {
             const r = omega_CalculateRecommendedStake();
-            const totalRisk = r.stake * r.count;
-            const perWinProfit = r.stake * (r.odds - 1);
-            const fullProfit = perWinProfit * r.count;
-            const afterBank = r.bank + fullProfit;
             const box = document.getElementById('finance-strategy-result');
-            if(box) {
-                box.innerHTML = `
-                    Kasa: <b>$${r.bank.toFixed(2)}</b> · Hedef: <b>$${r.targetProfit.toFixed(2)}</b> · İşlem: <b>${r.count}</b> · Oran: <b>@${r.odds.toFixed(2)}</b><br>
-                    Önerilen stake: <b>$${r.stake.toFixed(2)}</b> · İşlem başı kâr: <b>$${perWinProfit.toFixed(2)}</b> · Toplam risk: <b>$${totalRisk.toFixed(2)}</b><br>
-                    ${r.count}/${r.count} başarılı olursa yeni kasa: <b>$${afterBank.toFixed(2)}</b>.
-                `;
+            if(!box) return r.stake;
+            if(r.mode === 'crypto') {
+                const perProfit = r.stake * r.profitRate;
+                box.innerHTML = `KRİPTO · Kasa: <b>$${r.bank.toFixed(2)}</b> · Hedef: <b>$${r.targetProfit.toFixed(2)}</b> · İşlem: <b>${r.count}</b><br>
+                TP: <b>%${r.tpPct}</b> · Kaldıraç: <b>${r.lev}x</b> · Pozisyon başı önerilen marjin: <b>$${r.stake.toFixed(2)}</b><br>
+                İşlem başı hedef kâr: <b>$${perProfit.toFixed(2)}</b> · ${r.count}/${r.count} başarılı olursa yeni kasa: <b>$${(r.bank + perProfit*r.count).toFixed(2)}</b>.`;
+            } else {
+                const perProfit = r.stake * (r.odds - 1);
+                box.innerHTML = `BAHİS · Kasa: <b>$${r.bank.toFixed(2)}</b> · Hedef: <b>$${r.targetProfit.toFixed(2)}</b> · İşlem: <b>${r.count}</b> · Oran: <b>@${r.odds.toFixed(2)}</b><br>
+                Önerilen stake: <b>$${r.stake.toFixed(2)}</b> · İşlem başı kâr: <b>$${perProfit.toFixed(2)}</b> · Toplam risk: <b>$${(r.stake*r.count).toFixed(2)}</b><br>
+                ${r.count}/${r.count} başarılı olursa yeni kasa: <b>$${(r.bank + perProfit*r.count).toFixed(2)}</b>.`;
             }
             return r.stake;
         }
 
-        function omega_GetTodaySlots() {
-            omega_EnsureFinanceSettings();
-            return _DAILY_SLOTS[omega_TodayKey()];
-        }
+        function omega_GetTodaySlots() { omega_EnsureFinanceSettings(); return _DAILY_SLOTS[omega_TodayKey()]; }
 
         function omega_ApplyStakeToEmptySlots() {
-            const stake = omega_CalculateStakePlan();
+            const r = omega_CalculateRecommendedStake();
             const slots = omega_GetTodaySlots();
             slots.forEach((slot, idx) => {
                 if(slot.status === 'empty') {
                     slot.type = _FINANCE_MODE;
                     slot.name = slot.name || `${_FINANCE_MODE === 'crypto' ? 'CRYPTO' : 'BAHİS'} #${idx+1}`;
-                    slot.stake = parseFloat(stake.toFixed(2));
-                    slot.odds = _FINANCE_SETTINGS.defaultOdds;
+                    slot.stake = Number(r.stake.toFixed(2));
+                    slot.odds = Number(r.odds.toFixed(4));
                     slot.status = 'pending';
                 }
             });
-            omega_SaveFinanceAll();
-            omega_RenderDailyTradeGrid();
-            omega_RefreshFinanceDashboard();
+            omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard();
         }
 
         function omega_RenderDailyTradeGrid() {
-            const grid = document.getElementById('daily-trade-grid');
-            if(!grid) return;
+            const grid = document.getElementById('daily-trade-grid'); if(!grid) return;
             const slots = omega_GetTodaySlots();
-            let html = '';
+            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Mod</th><th>İşlem</th><th>Stake / Marjin</th><th>Oran / Katsayı</th><th>Durum</th><th>P/L</th><th>Aksiyon</th></tr></thead><tbody>`;
             slots.forEach((slot, idx) => {
-                const cls = slot.status === 'win' ? 'win' : slot.status === 'loss' ? 'loss' : slot.status === 'pending' ? 'pending' : '';
-                const pnlCls = (slot.pnl || 0) >= 0 ? 'pos' : 'neg';
-                html += `
-                    <div class="trade-slot ${cls}">
-                        <div class="slot-top"><span>#${idx+1}</span><span class="slot-badge">${(slot.status || 'empty').toUpperCase()}</span></div>
-                        <select onchange="omega_UpdateSlot(${idx}, 'type', this.value)">
-                            <option value="bet" ${slot.type === 'bet' ? 'selected' : ''}>BAHİS</option>
-                            <option value="crypto" ${slot.type === 'crypto' ? 'selected' : ''}>KRİPTO</option>
-                        </select>
-                        <input type="text" value="${slot.name || ''}" placeholder="İşlem adı" onchange="omega_UpdateSlot(${idx}, 'name', this.value)">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                            <input type="number" value="${slot.stake || ''}" placeholder="Stake" onchange="omega_UpdateSlot(${idx}, 'stake', this.value)">
-                            <input type="number" value="${slot.odds || _FINANCE_SETTINGS.defaultOdds}" step="0.01" placeholder="Oran / TP" onchange="omega_UpdateSlot(${idx}, 'odds', this.value)">
-                        </div>
-                        <div class="slot-actions">
-                            <button class="w" onclick="omega_ResolveDailySlot(${idx}, 'win')">W</button>
-                            <button class="l" onclick="omega_ResolveDailySlot(${idx}, 'loss')">L</button>
-                            <button class="r" onclick="omega_ResetDailySlot(${idx})">SIFIRLA</button>
-                        </div>
-                        <div class="slot-pnl ${pnlCls}">${slot.pnl ? (slot.pnl >= 0 ? '+' : '') + '$' + Number(slot.pnl).toFixed(2) : '$0.00'}</div>
-                    </div>`;
+                const pnl = Number(slot.pnl || 0);
+                const pnlClass = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+                html += `<tr>
+                    <td style="font-family:'JetBrains Mono'; color:var(--muted); font-weight:900;">${idx+1}</td>
+                    <td><select onchange="omega_UpdateSlot(${idx}, 'type', this.value)"><option value="bet" ${slot.type === 'bet' ? 'selected' : ''}>BAHİS</option><option value="crypto" ${slot.type === 'crypto' ? 'selected' : ''}>KRİPTO</option></select></td>
+                    <td><input type="text" value="${slot.name || ''}" placeholder="İşlem adı" onchange="omega_UpdateSlot(${idx}, 'name', this.value)"></td>
+                    <td><input type="number" value="${slot.stake || ''}" placeholder="0.00" onchange="omega_UpdateSlot(${idx}, 'stake', this.value)"></td>
+                    <td><input type="number" value="${slot.odds || ''}" step="0.01" placeholder="1.30" onchange="omega_UpdateSlot(${idx}, 'odds', this.value)"></td>
+                    <td style="font-family:'JetBrains Mono'; color:${slot.status==='win'?'var(--green)':slot.status==='loss'?'var(--red)':slot.status==='pending'?'var(--gold)':'var(--muted)'}; font-weight:950;">${(slot.status || 'empty').toUpperCase()}</td>
+                    <td class="${pnlClass}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</td>
+                    <td><div class="mini-actions"><button class="w" onclick="omega_ResolveDailySlot(${idx}, 'win')">W</button><button class="l" onclick="omega_ResolveDailySlot(${idx}, 'loss')">L</button><button class="r" onclick="omega_ResetDailySlot(${idx})">SIFIRLA</button></div></td>
+                </tr>`;
             });
+            html += `</tbody></table>`;
             grid.innerHTML = html;
         }
 
         function omega_UpdateSlot(index, field, value) {
-            const slots = omega_GetTodaySlots();
-            if(!slots[index]) return;
-            if(['stake','odds','leverage','entry','exit'].includes(field)) value = parseFloat(value) || '';
+            const slots = omega_GetTodaySlots(); if(!slots[index]) return;
+            if(['stake','odds'].includes(field)) value = parseFloat(value) || '';
             slots[index][field] = value;
             if(slots[index].status === 'empty' && (slots[index].stake || slots[index].name)) slots[index].status = 'pending';
-            omega_SaveFinanceAll();
-            omega_RefreshFinanceDashboard();
+            omega_SaveFinanceAll(); omega_RefreshFinanceDashboard();
         }
 
         function omega_ResolveDailySlot(index, result) {
-            const slots = omega_GetTodaySlots();
-            const slot = slots[index];
-            if(!slot) return;
-            const stake = parseFloat(slot.stake);
-            const odds = parseFloat(slot.odds);
-            if(isNaN(stake) || stake <= 0) { alert('Stake gir.'); return; }
-            if(isNaN(odds) || odds <= 1) { alert('Oran / hedef katsayısı gir.'); return; }
+            const slot = omega_GetTodaySlots()[index]; if(!slot) return;
+            const stake = parseFloat(slot.stake); const odds = parseFloat(slot.odds);
+            if(isNaN(stake) || stake <= 0) { alert('Stake / marjin gir.'); return; }
+            if(isNaN(odds) || odds <= 1) { alert('Oran / katsayı gir.'); return; }
             const pnl = result === 'win' ? stake * (odds - 1) : -stake;
-            slot.status = result;
-            slot.pnl = pnl;
-            slot.resolvedAt = Date.now();
-            slot.name = slot.name || `${slot.type === 'crypto' ? 'CRYPTO' : 'BAHİS'} #${index+1}`;
-            _WALLET_BALANCE += pnl;
-            _BALANCE_HISTORY.push(Number(_WALLET_BALANCE.toFixed(2)));
-            _COMPLETED_LEDGER.unshift({ id: slot.resolvedAt, name: slot.name, type: slot.type, amt: stake, odds: odds, res: result, pnl: pnl, bal: _WALLET_BALANCE });
-            omega_SaveFinanceAll();
-            omega_RenderDailyTradeGrid();
-            omega_RefreshFinanceDashboard();
-            omega_RenderApexSupremeChart();
+            slot.status = result; slot.pnl = pnl; slot.resolvedAt = Date.now(); slot.name = slot.name || `${slot.type === 'crypto' ? 'CRYPTO' : 'BAHİS'} #${index+1}`;
+            _WALLET_BALANCE += pnl; _BALANCE_HISTORY.push(Number(_WALLET_BALANCE.toFixed(2)));
+            _COMPLETED_LEDGER.unshift({ id: slot.resolvedAt, name: slot.name, type: slot.type, amt: stake, odds, res: result, pnl, bal: _WALLET_BALANCE });
+            omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard(); omega_RenderApexSupremeChart();
         }
 
-        function omega_ResetDailySlot(index) {
-            const slots = omega_GetTodaySlots();
-            slots[index] = { id: Date.now()+index, index:index+1, type:_FINANCE_MODE, name:'', stake:'', odds:_FINANCE_SETTINGS.defaultOdds, leverage:'', entry:'', exit:'', status:'empty', pnl:0 };
-            omega_SaveFinanceAll();
-            omega_RenderDailyTradeGrid();
-            omega_RefreshFinanceDashboard();
-        }
+        function omega_ResetDailySlot(index) { const slots=omega_GetTodaySlots(); slots[index]=omega_NewSlot(index); omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard(); }
+        function omega_ClearTodaySlots() { if(!confirm('Bugünün 20 işlem tablosu temizlensin mi?')) return; _DAILY_SLOTS[omega_TodayKey()] = Array.from({length:20}, (_,i)=>omega_NewSlot(i)); omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard(); }
+        function omega_ResetFinanceAll() { if(!confirm('Tüm kasa ve işlem geçmişi sıfırlansın mı?')) return; const start=parseFloat(document.getElementById(_FINANCE_MODE==='crypto'?'crypto-start-bank':'finance-start-bank')?.value)||100; _WALLET_BALANCE=start; _BALANCE_HISTORY=[start]; _PENDING_OPS=[]; _COMPLETED_LEDGER=[]; _DAILY_SLOTS={}; omega_SaveFinanceAll(); omega_LoadFinanceInputs(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard(); omega_RenderApexSupremeChart(); }
+        function omega_AddManualOperationFromTop() { omega_ApplyStakeToEmptySlots(); }
+        function omega_CommitNewOperation() { omega_ApplyStakeToEmptySlots(); }
 
-        function omega_ClearTodaySlots() {
-            if(!confirm('Bugünün 20 işlem masasını temizlemek istiyor musun?')) return;
-            _DAILY_SLOTS[omega_TodayKey()] = Array.from({length:20}, (_,i) => ({ id: Date.now()+i, index:i+1, type:_FINANCE_MODE, name:'', stake:'', odds:_FINANCE_SETTINGS.defaultOdds, status:'empty', pnl:0 }));
-            omega_SaveFinanceAll();
-            omega_RenderDailyTradeGrid();
-            omega_RefreshFinanceDashboard();
-        }
-
-        function omega_ResetFinanceAll() {
-            if(!confirm('Tüm kasa geçmişi, bekleyen işlemler ve günlük masalar sıfırlansın mı?')) return;
-            const start = parseFloat(document.getElementById('finance-start-bank')?.value) || 100;
-            _WALLET_BALANCE = start;
-            _BALANCE_HISTORY = [start];
-            _PENDING_OPS = [];
-            _COMPLETED_LEDGER = [];
-            _DAILY_SLOTS = {};
-            omega_SaveFinanceAll();
-            omega_LoadFinanceInputs();
-            omega_RenderDailyTradeGrid();
-            omega_RefreshFinanceDashboard();
-            omega_RenderApexSupremeChart();
-        }
-
-        function omega_AddManualOperationFromTop() {
-            omega_ApplyStakeToEmptySlots();
+        function omega_RenderBarriers() {
+            const strip = document.getElementById('finance-barrier-strip');
+            if(!strip) return;
+            const bal = Number(_WALLET_BALANCE || 0);
+            const next = FINANCE_BARRIERS.find(x => x > bal) || FINANCE_BARRIERS[FINANCE_BARRIERS.length-1];
+            const prev = [...FINANCE_BARRIERS].reverse().find(x => x <= bal) || 0;
+            strip.innerHTML = FINANCE_BARRIERS.map(x => `<span class="barrier-pill ${bal >= x ? 'done' : x === next ? 'next' : ''}">$${x.toLocaleString('en-US')}</span>`).join('');
+            const fill = document.getElementById('barrier-progress-fill');
+            const text = document.getElementById('barrier-progress-text');
+            const pct = next === prev ? 100 : Math.max(0, Math.min(100, ((bal - prev) / (next - prev)) * 100));
+            if(fill) fill.style.width = pct + '%';
+            if(text) text.innerText = bal >= FINANCE_BARRIERS[FINANCE_BARRIERS.length-1] ? 'Son bariyer geçildi.' : `Sonraki bariyer: $${next.toLocaleString('en-US')} · Kalan: $${Math.max(0,next-bal).toFixed(2)}`;
         }
 
         function omega_RefreshFinanceDashboard() {
-            omega_EnsureFinanceSettings();
-            omega_LoadFinanceInputs();
+            omega_EnsureFinanceSettings(); omega_LoadFinanceInputs();
             const todaySlots = omega_GetTodaySlots();
-            const dayPnl = todaySlots.reduce((sum, x) => sum + (Number(x.pnl) || 0), 0);
-            const netProfit = _COMPLETED_LEDGER.reduce((sum, item) => sum + (item.pnl || 0), 0);
-            const activeRisk = todaySlots.filter(x => x.status === 'pending').reduce((sum, x) => sum + (parseFloat(x.stake) || 0), 0) + _PENDING_OPS.reduce((sum, item) => sum + item.amt, 0);
-            const wins = _COMPLETED_LEDGER.filter(x => x.res === 'win').length + todaySlots.filter(x => x.status === 'win').length;
-            const losses = _COMPLETED_LEDGER.filter(x => x.res === 'loss').length + todaySlots.filter(x => x.status === 'loss').length;
+            const dayPnl = todaySlots.reduce((sum,x)=>sum+(Number(x.pnl)||0),0);
+            const netProfit = _COMPLETED_LEDGER.reduce((sum,item)=>sum+(item.pnl||0),0);
+            const activeRisk = todaySlots.filter(x=>x.status==='pending').reduce((sum,x)=>sum+(parseFloat(x.stake)||0),0) + _PENDING_OPS.reduce((sum,item)=>sum+item.amt,0);
+            const wins = _COMPLETED_LEDGER.filter(x=>x.res==='win').length + todaySlots.filter(x=>x.status==='win').length;
+            const losses = _COMPLETED_LEDGER.filter(x=>x.res==='loss').length + todaySlots.filter(x=>x.status==='loss').length;
             const totalDone = wins + losses;
             const initialBalance = _BALANCE_HISTORY[0] || _FINANCE_SETTINGS.startBank || 100;
             const currentRoi = initialBalance ? ((_WALLET_BALANCE - initialBalance) / initialBalance * 100) : 0;
-            const setText = (id, val, color) => { const el=document.getElementById(id); if(el){ el.innerText=val; if(color) el.style.color=color; } };
-            setText('kpi-val-w', _WALLET_BALANCE.toFixed(2));
-            setText('kpi-day-pnl', (dayPnl >= 0 ? '+' : '') + dayPnl.toFixed(2), dayPnl >= 0 ? 'var(--green)' : 'var(--red)');
-            setText('kpi-val-p', (netProfit >= 0 ? '+' : '') + netProfit.toFixed(2), netProfit >= 0 ? 'var(--green)' : 'var(--red)');
-            setText('kpi-val-risk', activeRisk.toFixed(2));
-            setText('kpi-winrate', totalDone ? '%' + ((wins / totalDone) * 100).toFixed(1) : '%0');
-            setText('kpi-val-roi', '%' + currentRoi.toFixed(1), currentRoi >= 0 ? 'var(--green)' : 'var(--red)');
-            omega_CalculateStakePlan();
-            omega_RenderDailyTradeGrid();
-            omega_RenderSupremeLedgerTable();
+            omega_Text('finance-hero-balance', '$' + Number(_WALLET_BALANCE||0).toFixed(2));
+            omega_Text('kpi-val-w', Number(_WALLET_BALANCE||0).toFixed(2));
+            omega_Text('kpi-day-pnl', (dayPnl >= 0 ? '+' : '') + dayPnl.toFixed(2), dayPnl >= 0 ? 'var(--green)' : 'var(--red)');
+            omega_Text('kpi-val-p', (netProfit >= 0 ? '+' : '') + netProfit.toFixed(2), netProfit >= 0 ? 'var(--green)' : 'var(--red)');
+            omega_Text('kpi-val-risk', activeRisk.toFixed(2));
+            omega_Text('kpi-winrate', totalDone ? '%' + ((wins/totalDone)*100).toFixed(1) : '%0');
+            omega_Text('kpi-val-roi', '%' + currentRoi.toFixed(1), currentRoi >= 0 ? 'var(--green)' : 'var(--red)');
+            omega_CalculateStakePlan(); omega_RenderDailyTradeGrid(); omega_RenderSupremeLedgerTable(); omega_RenderBarriers();
         }
 
         function omega_RenderSupremeLedgerTable() {
-            const tableElement = document.getElementById('omega-data-table');
-            if(!tableElement) return;
+            const tableElement = document.getElementById('omega-data-table'); if(!tableElement) return;
             let headerHtml = `<tr><th>TARİH</th><th>TÜR</th><th>KOD</th><th>STAKE</th><th>ORAN</th><th>DURUM</th><th>P/L</th><th>KASA</th></tr>`;
-            let rowsHtml = "";
-            const combinedList = [..._PENDING_OPS.map(x => ({...x, pending:true})), ..._COMPLETED_LEDGER.slice(0, 40)];
-            if(combinedList.length === 0) rowsHtml = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--muted); font-weight:800;">Henüz işlem yok.</td></tr>`;
-            combinedList.forEach(item => {
+            let rowsHtml = '';
+            const list = [..._PENDING_OPS.map(x=>({...x,pending:true})), ..._COMPLETED_LEDGER.slice(0,40)];
+            if(list.length===0) rowsHtml = `<tr><td colspan="8" style="text-align:center; padding:28px; color:var(--muted); font-weight:900;">Henüz işlem yok.</td></tr>`;
+            list.forEach(item=>{
                 const dateStr = new Date(item.id).toLocaleDateString('tr-TR');
-                const statusBadge = item.pending ? `<span style="color:var(--gold); font-weight:900;">BEKLEMEDE</span>` : item.res === 'win' ? `<b style="color:var(--green)">WIN</b>` : `<b style="color:var(--red)">LOSS</b>`;
-                const pnlDisplay = item.pending ? '-' : `<span style="color:${item.pnl >= 0 ? 'var(--green)' : 'var(--red)'}; font-weight:900;">${item.pnl >= 0 ? '+' : ''}${item.pnl.toFixed(2)}</span>`;
-                rowsHtml += `<tr><td>${dateStr}</td><td>${(item.type || 'bet').toUpperCase()}</td><td style="color:#fff; font-weight:800;">${item.name}</td><td>$${Number(item.amt || 0).toFixed(2)}</td><td>@${Number(item.odds || 0).toFixed(2)}</td><td>${statusBadge}</td><td>${pnlDisplay}</td><td>${item.bal ? '$'+Number(item.bal).toFixed(2) : '-'}</td></tr>`;
+                const statusBadge = item.pending ? `<span style="color:var(--gold); font-weight:900;">BEKLEMEDE</span>` : item.res==='win' ? `<b style="color:var(--green)">WIN</b>` : `<b style="color:var(--red)">LOSS</b>`;
+                const pnlDisplay = item.pending ? '-' : `<span style="color:${item.pnl>=0?'var(--green)':'var(--red)'}; font-weight:900;">${item.pnl>=0?'+':''}${item.pnl.toFixed(2)}</span>`;
+                rowsHtml += `<tr><td>${dateStr}</td><td>${(item.type||'bet').toUpperCase()}</td><td style="color:#fff; font-weight:800;">${item.name}</td><td>$${Number(item.amt||0).toFixed(2)}</td><td>@${Number(item.odds||0).toFixed(2)}</td><td>${statusBadge}</td><td>${pnlDisplay}</td><td>${item.bal?'$'+Number(item.bal).toFixed(2):'-'}</td></tr>`;
             });
             tableElement.innerHTML = headerHtml + rowsHtml;
         }
 
-        function omega_CommitNewOperation() {
-            omega_ApplyStakeToEmptySlots();
-        }
-
         function omega_ResolveOperation(id, result) {
-            const operation = _PENDING_OPS.find(x => x.id === id);
-            if(!operation) return;
-            const calculatedPnl = result === 'win' ? (operation.amt * operation.odds) - operation.amt : -operation.amt;
-            _WALLET_BALANCE += calculatedPnl;
-            _BALANCE_HISTORY.push(Number(_WALLET_BALANCE.toFixed(2)));
-            _COMPLETED_LEDGER.unshift({ ...operation, res: result, pnl: calculatedPnl, bal: _WALLET_BALANCE });
-            _PENDING_OPS = _PENDING_OPS.filter(x => x.id !== id);
-            omega_SaveFinanceAll();
-            omega_RefreshFinanceDashboard();
-            omega_RenderApexSupremeChart();
+            const operation = _PENDING_OPS.find(x=>x.id===id); if(!operation) return;
+            const pnl = result==='win' ? (operation.amt*operation.odds)-operation.amt : -operation.amt;
+            _WALLET_BALANCE += pnl; _BALANCE_HISTORY.push(Number(_WALLET_BALANCE.toFixed(2)));
+            _COMPLETED_LEDGER.unshift({ ...operation, res:result, pnl, bal:_WALLET_BALANCE });
+            _PENDING_OPS = _PENDING_OPS.filter(x=>x.id!==id);
+            omega_SaveFinanceAll(); omega_RefreshFinanceDashboard(); omega_RenderApexSupremeChart();
         }
 
         function omega_PersistData() {
@@ -1341,24 +1366,27 @@
 
         let _SUPREME_CHART_INSTANCE;
         function omega_RenderApexSupremeChart() {
-            const chartDiv = document.querySelector("#omega-apex-chart-main");
-            if(!chartDiv) return;
+            const chartDiv = document.querySelector('#omega-apex-chart-main'); if(!chartDiv) return;
             if(_SUPREME_CHART_INSTANCE) _SUPREME_CHART_INSTANCE.destroy();
-            const data = (_BALANCE_HISTORY && _BALANCE_HISTORY.length) ? _BALANCE_HISTORY : [_WALLET_BALANCE || 100];
+            const data = (_BALANCE_HISTORY && _BALANCE_HISTORY.length) ? _BALANCE_HISTORY.map(Number) : [Number(_WALLET_BALANCE||100)];
+            const start = data[0] || 100;
+            const positive = Number(_WALLET_BALANCE||0) >= start;
+            const visibleBarriers = FINANCE_BARRIERS.filter(x => x >= Math.min(...data)*0.8 && x <= Math.max(Math.max(...data)*1.25, 1000));
+            const annotations = { yaxis: visibleBarriers.map(v => ({ y:v, borderColor:'#3f3f46', strokeDashArray:4, label:{ text:'$'+v.toLocaleString('en-US'), style:{ background:'#18181b', color:'#a1a1aa', fontSize:'10px' } } })) };
             const chartOptions = {
-                series: [{ name: "KASA", data }],
-                chart: { type:'area', height:'100%', toolbar:{show:false}, background:'transparent', animations:{enabled:true, speed:500} },
-                theme: { mode:'dark' },
-                colors: [_WALLET_BALANCE >= data[0] ? '#10b981' : '#ef4444'],
-                stroke: { curve:'smooth', width:3 },
-                fill: { type:'gradient', gradient:{ shadeIntensity:1, opacityFrom:.38, opacityTo:.05, stops:[0,90,100] } },
-                xaxis: { labels:{show:false}, axisBorder:{show:false}, axisTicks:{show:false} },
-                yaxis: { opposite:true, labels:{ style:{colors:'#71717a', fontSize:'11px', fontFamily:'JetBrains Mono'}, formatter:(v)=>'$'+Number(v).toFixed(0) } },
-                grid: { borderColor:'#272727', strokeDashArray:4 },
-                tooltip: { theme:'dark', y:{ formatter:(v)=>'$'+Number(v).toFixed(2) } }
+                series:[{ name:'Bakiye', data }],
+                chart:{ type:'area', height:'100%', toolbar:{show:false}, background:'transparent', animations:{enabled:true, speed:450} },
+                theme:{ mode:'dark' },
+                colors:[positive ? '#10b981' : '#ef4444'],
+                stroke:{ curve:'smooth', width:3 },
+                fill:{ type:'gradient', gradient:{ opacityFrom:.32, opacityTo:.04, stops:[0,90,100] } },
+                annotations,
+                xaxis:{ labels:{show:false}, axisBorder:{show:false}, axisTicks:{show:false} },
+                yaxis:{ opposite:true, labels:{ style:{colors:'#8a8a8a', fontSize:'11px', fontFamily:'JetBrains Mono'}, formatter:v=>'$'+Number(v).toFixed(0) } },
+                grid:{ borderColor:'#272727', strokeDashArray:4 },
+                tooltip:{ theme:'dark', y:{ formatter:v=>'$'+Number(v).toFixed(2) } }
             };
-            _SUPREME_CHART_INSTANCE = new ApexCharts(chartDiv, chartOptions);
-            _SUPREME_CHART_INSTANCE.render();
+            _SUPREME_CHART_INSTANCE = new ApexCharts(chartDiv, chartOptions); _SUPREME_CHART_INSTANCE.render(); omega_RenderBarriers();
         }
     </script>
 </body>
