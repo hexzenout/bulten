@@ -768,42 +768,52 @@
             const dateSelectElement = document.getElementById('v19-date-select');
             const dropdownMenuArea = document.getElementById('drop-menu-list');
             
-            // Bugünü hesapla (Gece 00:00 itibarıyla sıfırla)
+            // Bugünü hesapla
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
             let dateHtml = '<option value="ALL">TÜM TARİHLER</option>';
             
-            // Veritabanındaki tarihleri filtrele (Geçmişi yoksay)
+            // DİNAMİK CANLI SAYAÇ (Sadece güncel maçları sayar)
+            let activeLeagueStats = {};
+            
             const uniqueDates = [...new Set(_MASTER_DB.filter(m => {
                 const isBasket = omega_IsBasketballLeague(m.l);
-                return (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
-            }).map(m => m.dt))]
-            .filter(d => {
-                const p = d.split('-');
-                const matchDate = new Date(p[0], p[1] - 1, p[2]);
-                // SADECE BUGÜN VE GELECEKTEKİ MAÇLARI KABUL ET
-                return matchDate >= today; 
-            }).sort();
+                const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
+                
+                if (sportMatch) {
+                    const p = m.dt.split('-');
+                    const matchDate = new Date(p[0], p[1] - 1, p[2]);
+                    // EĞER MAÇ GEÇMİŞTE DEĞİLSE SAYACA EKLE
+                    if (matchDate >= today) {
+                        activeLeagueStats[m.l] = (activeLeagueStats[m.l] || 0) + 1;
+                        return true;
+                    }
+                }
+                return false;
+            }).map(m => m.dt))].sort();
             
-            // Filtrelenmiş tarihleri menüye ekle
             uniqueDates.forEach(d => {
                 dateHtml += `<option value="${d}">${omega_FormatHumanDate(d)}</option>`;
             });
             dateSelectElement.innerHTML = dateHtml;
 
-            // Lig listesini oluştur
             let leagueHtml = `<div class="league-drop-item" onclick="omega_HandleLeagueSelection('ALL', 'TÜM LİGLER')">TÜM LİGLER</div>`;
-            const statsArray = _ACTIVE_SPORT === 'basketbol' ? GOLD_BASKET_LIST : Object.keys(_LEAGUE_STATS_DB).filter(l => !omega_IsBasketballLeague(l));
+            
+            // Sadece içinde aktif maç olan ligleri menüye ekle
+            const statsArray = _ACTIVE_SPORT === 'basketbol' ? Object.keys(activeLeagueStats).filter(l => GOLD_BASKET_LIST.some(g => l.toUpperCase().includes(g))) : Object.keys(activeLeagueStats).filter(l => !omega_IsBasketballLeague(l));
             
             statsArray.forEach(ligName => {
-                const matchCount = _LEAGUE_STATS_DB[ligName] || 0;
-                leagueHtml += `
-                    <div class="league-drop-item" onclick="omega_HandleLeagueSelection('${ligName}', this.innerHTML)">
-                        <img src="https://flagcdn.com/w40/${omega_GetFlagCode(ligName)}.png"> 
-                        <span>${ligName} (${matchCount})</span>
-                    </div>
-                `;
+                const matchCount = activeLeagueStats[ligName] || 0;
+                // Eğer ligde güncel maç varsa menüde göster
+                if (matchCount > 0) {
+                    leagueHtml += `
+                        <div class="league-drop-item" onclick="omega_HandleLeagueSelection('${ligName}', this.innerHTML)">
+                            <img src="https://flagcdn.com/w40/${omega_GetFlagCode(ligName)}.png"> 
+                            <span>${ligName} (${matchCount})</span>
+                        </div>
+                    `;
+                }
             });
             
             dropdownMenuArea.innerHTML = leagueHtml;
