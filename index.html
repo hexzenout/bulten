@@ -833,13 +833,15 @@
             const todayMidnight = new Date();
 todayMidnight.setHours(0, 0, 0, 0);
 
+const todayMidnight = new Date();
+todayMidnight.setHours(0, 0, 0, 0);
+
 let filteredData = _MASTER_DB.filter(m => {
     const isBasket = omega_IsBasketballLeague(m.l);
     const sportMatch = (_ACTIVE_SPORT === 'basketbol' && isBasket) || (_ACTIVE_SPORT === 'futbol' && !isBasket);
     const dateMatch = (selectedDate === 'ALL' || m.dt === selectedDate);
     const leagueMatch = (_ACTIVE_LEAGUE_FILTER === 'ALL' || m.l === _ACTIVE_LEAGUE_FILTER);
 
-    // Geçmiş günleri filtrele (bugün dahil göster, dün ve öncesi çıkar)
     const p = m.dt.split('-');
     const matchDate = new Date(p[0], p[1] - 1, p[2]);
     const notPast = matchDate >= todayMidnight;
