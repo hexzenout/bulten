@@ -388,6 +388,60 @@
 
         @media (max-width: 1150px) { .live-center-shell { grid-template-columns:1fr; } .watch-list { grid-template-columns:1fr; } }
 
+    
+
+        /* ================= V9 AYRI CANLI TAKİP + KRİPTO TERMİNAL ================= */
+        #nav-live i { color: var(--blue-accent); }
+        #nav-crypto i { color: #f7931a; }
+        .omega-standalone-block { display:none; width:100%; }
+        .omega-standalone-block.active { display:block; }
+        .v9-page-title { background:linear-gradient(135deg,#151515,#0b0b0b); border:1px solid #2c2c2c; border-radius:18px; padding:18px 20px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+        .v9-page-title h2 { margin:0; color:#fff; font-size:1.05em; font-weight:950; letter-spacing:1px; }
+        .v9-page-title p { margin:6px 0 0 0; color:#999; font-size:.82em; font-weight:700; }
+        .v9-page-title b { color:var(--gold); font-family:'JetBrains Mono'; font-size:.8em; }
+        .v9-crypto-shell { display:grid; grid-template-columns:360px 1fr; gap:16px; align-items:start; }
+        .v9-panel { background:#111; border:1px solid #292929; border-radius:18px; overflow:hidden; box-shadow:0 14px 35px rgba(0,0,0,.22); }
+        .v9-panel-head { padding:15px 16px; background:#151515; border-bottom:1px solid #262626; }
+        .v9-panel-head h3 { margin:0; color:#fff; font-size:.86em; letter-spacing:.7px; font-weight:950; text-transform:uppercase; }
+        .v9-panel-head span { display:block; color:#888; font-size:.72em; margin-top:5px; font-weight:750; }
+        .v9-panel-body { padding:16px; }
+        .v9-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .v9-field { display:flex; flex-direction:column; gap:6px; }
+        .v9-field label { color:#bdbdbd; font-size:.68em; text-transform:uppercase; font-weight:950; letter-spacing:.7px; }
+        .v9-input, .v9-select { background:#080808; border:1px solid #343434; color:#fff; border-radius:11px; padding:12px 12px; min-height:42px; font-size:.92em; font-weight:850; font-family:'JetBrains Mono'; width:100%; }
+        .v9-input:focus, .v9-select:focus { border-color:var(--gold); box-shadow:0 0 0 2px rgba(251,191,36,.09); }
+        .v9-side-toggle { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+        .v9-side-btn { border:1px solid #333; background:#151515; color:#aaa; border-radius:11px; padding:12px; font-weight:950; cursor:pointer; }
+        .v9-side-btn.active.long { background:var(--green); color:#00170d; border-color:var(--green); }
+        .v9-side-btn.active.short { background:var(--red); color:#fff; border-color:var(--red); }
+        .v9-timeframes { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
+        .v9-tf-btn { border:1px solid #303030; background:#0b0b0b; color:#aaa; border-radius:999px; padding:8px 10px; font-size:.72em; font-weight:950; cursor:pointer; font-family:'JetBrains Mono'; }
+        .v9-tf-btn.active { background:var(--gold); border-color:var(--gold); color:#171000; }
+        .v9-chart-card { background:#080808; border:1px solid #292929; border-radius:18px; padding:14px; }
+        .v9-chart-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px; }
+        .v9-symbol-title b { display:block; color:#fff; font-size:1.2em; font-family:'JetBrains Mono'; }
+        .v9-symbol-title span { color:#888; font-size:.78em; font-weight:800; }
+        .v9-live-price { text-align:right; font-family:'JetBrains Mono'; }
+        .v9-live-price b { display:block; color:var(--gold); font-size:1.6em; }
+        .v9-live-price span { font-size:.8em; font-weight:950; }
+        .v9-live-price .up { color:var(--green); } .v9-live-price .down { color:var(--red); }
+        #crypto-terminal-chart { width:100%; height:460px; background:linear-gradient(180deg,#050505,#090909); border:1px solid #202020; border-radius:15px; display:block; }
+        .v9-trade-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin-top:12px; }
+        .v9-stat { background:#101010; border:1px solid #252525; border-radius:13px; padding:11px; }
+        .v9-stat span { display:block; color:#777; font-size:.62em; text-transform:uppercase; font-weight:950; letter-spacing:.6px; margin-bottom:6px; }
+        .v9-stat b { color:#fff; font-family:'JetBrains Mono'; font-size:.95em; }
+        .v9-stat.good b { color:var(--green); } .v9-stat.bad b { color:var(--red); } .v9-stat.warn b { color:var(--gold); }
+        .v9-tp-table { margin-top:14px; display:grid; gap:8px; }
+        .v9-tp-row { display:grid; grid-template-columns:42px 1fr 78px 1fr; gap:8px; align-items:center; background:#0b0b0b; border:1px solid #272727; padding:8px; border-radius:12px; }
+        .v9-tp-row label { color:var(--green); font-weight:950; font-size:.8em; font-family:'JetBrains Mono'; }
+        .v9-tp-row input { background:#050505; border:1px solid #333; color:#fff; border-radius:9px; padding:10px; font-family:'JetBrains Mono'; font-weight:850; min-width:0; }
+        .v9-tp-profit { color:#9be8c8; font-size:.78em; font-weight:850; line-height:1.35; }
+        .v9-stop-box { margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .v9-danger-note { margin-top:10px; background:rgba(239,68,68,.06); border:1px solid rgba(239,68,68,.22); color:#ffb4b4; border-radius:12px; padding:11px; font-size:.78em; font-weight:800; line-height:1.45; }
+        .v9-live-grid-only { display:grid; grid-template-columns:280px 1fr; gap:14px; }
+        @media (max-width:1200px){ .v9-crypto-shell,.v9-live-grid-only{grid-template-columns:1fr;} .v9-trade-stats{grid-template-columns:repeat(2,1fr);} #crypto-terminal-chart{height:360px;} }
+        @media (max-width:700px){ .v9-form-grid,.v9-stop-box{grid-template-columns:1fr;} .v9-tp-row{grid-template-columns:38px 1fr 68px;}.v9-tp-profit{grid-column:1/-1;} .v9-trade-stats{grid-template-columns:1fr;} }
+
     </style>
 </head>
 <body>
@@ -425,6 +479,12 @@
             <div class="nav-link" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
                 <i class="fa-solid fa-star"></i> FAVORİLERİM
             </div>
+            <div class="nav-link" id="nav-live" onclick="omega_SwitchMainTab('live', this)">
+                <i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP
+            </div>
+            <div class="nav-link" id="nav-crypto" onclick="omega_SwitchMainTab('crypto', this)">
+                <i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL
+            </div>
             <div class="nav-link" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
                 <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
             </div>
@@ -459,6 +519,93 @@
 
                 <div id="omega-favs-block" style="display:none;">
                     <div id="favs-render-output"></div>
+                </div>
+
+
+                <div id="omega-live-block" class="omega-standalone-block">
+                    <div class="v9-page-title">
+                        <div>
+                            <h2><i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP MERKEZİ</h2>
+                            <p>Günlük işlem tablosundan TAKİP dediğin kripto ve maçlar burada tek ekranda izlenir.</p>
+                        </div>
+                        <b id="live-center-clock">AUTO REFRESH</b>
+                    </div>
+                    <div class="v9-panel">
+                        <div class="v9-panel-head"><h3>Takip Listesi</h3><span>Kripto fiyatları canlı, maç skorları live_scores.json üzerinden gelir.</span></div>
+                        <div class="v9-panel-body">
+                            <div class="v9-live-grid-only">
+                                <div class="watch-sidebar">
+                                    <div class="watch-tabs">
+                                        <button class="watch-tab active" id="watch-tab-all" onclick="omega_SetWatchFilter('all')">TÜMÜ</button>
+                                        <button class="watch-tab" id="watch-tab-live" onclick="omega_SetWatchFilter('live')">CANLI</button>
+                                    </div>
+                                    <div class="watch-filter-pill"><span>Kripto</span><b id="watch-crypto-count">0</b></div>
+                                    <div class="watch-filter-pill"><span>Maç / Bahis</span><b id="watch-bet-count">0</b></div>
+                                    <button class="btn-finance gold" onclick="omega_RefreshLiveCenter(true)">YENİLE</button>
+                                    <div class="watch-help">Kasa Yönetimi altındaki 20 işlem tablosunda satırı TAKİPTE yap. Takip kartı burada açılır.</div>
+                                </div>
+                                <div class="watch-list" id="live-watch-list">
+                                    <div class="watch-empty">Takip listesi boş. Kasa Yönetimi > Günlük 20 İşlem bölümünde TAKİP butonuna bas.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="omega-crypto-block" class="omega-standalone-block">
+                    <div class="v9-page-title">
+                        <div>
+                            <h2><i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL</h2>
+                            <p>Binance / OKX, USDT / USDC, zaman aralığı, TP/SL/LIQ ve canlı PnL tek ekranda.</p>
+                        </div>
+                        <b id="crypto-terminal-status">HAZIR</b>
+                    </div>
+                    <div class="v9-crypto-shell">
+                        <div class="v9-panel">
+                            <div class="v9-panel-head"><h3>İşlem Kurulumu</h3><span>Coin, kaldıraç, TP/SL ve zaman aralığını ayarla.</span></div>
+                            <div class="v9-panel-body">
+                                <div class="v9-form-grid">
+                                    <div class="v9-field"><label>Borsa</label><select id="ct-exchange" class="v9-select" onchange="ct_UpdateAndFetch(true)"><option value="binance">Binance</option><option value="okx">OKX</option></select></div>
+                                    <div class="v9-field"><label>Parite</label><select id="ct-quote" class="v9-select" onchange="ct_UpdateAndFetch(true)"><option value="USDT">USDT</option><option value="USDC">USDC</option></select></div>
+                                    <div class="v9-field"><label>Coin</label><input id="ct-symbol" list="crypto-v9-symbol-list" class="v9-input" value="BTC" onchange="ct_UpdateAndFetch(true)" placeholder="BTC"></div>
+                                    <div class="v9-field"><label>Kaldıraç</label><input id="ct-lev" class="v9-input" type="number" value="10" min="1" step="1" oninput="ct_RenderTerminal()"></div>
+                                    <div class="v9-field"><label>Giriş Fiyatı</label><input id="ct-entry" class="v9-input" type="number" step="0.0001" placeholder="Otomatik / manuel" oninput="ct_RenderTerminal()"></div>
+                                    <div class="v9-field"><label>Pozisyon Tutarı $</label><input id="ct-stake" class="v9-input" type="number" value="100" step="1" oninput="ct_RenderTerminal()"></div>
+                                </div>
+                                <datalist id="crypto-v9-symbol-list"></datalist>
+                                <div class="v9-side-toggle">
+                                    <button id="ct-long" class="v9-side-btn active long" onclick="ct_SetSide('long')">LONG</button>
+                                    <button id="ct-short" class="v9-side-btn short" onclick="ct_SetSide('short')">SHORT</button>
+                                </div>
+                                <div class="v9-timeframes" id="ct-timeframes"></div>
+                                <div class="v9-stop-box">
+                                    <div class="v9-field"><label>Stop Fiyatı</label><input id="ct-stop" class="v9-input" type="number" step="0.0001" oninput="ct_RenderTerminal()" placeholder="Zarar durdur"></div>
+                                    <div class="v9-field"><label>Likidasyon Fiyatı</label><input id="ct-liq" class="v9-input" type="number" step="0.0001" oninput="ct_RenderTerminal()" placeholder="Manuel / tahmini"></div>
+                                </div>
+                                <div class="v9-tp-table" id="ct-tp-table"></div>
+                                <button class="btn-finance green" style="width:100%; margin-top:12px;" onclick="ct_AddTpRow()">+ KAR AL NOKTASI EKLE</button>
+                                <div class="v9-danger-note">TP satırında fiyat ve kapatılacak yüzdeyi yaz. Grafik üzerinde TP/SL/LIQ çizgileri görünür; her noktanın tahmini kâr/zararı hesaplanır.</div>
+                            </div>
+                        </div>
+                        <div class="v9-panel">
+                            <div class="v9-panel-head"><h3>Canlı Grafik</h3><span>Seçili zaman aralığında mum kapanışları ve işlem seviyeleri.</span></div>
+                            <div class="v9-panel-body">
+                                <div class="v9-chart-card">
+                                    <div class="v9-chart-top">
+                                        <div class="v9-symbol-title"><b id="ct-title">BTCUSDT</b><span id="ct-subtitle">Binance · 1m</span></div>
+                                        <div class="v9-live-price"><b id="ct-price">-</b><span id="ct-change">Yükleniyor</span></div>
+                                    </div>
+                                    <canvas id="crypto-terminal-chart" width="1200" height="520"></canvas>
+                                    <div class="v9-trade-stats">
+                                        <div class="v9-stat"><span>Canlı PnL</span><b id="ct-pnl">$0.00</b></div>
+                                        <div class="v9-stat"><span>Stop Riski</span><b id="ct-stop-risk">$0.00</b></div>
+                                        <div class="v9-stat"><span>Tahmini Liq</span><b id="ct-liq-auto">-</b></div>
+                                        <div class="v9-stat"><span>Son Güncelleme</span><b id="ct-updated">-</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="omega-stream-block" style="display:none;">
@@ -565,30 +712,6 @@
                                     <button class="btn-finance red" onclick="omega_ResetFinanceAll()">SIFIRLA</button>
                                 </div>
                                 <div class="simple-plan-help">Not: “20 alana uygula” kazandı/kaybetti olarak kapanmamış bütün satırlara önerilen tutarı yazar. Maç, coin veya işlem notunu günlük tabloda “İşlem / Not” alanına yazabilirsin.</div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="finance-card finance-live-center">
-                        <div class="finance-card-head">
-                            <div><h3><i class="fa-solid fa-tower-broadcast"></i> Canlı Takip Merkezi</h3><span>İşlem tablosundan “TAKİP” dediğin kripto ve maçlar burada izlenir</span></div>
-                            <button class="btn-finance" onclick="omega_RefreshLiveCenter(true)" style="max-width:160px;">YENİLE</button>
-                        </div>
-                        <div class="finance-card-body">
-                            <div class="live-center-shell">
-                                <div class="watch-sidebar">
-                                    <div class="watch-tabs">
-                                        <button class="watch-tab active" id="watch-tab-all" onclick="omega_SetWatchFilter('all')">TÜMÜ</button>
-                                        <button class="watch-tab" id="watch-tab-live" onclick="omega_SetWatchFilter('live')">CANLI</button>
-                                    </div>
-                                    <div class="watch-filter-pill"><span>Kripto</span><b id="watch-crypto-count">0</b></div>
-                                    <div class="watch-filter-pill"><span>Maç / Bahis</span><b id="watch-bet-count">0</b></div>
-                                    <div class="watch-help">Buraya sadece takip etmek istediğin satırlar düşer. Kripto kartları Binance/OKX fiyat + mini grafik gösterir. Maç kartları canlı skor JSON’u hazır olduğunda otomatik skora döner.</div>
-                                </div>
-                                <div class="watch-list" id="live-watch-list">
-                                    <div class="watch-empty">Takip listesi boş. Günlük işlem tablosunda bir satır için TAKİP butonuna bas.</div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -704,7 +827,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash.replace('#', '') || 'futbol';
-            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'finance'];
+            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
             if (validTabs.includes(hash)) {
                 omega_SwitchMainTab(hash, document.getElementById('nav-' + hash), false);
             } else {
@@ -822,6 +945,8 @@
             document.getElementById('omega-radar-block').style.display = 'none';
             document.getElementById('omega-favs-block').style.display = 'none';
             document.getElementById('omega-stream-block').style.display = 'none';
+            const liveBlock = document.getElementById('omega-live-block'); if(liveBlock) liveBlock.classList.remove('active');
+            const cryptoBlock = document.getElementById('omega-crypto-block'); if(cryptoBlock) cryptoBlock.classList.remove('active');
             document.getElementById('v19-finance-block').classList.remove('active');
 
             const centerWrapper = document.querySelector('.center-wrapper');
@@ -829,7 +954,7 @@
             if(targetModule === 'stream') {
                 centerWrapper.style.maxWidth = '1800px';
                 omega_BuildStreamMatrix(_ACTIVE_LAYOUT);
-            } else if(targetModule === 'finance') {
+            } else if(targetModule === 'finance' || targetModule === 'live' || targetModule === 'crypto') {
                 centerWrapper.style.maxWidth = '1700px';
             } else {
                 centerWrapper.style.maxWidth = '1000px';
@@ -872,6 +997,20 @@
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
                 titleElem.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
+
+            } else if(targetModule === 'live') {
+                _ACTIVE_TAB = 'live';
+                const lb = document.getElementById('omega-live-block');
+                if(lb) lb.classList.add('active');
+                titleElem.innerHTML = '<span style="color:var(--blue-accent)">/ CANLI TAKİP</span>';
+                setTimeout(() => omega_RefreshLiveCenter(true), 200);
+
+            } else if(targetModule === 'crypto') {
+                _ACTIVE_TAB = 'crypto';
+                const cb = document.getElementById('omega-crypto-block');
+                if(cb) cb.classList.add('active');
+                titleElem.innerHTML = '<span style="color:#f7931a">/ KRİPTO TERMİNAL</span>';
+                setTimeout(() => ct_InitTerminal(), 150);
 
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
@@ -1674,7 +1813,7 @@
         function omega_StartCryptoTimer() {
             if(_CRYPTO_TIMER) return;
             _CRYPTO_TIMER = setInterval(() => {
-                if(_ACTIVE_TAB === 'finance') omega_RefreshCryptoLive(false);
+                if(['finance','live','crypto'].includes(_ACTIVE_TAB)) omega_RefreshCryptoLive(false);
             }, 25000);
             setTimeout(() => omega_RefreshCryptoLive(true), 400);
         }
@@ -2262,7 +2401,7 @@
         omega_StartCryptoTimer = function() {
             if(_CRYPTO_TIMER) return;
             _CRYPTO_TIMER = setInterval(() => {
-                if(_ACTIVE_TAB === 'finance') omega_RefreshLiveCenter(false);
+                if(['finance','live','crypto'].includes(_ACTIVE_TAB)) omega_RefreshLiveCenter(false);
             }, 8000);
             setTimeout(() => omega_RefreshLiveCenter(true), 500);
         };
@@ -2273,6 +2412,157 @@
             omega_RenderLiveWatchCenter();
         };
 
+
+
+        /* ================= V9 KRİPTO TERMİNAL: ZAMAN ARALIĞI + TP/SL/LIQ ================= */
+        const CT_SYMBOLS = ['BTC','ETH','BNB','SOL','XRP','DOGE','ADA','AVAX','LINK','TRX','TON','DOT','MATIC','LTC','BCH','UNI','APT','ARB','OP','SUI','PEPE','SHIB','WIF','FET','INJ','NEAR','ATOM','FIL','TIA','SEI','AAVE','RUNE','ETC','MKR','RENDER','TAO','JUP','PYTH','ENA','WLD','ORDI','BONK'];
+        const CT_TIMEFRAMES = [
+            ['1m','1 dk'],['3m','3 dk'],['5m','5 dk'],['15m','15 dk'],['30m','30 dk'],
+            ['1h','1 sa'],['2h','2 sa'],['4h','4 sa'],['8h','8 sa'],['12h','12 sa'],
+            ['1d','1 gün'],['3d','3 gün'],['1w','1 hafta'],['1M','1 ay']
+        ];
+        let CT_STATE = { side:'long', tf:'1m', candles:[], price:null, prev:null, timer:null, tp:[{price:'',pct:25},{price:'',pct:25},{price:'',pct:25},{price:'',pct:25}] };
+
+        function ct_InitTerminal(){
+            const dl = document.getElementById('crypto-v9-symbol-list');
+            if(dl && !dl.dataset.ready){ dl.innerHTML = CT_SYMBOLS.map(s=>`<option value="${s}"></option>`).join(''); dl.dataset.ready='1'; }
+            const tfBox = document.getElementById('ct-timeframes');
+            if(tfBox && !tfBox.dataset.ready){
+                tfBox.innerHTML = CT_TIMEFRAMES.map(([v,l])=>`<button class="v9-tf-btn ${v==='1m'?'active':''}" id="ct-tf-${v}" onclick="ct_SetTimeframe('${v}')">${l}</button>`).join('');
+                tfBox.dataset.ready='1';
+            }
+            ct_RenderTpRows();
+            ct_UpdateAndFetch(true);
+            if(CT_STATE.timer) clearInterval(CT_STATE.timer);
+            CT_STATE.timer = setInterval(()=>{ if(_ACTIVE_TAB === 'crypto') ct_UpdateAndFetch(false); }, 8000);
+        }
+        function ct_GetPair(){
+            const sym = (document.getElementById('ct-symbol')?.value || 'BTC').toUpperCase().replace(/[^A-Z0-9]/g,'');
+            const quote = document.getElementById('ct-quote')?.value || 'USDT';
+            const ex = document.getElementById('ct-exchange')?.value || 'binance';
+            return { sym, quote, ex, inst: ex==='okx' ? `${sym}-${quote}` : `${sym}${quote}` };
+        }
+        function ct_SetSide(side){
+            CT_STATE.side=side;
+            document.getElementById('ct-long')?.classList.toggle('active', side==='long');
+            document.getElementById('ct-short')?.classList.toggle('active', side==='short');
+            ct_RenderTerminal();
+        }
+        function ct_SetTimeframe(tf){
+            CT_STATE.tf=tf;
+            document.querySelectorAll('.v9-tf-btn').forEach(b=>b.classList.remove('active'));
+            document.getElementById('ct-tf-'+tf)?.classList.add('active');
+            ct_UpdateAndFetch(true);
+        }
+        function ct_OkxBar(tf){
+            const m = {'1m':'1m','3m':'3m','5m':'5m','15m':'15m','30m':'30m','1h':'1H','2h':'2H','4h':'4H','8h':'6H','12h':'12H','1d':'1D','3d':'2D','1w':'1W','1M':'1M'};
+            return m[tf] || '1m';
+        }
+        async function ct_UpdateAndFetch(force=false){
+            if(_ACTIVE_TAB !== 'crypto' && !force) return;
+            const {sym,quote,ex,inst} = ct_GetPair();
+            try{
+                document.getElementById('crypto-terminal-status').innerText = 'GÜNCELLENİYOR';
+                if(ex==='okx'){
+                    const [tr, cr] = await Promise.all([
+                        fetch(`https://www.okx.com/api/v5/market/ticker?instId=${encodeURIComponent(inst)}`),
+                        fetch(`https://www.okx.com/api/v5/market/candles?instId=${encodeURIComponent(inst)}&bar=${ct_OkxBar(CT_STATE.tf)}&limit=80`)
+                    ]);
+                    const tj = await tr.json(); const cj = await cr.json();
+                    const price = Number(tj?.data?.[0]?.last);
+                    const candles = (cj?.data||[]).map(x=>({t:Number(x[0]),o:Number(x[1]),h:Number(x[2]),l:Number(x[3]),c:Number(x[4])})).filter(x=>x.c).reverse();
+                    if(!price) throw new Error('OKX fiyat yok');
+                    CT_STATE.prev = CT_STATE.price; CT_STATE.price = price; CT_STATE.candles = candles;
+                } else {
+                    const [tr, cr] = await Promise.all([
+                        fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${encodeURIComponent(inst)}`),
+                        fetch(`https://api.binance.com/api/v3/klines?symbol=${encodeURIComponent(inst)}&interval=${CT_STATE.tf}&limit=80`)
+                    ]);
+                    const tj = await tr.json(); const cj = await cr.json();
+                    const price = Number(tj?.price);
+                    const candles = Array.isArray(cj) ? cj.map(x=>({t:Number(x[0]),o:Number(x[1]),h:Number(x[2]),l:Number(x[3]),c:Number(x[4])})).filter(x=>x.c) : [];
+                    if(!price) throw new Error('Binance fiyat yok');
+                    CT_STATE.prev = CT_STATE.price; CT_STATE.price = price; CT_STATE.candles = candles;
+                }
+                const entryEl = document.getElementById('ct-entry');
+                if(entryEl && !entryEl.value) entryEl.value = CT_STATE.price;
+                document.getElementById('crypto-terminal-status').innerText = 'CANLI';
+                ct_RenderTerminal();
+            }catch(e){
+                document.getElementById('crypto-terminal-status').innerText = 'VERİ YOK';
+                console.warn(e);
+                ct_RenderTerminal();
+            }
+        }
+        function ct_AddTpRow(){ CT_STATE.tp.push({price:'',pct:10}); ct_RenderTpRows(); ct_RenderTerminal(); }
+        function ct_RemoveTpRow(i){ CT_STATE.tp.splice(i,1); ct_RenderTpRows(); ct_RenderTerminal(); }
+        function ct_RenderTpRows(){
+            const box=document.getElementById('ct-tp-table'); if(!box) return;
+            box.innerHTML = CT_STATE.tp.map((tp,i)=>`<div class="v9-tp-row">
+                <label>TP${i+1}</label>
+                <input type="number" step="0.0001" value="${tp.price||''}" placeholder="Fiyat" oninput="CT_STATE.tp[${i}].price=this.value; ct_RenderTerminal();">
+                <input type="number" step="1" value="${tp.pct||''}" placeholder="%" oninput="CT_STATE.tp[${i}].pct=this.value; ct_RenderTerminal();">
+                <div class="v9-tp-profit" id="ct-tp-profit-${i}">Kâr hesaplanacak ${CT_STATE.tp.length>1?`<button onclick="ct_RemoveTpRow(${i})" style="float:right;background:#222;color:#aaa;border:1px solid #333;border-radius:6px;cursor:pointer;">sil</button>`:''}</div>
+            </div>`).join('');
+        }
+        function ct_Num(id){ return parseFloat(document.getElementById(id)?.value); }
+        function ct_PnlAt(price, pct=100){
+            const entry=ct_Num('ct-entry'), stake=ct_Num('ct-stake'), lev=ct_Num('ct-lev') || 1;
+            if(!price || !entry || !stake) return 0;
+            const direction = CT_STATE.side==='short' ? (entry - price)/entry : (price - entry)/entry;
+            return stake * lev * direction * ((parseFloat(pct)||0)/100);
+        }
+        function ct_FormatPrice(v){ v=Number(v); if(!v) return '-'; if(v>=1000) return '$'+v.toLocaleString('en-US',{maximumFractionDigits:2}); if(v>=1) return '$'+v.toFixed(4); return '$'+v.toPrecision(6); }
+        function ct_RenderTerminal(){
+            const {sym,quote,ex,inst} = ct_GetPair();
+            const price = CT_STATE.price;
+            const entry=ct_Num('ct-entry'), stake=ct_Num('ct-stake'), lev=ct_Num('ct-lev') || 1;
+            const change = price && CT_STATE.prev ? ((price-CT_STATE.prev)/CT_STATE.prev)*100 : 0;
+            const title=document.getElementById('ct-title'); if(title) title.innerText = `${sym}${quote}`;
+            const sub=document.getElementById('ct-subtitle'); if(sub) sub.innerText = `${ex.toUpperCase()} · ${CT_STATE.tf} · ${CT_STATE.side.toUpperCase()}`;
+            const priceEl=document.getElementById('ct-price'); if(priceEl) priceEl.innerText = ct_FormatPrice(price);
+            const ch=document.getElementById('ct-change'); if(ch){ ch.innerText = `${change>=0?'+':''}${change.toFixed(3)}%`; ch.className = change>=0?'up':'down'; }
+            const pnl = price ? ct_PnlAt(price,100) : 0;
+            const pnlEl=document.getElementById('ct-pnl'); if(pnlEl){ pnlEl.innerText = `${pnl>=0?'+':''}$${pnl.toFixed(2)}`; pnlEl.parentElement.className = 'v9-stat ' + (pnl>=0?'good':'bad'); }
+            const stop=ct_Num('ct-stop'), liqManual=ct_Num('ct-liq');
+            const stopRisk = stop ? ct_PnlAt(stop,100) : 0;
+            const sr=document.getElementById('ct-stop-risk'); if(sr){ sr.innerText = `${stopRisk>=0?'+':''}$${stopRisk.toFixed(2)}`; sr.parentElement.className='v9-stat '+(stopRisk>=0?'good':'bad'); }
+            const autoLiq = entry ? (CT_STATE.side==='long' ? entry*(1-1/lev) : entry*(1+1/lev)) : null;
+            const liqShow = liqManual || autoLiq;
+            const liq=document.getElementById('ct-liq-auto'); if(liq) liq.innerText = liqShow ? ct_FormatPrice(liqShow) : '-';
+            const upd=document.getElementById('ct-updated'); if(upd) upd.innerText = new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+            CT_STATE.tp.forEach((tp,i)=>{ const el=document.getElementById('ct-tp-profit-'+i); if(el){ const p=parseFloat(tp.price), pct=parseFloat(tp.pct)||0, val=p?ct_PnlAt(p,pct):0; el.innerHTML = p ? `%${pct} kapatılırsa <b>${val>=0?'+':''}$${val.toFixed(2)}</b>` : 'Fiyat gir'; } });
+            ct_DrawChart();
+        }
+        function ct_DrawChart(){
+            const cv=document.getElementById('crypto-terminal-chart'); if(!cv) return;
+            const ctx=cv.getContext('2d'), w=cv.width, h=cv.height;
+            ctx.clearRect(0,0,w,h); ctx.fillStyle='#060606'; ctx.fillRect(0,0,w,h);
+            const candles=CT_STATE.candles||[];
+            const entry=ct_Num('ct-entry'), stop=ct_Num('ct-stop'), liqManual=ct_Num('ct-liq'), lev=ct_Num('ct-lev')||1;
+            const autoLiq = entry ? (CT_STATE.side==='long' ? entry*(1-1/lev) : entry*(1+1/lev)) : null;
+            const levels=[entry,stop,liqManual||autoLiq,...CT_STATE.tp.map(x=>parseFloat(x.price)).filter(Boolean),...candles.flatMap(c=>[c.h,c.l])].filter(Boolean);
+            if(levels.length<2){ ctx.fillStyle='#777'; ctx.font='28px Inter'; ctx.fillText('Grafik için veri bekleniyor...',40,80); return; }
+            const min=Math.min(...levels)*0.998, max=Math.max(...levels)*1.002;
+            const pxY=v => h-34-((v-min)/(max-min))*(h-72);
+            const pxX=i => 38 + (i/(Math.max(candles.length-1,1)))*(w-76);
+            // grid
+            ctx.strokeStyle='#1f1f1f'; ctx.lineWidth=1;
+            for(let i=0;i<6;i++){ const y=30+i*(h-64)/5; ctx.beginPath(); ctx.moveTo(34,y); ctx.lineTo(w-34,y); ctx.stroke(); }
+            // candle close line
+            if(candles.length){
+                ctx.strokeStyle='#fbbf24'; ctx.lineWidth=3; ctx.beginPath();
+                candles.forEach((c,i)=>{ const x=pxX(i), y=pxY(c.c); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
+                // mini bars
+                candles.forEach((c,i)=>{ const x=pxX(i), y1=pxY(c.h), y2=pxY(c.l); ctx.strokeStyle=c.c>=c.o?'#10b981':'#ef4444'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,y2); ctx.stroke(); });
+            }
+            function line(v,label,color,dash=false){ if(!v) return; const y=pxY(v); ctx.strokeStyle=color; ctx.lineWidth=2; ctx.setLineDash(dash?[8,6]:[]); ctx.beginPath(); ctx.moveTo(34,y); ctx.lineTo(w-34,y); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle=color; ctx.font='bold 20px JetBrains Mono'; ctx.fillText(label+' '+ct_FormatPrice(v), 46, y-8); }
+            line(entry,'GİRİŞ','#fbbf24');
+            CT_STATE.tp.forEach((tp,i)=>line(parseFloat(tp.price),`TP${i+1}`,'#10b981',true));
+            line(stop,'STOP','#ef4444',true);
+            line(liqManual||autoLiq,'LIQ','#f97316',true);
+            if(CT_STATE.price) line(CT_STATE.price,'CANLI','#3b82f6');
+        }
 
     </script>
 </body>
