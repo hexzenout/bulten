@@ -502,6 +502,25 @@
         .day-result { min-width:120px; padding-top:8px; }
         @media (max-width: 760px) { .day-row-capsule { flex-direction:column; } .day-info { border-right:none; border-bottom:1px solid #333; padding-bottom:10px; width:100%; } .day-result { text-align:left; } .kapsul { width:100%; } }
 
+    
+        /* ================= V13 GRAPH + ALARM UX CLEANUP ================= */
+        .crypto-v13-toolbar{align-items:center;border-color:#303030;background:linear-gradient(180deg,#0b0b0b,#070707)}
+        .crypto-v13-toolbar .chart-tool-btn{min-height:36px;font-size:.74em}
+        .crypto-v13-alarm-box{border-color:#333;background:linear-gradient(180deg,#0b0b0b,#070707)}
+        .alarm-v13-help{display:grid;gap:6px;background:#101010;border:1px solid #262626;border-radius:13px;padding:10px;margin-bottom:11px;color:#aaa;font-size:.72em;font-weight:800;line-height:1.45}
+        .alarm-v13-help b{color:var(--gold)}
+        .alarm-v13-grid{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:9px}
+        .alarm-v13-grid label{display:flex;flex-direction:column;gap:6px;color:#aaa;font-size:.62em;font-weight:950;text-transform:uppercase;letter-spacing:.6px}
+        .alarm-v13-grid input,.alarm-v13-grid select{background:#070707;border:1px solid #363636;color:#fff;border-radius:11px;padding:11px 10px;font-family:'JetBrains Mono';font-size:.82em;width:100%}
+        .alarm-v13-grid input:focus,.alarm-v13-grid select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(251,191,36,.09)}
+        .alarm-v13-actions{grid-template-columns:1fr 1fr 1fr !important;margin-top:10px!important}
+        .alarm-v12-row{grid-template-columns:1fr auto auto!important}
+        .alarm-v12-row .alarm-status{font-size:.62em;text-transform:uppercase;font-weight:950;border:1px solid #333;border-radius:999px;padding:5px 8px;color:#aaa;background:#151515}
+        .alarm-v12-row.hit .alarm-status{color:#06140d;background:var(--green);border-color:var(--green)}
+        .crypto-v10-chart-caption{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid #252525;background:#0b0b0b;border-radius:12px;padding:9px 11px;color:#aaa!important}
+        .crypto-v10-canvas{cursor:crosshair}
+        @media(max-width:760px){.alarm-v13-grid,.alarm-v13-actions{grid-template-columns:1fr!important}.crypto-v13-toolbar .chart-tool-btn{flex:1 1 130px}}
+
     </style>
 </head>
 <body>
@@ -652,13 +671,12 @@
                                 </div>
                             </div>
                             <div class="crypto-v10-timeframes" id="crypto-v10-timeframes"></div>
-                            <div class="crypto-v12-toolbar">
+                            <div class="crypto-v12-toolbar crypto-v13-toolbar">
                                 <button class="chart-tool-btn" onclick="omega_V12Zoom(0.72)"><i class="fa-solid fa-magnifying-glass-plus"></i> Yakınlaştır</button>
                                 <button class="chart-tool-btn" onclick="omega_V12Zoom(1.38)"><i class="fa-solid fa-magnifying-glass-minus"></i> Uzaklaştır</button>
-                                <button class="chart-tool-btn" onclick="omega_V12Pan(-0.25)"><i class="fa-solid fa-arrow-left"></i> Geri</button>
-                                <button class="chart-tool-btn" onclick="omega_V12Pan(0.25)">İleri <i class="fa-solid fa-arrow-right"></i></button>
-                                <button class="chart-tool-btn" onclick="omega_V12ResetView()"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
-                                <button class="chart-tool-btn" id="tool-hline" onclick="omega_V12SetDrawMode('hline')"><i class="fa-solid fa-grip-lines"></i> Yatay Çizgi</button>
+                                <button class="chart-tool-btn" onclick="omega_V12ResetView()"><i class="fa-solid fa-compress"></i> Grafiği Sığdır</button>
+                                <button class="chart-tool-btn green" id="tool-alarm" onclick="omega_V12SetDrawMode('alarm')"><i class="fa-solid fa-bell"></i> Grafikten Alarm</button>
+                                <button class="chart-tool-btn" id="tool-hline" onclick="omega_V12SetDrawMode('hline')"><i class="fa-solid fa-grip-lines"></i> Fiyat Çizgisi</button>
                                 <button class="chart-tool-btn" id="tool-trend" onclick="omega_V12SetDrawMode('trend')"><i class="fa-solid fa-slash"></i> Trend Çizgisi</button>
                                 <button class="chart-tool-btn blue" id="tool-ma" onclick="omega_V12ToggleMA()">MA20</button>
                                 <button class="chart-tool-btn red" onclick="omega_V12UndoDrawing()"><i class="fa-solid fa-eraser"></i> Son Çizimi Sil</button>
@@ -720,19 +738,28 @@
 
 
 
-                            <div class="crypto-v12-alarm-box">
+                            <div class="crypto-v12-alarm-box crypto-v13-alarm-box">
                                 <div class="crypto-v12-alarm-head">
-                                    <div><b><i class="fa-solid fa-bell"></i> Sınırsız Alarm</b><br><span>Seçili coin/parite için fiyat alarmı kur. Tarayıcı açıkken canlı kontrol eder.</span></div>
-                                    <button class="chart-tool-btn green" onclick="omega_V12RequestNotify()">Bildirim İzni</button>
+                                    <div>
+                                        <b><i class="fa-solid fa-bell"></i> Alarm Merkezi</b><br>
+                                        <span>Manuel fiyat yazabilir veya üstteki <b>Grafikten Alarm</b> butonuna basıp grafikte istediğin fiyat seviyesine tıklayabilirsin.</span>
+                                    </div>
+                                    <button class="chart-tool-btn green" onclick="omega_V12RequestNotify()"><i class="fa-solid fa-bell"></i> Bildirim İzni</button>
                                 </div>
-                                <div class="alarm-v12-grid">
-                                    <input id="v12-alarm-price" type="number" placeholder="Alarm fiyatı" step="0.00000001">
-                                    <select id="v12-alarm-dir"><option value="above">Üstüne çıkarsa</option><option value="below">Altına düşerse</option></select>
-                                    <input id="v12-alarm-note" type="text" placeholder="Not: TP1, Stop, fırsat...">
+                                <div class="alarm-v13-help">
+                                    <div><b>Üst alarm:</b> Fiyat yazdığın seviyenin üstüne çıkınca çalar.</div>
+                                    <div><b>Alt alarm:</b> Fiyat yazdığın seviyenin altına düşünce çalar.</div>
+                                    <div><b>Grafikten alarm:</b> Seviyeyi grafikten seçer, yönü canlı fiyata göre otomatik belirler.</div>
                                 </div>
-                                <div class="crypto-v10-actions" style="margin-top:9px;grid-template-columns:1fr 1fr;">
-                                    <button class="terminal-v10-btn gold" onclick="omega_V12AddAlarm()">ALARM EKLE</button>
-                                    <button class="terminal-v10-btn" onclick="omega_V12ClearHitAlarms()">ÇALANLARI TEMİZLE</button>
+                                <div class="alarm-v13-grid">
+                                    <label><span>Alarm Fiyatı</span><input id="v12-alarm-price" type="number" placeholder="Örn: 105000" step="0.00000001"></label>
+                                    <label><span>Koşul</span><select id="v12-alarm-dir"><option value="above">Fiyat bunun ÜSTÜNE çıkarsa</option><option value="below">Fiyat bunun ALTINA düşerse</option></select></label>
+                                    <label><span>Not</span><input id="v12-alarm-note" type="text" placeholder="TP1, Stop, fırsat..."></label>
+                                </div>
+                                <div class="crypto-v10-actions alarm-v13-actions">
+                                    <button class="terminal-v10-btn gold" onclick="omega_V12AddAlarm()"><i class="fa-solid fa-plus"></i> Alarm Ekle</button>
+                                    <button class="terminal-v10-btn" onclick="omega_V13SetAlarmAtLive()"><i class="fa-solid fa-location-crosshairs"></i> Canlı Fiyata Kur</button>
+                                    <button class="terminal-v10-btn" onclick="omega_V12ClearHitAlarms()"><i class="fa-solid fa-broom"></i> Çalanları Temizle</button>
                                 </div>
                                 <div class="alarm-v12-list" id="v12-alarm-list"></div>
                             </div>
@@ -3144,6 +3171,195 @@
             }, 600);
         });
 
+
+
+        /* ================= V13 GRAPH AXIS + CLICK ALARM + CLEAN TOOLBAR ================= */
+        let _V13_CROSSHAIR = null;
+
+        function omega_V13FormatAxisTime(ts){
+            const d = new Date(ts);
+            const tf = _V10_TF || '1m';
+            if(tf === '1M') return d.toLocaleDateString('tr-TR', {month:'short', year:'2-digit'});
+            if(tf.endsWith('d') || tf.endsWith('w')) return d.toLocaleDateString('tr-TR', {day:'2-digit', month:'short', year:'2-digit'});
+            return d.toLocaleString('tr-TR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+        }
+
+        function omega_V13SetAlarmAtLive(){
+            if(!_V10_PRICE){ if(omega_ShowFinanceToast) omega_ShowFinanceToast('Canlı fiyat henüz yok.'); return; }
+            const priceEl = document.getElementById('v12-alarm-price');
+            const dirEl = document.getElementById('v12-alarm-dir');
+            const noteEl = document.getElementById('v12-alarm-note');
+            if(priceEl) priceEl.value = _V10_PRICE;
+            if(dirEl) dirEl.value = 'above';
+            if(noteEl && !noteEl.value) noteEl.value = 'Canlı fiyat alarmı';
+            omega_V12AddAlarm();
+        }
+
+        const _omega_V12SetDrawMode_v13_base = omega_V12SetDrawMode;
+        omega_V12SetDrawMode = function(mode){
+            _V12_DRAW_MODE = _V12_DRAW_MODE === mode ? null : mode;
+            _V12_PENDING_TREND = null;
+            document.querySelectorAll('.chart-tool-btn').forEach(b=>b.classList.remove('active'));
+            let btnId = null;
+            if(_V12_DRAW_MODE === 'hline') btnId = 'tool-hline';
+            if(_V12_DRAW_MODE === 'trend') btnId = 'tool-trend';
+            if(_V12_DRAW_MODE === 'alarm') btnId = 'tool-alarm';
+            const btn = btnId ? document.getElementById(btnId) : null;
+            if(_V12_DRAW_MODE && btn) btn.classList.add('active');
+            const hint = document.getElementById('crypto-v12-hint');
+            if(hint){
+                let txt = '';
+                if(_V12_DRAW_MODE === 'trend') txt = 'Trend çizgisi için iki noktaya tıkla.';
+                if(_V12_DRAW_MODE === 'hline') txt = 'Fiyat çizgisi için grafikte bir seviyeye tıkla.';
+                if(_V12_DRAW_MODE === 'alarm') txt = 'Alarm kurmak istediğin fiyat seviyesine tıkla. Yön otomatik seçilecek.';
+                hint.textContent = txt;
+                hint.classList.toggle('show', !!_V12_DRAW_MODE);
+            }
+        };
+
+        const _omega_V12AttachCanvasEvents_v13_base = omega_V12AttachCanvasEvents;
+        omega_V12AttachCanvasEvents = function(){
+            const canvas = document.getElementById('crypto-v10-chart');
+            if(!canvas || canvas.dataset.v13Bound) return;
+            canvas.dataset.v13Bound = '1';
+            canvas.addEventListener('click', (ev)=>{
+                if(!_V12_DRAW_MODE) return;
+                const rect = canvas.getBoundingClientRect();
+                const xPx = (ev.clientX - rect.left) * (canvas.width / rect.width);
+                const yPx = (ev.clientY - rect.top) * (canvas.height / rect.height);
+                const conv = omega_V12ChartConverters();
+                if(!conv) return;
+                const price = conv.priceForY(yPx);
+                const timeIndex = conv.indexForX(xPx);
+                const plan = omega_V10GetPlan();
+                const key = omega_V12SymbolKey(plan);
+                if(_V12_DRAW_MODE === 'alarm'){
+                    const dir = (_V10_PRICE && price > _V10_PRICE) ? 'above' : 'below';
+                    _V12_ALARMS.push({id:Date.now(), key, symbol:`${plan.symbol}${plan.quote}`, exchange:plan.exchange, dir, price, note:'Grafikten alarm', hit:false, created:new Date().toISOString()});
+                    omega_V12SaveAlarms();
+                    omega_V12RenderAlarms();
+                    omega_V12SetDrawMode(null);
+                    omega_V10DrawChart();
+                    if(omega_ShowFinanceToast) omega_ShowFinanceToast(`Grafikten alarm eklendi: ${omega_V10FormatPrice(price)}`);
+                    return;
+                }
+                if(_V12_DRAW_MODE === 'hline'){
+                    _V12_DRAWINGS.push({type:'hline', key, price, label:'Çizgi'});
+                    omega_V12SaveDrawings();
+                    omega_V12SetDrawMode(null);
+                    omega_V10DrawChart();
+                } else if(_V12_DRAW_MODE === 'trend'){
+                    if(!_V12_PENDING_TREND){
+                        _V12_PENDING_TREND = {x1:timeIndex, y1:price};
+                        const hint = document.getElementById('crypto-v12-hint');
+                        if(hint) hint.textContent = 'İkinci noktaya tıkla.';
+                    } else {
+                        _V12_DRAWINGS.push({type:'trend', key, x1:_V12_PENDING_TREND.x1, y1:_V12_PENDING_TREND.y1, x2:timeIndex, y2:price});
+                        _V12_PENDING_TREND = null;
+                        omega_V12SaveDrawings();
+                        omega_V12SetDrawMode(null);
+                        omega_V10DrawChart();
+                    }
+                }
+            });
+            canvas.addEventListener('mousemove', (ev)=>{
+                const rect = canvas.getBoundingClientRect();
+                _V13_CROSSHAIR = {x:(ev.clientX - rect.left) * (canvas.width / rect.width), y:(ev.clientY - rect.top) * (canvas.height / rect.height)};
+                omega_V10DrawChart();
+            });
+            canvas.addEventListener('mouseleave', ()=>{ _V13_CROSSHAIR = null; omega_V10DrawChart(); });
+            canvas.addEventListener('wheel', (ev)=>{ ev.preventDefault(); omega_V12Zoom(ev.deltaY < 0 ? 0.82 : 1.18); }, {passive:false});
+        };
+
+        omega_V12RenderAlarms = function(){
+            const box = document.getElementById('v12-alarm-list'); if(!box) return;
+            const plan = omega_V10GetPlan(); const key = omega_V12SymbolKey(plan);
+            const list = _V12_ALARMS.filter(a=>a.key===key).sort((a,b)=>a.price-b.price);
+            if(!list.length){ box.innerHTML = '<div class="alarm-v12-row"><span>Bu sembol için alarm yok. Manuel ekle veya Grafikten Alarm butonunu kullan.</span><span></span><span></span></div>'; return; }
+            box.innerHTML = list.map(a=>`<div class="alarm-v12-row ${a.hit?'hit':''}"><div><b>${a.dir==='above'?'ÜSTÜNE ÇIKARSA':'ALTINA DÜŞERSE'} ${omega_V10FormatPrice(a.price)}</b><br><span>${a.note || a.symbol}</span></div><span class="alarm-status">${a.hit?'ÇALDI':'AKTİF'}</span><button onclick="omega_V12DeleteAlarm(${a.id})">SİL</button></div>`).join('');
+        };
+
+        omega_V10DrawChart = function(){
+            const canvas = document.getElementById('crypto-v10-chart');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,w,h);
+            const plan = omega_V10GetPlan();
+            const candles = omega_V12VisibleCandles();
+            const levels = [];
+            if(plan.entry) levels.push({v:plan.entry, c:'rgba(251,191,36,.95)', label:'GİRİŞ'});
+            if(plan.stop) levels.push({v:plan.stop, c:'rgba(239,68,68,.95)', label:'STOP'});
+            if(plan.liq) levels.push({v:plan.liq, c:'rgba(249,115,22,.95)', label:'LİQ'});
+            if(_V10_PRICE) levels.push({v:_V10_PRICE, c:'rgba(59,130,246,.98)', label:'CANLI'});
+            plan.tps.forEach(tp => levels.push({v:tp.price, c:'rgba(16,185,129,.95)', label:`TP${tp.index}`}));
+            const all = [...candles.flatMap(c => [c.high,c.low]), ...levels.map(l=>l.v)].filter(Boolean);
+            if(all.length < 2){
+                ctx.fillStyle='#aaa'; ctx.font='18px Inter, sans-serif'; ctx.fillText('Grafik verisi bekleniyor...', 32, 54);
+                return;
+            }
+            const min = Math.min(...all), max = Math.max(...all);
+            const pad = (max-min)*0.08 || 1; const lo = min-pad, hi=max+pad;
+            const left = 58, right = 96, top = 24, bottom = 52;
+            const plotW = w-left-right, plotH = h-top-bottom;
+            const yFor = v => top + (hi-v)/(hi-lo)*plotH;
+            const xFor = i => left + (i/(candles.length-1||1))*plotW;
+            // background grid + price axis
+            ctx.strokeStyle='rgba(255,255,255,.055)'; ctx.lineWidth=1; ctx.fillStyle='rgba(255,255,255,.55)'; ctx.font='12px JetBrains Mono, monospace';
+            for(let i=0;i<6;i++){
+                const y=top+i*plotH/5; const val=hi-(i/5)*(hi-lo);
+                ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(w-right,y); ctx.stroke();
+                ctx.fillText(omega_V10FormatPrice(val), w-right+10, y+4);
+            }
+            // candles
+            const cw = Math.max(2, plotW/(candles.length||1)*0.58);
+            candles.forEach((c,i)=>{
+                const x=xFor(i);
+                const yO=yFor(c.open), yC=yFor(c.close), yH=yFor(c.high), yL=yFor(c.low);
+                const up=c.close>=c.open; ctx.strokeStyle=up?'#10b981':'#ef4444'; ctx.fillStyle=up?'rgba(16,185,129,.76)':'rgba(239,68,68,.76)';
+                ctx.beginPath(); ctx.moveTo(x,yH); ctx.lineTo(x,yL); ctx.stroke();
+                ctx.fillRect(x-cw/2, Math.min(yO,yC), cw, Math.max(2,Math.abs(yC-yO)));
+            });
+            // time axis
+            const labelCount = Math.min(7, candles.length);
+            ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.beginPath(); ctx.moveTo(left,h-bottom+6); ctx.lineTo(w-right,h-bottom+6); ctx.stroke();
+            ctx.fillStyle='rgba(255,255,255,.62)'; ctx.font='12px JetBrains Mono, monospace';
+            for(let i=0;i<labelCount;i++){
+                const idx = Math.round(i*(candles.length-1)/(labelCount-1||1));
+                const x = xFor(idx); const label = omega_V13FormatAxisTime(candles[idx].time);
+                ctx.fillText(label, Math.max(8, Math.min(w-right-92, x-42)), h-19);
+            }
+            const conv = omega_V12ChartConverters();
+            omega_V12DrawMA(ctx, conv);
+            omega_V12DrawUserDrawings(ctx, conv);
+            // saved alarms as subtle lines
+            const key = omega_V12SymbolKey(plan);
+            _V12_ALARMS.filter(a=>a.key===key && !a.hit).forEach(a=>{
+                const y=yFor(a.price); ctx.strokeStyle='rgba(251,191,36,.42)'; ctx.lineWidth=1; ctx.setLineDash([2,5]); ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(w-right,y); ctx.stroke(); ctx.setLineDash([]);
+                ctx.fillStyle='rgba(251,191,36,.82)'; ctx.font='11px JetBrains Mono, monospace'; ctx.fillText(`ALARM ${a.dir==='above'?'↑':'↓'} ${omega_V10FormatPrice(a.price)}`, left+8, y-5);
+            });
+            levels.forEach(l=>{
+                const y=yFor(l.v); ctx.strokeStyle=l.c; ctx.lineWidth=1.5; ctx.setLineDash([7,5]); ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(w-right,y); ctx.stroke(); ctx.setLineDash([]);
+                ctx.fillStyle='#080808'; ctx.fillRect(left+6, Math.max(6,y-18), 150, 20); ctx.fillStyle=l.c; ctx.font='12px JetBrains Mono, monospace'; ctx.fillText(`${l.label} ${omega_V10FormatPrice(l.v)}`,left+11,Math.max(20,y-4));
+            });
+            if(_V13_CROSSHAIR){
+                const x = Math.max(left, Math.min(w-right, _V13_CROSSHAIR.x));
+                const y = Math.max(top, Math.min(h-bottom, _V13_CROSSHAIR.y));
+                const idx = Math.round(((x-left)/plotW)*(candles.length-1||1));
+                const price = hi - ((y-top)/plotH)*(hi-lo);
+                ctx.strokeStyle='rgba(255,255,255,.28)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+                ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(w-right,y); ctx.moveTo(x,top); ctx.lineTo(x,h-bottom); ctx.stroke(); ctx.setLineDash([]);
+                ctx.fillStyle='rgba(0,0,0,.88)'; ctx.fillRect(x+10> w-250 ? x-230 : x+10, y-42<10 ? y+12 : y-42, 220, 34);
+                ctx.fillStyle='#fff'; ctx.font='12px JetBrains Mono, monospace';
+                const label = `${omega_V13FormatAxisTime(candles[idx]?.time || Date.now())}  ${omega_V10FormatPrice(price)}`;
+                ctx.fillText(label, x+18> w-240 ? x-222 : x+18, y-20<28 ? y+34 : y-20);
+            }
+            const cap=document.getElementById('crypto-v10-caption');
+            if(cap) cap.innerHTML=`<span>Grafik: ${candles.length}/${(_V10_CANDLES||[]).length} mum · Zaman: ${V10_TIMEFRAMES.find(x=>x.id===_V10_TF)?.label || _V10_TF}</span><span>Mouse: fiyat/saat · Tekerlek: zoom · Grafikten alarm: butona bas, seviyeye tıkla</span>`;
+        };
+
+        setTimeout(()=>{ omega_V12AttachCanvasEvents(); omega_V12RenderAlarms(); }, 900);
 
 </script>
 </body>
