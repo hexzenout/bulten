@@ -521,6 +521,22 @@
         .crypto-v10-canvas{cursor:crosshair}
         @media(max-width:760px){.alarm-v13-grid,.alarm-v13-actions{grid-template-columns:1fr!important}.crypto-v13-toolbar .chart-tool-btn{flex:1 1 130px}}
 
+
+        /* ================= V14 CHART POLISH + DRAWING MANAGER ================= */
+        .drawing-v14-panel{margin-top:10px;display:flex;flex-direction:column;gap:7px;background:#080808;border:1px solid #292929;border-radius:14px;padding:10px}
+        .drawing-v14-panel:empty{display:none}
+        .drawing-v14-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:#101010;border:1px solid #242424;border-radius:11px;padding:9px 10px;color:#d6d6d6;font-size:.76em;font-weight:850}
+        .drawing-v14-row b{font-family:'JetBrains Mono';font-size:.82em;color:#fff}
+        .drawing-v14-row span{color:#8f8f8f;font-size:.7em}
+        .drawing-v14-row.green{border-left:4px solid var(--green)}
+        .drawing-v14-row.red{border-left:4px solid var(--red)}
+        .drawing-v14-row.hline{border-left:4px solid #d4d4d4}
+        .drawing-v14-row button{border:none;background:#2a1515;color:#ffb4b4;border-radius:8px;padding:8px 10px;font-weight:950;cursor:pointer}
+        .drawing-v14-row button:hover{background:var(--red);color:#fff}
+        .chart-tool-btn.green.active{background:var(--green)!important;border-color:var(--green)!important;color:#00170d!important}
+        .chart-tool-btn.red.active{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}
+        .crypto-v10-canvas{image-rendering:auto;}
+
     </style>
 </head>
 <body>
@@ -677,15 +693,18 @@
                                 <button class="chart-tool-btn" onclick="omega_V12ResetView()"><i class="fa-solid fa-compress"></i> Grafiği Sığdır</button>
                                 <button class="chart-tool-btn green" id="tool-alarm" onclick="omega_V12SetDrawMode('alarm')"><i class="fa-solid fa-bell"></i> Grafikten Alarm</button>
                                 <button class="chart-tool-btn" id="tool-hline" onclick="omega_V12SetDrawMode('hline')"><i class="fa-solid fa-grip-lines"></i> Fiyat Çizgisi</button>
-                                <button class="chart-tool-btn" id="tool-trend" onclick="omega_V12SetDrawMode('trend')"><i class="fa-solid fa-slash"></i> Trend Çizgisi</button>
+                                <button class="chart-tool-btn green" id="tool-trend-green" onclick="omega_V14SetTrendTool('green')"><i class="fa-solid fa-slash"></i> Trend Yeşil</button>
+                                <button class="chart-tool-btn red" id="tool-trend-red" onclick="omega_V14SetTrendTool('red')"><i class="fa-solid fa-slash"></i> Trend Kırmızı</button>
                                 <button class="chart-tool-btn blue" id="tool-ma" onclick="omega_V12ToggleMA()">MA20</button>
-                                <button class="chart-tool-btn red" onclick="omega_V12UndoDrawing()"><i class="fa-solid fa-eraser"></i> Son Çizimi Sil</button>
+                                <button class="chart-tool-btn red" onclick="omega_V12UndoDrawing()"><i class="fa-solid fa-trash-arrow-up"></i> Son Çizimi Sil</button>
+                                <button class="chart-tool-btn red" onclick="omega_V14ClearDrawingsForSymbol()"><i class="fa-solid fa-trash-can"></i> Tüm Çizimleri Sil</button>
                             </div>
                             <div class="crypto-v12-chart-wrap">
                                 <div class="crypto-v12-hint" id="crypto-v12-hint">Çizim için grafiğe tıkla.</div>
                                 <canvas id="crypto-v10-chart" width="1200" height="520" class="crypto-v10-canvas"></canvas>
                             </div>
                             <div class="crypto-v10-chart-caption" id="crypto-v10-caption">Grafik yükleniyor.</div>
+                            <div class="drawing-v14-panel" id="drawing-v14-panel"></div>
                         </div>
 
                         <div class="crypto-v10-control-panel">
@@ -1003,7 +1022,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash.replace('#', '') || 'futbol';
-            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'finance'];
+            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
             if (validTabs.includes(hash)) {
                 omega_SwitchMainTab(hash, document.getElementById('nav-' + hash), false);
             } else {
@@ -2582,20 +2601,20 @@
     
         /* ================= V10 MODULE SPLIT + HISTORICAL CRYPTO ENGINE ================= */
         const V10_TIMEFRAMES = [
-            {id:'1m', label:'1 dk', binance:'1m', okx:'1m', limit:180},
-            {id:'3m', label:'3 dk', binance:'3m', okx:'3m', limit:180},
-            {id:'5m', label:'5 dk', binance:'5m', okx:'5m', limit:180},
-            {id:'15m', label:'15 dk', binance:'15m', okx:'15m', limit:180},
-            {id:'30m', label:'30 dk', binance:'30m', okx:'30m', limit:180},
-            {id:'1h', label:'1 saat', binance:'1h', okx:'1H', limit:160},
-            {id:'2h', label:'2 saat', binance:'2h', okx:'2H', limit:160},
-            {id:'4h', label:'4 saat', binance:'4h', okx:'4H', limit:160},
-            {id:'8h', label:'8 saat', binance:'8h', okx:'6H', limit:160},
-            {id:'12h', label:'12 saat', binance:'12h', okx:'12H', limit:160},
-            {id:'1d', label:'1 gün', binance:'1d', okx:'1D', limit:140},
-            {id:'3d', label:'3 gün', binance:'3d', okx:'3D', limit:120},
-            {id:'1w', label:'1 hafta', binance:'1w', okx:'1W', limit:100},
-            {id:'1M', label:'1 ay', binance:'1M', okx:'1M', limit:80}
+            {id:'1m', label:'1 dk', binance:'1m', okx:'1m', limit:1000},
+            {id:'3m', label:'3 dk', binance:'3m', okx:'3m', limit:1000},
+            {id:'5m', label:'5 dk', binance:'5m', okx:'5m', limit:1000},
+            {id:'15m', label:'15 dk', binance:'15m', okx:'15m', limit:1000},
+            {id:'30m', label:'30 dk', binance:'30m', okx:'30m', limit:1000},
+            {id:'1h', label:'1 saat', binance:'1h', okx:'1H', limit:1000},
+            {id:'2h', label:'2 saat', binance:'2h', okx:'2H', limit:1000},
+            {id:'4h', label:'4 saat', binance:'4h', okx:'4H', limit:1000},
+            {id:'8h', label:'8 saat', binance:'8h', okx:'6H', limit:1000},
+            {id:'12h', label:'12 saat', binance:'12h', okx:'12H', limit:1000},
+            {id:'1d', label:'1 gün', binance:'1d', okx:'1D', limit:1000},
+            {id:'3d', label:'3 gün', binance:'3d', okx:'3D', limit:700},
+            {id:'1w', label:'1 hafta', binance:'1w', okx:'1W', limit:520},
+            {id:'1M', label:'1 ay', binance:'1M', okx:'1M', limit:360}
         ];
         let _V10_TF = localStorage.getItem('v10_crypto_tf') || '1m';
         let _V10_CANDLES = [];
@@ -2659,7 +2678,7 @@
                 const inst = omega_V10Inst(plan);
                 const [tickerRes, candleRes] = await Promise.all([
                     fetch(`https://www.okx.com/api/v5/market/ticker?instId=${encodeURIComponent(inst)}`),
-                    fetch(`https://www.okx.com/api/v5/market/candles?instId=${encodeURIComponent(inst)}&bar=${tf.okx}&limit=${tf.limit}`)
+                    fetch(`https://www.okx.com/api/v5/market/candles?instId=${encodeURIComponent(inst)}&bar=${tf.okx}&limit=${Math.min(tf.limit, 300)}`)
                 ]);
                 const ticker = await tickerRes.json();
                 const candles = await candleRes.json();
@@ -3360,6 +3379,212 @@
         };
 
         setTimeout(()=>{ omega_V12AttachCanvasEvents(); omega_V12RenderAlarms(); }, 900);
+
+
+        /* ================= V14 CHART FIXES: SOLID TRENDS, TRASH, DEEP HISTORY, HASH FIX ================= */
+        let _V14_TREND_COLOR = 'green';
+
+        function omega_V14SetTrendTool(color){
+            _V14_TREND_COLOR = color || 'green';
+            omega_V12SetDrawMode('trend');
+            document.querySelectorAll('#tool-trend-green,#tool-trend-red').forEach(b=>b.classList.remove('active'));
+            const btn = document.getElementById(color === 'red' ? 'tool-trend-red' : 'tool-trend-green');
+            if(_V12_DRAW_MODE === 'trend' && btn) btn.classList.add('active');
+        }
+
+        const _omega_v14_old_set_draw_mode = omega_V12SetDrawMode;
+        omega_V12SetDrawMode = function(mode){
+            _V12_DRAW_MODE = _V12_DRAW_MODE === mode ? null : mode;
+            _V12_PENDING_TREND = null;
+            document.querySelectorAll('.chart-tool-btn').forEach(b=>b.classList.remove('active'));
+            let btnId = null;
+            if(_V12_DRAW_MODE === 'alarm') btnId = 'tool-alarm';
+            if(_V12_DRAW_MODE === 'hline') btnId = 'tool-hline';
+            if(_V12_DRAW_MODE === 'trend') btnId = _V14_TREND_COLOR === 'red' ? 'tool-trend-red' : 'tool-trend-green';
+            if(_V12_DRAW_MODE && btnId){ const b=document.getElementById(btnId); if(b) b.classList.add('active'); }
+            const hint = document.getElementById('crypto-v12-hint');
+            if(hint){
+                let txt = '';
+                if(_V12_DRAW_MODE === 'alarm') txt = 'Alarm kurmak istediğin fiyat seviyesine tıkla. Yön otomatik seçilecek.';
+                if(_V12_DRAW_MODE === 'hline') txt = 'Yatay fiyat çizgisi için grafikte bir seviyeye tıkla.';
+                if(_V12_DRAW_MODE === 'trend') txt = (_V14_TREND_COLOR === 'red' ? 'Kırmızı' : 'Yeşil') + ' trend çizgisi için iki noktaya tıkla.';
+                hint.textContent = txt;
+                hint.classList.toggle('show', !!_V12_DRAW_MODE);
+            }
+        };
+
+        const _omega_v14_old_save_drawings = omega_V12SaveDrawings;
+        omega_V12SaveDrawings = function(){
+            _omega_v14_old_save_drawings();
+            omega_V14RenderDrawingsPanel();
+        };
+
+        function omega_V14DeleteDrawing(id){
+            _V12_DRAWINGS = _V12_DRAWINGS.filter(d => d.id !== id);
+            omega_V12SaveDrawings();
+            omega_V10DrawChart();
+        }
+
+        function omega_V14ClearDrawingsForSymbol(){
+            const plan = omega_V10GetPlan();
+            const key = omega_V12SymbolKey(plan);
+            _V12_DRAWINGS = _V12_DRAWINGS.filter(d => d.key !== key);
+            omega_V12SaveDrawings();
+            omega_V10DrawChart();
+            if(omega_ShowFinanceToast) omega_ShowFinanceToast('Bu semboldeki tüm çizimler silindi.');
+        }
+
+        function omega_V14RenderDrawingsPanel(){
+            const box = document.getElementById('drawing-v14-panel');
+            if(!box) return;
+            const plan = omega_V10GetPlan();
+            const key = omega_V12SymbolKey(plan);
+            const rows = _V12_DRAWINGS.filter(d => d.key === key);
+            if(!rows.length){ box.innerHTML=''; return; }
+            box.innerHTML = rows.map((d,idx)=>{
+                if(!d.id) d.id = Date.now() + idx;
+                const cls = d.type === 'hline' ? 'hline' : (d.color === 'red' ? 'red' : 'green');
+                const title = d.type === 'hline' ? 'Fiyat çizgisi' : `${d.color === 'red' ? 'Kırmızı' : 'Yeşil'} trend çizgisi`;
+                const desc = d.type === 'hline' ? omega_V10FormatPrice(d.price) : `${omega_V10FormatPrice(d.y1)} → ${omega_V10FormatPrice(d.y2)}`;
+                return `<div class="drawing-v14-row ${cls}"><div><b>${title}</b><br><span>${desc}</span></div><button onclick="omega_V14DeleteDrawing(${d.id})"><i class="fa-solid fa-trash"></i> Sil</button></div>`;
+            }).join('');
+            _omega_v14_old_save_drawings();
+        }
+
+        // Stronger visible candle/drawing renderer
+        omega_V12DrawUserDrawings = function(ctx, conv){
+            if(!conv) return;
+            const plan = omega_V10GetPlan(); const key = omega_V12SymbolKey(plan);
+            const drawings = _V12_DRAWINGS.filter(d => d.key === key);
+            drawings.forEach(d=>{
+                if(!d.id) d.id = Date.now() + Math.floor(Math.random()*1000);
+                const col = d.type === 'hline' ? 'rgba(245,245,245,.90)' : (d.color === 'red' ? '#ef4444' : '#10b981');
+                ctx.strokeStyle = col; ctx.fillStyle=col; ctx.lineWidth=d.type === 'trend' ? 4 : 2.5; ctx.setLineDash([]);
+                if(d.type === 'hline'){
+                    const y = conv.yFor(d.price); ctx.beginPath(); ctx.moveTo(58,y); ctx.lineTo(1104,y); ctx.stroke();
+                    ctx.font='13px JetBrains Mono, monospace'; ctx.fillText(`ÇİZGİ ${omega_V10FormatPrice(d.price)}`, 74, y-7);
+                } else if(d.type === 'trend'){
+                    const x1 = conv.xForIndex(d.x1), y1 = conv.yFor(d.y1), x2 = conv.xForIndex(d.x2), y2 = conv.yFor(d.y2);
+                    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+                    ctx.beginPath(); ctx.arc(x1,y1,4,0,Math.PI*2); ctx.arc(x2,y2,4,0,Math.PI*2); ctx.fill();
+                }
+            });
+            ctx.setLineDash([]);
+            omega_V14RenderDrawingsPanel();
+        };
+
+        // New canvas binding with colored trends + alarm from chart. Clone once to remove older click listeners.
+        function omega_V14BindCanvasEvents(){
+            const oldCanvas = document.getElementById('crypto-v10-chart');
+            if(!oldCanvas || oldCanvas.dataset.v14Bound) return;
+            const canvas = oldCanvas.cloneNode(true);
+            oldCanvas.parentNode.replaceChild(canvas, oldCanvas);
+            canvas.dataset.v14Bound = '1';
+            canvas.addEventListener('click', (ev)=>{
+                if(!_V12_DRAW_MODE) return;
+                const rect = canvas.getBoundingClientRect();
+                const xPx = (ev.clientX - rect.left) * (canvas.width / rect.width);
+                const yPx = (ev.clientY - rect.top) * (canvas.height / rect.height);
+                const conv = omega_V12ChartConverters();
+                if(!conv) return;
+                const price = conv.priceForY(yPx);
+                const timeIndex = conv.indexForX(xPx);
+                const plan = omega_V10GetPlan();
+                const key = omega_V12SymbolKey(plan);
+                if(_V12_DRAW_MODE === 'alarm'){
+                    const dir = (_V10_PRICE && price > _V10_PRICE) ? 'above' : 'below';
+                    _V12_ALARMS.push({id:Date.now(), key, symbol:`${plan.symbol}${plan.quote}`, exchange:plan.exchange, dir, price, note:'Grafikten alarm', hit:false, created:new Date().toISOString()});
+                    omega_V12SaveAlarms(); omega_V12RenderAlarms(); omega_V12SetDrawMode(null); omega_V10DrawChart();
+                    if(omega_ShowFinanceToast) omega_ShowFinanceToast(`Grafikten alarm eklendi: ${omega_V10FormatPrice(price)}`);
+                    return;
+                }
+                if(_V12_DRAW_MODE === 'hline'){
+                    _V12_DRAWINGS.push({id:Date.now(), type:'hline', key, price, label:'Çizgi'});
+                    omega_V12SaveDrawings(); omega_V12SetDrawMode(null); omega_V10DrawChart();
+                } else if(_V12_DRAW_MODE === 'trend'){
+                    if(!_V12_PENDING_TREND){
+                        _V12_PENDING_TREND = {x1:timeIndex, y1:price};
+                        const hint = document.getElementById('crypto-v12-hint');
+                        if(hint) hint.textContent = 'İkinci noktaya tıkla.';
+                    } else {
+                        _V12_DRAWINGS.push({id:Date.now(), type:'trend', key, color:_V14_TREND_COLOR, x1:_V12_PENDING_TREND.x1, y1:_V12_PENDING_TREND.y1, x2:timeIndex, y2:price});
+                        _V12_PENDING_TREND = null;
+                        omega_V12SaveDrawings(); omega_V12SetDrawMode(null); omega_V10DrawChart();
+                    }
+                }
+            });
+            canvas.addEventListener('mousemove', (ev)=>{
+                const rect = canvas.getBoundingClientRect();
+                _V13_CROSSHAIR = {x:(ev.clientX - rect.left) * (canvas.width / rect.width), y:(ev.clientY - rect.top) * (canvas.height / rect.height)};
+                omega_V10DrawChart();
+            });
+            canvas.addEventListener('mouseleave', ()=>{ _V13_CROSSHAIR = null; omega_V10DrawChart(); });
+            canvas.addEventListener('wheel', (ev)=>{ ev.preventDefault(); omega_V12Zoom(ev.deltaY < 0 ? 0.74 : 1.34); }, {passive:false});
+            omega_V10DrawChart();
+        }
+
+        const _omega_v14_old_zoom = omega_V12Zoom;
+        omega_V12Zoom = function(factor){
+            const center = (_V12_VIEW_START + _V12_VIEW_END) / 2;
+            const width = Math.min(1, Math.max(0.015, (_V12_VIEW_END - _V12_VIEW_START) * factor));
+            _V12_VIEW_START = Math.max(0, center - width/2);
+            _V12_VIEW_END = Math.min(1, center + width/2);
+            if(_V12_VIEW_END - _V12_VIEW_START < width){
+                if(_V12_VIEW_START === 0) _V12_VIEW_END = Math.min(1, width);
+                if(_V12_VIEW_END === 1) _V12_VIEW_START = Math.max(0, 1-width);
+            }
+            _V12_AUTO_FIT = false;
+            omega_V10DrawChart();
+        };
+
+        const _omega_v14_old_draw_chart = omega_V10DrawChart;
+        omega_V10DrawChart = function(){
+            _omega_v14_old_draw_chart();
+            const canvas = document.getElementById('crypto-v10-chart');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const plan = omega_V10GetPlan();
+            const candles = omega_V12VisibleCandles();
+            if(!candles.length) return;
+            // Make candles visually stronger by re-stroking bodies with crisp borders.
+            const w=canvas.width,h=canvas.height,left=58,right=96,top=24,bottom=52,plotW=w-left-right,plotH=h-top-bottom;
+            const levels=[]; if(plan.entry)levels.push(plan.entry); if(plan.stop)levels.push(plan.stop); if(plan.liq)levels.push(plan.liq); if(_V10_PRICE)levels.push(_V10_PRICE); plan.tps.forEach(tp=>levels.push(tp.price));
+            const all=[...candles.flatMap(c=>[c.high,c.low]),...levels].filter(Boolean); if(all.length<2)return;
+            const min=Math.min(...all),max=Math.max(...all),pad=(max-min)*0.08||1,lo=min-pad,hi=max+pad;
+            const yFor=v=>top+(hi-v)/(hi-lo)*plotH;
+            const xFor=i=>left+(i/(candles.length-1||1))*plotW;
+            const cw=Math.max(4, Math.min(15, plotW/(candles.length||1)*0.62));
+            candles.forEach((c,i)=>{
+                const x=xFor(i), yO=yFor(c.open), yC=yFor(c.close), yH=yFor(c.high), yL=yFor(c.low);
+                const up=c.close>=c.open; ctx.strokeStyle=up?'#14e6a2':'#ff5555'; ctx.fillStyle=up?'rgba(16,185,129,.93)':'rgba(239,68,68,.93)'; ctx.lineWidth=1.8;
+                ctx.beginPath(); ctx.moveTo(x,yH); ctx.lineTo(x,yL); ctx.stroke();
+                ctx.fillRect(x-cw/2, Math.min(yO,yC), cw, Math.max(4,Math.abs(yC-yO)));
+                ctx.strokeRect(x-cw/2, Math.min(yO,yC), cw, Math.max(4,Math.abs(yC-yO)));
+            });
+            const conv = omega_V12ChartConverters();
+            omega_V12DrawUserDrawings(ctx, conv);
+        };
+
+        // Fetch deeper chart history where the exchange permits it.
+        const _omega_v14_old_refresh_crypto = omega_V10RefreshCrypto;
+        omega_V10RefreshCrypto = async function(force=false){
+            await _omega_v14_old_refresh_crypto(force);
+            omega_V14BindCanvasEvents();
+            omega_V14RenderDrawingsPanel();
+        };
+
+        // Make Crypto tab survive refresh even with the first DOMContentLoaded handler.
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const hash = window.location.hash.replace('#','');
+                if(['live','crypto','finance','favs','stream','basketbol','futbol'].includes(hash)){
+                    const el = document.getElementById('nav-' + hash);
+                    if(el) omega_SwitchMainTab(hash, el, false);
+                }
+                omega_V14BindCanvasEvents();
+                omega_V14RenderDrawingsPanel();
+            }, 1200);
+        });
 
 </script>
 </body>
