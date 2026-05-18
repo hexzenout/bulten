@@ -186,6 +186,56 @@
         .rolling-box-btn b { color:var(--gold); font-size:.84em; font-family:'JetBrains Mono'; font-weight:950; }
         @media (max-width: 1150px) { .finance-main-grid, .finance-secondary-grid { grid-template-columns:1fr; } .finance-kpi-row { grid-template-columns:repeat(3,1fr); } }
         @media (max-width: 680px) { .finance-clean-hero { flex-direction:column; align-items:flex-start; } .finance-clean-balance { text-align:left; } .finance-kpi-row { grid-template-columns:repeat(2,1fr); } .finance-form-grid, .finance-actions { grid-template-columns:1fr; } .rolling-grand-grid { grid-template-columns:repeat(2,1fr); } }
+
+        /* ================= KASA UX V3 OVERRIDES ================= */
+        .finance-clean-hero { background:linear-gradient(135deg,#121212,#0b0b0b); border-color:#303030; }
+        .finance-clean-title h2 { color:var(--gold); }
+        .finance-clean-balance b { color:var(--gold); text-shadow:0 0 18px rgba(251,191,36,.16); }
+        .finance-kpi-row .kpi-card-supreme:nth-child(1) { border-left:3px solid var(--gold); }
+        .finance-kpi-row .kpi-card-supreme:nth-child(2), .finance-kpi-row .kpi-card-supreme:nth-child(3) { border-left:3px solid var(--green); }
+        .finance-kpi-row .kpi-card-supreme:nth-child(4) { border-left:3px solid var(--orange); }
+        .finance-kpi-row .kpi-card-supreme:nth-child(5) { border-left:3px solid var(--blue-accent); }
+        .finance-kpi-row .kpi-card-supreme:nth-child(6) { border-left:3px solid var(--muted); }
+        .finance-card { background:#111; border-color:#262626; }
+        .finance-card-head { background:#151515; }
+        .finance-card-head h3 i { color:var(--gold); margin-right:7px; }
+        .finance-tab { border:1px solid transparent; }
+        .finance-tab.active#finance-tab-bet { background:rgba(251,191,36,.95); color:#1b1300; }
+        .finance-tab.active#finance-tab-crypto { background:rgba(59,130,246,.95); color:#03112b; }
+        .finance-field label { color:#d0d0d0; }
+        .finance-input, .finance-select { background:#0b0b0b; border-color:#363636; }
+        .finance-input:focus, .finance-select:focus { border-color:var(--gold); box-shadow:0 0 0 2px rgba(251,191,36,.10); }
+        .strategy-result { background:#0a0a0a; border-color:#333; color:#e6e6e6; }
+        .strategy-result .plan-line { display:flex; justify-content:space-between; gap:12px; padding:5px 0; border-bottom:1px solid #1e1e1e; }
+        .strategy-result .plan-line:last-child { border-bottom:none; }
+        .strategy-result .plan-label { color:var(--muted); font-weight:800; }
+        .strategy-result .plan-val { color:var(--gold); font-family:'JetBrains Mono'; font-weight:950; text-align:right; }
+        .trade-table-wrap { max-height:620px; background:#0b0b0b; }
+        .trade-table { min-width:880px; font-size:.76em; }
+        .trade-table th { background:#151515; color:#bdbdbd; padding:11px 9px; }
+        .trade-table td { padding:7px; vertical-align:middle; }
+        .trade-table input, .trade-table select { background:#0b0b0b; border-color:#303030; min-height:34px; }
+        .trade-table select.slot-type-bet { color:var(--gold); border-color:rgba(251,191,36,.35); font-weight:900; }
+        .trade-table select.slot-type-crypto { color:var(--blue-accent); border-color:rgba(59,130,246,.38); font-weight:900; }
+        .slot-money-input { color:var(--green) !important; font-weight:900; }
+        .slot-odds-input { color:var(--gold) !important; font-weight:900; }
+        .status-badge { display:inline-flex; align-items:center; justify-content:center; min-width:92px; padding:6px 8px; border-radius:999px; font-size:.68em; font-weight:950; letter-spacing:.4px; font-family:'Inter',sans-serif; }
+        .status-empty { background:#222; color:#aaa; }
+        .status-pending { background:rgba(251,191,36,.13); color:var(--gold); border:1px solid rgba(251,191,36,.35); }
+        .status-win { background:rgba(16,185,129,.14); color:var(--green); border:1px solid rgba(16,185,129,.4); }
+        .status-loss { background:rgba(239,68,68,.14); color:#ff8a8a; border:1px solid rgba(239,68,68,.4); }
+        .mini-actions { display:grid; grid-template-columns:1fr 1fr; gap:6px; min-width:160px; }
+        .mini-actions button { min-height:34px; border-radius:9px; font-size:.68em; letter-spacing:.35px; }
+        .mini-actions .w { background:var(--green); color:#00170d; box-shadow:0 0 12px rgba(16,185,129,.12); }
+        .mini-actions .l { background:var(--red); color:#fff; box-shadow:0 0 12px rgba(239,68,68,.12); }
+        .mini-actions .r { grid-column:1 / -1; background:#242424; color:#d0d0d0; border:1px solid #333; }
+        .pnl-pos { color:var(--green); font-family:'JetBrains Mono'; font-weight:950; }
+        .pnl-neg { color:var(--red); font-family:'JetBrains Mono'; font-weight:950; }
+        #omega-apex-chart-main { height:340px; background:#090909; }
+        .barrier-pill.done { color:#06140d; background:var(--green); }
+        .barrier-pill.next { color:#1b1300; background:var(--gold); box-shadow:0 0 14px rgba(251,191,36,.14); }
+        .finance-actions { grid-template-columns:1fr 1fr; }
+        @media (max-width: 680px) { .finance-actions { grid-template-columns:1fr; } .mini-actions { min-width:140px; } }
         .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .custom-modal-overlay.show-modal { opacity: 1; pointer-events: all; }
         .modal-header { padding: 20px 30px; background: #0f0f0f; border-bottom: 1px solid var(--border-bright); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
@@ -314,7 +364,7 @@
                     <div class="finance-clean-hero">
                         <div class="finance-clean-title">
                             <h2><i class="fa-solid fa-wallet"></i> KASA TERMINAL</h2>
-                            <p>Basit görünüm. Bahis ve kripto ayrı sekmeler. Bakiye, P/L ve hedef bariyerleri tek ekranda.</p>
+                            <p>Sade görünüm. Bahis ve kripto ayrı sekmeler, kasa bölme, P/L grafiği ve hedef bariyerleri tek ekranda.</p>
                         </div>
                         <div class="finance-clean-balance">
                             <label>Güncel Bakiye</label>
@@ -360,8 +410,9 @@
                                         <div class="finance-field"><label>Güncel Kasa</label><input id="finance-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankroll()"></div>
                                         <div class="finance-field"><label>Günlük Hedef %</label><input id="finance-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateFinanceSettings()"></div>
                                         <div class="finance-field"><label>İşlem Sayısı</label><input id="finance-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <div class="finance-field"><label>Kasayı Kaça Böl?</label><input id="finance-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateFinanceSettings()"></div>
                                         <div class="finance-field"><label>Oran</label><input id="finance-default-odds" class="finance-input" type="number" value="1.30" step="0.01" onchange="omega_UpdateFinanceSettings()"></div>
-                                        <div class="finance-field"><label>Risk Modeli</label><select id="finance-risk-model" class="finance-select" onchange="omega_UpdateFinanceSettings()"><option value="target">Hedefe göre</option><option value="equal">Kasayı eşit böl</option><option value="percent">Kasanın %2'si</option></select></div>
+                                        <div class="finance-field"><label>Risk Modeli</label><select id="finance-risk-model" class="finance-select" onchange="omega_UpdateFinanceSettings()"><option value="target">Hedefe göre</option><option value="split">Kasayı seçtiğim parçaya böl</option><option value="equal">İşlem sayısına eşit böl</option><option value="percent">Kasanın %2'si</option></select></div>
                                     </div>
                                 </div>
 
@@ -371,6 +422,7 @@
                                         <div class="finance-field"><label>Güncel Kasa</label><input id="crypto-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankrollFromCrypto()"></div>
                                         <div class="finance-field"><label>Günlük Hedef %</label><input id="crypto-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>İşlem Sayısı</label><input id="crypto-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Kasayı Kaça Böl?</label><input id="crypto-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>TP %</label><input id="crypto-tp-pct" class="finance-input" type="number" value="1" step="0.1" onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>Kaldıraç</label><input id="crypto-leverage" class="finance-input" type="number" value="10" step="1" onchange="omega_UpdateCryptoSettings()"></div>
                                     </div>
@@ -1103,6 +1155,8 @@
                 tradeCount: 20,
                 defaultOdds: 1.30,
                 riskModel: 'target',
+                splitCount: 20,
+                cryptoSplitCount: 20,
                 cryptoTargetPct: 30,
                 cryptoTradeCount: 20,
                 cryptoTpPct: 1,
@@ -1135,12 +1189,14 @@
             omega_SetVal('finance-current-bank', Number(_WALLET_BALANCE || 0).toFixed(2));
             omega_SetVal('finance-target-pct', _FINANCE_SETTINGS.targetPct);
             omega_SetVal('finance-trade-count', _FINANCE_SETTINGS.tradeCount);
+            omega_SetVal('finance-split-count', _FINANCE_SETTINGS.splitCount);
             omega_SetVal('finance-default-odds', _FINANCE_SETTINGS.defaultOdds);
             const rm = document.getElementById('finance-risk-model'); if(rm) rm.value = _FINANCE_SETTINGS.riskModel;
             omega_SetVal('crypto-start-bank', _FINANCE_SETTINGS.startBank);
             omega_SetVal('crypto-current-bank', Number(_WALLET_BALANCE || 0).toFixed(2));
             omega_SetVal('crypto-target-pct', _FINANCE_SETTINGS.cryptoTargetPct);
             omega_SetVal('crypto-trade-count', _FINANCE_SETTINGS.cryptoTradeCount);
+            omega_SetVal('crypto-split-count', _FINANCE_SETTINGS.cryptoSplitCount);
             omega_SetVal('crypto-tp-pct', _FINANCE_SETTINGS.cryptoTpPct);
             omega_SetVal('crypto-leverage', _FINANCE_SETTINGS.cryptoLeverage);
             const todayLabel = document.getElementById('finance-today-label');
@@ -1163,6 +1219,7 @@
             _FINANCE_SETTINGS.startBank = parseFloat(document.getElementById('finance-start-bank')?.value) || 100;
             _FINANCE_SETTINGS.targetPct = parseFloat(document.getElementById('finance-target-pct')?.value) || 0;
             _FINANCE_SETTINGS.tradeCount = Math.min(20, Math.max(1, parseInt(document.getElementById('finance-trade-count')?.value) || 20));
+            _FINANCE_SETTINGS.splitCount = Math.min(100, Math.max(1, parseInt(document.getElementById('finance-split-count')?.value) || 20));
             _FINANCE_SETTINGS.defaultOdds = parseFloat(document.getElementById('finance-default-odds')?.value) || 1.30;
             _FINANCE_SETTINGS.riskModel = document.getElementById('finance-risk-model')?.value || 'target';
             omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RefreshFinanceDashboard();
@@ -1172,6 +1229,7 @@
             _FINANCE_SETTINGS.startBank = parseFloat(document.getElementById('crypto-start-bank')?.value) || _FINANCE_SETTINGS.startBank || 100;
             _FINANCE_SETTINGS.cryptoTargetPct = parseFloat(document.getElementById('crypto-target-pct')?.value) || 0;
             _FINANCE_SETTINGS.cryptoTradeCount = Math.min(20, Math.max(1, parseInt(document.getElementById('crypto-trade-count')?.value) || 20));
+            _FINANCE_SETTINGS.cryptoSplitCount = Math.min(100, Math.max(1, parseInt(document.getElementById('crypto-split-count')?.value) || 20));
             _FINANCE_SETTINGS.cryptoTpPct = parseFloat(document.getElementById('crypto-tp-pct')?.value) || 1;
             _FINANCE_SETTINGS.cryptoLeverage = parseFloat(document.getElementById('crypto-leverage')?.value) || 1;
             omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RefreshFinanceDashboard();
@@ -1198,21 +1256,28 @@
             if(_FINANCE_MODE === 'crypto') {
                 const targetProfit = bank * ((_FINANCE_SETTINGS.cryptoTargetPct || 0) / 100);
                 const count = Math.max(1, _FINANCE_SETTINGS.cryptoTradeCount || 20);
+                const splitCount = Math.max(1, _FINANCE_SETTINGS.cryptoSplitCount || 20);
                 const tpPct = Math.max(.01, _FINANCE_SETTINGS.cryptoTpPct || 1);
                 const lev = Math.max(1, _FINANCE_SETTINGS.cryptoLeverage || 1);
                 const profitRate = (tpPct / 100) * lev;
-                const stake = targetProfit / count / profitRate;
+                const stakeByTarget = targetProfit / count / profitRate;
+                const stakeBySplit = bank / splitCount;
+                const stake = stakeBySplit;
                 const syntheticOdds = 1 + profitRate;
-                return { mode:'crypto', bank, targetProfit, count, odds:syntheticOdds, stake, tpPct, lev, profitRate };
+                return { mode:'crypto', bank, targetProfit, count, splitCount, odds:syntheticOdds, stake, stakeByTarget, stakeBySplit, tpPct, lev, profitRate };
             }
             const targetProfit = bank * ((_FINANCE_SETTINGS.targetPct || 0) / 100);
             const count = Math.max(1, _FINANCE_SETTINGS.tradeCount || 20);
+            const splitCount = Math.max(1, _FINANCE_SETTINGS.splitCount || 20);
             const odds = Math.max(1.01, _FINANCE_SETTINGS.defaultOdds || 1.30);
             let stake = 0;
-            if(_FINANCE_SETTINGS.riskModel === 'equal') stake = bank / count;
+            if(_FINANCE_SETTINGS.riskModel === 'split') stake = bank / splitCount;
+            else if(_FINANCE_SETTINGS.riskModel === 'equal') stake = bank / count;
             else if(_FINANCE_SETTINGS.riskModel === 'percent') stake = bank * 0.02;
             else stake = targetProfit / count / (odds - 1);
-            return { mode:'bet', bank, targetProfit, count, odds, stake };
+            const stakeByTarget = targetProfit / count / (odds - 1);
+            const stakeBySplit = bank / splitCount;
+            return { mode:'bet', bank, targetProfit, count, splitCount, odds, stake, stakeByTarget, stakeBySplit, riskModel:_FINANCE_SETTINGS.riskModel };
         }
 
         function omega_CalculateStakePlan() {
@@ -1221,14 +1286,26 @@
             if(!box) return r.stake;
             if(r.mode === 'crypto') {
                 const perProfit = r.stake * r.profitRate;
-                box.innerHTML = `KRİPTO · Kasa: <b>$${r.bank.toFixed(2)}</b> · Hedef: <b>$${r.targetProfit.toFixed(2)}</b> · İşlem: <b>${r.count}</b><br>
-                TP: <b>%${r.tpPct}</b> · Kaldıraç: <b>${r.lev}x</b> · Pozisyon başı önerilen marjin: <b>$${r.stake.toFixed(2)}</b><br>
-                İşlem başı hedef kâr: <b>$${perProfit.toFixed(2)}</b> · ${r.count}/${r.count} başarılı olursa yeni kasa: <b>$${(r.bank + perProfit*r.count).toFixed(2)}</b>.`;
+                const targetProfitPerTrade = r.stakeByTarget * r.profitRate;
+                box.innerHTML = `
+                    <div class="plan-line"><span class="plan-label">Mod</span><span class="plan-val">KRİPTO</span></div>
+                    <div class="plan-line"><span class="plan-label">Kasa / Bölüm</span><span class="plan-val">$${r.bank.toFixed(2)} / ${r.splitCount} parça</span></div>
+                    <div class="plan-line"><span class="plan-label">Önerilen marjin</span><span class="plan-val">$${r.stake.toFixed(2)}</span></div>
+                    <div class="plan-line"><span class="plan-label">TP ve kaldıraç</span><span class="plan-val">%${r.tpPct} · ${r.lev}x</span></div>
+                    <div class="plan-line"><span class="plan-label">İşlem başı hedef kâr</span><span class="plan-val">$${perProfit.toFixed(2)}</span></div>
+                    <div class="plan-line"><span class="plan-label">Günlük hedefe göre gereken marjin</span><span class="plan-val">$${r.stakeByTarget.toFixed(2)}</span></div>
+                `;
             } else {
                 const perProfit = r.stake * (r.odds - 1);
-                box.innerHTML = `BAHİS · Kasa: <b>$${r.bank.toFixed(2)}</b> · Hedef: <b>$${r.targetProfit.toFixed(2)}</b> · İşlem: <b>${r.count}</b> · Oran: <b>@${r.odds.toFixed(2)}</b><br>
-                Önerilen stake: <b>$${r.stake.toFixed(2)}</b> · İşlem başı kâr: <b>$${perProfit.toFixed(2)}</b> · Toplam risk: <b>$${(r.stake*r.count).toFixed(2)}</b><br>
-                ${r.count}/${r.count} başarılı olursa yeni kasa: <b>$${(r.bank + perProfit*r.count).toFixed(2)}</b>.`;
+                const modelText = r.riskModel === 'split' ? `${r.splitCount} parçaya böl` : r.riskModel === 'equal' ? 'İşlem sayısına böl' : r.riskModel === 'percent' ? 'Kasanın %2si' : 'Hedefe göre';
+                box.innerHTML = `
+                    <div class="plan-line"><span class="plan-label">Mod</span><span class="plan-val">BAHİS</span></div>
+                    <div class="plan-line"><span class="plan-label">Kasa / Model</span><span class="plan-val">$${r.bank.toFixed(2)} · ${modelText}</span></div>
+                    <div class="plan-line"><span class="plan-label">Önerilen stake</span><span class="plan-val">$${r.stake.toFixed(2)}</span></div>
+                    <div class="plan-line"><span class="plan-label">Oran / İşlem sayısı</span><span class="plan-val">@${r.odds.toFixed(2)} · ${r.count} işlem</span></div>
+                    <div class="plan-line"><span class="plan-label">İşlem başı kâr</span><span class="plan-val">$${perProfit.toFixed(2)}</span></div>
+                    <div class="plan-line"><span class="plan-label">Günlük hedefe göre gereken stake</span><span class="plan-val">$${r.stakeByTarget.toFixed(2)}</span></div>
+                `;
             }
             return r.stake;
         }
@@ -1250,22 +1327,32 @@
             omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard();
         }
 
+        function omega_StatusText(status) {
+            if(status === 'win') return 'KAZANDI';
+            if(status === 'loss') return 'KAYBETTİ';
+            if(status === 'pending') return 'BEKLEMEDE';
+            return 'BOŞ';
+        }
+        function omega_TypeText(type) { return type === 'crypto' ? 'KRİPTO' : 'BAHİS'; }
+
         function omega_RenderDailyTradeGrid() {
             const grid = document.getElementById('daily-trade-grid'); if(!grid) return;
             const slots = omega_GetTodaySlots();
-            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Mod</th><th>İşlem</th><th>Stake / Marjin</th><th>Oran / Katsayı</th><th>Durum</th><th>P/L</th><th>Aksiyon</th></tr></thead><tbody>`;
+            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Tür</th><th>İşlem Adı</th><th>Tutar</th><th>Oran / Katsayı</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
             slots.forEach((slot, idx) => {
                 const pnl = Number(slot.pnl || 0);
                 const pnlClass = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+                const typeCls = slot.type === 'crypto' ? 'slot-type-crypto' : 'slot-type-bet';
+                const statusCls = slot.status === 'win' ? 'status-win' : slot.status === 'loss' ? 'status-loss' : slot.status === 'pending' ? 'status-pending' : 'status-empty';
                 html += `<tr>
                     <td style="font-family:'JetBrains Mono'; color:var(--muted); font-weight:900;">${idx+1}</td>
-                    <td><select onchange="omega_UpdateSlot(${idx}, 'type', this.value)"><option value="bet" ${slot.type === 'bet' ? 'selected' : ''}>BAHİS</option><option value="crypto" ${slot.type === 'crypto' ? 'selected' : ''}>KRİPTO</option></select></td>
-                    <td><input type="text" value="${slot.name || ''}" placeholder="İşlem adı" onchange="omega_UpdateSlot(${idx}, 'name', this.value)"></td>
-                    <td><input type="number" value="${slot.stake || ''}" placeholder="0.00" onchange="omega_UpdateSlot(${idx}, 'stake', this.value)"></td>
-                    <td><input type="number" value="${slot.odds || ''}" step="0.01" placeholder="1.30" onchange="omega_UpdateSlot(${idx}, 'odds', this.value)"></td>
-                    <td style="font-family:'JetBrains Mono'; color:${slot.status==='win'?'var(--green)':slot.status==='loss'?'var(--red)':slot.status==='pending'?'var(--gold)':'var(--muted)'}; font-weight:950;">${(slot.status || 'empty').toUpperCase()}</td>
+                    <td><select class="${typeCls}" onchange="omega_UpdateSlot(${idx}, 'type', this.value)"><option value="bet" ${slot.type === 'bet' ? 'selected' : ''}>BAHİS</option><option value="crypto" ${slot.type === 'crypto' ? 'selected' : ''}>KRİPTO</option></select></td>
+                    <td><input type="text" value="${slot.name || ''}" placeholder="Örn: Arsenal / BTC Long" onchange="omega_UpdateSlot(${idx}, 'name', this.value)"></td>
+                    <td><input class="slot-money-input" type="number" value="${slot.stake || ''}" placeholder="0.00" onchange="omega_UpdateSlot(${idx}, 'stake', this.value)"></td>
+                    <td><input class="slot-odds-input" type="number" value="${slot.odds || ''}" step="0.01" placeholder="1.30" onchange="omega_UpdateSlot(${idx}, 'odds', this.value)"></td>
+                    <td><span class="status-badge ${statusCls}">${omega_StatusText(slot.status)}</span></td>
                     <td class="${pnlClass}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</td>
-                    <td><div class="mini-actions"><button class="w" onclick="omega_ResolveDailySlot(${idx}, 'win')">W</button><button class="l" onclick="omega_ResolveDailySlot(${idx}, 'loss')">L</button><button class="r" onclick="omega_ResetDailySlot(${idx})">SIFIRLA</button></div></td>
+                    <td><div class="mini-actions"><button class="w" onclick="omega_ResolveDailySlot(${idx}, 'win')">KAZANDI</button><button class="l" onclick="omega_ResolveDailySlot(${idx}, 'loss')">KAYBETTİ</button><button class="r" onclick="omega_ResetDailySlot(${idx})">SIFIRLA</button></div></td>
                 </tr>`;
             });
             html += `</tbody></table>`;
@@ -1283,7 +1370,7 @@
         function omega_ResolveDailySlot(index, result) {
             const slot = omega_GetTodaySlots()[index]; if(!slot) return;
             const stake = parseFloat(slot.stake); const odds = parseFloat(slot.odds);
-            if(isNaN(stake) || stake <= 0) { alert('Stake / marjin gir.'); return; }
+            if(isNaN(stake) || stake <= 0) { alert('Tutar / marjin gir.'); return; }
             if(isNaN(odds) || odds <= 1) { alert('Oran / katsayı gir.'); return; }
             const pnl = result === 'win' ? stake * (odds - 1) : -stake;
             slot.status = result; slot.pnl = pnl; slot.resolvedAt = Date.now(); slot.name = slot.name || `${slot.type === 'crypto' ? 'CRYPTO' : 'BAHİS'} #${index+1}`;
@@ -1341,9 +1428,9 @@
             if(list.length===0) rowsHtml = `<tr><td colspan="8" style="text-align:center; padding:28px; color:var(--muted); font-weight:900;">Henüz işlem yok.</td></tr>`;
             list.forEach(item=>{
                 const dateStr = new Date(item.id).toLocaleDateString('tr-TR');
-                const statusBadge = item.pending ? `<span style="color:var(--gold); font-weight:900;">BEKLEMEDE</span>` : item.res==='win' ? `<b style="color:var(--green)">WIN</b>` : `<b style="color:var(--red)">LOSS</b>`;
+                const statusBadge = item.pending ? `<span style="color:var(--gold); font-weight:900;">BEKLEMEDE</span>` : item.res==='win' ? `<b style="color:var(--green)">KAZANDI</b>` : `<b style="color:var(--red)">KAYBETTİ</b>`;
                 const pnlDisplay = item.pending ? '-' : `<span style="color:${item.pnl>=0?'var(--green)':'var(--red)'}; font-weight:900;">${item.pnl>=0?'+':''}${item.pnl.toFixed(2)}</span>`;
-                rowsHtml += `<tr><td>${dateStr}</td><td>${(item.type||'bet').toUpperCase()}</td><td style="color:#fff; font-weight:800;">${item.name}</td><td>$${Number(item.amt||0).toFixed(2)}</td><td>@${Number(item.odds||0).toFixed(2)}</td><td>${statusBadge}</td><td>${pnlDisplay}</td><td>${item.bal?'$'+Number(item.bal).toFixed(2):'-'}</td></tr>`;
+                rowsHtml += `<tr><td>${dateStr}</td><td>${omega_TypeText(item.type||'bet')}</td><td style="color:#fff; font-weight:800;">${item.name}</td><td>$${Number(item.amt||0).toFixed(2)}</td><td>@${Number(item.odds||0).toFixed(2)}</td><td>${statusBadge}</td><td>${pnlDisplay}</td><td>${item.bal?'$'+Number(item.bal).toFixed(2):'-'}</td></tr>`;
             });
             tableElement.innerHTML = headerHtml + rowsHtml;
         }
@@ -1368,23 +1455,34 @@
         function omega_RenderApexSupremeChart() {
             const chartDiv = document.querySelector('#omega-apex-chart-main'); if(!chartDiv) return;
             if(_SUPREME_CHART_INSTANCE) _SUPREME_CHART_INSTANCE.destroy();
-            const data = (_BALANCE_HISTORY && _BALANCE_HISTORY.length) ? _BALANCE_HISTORY.map(Number) : [Number(_WALLET_BALANCE||100)];
-            const start = data[0] || 100;
-            const positive = Number(_WALLET_BALANCE||0) >= start;
-            const visibleBarriers = FINANCE_BARRIERS.filter(x => x >= Math.min(...data)*0.8 && x <= Math.max(Math.max(...data)*1.25, 1000));
-            const annotations = { yaxis: visibleBarriers.map(v => ({ y:v, borderColor:'#3f3f46', strokeDashArray:4, label:{ text:'$'+v.toLocaleString('en-US'), style:{ background:'#18181b', color:'#a1a1aa', fontSize:'10px' } } })) };
+            const balanceData = (_BALANCE_HISTORY && _BALANCE_HISTORY.length) ? _BALANCE_HISTORY.map(Number) : [Number(_WALLET_BALANCE||100)];
+            const pnlData = balanceData.map((v, i) => i === 0 ? 0 : Number((v - balanceData[i-1]).toFixed(2)));
+            const labels = balanceData.map((_, i) => i === 0 ? 'Başlangıç' : `${i}. işlem`);
+            const minBal = Math.min(...balanceData);
+            const maxBal = Math.max(...balanceData);
+            const visibleBarriers = FINANCE_BARRIERS.filter(x => x >= minBal * 0.80 && x <= Math.max(maxBal * 1.25, 1000));
+            const annotations = { yaxis: visibleBarriers.map(v => ({ y:v, borderColor:'#34343a', strokeDashArray:5, label:{ text:'$'+v.toLocaleString('en-US'), style:{ background:'#151515', color:'#c8c8c8', fontSize:'10px' } } })) };
             const chartOptions = {
-                series:[{ name:'Bakiye', data }],
-                chart:{ type:'area', height:'100%', toolbar:{show:false}, background:'transparent', animations:{enabled:true, speed:450} },
+                series:[
+                    { name:'Kasa', type:'line', data: balanceData },
+                    { name:'P/L', type:'column', data: pnlData }
+                ],
+                chart:{ type:'line', height:'100%', toolbar:{show:false}, background:'transparent', animations:{enabled:true, speed:420}, stacked:false },
                 theme:{ mode:'dark' },
-                colors:[positive ? '#10b981' : '#ef4444'],
-                stroke:{ curve:'smooth', width:3 },
-                fill:{ type:'gradient', gradient:{ opacityFrom:.32, opacityTo:.04, stops:[0,90,100] } },
+                colors:['#fbbf24', '#10b981'],
+                stroke:{ width:[4,0], curve:'straight' },
+                plotOptions:{ bar:{ columnWidth:'42%', borderRadius:3, colors:{ ranges:[{ from:-999999999, to:-0.01, color:'#ef4444' }, { from:0, to:999999999, color:'#10b981' }] } } },
+                fill:{ opacity:[1,.42], type:['solid','solid'] },
                 annotations,
+                labels,
                 xaxis:{ labels:{show:false}, axisBorder:{show:false}, axisTicks:{show:false} },
-                yaxis:{ opposite:true, labels:{ style:{colors:'#8a8a8a', fontSize:'11px', fontFamily:'JetBrains Mono'}, formatter:v=>'$'+Number(v).toFixed(0) } },
-                grid:{ borderColor:'#272727', strokeDashArray:4 },
-                tooltip:{ theme:'dark', y:{ formatter:v=>'$'+Number(v).toFixed(2) } }
+                yaxis:[
+                    { seriesName:'Kasa', opposite:true, labels:{ style:{colors:'#a1a1aa', fontSize:'11px', fontFamily:'JetBrains Mono'}, formatter:v=>'$'+Number(v).toFixed(0) } },
+                    { seriesName:'P/L', show:false }
+                ],
+                grid:{ borderColor:'#252525', strokeDashArray:4 },
+                legend:{ show:true, labels:{ colors:'#aaa' } },
+                tooltip:{ theme:'dark', shared:true, y:{ formatter:v=>'$'+Number(v).toFixed(2) } }
             };
             _SUPREME_CHART_INSTANCE = new ApexCharts(chartDiv, chartOptions); _SUPREME_CHART_INSTANCE.render(); omega_RenderBarriers();
         }
