@@ -117,10 +117,20 @@
     setTimeout(check, 250);
   }
 
+
+  function loadCryptoProFix() {
+    if (document.querySelector('script[data-v26-crypto-pro="1"]')) return;
+    const script = document.createElement("script");
+    script.src = "assets/js/crypto.js?v=26pro1";
+    script.dataset.v26CryptoPro = "1";
+    document.body.appendChild(script);
+  }
+
   function bootFixes() {
     document.body.classList.remove("v26-footer-ready");
     hideBadStartupTexts();
     revealFooterWhenStable();
+    loadCryptoProFix();
 
     const timer = setInterval(function () {
       hideBadStartupTexts();
