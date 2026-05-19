@@ -232,8 +232,7 @@ function createAuthUI() {
   shell.innerHTML = `
     <span class="v26-auth-user" id="v26-auth-user-label">Giriş yapılmadı</span>
     <button class="v26-auth-btn gold" id="v26-auth-open-btn">GİRİŞ / KAYIT</button>
-    <button class="v26-auth-btn" id="v26-cloud-save-btn" style="display:none;">BULUTA KAYDET</button>
-    <button class="v26-auth-btn" id="v26-cloud-load-btn" style="display:none;">BULUTTAN YÜKLE</button>
+    <!-- Cloud save/load arka planda hazır tutulur; kullanıcı ekranında gösterilmez. -->
     <button class="v26-auth-btn" id="v26-auth-logout-btn" style="display:none;">ÇIKIŞ</button>
   `;
 
@@ -275,8 +274,10 @@ function createAuthUI() {
   document.getElementById("v26-login-btn").onclick = loginUser;
   document.getElementById("v26-register-btn").onclick = registerUser;
   document.getElementById("v26-auth-logout-btn").onclick = logoutUser;
-  document.getElementById("v26-cloud-save-btn").onclick = saveUserCloudData;
-  document.getElementById("v26-cloud-load-btn").onclick = loadUserCloudData;
+  const cloudSaveBtn = document.getElementById("v26-cloud-save-btn");
+  const cloudLoadBtn = document.getElementById("v26-cloud-load-btn");
+  if (cloudSaveBtn) cloudSaveBtn.onclick = saveUserCloudData;
+  if (cloudLoadBtn) cloudLoadBtn.onclick = loadUserCloudData;
 
   modal.addEventListener("click", (e) => {
     if (e.target.id === "v26-auth-modal") closeAuthModal();
