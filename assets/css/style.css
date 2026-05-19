@@ -542,62 +542,18 @@
         .alarm-v15-sound-box button{height:39px;border:1px solid #333;background:#191919;color:#ddd;border-radius:10px;font-weight:950;cursor:pointer;}
         .alarm-v15-sound-box button:hover{border-color:var(--gold);color:var(--gold);}
         @media(max-width:760px){.alarm-v15-sound-box{grid-template-columns:1fr}.chart-delete-floating{font-size:.68em;padding:7px 9px}}
+
 /* ===============================
-   V26 TOAST FIX
-   Sayfa açılışındaki gereksiz Plan hesaplandı bildirimini gizler.
-   Sadece gerçek kullanıcı tıklamasından sonra toast gösterilir.
+   V26 SAFE FINAL FIXES
+   Footer düzenini bozmaz. Sadece açılış toastını gizler.
 ================================ */
 
-body:not(.v26-toast-allowed) #finance-toast,
-body:not(.v26-toast-allowed) .finance-toast {
-    display: none !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    visibility: hidden !important;
-}
-/* ===============================
-   V26 GLOBAL LAYOUT RESET
-   Sayfa geçişlerinde zıplama, footer parlaması ve genişlik animasyonunu düzeltir.
-================================ */
-
-/* Sayfa geçişlerinde genişleme/daralma animasyonunu kapat */
+/* Sayfa geçişlerindeki genişlik zıplamasını azaltır, footer akışına dokunmaz. */
 .center-wrapper {
     transition: none !important;
 }
 
-/* Ana içerikler yüklenirken footer ekranda parlamasın */
-body:not(.v26-layout-ready) .center-wrapper > div:last-child {
-    opacity: 0 !important;
-    visibility: hidden !important;
-}
-
-/* Footer normal akışta altta kalsın, ortaya sabitlenmesin */
-.center-wrapper > div:last-child {
-    margin-top: 80px !important;
-    padding-top: 30px !important;
-    padding-bottom: 50px !important;
-    flex-shrink: 0 !important;
-}
-
-/* Radar / favoriler / yayın / kasa blokları çok kısa kalırsa footer yukarı zıplamasın */
-#omega-radar-block,
-#omega-favs-block,
-#omega-stream-block,
-#v19-finance-block {
-    min-height: 420px;
-}
-
-/* Canlı yayın ekranında footer yayının üstüne yapışmasın */
-#omega-stream-block {
-    padding-bottom: 80px;
-}
-
-/* Açılışta "Kayıt bulunamadı / veri bekleniyor" gibi boş ekranlar tasarımı bozmasın */
-#radar-render-output:empty {
-    min-height: 420px;
-}
-
-/* Eski finance toast sistemi açılışta görünmesin */
+/* Eski otomatik finance bildirimi yalnızca kullanıcı işleminden sonra görünsün. */
 body:not(.v26-toast-allowed) #finance-toast,
 body:not(.v26-toast-allowed) .finance-toast {
     display: none !important;
@@ -605,3 +561,28 @@ body:not(.v26-toast-allowed) .finance-toast {
     pointer-events: none !important;
     visibility: hidden !important;
 }
+
+/* Yeni sade finance modülünün bildirimi normal çalışsın. */
+#finance-clean-toast.finance-clean-toast {
+    display: block;
+}
+
+/* Footer için generic last-child kuralları kullanılmaz. Footer eski HTML akışındaki yerinde kalır. */
+#omega-site-footer {
+    margin-top: auto;
+    padding-top: 100px;
+    padding-bottom: 50px;
+    text-align: center;
+    color: var(--border-bright);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    font-weight: 800;
+    letter-spacing: 2px;
+    position: static;
+}
+
+/* Ana radar alanı boşken tasarıma müdahale etme; içerik gelince doğal şekilde dolar. */
+#radar-render-output:empty {
+    min-height: 0;
+}
+
