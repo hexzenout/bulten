@@ -680,7 +680,7 @@
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
-                titleElem.innerHTML = '<span style="color:#7E22CE">/ CANLI YAYIN</span>';
+                titleElem.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
 
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
@@ -2649,7 +2649,7 @@
                 _ACTIVE_TAB = 'crypto';
                 const cryptoBlock = document.getElementById('omega-crypto-block');
                 if(cryptoBlock) cryptoBlock.style.display = 'block';
-                if(titleElem) titleElem.innerHTML = '<span style="color:#f97316">/ KRİPTO TERMİNAL</span>';
+                if(titleElem) titleElem.innerHTML = '<span style="color:var(--gold)">/ KRİPTO TERMİNAL</span>';
                 omega_InitV10Timeframes();
                 omega_V10SeedTpRows();
                 omega_V10RefreshCrypto(true);
@@ -3348,5 +3348,19 @@
 <script src="assets/js/stream-fix.js"></script>    
 <script type="module" src="assets/js/firebase.js"></script>
 <script src="assets/js/v28-crypto-panel.js"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () {
+      document.body.classList.add("omega-route-ready");
+    }, 350);
+  });
+
+  window.addEventListener("hashchange", function () {
+    document.body.classList.remove("omega-route-ready");
+    setTimeout(function () {
+      document.body.classList.add("omega-route-ready");
+    }, 250);
+  });
+</script>
 </body>
 </html>
