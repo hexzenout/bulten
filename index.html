@@ -39,7 +39,7 @@
                 <i class="fa-solid fa-basketball"></i> BASKETBOL
             </div>
             <div class="nav-link" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)">
-                <i class="fa-solid fa-satellite-dish"></i> YAYIN MATRİSİ
+                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
             </div>
             <div class="nav-link" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
                 <i class="fa-solid fa-star"></i> FAVORİLERİM
@@ -48,7 +48,7 @@
                 <i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP
             </div>
             <div class="nav-link" id="nav-crypto" onclick="omega_SwitchMainTab('crypto', this)">
-                <i class="fa-brands fa-bitcoin"></i> KRİPTO PRO PANEL
+                <i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL
             </div>
             <div class="nav-link" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
                 <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
@@ -138,8 +138,7 @@
                 <div id="omega-crypto-block" class="omega-crypto-standalone" style="display:none;">
                     <div class="terminal-v10-hero crypto">
                         <div>
-                            <h2><i class="fa-brands fa-bitcoin"></i> KRİPTO PRO PANEL</h2>
-                            <p>Binance / OKX, USDT / USDC, geçmiş grafik, canlı fiyat, TP yüzdeleri, stop ve likidasyon tek ekranda.</p>
+                            <h2><i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL</h2>
                         </div>
                         <div class="terminal-v10-live-dot" id="crypto-v10-status">VERİ BEKLENİYOR</div>
                     </div>
@@ -683,7 +682,7 @@
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
-                titleElem.innerHTML = '<span style="color:var(--gold)">/ YAYIN MATRİSİ</span>';
+                titleElem.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
 
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
@@ -2652,7 +2651,7 @@
                 _ACTIVE_TAB = 'crypto';
                 const cryptoBlock = document.getElementById('omega-crypto-block');
                 if(cryptoBlock) cryptoBlock.style.display = 'block';
-                if(titleElem) titleElem.innerHTML = '<span style="color:var(--gold)">/ KRİPTO PRO PANEL</span>';
+                if(titleElem) titleElem.innerHTML = '<span style="color:var(--gold)">/ KRİPTO TERMİNAL</span>';
                 omega_InitV10Timeframes();
                 omega_V10SeedTpRows();
                 omega_V10RefreshCrypto(true);
@@ -3100,11 +3099,6 @@
                 del.innerHTML='<i class="fa-solid fa-trash-can"></i> Sil';
                 del.onclick=(e)=>{ e.stopPropagation(); omega_V15DeleteSelected(); };
                 wrap.appendChild(del);
-                const help=document.createElement('div');
-                help.className='chart-v15-mini-help';
-                help.innerHTML='<b>Kullanım:</b> Mouse tekerleği zaman ekseninde yakınlaştırır/uzaklaştırır. Sağ fiyat ekseninde tekerlek veya sürükleme dikey ölçeği değiştirir. Trend aracında ilk tık başlangıç, mouse ile yön, ikinci tık bitiştir. Çizgi/alarm üstüne tıklayınca çöp kutusu çıkar.';
-                const canvas=document.getElementById('crypto-v10-chart');
-                if(canvas && !document.querySelector('.chart-v15-mini-help')) canvas.insertAdjacentElement('afterend', help);
             }
             const alarmBox=document.querySelector('.crypto-v13-alarm-box');
             if(alarmBox && !document.getElementById('v15-sound-box')){
