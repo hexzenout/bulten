@@ -543,17 +543,36 @@
         .alarm-v15-sound-box button:hover{border-color:var(--gold);color:var(--gold);}
         @media(max-width:760px){.alarm-v15-sound-box{grid-template-columns:1fr}.chart-delete-floating{font-size:.68em;padding:7px 9px}}
 
+
 /* ===============================
-   V26 SAFE FINAL FIXES
-   Footer düzenini bozmaz. Sadece açılış toastını gizler.
+   V26 FINAL STABLE FIXES
+   Footer eski akışında kalır; açılış toastı ve gereksiz boş mesajlar gizlenir.
 ================================ */
 
-/* Sayfa geçişlerindeki genişlik zıplamasını azaltır, footer akışına dokunmaz. */
+/* Genişlik geçişlerinde zıplama olmasın; footer akışına dokunmaz. */
 .center-wrapper {
     transition: none !important;
 }
 
-/* Eski otomatik finance bildirimi yalnızca kullanıcı işleminden sonra görünsün. */
+/* OMEGA footer sadece kendi ID'siyle yönetilir; last-child gibi genel kurallar kullanılmaz. */
+#omega-site-footer {
+    margin-top: auto !important;
+    padding-top: 100px !important;
+    padding-bottom: 50px !important;
+    text-align: center !important;
+    color: var(--border-bright) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.85em !important;
+    font-weight: 800 !important;
+    letter-spacing: 2px !important;
+    position: static !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    flex-shrink: 0 !important;
+}
+
+/* Eski otomatik finance bildirimi açılışta görünmesin. Kullanıcı tıklayınca app-fixes izin verir. */
 body:not(.v26-toast-allowed) #finance-toast,
 body:not(.v26-toast-allowed) .finance-toast {
     display: none !important;
@@ -562,27 +581,14 @@ body:not(.v26-toast-allowed) .finance-toast {
     visibility: hidden !important;
 }
 
-/* Yeni sade finance modülünün bildirimi normal çalışsın. */
+/* Yeni sade Kasa modülünün kendi bildirimi normal çalışsın. */
 #finance-clean-toast.finance-clean-toast {
-    display: block;
+    display: block !important;
+    visibility: visible !important;
 }
 
-/* Footer için generic last-child kuralları kullanılmaz. Footer eski HTML akışındaki yerinde kalır. */
-#omega-site-footer {
-    margin-top: auto;
-    padding-top: 100px;
-    padding-bottom: 50px;
-    text-align: center;
-    color: var(--border-bright);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85em;
-    font-weight: 800;
-    letter-spacing: 2px;
-    position: static;
-}
-
-/* Ana radar alanı boşken tasarıma müdahale etme; içerik gelince doğal şekilde dolar. */
+/* Radar alanı boşsa ekrana mesaj/boy uzatma basma. */
 #radar-render-output:empty {
-    min-height: 0;
+    min-height: 0 !important;
 }
 
