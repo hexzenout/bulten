@@ -1236,3 +1236,32 @@ body.omega-route-ready #omega-finance-block {
 #omega-matrix-grid {
     transition: min-height 0.18s ease, opacity 0.12s ease;
 }
+
+/* ===============================
+   V36 SPEED MODE
+   Stream geçişleri ve Lig/Saat sıralama geçişleri maksimum stabil hıza çekildi.
+================================ */
+
+.stream-master-grid,
+.matrix-unit,
+.league-container-pro,
+.match-card-pro,
+.sort-btn,
+.filter-panel,
+.controls-wrapper,
+.btn-stream-layout {
+    transition-duration: 0.04s !important;
+    animation-duration: 0.04s !important;
+}
+
+#omega-matrix-grid {
+    transition: min-height 0.05s ease, opacity 0.04s ease !important;
+}
+
+body.v36-fast-mode .league-container-pro,
+body.v36-fast-mode .match-card-pro,
+body.v36-fast-mode #radar-render-output,
+body.v36-fast-mode .controls-wrapper {
+    transition: none !important;
+    animation: none !important;
+}
