@@ -135,12 +135,12 @@
 
   const moduleName = qs("#active-module-name");
   if (moduleName && isCrypto) {
-    moduleName.innerHTML = '<span style="color:var(--gold)">/ KRİPTO TERMİNAL</span>';
+    moduleName.innerHTML = '<span style="color:#1E3A8A">/ KRİPTO TERMİNAL</span>';
   }
 
   const streamName = qs("#active-module-name");
   if (streamName && location.hash === "#stream") {
-    streamName.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
+    streamName.innerHTML = '<span style="color:#7E22CE">/ CANLI YAYIN</span>';
   }
 }
   function patchHashBoot() {
