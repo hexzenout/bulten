@@ -1098,71 +1098,34 @@ body.v26-footer-ready #omega-site-footer {
 }
 
 /* ===============================
-   V31 ORANGE LABEL + ICON FIX
-   Sadece istenen yerleri düzeltir:
-   - Sol menü yazıları beyaz kalır.
-   - Sol menü CANLI YAYIN ikonu eski mavi tona döner.
-   - Sol menü KRİPTO TERMİNAL ikonu turuncu olur.
-   - Üst / KRİPTO TERMİNAL turuncu olur.
-   - Kripto iç başlıklar ve BTCUSDT gibi mavi kalan yazılar turuncu olur.
+   INITIAL MODULE FLASH FIX
+   F5 sırasında yanlış ana sayfa/futbol filtrelerinin anlık görünmesini engeller.
 ================================ */
 
-:root {
-    --v31-orange: #f97316;
-    --v31-stream-blue: #3b82f6;
+body:not(.omega-route-ready) main,
+body:not(.omega-route-ready) .center-wrapper,
+body:not(.omega-route-ready) #omega-main-content,
+body:not(.omega-route-ready) #home-section,
+body:not(.omega-route-ready) #football-section,
+body:not(.omega-route-ready) #basketball-section,
+body:not(.omega-route-ready) #omega-stream-block,
+body:not(.omega-route-ready) #omega-crypto-block,
+body:not(.omega-route-ready) #omega-live-block,
+body:not(.omega-route-ready) #omega-finance-block {
+    opacity: 0 !important;
+    visibility: hidden !important;
 }
 
-/* Sol menü yazıları beyaz */
-.accordion-menu #nav-stream,
-.accordion-menu #nav-stream span,
-.accordion-menu #nav-stream b,
-.accordion-menu #nav-crypto,
-.accordion-menu #nav-crypto span,
-.accordion-menu #nav-crypto b {
-    color: var(--text) !important;
+body.omega-route-ready main,
+body.omega-route-ready .center-wrapper,
+body.omega-route-ready #omega-main-content,
+body.omega-route-ready #home-section,
+body.omega-route-ready #football-section,
+body.omega-route-ready #basketball-section,
+body.omega-route-ready #omega-stream-block,
+body.omega-route-ready #omega-crypto-block,
+body.omega-route-ready #omega-live-block,
+body.omega-route-ready #omega-finance-block {
+    opacity: 1 !important;
+    visibility: visible !important;
 }
-
-/* Sol menü ikonları */
-.accordion-menu #nav-stream i,
-.accordion-menu #nav-stream svg,
-.accordion-menu #nav-stream .fa,
-.accordion-menu #nav-stream .fa-solid {
-    color: var(--v31-stream-blue) !important;
-    fill: var(--v31-stream-blue) !important;
-}
-
-.accordion-menu #nav-crypto i,
-.accordion-menu #nav-crypto svg,
-.accordion-menu #nav-crypto .fa,
-.accordion-menu #nav-crypto .fa-solid {
-    color: var(--v31-orange) !important;
-    fill: var(--v31-orange) !important;
-}
-
-/* Üst breadcrumb: sadece Kripto Terminal ve Canlı Yayın kısmı */
-#active-module-name span {
-    color: inherit;
-}
-/* Kripto terminal içindeki mavi/lacivert kalan başlıklar */
-#omega-crypto-block .terminal-v10-hero.crypto h2,
-#omega-crypto-block .terminal-v10-hero.crypto h2 i,
-#omega-crypto-block .crypto-v10-chart-head h3,
-#omega-crypto-block .crypto-v10-chart-head h3 i,
-#omega-crypto-block .crypto-v10-title,
-#omega-crypto-block .crypto-symbol-title,
-#omega-crypto-block .crypto-v10-symbol,
-#omega-crypto-block .crypto-v28-title,
-#omega-crypto-block h1,
-#omega-crypto-block h2,
-#omega-crypto-block h3 {
-    color: var(--v31-orange) !important;
-}
-
-/* BTCUSDT / BTC USDT benzeri sembol başlıkları */
-#omega-crypto-block [id*="symbol"],
-#omega-crypto-block [class*="symbol"],
-#omega-crypto-block [class*="coin-title"] {
-    color: var(--v31-orange) !important;
-}
-
-/* Canlı Yayın üst breadcrumb koyu lila kalsın */
