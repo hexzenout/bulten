@@ -157,18 +157,7 @@
                                 </div>
                             </div>
                             <div class="crypto-v10-timeframes" id="crypto-v10-timeframes"></div>
-                            <div class="crypto-v12-toolbar crypto-v13-toolbar">
-                                <button class="chart-tool-btn" onclick="omega_V12Zoom(0.72)"><i class="fa-solid fa-magnifying-glass-plus"></i> Yakınlaştır</button>
-                                <button class="chart-tool-btn" onclick="omega_V12Zoom(1.38)"><i class="fa-solid fa-magnifying-glass-minus"></i> Uzaklaştır</button>
-                                <button class="chart-tool-btn" onclick="omega_V12ResetView()"><i class="fa-solid fa-compress"></i> Grafiği Sığdır</button>
-                                <button class="chart-tool-btn green" id="tool-alarm" onclick="omega_V12SetDrawMode('alarm')"><i class="fa-solid fa-bell"></i> Grafikten Alarm</button>
-                                <button class="chart-tool-btn" id="tool-hline" onclick="omega_V12SetDrawMode('hline')"><i class="fa-solid fa-grip-lines"></i> Fiyat Çizgisi</button>
-                                <button class="chart-tool-btn green" id="tool-trend-green" onclick="omega_V14SetTrendTool('green')"><i class="fa-solid fa-slash"></i> Trend Yeşil</button>
-                                <button class="chart-tool-btn red" id="tool-trend-red" onclick="omega_V14SetTrendTool('red')"><i class="fa-solid fa-slash"></i> Trend Kırmızı</button>
-                                <button class="chart-tool-btn blue" id="tool-ma" onclick="omega_V12ToggleMA()">MA20</button>
-                                <button class="chart-tool-btn red" onclick="omega_V12UndoDrawing()"><i class="fa-solid fa-trash-arrow-up"></i> Son Çizimi Sil</button>
-                                <button class="chart-tool-btn red" onclick="omega_V14ClearDrawingsForSymbol()"><i class="fa-solid fa-trash-can"></i> Tüm Çizimleri Sil</button>
-                            </div>
+                            <div class="crypto-v12-toolbar crypto-v13-toolbar" style="display:none;"></div>
                             <div class="crypto-v12-chart-wrap">
                                 <div class="crypto-v12-hint" id="crypto-v12-hint">Çizim için grafiğe tıkla.</div>
                                 <canvas id="crypto-v10-chart" width="1200" height="520" class="crypto-v10-canvas"></canvas>
@@ -226,32 +215,6 @@
                             </div>
 
 
-
-                            <div class="crypto-v12-alarm-box crypto-v13-alarm-box">
-                                <div class="crypto-v12-alarm-head">
-                                    <div>
-                                        <b><i class="fa-solid fa-bell"></i> Alarm Merkezi</b><br>
-                                        <span>Manuel fiyat yazabilir veya üstteki <b>Grafikten Alarm</b> butonuna basıp grafikte istediğin fiyat seviyesine tıklayabilirsin.</span>
-                                    </div>
-                                    <button class="chart-tool-btn green" onclick="omega_V12RequestNotify()"><i class="fa-solid fa-bell"></i> Bildirim İzni</button>
-                                </div>
-                                <div class="alarm-v13-help">
-                                    <div><b>Üst alarm:</b> Fiyat yazdığın seviyenin üstüne çıkınca çalar.</div>
-                                    <div><b>Alt alarm:</b> Fiyat yazdığın seviyenin altına düşünce çalar.</div>
-                                    <div><b>Grafikten alarm:</b> Seviyeyi grafikten seçer, yönü canlı fiyata göre otomatik belirler.</div>
-                                </div>
-                                <div class="alarm-v13-grid">
-                                    <label><span>Alarm Fiyatı</span><input id="v12-alarm-price" type="number" placeholder="Örn: 105000" step="0.00000001"></label>
-                                    <label><span>Koşul</span><select id="v12-alarm-dir"><option value="above">Fiyat bunun ÜSTÜNE çıkarsa</option><option value="below">Fiyat bunun ALTINA düşerse</option></select></label>
-                                    <label><span>Not</span><input id="v12-alarm-note" type="text" placeholder="TP1, Stop, fırsat..."></label>
-                                </div>
-                                <div class="crypto-v10-actions alarm-v13-actions">
-                                    <button class="terminal-v10-btn gold" onclick="omega_V12AddAlarm()"><i class="fa-solid fa-plus"></i> Alarm Ekle</button>
-                                    <button class="terminal-v10-btn" onclick="omega_V13SetAlarmAtLive()"><i class="fa-solid fa-location-crosshairs"></i> Canlı Fiyata Kur</button>
-                                    <button class="terminal-v10-btn" onclick="omega_V12ClearHitAlarms()"><i class="fa-solid fa-broom"></i> Çalanları Temizle</button>
-                                </div>
-                                <div class="alarm-v12-list" id="v12-alarm-list"></div>
-                            </div>
 
                             <div class="crypto-v10-metrics">
                                 <div><span>Canlı PnL</span><b id="v10-live-pnl">$0.00</b></div>
@@ -3355,6 +3318,6 @@
 <script src="assets/js/app-fixes.js"></script>
 <script src="assets/js/pwa.js"></script>
 <script type="module" src="assets/js/firebase.js"></script>
-<script src="assets/js/ui-hotfix.js"></script>
+<script src="assets/js/v27-cleanup.js"></script>
 </body>
 </html>
