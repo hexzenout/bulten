@@ -1143,12 +1143,6 @@ body.v26-footer-ready #omega-site-footer {
 #active-module-name span {
     color: inherit;
 }
-
-body:has(#omega-crypto-block) #active-module-name span,
-body.crypto-active #active-module-name span {
-    color: var(--v31-orange) !important;
-}
-
 /* Kripto terminal içindeki mavi/lacivert kalan başlıklar */
 #omega-crypto-block .terminal-v10-hero.crypto h2,
 #omega-crypto-block .terminal-v10-hero.crypto h2 i,
@@ -1172,7 +1166,3 @@ body.crypto-active #active-module-name span {
 }
 
 /* Canlı Yayın üst breadcrumb koyu lila kalsın */
-body:has(#omega-stream-block) #active-module-name span,
-body.stream-active #active-module-name span {
-    color: #7E22CE !important;
-}
