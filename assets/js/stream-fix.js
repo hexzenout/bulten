@@ -1,40 +1,47 @@
 // ===============================
 // V30 STREAM FIX
-// Canlı Yayın 4/6 ekran çoklu tıklama sorununu azaltır.
-// Eski eventler üst üste bindiyse tek merkezi tıklama kontrolü uygular.
+// Canlı Yayın 4/6 ekran butonlarının çoklu tıklama/çift tetiklenme sorununu azaltır.
 // ===============================
 
 (function () {
   let lastClickAt = 0;
-  let lastTargetKey = "";
+  let lastKey = "";
 
   function isStreamPage() {
     return location.hash === "#stream" || !!document.querySelector("#omega-stream-block");
   }
 
-  function getTargetKey(target) {
-    const btn = target.closest(
-      ".btn-stream-layout, [data-layout], [onclick*='omega_SetStreamLayout'], button"
+  function getLayoutButton(target) {
+    return target.closest(
+      ".stream-layout-btn, .btn-stream-layout, [data-layout], [data-stream-layout], button"
     );
+  }
 
+  function getButtonKey(btn) {
     if (!btn) return "";
 
-    const text = (btn.innerText || btn.textContent || "").trim();
-    const data = btn.dataset?.layout || btn.getAttribute("data-layout") || "";
+    const text = (btn.innerText || btn.textContent || "").trim().replace(/\s+/g, " ");
+    const data =
+      btn.dataset?.layout ||
+      btn.dataset?.streamLayout ||
+      btn.getAttribute("data-layout") ||
+      btn.getAttribute("data-stream-layout") ||
+      "";
     const onclick = btn.getAttribute("onclick") || "";
 
-    if (
+    const looksLikeLayout =
+      data ||
+      onclick.toLowerCase().includes("stream") ||
+      text === "1 EKRAN" ||
+      text === "2 EKRAN" ||
+      text === "4 EKRAN" ||
+      text === "6 EKRAN" ||
       text === "1" ||
       text === "2" ||
       text === "4" ||
-      text === "6" ||
-      data ||
-      onclick.includes("Stream")
-    ) {
-      return `${text}|${data}|${onclick}`;
-    }
+      text === "6";
 
-    return "";
+    return looksLikeLayout ? `${text}|${data}|${onclick}` : "";
   }
 
   document.addEventListener(
@@ -42,27 +49,33 @@
     function (e) {
       if (!isStreamPage()) return;
 
-      const key = getTargetKey(e.target);
+      const btn = getLayoutButton(e.target);
+      const key = getButtonKey(btn);
       if (!key) return;
 
       const now = Date.now();
 
-      if (key === lastTargetKey && now - lastClickAt < 450) {
+      // Aynı butondan çok kısa sürede gelen ikinci/üçüncü tetikleri kes.
+      if (key === lastKey && now - lastClickAt < 600) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
         return false;
       }
 
-      lastTargetKey = key;
+      lastKey = key;
       lastClickAt = now;
     },
     true
   );
 
-  function markStreamButtons() {
-    document.querySelectorAll(".btn-stream-layout, [data-layout]").forEach((btn) => {
-      if (btn.dataset.v30StreamFixed === "1") return;
+  function markButtons() {
+    if (!isStreamPage()) return;
+
+    document.querySelectorAll("button, [data-layout], [data-stream-layout]").forEach((btn) => {
+      const key = getButtonKey(btn);
+      if (!key) return;
+
       btn.dataset.v30StreamFixed = "1";
       btn.style.userSelect = "none";
       btn.style.webkitUserSelect = "none";
@@ -70,7 +83,7 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", markStreamButtons);
-  window.addEventListener("hashchange", () => setTimeout(markStreamButtons, 300));
-  setInterval(markStreamButtons, 1500);
+  document.addEventListener("DOMContentLoaded", () => setTimeout(markButtons, 250));
+  window.addEventListener("hashchange", () => setTimeout(markButtons, 250));
+  setInterval(markButtons, 1500);
 })();
