@@ -39,18 +39,17 @@ window.V26_FIREBASE = {
   user: null,
   ready: false
 };
-
 const CLOUD_LOCAL_KEYS = [
   "omega_favorites",
   "omega_finance_state",
   "omega_finance_slots",
+  "v26_finance_clean_state_v1",
   "omega_crypto_drawings",
   "omega_crypto_alarms",
   "omega_crypto_settings",
   "omega_watch_list",
   "omega_stream_channels"
 ];
-
 function injectAuthStyles() {
   if (document.getElementById("v26-auth-style")) return;
 
