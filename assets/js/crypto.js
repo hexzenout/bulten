@@ -692,10 +692,19 @@
   function addAlarmFromPrice(price) {
     const p = plan();
     const dir = price >= state.price ? "above" : "below";
-    state.alarms.push({ id: Date.now(), key: alarmKey(p), symbol: p.pair, exchange: p.exchange, price, dir, note: "Grafikten alarm", hit: false, created: new Date().toISOString() });
+    const item = { id: Date.now(), key: alarmKey(p), symbol: p.pair, exchange: p.exchange, price, dir, note: "Grafikten alarm", hit: false, created: new Date().toISOString() };
+    state.alarms.push(item);
     saveJSON("alarms", state.alarms);
     renderAlarms();
     renderPriceLines();
+
+    // V27 Alarm Merkezi ile senkronla
+    try {
+      if (window.V26AlarmCenter?.add) {
+        window.V26AlarmCenter.add(`${p.exchange}:${p.pair}`, dir, price, "Grafikten alarm");
+      }
+    } catch (_) {}
+
     showToast("Grafikten alarm eklendi.");
   }
 
@@ -752,8 +761,12 @@
         a.hit = true;
         a.hitAt = new Date().toISOString();
         changed = true;
-        showToast(`ALARM: ${a.symbol} ${fmtPrice(a.price)}`);
-        try { new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=").play(); } catch (_) {}
+        const msg = `ALARM: ${a.symbol} ${fmtPrice(a.price)}`;
+        showToast(msg);
+        try {
+          window.dispatchEvent(new CustomEvent("v26-alarm-fired", { detail: { message: msg, alarm: a, price: state.price } }));
+          if (window.V26AlarmAudio?.play) window.V26AlarmAudio.play(msg);
+        } catch (_) {}
       }
     });
     if (changed) {
