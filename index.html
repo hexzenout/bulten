@@ -680,7 +680,7 @@
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
-                titleElem.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
+                titleElem.innerHTML = '<span style="color:#7E22CE">/ CANLI YAYIN</span>';
 
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
@@ -931,22 +931,72 @@
         }
 
         function omega_BuildStreamMatrix(numScreens) {
-            _ACTIVE_LAYOUT = numScreens;
-            localStorage.setItem('v19_layout', numScreens);
-            const gridContainer = document.getElementById('omega-matrix-grid');
-            gridContainer.className = `stream-master-grid active m-lay-${numScreens}`;
-            gridContainer.innerHTML = "";
-            document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
-            const clickedBtn = document.getElementById('lay-btn-' + numScreens);
-            if(clickedBtn) clickedBtn.classList.add('active');
-            let optionsHtml = `<option value="">KANAL SEÇ...</option>`;
-            _CHANNELS_DB.forEach(ch => {
-                optionsHtml += `<option value="${ch.url}">${ch.name}</option>`;
-            });
-            for(let i=1; i<=numScreens; i++) {
-                let savedUrl = _ACTIVE_STREAMS[i-1] || "";
-                gridContainer.innerHTML += `
-                    <div class="matrix-unit">
+            numScreens = Number(numScreens || 6);
+
+            const now = Date.now();
+
+            // PC'de çift/çoklu click tetiklerini kes.
+            if (window.__OMEGA_STREAM_BUILDING) return;
+            if (window.__OMEGA_LAST_STREAM_LAYOUT === numScreens && (now - (window.__OMEGA_LAST_STREAM_CLICK || 0)) < 900) return;
+
+            window.__OMEGA_STREAM_BUILDING = true;
+            window.__OMEGA_LAST_STREAM_LAYOUT = numScreens;
+            window.__OMEGA_LAST_STREAM_CLICK = now;
+
+            try {
+                _ACTIVE_LAYOUT = numScreens;
+                localStorage.setItem('v19_layout', numScreens);
+
+                const gridContainer = document.getElementById('omega-matrix-grid');
+                if (!gridContainer) return;
+
+                gridContainer.className = `stream-master-grid active m-lay-${numScreens}`;
+
+                document.querySelectorAll('.btn-stream-layout').forEach(b => {
+                    b.classList.remove('active');
+                    b.disabled = true;
+                    b.style.pointerEvents = 'none';
+                });
+
+                const clickedBtn = document.getElementById('lay-btn-' + numScreens);
+                if(clickedBtn) clickedBtn.classList.add('active');
+
+                let optionsHtml = `<option value="">KANAL SEÇ...</option>`;
+                _CHANNELS_DB.forEach(ch => {
+                    optionsHtml += `<option value="${ch.url}">${ch.name}</option>`;
+                });
+
+                // Eski sistem tüm grid'i innerHTML="" ile sıfırlıyordu.
+                // PC'de bu, tüm iframe'lerin aynı anda tekrar yüklenmesine sebep olduğu için
+                // 7-8 kere tıklıyormuş gibi görünüyordu.
+                // Yeni sistem sadece eksik ekranı ekler, fazla ekranı kaldırır, mevcut iframe'lere dokunmaz.
+                const existingUnits = Array.from(gridContainer.querySelectorAll('.matrix-unit[data-screen-id]'));
+
+                // Fazla ekranları kaldır.
+                existingUnits.forEach(unit => {
+                    const id = Number(unit.dataset.screenId || 0);
+                    if (id > numScreens) unit.remove();
+                });
+
+                // Eksik ekranları ekle; mevcut iframe'lerin src değerlerine dokunma.
+                for(let i=1; i<=numScreens; i++) {
+                    const existing = gridContainer.querySelector(`.matrix-unit[data-screen-id="${i}"]`);
+                    if (existing) {
+                        const selectElem = existing.querySelector(`#s-sel-${i}`);
+                        if (selectElem && !selectElem.dataset.optionsLocked) {
+                            const currentVal = selectElem.value;
+                            selectElem.innerHTML = optionsHtml;
+                            selectElem.value = currentVal;
+                            selectElem.dataset.optionsLocked = "1";
+                        }
+                        continue;
+                    }
+
+                    let savedUrl = _ACTIVE_STREAMS[i-1] || "";
+                    const unit = document.createElement('div');
+                    unit.className = 'matrix-unit';
+                    unit.dataset.screenId = String(i);
+                    unit.innerHTML = `
                         <div class="matrix-nav">
                             <select id="s-sel-${i}" class="matrix-channel-select select-supreme" style="padding:6px; min-width:120px; font-size:11px" onchange="omega_LoadChannelToInput(${i})">
                                 ${optionsHtml}
@@ -957,7 +1007,17 @@
                             <button onclick="omega_TerminateStreamUnit(${i})" style="background:var(--red); color:#fff; border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                         <iframe id="s-fr-${i}" style="flex:1; border:none; background:#000000;" src="${savedUrl || 'about:blank'}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; clipboard-read; clipboard-write; web-share" allowfullscreen></iframe>
-                    </div>`;
+                    `;
+                    gridContainer.appendChild(unit);
+                }
+            } finally {
+                setTimeout(() => {
+                    document.querySelectorAll('.btn-stream-layout').forEach(b => {
+                        b.disabled = false;
+                        b.style.pointerEvents = '';
+                    });
+                    window.__OMEGA_STREAM_BUILDING = false;
+                }, 650);
             }
         }
 
@@ -2649,7 +2709,7 @@
                 _ACTIVE_TAB = 'crypto';
                 const cryptoBlock = document.getElementById('omega-crypto-block');
                 if(cryptoBlock) cryptoBlock.style.display = 'block';
-                if(titleElem) titleElem.innerHTML = '<span style="color:var(--gold)">/ KRİPTO TERMİNAL</span>';
+                if(titleElem) titleElem.innerHTML = '<span style="color:#f97316">/ KRİPTO TERMİNAL</span>';
                 omega_InitV10Timeframes();
                 omega_V10SeedTpRows();
                 omega_V10RefreshCrypto(true);
@@ -3345,7 +3405,6 @@
 <script src="assets/js/alarm-center.js"></script>
 <script src="assets/js/app-fixes.js"></script>
 <script src="assets/js/pwa.js"></script>
-<script src="assets/js/stream-fix.js"></script>
 <script type="module" src="assets/js/firebase.js"></script>
 <script src="assets/js/v28-crypto-panel.js"></script>
 <script>
