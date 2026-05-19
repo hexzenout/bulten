@@ -1265,3 +1265,44 @@ body.v36-fast-mode .controls-wrapper {
     transition: none !important;
     animation: none !important;
 }
+
+/* ===============================
+   V37 STREAM INSTANT LAYOUT FIX
+   1/2/4/6 geçişleri kilitsiz, gecikmesiz ve hizalı.
+================================ */
+
+.stream-master-grid,
+.stream-master-grid.active,
+#omega-matrix-grid {
+    transition: none !important;
+    animation: none !important;
+    align-items: stretch !important;
+}
+
+.matrix-unit {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+}
+
+.m-lay-1 {
+    grid-template-columns: 1fr !important;
+}
+
+.m-lay-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.m-lay-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.m-lay-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    align-items: stretch !important;
+}
+
+.m-lay-6 .matrix-unit {
+    aspect-ratio: 16 / 10.5 !important;
+}
