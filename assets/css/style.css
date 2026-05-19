@@ -1096,3 +1096,17 @@ body.v26-footer-ready #omega-site-footer {
         grid-template-columns: 1fr !important;
     }
 }
+/* ===============================
+   NAV MENU SINGLE COLOR FIX
+   Sadece sol menüdeki Kripto Terminal ve Canlı Yayın yazı/ikon rengi.
+================================ */
+
+#nav-crypto,
+#nav-crypto i {
+    color: #8B5A2B !important; /* kahverengi */
+}
+
+#nav-stream,
+#nav-stream i {
+    color: #7E22CE !important; /* koyu lila / mor */
+}
