@@ -1098,34 +1098,32 @@ body.v26-footer-ready #omega-site-footer {
 }
 
 /* ===============================
-   INITIAL MODULE FLASH FIX
-   F5 sırasında yanlış ana sayfa/futbol filtrelerinin anlık görünmesini engeller.
+   INITIAL MODULE FLASH FIX - FAST
+   F5 sırasında yanlış modül içeriğini gizler ama sayfanın tamamını yavaşlatmaz.
 ================================ */
 
-body:not(.omega-route-ready) main,
-body:not(.omega-route-ready) .center-wrapper,
-body:not(.omega-route-ready) #omega-main-content,
 body:not(.omega-route-ready) #home-section,
 body:not(.omega-route-ready) #football-section,
 body:not(.omega-route-ready) #basketball-section,
 body:not(.omega-route-ready) #omega-stream-block,
 body:not(.omega-route-ready) #omega-crypto-block,
 body:not(.omega-route-ready) #omega-live-block,
-body:not(.omega-route-ready) #omega-finance-block {
+body:not(.omega-route-ready) #omega-finance-block,
+body:not(.omega-route-ready) #favs-section,
+body:not(.omega-route-ready) #favorites-section {
     opacity: 0 !important;
     visibility: hidden !important;
 }
 
-body.omega-route-ready main,
-body.omega-route-ready .center-wrapper,
-body.omega-route-ready #omega-main-content,
 body.omega-route-ready #home-section,
 body.omega-route-ready #football-section,
 body.omega-route-ready #basketball-section,
 body.omega-route-ready #omega-stream-block,
 body.omega-route-ready #omega-crypto-block,
 body.omega-route-ready #omega-live-block,
-body.omega-route-ready #omega-finance-block {
+body.omega-route-ready #omega-finance-block,
+body.omega-route-ready #favs-section,
+body.omega-route-ready #favorites-section {
     opacity: 1 !important;
     visibility: visible !important;
 }
