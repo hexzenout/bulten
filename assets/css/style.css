@@ -1097,29 +1097,28 @@ body.v26-footer-ready #omega-site-footer {
     }
 }
 
-
 /* ===============================
-   V30 EXACT LABEL COLOR RESTORE
-   Sadece hedeflenen yazılar. Sol menüde Kripto/Canlı Yayın beyaz tona döner.
+   V30 SOURCE COLOR FIX
+   Sadece istenen alanlar:
+   - Sol menü yazıları beyaz.
+   - Sol menü ikonları eski renklerine yakın.
+   - Kripto iç büyük başlık lacivert.
 ================================ */
 
-#nav-stream,
-#nav-stream i,
-#nav-crypto,
-#nav-crypto i {
+.accordion-menu #nav-stream,
+.accordion-menu #nav-crypto {
     color: var(--text) !important;
 }
 
-#omega-crypto-block .terminal-v10-hero h2,
-#omega-crypto-block .terminal-v10-hero h2 i,
-#omega-crypto-block .crypto-v10-chart-head h3,
-#omega-crypto-block .crypto-v10-chart-head h3 i {
-    color: #1E3A8A !important;
+.accordion-menu #nav-stream i {
+    color: var(--blue-accent) !important;
 }
 
-#omega-stream-block .terminal-v10-hero h2,
-#omega-stream-block .terminal-v10-hero h2 i,
-#omega-stream-block .stream-title,
-#omega-stream-block h2 {
-    color: #7E22CE !important;
+.accordion-menu #nav-crypto i {
+    color: var(--gold) !important;
+}
+
+#omega-crypto-block .terminal-v10-hero.crypto h2,
+#omega-crypto-block .terminal-v10-hero.crypto h2 i {
+    color: #1E3A8A !important;
 }
