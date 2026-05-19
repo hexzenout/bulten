@@ -680,7 +680,7 @@
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
-                titleElem.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
+                titleElem.innerHTML = '<span style="color:#7E22CE">/ CANLI YAYIN</span>';
 
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
@@ -2649,7 +2649,7 @@
                 _ACTIVE_TAB = 'crypto';
                 const cryptoBlock = document.getElementById('omega-crypto-block');
                 if(cryptoBlock) cryptoBlock.style.display = 'block';
-                if(titleElem) titleElem.innerHTML = '<span style="color:var(--gold)">/ KRİPTO TERMİNAL</span>';
+                if(titleElem) titleElem.innerHTML = '<span style="color:#1E3A8A">/ KRİPTO TERMİNAL</span>';
                 omega_InitV10Timeframes();
                 omega_V10SeedTpRows();
                 omega_V10RefreshCrypto(true);
