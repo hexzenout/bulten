@@ -1096,3 +1096,40 @@ body.v26-footer-ready #omega-site-footer {
         grid-template-columns: 1fr !important;
     }
 }
+/* ===============================
+   V30 HEADER LABEL FIX
+   Ana Sayfa yazısı ile modül adları aynı görünmesin.
+================================ */
+
+/* Ana Sayfa altın kalsın */
+.home-link,
+.home-link i {
+    color: var(--gold) !important;
+}
+
+/* Sağındaki modül adı farklı görünsün */
+#active-module-name span,
+.module-name {
+    color: #e5e5e5 !important;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid #2f2f2f;
+    border-radius: 999px;
+    padding: 5px 10px;
+    margin-left: 8px;
+    font-size: 0.78em;
+    letter-spacing: 0.7px;
+}
+
+/* Kripto ve yayın başlıkları ana sayfa gibi bağırmasın */
+.terminal-v10-hero h2,
+.crypto-v10-chart-head h3,
+.stream-controls-bar strong,
+.stream-controls-bar b {
+    color: #f1f1f1 !important;
+}
+
+/* Sadece ikonlar hafif altın kalsın */
+.terminal-v10-hero h2 i,
+.crypto-v10-chart-head h3 i {
+    color: var(--gold) !important;
+}
