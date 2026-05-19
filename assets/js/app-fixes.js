@@ -1,16 +1,28 @@
 // ===============================
 // V26 APP FIXES
-// Küçük genel düzeltmeler
+// Genel küçük düzeltmeler
 // ===============================
 
 (function () {
   window.__v26LastUserAction = 0;
+  window.__v26ToastAllowTimer = null;
+
+  function allowToastTemporarily() {
+    window.__v26LastUserAction = Date.now();
+
+    document.body.classList.add("v26-toast-allowed");
+
+    clearTimeout(window.__v26ToastAllowTimer);
+    window.__v26ToastAllowTimer = setTimeout(function () {
+      document.body.classList.remove("v26-toast-allowed");
+    }, 3500);
+  }
 
   document.addEventListener(
     "pointerdown",
     function (e) {
-      if (e.target.closest("button, .btn-finance, .nav-link, input, select")) {
-        window.__v26LastUserAction = Date.now();
+      if (e.target.closest("button, .btn-finance, .nav-link, input, select, .chart-tool-btn, .tf-v10")) {
+        allowToastTemporarily();
       }
     },
     true
@@ -20,10 +32,16 @@
     const toast = document.getElementById("finance-toast");
     if (!toast) return;
 
-    toast.classList.remove("show");
+    const text = toast.innerText || "";
 
-    if ((toast.innerText || "").includes("Plan hesaplandı")) {
+    if (text.includes("Plan hesaplandı")) {
+      toast.classList.remove("show");
       toast.innerText = "";
+      toast.style.display = "none";
+
+      setTimeout(function () {
+        toast.style.display = "";
+      }, 400);
     }
   }
 
@@ -34,12 +52,22 @@
     const originalToast = window.omega_FinanceToast;
 
     window.omega_FinanceToast = function (msg) {
-      const isUserAction = Date.now() - (window.__v26LastUserAction || 0) < 1200;
-      const isPlanMessage = String(msg || "").includes("Plan hesaplandı");
+      const message = String(msg || "");
+      const isUserAction = Date.now() - (window.__v26LastUserAction || 0) < 1400;
+      const isPlanMessage = message.includes("Plan hesaplandı");
 
       if (isPlanMessage && !isUserAction) {
         hideOldFinanceToast();
         return;
+      }
+
+      if (isUserAction) {
+        document.body.classList.add("v26-toast-allowed");
+
+        clearTimeout(window.__v26ToastAllowTimer);
+        window.__v26ToastAllowTimer = setTimeout(function () {
+          document.body.classList.remove("v26-toast-allowed");
+        }, 3500);
       }
 
       return originalToast.apply(this, arguments);
@@ -56,7 +84,7 @@
     wrapper.style.transition = "none";
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  function bootFixes() {
     hideOldFinanceToast();
     stabilizeLayout();
 
@@ -66,12 +94,18 @@
       stabilizeLayout();
 
       if (ok) clearInterval(patchTimer);
-    }, 250);
+    }, 150);
 
     setTimeout(function () {
       clearInterval(patchTimer);
       hideOldFinanceToast();
       stabilizeLayout();
     }, 5000);
-  });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootFixes);
+  } else {
+    bootFixes();
+  }
 })();
