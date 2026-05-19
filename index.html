@@ -934,14 +934,14 @@
             numScreens = Number(numScreens || 6);
 
             const now = Date.now();
-
-            // PC'de çift/çoklu click tetiklerini kes.
             if (window.__OMEGA_STREAM_BUILDING) return;
             if (window.__OMEGA_LAST_STREAM_LAYOUT === numScreens && (now - (window.__OMEGA_LAST_STREAM_CLICK || 0)) < 120) return;
 
             window.__OMEGA_STREAM_BUILDING = true;
             window.__OMEGA_LAST_STREAM_LAYOUT = numScreens;
             window.__OMEGA_LAST_STREAM_CLICK = now;
+
+            const scrollY = window.scrollY || window.pageYOffset || 0;
 
             try {
                 _ACTIVE_LAYOUT = numScreens;
@@ -950,9 +950,12 @@
                 const gridContainer = document.getElementById('omega-matrix-grid');
                 if (!gridContainer) return;
 
-                gridContainer.className = `stream-master-grid active m-lay-${numScreens}`;
-                document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
+                const oldHeight = gridContainer.offsetHeight || 0;
+                if (oldHeight > 120) gridContainer.style.minHeight = oldHeight + 'px';
 
+                gridContainer.className = `stream-master-grid active m-lay-${numScreens}`;
+
+                document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
                 const clickedBtn = document.getElementById('lay-btn-' + numScreens);
                 if(clickedBtn) clickedBtn.classList.add('active');
 
@@ -961,52 +964,31 @@
                     optionsHtml += `<option value="${ch.url}">${ch.name}</option>`;
                 });
 
-                // Eski sistem tüm grid'i innerHTML="" ile sıfırlıyordu.
-                // PC'de bu, tüm iframe'lerin aynı anda tekrar yüklenmesine sebep olduğu için
-                // 7-8 kere tıklıyormuş gibi görünüyordu.
-                // Yeni sistem sadece eksik ekranı ekler, fazla ekranı kaldırır, mevcut iframe'lere dokunmaz.
-                const existingUnits = Array.from(gridContainer.querySelectorAll('.matrix-unit[data-screen-id]'));
-
-                // Fazla ekranları kaldır.
-                existingUnits.forEach(unit => {
-                    const id = Number(unit.dataset.screenId || 0);
-                    if (id > numScreens) unit.remove();
-                });
-
-                // Eksik ekranları ekle; mevcut iframe'lerin src değerlerine dokunma.
+                const nextHtml = [];
                 for(let i=1; i<=numScreens; i++) {
-                    const existing = gridContainer.querySelector(`.matrix-unit[data-screen-id="${i}"]`);
-                    if (existing) {
-                        const selectElem = existing.querySelector(`#s-sel-${i}`);
-                        if (selectElem && !selectElem.dataset.optionsLocked) {
-                            const currentVal = selectElem.value;
-                            selectElem.innerHTML = optionsHtml;
-                            selectElem.value = currentVal;
-                            selectElem.dataset.optionsLocked = "1";
-                        }
-                        continue;
-                    }
-
                     let savedUrl = _ACTIVE_STREAMS[i-1] || "";
-                    const unit = document.createElement('div');
-                    unit.className = 'matrix-unit';
-                    unit.dataset.screenId = String(i);
-                    unit.innerHTML = `
-                        <div class="matrix-nav">
-                            <select id="s-sel-${i}" class="matrix-channel-select select-supreme" style="padding:6px; min-width:120px; font-size:11px" onchange="omega_LoadChannelToInput(${i})">
-                                ${optionsHtml}
-                            </select>
-                            <input id="s-in-${i}" value="${savedUrl}" style="flex:1; background:#000; border:1px solid #333; color:#fff; padding:8px; border-radius:4px; font-size:11px;" placeholder="Yayın URL...">
-                            <button onclick="omega_LaunchStreamUnit(${i})" style="background:var(--green); border:none; padding:0 12px; border-radius:4px; font-weight:800; cursor:pointer;">İZLE</button>
-                            <button onclick="omega_FullscreenIframe(${i})" style="background:#272727; color:var(--blue-accent); border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-expand"></i></button>
-                            <button onclick="omega_TerminateStreamUnit(${i})" style="background:var(--red); color:#fff; border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                        <iframe id="s-fr-${i}" style="flex:1; border:none; background:#000000;" src="${savedUrl || 'about:blank'}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; clipboard-read; clipboard-write; web-share" allowfullscreen></iframe>
-                    `;
-                    gridContainer.appendChild(unit);
+                    nextHtml.push(`
+                        <div class="matrix-unit">
+                            <div class="matrix-nav">
+                                <select id="s-sel-${i}" class="matrix-channel-select select-supreme" style="padding:6px; min-width:120px; font-size:11px" onchange="omega_LoadChannelToInput(${i})">
+                                    ${optionsHtml}
+                                </select>
+                                <input id="s-in-${i}" value="${savedUrl}" style="flex:1; background:#000; border:1px solid #333; color:#fff; padding:8px; border-radius:4px; font-size:11px;" placeholder="Yayın URL...">
+                                <button onclick="omega_LaunchStreamUnit(${i})" style="background:var(--green); border:none; padding:0 12px; border-radius:4px; font-weight:800; cursor:pointer;">İZLE</button>
+                                <button onclick="omega_FullscreenIframe(${i})" style="background:#272727; color:var(--blue-accent); border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-expand"></i></button>
+                                <button onclick="omega_TerminateStreamUnit(${i})" style="background:var(--red); color:#fff; border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <iframe id="s-fr-${i}" style="flex:1; border:none; background:#000000;" src="${savedUrl || 'about:blank'}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; clipboard-read; clipboard-write; web-share" allowfullscreen></iframe>
+                        </div>`);
                 }
+
+                requestAnimationFrame(() => {
+                    gridContainer.innerHTML = nextHtml.join('');
+                    window.scrollTo({ top: scrollY, left: 0, behavior: 'auto' });
+                    setTimeout(() => { gridContainer.style.minHeight = ''; }, 220);
+                });
             } finally {
-                setTimeout(() => { window.__OMEGA_STREAM_BUILDING = false; }, 80);
+                setTimeout(() => { window.__OMEGA_STREAM_BUILDING = false; }, 160);
             }
         }
 
@@ -3390,6 +3372,7 @@
 </script>
 <script src="assets/js/finance.js"></script>
 <script src="assets/js/crypto.js"></script>
+<script src="assets/js/v35-crypto-timeframes.js"></script>
 <script src="assets/js/alarm-audio.js"></script>
 <script src="assets/js/alarm-center.js"></script>
 <script src="assets/js/app-fixes.js"></script>
