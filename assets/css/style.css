@@ -555,3 +555,19 @@ body:not(.v26-toast-allowed) .finance-toast {
     pointer-events: none !important;
     visibility: hidden !important;
 }
+/* ===============================
+   V26 FOOTER POSITION FIX
+   Footer altta kalsın ama ilk yüklemede ekran ortasında görünmesin.
+================================ */
+
+#omega-radar-block,
+#omega-favs-block,
+#omega-stream-block,
+#v19-finance-block {
+    min-height: calc(100vh - 170px);
+}
+
+.center-wrapper > div[style*="OMEGA"],
+.center-wrapper > div:last-child {
+    flex-shrink: 0;
+}
