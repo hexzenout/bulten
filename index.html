@@ -937,7 +937,7 @@
 
             // PC'de çift/çoklu click tetiklerini kes.
             if (window.__OMEGA_STREAM_BUILDING) return;
-            if (window.__OMEGA_LAST_STREAM_LAYOUT === numScreens && (now - (window.__OMEGA_LAST_STREAM_CLICK || 0)) < 900) return;
+            if (window.__OMEGA_LAST_STREAM_LAYOUT === numScreens && (now - (window.__OMEGA_LAST_STREAM_CLICK || 0)) < 120) return;
 
             window.__OMEGA_STREAM_BUILDING = true;
             window.__OMEGA_LAST_STREAM_LAYOUT = numScreens;
@@ -951,12 +951,7 @@
                 if (!gridContainer) return;
 
                 gridContainer.className = `stream-master-grid active m-lay-${numScreens}`;
-
-                document.querySelectorAll('.btn-stream-layout').forEach(b => {
-                    b.classList.remove('active');
-                    b.disabled = true;
-                    b.style.pointerEvents = 'none';
-                });
+                document.querySelectorAll('.btn-stream-layout').forEach(b => b.classList.remove('active'));
 
                 const clickedBtn = document.getElementById('lay-btn-' + numScreens);
                 if(clickedBtn) clickedBtn.classList.add('active');
@@ -1011,13 +1006,7 @@
                     gridContainer.appendChild(unit);
                 }
             } finally {
-                setTimeout(() => {
-                    document.querySelectorAll('.btn-stream-layout').forEach(b => {
-                        b.disabled = false;
-                        b.style.pointerEvents = '';
-                    });
-                    window.__OMEGA_STREAM_BUILDING = false;
-                }, 650);
+                setTimeout(() => { window.__OMEGA_STREAM_BUILDING = false; }, 80);
             }
         }
 
@@ -3411,14 +3400,14 @@
   window.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
       document.body.classList.add("omega-route-ready");
-    }, 90);
+    }, 25);
   });
 
   window.addEventListener("hashchange", function () {
     document.body.classList.remove("omega-route-ready");
     setTimeout(function () {
       document.body.classList.add("omega-route-ready");
-    }, 70);
+    }, 25);
   });
 </script>
 </body>
