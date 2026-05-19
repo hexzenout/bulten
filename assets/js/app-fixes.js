@@ -1,7 +1,7 @@
 // ===============================
 // V26 APP FIXES
 // Açılışta gereksiz yazı/toast engeller.
-// Layout ve footer davranışına dokunmaz.
+// Footer/layout davranışını bozmaz; sadece ilk yükleme flaşını gizler.
 // ===============================
 
 (function () {
@@ -80,21 +80,65 @@
     return true;
   }
 
+  function activeContentLooksReady() {
+    const hash = (location.hash || "#futbol").replace("#", "");
+
+    // Stream/finance/crypto/live gibi veri beklemeyen ekranlarda kısa gecikme yeterli.
+    if (!["", "futbol", "basketbol", "favs"].includes(hash)) return true;
+
+    const radar = document.getElementById("radar-render-output");
+    const favs = document.getElementById("favs-render-output");
+
+    if (hash === "favs") return !!(favs && favs.children.length > 0);
+
+    // Futbol/basketbol ana ekranda gerçek maç blokları geldiyse footer görünür.
+    return !!(radar && radar.children.length > 0 && !/KAYIT BULUNAMADI|VERİ YÜKLENİYOR/i.test(radar.innerText || ""));
+  }
+
+  function revealFooterWhenStable() {
+    const started = Date.now();
+
+    function check() {
+      hideBadStartupTexts();
+
+      const waited = Date.now() - started;
+      const ready = activeContentLooksReady();
+
+      // İçerik geldiyse göster. En geç 4 saniyede göster ki footer tamamen kaybolmasın.
+      if (ready || waited > 4000) {
+        document.body.classList.add("v26-footer-ready");
+        return;
+      }
+
+      requestAnimationFrame(check);
+    }
+
+    // İlk birkaç frame boyunca footer gizli kalsın; layout oturduktan sonra kontrol başlasın.
+    setTimeout(check, 250);
+  }
+
   function bootFixes() {
+    document.body.classList.remove("v26-footer-ready");
     hideBadStartupTexts();
+    revealFooterWhenStable();
 
     const timer = setInterval(function () {
       hideBadStartupTexts();
       const ok = patchFinanceToast();
-
       if (ok) clearInterval(timer);
     }, 150);
 
     setTimeout(function () {
       clearInterval(timer);
       hideBadStartupTexts();
+      document.body.classList.add("v26-footer-ready");
     }, 5000);
   }
+
+  window.addEventListener("hashchange", function () {
+    // Sekme geçişinde footer'ı yeniden saklamıyoruz; sadece ilk F5 flaşını engelliyoruz.
+    hideBadStartupTexts();
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", bootFixes);
