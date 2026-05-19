@@ -1098,10 +1098,64 @@ body.v26-footer-ready #omega-site-footer {
 }
 
 /* ===============================
-   INITIAL MODULE FLASH FIX - FAST
-   F5 sırasında yanlış modül içeriğini gizler ama sayfanın tamamını yavaşlatmaz.
+   V32 FINAL COLOR + ROUTE FIX
+   - Sol menü ikonları eski mantıkta.
+   - Sol menü yazıları beyaz.
+   - Kripto başlıkları turuncu.
+   - Canlı yayın üst yazısı lila, ama sol menü yazısı beyaz.
+   - F5 sırasında yanlış ana sayfa filtreleri kısa süre gizlenir.
 ================================ */
 
+:root {
+    --v32-orange: #f97316;
+    --v32-stream-purple: #7E22CE;
+    --v32-stream-blue: #3b82f6;
+}
+
+/* Sol menü: yazılar beyaz */
+.accordion-menu #nav-stream,
+.accordion-menu #nav-stream span,
+.accordion-menu #nav-stream b,
+.accordion-menu #nav-crypto,
+.accordion-menu #nav-crypto span,
+.accordion-menu #nav-crypto b {
+    color: var(--text) !important;
+}
+
+/* Sol menü: ikonlar */
+.accordion-menu #nav-stream i,
+.accordion-menu #nav-stream svg,
+.accordion-menu #nav-stream svg path {
+    color: var(--v32-stream-blue) !important;
+    fill: var(--v32-stream-blue) !important;
+}
+
+.accordion-menu #nav-crypto i,
+.accordion-menu #nav-crypto svg,
+.accordion-menu #nav-crypto svg path {
+    color: var(--v32-orange) !important;
+    fill: var(--v32-orange) !important;
+}
+
+/* Kripto iç başlıkları ve sembol yazıları turuncu */
+#omega-crypto-block .terminal-v10-hero.crypto h2,
+#omega-crypto-block .terminal-v10-hero.crypto h2 i,
+#omega-crypto-block .crypto-v10-chart-head h3,
+#omega-crypto-block .crypto-v10-chart-head h3 i,
+#omega-crypto-block .crypto-v10-title,
+#omega-crypto-block .crypto-symbol-title,
+#omega-crypto-block .crypto-v10-symbol,
+#omega-crypto-block .crypto-v28-title,
+#omega-crypto-block h1,
+#omega-crypto-block h2,
+#omega-crypto-block h3,
+#omega-crypto-block [id*="symbol"],
+#omega-crypto-block [class*="symbol"],
+#omega-crypto-block [class*="coin-title"] {
+    color: var(--v32-orange) !important;
+}
+
+/* Route flash fix - hızlı */
 body:not(.omega-route-ready) #home-section,
 body:not(.omega-route-ready) #football-section,
 body:not(.omega-route-ready) #basketball-section,
