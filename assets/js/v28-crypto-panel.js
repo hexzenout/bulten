@@ -135,7 +135,7 @@
 
   const moduleName = qs("#active-module-name");
   if (moduleName && isCrypto) {
-    moduleName.innerHTML = '<span style="color:#1E3A8A">/ KRİPTO TERMİNAL</span>';
+    moduleName.innerHTML = '<span style="color:#f97316">/ KRİPTO TERMİNAL</span>';
   }
 
   const streamName = qs("#active-module-name");
