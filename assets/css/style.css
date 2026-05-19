@@ -1098,27 +1098,81 @@ body.v26-footer-ready #omega-site-footer {
 }
 
 /* ===============================
-   V30 SOURCE COLOR FIX
-   Sadece istenen alanlar:
-   - Sol menü yazıları beyaz.
-   - Sol menü ikonları eski renklerine yakın.
-   - Kripto iç büyük başlık lacivert.
+   V31 ORANGE LABEL + ICON FIX
+   Sadece istenen yerleri düzeltir:
+   - Sol menü yazıları beyaz kalır.
+   - Sol menü CANLI YAYIN ikonu eski mavi tona döner.
+   - Sol menü KRİPTO TERMİNAL ikonu turuncu olur.
+   - Üst / KRİPTO TERMİNAL turuncu olur.
+   - Kripto iç başlıklar ve BTCUSDT gibi mavi kalan yazılar turuncu olur.
 ================================ */
 
+:root {
+    --v31-orange: #f97316;
+    --v31-stream-blue: #3b82f6;
+}
+
+/* Sol menü yazıları beyaz */
 .accordion-menu #nav-stream,
-.accordion-menu #nav-crypto {
+.accordion-menu #nav-stream span,
+.accordion-menu #nav-stream b,
+.accordion-menu #nav-crypto,
+.accordion-menu #nav-crypto span,
+.accordion-menu #nav-crypto b {
     color: var(--text) !important;
 }
 
-.accordion-menu #nav-stream i {
-    color: var(--blue-accent) !important;
+/* Sol menü ikonları */
+.accordion-menu #nav-stream i,
+.accordion-menu #nav-stream svg,
+.accordion-menu #nav-stream .fa,
+.accordion-menu #nav-stream .fa-solid {
+    color: var(--v31-stream-blue) !important;
+    fill: var(--v31-stream-blue) !important;
 }
 
-.accordion-menu #nav-crypto i {
-    color: var(--gold) !important;
+.accordion-menu #nav-crypto i,
+.accordion-menu #nav-crypto svg,
+.accordion-menu #nav-crypto .fa,
+.accordion-menu #nav-crypto .fa-solid {
+    color: var(--v31-orange) !important;
+    fill: var(--v31-orange) !important;
 }
 
+/* Üst breadcrumb: sadece Kripto Terminal ve Canlı Yayın kısmı */
+#active-module-name span {
+    color: inherit;
+}
+
+body:has(#omega-crypto-block) #active-module-name span,
+body.crypto-active #active-module-name span {
+    color: var(--v31-orange) !important;
+}
+
+/* Kripto terminal içindeki mavi/lacivert kalan başlıklar */
 #omega-crypto-block .terminal-v10-hero.crypto h2,
-#omega-crypto-block .terminal-v10-hero.crypto h2 i {
-    color: #1E3A8A !important;
+#omega-crypto-block .terminal-v10-hero.crypto h2 i,
+#omega-crypto-block .crypto-v10-chart-head h3,
+#omega-crypto-block .crypto-v10-chart-head h3 i,
+#omega-crypto-block .crypto-v10-title,
+#omega-crypto-block .crypto-symbol-title,
+#omega-crypto-block .crypto-v10-symbol,
+#omega-crypto-block .crypto-v28-title,
+#omega-crypto-block h1,
+#omega-crypto-block h2,
+#omega-crypto-block h3 {
+    color: var(--v31-orange) !important;
+}
+
+/* BTCUSDT / BTC USDT benzeri sembol başlıkları */
+#omega-crypto-block [id*="symbol"],
+#omega-crypto-block [class*="symbol"],
+#omega-crypto-block [class*="coin-title"] {
+    color: var(--v31-orange) !important;
+}
+
+/* Canlı Yayın üst breadcrumb koyu lila kalsın */
+body:has(#omega-stream-block) #active-module-name span,
+body.stream-active #active-module-name span {
+    color: #7E22CE !important;
 }
