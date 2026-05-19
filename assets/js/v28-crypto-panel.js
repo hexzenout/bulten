@@ -104,23 +104,45 @@
   }
 
   function hardCleanup() {
-    // Eski floating ses paneli veya eski alarm merkezi DOM'a sonradan düşerse kaldır/gizle.
-    qsa("#v26-alarm-audio-panel, .v26-audio-pill, #v26-alarm-center, .v26-alarm-center").forEach(el => {
+  const isCrypto = location.hash === "#crypto";
+
+  // Eski alarm kutuları varsa gizle. Yeni alarm-center.js buna dahil değil.
+  qsa(".crypto-v12-alarm-box, .crypto-v13-alarm-box, .alarm-v12-grid, .alarm-v13-grid, .alarm-v13-help").forEach(el => {
+    el.style.display = "none";
+  });
+
+  // Ses paneli sadece Kripto Terminal içinde görünsün.
+  qsa("#v26-alarm-audio-panel, .v26-audio-pill").forEach(el => {
+    if (isCrypto) {
+      el.style.display = "";
+      el.style.visibility = "";
+      el.style.pointerEvents = "";
+    } else {
       el.style.display = "none";
       el.style.visibility = "hidden";
       el.style.pointerEvents = "none";
-    });
-
-    qsa(".crypto-v12-alarm-box, .crypto-v13-alarm-box").forEach(el => {
-      el.style.display = "none";
-    });
-
-    const moduleName = qs("#active-module-name");
-    if (moduleName && location.hash === "#crypto") {
-      moduleName.innerHTML = '<span style="color:var(--gold)">/ KRİPTO PRO PANEL</span>';
     }
+  });
+
+  // Yeni alarm merkezi Kripto içinde kalsın; artık onu gizleme.
+  qsa("#v26-alarm-center, .v26-alarm-center").forEach(el => {
+    if (isCrypto) {
+      el.style.display = "";
+      el.style.visibility = "";
+      el.style.pointerEvents = "";
+    }
+  });
+
+  const moduleName = qs("#active-module-name");
+  if (moduleName && isCrypto) {
+    moduleName.innerHTML = '<span style="color:var(--gold)">/ KRİPTO TERMİNAL</span>';
   }
 
+  const streamName = qs("#active-module-name");
+  if (streamName && location.hash === "#stream") {
+    streamName.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
+  }
+}
   function patchHashBoot() {
     window.addEventListener("hashchange", () => {
       setTimeout(() => {
