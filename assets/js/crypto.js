@@ -13,6 +13,13 @@
     resizeTimer: null
   };
 
+
+
+  // Güvenli global başlangıçlar: eski inline kod bu değişkenleri her zaman tanımlamıyor.
+  window._V15_Y_SCALE = Number(localStorage.getItem("v15_y_scale") || window._V15_Y_SCALE || 1);
+  window._V12_SHOW_MA = false;
+  localStorage.setItem("v12_show_ma", "0");
+
   function $(id) { return document.getElementById(id); }
 
   function toast(msg) {
@@ -52,7 +59,9 @@
       .crypto-v10-timeframes { gap: 6px !important; padding: 8px; background:#080808; border:1px solid #222; border-radius:14px; }
       .tf-v10 { padding: 9px 11px !important; border-radius: 9px !important; background:#101010 !important; }
       .tf-v10.active { background:#fbbf24 !important; color:#171000 !important; border-color:#fbbf24 !important; }
-      .crypto-v12-toolbar { gap: 8px !important; padding: 10px !important; background:#090909 !important; border-color:#292929 !important; }
+      .crypto-v12-toolbar { gap: 8px !important; padding: 10px !important; background:#090909 !important; border-color:#292929 !important; align-items:center!important; }
+      #tool-ma { display:none !important; }
+      .crypto-v10-canvas.axis-hover { cursor: ns-resize !important; }
       .chart-tool-btn { border-radius: 10px !important; padding: 9px 11px !important; background:#141414 !important; color:#ddd !important; border:1px solid #303030 !important; }
       .chart-tool-btn:hover { border-color:#fbbf24 !important; color:#fbbf24 !important; }
       .chart-tool-btn.active { background:#fbbf24 !important; color:#171000 !important; border-color:#fbbf24 !important; }
@@ -88,13 +97,12 @@
     if (toolbar && !toolbar.dataset.v26Pro) {
       toolbar.dataset.v26Pro = "1";
       toolbar.innerHTML = `
-        <button class="chart-tool-btn green" id="tool-alarm" onclick="omega_V12SetDrawMode('alarm')"><i class="fa-solid fa-bell"></i> Grafikten Alarm</button>
+        <button class="chart-tool-btn green" id="tool-alarm" onclick="omega_V12SetDrawMode('alarm')"><i class="fa-solid fa-bell"></i> Alarm</button>
         <button class="chart-tool-btn" id="tool-hline" onclick="omega_V12SetDrawMode('hline')"><i class="fa-solid fa-grip-lines"></i> Fiyat Çizgisi</button>
         <button class="chart-tool-btn green" id="tool-trend-green" onclick="omega_V14SetTrendTool('green')"><i class="fa-solid fa-arrow-trend-up"></i> Yeşil Trend</button>
         <button class="chart-tool-btn red" id="tool-trend-red" onclick="omega_V14SetTrendTool('red')"><i class="fa-solid fa-arrow-trend-down"></i> Kırmızı Trend</button>
-        <button class="chart-tool-btn blue" id="tool-ma" onclick="omega_V12ToggleMA()">MA20</button>
         <button class="chart-tool-btn red" onclick="v26CryptoDeleteSelected()"><i class="fa-solid fa-trash"></i> Seçileni Sil</button>
-        <button class="chart-tool-btn red" onclick="omega_V14ClearDrawingsForSymbol()"><i class="fa-solid fa-trash-can"></i> Tüm Çizimleri Sil</button>
+        <button class="chart-tool-btn red" onclick="omega_V14ClearDrawingsForSymbol()"><i class="fa-solid fa-trash-can"></i> Tümünü Sil</button>
       `;
     }
 
@@ -113,7 +121,7 @@
       canvas.insertAdjacentHTML("afterend", `
         <div class="v26-chart-tip">
           <div><b>Zoom:</b> Mouse tekerleği grafiği yakınlaştırır / uzaklaştırır.</div>
-          <div><b>Fiyat ölçeği:</b> Sağ fiyat ekseninde tekerlek veya basılı sürükle.</div>
+          <div><b>Fiyat ölçeği:</b> Sağdaki fiyat alanında basılı tutup yukarı/aşağı sürükle.</div>
           <div><b>Çizim:</b> Trend aracını seç, grafikte basılı tutup sürükle.</div>
         </div>
       `);
@@ -163,7 +171,7 @@
     let lo = Math.min(...values), hi = Math.max(...values);
     const mid = (hi + lo) / 2;
     let half = Math.max((hi - lo) / 2, hi * 0.002);
-    const scale = Math.max(0.12, Math.min(30, Number(_V15_Y_SCALE || 1)));
+    const scale = Math.max(0.12, Math.min(30, Number(window._V15_Y_SCALE || 1)));
     half *= scale;
     hi = mid + half * 1.08;
     lo = mid - half * 1.08;
@@ -295,17 +303,28 @@
     if (label) drawText(ctx, label, conv.left + 10, y - 12, color, 12, "left", "900");
   }
 
+
+  function drawCurrentPriceTag(ctx, conv) {
+    if (!_V10_PRICE) return;
+    const y = conv.yFor(_V10_PRICE);
+    if (y < conv.top - 30 || y > conv.top + conv.plotH + 30) return;
+    const tagText = priceFmt(_V10_PRICE);
+    const tagW = Math.max(82, ctx.measureText(tagText).width + 18);
+    roundRect(ctx, conv.left + conv.plotW + 8, y - 13, tagW, 26, 7, "rgba(20,45,92,.92)");
+    drawText(ctx, tagText, conv.left + conv.plotW + 16, y, "#93c5fd", 12, "left", "900");
+  }
+
   function drawTradeLevels(ctx, conv) {
     const p = safePlan();
     if (p.entry) drawLevel(ctx, conv, p.entry, "GİRİŞ", "rgba(251,191,36,.92)", { width: 1.6, tagBg: "rgba(89,63,0,.95)", tagColor: "#fbbf24" });
     if (p.stop) drawLevel(ctx, conv, p.stop, "STOP", "rgba(239,68,68,.94)", { width: 1.8, tagBg: "rgba(80,16,16,.95)", tagColor: "#ff9a9a" });
     if (p.liq) drawLevel(ctx, conv, p.liq, "LİQ", "rgba(249,115,22,.92)", { width: 1.5, tagBg: "rgba(80,42,10,.95)", tagColor: "#fdba74" });
     (p.tps || []).forEach(tp => drawLevel(ctx, conv, tp.price, `TP${tp.index}`, "rgba(16,185,129,.92)", { width: 1.5, tagBg: "rgba(4,67,45,.95)", tagColor: "#86efac" }));
-    if (_V10_PRICE) drawLevel(ctx, conv, _V10_PRICE, "", "rgba(59,130,246,.78)", { width: 1.2, dash: [7, 5], tagBg: "rgba(20,45,92,.95)", tagColor: "#93c5fd" });
+    drawCurrentPriceTag(ctx, conv);
   }
 
   function drawMA(ctx, conv) {
-    if (typeof _V12_SHOW_MA !== "undefined" && !_V12_SHOW_MA) return;
+    return;
     const arr = conv.candles;
     if (arr.length < 22) return;
     ctx.save();
@@ -498,7 +517,7 @@
       STATE.lastMouse = { x, y };
 
       if (x > conv.left + conv.plotW) {
-        STATE.draggingAxis = { startY: y, startScale: Number(_V15_Y_SCALE || 1) };
+        STATE.draggingAxis = { startY: y, startScale: Number(window._V15_Y_SCALE || 1) };
         return;
       }
 
@@ -527,11 +546,12 @@
       const x = (ev.clientX - rect.left) * (canvas.width / rect.width);
       const y = (ev.clientY - rect.top) * (canvas.height / rect.height);
       STATE.lastMouse = { x, y };
+      canvas.classList.toggle('axis-hover', x > conv.left + conv.plotW);
 
       if (STATE.draggingAxis) {
         const dy = y - STATE.draggingAxis.startY;
-        _V15_Y_SCALE = Math.max(0.12, Math.min(30, STATE.draggingAxis.startScale * Math.exp(dy / 170)));
-        localStorage.setItem("v15_y_scale", String(_V15_Y_SCALE));
+        window._V15_Y_SCALE = Math.max(0.12, Math.min(30, STATE.draggingAxis.startScale * Math.exp(dy / 170)));
+        localStorage.setItem("v15_y_scale", String(window._V15_Y_SCALE));
         omega_V10DrawChart();
         return;
       }
@@ -612,6 +632,7 @@
 
     canvas.addEventListener("mouseleave", () => {
       STATE.lastMouse = null;
+      canvas.classList.remove('axis-hover');
       if (!STATE.draggingAxis && !STATE.draggingPan) omega_V10DrawChart();
     });
 
@@ -622,8 +643,8 @@
       const x = (ev.clientX - rect.left) * (canvas.width / rect.width);
       const factor = ev.deltaY < 0 ? 0.78 : 1.28;
       if (x > conv.left + conv.plotW || ev.ctrlKey) {
-        _V15_Y_SCALE = Math.max(0.12, Math.min(30, Number(_V15_Y_SCALE || 1) * (ev.deltaY < 0 ? 0.82 : 1.22)));
-        localStorage.setItem("v15_y_scale", String(_V15_Y_SCALE));
+        window._V15_Y_SCALE = Math.max(0.12, Math.min(30, Number(window._V15_Y_SCALE || 1) * (ev.deltaY < 0 ? 0.82 : 1.22)));
+        localStorage.setItem("v15_y_scale", String(window._V15_Y_SCALE));
         omega_V10DrawChart();
       } else {
         zoomAt(x, factor);
@@ -654,12 +675,16 @@
   }
 
   function boot() {
+    window._V12_SHOW_MA = false;
+    localStorage.setItem('v12_show_ma','0');
     installUi();
     patchAlarmRender();
     bindCanvas();
     if (typeof omega_V12RenderAlarms === "function") omega_V12RenderAlarms();
     if (typeof omega_V10DrawChart === "function") omega_V10DrawChart();
   }
+
+  window.omega_V12ToggleMA = function(){ window._V12_SHOW_MA = false; localStorage.setItem('v12_show_ma','0'); if (typeof omega_V10DrawChart==='function') omega_V10DrawChart(); };
 
   const timer = setInterval(() => {
     const ok = $("crypto-v10-chart") && typeof omega_V10GetPlan === "function";
