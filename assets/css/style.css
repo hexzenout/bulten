@@ -592,3 +592,17 @@ body:not(.v26-toast-allowed) .finance-toast {
     min-height: 0 !important;
 }
 
+/* ===============================
+   V26 FOOTER FLASH FIX
+   F5 / ilk açılışta footer içerik gelmeden görünmesin.
+   Footer silinmez; sadece layout oturunca tekrar görünür.
+================================ */
+body:not(.v26-footer-ready) #omega-site-footer {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+body.v26-footer-ready #omega-site-footer {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
