@@ -537,6 +537,23 @@
         .chart-tool-btn.red.active{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}
         .crypto-v10-canvas{image-rendering:auto;}
 
+    
+
+        /* ================= V15 PROFESSIONAL CHART INTERACTION ================= */
+        .chart-tool-btn[data-v15-hide], .chart-tool-btn.v15-hide { display:none !important; }
+        .crypto-v10-canvas{background:#030303!important;border-color:#2d2d2d!important;cursor:crosshair;}
+        .chart-delete-floating{position:absolute;z-index:8;display:none;align-items:center;gap:6px;background:#2a0d0d;color:#fff;border:1px solid rgba(239,68,68,.75);border-radius:999px;padding:8px 11px;font-size:.72em;font-weight:950;box-shadow:0 10px 28px rgba(0,0,0,.45);cursor:pointer;user-select:none;}
+        .chart-delete-floating.show{display:flex;}
+        .chart-delete-floating i{color:#ffb4b4;}
+        .chart-v15-mini-help{margin-top:8px;background:#080808;border:1px solid #292929;border-radius:12px;padding:9px 11px;color:#aaa;font-size:.72em;font-weight:800;line-height:1.5;}
+        .chart-v15-mini-help b{color:var(--gold);}
+        .alarm-v15-sound-box{margin-top:10px;display:grid;grid-template-columns:1fr 1.2fr auto;gap:8px;align-items:end;background:#0b0b0b;border:1px solid #282828;border-radius:13px;padding:10px;}
+        .alarm-v15-sound-box label{display:flex;flex-direction:column;gap:6px;color:#aaa;font-size:.62em;font-weight:950;text-transform:uppercase;letter-spacing:.6px;}
+        .alarm-v15-sound-box select,.alarm-v15-sound-box input{background:#070707;border:1px solid #363636;color:#fff;border-radius:10px;padding:10px 9px;font-family:'JetBrains Mono';font-size:.78em;width:100%;}
+        .alarm-v15-sound-box button{height:39px;border:1px solid #333;background:#191919;color:#ddd;border-radius:10px;font-weight:950;cursor:pointer;}
+        .alarm-v15-sound-box button:hover{border-color:var(--gold);color:var(--gold);}
+        @media(max-width:760px){.alarm-v15-sound-box{grid-template-columns:1fr}.chart-delete-floating{font-size:.68em;padding:7px 9px}}
+
     </style>
 </head>
 <body>
@@ -3585,6 +3602,302 @@
                 omega_V14RenderDrawingsPanel();
             }, 1200);
         });
+
+
+
+        /* ================= V15 FINAL CHART UX: WHEEL ZOOM, AXIS SCALE, DRAG TREND, SOUND ALARMS ================= */
+        let _V15_SELECTED_ITEM = null;
+        let _V15_TREND_PREVIEW = null;
+        let _V15_Y_SCALE = parseFloat(localStorage.getItem('v15_y_scale') || '1');
+        let _V15_AXIS_DRAG = null;
+        let _V15_PAN_DRAG = null;
+        let _V15_SOUND_SETTINGS = JSON.parse(localStorage.getItem('v15_alarm_sound') || '{"sound":"beep","customUrl":""}');
+        let _V15_AUDIO_CTX = null;
+
+        function omega_V15SaveSound(){ localStorage.setItem('v15_alarm_sound', JSON.stringify(_V15_SOUND_SETTINGS)); }
+
+        function omega_V15InstallUi(){
+            document.querySelectorAll('.crypto-v12-toolbar .chart-tool-btn').forEach(btn=>{
+                const txt=(btn.textContent||'').toLowerCase();
+                if(txt.includes('yakınlaştır') || txt.includes('uzaklaştır') || txt.includes('sığdır')) btn.classList.add('v15-hide');
+            });
+            const wrap=document.querySelector('.crypto-v12-chart-wrap');
+            if(wrap && !document.getElementById('v15-chart-trash')){
+                const del=document.createElement('button');
+                del.id='v15-chart-trash'; del.className='chart-delete-floating';
+                del.innerHTML='<i class="fa-solid fa-trash-can"></i> Sil';
+                del.onclick=(e)=>{ e.stopPropagation(); omega_V15DeleteSelected(); };
+                wrap.appendChild(del);
+                const help=document.createElement('div');
+                help.className='chart-v15-mini-help';
+                help.innerHTML='<b>Kullanım:</b> Mouse tekerleği zaman ekseninde yakınlaştırır/uzaklaştırır. Sağ fiyat ekseninde tekerlek veya sürükleme dikey ölçeği değiştirir. Trend aracında ilk tık başlangıç, mouse ile yön, ikinci tık bitiştir. Çizgi/alarm üstüne tıklayınca çöp kutusu çıkar.';
+                const canvas=document.getElementById('crypto-v10-chart');
+                if(canvas && !document.querySelector('.chart-v15-mini-help')) canvas.insertAdjacentElement('afterend', help);
+            }
+            const alarmBox=document.querySelector('.crypto-v13-alarm-box');
+            if(alarmBox && !document.getElementById('v15-sound-box')){
+                const box=document.createElement('div');
+                box.id='v15-sound-box'; box.className='alarm-v15-sound-box';
+                box.innerHTML=`
+                    <label>Alarm Sesi
+                        <select id="v15-alarm-sound">
+                            <option value="beep">Standart Bip</option>
+                            <option value="chime">Yumuşak Chime</option>
+                            <option value="siren">Siren</option>
+                            <option value="digital">Dijital Uyarı</option>
+                            <option value="silent">Sessiz</option>
+                            <option value="custom">Özel Ses URL</option>
+                        </select>
+                    </label>
+                    <label>Özel Ses / Müzik URL
+                        <input id="v15-alarm-custom" placeholder="https://.../alarm.mp3">
+                    </label>
+                    <button onclick="omega_V15TestAlarmSound()"><i class="fa-solid fa-play"></i> Test</button>`;
+                const list=document.getElementById('v12-alarm-list');
+                if(list) list.insertAdjacentElement('beforebegin', box); else alarmBox.appendChild(box);
+                const s=document.getElementById('v15-alarm-sound'); const u=document.getElementById('v15-alarm-custom');
+                if(s) { s.value=_V15_SOUND_SETTINGS.sound||'beep'; s.onchange=()=>{_V15_SOUND_SETTINGS.sound=s.value; omega_V15SaveSound();}; }
+                if(u) { u.value=_V15_SOUND_SETTINGS.customUrl||''; u.onchange=()=>{_V15_SOUND_SETTINGS.customUrl=u.value.trim(); omega_V15SaveSound();}; }
+            }
+        }
+
+        function omega_V15Beep(freq=880, dur=180, type='sine', delay=0, vol=.13){
+            try{
+                _V15_AUDIO_CTX = _V15_AUDIO_CTX || new (window.AudioContext || window.webkitAudioContext)();
+                const ctx=_V15_AUDIO_CTX; const osc=ctx.createOscillator(); const gain=ctx.createGain();
+                osc.type=type; osc.frequency.value=freq; gain.gain.value=0;
+                osc.connect(gain); gain.connect(ctx.destination);
+                const t=ctx.currentTime+delay/1000;
+                gain.gain.setValueAtTime(0,t); gain.gain.linearRampToValueAtTime(vol,t+.02); gain.gain.exponentialRampToValueAtTime(.001,t+dur/1000);
+                osc.start(t); osc.stop(t+dur/1000+.04);
+            }catch(e){}
+        }
+        function omega_V15PlayAlarmSound(sound){
+            sound = sound || _V15_SOUND_SETTINGS.sound || 'beep';
+            const custom = _V15_SOUND_SETTINGS.customUrl || '';
+            if(sound==='silent') return;
+            if(sound==='custom' && custom){ try{ const a=new Audio(custom); a.volume=.8; a.play().catch(()=>{}); return; }catch(e){} }
+            if(sound==='chime'){ omega_V15Beep(660,180,'sine',0,.12); omega_V15Beep(990,260,'sine',170,.10); return; }
+            if(sound==='siren'){ omega_V15Beep(740,180,'sawtooth',0,.11); omega_V15Beep(520,180,'sawtooth',180,.11); omega_V15Beep(740,220,'sawtooth',360,.11); return; }
+            if(sound==='digital'){ omega_V15Beep(1200,90,'square',0,.09); omega_V15Beep(900,90,'square',105,.09); omega_V15Beep(1200,120,'square',210,.09); return; }
+            omega_V15Beep(880,220,'sine',0,.13);
+        }
+        function omega_V15TestAlarmSound(){
+            const s=document.getElementById('v15-alarm-sound'); const u=document.getElementById('v15-alarm-custom');
+            _V15_SOUND_SETTINGS.sound=s?.value||'beep'; _V15_SOUND_SETTINGS.customUrl=(u?.value||'').trim(); omega_V15SaveSound(); omega_V15PlayAlarmSound(_V15_SOUND_SETTINGS.sound);
+        }
+
+        function omega_V15TimeLabel(ms, detailed=false){
+            const d=new Date(ms);
+            if(detailed) return d.toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+            const tf=_V10_TF||'1m';
+            if(['1d','3d','1w','1M'].includes(tf)) return d.toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'2-digit'});
+            return d.toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+        }
+
+        function omega_V15VisibleIndexRange(){
+            const n=(_V10_CANDLES||[]).length; if(!n) return {start:0,end:0};
+            const start=Math.max(0,Math.floor(_V12_VIEW_START*(n-1)));
+            const end=Math.min(n,Math.max(start+8,Math.ceil(_V12_VIEW_END*n)));
+            return {start,end};
+        }
+
+        function omega_V12ChartConverters(){
+            const canvas=document.getElementById('crypto-v10-chart'); if(!canvas) return null;
+            const w=canvas.width,h=canvas.height;
+            const left=64,right=104,top=24,bottom=62,plotW=w-left-right,plotH=h-top-bottom;
+            const allCandles=_V10_CANDLES||[];
+            const range=omega_V15VisibleIndexRange();
+            const candles=allCandles.slice(range.start,range.end);
+            const plan=omega_V10GetPlan();
+            const levels=[]; if(plan.entry)levels.push(plan.entry); if(plan.stop)levels.push(plan.stop); if(plan.liq)levels.push(plan.liq); if(_V10_PRICE)levels.push(_V10_PRICE); plan.tps.forEach(tp=>levels.push(tp.price));
+            const all=[...candles.flatMap(c=>[c.high,c.low]),...levels].filter(v=>Number.isFinite(Number(v)) && Number(v)>0).map(Number);
+            if(all.length<2||!candles.length)return null;
+            let min=Math.min(...all), max=Math.max(...all); let pad=(max-min)*0.10||1;
+            let lo=min-pad, hi=max+pad;
+            const mid=(lo+hi)/2; const half=((hi-lo)/2)*Math.max(.22,Math.min(18,_V15_Y_SCALE||1));
+            lo=mid-half; hi=mid+half;
+            return {
+                w,h,left,right,top,bottom,plotW,plotH,lo,hi,candles,range,allCandles,
+                yFor:v=>top+(hi-v)/(hi-lo)*plotH,
+                priceForY:y=>hi-((y-top)/plotH)*(hi-lo),
+                xForIndex:i=>left+((i-range.start)/(Math.max(1,range.end-range.start-1)))*plotW,
+                indexForX:x=>Math.max(range.start,Math.min(range.end-1,Math.round(range.start+((x-left)/plotW)*(Math.max(1,range.end-range.start-1))))),
+                candleAtIndex:i=>allCandles[Math.max(0,Math.min(allCandles.length-1,i))]
+            };
+        }
+
+        function omega_V15ZoomAt(xPx, factor){
+            const conv=omega_V12ChartConverters(); const n=(_V10_CANDLES||[]).length; if(!conv||n<10)return;
+            const plotFrac=Math.max(0,Math.min(1,(xPx-conv.left)/conv.plotW));
+            const width=_V12_VIEW_END-_V12_VIEW_START;
+            const anchor=_V12_VIEW_START+plotFrac*width;
+            const newWidth=Math.min(1,Math.max(0.003,width*factor));
+            let ns=anchor-plotFrac*newWidth, ne=ns+newWidth;
+            if(ns<0){ne-=ns;ns=0;} if(ne>1){ns-=ne-1;ne=1;} ns=Math.max(0,ns); ne=Math.min(1,ne);
+            _V12_VIEW_START=ns; _V12_VIEW_END=ne; _V12_AUTO_FIT=false; omega_V10DrawChart();
+        }
+
+        function omega_V15SelectItemAt(x,y){
+            const conv=omega_V12ChartConverters(); if(!conv)return false;
+            const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan);
+            let best=null;
+            const distPoint=(x1,y1,x2,y2)=>Math.hypot(x1-x2,y1-y2);
+            function distSeg(px,py,x1,y1,x2,y2){ const A=px-x1,B=py-y1,C=x2-x1,D=y2-y1; const dot=A*C+B*D; const len=C*C+D*D||1; let t=Math.max(0,Math.min(1,dot/len)); return Math.hypot(px-(x1+t*C),py-(y1+t*D)); }
+            _V12_DRAWINGS.filter(d=>d.key===key).forEach(d=>{
+                if(d.type==='hline'){
+                    const yy=conv.yFor(d.price); const ds=Math.abs(y-yy); if(ds<12 && (!best||ds<best.dist)) best={type:'drawing',id:d.id,dist:ds,x:Math.min(Math.max(x,conv.left),conv.left+conv.plotW),y:yy};
+                }else if(d.type==='trend'){
+                    const x1=conv.xForIndex(d.x1),y1=conv.yFor(d.y1),x2=conv.xForIndex(d.x2),y2=conv.yFor(d.y2); const ds=distSeg(x,y,x1,y1,x2,y2); if(ds<14 && (!best||ds<best.dist)) best={type:'drawing',id:d.id,dist:ds,x,y};
+                }
+            });
+            _V12_ALARMS.filter(a=>a.key===key&&!a.hit).forEach(a=>{
+                const yy=conv.yFor(a.price); const ds=Math.abs(y-yy); if(ds<12 && (!best||ds<best.dist)) best={type:'alarm',id:a.id,dist:ds,x:conv.left+conv.plotW-20,y:yy};
+            });
+            if(best){ _V15_SELECTED_ITEM=best; omega_V15PositionTrash(); omega_V10DrawChart(); return true; }
+            _V15_SELECTED_ITEM=null; omega_V15PositionTrash(); omega_V10DrawChart(); return false;
+        }
+
+        function omega_V15PositionTrash(){
+            const btn=document.getElementById('v15-chart-trash'); const canvas=document.getElementById('crypto-v10-chart'); if(!btn||!canvas)return;
+            if(!_V15_SELECTED_ITEM){btn.classList.remove('show');return;}
+            const rect=canvas.getBoundingClientRect(); const wrap=canvas.parentElement.getBoundingClientRect();
+            const left=(rect.left-wrap.left)+Math.min(Math.max(_V15_SELECTED_ITEM.x+12,10),rect.width-82);
+            const top=(rect.top-wrap.top)+Math.min(Math.max(_V15_SELECTED_ITEM.y-22,8),rect.height-36);
+            btn.style.left=left+'px'; btn.style.top=top+'px'; btn.classList.add('show');
+        }
+
+        function omega_V15DeleteSelected(){
+            if(!_V15_SELECTED_ITEM)return;
+            if(_V15_SELECTED_ITEM.type==='drawing'){ _V12_DRAWINGS=_V12_DRAWINGS.filter(d=>d.id!==_V15_SELECTED_ITEM.id); omega_V12SaveDrawings(); }
+            if(_V15_SELECTED_ITEM.type==='alarm'){ _V12_ALARMS=_V12_ALARMS.filter(a=>a.id!==_V15_SELECTED_ITEM.id); omega_V12SaveAlarms(); omega_V12RenderAlarms(); }
+            _V15_SELECTED_ITEM=null; omega_V15PositionTrash(); omega_V10DrawChart(); omega_V14RenderDrawingsPanel&&omega_V14RenderDrawingsPanel();
+        }
+
+        function omega_V12DrawUserDrawings(ctx, conv){
+            if(!conv)return; const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan);
+            _V12_DRAWINGS.filter(d=>d.key===key).forEach(d=>{
+                if(!d.id)d.id=Date.now()+Math.floor(Math.random()*1000);
+                const selected=_V15_SELECTED_ITEM&&_V15_SELECTED_ITEM.type==='drawing'&&_V15_SELECTED_ITEM.id===d.id;
+                const col=d.type==='hline'?'#f2f2f2':(d.color==='red'?'#dc2626':'#059669');
+                ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=selected?5.5:(d.type==='trend'?4.2:2.8); ctx.setLineDash([]);
+                if(d.type==='hline'){
+                    const y=conv.yFor(d.price); ctx.beginPath(); ctx.moveTo(conv.left,y); ctx.lineTo(conv.left+conv.plotW,y); ctx.stroke();
+                    ctx.font='bold 12px JetBrains Mono, monospace'; ctx.fillText(`ÇİZGİ ${omega_V10FormatPrice(d.price)}`, conv.left+10, y-8);
+                    if(selected){ctx.beginPath();ctx.arc(conv.left+conv.plotW-18,y,6,0,Math.PI*2);ctx.fill();}
+                }else if(d.type==='trend'){
+                    const x1=conv.xForIndex(d.x1),y1=conv.yFor(d.y1),x2=conv.xForIndex(d.x2),y2=conv.yFor(d.y2);
+                    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+                    ctx.beginPath(); ctx.arc(x1,y1,selected?6:4.5,0,Math.PI*2); ctx.arc(x2,y2,selected?6:4.5,0,Math.PI*2); ctx.fill();
+                }
+            });
+            if(_V15_TREND_PREVIEW){
+                const col=_V14_TREND_COLOR==='red'?'#dc2626':'#059669'; ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=4.2; ctx.setLineDash([]);
+                ctx.beginPath(); ctx.moveTo(conv.xForIndex(_V15_TREND_PREVIEW.x1),conv.yFor(_V15_TREND_PREVIEW.y1)); ctx.lineTo(_V15_TREND_PREVIEW.x2Px,_V15_TREND_PREVIEW.y2Px); ctx.stroke();
+                ctx.beginPath(); ctx.arc(conv.xForIndex(_V15_TREND_PREVIEW.x1),conv.yFor(_V15_TREND_PREVIEW.y1),5,0,Math.PI*2); ctx.arc(_V15_TREND_PREVIEW.x2Px,_V15_TREND_PREVIEW.y2Px,5,0,Math.PI*2); ctx.fill();
+            }
+            omega_V14RenderDrawingsPanel&&omega_V14RenderDrawingsPanel();
+        };
+
+        function omega_V15DrawAlarms(ctx, conv){
+            const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan);
+            _V12_ALARMS.filter(a=>a.key===key&&!a.hit).forEach(a=>{
+                const y=conv.yFor(a.price); const selected=_V15_SELECTED_ITEM&&_V15_SELECTED_ITEM.type==='alarm'&&_V15_SELECTED_ITEM.id===a.id;
+                ctx.strokeStyle=a.dir==='above'?'#f59e0b':'#60a5fa'; ctx.fillStyle=ctx.strokeStyle; ctx.lineWidth=selected?3.8:2.4; ctx.setLineDash([10,6]);
+                ctx.beginPath(); ctx.moveTo(conv.left,y); ctx.lineTo(conv.left+conv.plotW,y); ctx.stroke(); ctx.setLineDash([]);
+                const txt=`ALARM ${a.dir==='above'?'ÜST':'ALT'} ${omega_V10FormatPrice(a.price)}`;
+                ctx.font='bold 12px JetBrains Mono, monospace'; const tw=ctx.measureText(txt).width+14;
+                ctx.fillStyle='rgba(5,5,5,.92)'; ctx.fillRect(conv.left+conv.plotW-tw-8, y-20, tw, 18);
+                ctx.fillStyle=a.dir==='above'?'#f59e0b':'#60a5fa'; ctx.fillText(txt, conv.left+conv.plotW-tw, y-7);
+                if(selected){ctx.beginPath();ctx.arc(conv.left+conv.plotW-12,y,6,0,Math.PI*2);ctx.fill();}
+            });
+        }
+
+        function omega_V10DrawChart(){
+            const canvas=document.getElementById('crypto-v10-chart'); if(!canvas)return; const ctx=canvas.getContext('2d');
+            const w=canvas.width,h=canvas.height; ctx.clearRect(0,0,w,h); ctx.fillStyle='#020202'; ctx.fillRect(0,0,w,h);
+            const conv=omega_V12ChartConverters(); if(!conv)return; const {left,top,plotW,plotH,candles}=conv; const plan=omega_V10GetPlan();
+            ctx.fillStyle='#050505'; ctx.fillRect(left,top,plotW,plotH);
+            ctx.strokeStyle='rgba(255,255,255,.055)'; ctx.lineWidth=1;
+            ctx.font='11px JetBrains Mono, monospace'; ctx.fillStyle='#7b7b7b';
+            for(let i=0;i<=6;i++){ const y=top+i*plotH/6; const price=conv.hi-(i/6)*(conv.hi-conv.lo); ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(left+plotW,y); ctx.stroke(); ctx.fillText(omega_V10FormatPrice(price), left+plotW+10, y+4); }
+            const tickCount=6; for(let i=0;i<=tickCount;i++){ const idx=Math.round(conv.range.start+(i/tickCount)*Math.max(1,conv.range.end-conv.range.start-1)); const c=conv.allCandles[idx]; if(!c)continue; const x=conv.xForIndex(idx); ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,top+plotH); ctx.stroke(); ctx.fillText(omega_V15TimeLabel(c.time,false), Math.min(x-28,left+plotW-72), top+plotH+24); }
+            ctx.strokeStyle='rgba(255,255,255,.18)'; ctx.strokeRect(left,top,plotW,plotH);
+            const cw=Math.max(3.5,Math.min(16,plotW/(candles.length||1)*.64));
+            candles.forEach((c,localI)=>{ const globalI=conv.range.start+localI; const x=conv.xForIndex(globalI); const yO=conv.yFor(c.open),yC=conv.yFor(c.close),yH=conv.yFor(c.high),yL=conv.yFor(c.low); const up=c.close>=c.open; ctx.strokeStyle=up?'#00b46f':'#c81e1e'; ctx.fillStyle=up?'#008f5c':'#a91515'; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(x,yH); ctx.lineTo(x,yL); ctx.stroke(); const bodyY=Math.min(yO,yC), bodyH=Math.max(4,Math.abs(yC-yO)); ctx.fillRect(x-cw/2,bodyY,cw,bodyH); ctx.strokeRect(x-cw/2,bodyY,cw,bodyH); });
+            omega_V12DrawMA(ctx,conv);
+            const levels=[]; if(plan.entry)levels.push({v:plan.entry,c:'#fbbf24',label:'GİRİŞ'}); if(plan.stop)levels.push({v:plan.stop,c:'#ef4444',label:'STOP'}); if(plan.liq)levels.push({v:plan.liq,c:'#f97316',label:'LİQ'}); if(_V10_PRICE)levels.push({v:_V10_PRICE,c:'#3b82f6',label:'CANLI'}); plan.tps.forEach(tp=>levels.push({v:tp.price,c:'#10b981',label:`TP${tp.index}`}));
+            levels.forEach(l=>{ const y=conv.yFor(l.v); ctx.strokeStyle=l.c; ctx.fillStyle=l.c; ctx.lineWidth=l.label==='CANLI'?3.2:2.2; ctx.setLineDash(l.label==='CANLI'?[]:[8,5]); ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(left+plotW,y); ctx.stroke(); ctx.setLineDash([]); const txt=`${l.label} ${omega_V10FormatPrice(l.v)}`; const tw=ctx.measureText(txt).width+14; ctx.fillStyle='rgba(4,4,4,.94)'; ctx.fillRect(left+8,y-20,tw,18); ctx.fillStyle=l.c; ctx.font='bold 12px JetBrains Mono, monospace'; ctx.fillText(txt,left+15,y-7); });
+            omega_V15DrawAlarms(ctx,conv);
+            omega_V12DrawUserDrawings(ctx,conv);
+            if(_V13_CROSSHAIR){ const x=Math.max(left,Math.min(left+plotW,_V13_CROSSHAIR.x)); const y=Math.max(top,Math.min(top+plotH,_V13_CROSSHAIR.y)); ctx.strokeStyle='rgba(255,255,255,.28)'; ctx.lineWidth=1; ctx.setLineDash([4,4]); ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(left+plotW,y);ctx.moveTo(x,top);ctx.lineTo(x,top+plotH);ctx.stroke();ctx.setLineDash([]); const price=conv.priceForY(y); const idx=conv.indexForX(x); const c=conv.candleAtIndex(idx); const label=`${omega_V10FormatPrice(price)} · ${c?omega_V15TimeLabel(c.time,true):''}`; ctx.fillStyle='rgba(0,0,0,.86)'; ctx.fillRect(left+10,top+10,ctx.measureText(label).width+20,24); ctx.fillStyle='#e5e5e5';ctx.font='12px JetBrains Mono, monospace';ctx.fillText(label,left+20,top+27); }
+            const cap=document.getElementById('crypto-v10-caption'); if(cap) cap.innerHTML=`<span>Grafik: <b>${candles.length}/${(_V10_CANDLES||[]).length}</b> mum · Wheel: zaman zoom · Sağ fiyat ekseni: dikey ölçek · Son güncelleme: ${new Date().toLocaleTimeString('tr-TR')}</span><span>Fiyat ve tarih ekseni aktif.</span>`;
+            omega_V15PositionTrash();
+        }
+
+        function omega_V15BindCanvasEvents(){
+            const old=document.getElementById('crypto-v10-chart'); if(!old)return;
+            if(old.dataset.v15Bound)return;
+            const canvas=old.cloneNode(true); old.parentNode.replaceChild(canvas,old); canvas.dataset.v15Bound='1';
+            let trendDragStarted=false;
+            canvas.addEventListener('mousedown',(ev)=>{
+                const rect=canvas.getBoundingClientRect(); const x=(ev.clientX-rect.left)*(canvas.width/rect.width); const y=(ev.clientY-rect.top)*(canvas.height/rect.height); const conv=omega_V12ChartConverters(); if(!conv)return;
+                if(x>conv.left+conv.plotW){ _V15_AXIS_DRAG={startY:y,startScale:_V15_Y_SCALE}; return; }
+                if(_V12_DRAW_MODE==='trend'){
+                    const price=conv.priceForY(y), timeIndex=conv.indexForX(x); const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan);
+                    _V12_PENDING_TREND={x1:timeIndex,y1:price,key}; _V15_TREND_PREVIEW={x1:timeIndex,y1:price,x2Px:x,y2Px:y}; trendDragStarted=true; omega_V10DrawChart(); return;
+                }
+                if(!_V12_DRAW_MODE && !omega_V15SelectItemAt(x,y)){ _V15_PAN_DRAG={startX:x,startStart:_V12_VIEW_START,startEnd:_V12_VIEW_END}; }
+            });
+            canvas.addEventListener('mousemove',(ev)=>{
+                const rect=canvas.getBoundingClientRect(); const x=(ev.clientX-rect.left)*(canvas.width/rect.width); const y=(ev.clientY-rect.top)*(canvas.height/rect.height); const conv=omega_V12ChartConverters(); if(!conv)return;
+                _V13_CROSSHAIR={x,y};
+                if(_V15_AXIS_DRAG){ const dy=y-_V15_AXIS_DRAG.startY; _V15_Y_SCALE=Math.max(.18,Math.min(22,_V15_AXIS_DRAG.startScale*Math.exp(dy/180))); localStorage.setItem('v15_y_scale',String(_V15_Y_SCALE)); omega_V10DrawChart(); return; }
+                if(_V15_PAN_DRAG){ const dx=x-_V15_PAN_DRAG.startX; const width=_V15_PAN_DRAG.startEnd-_V15_PAN_DRAG.startStart; const shift=-(dx/conv.plotW)*width; let ns=_V15_PAN_DRAG.startStart+shift, ne=_V15_PAN_DRAG.startEnd+shift; if(ns<0){ne-=ns;ns=0;} if(ne>1){ns-=ne-1;ne=1;} _V12_VIEW_START=Math.max(0,ns); _V12_VIEW_END=Math.min(1,ne); _V12_AUTO_FIT=false; omega_V10DrawChart(); return; }
+                if(_V12_DRAW_MODE==='trend' && _V12_PENDING_TREND){ _V15_TREND_PREVIEW={x1:_V12_PENDING_TREND.x1,y1:_V12_PENDING_TREND.y1,x2Px:x,y2Px:y}; omega_V10DrawChart(); return; }
+                omega_V10DrawChart();
+            });
+            canvas.addEventListener('mouseup',(ev)=>{
+                const rect=canvas.getBoundingClientRect(); const x=(ev.clientX-rect.left)*(canvas.width/rect.width); const y=(ev.clientY-rect.top)*(canvas.height/rect.height); const conv=omega_V12ChartConverters();
+                if(_V15_AXIS_DRAG){_V15_AXIS_DRAG=null; return;} if(_V15_PAN_DRAG){_V15_PAN_DRAG=null; return;}
+                if(_V12_DRAW_MODE==='trend' && _V12_PENDING_TREND && conv && trendDragStarted){ const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan); const price=conv.priceForY(y), timeIndex=conv.indexForX(x); if(Math.abs(timeIndex-_V12_PENDING_TREND.x1)>0 || Math.abs(price-_V12_PENDING_TREND.y1)>0){ _V12_DRAWINGS.push({id:Date.now(),type:'trend',key,color:_V14_TREND_COLOR,x1:_V12_PENDING_TREND.x1,y1:_V12_PENDING_TREND.y1,x2:timeIndex,y2:price}); omega_V12SaveDrawings(); omega_V12SetDrawMode(null); } _V12_PENDING_TREND=null; _V15_TREND_PREVIEW=null; trendDragStarted=false; omega_V10DrawChart(); }
+            });
+            canvas.addEventListener('click',(ev)=>{
+                const rect=canvas.getBoundingClientRect(); const x=(ev.clientX-rect.left)*(canvas.width/rect.width); const y=(ev.clientY-rect.top)*(canvas.height/rect.height); const conv=omega_V12ChartConverters(); if(!conv)return;
+                if(_V12_DRAW_MODE==='alarm'){ const price=conv.priceForY(y); const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan); const dir=(_V10_PRICE&&price>_V10_PRICE)?'above':'below'; _V12_ALARMS.push({id:Date.now(),key,symbol:`${plan.symbol}${plan.quote}`,exchange:plan.exchange,dir,price,note:'Grafikten alarm',sound:_V15_SOUND_SETTINGS.sound,customUrl:_V15_SOUND_SETTINGS.customUrl,hit:false,created:new Date().toISOString()}); omega_V12SaveAlarms(); omega_V12RenderAlarms(); omega_V12SetDrawMode(null); omega_V10DrawChart(); omega_ShowFinanceToast&&omega_ShowFinanceToast('Grafikten alarm eklendi.'); return; }
+                if(_V12_DRAW_MODE==='hline'){ const price=conv.priceForY(y); const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan); _V12_DRAWINGS.push({id:Date.now(),type:'hline',key,price,label:'Çizgi'}); omega_V12SaveDrawings(); omega_V12SetDrawMode(null); omega_V10DrawChart(); return; }
+                if(!_V12_DRAW_MODE) omega_V15SelectItemAt(x,y);
+            });
+            canvas.addEventListener('mouseleave',()=>{_V13_CROSSHAIR=null; if(!_V12_PENDING_TREND){omega_V10DrawChart();}});
+            canvas.addEventListener('wheel',(ev)=>{ ev.preventDefault(); const rect=canvas.getBoundingClientRect(); const x=(ev.clientX-rect.left)*(canvas.width/rect.width); const y=(ev.clientY-rect.top)*(canvas.height/rect.height); const conv=omega_V12ChartConverters(); if(!conv)return; const factor=ev.deltaY<0?.76:1.32; if(x>conv.left+conv.plotW || ev.ctrlKey){ _V15_Y_SCALE=Math.max(.18,Math.min(22,_V15_Y_SCALE*(ev.deltaY<0?.82:1.22))); localStorage.setItem('v15_y_scale',String(_V15_Y_SCALE)); omega_V10DrawChart(); } else omega_V15ZoomAt(x,factor); },{passive:false});
+            omega_V10DrawChart();
+        }
+
+        const _omega_v15_old_check_alarms = omega_V12CheckAlarms;
+        omega_V12CheckAlarms = function(){
+            if(!_V10_PRICE)return; const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan); let changed=false;
+            _V12_ALARMS.forEach(a=>{ if(a.key!==key||a.hit)return; const hit=a.dir==='above'?_V10_PRICE>=a.price:_V10_PRICE<=a.price; if(hit){ a.hit=true; a.hitAt=new Date().toISOString(); changed=true; const msg=`${a.symbol} ${a.dir==='above'?'üstüne çıktı':'altına düştü'}: ${omega_V10FormatPrice(a.price)}`; omega_ShowFinanceToast&&omega_ShowFinanceToast('ALARM: '+msg); omega_V15PlayAlarmSound(a.sound||_V15_SOUND_SETTINGS.sound); if('Notification'in window&&Notification.permission==='granted') new Notification('Kasa Terminal Alarm',{body:msg}); } });
+            if(changed){omega_V12SaveAlarms(); omega_V12RenderAlarms(); omega_V10DrawChart();}
+        };
+
+        const _omega_v15_old_add_alarm = omega_V12AddAlarm;
+        omega_V12AddAlarm = function(){
+            const price=parseFloat(document.getElementById('v12-alarm-price')?.value); const dir=document.getElementById('v12-alarm-dir')?.value||'above'; const note=(document.getElementById('v12-alarm-note')?.value||'').trim();
+            if(!price||price<=0){omega_ShowFinanceToast&&omega_ShowFinanceToast('Alarm için geçerli fiyat gir.');return;}
+            const plan=omega_V10GetPlan(); _V12_ALARMS.push({id:Date.now(),key:omega_V12SymbolKey(plan),symbol:`${plan.symbol}${plan.quote}`,exchange:plan.exchange,dir,price,note,sound:_V15_SOUND_SETTINGS.sound,customUrl:_V15_SOUND_SETTINGS.customUrl,hit:false,created:new Date().toISOString()});
+            omega_V12SaveAlarms(); omega_V12RenderAlarms(); omega_V10DrawChart(); const pe=document.getElementById('v12-alarm-price'); if(pe)pe.value=''; omega_ShowFinanceToast&&omega_ShowFinanceToast('Alarm eklendi.');
+        };
+
+        const _omega_v15_old_render_alarms = omega_V12RenderAlarms;
+        omega_V12RenderAlarms = function(){
+            const box=document.getElementById('v12-alarm-list'); if(!box)return; const plan=omega_V10GetPlan(); const key=omega_V12SymbolKey(plan); const list=_V12_ALARMS.filter(a=>a.key===key);
+            if(!list.length){box.innerHTML='<div class="alarm-v12-row"><span>Bu sembol için alarm yok.</span><span></span><span></span></div>';return;}
+            box.innerHTML=list.map(a=>`<div class="alarm-v12-row ${a.hit?'hit':''}"><div><b>${a.dir==='above'?'ÜST':'ALT'} ${omega_V10FormatPrice(a.price)}</b><br><span>${a.note||a.symbol} · ${a.hit?'ÇALDI':'aktif'} · ses: ${a.sound||_V15_SOUND_SETTINGS.sound}</span></div><span class="alarm-status">${a.hit?'ÇALDI':'AKTİF'}</span><button onclick="omega_V12DeleteAlarm(${a.id})"><i class="fa-solid fa-trash"></i></button></div>`).join('');
+        };
+
+        const _omega_v15_old_refresh = omega_V10RefreshCrypto;
+        omega_V10RefreshCrypto = async function(force=false){ await _omega_v15_old_refresh(force); omega_V15InstallUi(); omega_V15BindCanvasEvents(); omega_V12RenderAlarms(); omega_V10DrawChart(); };
+        window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{omega_V15InstallUi(); omega_V15BindCanvasEvents(); omega_V10DrawChart();},1500));
 
 </script>
 </body>
