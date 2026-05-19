@@ -542,3 +542,16 @@
         .alarm-v15-sound-box button{height:39px;border:1px solid #333;background:#191919;color:#ddd;border-radius:10px;font-weight:950;cursor:pointer;}
         .alarm-v15-sound-box button:hover{border-color:var(--gold);color:var(--gold);}
         @media(max-width:760px){.alarm-v15-sound-box{grid-template-columns:1fr}.chart-delete-floating{font-size:.68em;padding:7px 9px}}
+/* ===============================
+   V26 TOAST FIX
+   Sayfa açılışındaki gereksiz Plan hesaplandı bildirimini gizler.
+   Sadece gerçek kullanıcı tıklamasından sonra toast gösterilir.
+================================ */
+
+body:not(.v26-toast-allowed) #finance-toast,
+body:not(.v26-toast-allowed) .finance-toast {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
