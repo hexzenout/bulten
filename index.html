@@ -39,7 +39,7 @@
                 <i class="fa-solid fa-basketball"></i> BASKETBOL
             </div>
             <div class="nav-link" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)">
-                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
+                <i class="fa-solid fa-satellite-dish"></i> YAYIN MATRİSİ
             </div>
             <div class="nav-link" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
                 <i class="fa-solid fa-star"></i> FAVORİLERİM
@@ -48,7 +48,7 @@
                 <i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP
             </div>
             <div class="nav-link" id="nav-crypto" onclick="omega_SwitchMainTab('crypto', this)">
-                <i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL
+                <i class="fa-brands fa-bitcoin"></i> KRİPTO PRO PANEL
             </div>
             <div class="nav-link" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
                 <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
@@ -138,14 +138,23 @@
                 <div id="omega-crypto-block" class="omega-crypto-standalone" style="display:none;">
                     <div class="terminal-v10-hero crypto">
                         <div>
-                            <h2><i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL</h2>
+                            <h2><i class="fa-brands fa-bitcoin"></i> KRİPTO PRO PANEL</h2>
                             <p>Binance / OKX, USDT / USDC, geçmiş grafik, canlı fiyat, TP yüzdeleri, stop ve likidasyon tek ekranda.</p>
                         </div>
                         <div class="terminal-v10-live-dot" id="crypto-v10-status">VERİ BEKLENİYOR</div>
                     </div>
 
-                    <div class="crypto-v10-layout">
-                        <div class="crypto-v10-chart-panel">
+                    <div class="crypto-v28-layout">
+                        <aside class="crypto-v28-side-tabs">
+                            <button class="crypto-v28-tab active" data-crypto-panel="graph"><i class="fa-solid fa-chart-candlestick"></i><span>Grafik</span></button>
+                            <button class="crypto-v28-tab" data-crypto-panel="plan"><i class="fa-solid fa-list-check"></i><span>İşlem</span></button>
+                            <button class="crypto-v28-tab" data-crypto-panel="alarm"><i class="fa-solid fa-bell"></i><span>Alarm</span></button>
+                            <button class="crypto-v28-tab" data-crypto-panel="sound"><i class="fa-solid fa-volume-high"></i><span>Ses</span></button>
+                            <button class="crypto-v28-tab" data-crypto-panel="draw"><i class="fa-solid fa-pen-ruler"></i><span>Çizim</span></button>
+                            <button class="crypto-v28-tab" data-crypto-panel="settings"><i class="fa-solid fa-sliders"></i><span>Ayar</span></button>
+                        </aside>
+
+                        <div class="crypto-v10-chart-panel crypto-v28-chart-panel">
                             <div class="crypto-v10-chart-head">
                                 <div>
                                     <h3 id="crypto-v10-title">BTCUSDT</h3>
@@ -156,8 +165,19 @@
                                     <span id="crypto-v10-change">0.00%</span>
                                 </div>
                             </div>
+
+                            <div class="crypto-v28-mini-panel">
+                                <div>
+                                    <b>Grafik Aralığı</b>
+                                    <span>Binance / OKX mum verisiyle güncellenir.</span>
+                                </div>
+                                <button class="terminal-v10-btn gold" onclick="omega_V10RefreshCrypto(true)">GRAFİĞİ YENİLE</button>
+                            </div>
+
                             <div class="crypto-v10-timeframes" id="crypto-v10-timeframes"></div>
+
                             <div class="crypto-v12-toolbar crypto-v13-toolbar" style="display:none;"></div>
+
                             <div class="crypto-v12-chart-wrap">
                                 <div class="crypto-v12-hint" id="crypto-v12-hint">Çizim için grafiğe tıkla.</div>
                                 <canvas id="crypto-v10-chart" width="1200" height="520" class="crypto-v10-canvas"></canvas>
@@ -166,61 +186,100 @@
                             <div class="drawing-v14-panel" id="drawing-v14-panel"></div>
                         </div>
 
-                        <div class="crypto-v10-control-panel">
+                        <div class="crypto-v10-control-panel crypto-v28-control-panel">
                             <div class="terminal-v10-panel-head">
-                                <h3>İşlem Planı</h3>
-                                <span>TP / SL / LIQ</span>
+                                <h3 id="crypto-v28-panel-title">Grafik Kontrolü</h3>
+                                <span id="crypto-v28-panel-subtitle">Borsa, parite ve coin</span>
                             </div>
 
-                            <div class="crypto-v10-form">
-                                <label>Borsa</label>
-                                <select id="v10-exchange"><option value="binance">Binance</option><option value="okx">OKX</option></select>
+                            <div class="crypto-v28-panel active" data-crypto-pane="graph">
+                                <div class="crypto-v10-form crypto-v28-form">
+                                    <label>Borsa</label>
+                                    <select id="v10-exchange"><option value="binance">Binance</option><option value="okx">OKX</option></select>
 
-                                <label>Parite</label>
-                                <select id="v10-quote"><option value="USDT">USDT</option><option value="USDC">USDC</option></select>
+                                    <label>Parite</label>
+                                    <select id="v10-quote"><option value="USDT">USDT</option><option value="USDC">USDC</option></select>
 
-                                <label>Coin</label>
-                                <input id="v10-symbol" list="crypto-symbol-list" value="BTC" placeholder="BTC, ETH, SOL...">
-
-                                <label>Yön</label>
-                                <select id="v10-side"><option value="long">LONG</option><option value="short">SHORT</option></select>
-
-                                <label>Marjin / Stake ($)</label>
-                                <input id="v10-stake" type="number" value="100" step="1">
-
-                                <label>Kaldıraç</label>
-                                <input id="v10-lev" type="number" value="10" step="1">
-
-                                <label>Giriş Fiyatı</label>
-                                <input id="v10-entry" type="number" placeholder="Boşsa canlı fiyat alınır" step="0.00000001">
-
-                                <label>Likidasyon</label>
-                                <input id="v10-liq" type="number" placeholder="Manuel LIQ" step="0.00000001">
-
-                                <label>Stop</label>
-                                <input id="v10-stop" type="number" placeholder="Stop fiyatı" step="0.00000001">
-                            </div>
-
-                            <div class="tp-v10-box">
-                                <div class="tp-v10-head">
-                                    <b>Kar Al Noktaları</b>
-                                    <button onclick="omega_V10AddTpRow()">+ TP</button>
+                                    <label>Coin</label>
+                                    <input id="v10-symbol" list="crypto-symbol-list" value="BTC" placeholder="BTC, ETH, SOL...">
                                 </div>
-                                <div id="tp-v10-rows"></div>
+
+                                <div class="crypto-v28-info-grid">
+                                    <div><span>Canlı Fiyat</span><b id="v28-live-price">$-</b></div>
+                                    <div><span>24s Değişim</span><b id="v28-change">0.00%</b></div>
+                                </div>
+
+                                <button class="terminal-v10-btn gold crypto-v28-full-btn" onclick="omega_V10RefreshCrypto(true)">GRAFİĞİ YENİLE</button>
                             </div>
 
-                            <div class="crypto-v10-actions">
-                                <button class="terminal-v10-btn gold" onclick="omega_V10RefreshCrypto(true)">GRAFİĞİ YENİLE</button>
-                                <button class="terminal-v10-btn" onclick="omega_V10UseLiveAsEntry()">CANLIYI GİRİŞ YAP</button>
+                            <div class="crypto-v28-panel" data-crypto-pane="plan">
+                                <div class="crypto-v10-form crypto-v28-form">
+                                    <label>Yön</label>
+                                    <select id="v10-side"><option value="long">LONG</option><option value="short">SHORT</option></select>
+
+                                    <label>Marjin / Stake ($)</label>
+                                    <input id="v10-stake" type="number" value="100" step="1">
+
+                                    <label>Kaldıraç</label>
+                                    <input id="v10-lev" type="number" value="10" step="1">
+
+                                    <label>Giriş Fiyatı</label>
+                                    <input id="v10-entry" type="number" placeholder="Boşsa canlı fiyat alınır" step="0.00000001">
+
+                                    <label>Likidasyon</label>
+                                    <input id="v10-liq" type="number" placeholder="Manuel LIQ" step="0.00000001">
+
+                                    <label>Stop</label>
+                                    <input id="v10-stop" type="number" placeholder="Stop fiyatı" step="0.00000001">
+                                </div>
+
+                                <div class="tp-v10-box">
+                                    <div class="tp-v10-head">
+                                        <b>Kar Al Noktaları</b>
+                                        <button onclick="omega_V10AddTpRow()">+ TP</button>
+                                    </div>
+                                    <div id="tp-v10-rows"></div>
+                                </div>
+
+                                <div class="crypto-v10-actions crypto-v28-two-btns">
+                                    <button class="terminal-v10-btn gold" onclick="omega_V10RefreshCrypto(true)">GRAFİĞİ YENİLE</button>
+                                    <button class="terminal-v10-btn" onclick="omega_V10UseLiveAsEntry()">CANLIYI GİRİŞ YAP</button>
+                                </div>
+
+                                <div class="crypto-v10-metrics">
+                                    <div><span>Canlı PnL</span><b id="v10-live-pnl">$0.00</b></div>
+                                    <div><span>Stop Zararı</span><b id="v10-stop-pnl">$0.00</b></div>
+                                    <div><span>Toplam TP Kârı</span><b id="v10-tp-total">$0.00</b></div>
+                                    <div><span>Risk / Ödül</span><b id="v10-rr">-</b></div>
+                                </div>
                             </div>
 
+                            <div class="crypto-v28-panel" data-crypto-pane="alarm">
+                                <div id="v28-alarm-mount"></div>
+                            </div>
 
+                            <div class="crypto-v28-panel" data-crypto-pane="sound">
+                                <div id="v28-sound-mount"></div>
+                            </div>
 
-                            <div class="crypto-v10-metrics">
-                                <div><span>Canlı PnL</span><b id="v10-live-pnl">$0.00</b></div>
-                                <div><span>Stop Zararı</span><b id="v10-stop-pnl">$0.00</b></div>
-                                <div><span>Toplam TP Kârı</span><b id="v10-tp-total">$0.00</b></div>
-                                <div><span>Risk / Ödül</span><b id="v10-rr">-</b></div>
+                            <div class="crypto-v28-panel" data-crypto-pane="draw">
+                                <div class="crypto-v28-draw-grid">
+                                    <button class="terminal-v10-btn" onclick="omega_V12ResetView()">GRAFİĞİ SIĞDIR</button>
+                                    <button class="terminal-v10-btn green" onclick="omega_V12SetDrawMode('alarm')">GRAFİKTEN ALARM</button>
+                                    <button class="terminal-v10-btn" onclick="omega_V12SetDrawMode('hline')">FİYAT ÇİZGİSİ</button>
+                                    <button class="terminal-v10-btn green" onclick="omega_V14SetTrendTool('green')">YEŞİL TREND</button>
+                                    <button class="terminal-v10-btn red" onclick="omega_V14SetTrendTool('red')">KIRMIZI TREND</button>
+                                    <button class="terminal-v10-btn red" onclick="omega_V14ClearDrawingsForSymbol()">TÜM ÇİZİMLERİ SİL</button>
+                                </div>
+                                <div class="crypto-v28-note">Çizim aracı seçtikten sonra grafiğe tıkla. Trend için ilk noktaya bas, ikinci noktada bırak.</div>
+                            </div>
+
+                            <div class="crypto-v28-panel" data-crypto-pane="settings">
+                                <div class="crypto-v28-settings-card">
+                                    <b>Terminal Ayarları</b>
+                                    <span>Seçilen borsa, parite, coin ve zaman aralığı tarayıcıda kalıcı saklanır. PWA cache eski dosya tutarsa Ctrl+F5 veya site verilerini temizle.</span>
+                                </div>
+                                <button class="terminal-v10-btn red crypto-v28-full-btn" id="v28-reset-crypto-settings">KRİPTO AYARLARINI SIFIRLA</button>
                             </div>
                         </div>
                     </div>
@@ -582,6 +641,8 @@
                 omega_BuildStreamMatrix(_ACTIVE_LAYOUT);
             } else if(targetModule === 'finance') {
                 centerWrapper.style.maxWidth = '1700px';
+            } else if(targetModule === 'crypto') {
+                centerWrapper.style.maxWidth = '1850px';
             } else {
                 centerWrapper.style.maxWidth = '1000px';
             }
@@ -622,7 +683,7 @@
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 document.getElementById('omega-stream-block').style.display = 'block';
-                titleElem.innerHTML = '<span style="color:var(--gold)">/ CANLI YAYIN</span>';
+                titleElem.innerHTML = '<span style="color:var(--gold)">/ YAYIN MATRİSİ</span>';
 
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
@@ -2591,7 +2652,7 @@
                 _ACTIVE_TAB = 'crypto';
                 const cryptoBlock = document.getElementById('omega-crypto-block');
                 if(cryptoBlock) cryptoBlock.style.display = 'block';
-                if(titleElem) titleElem.innerHTML = '<span style="color:var(--gold)">/ KRİPTO TERMİNAL</span>';
+                if(titleElem) titleElem.innerHTML = '<span style="color:var(--gold)">/ KRİPTO PRO PANEL</span>';
                 omega_InitV10Timeframes();
                 omega_V10SeedTpRows();
                 omega_V10RefreshCrypto(true);
@@ -3318,6 +3379,6 @@
 <script src="assets/js/app-fixes.js"></script>
 <script src="assets/js/pwa.js"></script>
 <script type="module" src="assets/js/firebase.js"></script>
-<script src="assets/js/v27-cleanup.js"></script>
+<script src="assets/js/v28-crypto-panel.js"></script>
 </body>
 </html>
