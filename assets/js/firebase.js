@@ -205,6 +205,24 @@ function injectAuthStyles() {
     .v26-auth-msg.good { color: #10b981; }
     .v26-auth-msg.bad { color: #ef4444; }
 
+
+    body:not(.v27-auth-ready) #v26-auth-shell {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    body.v27-auth-ready #v26-auth-shell {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
+
+    #v26-cloud-save-btn,
+    #v26-cloud-load-btn {
+      display: none !important;
+    }
+
     @media(max-width: 760px) {
       .v26-auth-shell {
         margin-left: 0;
@@ -368,8 +386,8 @@ function updateAuthUI(user) {
     label.textContent = user.email || "Kullanıcı";
     openBtn.style.display = "none";
     logoutBtn.style.display = "inline-flex";
-    if (saveBtn) saveBtn.style.display = "inline-flex";
-    if (loadBtn) loadBtn.style.display = "inline-flex";
+    if (saveBtn) saveBtn.style.display = "none";
+    if (loadBtn) loadBtn.style.display = "none";
   } else {
     label.textContent = "Giriş yapılmadı";
     openBtn.style.display = "inline-flex";
@@ -471,6 +489,7 @@ function firebaseErrorToTurkish(err) {
 onAuthStateChanged(auth, (user) => {
   window.V26_FIREBASE.user = user || null;
   window.V26_FIREBASE.ready = true;
+  document.body.classList.add("v27-auth-ready");
   updateAuthUI(user);
 
   window.dispatchEvent(new CustomEvent("v26-auth-ready", {
