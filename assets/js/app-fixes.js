@@ -1,19 +1,15 @@
 // ===============================
 // V26 APP FIXES
-// Açılış, footer, layout ve gereksiz bildirim düzeltmeleri
+// Açılışta gereksiz yazı/toast engeller.
+// Layout ve footer davranışına dokunmaz.
 // ===============================
 
 (function () {
   window.__v26LastUserAction = 0;
   window.__v26ToastAllowTimer = null;
 
-  function markLayoutReady() {
-    document.body.classList.add("v26-layout-ready");
-  }
-
   function allowToastTemporarily() {
     window.__v26LastUserAction = Date.now();
-
     document.body.classList.add("v26-toast-allowed");
 
     clearTimeout(window.__v26ToastAllowTimer);
@@ -22,24 +18,23 @@
     }, 3500);
   }
 
-  function bindUserActions() {
-    document.addEventListener(
-      "pointerdown",
-      function (e) {
-        if (
-          e.target.closest(
-            "button, .btn-finance, .nav-link, input, select, .chart-tool-btn, .tf-v10, .finance-clean-btn"
-          )
-        ) {
-          allowToastTemporarily();
-        }
-      },
-      true
-    );
-  }
+  document.addEventListener(
+    "pointerdown",
+    function (e) {
+      if (
+        e.target.closest(
+          "button, .btn-finance, .nav-link, input, select, .chart-tool-btn, .tf-v10, .finance-clean-btn"
+        )
+      ) {
+        allowToastTemporarily();
+      }
+    },
+    true
+  );
 
   function hideBadStartupTexts() {
     const radar = document.getElementById("radar-render-output");
+
     if (radar) {
       const text = (radar.innerText || "").trim();
 
@@ -53,6 +48,7 @@
     }
 
     const toast = document.getElementById("finance-toast");
+
     if (toast) {
       const text = toast.innerText || "";
 
@@ -77,15 +73,6 @@
         return;
       }
 
-      if (isUserAction) {
-        document.body.classList.add("v26-toast-allowed");
-
-        clearTimeout(window.__v26ToastAllowTimer);
-        window.__v26ToastAllowTimer = setTimeout(function () {
-          document.body.classList.remove("v26-toast-allowed");
-        }, 3500);
-      }
-
       return originalToast.apply(this, arguments);
     };
 
@@ -93,33 +80,19 @@
     return true;
   }
 
-  function stabilizeWrapper() {
-    const wrapper = document.querySelector(".center-wrapper");
-    if (!wrapper) return;
-
-    wrapper.style.transition = "none";
-  }
-
   function bootFixes() {
-    bindUserActions();
-    stabilizeWrapper();
     hideBadStartupTexts();
 
-    setTimeout(markLayoutReady, 700);
-
-    const patchTimer = setInterval(function () {
-      stabilizeWrapper();
+    const timer = setInterval(function () {
       hideBadStartupTexts();
       const ok = patchFinanceToast();
 
-      if (ok) clearInterval(patchTimer);
+      if (ok) clearInterval(timer);
     }, 150);
 
     setTimeout(function () {
-      clearInterval(patchTimer);
-      stabilizeWrapper();
+      clearInterval(timer);
       hideBadStartupTexts();
-      markLayoutReady();
     }, 5000);
   }
 
