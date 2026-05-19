@@ -1,11 +1,15 @@
 // ===============================
-// V26 ALARM CENTER
-// Kripto alarm listesi + fiyat kontrolü + ses tetikleme
+// V26 ALARM CENTER PRO
+// Temiz alarm kartı, geçmiş, taşmayan butonlar, tetikleme kaydı
 // ===============================
+
 (function () {
-  const STORAGE_KEY = "v26_crypto_alarm_center_v1";
+  const STORAGE_KEY = "v26_crypto_alarm_center_pro_v1";
+  const HISTORY_KEY = "v26_crypto_alarm_history_pro_v1";
   const POLL_MS = 2500;
+
   let state = loadState();
+  let history = loadHistory();
   let timer = null;
   let initialized = false;
 
@@ -18,8 +22,21 @@
     }
   }
 
+  function loadHistory() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch {
+      return [];
+    }
+  }
+
   function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function saveHistory() {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 500)));
   }
 
   function uid() {
@@ -73,6 +90,7 @@
 
   function normalizeAlarmSymbol(input) {
     const raw = String(input || "").trim().toUpperCase();
+
     if (raw.includes(":")) {
       const [ex, sym] = raw.split(":");
       const exchange = ex.toLowerCase().includes("OKX") ? "okx" : "binance";
@@ -80,6 +98,7 @@
       const coin = normalizeCoin(sym.replace(quote, ""));
       return `${exchange}:${coin}${quote}`;
     }
+
     const quote = raw.endsWith("USDC") ? "USDC" : "USDT";
     const coin = normalizeCoin(raw.replace(quote, ""));
     return `${getSelectedExchange()}:${coin}${quote}`;
@@ -111,40 +130,267 @@
   }
 
   function injectStyles() {
-    if (document.getElementById("v26-alarm-center-style")) return;
+    if (document.getElementById("v26-alarm-center-pro-style")) return;
+
     const style = document.createElement("style");
-    style.id = "v26-alarm-center-style";
+    style.id = "v26-alarm-center-pro-style";
     style.textContent = `
-      .v26-alarm-center{margin-top:14px;background:#080808;border:1px solid #2a2a2a;border-radius:16px;overflow:hidden}
-      .v26-alarm-center-head{padding:14px 15px;border-bottom:1px solid #242424;background:#111;display:flex;justify-content:space-between;align-items:center;gap:12px}
-      .v26-alarm-center-head h3{margin:0;color:#fff;font-size:.86em;letter-spacing:.6px;font-weight:950;text-transform:uppercase}
-      .v26-alarm-center-head span{color:#888;font-size:.68em;font-weight:800}
-      .v26-alarm-center-body{padding:13px;display:grid;gap:10px}
-      .v26-alarm-form{display:grid;grid-template-columns:1fr .8fr .8fr 1fr auto;gap:8px;align-items:end}
-      .v26-alarm-field{display:grid;gap:5px}
-      .v26-alarm-field label{color:#aaa;font-size:.58em;font-weight:950;text-transform:uppercase;letter-spacing:.7px}
-      .v26-alarm-field input,.v26-alarm-field select{background:#070707;border:1px solid #333;color:#fff;border-radius:10px;padding:10px 9px;font-family:'JetBrains Mono',monospace;font-size:.78em;width:100%}
-      .v26-alarm-btn{border:1px solid #333;background:#171717;color:#eee;border-radius:10px;padding:10px 12px;font-size:.72em;font-weight:950;cursor:pointer;min-height:39px}
-      .v26-alarm-btn.gold{background:#fbbf24;color:#171000;border-color:#fbbf24}
-      .v26-alarm-btn.red{background:rgba(239,68,68,.14);color:#ff9a9a;border-color:rgba(239,68,68,.35)}
-      .v26-alarm-btn.green{background:rgba(16,185,129,.14);color:#10b981;border-color:rgba(16,185,129,.35)}
-      .v26-alarm-list{display:grid;gap:7px;max-height:260px;overflow:auto}
-      .v26-alarm-row{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center;background:#101010;border:1px solid #252525;border-radius:12px;padding:10px}
-      .v26-alarm-row.hit{border-color:rgba(16,185,129,.55);background:rgba(16,185,129,.06)}
-      .v26-alarm-main b{display:block;color:#fbbf24;font-family:'JetBrains Mono',monospace;font-size:.86em;margin-bottom:3px}
-      .v26-alarm-main span{display:block;color:#aaa;font-size:.68em;font-weight:800;line-height:1.35}
-      .v26-alarm-price{font-family:'JetBrains Mono',monospace;color:#fff;font-size:.82em;font-weight:950}
-      .v26-alarm-status{border:1px solid #333;background:#171717;color:#aaa;border-radius:999px;padding:6px 8px;font-size:.62em;font-weight:950;text-transform:uppercase}
-      .v26-alarm-status.hit{color:#00170d;background:#10b981;border-color:#10b981}
-      .v26-alarm-empty{border:1px dashed #333;border-radius:12px;padding:18px;color:#777;font-size:.78em;font-weight:800;text-align:center}
-      @media(max-width:900px){.v26-alarm-form,.v26-alarm-row{grid-template-columns:1fr}}
+      .crypto-v12-alarm-box,
+      .crypto-v13-alarm-box {
+        display: none !important;
+      }
+
+      .v26-alarm-center {
+        margin-top: 14px;
+        background: #080808;
+        border: 1px solid #2a2a2a;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .v26-alarm-center-head {
+        padding: 13px 14px;
+        border-bottom: 1px solid #242424;
+        background: #111;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .v26-alarm-center-head h3 {
+        margin: 0;
+        color: #fff;
+        font-size: .84em;
+        letter-spacing: .6px;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      .v26-alarm-center-head span {
+        color: #888;
+        font-size: .66em;
+        font-weight: 800;
+      }
+
+      .v26-alarm-center-body {
+        padding: 12px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .v26-alarm-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        background: #0b0b0b;
+        border: 1px solid #242424;
+        border-radius: 12px;
+        padding: 7px;
+      }
+
+      .v26-alarm-tab {
+        border: 1px solid transparent;
+        background: transparent;
+        color: #aaa;
+        border-radius: 9px;
+        padding: 9px;
+        font-size: .68em;
+        font-weight: 950;
+        cursor: pointer;
+      }
+
+      .v26-alarm-tab.active {
+        background: #fbbf24;
+        color: #171000;
+      }
+
+      .v26-alarm-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .v26-alarm-field {
+        display: grid;
+        gap: 5px;
+      }
+
+      .v26-alarm-field.full {
+        grid-column: 1 / -1;
+      }
+
+      .v26-alarm-field label {
+        color: #aaa;
+        font-size: .56em;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: .7px;
+      }
+
+      .v26-alarm-field input,
+      .v26-alarm-field select {
+        background: #070707;
+        border: 1px solid #333;
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 9px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .76em;
+        width: 100%;
+      }
+
+      .v26-alarm-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+      }
+
+      .v26-alarm-btn {
+        border: 1px solid #333;
+        background: #171717;
+        color: #eee;
+        border-radius: 10px;
+        padding: 10px 10px;
+        font-size: .68em;
+        font-weight: 950;
+        cursor: pointer;
+        min-height: 38px;
+        white-space: nowrap;
+      }
+
+      .v26-alarm-btn.gold {
+        background: #fbbf24;
+        color: #171000;
+        border-color: #fbbf24;
+      }
+
+      .v26-alarm-btn.red {
+        background: rgba(239,68,68,.14);
+        color: #ff9a9a;
+        border-color: rgba(239,68,68,.35);
+      }
+
+      .v26-alarm-btn.green {
+        background: rgba(16,185,129,.14);
+        color: #10b981;
+        border-color: rgba(16,185,129,.35);
+      }
+
+      .v26-alarm-list {
+        display: grid;
+        gap: 7px;
+        max-height: 240px;
+        overflow: auto;
+      }
+
+      .v26-alarm-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: center;
+        background: #101010;
+        border: 1px solid #252525;
+        border-radius: 12px;
+        padding: 10px;
+      }
+
+      .v26-alarm-row.hit {
+        border-color: rgba(16,185,129,.55);
+        background: rgba(16,185,129,.06);
+      }
+
+      .v26-alarm-main b {
+        display: block;
+        color: #fbbf24;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .78em;
+        margin-bottom: 4px;
+      }
+
+      .v26-alarm-main span {
+        display: block;
+        color: #aaa;
+        font-size: .64em;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+
+      .v26-alarm-row-actions {
+        display: grid;
+        gap: 6px;
+      }
+
+      .v26-alarm-status {
+        border: 1px solid #333;
+        background: #171717;
+        color: #aaa;
+        border-radius: 999px;
+        padding: 6px 8px;
+        font-size: .58em;
+        font-weight: 950;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      .v26-alarm-status.hit {
+        color: #00170d;
+        background: #10b981;
+        border-color: #10b981;
+      }
+
+      .v26-alarm-empty {
+        border: 1px dashed #333;
+        border-radius: 12px;
+        padding: 16px;
+        color: #777;
+        font-size: .74em;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .v26-history-row {
+        background: #101010;
+        border: 1px solid #252525;
+        border-radius: 12px;
+        padding: 10px;
+        display: grid;
+        gap: 4px;
+      }
+
+      .v26-history-row b {
+        color: #10b981;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .76em;
+      }
+
+      .v26-history-row span {
+        color: #aaa;
+        font-size: .63em;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+
+      @media(max-width: 900px) {
+        .v26-alarm-form,
+        .v26-alarm-actions {
+          grid-template-columns: 1fr;
+        }
+
+        .v26-alarm-row {
+          grid-template-columns: 1fr;
+        }
+
+        .v26-alarm-row-actions {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
     `;
     document.head.appendChild(style);
   }
 
   function findMountPoint() {
     return document.querySelector(".crypto-v10-control-panel") ||
-      document.querySelector(".crypto-v12-alarm-box") ||
       document.querySelector("#omega-crypto-block .crypto-v10-layout") ||
       document.querySelector("#omega-crypto-block") ||
       document.querySelector("#crypto-terminal") ||
@@ -155,46 +401,107 @@
     injectStyles();
     if (document.getElementById("v26-alarm-center")) return;
 
-    const mount = findMountPoint();
     const box = document.createElement("div");
     box.id = "v26-alarm-center";
     box.className = "v26-alarm-center";
     box.innerHTML = `
       <div class="v26-alarm-center-head">
-        <div><h3>Fiyat Alarm Merkezi</h3><span>Sınırsız alarm. Fiyat seviyeye gelince ses sistemi tetiklenir.</span></div>
+        <div>
+          <h3>Alarm Merkezi</h3>
+          <span>Sesli alarm, geçmiş ve sınırsız fiyat takibi.</span>
+        </div>
         <button class="v26-alarm-btn" id="v26-alarm-refresh">YENİLE</button>
       </div>
+
       <div class="v26-alarm-center-body">
-        <div class="v26-alarm-form">
-          <div class="v26-alarm-field"><label>Sembol</label><input id="v26-alarm-symbol" placeholder="binance:BTCUSDT"></div>
-          <div class="v26-alarm-field"><label>Yön</label><select id="v26-alarm-dir"><option value="above">Üstüne çıkarsa</option><option value="below">Altına düşerse</option></select></div>
-          <div class="v26-alarm-field"><label>Fiyat</label><input id="v26-alarm-price" type="number" step="0.00000001" placeholder="77000"></div>
-          <div class="v26-alarm-field"><label>Not</label><input id="v26-alarm-note" placeholder="BTC long bölgesi"></div>
-          <button class="v26-alarm-btn gold" id="v26-alarm-add">ALARM EKLE</button>
+        <div class="v26-alarm-tabs">
+          <button class="v26-alarm-tab active" data-v26-alarm-tab="active">AKTİF ALARMLAR</button>
+          <button class="v26-alarm-tab" data-v26-alarm-tab="history">GEÇMİŞ</button>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="v26-alarm-btn green" id="v26-alarm-fill-current">SEÇİLİ COINİ YAZ</button>
-          <button class="v26-alarm-btn" id="v26-alarm-use-price">CANLI FİYATI YAZ</button>
-          <button class="v26-alarm-btn red" id="v26-alarm-clear-hit">TETİKLENENLERİ TEMİZLE</button>
+
+        <div id="v26-alarm-active-panel">
+          <div class="v26-alarm-form">
+            <div class="v26-alarm-field full">
+              <label>Sembol</label>
+              <input id="v26-alarm-symbol" placeholder="binance:BTCUSDT">
+            </div>
+
+            <div class="v26-alarm-field">
+              <label>Yön</label>
+              <select id="v26-alarm-dir">
+                <option value="above">Üstüne çıkarsa</option>
+                <option value="below">Altına düşerse</option>
+              </select>
+            </div>
+
+            <div class="v26-alarm-field">
+              <label>Fiyat</label>
+              <input id="v26-alarm-price" type="number" step="0.00000001" placeholder="77000">
+            </div>
+
+            <div class="v26-alarm-field full">
+              <label>Not</label>
+              <input id="v26-alarm-note" placeholder="BTC long bölgesi">
+            </div>
+          </div>
+
+          <div class="v26-alarm-actions" style="margin-top:8px;">
+            <button class="v26-alarm-btn green" id="v26-alarm-fill-current">SEÇİLİ COİN</button>
+            <button class="v26-alarm-btn" id="v26-alarm-use-price">CANLI FİYAT</button>
+            <button class="v26-alarm-btn gold" id="v26-alarm-add">ALARM EKLE</button>
+            <button class="v26-alarm-btn red" id="v26-alarm-clear-hit">TETİKLENENLERİ SİL</button>
+          </div>
+
+          <div class="v26-alarm-list" id="v26-alarm-list" style="margin-top:10px;"></div>
         </div>
-        <div class="v26-alarm-list" id="v26-alarm-list"></div>
-      </div>`;
-    mount.appendChild(box);
+
+        <div id="v26-alarm-history-panel" style="display:none;">
+          <div class="v26-alarm-actions" style="margin-bottom:10px;">
+            <button class="v26-alarm-btn red" id="v26-history-clear">GEÇMİŞİ TEMİZLE</button>
+            <button class="v26-alarm-btn" id="v26-history-export">GEÇMİŞİ İNDİR</button>
+          </div>
+          <div class="v26-alarm-list" id="v26-alarm-history-list"></div>
+        </div>
+      </div>
+    `;
+
+    findMountPoint().appendChild(box);
     bindUI();
     fillCurrentSymbol();
-    renderList();
+    renderAll();
   }
 
   function bindUI() {
+    document.querySelectorAll("[data-v26-alarm-tab]").forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll("[data-v26-alarm-tab]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const tab = btn.dataset.v26AlarmTab;
+        document.getElementById("v26-alarm-active-panel").style.display = tab === "active" ? "" : "none";
+        document.getElementById("v26-alarm-history-panel").style.display = tab === "history" ? "" : "none";
+      };
+    });
+
     document.getElementById("v26-alarm-add")?.addEventListener("click", addAlarmFromForm);
-    document.getElementById("v26-alarm-refresh")?.addEventListener("click", () => { fillCurrentSymbol(); checkAllAlarms(true); });
+    document.getElementById("v26-alarm-refresh")?.addEventListener("click", () => {
+      fillCurrentSymbol();
+      checkAllAlarms(true);
+    });
     document.getElementById("v26-alarm-fill-current")?.addEventListener("click", fillCurrentSymbol);
     document.getElementById("v26-alarm-use-price")?.addEventListener("click", fillCurrentPrice);
     document.getElementById("v26-alarm-clear-hit")?.addEventListener("click", () => {
       state.alarms = state.alarms.filter(a => !a.hit);
       saveState();
-      renderList();
+      renderAll();
     });
+    document.getElementById("v26-history-clear")?.addEventListener("click", () => {
+      if (!confirm("Alarm geçmişi temizlensin mi?")) return;
+      history = [];
+      saveHistory();
+      renderHistory();
+    });
+    document.getElementById("v26-history-export")?.addEventListener("click", exportHistory);
   }
 
   function fillCurrentSymbol() {
@@ -206,6 +513,7 @@
   async function fillCurrentPrice() {
     const sym = document.getElementById("v26-alarm-symbol")?.value || currentSymbolKey();
     const priceEl = document.getElementById("v26-alarm-price");
+
     try {
       const data = await fetchPriceByKey(normalizeAlarmSymbol(sym));
       if (priceEl && data.price) priceEl.value = data.price;
@@ -226,14 +534,29 @@
     }
 
     state.alarms.push({
-      id: uid(), key, dir, price, note,
-      active: true, hit: false, createdAt: Date.now(), hitAt: null, lastPrice: null
+      id: uid(),
+      key,
+      dir,
+      price,
+      note,
+      active: true,
+      hit: false,
+      createdAt: Date.now(),
+      hitAt: null,
+      lastPrice: null
     });
+
     saveState();
-    renderList();
+    renderAll();
     checkAllAlarms(true);
+
     const noteEl = document.getElementById("v26-alarm-note");
     if (noteEl) noteEl.value = "";
+  }
+
+  function renderAll() {
+    renderList();
+    renderHistory();
   }
 
   function renderList() {
@@ -250,29 +573,58 @@
       const dirText = a.dir === "above" ? "üstüne çıkarsa" : "altına düşerse";
       const last = a.lastPrice ? money(a.lastPrice) : "-";
       const status = a.hit ? "Tetiklendi" : a.active ? "Aktif" : "Pasif";
+
       return `
         <div class="v26-alarm-row ${a.hit ? "hit" : ""}">
-          <div class="v26-alarm-main"><b>${p.exchange.toUpperCase()} ${p.symbol} ${dirText} ${money(a.price)}</b><span>${escapeHtml(a.note || "")}${a.note ? " · " : ""}Son fiyat: ${last}</span></div>
-          <div class="v26-alarm-price">${money(a.price)}</div>
-          <div class="v26-alarm-status ${a.hit ? "hit" : ""}">${status}</div>
-          <div style="display:flex;gap:6px;"><button class="v26-alarm-btn" data-toggle="${a.id}">${a.active ? "PASİF" : "AKTİF"}</button><button class="v26-alarm-btn red" data-delete="${a.id}">SİL</button></div>
-        </div>`;
+          <div class="v26-alarm-main">
+            <b>${p.exchange.toUpperCase()} ${p.symbol} ${dirText} ${money(a.price)}</b>
+            <span>${escapeHtml(a.note || "")}${a.note ? " · " : ""}Son fiyat: ${last}</span>
+          </div>
+          <div class="v26-alarm-row-actions">
+            <div class="v26-alarm-status ${a.hit ? "hit" : ""}">${status}</div>
+            <button class="v26-alarm-btn" data-toggle="${a.id}">${a.active ? "PASİF" : "AKTİF"}</button>
+            <button class="v26-alarm-btn red" data-delete="${a.id}">SİL</button>
+          </div>
+        </div>
+      `;
     }).join("");
 
-    list.querySelectorAll("[data-toggle]").forEach(btn => btn.onclick = () => {
-      const a = state.alarms.find(x => x.id === btn.dataset.toggle);
-      if (!a) return;
-      a.active = !a.active;
-      if (a.active) a.hit = false;
-      saveState();
-      renderList();
+    list.querySelectorAll("[data-toggle]").forEach(btn => {
+      btn.onclick = () => {
+        const a = state.alarms.find(x => x.id === btn.dataset.toggle);
+        if (!a) return;
+        a.active = !a.active;
+        if (a.active) a.hit = false;
+        saveState();
+        renderAll();
+      };
     });
 
-    list.querySelectorAll("[data-delete]").forEach(btn => btn.onclick = () => {
-      state.alarms = state.alarms.filter(a => a.id !== btn.dataset.delete);
-      saveState();
-      renderList();
+    list.querySelectorAll("[data-delete]").forEach(btn => {
+      btn.onclick = () => {
+        state.alarms = state.alarms.filter(a => a.id !== btn.dataset.delete);
+        saveState();
+        renderAll();
+      };
     });
+  }
+
+  function renderHistory() {
+    const list = document.getElementById("v26-alarm-history-list");
+    if (!list) return;
+
+    if (!history.length) {
+      list.innerHTML = `<div class="v26-alarm-empty">Henüz çalan alarm geçmişi yok.</div>`;
+      return;
+    }
+
+    list.innerHTML = history.slice(0, 100).map(h => `
+      <div class="v26-history-row">
+        <b>${escapeHtml(h.symbol)} · ${money(h.price)}</b>
+        <span>${escapeHtml(h.note || "")}</span>
+        <span>${new Date(h.time).toLocaleString("tr-TR")} · ${escapeHtml(h.message || "")}</span>
+      </div>
+    `).join("");
   }
 
   async function checkAllAlarms(force = false) {
@@ -298,8 +650,25 @@
           const p = parseKey(a.key);
           const msg = `${p.symbol} alarmı tetiklendi: ${money(data.price)}`;
 
-          window.dispatchEvent(new CustomEvent("v26-alarm-fired", { detail: { message: msg, alarm: a, price: data.price } }));
-          if (window.V26AlarmAudio?.play) window.V26AlarmAudio.play(msg);
+          history.unshift({
+            id: uid(),
+            symbol: `${p.exchange.toUpperCase()} ${p.symbol}`,
+            target: a.price,
+            price: data.price,
+            note: a.note || "",
+            message: msg,
+            time: Date.now()
+          });
+
+          saveHistory();
+
+          window.dispatchEvent(new CustomEvent("v26-alarm-fired", {
+            detail: { message: msg, alarm: a, price: data.price }
+          }));
+
+          if (window.V26AlarmAudio?.play) {
+            window.V26AlarmAudio.play(msg);
+          }
         });
       } catch (err) {
         if (force) console.warn("Alarm fiyat kontrol hatası:", key, err);
@@ -307,11 +676,25 @@
     }
 
     saveState();
-    renderList();
+    renderAll();
+  }
+
+  function exportHistory() {
+    const blob = new Blob([JSON.stringify(history, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "v26-alarm-gecmisi.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
   }
 
   function escapeHtml(str) {
-    return String(str || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+    return String(str || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   function shouldBoot() {
@@ -327,18 +710,47 @@
     setTimeout(() => checkAllAlarms(true), 800);
   }
 
-  window.addEventListener("hashchange", () => setTimeout(() => { if (shouldBoot()) boot(); }, 600));
-  document.addEventListener("DOMContentLoaded", () => setTimeout(() => { if (shouldBoot()) boot(); }, 900));
+  window.addEventListener("hashchange", () => {
+    setTimeout(() => {
+      if (shouldBoot()) boot();
+    }, 600);
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+      if (shouldBoot()) boot();
+    }, 900);
+  });
 
   window.V26AlarmCenter = {
     add(key, dir, price, note = "") {
-      state.alarms.push({ id: uid(), key: normalizeAlarmSymbol(key), dir, price: Number(price), note, active: true, hit: false, createdAt: Date.now(), hitAt: null, lastPrice: null });
+      state.alarms.push({
+        id: uid(),
+        key: normalizeAlarmSymbol(key),
+        dir,
+        price: Number(price),
+        note,
+        active: true,
+        hit: false,
+        createdAt: Date.now(),
+        hitAt: null,
+        lastPrice: null
+      });
       saveState();
-      renderList();
+      renderAll();
       checkAllAlarms(true);
     },
-    list() { return [...state.alarms]; },
-    clear() { state.alarms = []; saveState(); renderList(); },
+    list() {
+      return [...state.alarms];
+    },
+    history() {
+      return [...history];
+    },
+    clear() {
+      state.alarms = [];
+      saveState();
+      renderAll();
+    },
     check: checkAllAlarms
   };
 })();
