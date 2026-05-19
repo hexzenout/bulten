@@ -1,14 +1,12 @@
 // ===============================
-// V27 ALARM AUDIO CORE
-// Görünür panel oluşturmaz. Kontroller Alarm Merkezi içinden yönetilir.
-// Özel ses, başlangıç/bitiş aralığı, minimum 60 saniye çalma destekler.
+// V28 ALARM AUDIO MODULE
+// Floating panel yok. Ses ayarları Kripto Pro Panel > Ses sekmesine basılır.
 // ===============================
 
 (function () {
-  const STORE_KEY = "v27_alarm_audio_settings";
+  const STORE_KEY = "v28_alarm_audio_settings";
   const DEFAULTS = {
     enabled: false,
-    unlocked: false,
     sound: "digital",
     volume: 0.75,
     durationSec: 60,
@@ -20,6 +18,7 @@
 
   let settings = loadSettings();
   let audioCtx = null;
+  let unlocked = false;
   let ringTimers = [];
   let ringAudio = null;
   let isRinging = false;
@@ -32,7 +31,6 @@
   function saveSettings() {
     settings.durationSec = Math.max(60, Number(settings.durationSec || 60));
     localStorage.setItem(STORE_KEY, JSON.stringify(settings));
-    window.dispatchEvent(new CustomEvent("v27-alarm-audio-change", { detail: getSettings() }));
   }
 
   function ensureAudioContext() {
@@ -46,13 +44,16 @@
   function beep(freq, duration, type = "sine", gainValue = 0.08, delay = 0) {
     const ctx = ensureAudioContext();
     if (!ctx) return;
+
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
+
     osc.type = type;
     osc.frequency.value = freq;
     gain.gain.setValueAtTime(0.0001, ctx.currentTime + delay);
-    gain.gain.exponentialRampToValueAtTime(gainValue * Number(settings.volume || 0.75), ctx.currentTime + delay + 0.02);
+    gain.gain.exponentialRampToValueAtTime(gainValue * settings.volume, ctx.currentTime + delay + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + delay + duration);
+
     osc.connect(gain);
     gain.connect(ctx.destination);
     osc.start(ctx.currentTime + delay);
@@ -61,164 +62,299 @@
 
   function playBuiltinOnce(soundName) {
     if (soundName === "silent") return;
+
     if (soundName === "bip") {
       beep(920, 0.16, "sine", 0.09, 0);
       beep(920, 0.16, "sine", 0.09, 0.24);
       return;
     }
+
     if (soundName === "chime") {
       beep(660, 0.18, "sine", 0.07, 0);
-      beep(880, 0.20, "sine", 0.07, 0.18);
+      beep(880, 0.2, "sine", 0.07, 0.18);
       beep(1320, 0.22, "sine", 0.06, 0.38);
       return;
     }
+
     if (soundName === "siren") {
       for (let i = 0; i < 5; i++) beep(i % 2 ? 760 : 430, 0.14, "square", 0.055, i * 0.16);
       return;
     }
+
     beep(1180, 0.08, "square", 0.045, 0);
     beep(870, 0.08, "square", 0.045, 0.11);
     beep(1180, 0.08, "square", 0.045, 0.22);
     beep(870, 0.16, "square", 0.045, 0.33);
   }
 
-  function clearTimers() {
+  function clearRingTimers() {
     ringTimers.forEach(t => clearTimeout(t));
     ringTimers = [];
   }
 
   function stopAlarm() {
-    clearTimers();
+    clearRingTimers();
+
     if (ringAudio) {
-      try { ringAudio.pause(); ringAudio.currentTime = 0; } catch {}
+      try {
+        ringAudio.pause();
+        ringAudio.currentTime = 0;
+      } catch {}
     }
+
     isRinging = false;
-    document.body.classList.remove("v27-alarm-ringing");
-    window.dispatchEvent(new CustomEvent("v27-alarm-audio-stop", { detail: getSettings() }));
+    document.body.classList.remove("v28-alarm-ringing");
+    updateUI();
+    notify("Alarm durduruldu.");
   }
 
-  function playCustom(durationMs) {
+  function playCustomLoop(durationMs) {
     if (!settings.customDataUrl) return false;
+
     const start = Math.max(0, Number(settings.customStart || 0));
     const end = Math.max(0, Number(settings.customEnd || 0));
+
     ringAudio = new Audio(settings.customDataUrl);
     ringAudio.volume = Math.max(0, Math.min(1, Number(settings.volume || 0.75)));
     ringAudio.currentTime = start;
+
     ringAudio.ontimeupdate = () => {
       if (end > start && ringAudio.currentTime >= end) {
         ringAudio.currentTime = start;
         ringAudio.play().catch(() => {});
       }
     };
+
     ringAudio.onended = () => {
       if (isRinging) {
         ringAudio.currentTime = start;
         ringAudio.play().catch(() => {});
       }
     };
-    ringAudio.play().catch(() => notify("Özel ses çalamadı. Önce Ses Aktif/Test kullan."));
+
+    ringAudio.play().catch(() => notify("Özel ses çalamadı. Önce Ses Aktif / Test butonunu kullan."));
     ringTimers.push(setTimeout(stopAlarm, durationMs));
     return true;
   }
 
-  function notify(text) {
-    let el = document.getElementById("v27-mini-notice");
-    if (!el) {
-      el = document.createElement("div");
-      el.id = "v27-mini-notice";
-      el.style.cssText = "position:fixed;right:18px;bottom:18px;z-index:60000;background:#101010;border:1px solid #fbbf24;color:#fff;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:800;box-shadow:0 18px 50px rgba(0,0,0,.55);opacity:0;transform:translateY(8px);transition:.2s;max-width:360px;line-height:1.35;";
-      document.body.appendChild(el);
-    }
-    el.textContent = text;
-    el.style.opacity = "1";
-    el.style.transform = "translateY(0)";
-    clearTimeout(window.__v27MiniNoticeTimer);
-    window.__v27MiniNoticeTimer = setTimeout(() => {
-      el.style.opacity = "0";
-      el.style.transform = "translateY(8px)";
-    }, 4500);
-  }
-
   function playAlarm(message = "Fiyat alarmı tetiklendi.") {
-    if (!settings.enabled || !settings.unlocked) {
-      notify("Alarm tetiklendi ama ses kapalı. Alarm Merkezi > Ses Aktif butonuna bas.");
+    if (!settings.enabled || !unlocked) {
+      notify("Alarm tetiklendi ama ses kapalı. Ses sekmesinden SES AKTİF yap.");
       return;
     }
 
     stopAlarm();
     isRinging = true;
-    document.body.classList.add("v27-alarm-ringing");
-    window.dispatchEvent(new CustomEvent("v27-alarm-audio-start", { detail: { message, settings: getSettings() } }));
+    document.body.classList.add("v28-alarm-ringing");
+    updateUI();
 
-    const durationSec = Math.max(60, Number(settings.durationSec || 60));
-    const durationMs = durationSec * 1000;
+    const durationMs = Math.max(60, Number(settings.durationSec || 60)) * 1000;
     notify(message + " Alarm çalıyor.");
 
     if (settings.sound === "custom" && settings.customDataUrl) {
-      if (playCustom(durationMs)) return;
+      playCustomLoop(durationMs);
+      return;
     }
 
     const every = settings.sound === "siren" ? 900 : 1200;
     const count = Math.ceil(durationMs / every);
+
     for (let i = 0; i < count; i++) {
-      ringTimers.push(setTimeout(() => { if (isRinging) playBuiltinOnce(settings.sound); }, i * every));
+      ringTimers.push(setTimeout(() => {
+        if (isRinging) playBuiltinOnce(settings.sound);
+      }, i * every));
     }
+
     ringTimers.push(setTimeout(stopAlarm, durationMs));
   }
 
-  function unlock() {
-    ensureAudioContext();
-    settings.enabled = true;
-    settings.unlocked = true;
-    saveSettings();
-    playBuiltinOnce(settings.sound);
-    notify("Alarm sesi aktif.");
+  function notify(text) {
+    let el = document.getElementById("v28-alarm-notice");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "v28-alarm-notice";
+      el.className = "v28-alarm-notice";
+      document.body.appendChild(el);
+    }
+
+    el.textContent = text;
+    el.classList.add("show");
+
+    clearTimeout(window.__v28AlarmNoticeTimer);
+    window.__v28AlarmNoticeTimer = setTimeout(() => el.classList.remove("show"), 4500);
   }
 
-  function test() {
-    unlock();
-    playAlarm("Alarm sesi test edildi.");
+  function renderUI() {
+    const mount = document.getElementById("v28-sound-mount");
+    if (!mount || mount.dataset.ready === "1") return;
+    mount.dataset.ready = "1";
+
+    mount.innerHTML = `
+      <div class="v28-sound-card">
+        <div class="v28-card-title">
+          <b>Alarm Sesi</b>
+          <span>Ses izni, özel şarkı ve çalma süresi.</span>
+        </div>
+
+        <div class="v28-sound-actions">
+          <button class="terminal-v10-btn green" id="v28-audio-unlock-btn">SES AKTİF</button>
+          <button class="terminal-v10-btn" id="v28-audio-test-btn">TEST</button>
+          <button class="terminal-v10-btn red" id="v28-audio-stop-btn">DURDUR</button>
+        </div>
+
+        <div class="v28-form-grid">
+          <label>Ses Tipi<select id="v28-audio-sound">
+            <option value="digital">Dijital</option>
+            <option value="bip">Bip</option>
+            <option value="chime">Chime</option>
+            <option value="siren">Siren</option>
+            <option value="silent">Sessiz</option>
+            <option value="custom">Özel Ses</option>
+          </select></label>
+
+          <label>Çalma Süresi<input id="v28-audio-duration" type="number" min="60" step="10"></label>
+          <label>Ses Seviyesi<input id="v28-audio-volume" type="range" min="0" max="1" step="0.05"></label>
+          <label>Özel Ses<input id="v28-audio-file" type="file" accept="audio/*"></label>
+          <label>Başlangıç Sn<input id="v28-audio-start" type="number" min="0" step="1"></label>
+          <label>Bitiş Sn<input id="v28-audio-end" type="number" min="0" step="1"></label>
+        </div>
+
+        <div class="v28-help-text">Özel ses tarayıcı hafızasına kaydedilir. Başlangıç/bitiş girersen şarkının sadece o aralığı döngüye alınır. Minimum alarm süresi 60 saniyedir.</div>
+      </div>
+    `;
+
+    bindUI();
+    updateUI();
   }
 
-  function getSettings() {
-    return { ...settings, isRinging };
-  }
+  function bindUI() {
+    const unlockBtn = document.getElementById("v28-audio-unlock-btn");
+    const testBtn = document.getElementById("v28-audio-test-btn");
+    const stopBtn = document.getElementById("v28-audio-stop-btn");
+    const soundSel = document.getElementById("v28-audio-sound");
+    const durationInput = document.getElementById("v28-audio-duration");
+    const volumeInput = document.getElementById("v28-audio-volume");
+    const fileInput = document.getElementById("v28-audio-file");
+    const startInput = document.getElementById("v28-audio-start");
+    const endInput = document.getElementById("v28-audio-end");
 
-  function setSettings(next = {}) {
-    settings = { ...settings, ...next };
-    settings.durationSec = Math.max(60, Number(settings.durationSec || 60));
-    saveSettings();
-  }
+    if (!unlockBtn) return;
 
-  function setCustomFile(file) {
-    return new Promise((resolve, reject) => {
-      if (!file) return resolve(false);
+    soundSel.value = settings.sound;
+    durationInput.value = Math.max(60, settings.durationSec || 60);
+    volumeInput.value = settings.volume;
+    startInput.value = settings.customStart || 0;
+    endInput.value = settings.customEnd || 0;
+
+    unlockBtn.onclick = () => {
+      ensureAudioContext();
+      unlocked = true;
+      settings.enabled = true;
+      saveSettings();
+      updateUI();
+      playBuiltinOnce(settings.sound);
+      notify("Alarm sesi aktif.");
+    };
+
+    testBtn.onclick = () => {
+      ensureAudioContext();
+      unlocked = true;
+      settings.enabled = true;
+      saveSettings();
+      updateUI();
+      playAlarm("Alarm sesi test edildi.");
+    };
+
+    stopBtn.onclick = stopAlarm;
+
+    soundSel.onchange = () => {
+      settings.sound = soundSel.value;
+      saveSettings();
+      if (unlocked) playBuiltinOnce(settings.sound);
+    };
+
+    durationInput.oninput = () => {
+      settings.durationSec = Math.max(60, Number(durationInput.value || 60));
+      durationInput.value = settings.durationSec;
+      saveSettings();
+    };
+
+    volumeInput.oninput = () => {
+      settings.volume = Number(volumeInput.value || 0.75);
+      saveSettings();
+    };
+
+    startInput.oninput = () => {
+      settings.customStart = Math.max(0, Number(startInput.value || 0));
+      saveSettings();
+    };
+
+    endInput.oninput = () => {
+      settings.customEnd = Math.max(0, Number(endInput.value || 0));
+      saveSettings();
+    };
+
+    fileInput.onchange = () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+
       const reader = new FileReader();
       reader.onload = () => {
         settings.customDataUrl = String(reader.result || "");
         settings.customName = file.name;
         settings.sound = "custom";
         saveSettings();
-        resolve(true);
+        soundSel.value = "custom";
+        notify("Özel alarm sesi kaydedildi: " + file.name);
       };
-      reader.onerror = reject;
       reader.readAsDataURL(file);
+    };
+  }
+
+  function updateUI() {
+    const btn = document.getElementById("v28-audio-unlock-btn");
+    const stopBtn = document.getElementById("v28-audio-stop-btn");
+    const sound = document.getElementById("v28-audio-sound");
+    if (sound) sound.value = settings.sound || "digital";
+
+    if (btn) {
+      btn.classList.toggle("active", unlocked && settings.enabled);
+      btn.textContent = unlocked && settings.enabled ? "SES AÇIK" : "SES AKTİF";
+    }
+
+    if (stopBtn) stopBtn.style.display = isRinging ? "" : "none";
+  }
+
+  function boot() {
+    renderUI();
+
+    window.addEventListener("v26-alarm-fired", (e) => {
+      const msg = e.detail?.message || "Fiyat alarmı tetiklendi.";
+      playAlarm(msg);
     });
+
+    setInterval(renderUI, 800);
   }
 
   window.V26AlarmAudio = {
     play: playAlarm,
     stop: stopAlarm,
-    unlock,
-    test,
-    getSettings,
-    setSettings,
-    setCustomFile,
-    notify
+    unlock: () => {
+      ensureAudioContext();
+      unlocked = true;
+      settings.enabled = true;
+      saveSettings();
+      updateUI();
+    },
+    getSettings: () => ({ ...settings }),
+    setSettings: (next) => {
+      settings = { ...settings, ...next };
+      settings.durationSec = Math.max(60, Number(settings.durationSec || 60));
+      saveSettings();
+      updateUI();
+    }
   };
 
-  window.addEventListener("v26-alarm-fired", (e) => {
-    const msg = e.detail?.message || "Fiyat alarmı tetiklendi.";
-    playAlarm(msg);
-  });
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 })();
