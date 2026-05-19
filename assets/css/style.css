@@ -1181,3 +1181,30 @@ body.omega-route-ready #favorites-section {
     opacity: 1 !important;
     visibility: visible !important;
 }
+
+/* ===============================
+   V34 ROUTE FLASH FIX - STRONG + FAST
+   F5 sırasında ana sayfa/radar filtrelerinin görünmesini engeller.
+================================ */
+
+body:not(.omega-route-ready) #omega-radar-block,
+body:not(.omega-route-ready) #omega-favs-block,
+body:not(.omega-route-ready) #omega-stream-block,
+body:not(.omega-route-ready) #omega-crypto-block,
+body:not(.omega-route-ready) #omega-live-block,
+body:not(.omega-route-ready) #v19-finance-block,
+body:not(.omega-route-ready) #omega-finance-block {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+body.omega-route-ready #omega-radar-block,
+body.omega-route-ready #omega-favs-block,
+body.omega-route-ready #omega-stream-block,
+body.omega-route-ready #omega-crypto-block,
+body.omega-route-ready #omega-live-block,
+body.omega-route-ready #v19-finance-block,
+body.omega-route-ready #omega-finance-block {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
