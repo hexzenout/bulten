@@ -1208,3 +1208,31 @@ body.omega-route-ready #omega-finance-block {
     opacity: 1 !important;
     visibility: visible !important;
 }
+
+/* ===============================
+   V35 CRYPTO TIMEFRAME + STREAM SMOOTH FIX
+================================ */
+
+.crypto-v10-timeframes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.crypto-v10-timeframes .v35-tf,
+.crypto-v10-timeframes .tf-v10 {
+    min-width: 54px;
+    cursor: pointer;
+}
+
+.crypto-v10-timeframes .v35-tf.active,
+.crypto-v10-timeframes .tf-v10.active {
+    background: #f97316 !important;
+    border-color: #f97316 !important;
+    color: #171000 !important;
+    box-shadow: none !important;
+}
+
+#omega-matrix-grid {
+    transition: min-height 0.18s ease, opacity 0.12s ease;
+}
