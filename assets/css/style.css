@@ -555,3 +555,53 @@ body:not(.v26-toast-allowed) .finance-toast {
     pointer-events: none !important;
     visibility: hidden !important;
 }
+/* ===============================
+   V26 GLOBAL LAYOUT RESET
+   Sayfa geçişlerinde zıplama, footer parlaması ve genişlik animasyonunu düzeltir.
+================================ */
+
+/* Sayfa geçişlerinde genişleme/daralma animasyonunu kapat */
+.center-wrapper {
+    transition: none !important;
+}
+
+/* Ana içerikler yüklenirken footer ekranda parlamasın */
+body:not(.v26-layout-ready) .center-wrapper > div:last-child {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Footer normal akışta altta kalsın, ortaya sabitlenmesin */
+.center-wrapper > div:last-child {
+    margin-top: 80px !important;
+    padding-top: 30px !important;
+    padding-bottom: 50px !important;
+    flex-shrink: 0 !important;
+}
+
+/* Radar / favoriler / yayın / kasa blokları çok kısa kalırsa footer yukarı zıplamasın */
+#omega-radar-block,
+#omega-favs-block,
+#omega-stream-block,
+#v19-finance-block {
+    min-height: 420px;
+}
+
+/* Canlı yayın ekranında footer yayının üstüne yapışmasın */
+#omega-stream-block {
+    padding-bottom: 80px;
+}
+
+/* Açılışta "Kayıt bulunamadı / veri bekleniyor" gibi boş ekranlar tasarımı bozmasın */
+#radar-render-output:empty {
+    min-height: 420px;
+}
+
+/* Eski finance toast sistemi açılışta görünmesin */
+body:not(.v26-toast-allowed) #finance-toast,
+body:not(.v26-toast-allowed) .finance-toast {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
