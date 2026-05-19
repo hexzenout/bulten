@@ -3100,31 +3100,6 @@
                 del.onclick=(e)=>{ e.stopPropagation(); omega_V15DeleteSelected(); };
                 wrap.appendChild(del);
             }
-            const alarmBox=document.querySelector('.crypto-v13-alarm-box');
-            if(alarmBox && !document.getElementById('v15-sound-box')){
-                const box=document.createElement('div');
-                box.id='v15-sound-box'; box.className='alarm-v15-sound-box';
-                box.innerHTML=`
-                    <label>Alarm Sesi
-                        <select id="v15-alarm-sound">
-                            <option value="beep">Standart Bip</option>
-                            <option value="chime">Yumuşak Chime</option>
-                            <option value="siren">Siren</option>
-                            <option value="digital">Dijital Uyarı</option>
-                            <option value="silent">Sessiz</option>
-                            <option value="custom">Özel Ses URL</option>
-                        </select>
-                    </label>
-                    <label>Özel Ses / Müzik URL
-                        <input id="v15-alarm-custom" placeholder="https://.../alarm.mp3">
-                    </label>
-                    <button onclick="omega_V15TestAlarmSound()"><i class="fa-solid fa-play"></i> Test</button>`;
-                const list=document.getElementById('v12-alarm-list');
-                if(list) list.insertAdjacentElement('beforebegin', box); else alarmBox.appendChild(box);
-                const s=document.getElementById('v15-alarm-sound'); const u=document.getElementById('v15-alarm-custom');
-                if(s) { s.value=_V15_SOUND_SETTINGS.sound||'beep'; s.onchange=()=>{_V15_SOUND_SETTINGS.sound=s.value; omega_V15SaveSound();}; }
-                if(u) { u.value=_V15_SOUND_SETTINGS.customUrl||''; u.onchange=()=>{_V15_SOUND_SETTINGS.customUrl=u.value.trim(); omega_V15SaveSound();}; }
-            }
         }
 
         function omega_V15Beep(freq=880, dur=180, type='sine', delay=0, vol=.13){
