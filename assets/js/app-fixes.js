@@ -1,7 +1,6 @@
 // ===============================
 // V26 APP FIXES
-// Açılışta gereksiz yazı/toast engeller.
-// Footer/layout davranışını bozmaz; sadece ilk yükleme flaşını gizler.
+// Açılış/toast düzeltmeleri + crypto.js otomatik yükleme
 // ===============================
 
 (function () {
@@ -21,11 +20,7 @@
   document.addEventListener(
     "pointerdown",
     function (e) {
-      if (
-        e.target.closest(
-          "button, .btn-finance, .nav-link, input, select, .chart-tool-btn, .tf-v10, .finance-clean-btn"
-        )
-      ) {
+      if (e.target.closest("button, .btn-finance, .nav-link, input, select, .chart-tool-btn, .tf-v10, .finance-clean-btn, .v26-tv-btn")) {
         allowToastTemporarily();
       }
     },
@@ -34,24 +29,16 @@
 
   function hideBadStartupTexts() {
     const radar = document.getElementById("radar-render-output");
-
     if (radar) {
       const text = (radar.innerText || "").trim();
-
-      if (
-        text.includes("KAYIT BULUNAMADI") ||
-        text.includes("VERİ YÜKLENİYOR") ||
-        text.includes("VERİ BEKLENİYOR")
-      ) {
+      if (text.includes("KAYIT BULUNAMADI") || text.includes("VERİ YÜKLENİYOR") || text.includes("VERİ BEKLENİYOR")) {
         radar.innerHTML = "";
       }
     }
 
     const toast = document.getElementById("finance-toast");
-
     if (toast) {
       const text = toast.innerText || "";
-
       if (text.includes("Plan hesaplandı")) {
         toast.classList.remove("show");
         toast.innerText = "";
@@ -64,15 +51,10 @@
     if (window.__v26FinanceToastPatched) return true;
 
     const originalToast = window.omega_FinanceToast;
-
     window.omega_FinanceToast = function (msg) {
       const message = String(msg || "");
       const isUserAction = Date.now() - (window.__v26LastUserAction || 0) < 1400;
-
-      if (message.includes("Plan hesaplandı") && !isUserAction) {
-        return;
-      }
-
+      if (message.includes("Plan hesaplandı") && !isUserAction) return;
       return originalToast.apply(this, arguments);
     };
 
@@ -80,57 +62,18 @@
     return true;
   }
 
-  function activeContentLooksReady() {
-    const hash = (location.hash || "#futbol").replace("#", "");
-
-    // Stream/finance/crypto/live gibi veri beklemeyen ekranlarda kısa gecikme yeterli.
-    if (!["", "futbol", "basketbol", "favs"].includes(hash)) return true;
-
-    const radar = document.getElementById("radar-render-output");
-    const favs = document.getElementById("favs-render-output");
-
-    if (hash === "favs") return !!(favs && favs.children.length > 0);
-
-    // Futbol/basketbol ana ekranda gerçek maç blokları geldiyse footer görünür.
-    return !!(radar && radar.children.length > 0 && !/KAYIT BULUNAMADI|VERİ YÜKLENİYOR/i.test(radar.innerText || ""));
-  }
-
-  function revealFooterWhenStable() {
-    const started = Date.now();
-
-    function check() {
-      hideBadStartupTexts();
-
-      const waited = Date.now() - started;
-      const ready = activeContentLooksReady();
-
-      // İçerik geldiyse göster. En geç 4 saniyede göster ki footer tamamen kaybolmasın.
-      if (ready || waited > 4000) {
-        document.body.classList.add("v26-footer-ready");
-        return;
-      }
-
-      requestAnimationFrame(check);
-    }
-
-    // İlk birkaç frame boyunca footer gizli kalsın; layout oturduktan sonra kontrol başlasın.
-    setTimeout(check, 250);
-  }
-
-
-  function loadCryptoProFix() {
-    if (document.querySelector('script[data-v26-crypto-pro="1"]')) return;
-    const script = document.createElement("script");
-    script.src = "assets/js/crypto.js?v=26pro2";
-    script.dataset.v26CryptoPro = "1";
-    document.body.appendChild(script);
+  function loadCryptoModule() {
+    if (window.__v26CryptoModuleRequested) return;
+    window.__v26CryptoModuleRequested = true;
+    const s = document.createElement("script");
+    s.src = "assets/js/crypto.js?v=tv-lwc-20260519-1";
+    s.defer = true;
+    document.body.appendChild(s);
   }
 
   function bootFixes() {
-    document.body.classList.remove("v26-footer-ready");
     hideBadStartupTexts();
-    revealFooterWhenStable();
-    loadCryptoProFix();
+    loadCryptoModule();
 
     const timer = setInterval(function () {
       hideBadStartupTexts();
@@ -141,14 +84,8 @@
     setTimeout(function () {
       clearInterval(timer);
       hideBadStartupTexts();
-      document.body.classList.add("v26-footer-ready");
     }, 5000);
   }
-
-  window.addEventListener("hashchange", function () {
-    // Sekme geçişinde footer'ı yeniden saklamıyoruz; sadece ilk F5 flaşını engelliyoruz.
-    hideBadStartupTexts();
-  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", bootFixes);
