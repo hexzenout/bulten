@@ -109,3 +109,67 @@
     bootFixes();
   }
 })();
+// ===============================
+// V26 RADAR LOADING FIX
+// Açılışta geçici "KAYIT BULUNAMADI" görünmesini engeller
+// ===============================
+
+(function () {
+  function showRadarLoading() {
+    const radar = document.getElementById("radar-render-output");
+    if (!radar) return;
+
+    const text = (radar.innerText || "").trim();
+
+    if (text.includes("KAYIT BULUNAMADI")) {
+      radar.innerHTML = `
+        <div style="padding:80px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:15px;">
+          <i class="fa-solid fa-circle-notch fa-spin" style="font-size:2.6em; color:var(--gold);"></i>
+          <span style="color:var(--muted); font-weight:800; letter-spacing:1px; font-size:1em;">VERİ YÜKLENİYOR...</span>
+        </div>
+      `;
+    }
+  }
+
+  function patchRadarFilter() {
+    if (typeof window.omega_ExecuteRadarFilter !== "function") return false;
+    if (window.__v26RadarFilterPatched) return true;
+
+    const original = window.omega_ExecuteRadarFilter;
+
+    window.omega_ExecuteRadarFilter = function () {
+      const result = original.apply(this, arguments);
+
+      setTimeout(showRadarLoading, 0);
+      setTimeout(showRadarLoading, 80);
+      setTimeout(showRadarLoading, 180);
+
+      return result;
+    };
+
+    window.__v26RadarFilterPatched = true;
+    return true;
+  }
+
+  function bootRadarFix() {
+    showRadarLoading();
+
+    const t = setInterval(function () {
+      const ok = patchRadarFilter();
+      showRadarLoading();
+
+      if (ok) clearInterval(t);
+    }, 120);
+
+    setTimeout(function () {
+      clearInterval(t);
+      showRadarLoading();
+    }, 5000);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootRadarFix);
+  } else {
+    bootRadarFix();
+  }
+})();
