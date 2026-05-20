@@ -241,12 +241,7 @@
     const currentPlan = ensureRollingPlan();
     let runningBalance = Number(currentPlan.startBal || 100);
     let totalProfit = 0;
-    let htmlBuffer = `
-      <div class="rolling-toolbar-v32">
-        <button class="gold" onclick="omega_RollingSetAllSlots(10)">TÜM GÜNLERİ 10 İŞLEM YAP</button>
-        <button onclick="omega_RollingSetAllSlots(20)">TÜM GÜNLERİ 20 İŞLEM YAP</button>
-      </div>
-    `;
+    let htmlBuffer = "";
 
     for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
       if (!currentPlan.ops[day]) currentPlan.ops[day] = new Array(10).fill(null);
