@@ -40,6 +40,10 @@
   function renderSoundPanel() {
     const mount = qs("#v28-sound-mount");
     if (!mount) return;
+    const pane = mount.closest(".crypto-v28-panel");
+    if (pane) {
+      Array.from(pane.children).forEach(child => { if (child !== mount) child.style.display = "none"; });
+    }
 
     const s = getSoundSettings();
     mount.dataset.ready = "v32";
@@ -325,8 +329,9 @@
   };
 
   const oldOpenRolling = window.omega_OpenRollingExcel;
-  window.omega_OpenRollingExcel = function(days) {
-    const result = typeof oldOpenRolling === "function" ? oldOpenRolling(days) : undefined;
+  window.omega_OpenRollingExcel = function(days, skipHash = false) {
+    const result = typeof oldOpenRolling === "function" ? oldOpenRolling(days, skipHash) : undefined;
+    if(!skipHash) history.replaceState(null, "", `#finance/rolling/${days}`);
     setTimeout(() => omega_RenderExcelTable(), 80);
     return result;
   };
