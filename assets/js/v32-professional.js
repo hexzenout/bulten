@@ -332,6 +332,8 @@
   const oldOpenRolling = window.omega_OpenRollingExcel;
   window.omega_OpenRollingExcel = function(days, skipHash = false) {
     const result = typeof oldOpenRolling === "function" ? oldOpenRolling(days, skipHash) : undefined;
+    document.documentElement.classList.remove("rolling-hash-boot");
+    document.body.classList.add("rolling-active");
     if(!skipHash) history.replaceState(null, "", `#finance/rolling/${days}`);
     setTimeout(() => omega_RenderExcelTable(), 80);
     return result;
