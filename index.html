@@ -285,30 +285,51 @@
                 <div class="fin-terminal-wrapper" id="v19-finance-block">
 
                     
+                    
                     <aside class="finance-left-rolling-rail finance-left-rail">
-                        <button class="finance-rail-btn bet" type="button" onclick="omega_FinanceRailAction('bet')">
-                            <i class="fa-solid fa-ticket"></i><span>BAHİS</span>
-                        </button>
-                        <button class="finance-rail-btn crypto" type="button" onclick="omega_FinanceRailAction('crypto')">
-                            <i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span>
-                        </button>
-                        <button class="finance-rail-btn" type="button" onclick="omega_FinanceRailAction('chart')">
-                            <i class="fa-solid fa-chart-line"></i><span>KASA EĞRİSİ</span>
-                        </button>
-                        <button class="finance-rail-btn" type="button" onclick="omega_FinanceRailAction('daily')">
-                            <i class="fa-solid fa-table-cells"></i><span>GÜNLÜK</span>
-                        </button>
+                        <div class="finance-rail-section mode-bet">
+                            <div class="finance-rail-title"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></div>
+                            <button class="finance-rail-btn bet" data-finance-mode-btn="bet" type="button" onclick="omega_FinanceRailAction('bet')">
+                                <i class="fa-solid fa-sliders"></i><span>BAHİS PLANI</span>
+                            </button>
+                            <details class="finance-rolling-rail-selector bet" open>
+                                <summary><i class="fa-solid fa-layer-group"></i><span>BAHİS ROLLING</span></summary>
+                                <div class="finance-rolling-rail-menu">
+                                    <button onclick="omega_OpenModeRolling('bet', 7)">7 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 15)">15 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 30)">30 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 60)">60 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 90)">90 GÜN ROLLING</button>
+                                </div>
+                            </details>
+                        </div>
 
-                        <details class="finance-rolling-rail-selector" open>
-                            <summary><i class="fa-solid fa-layer-group"></i><span>ROLLING</span></summary>
-                            <div class="finance-rolling-rail-menu">
-                                <button onclick="omega_OpenRollingExcel(7)">7 GÜN ROLLING</button>
-                                <button onclick="omega_OpenRollingExcel(15)">15 GÜN ROLLING</button>
-                                <button onclick="omega_OpenRollingExcel(30)">30 GÜN ROLLING</button>
-                                <button onclick="omega_OpenRollingExcel(60)">60 GÜN ROLLING</button>
-                                <button onclick="omega_OpenRollingExcel(90)">90 GÜN ROLLING</button>
-                            </div>
-                        </details>
+                        <div class="finance-rail-section mode-crypto">
+                            <div class="finance-rail-title"><i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span></div>
+                            <button class="finance-rail-btn crypto" data-finance-mode-btn="crypto" type="button" onclick="omega_FinanceRailAction('crypto')">
+                                <i class="fa-solid fa-sliders"></i><span>KRİPTO RİSK</span>
+                            </button>
+                            <details class="finance-rolling-rail-selector crypto" open>
+                                <summary><i class="fa-solid fa-layer-group"></i><span>KRİPTO ROLLING</span></summary>
+                                <div class="finance-rolling-rail-menu">
+                                    <button onclick="omega_OpenModeRolling('crypto', 7)">7 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 15)">15 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 30)">30 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 60)">60 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 90)">90 GÜN ROLLING</button>
+                                </div>
+                            </details>
+                        </div>
+
+                        <div class="finance-rail-section mode-tools">
+                            <div class="finance-rail-title"><i class="fa-solid fa-wallet"></i><span>KASA</span></div>
+                            <button class="finance-rail-btn" type="button" onclick="omega_FinanceRailAction('chart')">
+                                <i class="fa-solid fa-chart-line"></i><span>KASA EĞRİSİ</span>
+                            </button>
+                            <button class="finance-rail-btn" type="button" onclick="omega_FinanceRailAction('daily')">
+                                <i class="fa-solid fa-table-cells"></i><span>GÜNLÜK DEFTER</span>
+                            </button>
+                        </div>
                     </aside>
 
                     <div class="finance-clean-hero">
