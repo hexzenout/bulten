@@ -1,7 +1,18 @@
 {
-  "up": "13:36",
-  "matches": [],
+  "up": "22:33",
+  "matches": [
+    {
+      "name": "SC Freiburg - Aston Villa",
+      "league": "UEFA Europa League",
+      "score": "0 - 0",
+      "home_goals": 0,
+      "away_goals": 0,
+      "minute": 33,
+      "status": "First Half",
+      "updated": "2026-05-20 22:33:52"
+    }
+  ],
   "logs": [
-    "key#1 OK live=0"
+    "key#1 OK live=1"
   ]
 }
