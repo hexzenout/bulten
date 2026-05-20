@@ -186,7 +186,7 @@
 
   function renderUI() {
     const mount = document.getElementById("v28-sound-mount");
-    if (!mount || mount.dataset.ready === "1") return;
+    if (!mount || mount.dataset.ready === "1" || mount.dataset.ready === "v32") return;
     mount.dataset.ready = "1";
 
     mount.innerHTML = `
@@ -326,14 +326,12 @@
   }
 
   function boot() {
-    renderUI();
-
+    // V37: Görsel ses paneli artık sadece v32-professional.js tarafından çizilir.
+    // Bu dosya yalnızca ses çalma, durdurma ve ayar saklama motoru olarak kalır.
     window.addEventListener("v26-alarm-fired", (e) => {
       const msg = e.detail?.message || "Fiyat alarmı tetiklendi.";
       playAlarm(msg);
     });
-
-    setInterval(renderUI, 800);
   }
 
   window.V26AlarmAudio = {
