@@ -37,12 +37,13 @@
     return merged;
   }
 
-  function renderSoundPanel() {
+  function renderSoundPanel(force = false) {
     const mount = qs("#v28-sound-mount");
     if (!mount) return;
+    if (mount.dataset.ready === "v32" && !force) return;
     const pane = mount.closest(".crypto-v28-panel");
     if (pane) {
-      Array.from(pane.children).forEach(child => { if (child !== mount) child.style.display = "none"; });
+      Array.from(pane.children).forEach(child => { if (child !== mount) child.remove(); });
     }
 
     const s = getSoundSettings();
@@ -112,7 +113,7 @@
     qs("#v32-sound-toggle").onclick = () => {
       const next = setSoundSettings({ enabled: true });
       if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
-      renderSoundPanel();
+      renderSoundPanel(true);
     };
 
     qs("#v32-sound-test").onclick = () => {
@@ -152,7 +153,7 @@
       const reader = new FileReader();
       reader.onload = () => {
         setSoundSettings({ customDataUrl: String(reader.result || ""), customName: file.name, sound: "custom" });
-        renderSoundPanel();
+        renderSoundPanel(true);
       };
       reader.readAsDataURL(file);
     };
@@ -343,7 +344,6 @@
     setInterval(() => {
       if (location.hash === "#crypto") {
         prepareCryptoForm();
-        renderSoundPanel();
       }
       if (location.hash === "#finance") fixFinanceEmptyState();
     }, 1200);
