@@ -420,16 +420,19 @@
                             <div class="finance-card-head"><div><h3><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</h3><span>Son işlemler</span></div></div>
                             <div class="ledger-panel-scroll"><table class="supreme-data-table" id="omega-data-table"></table></div>
                         </div>
-                        <div class="finance-card">
-                            <div class="finance-card-head"><div><h3><i class="fa-solid fa-layer-group"></i> Rolling</h3><span>Hızlı hedef planları</span></div></div>
+                        <div class="finance-card finance-rolling-launch-card">
+                            <div class="finance-card-head"><div><h3><i class="fa-solid fa-layer-group"></i> Rolling</h3><span>7 / 15 / 30 / 60 / 90 günlük plan seç</span></div></div>
                             <div class="finance-card-body">
-                                <div class="rolling-grand-grid">
-                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(7)"><label>7 GÜN</label><b>ROLLING</b></div>
-                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(15)"><label>15 GÜN</label><b>ROLLING</b></div>
-                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(30)"><label>30 GÜN</label><b>ROLLING</b></div>
-                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(60)"><label>60 GÜN</label><b>ROLLING</b></div>
-                                    <div class="rolling-box-btn" onclick="omega_OpenRollingExcel(90)"><label>90 GÜN</label><b>ROLLING</b></div>
-                                </div>
+                                <details class="finance-rolling-selector">
+                                    <summary><i class="fa-solid fa-chart-line"></i><b>ROLLING SEÇ</b><span>Planı aç</span></summary>
+                                    <div class="finance-rolling-options">
+                                        <button onclick="omega_OpenRollingExcel(7)"><b>7</b><span>GÜN</span></button>
+                                        <button onclick="omega_OpenRollingExcel(15)"><b>15</b><span>GÜN</span></button>
+                                        <button onclick="omega_OpenRollingExcel(30)"><b>30</b><span>GÜN</span></button>
+                                        <button onclick="omega_OpenRollingExcel(60)"><b>60</b><span>GÜN</span></button>
+                                        <button onclick="omega_OpenRollingExcel(90)"><b>90</b><span>GÜN</span></button>
+                                    </div>
+                                </details>
                             </div>
                         </div>
                     </div>
@@ -447,7 +450,7 @@
         <div class="modal-header">
             <h2 id="excel-modal-title">ROLLING EXCEL</h2>
             <div class="progress-bar-container"><div id="excel-progress-bar" class="progress-bar-fill"></div></div>
-            <button type="button" class="btn-modal-back" onclick="omega_CloseRollingExcel()">KAPAT</button>
+            <button type="button" class="btn-modal-back" onclick="omega_CloseRollingExcel(true)">KAPAT</button>
         </div>
         <div class="modal-config-bar">
             <div class="config-item"><label>BAŞLANGIÇ:</label><input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()" style="background:transparent; border:none; border-bottom:1px solid #444; color:var(--green); font-family:'JetBrains Mono'; font-size:1em; font-weight:800; padding:2px; width:60px; text-align:center;"></div>
