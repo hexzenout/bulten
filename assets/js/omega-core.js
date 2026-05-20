@@ -35,7 +35,8 @@ let _MASTER_DB = [];
         const ROLLING_TARGETS = { 7: 1000, 15: 5000, 30: 15000, 60: 40000, 90: 100000 };
 
         window.addEventListener('DOMContentLoaded', () => {
-            const hash = window.location.hash.replace('#', '') || 'futbol';
+            const rawHash = window.location.hash.replace('#', '') || 'futbol';
+            const hash = rawHash.split('/')[0] || 'futbol';
             const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
             if (validTabs.includes(hash)) {
                 omega_SwitchMainTab(hash, document.getElementById('nav-' + hash), false);
@@ -45,7 +46,20 @@ let _MASTER_DB = [];
             omega_InitializeEngine();
         });
 
-        window.addEventListener('popstate', (e) => {
+        
+        function omega_HandleHashRouteV38() {
+            const rawHash = window.location.hash.replace('#', '') || 'futbol';
+            const hash = rawHash.split('/')[0] || 'futbol';
+            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
+            if (validTabs.includes(hash)) {
+                const el = document.getElementById('nav-' + hash);
+                omega_SwitchMainTab(hash, el, false);
+            }
+        }
+
+        window.addEventListener('hashchange', omega_HandleHashRouteV38);
+
+window.addEventListener('popstate', (e) => {
             if(e.state && e.state.tab) {
                 const el = document.getElementById('nav-' + e.state.tab);
                 if(el) omega_SwitchMainTab(e.state.tab, el, false);
