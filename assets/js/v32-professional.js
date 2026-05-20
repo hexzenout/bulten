@@ -86,11 +86,11 @@
             <input id="v32-volume" type="range" min="0" max="1" step="0.05" value="${Number(s.volume || .75)}">
           </div>
 
-          <div class="v32-sound-field">
+          <div class="v32-sound-field v32-custom-file-field">
             <label>Özel Ses Dosyası</label>
             <div class="v32-file-row">
               <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-              <div class="v32-file-name" id="v32-file-name">${s.customName || "Henüz özel ses seçilmedi"}</div>
+              <div class="v32-file-name" id="v32-file-name" title="${s.customName || "Henüz özel ses seçilmedi"}">${s.customName || "Henüz özel ses seçilmedi"}</div>
               <input id="v32-file-input" type="file" accept="audio/*" hidden>
             </div>
           </div>
@@ -335,7 +335,6 @@
     document.documentElement.classList.remove("rolling-hash-boot");
     document.body.classList.add("rolling-active");
     if(!skipHash) history.replaceState(null, "", `#finance/rolling/${days}`);
-    setTimeout(() => omega_RenderExcelTable(), 80);
     return result;
   };
 
@@ -369,8 +368,8 @@
     }, 700);
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(boot, 800));
-  else setTimeout(boot, 800);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(boot, 120));
+  else setTimeout(boot, 120);
 
-  window.addEventListener("hashchange", () => setTimeout(boot, 350));
+  window.addEventListener("hashchange", () => setTimeout(boot, 120));
 })();
