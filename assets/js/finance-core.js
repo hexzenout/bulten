@@ -745,11 +745,16 @@ function omega_OpenRollingExcel(days) {
             if(!m) return;
             const days = parseInt(m[1]);
             if([7,15,30,60,90].includes(days)) {
-                setTimeout(() => omega_OpenRollingExcel(days, true), 450);
+                if(typeof omega_SwitchMainTab === 'function') {
+                    const el = document.getElementById('nav-finance');
+                    omega_SwitchMainTab('finance', el, false);
+                }
+                setTimeout(() => omega_OpenRollingExcel(days, true), 80);
             }
         }
         window.addEventListener('hashchange', omega_CheckRollingHashOnLoad);
         document.addEventListener('DOMContentLoaded', omega_CheckRollingHashOnLoad);
+
 
 /* ================= KASA CANLI TAKİP MERKEZİ V6 ================= */
         let _WATCH_FILTER = 'all';
