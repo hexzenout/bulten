@@ -1,6 +1,6 @@
 // ===============================
-// V34 CRYPTO TV CHART HOTFIX
-// Grafik canvas görünürlüğü, hızlı kontrol yükleme ve Binance/OKX mum grafiği.
+// V36 CRYPTO TV CHART
+// Hızlı yükleme, USDT-only güvenli mod, sağ tık alarm/çizgi menüsü ve grafiğe uygula.
 // ===============================
 
 (function () {
@@ -14,12 +14,13 @@
   };
 
   const POPULAR = ["BTC","ETH","SOL","BNB","XRP","DOGE","ADA","AVAX","LINK","TON","TRX","DOT","MATIC","NEAR","ATOM","APT","ARB","OP","INJ","SUI","PEPE","WIF","FET","RNDR","LTC","BCH","ETC","UNI","AAVE","FIL"];
-  let activeTf = localStorage.getItem("v34_crypto_tf") || localStorage.getItem("v32_crypto_tf") || "5m";
+  let activeTf = localStorage.getItem("v36_crypto_tf") || localStorage.getItem("v34_crypto_tf") || localStorage.getItem("v32_crypto_tf") || "5m";
   let chart = null;
   let candleSeries = null;
   let priceLines = [];
   let resizeObserver = null;
   let busy = false;
+  let lastRightClickPrice = null;
 
   function qs(sel) { return document.querySelector(sel); }
 
@@ -48,73 +49,70 @@
   }
 
   function syncNativeFromControls() {
-    const sym = normalizeSymbol(qs("#v32-symbol-input")?.value || "BTC");
-    const ex = (qs("#v32-exchange-select")?.value || "binance").toLowerCase();
-    const quote = qs("#v32-quote-select")?.value || "USDT";
-
+    const sym = normalizeSymbol(qs("#v36-symbol-input")?.value || qs("#v32-symbol-input")?.value || "BTC");
+    const ex = (qs("#v36-exchange-select")?.value || qs("#v32-exchange-select")?.value || "binance").toLowerCase();
     if (qs("#v10-symbol")) qs("#v10-symbol").value = sym;
     if (qs("#v10-exchange")) qs("#v10-exchange").value = ex;
-    if (qs("#v10-quote")) qs("#v10-quote").value = quote;
+    if (qs("#v10-quote")) qs("#v10-quote").value = "USDT";
   }
 
   function buildControls() {
     ensureDatalist();
 
-    let host = qs("#v32-chart-controls");
+    let host = qs("#v32-chart-controls") || qs("#v36-chart-controls");
     if (host) return host;
 
     const mini = qs(".crypto-v28-mini-panel");
-    const chartHead = qs(".crypto-v10-chart-head") || qs(".terminal-v10-chart-head") || qs(".crypto-v12-chart-wrap")?.parentElement;
+    const chartHead = qs(".crypto-v10-chart-head") || qs(".crypto-v12-chart-wrap")?.parentElement;
     if (!mini && !chartHead) return null;
 
     const symbol = normalizeSymbol(getNativeValue("v10-symbol", "BTC"));
-    const exchange = (getNativeValue("v10-exchange", "binance") || "binance").toLowerCase();
-    const quote = getNativeValue("v10-quote", "USDT") || "USDT";
+    const exchange = (localStorage.getItem("v36_default_exchange") || getNativeValue("v10-exchange", "binance") || "binance").toLowerCase();
+    const savedTf = localStorage.getItem("v36_default_tf");
+    if(savedTf && TF_OPTIONS[savedTf]) activeTf = savedTf;
 
     const html = `
-      <div class="v32-chart-controls" id="v32-chart-controls">
+      <div class="v32-chart-controls v36-chart-controls" id="v32-chart-controls">
         <div class="v32-field">
           <label>Coin Ara / Seç</label>
-          <input id="v32-symbol-input" list="crypto-symbol-list" value="${symbol}" placeholder="BTC, ETH, SOL...">
+          <input id="v36-symbol-input" list="crypto-symbol-list" value="${symbol}" placeholder="BTC, ETH, SOL...">
         </div>
         <div class="v32-field">
           <label>Borsa</label>
-          <select id="v32-exchange-select">
+          <select id="v36-exchange-select">
             <option value="binance">Binance</option>
             <option value="okx">OKX</option>
           </select>
         </div>
-        <div class="v32-field">
+        <div class="v32-field v36-quote-locked">
           <label>Parite</label>
-          <select id="v32-quote-select">
+          <select id="v36-quote-select">
             <option value="USDT">USDT</option>
-            <option value="USDC">USDC</option>
           </select>
         </div>
         <div class="v32-field">
           <label>Zaman Aralığı</label>
           <div class="v32-tf-row">${Object.keys(TF_OPTIONS).map(tf => `<button type="button" class="v32-tf-btn ${tf === activeTf ? "active" : ""}" data-tf="${tf}">${TF_OPTIONS[tf].label}</button>`).join("")}</div>
         </div>
-        <button type="button" class="v32-refresh-btn" id="v32-refresh-chart">GRAFİĞİ YENİLE</button>
+        <button type="button" class="v32-refresh-btn" id="v36-refresh-chart">GRAFİĞİ YENİLE</button>
       </div>
     `;
 
     if (mini) mini.outerHTML = html;
     else chartHead.insertAdjacentHTML("afterend", html);
 
-    qs("#v32-exchange-select").value = exchange === "okx" ? "okx" : "binance";
-    qs("#v32-quote-select").value = quote === "USDC" ? "USDC" : "USDT";
+    qs("#v36-exchange-select").value = exchange === "okx" ? "okx" : "binance";
+    if (qs("#v10-quote")) qs("#v10-quote").value = "USDT";
 
-    qs("#v32-symbol-input")?.addEventListener("change", () => { syncNativeFromControls(); refresh(true); });
-    qs("#v32-symbol-input")?.addEventListener("keydown", e => { if (e.key === "Enter") { syncNativeFromControls(); refresh(true); }});
-    qs("#v32-exchange-select")?.addEventListener("change", () => { syncNativeFromControls(); refresh(true); });
-    qs("#v32-quote-select")?.addEventListener("change", () => { syncNativeFromControls(); refresh(true); });
-    qs("#v32-refresh-chart")?.addEventListener("click", () => { syncNativeFromControls(); refresh(true); });
+    qs("#v36-symbol-input")?.addEventListener("change", () => { syncNativeFromControls(); refresh(true); });
+    qs("#v36-symbol-input")?.addEventListener("keydown", e => { if (e.key === "Enter") { syncNativeFromControls(); refresh(true); }});
+    qs("#v36-exchange-select")?.addEventListener("change", () => { syncNativeFromControls(); refresh(true); });
+    qs("#v36-refresh-chart")?.addEventListener("click", () => { syncNativeFromControls(); refresh(true); });
 
     document.querySelectorAll(".v32-tf-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         activeTf = btn.dataset.tf || "5m";
-        localStorage.setItem("v34_crypto_tf", activeTf);
+        localStorage.setItem("v36_crypto_tf", activeTf);
         document.querySelectorAll(".v32-tf-btn").forEach(x => x.classList.toggle("active", x === btn));
         refresh(true);
       });
@@ -126,7 +124,6 @@
   function ensureContainer() {
     const wrap = qs(".crypto-v12-chart-wrap");
     if (!wrap) return null;
-
     const oldCanvas = qs("#crypto-v10-chart");
     if (oldCanvas) oldCanvas.style.display = "none";
 
@@ -136,7 +133,6 @@
       box.id = "crypto-tv-chart";
       wrap.appendChild(box);
     }
-
     box.style.display = "block";
     box.style.visibility = "visible";
     box.style.height = "520px";
@@ -150,16 +146,15 @@
     }
     return {
       ...plan,
-      symbol: normalizeSymbol(qs("#v32-symbol-input")?.value || getNativeValue("v10-symbol", plan.symbol || "BTC")),
-      quote: qs("#v32-quote-select")?.value || getNativeValue("v10-quote", plan.quote || "USDT"),
-      exchange: (qs("#v32-exchange-select")?.value || getNativeValue("v10-exchange", plan.exchange || "binance")).toLowerCase()
+      symbol: normalizeSymbol(qs("#v36-symbol-input")?.value || getNativeValue("v10-symbol", plan.symbol || "BTC")),
+      quote: "USDT",
+      exchange: (qs("#v36-exchange-select")?.value || getNativeValue("v10-exchange", plan.exchange || "binance")).toLowerCase()
     };
   }
 
   function inst(plan) {
     const symbol = normalizeSymbol(plan.symbol);
-    const quote = String(plan.quote || "USDT").replace(/[^A-Z0-9]/g, "").toUpperCase();
-    return plan.exchange === "okx" ? `${symbol}-${quote}` : `${symbol}${quote}`;
+    return plan.exchange === "okx" ? `${symbol}-USDT` : `${symbol}USDT`;
   }
 
   async function fetchCandles(plan) {
@@ -203,10 +198,7 @@
       wickDownColor: "#ef4444",
       priceLineVisible: true
     };
-
-    if (c.addSeries && window.LightweightCharts?.CandlestickSeries) {
-      return c.addSeries(window.LightweightCharts.CandlestickSeries, options);
-    }
+    if (c.addSeries && window.LightweightCharts?.CandlestickSeries) return c.addSeries(window.LightweightCharts.CandlestickSeries, options);
     if (c.addCandlestickSeries) return c.addCandlestickSeries(options);
     throw new Error("Lightweight Charts candlestick API bulunamadı");
   }
@@ -214,12 +206,10 @@
   function ensureChart() {
     const box = ensureContainer();
     if (!box) return null;
-
     if (!window.LightweightCharts) {
       box.innerHTML = '<div style="padding:32px;color:#f97316;font-weight:900">Grafik kütüphanesi yüklenemedi.</div>';
       return null;
     }
-
     if (chart && candleSeries) {
       setTimeout(() => chart.applyOptions({ width: box.clientWidth || 1200, height: box.clientHeight || 520 }), 0);
       return { chart, candleSeries };
@@ -236,7 +226,6 @@
       handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: false },
       handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true }
     });
-
     candleSeries = createSeries(chart);
 
     if (resizeObserver) resizeObserver.disconnect();
@@ -246,11 +235,59 @@
     });
     resizeObserver.observe(box);
 
-    box.addEventListener("dblclick", () => {
-      try { chart.timeScale().fitContent(); } catch (e) {}
+    box.addEventListener("dblclick", () => { try { chart.timeScale().fitContent(); } catch (e) {} });
+    box.addEventListener("contextmenu", e => {
+      e.preventDefault();
+      const price = estimatePriceFromMouse(e, box);
+      lastRightClickPrice = price;
+      showContextMenu(e.clientX, e.clientY, price);
     });
-
+    document.addEventListener("click", hideContextMenu);
     return { chart, candleSeries };
+  }
+
+  function estimatePriceFromMouse(e, box) {
+    if (!window._V10_CANDLES || !window._V10_CANDLES.length) return Number(window._V10_PRICE || 0);
+    const rows = window._V10_CANDLES;
+    const highs = rows.map(x=>Number(x.high)).filter(Number.isFinite);
+    const lows = rows.map(x=>Number(x.low)).filter(Number.isFinite);
+    const max = Math.max(...highs);
+    const min = Math.min(...lows);
+    const rect = box.getBoundingClientRect();
+    const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+    return max - (y / rect.height) * (max - min);
+  }
+
+  function showContextMenu(x, y, price) {
+    hideContextMenu();
+    const menu = document.createElement("div");
+    menu.id = "crypto-chart-context-menu";
+    menu.className = "crypto-chart-context-menu";
+    menu.innerHTML = `
+      <b>${priceFormat(price)}</b>
+      <button data-act="alarm">Bu fiyata alarm kur</button>
+      <button data-act="entry">Giriş çizgisi yap</button>
+      <button data-act="stop">Stop çizgisi yap</button>
+      <button data-act="tp">TP çizgisi yap</button>
+    `;
+    menu.style.left = x + "px";
+    menu.style.top = y + "px";
+    menu.addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      const act = btn.dataset.act;
+      if (act === "alarm") addLine(price, "#f97316", "ALARM");
+      if (act === "entry") { if(qs("#v10-entry")) qs("#v10-entry").value = price.toFixed(8); addLine(price, "#fbbf24", "GİRİŞ"); }
+      if (act === "stop") { if(qs("#v10-stop")) qs("#v10-stop").value = price.toFixed(8); addLine(price, "#ef4444", "STOP"); }
+      if (act === "tp") addLine(price, "#10b981", "TP");
+      hideContextMenu();
+    });
+    document.body.appendChild(menu);
+  }
+
+  function hideContextMenu() {
+    const old = qs("#crypto-chart-context-menu");
+    if (old) old.remove();
   }
 
   function priceFormat(v) {
@@ -280,13 +317,71 @@
     } catch (e) {}
   }
 
+  window.omega_V36ClearChartLines = function () {
+    clearPriceLines();
+  };
+
+  window.omega_V36AutoCalcPlan = function () {
+    const entryEl = qs("#v10-entry");
+    const levEl = qs("#v10-lev");
+    const sideEl = qs("#v10-side");
+    const liqEl = qs("#v10-liq");
+    const x2El = qs("#v10-2x");
+    const entry = Number(entryEl?.value || window._V10_PRICE || 0);
+    const lev = Math.max(1, Number(levEl?.value || 1));
+    const side = sideEl?.value || "long";
+    if (!entry || !lev) return alert("Giriş fiyatı ve kaldıraç gerekli.");
+    const diff = entry / lev;
+    const approxLiq = side === "short" ? entry + diff : entry - diff;
+    const x2 = side === "short" ? entry - diff : entry + diff;
+    if (liqEl && !liqEl.value) liqEl.value = approxLiq.toFixed(8);
+    if (x2El && !x2El.value) x2El.value = x2.toFixed(8);
+    updateMetricsOnly();
+  };
+
+  window.omega_V36ApplyPlanToChart = function () {
+    const plan = getPlan();
+    const entry = Number(qs("#v10-entry")?.value || window._V10_PRICE || 0);
+    const stop = Number(qs("#v10-stop")?.value || 0);
+    const liq = Number(qs("#v10-liq")?.value || 0);
+    const x2 = Number(qs("#v10-2x")?.value || 0);
+    clearPriceLines();
+    addLine(window._V10_PRICE, "#3b82f6", "CANLI");
+    addLine(entry, "#fbbf24", "GİRİŞ");
+    addLine(stop, "#ef4444", "STOP");
+    addLine(liq, "#f97316", "LİQ");
+    addLine(x2, "#10b981", "2X");
+  };
+
+  window.omega_V36SaveCryptoSettings = function () {
+    const ex = qs("#v36-default-exchange")?.value || "binance";
+    const tf = qs("#v36-default-tf")?.value || "5m";
+    localStorage.setItem("v36_default_exchange", ex);
+    localStorage.setItem("v36_default_tf", tf);
+    localStorage.setItem("v36_crypto_tf", tf);
+    if (qs("#v36-exchange-select")) qs("#v36-exchange-select").value = ex;
+    activeTf = tf;
+    refresh(true);
+  };
+
+  function updateMetricsOnly() {
+    const stake = Number(qs("#v10-stake")?.value || 0);
+    const entry = Number(qs("#v10-entry")?.value || window._V10_PRICE || 0);
+    const stop = Number(qs("#v10-stop")?.value || 0);
+    const x2 = Number(qs("#v10-2x")?.value || 0);
+    const side = qs("#v10-side")?.value || "long";
+    const stopLoss = stop && entry ? Math.abs((entry - stop) / entry) * stake * Number(qs("#v10-lev")?.value || 1) : 0;
+    const x2Profit = x2 && entry ? stake : 0;
+    if(qs("#v10-live-pnl")) qs("#v10-live-pnl").textContent = "$0.00";
+    if(qs("#v10-stop-pnl")) qs("#v10-stop-pnl").textContent = stopLoss ? "-$" + stopLoss.toFixed(2) : "$0.00";
+    if(qs("#v10-tp-total")) qs("#v10-tp-total").textContent = x2Profit ? "$" + x2Profit.toFixed(2) : "$0.00";
+    if(qs("#v10-rr")) qs("#v10-rr").textContent = stopLoss ? (x2Profit / stopLoss).toFixed(2) : "-";
+  }
+
   function renderLevels(plan, lastPrice) {
+    // V36: işlem planı artık otomatik grafiğe basılmaz. Sadece canlı çizgi kalır.
     clearPriceLines();
     addLine(lastPrice, "#3b82f6", "CANLI");
-    addLine(plan.entry, "#fbbf24", "GİRİŞ");
-    addLine(plan.stop, "#ef4444", "STOP");
-    addLine(plan.liq, "#f97316", "LİQ");
-    (Array.isArray(plan.tps) ? plan.tps : []).forEach((tp, i) => addLine(tp.price, "#10b981", "TP" + (i + 1)));
   }
 
   function updateHeader(plan, rows) {
@@ -311,7 +406,7 @@
       change.className = pct >= 0 ? "up" : "down";
     }
 
-    if (cap) cap.textContent = "TradingView Lightweight Charts · mouse wheel zoom · sağ fiyat ekseni ölçekleme · çift tıkla sıfırla";
+    if (cap) cap.textContent = "";
     if (status) {
       status.textContent = "CANLI";
       status.className = "terminal-v10-live-dot ok";
@@ -325,7 +420,6 @@
     try {
       busy = true;
       buildControls();
-
       if (status) {
         status.textContent = "YÜKLENİYOR";
         status.className = "terminal-v10-live-dot";
@@ -346,6 +440,7 @@
 
       window._V10_CANDLES = rows.map(r => ({ time: r.time * 1000, open: r.open, high: r.high, low: r.low, close: r.close }));
       window._V10_PRICE = rows[rows.length - 1].close;
+      updateMetricsOnly();
     } catch (e) {
       const cap = qs("#crypto-v10-caption");
       const box = ensureContainer();
@@ -367,11 +462,7 @@
   };
 
   window.omega_V10DrawChart = function () {
-    if (isCryptoVisible()) {
-      const plan = getPlan();
-      const priceText = (qs("#crypto-v10-price")?.textContent || "").replace(/[^\d.-]/g, "");
-      renderLevels(plan, Number(priceText));
-    }
+    if (isCryptoVisible()) updateMetricsOnly();
   };
 
   window.omega_TVRefreshCryptoChart = refresh;
@@ -380,15 +471,13 @@
     if (!isCryptoVisible()) return;
     buildControls();
     ensureContainer();
+    if(qs("#v36-default-exchange")) qs("#v36-default-exchange").value = localStorage.getItem("v36_default_exchange") || "binance";
+    if(qs("#v36-default-tf")) qs("#v36-default-tf").value = localStorage.getItem("v36_default_tf") || activeTf;
     refresh(true);
   }
 
-  // Script body sonunda yüklendiği için bekletmeden başlat.
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 
   window.addEventListener("hashchange", () => { if (location.hash === "#crypto") setTimeout(boot, 80); });
 
@@ -396,6 +485,13 @@
     if (!isCryptoVisible()) return;
     if (e.target && ["v10-symbol", "v10-quote", "v10-exchange"].includes(e.target.id)) {
       setTimeout(() => { buildControls(); refresh(true); }, 50);
+    }
+  });
+
+  document.addEventListener("input", (e) => {
+    if (!isCryptoVisible()) return;
+    if (e.target && ["v10-stake","v10-lev","v10-entry","v10-stop","v10-liq","v10-2x"].includes(e.target.id)) {
+      updateMetricsOnly();
     }
   });
 })();
