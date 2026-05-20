@@ -2784,3 +2784,211 @@ body.rolling-active #omega-site-footer {
         min-width: 0 !important;
     }
 }
+
+
+/* ===============================
+   V41 ROLLING WRAP + SELECTOR + F5 FIX
+   Rolling kutuları görünür sarılır, butonlu seçici gelir, F5 arka planı kapanır.
+================================ */
+
+/* Rolling hash ile açılışta hiçbir arka plan sızmasın. */
+html.rolling-hash-boot,
+html.rolling-hash-boot body {
+    background: #050505 !important;
+}
+
+html.rolling-hash-boot body > *:not(#rolling-excel-overlay) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+html.rolling-hash-boot body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: #050505;
+    z-index: 999999;
+}
+
+body.rolling-active > header,
+body.rolling-active > nav,
+body.rolling-active > main {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+#rolling-excel-overlay {
+    background: #050505 !important;
+    backdrop-filter: none !important;
+}
+
+#rolling-excel-overlay.show-modal {
+    z-index: 1000000 !important;
+    background: #050505 !important;
+}
+
+/* Kasa Yönetimi içi Rolling butonu/selector */
+.finance-rolling-launch-card .finance-card-body {
+    padding: 14px !important;
+}
+
+.finance-rolling-selector {
+    width: 100%;
+}
+
+.finance-rolling-selector summary {
+    list-style: none;
+    min-height: 72px;
+    border: 1px solid #333;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #151515, #080808);
+    display: grid;
+    grid-template-columns: 46px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    cursor: pointer;
+}
+
+.finance-rolling-selector summary::-webkit-details-marker {
+    display: none;
+}
+
+.finance-rolling-selector summary i {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #fbbf24;
+    color: #111;
+}
+
+.finance-rolling-selector summary b {
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: .8px;
+}
+
+.finance-rolling-selector summary span {
+    color: #aaa;
+    font-size: .8rem;
+    font-weight: 900;
+}
+
+.finance-rolling-options {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.finance-rolling-options button {
+    min-height: 58px;
+    border: 1px solid #333;
+    border-radius: 12px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 950;
+}
+
+.finance-rolling-options button:hover {
+    background: #fbbf24;
+    border-color: #fbbf24;
+    color: #111;
+}
+
+.finance-rolling-options button b,
+.finance-rolling-options button span {
+    display: block;
+}
+
+.finance-rolling-options button b {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.15rem;
+}
+
+.finance-rolling-options button span {
+    font-size: .7rem;
+    opacity: .8;
+}
+
+/* Rolling modal: kutular gizlenmez, satır dolunca alta düzenli iner. */
+#rolling-excel-overlay .day-row-capsule.v32 {
+    grid-template-columns: 150px minmax(0, 1fr) 120px !important;
+    align-items: start !important;
+}
+
+#rolling-excel-overlay .day-tools-v32 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 7px !important;
+    width: 100% !important;
+}
+
+#rolling-excel-overlay .day-tools-v32 button {
+    min-height: 34px !important;
+    width: 100% !important;
+    padding: 0 8px !important;
+    white-space: nowrap !important;
+    font-size: .72rem !important;
+}
+
+#rolling-excel-overlay .day-tools-v32 button:first-child,
+#rolling-excel-overlay .day-tools-v32 button:last-child {
+    grid-column: 1 / -1 !important;
+}
+
+#rolling-excel-overlay .capsule-container.v32 {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)) !important;
+    gap: 10px !important;
+    overflow: visible !important;
+    padding: 0 !important;
+}
+
+#rolling-excel-overlay .kapsul.v32 {
+    width: auto !important;
+    max-width: none !important;
+    flex: initial !important;
+    min-height: 104px !important;
+    padding: 9px !important;
+}
+
+#rolling-excel-overlay .kapsul.v32 input {
+    height: 31px !important;
+    margin-bottom: 5px !important;
+    font-size: .76em !important;
+}
+
+#rolling-excel-overlay .k-actions.v32 button {
+    min-height: 31px !important;
+    font-size: .7rem !important;
+}
+
+#rolling-excel-overlay .k-note-show {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    line-height: 1.25 !important;
+}
+
+@media (max-width: 1100px) {
+    .finance-rolling-options {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    #rolling-excel-overlay .day-row-capsule.v32 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .finance-rolling-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
