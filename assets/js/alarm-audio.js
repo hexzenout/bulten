@@ -42,20 +42,28 @@
   }
 
   async function saveCustomFileToDb(file) {
-    const db = await openAudioDb();
-    await new Promise((resolve, reject) => {
-      const tx = db.transaction(DB_STORE, "readwrite");
-      tx.objectStore(DB_STORE).put(file, DB_KEY);
-      tx.oncomplete = resolve;
-      tx.onerror = () => reject(tx.error);
-    });
-    db.close();
     if (customObjectUrl) URL.revokeObjectURL(customObjectUrl);
     customObjectUrl = URL.createObjectURL(file);
+
     settings.customDataUrl = "";
     settings.customName = file.name;
     settings.sound = "custom";
+    settings.enabled = true;
     saveSettings();
+
+    try {
+      const db = await openAudioDb();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, "readwrite");
+        tx.objectStore(DB_STORE).put(file, DB_KEY);
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+      });
+      db.close();
+    } catch (err) {
+      notify("Özel ses bu oturumda yüklendi; tarayıcı kalıcı kayda izin vermedi.");
+    }
+
     return { ...settings };
   }
 
@@ -412,6 +420,13 @@
 
   window.V26AlarmAudio = {
     play: playAlarm,
+    testSelected: () => {
+      ensureAudioContext();
+      unlocked = true;
+      settings.enabled = true;
+      saveSettings();
+      playAlarm("Alarm sesi test edildi.");
+    },
     stop: stopAlarm,
     unlock: () => {
       ensureAudioContext();
