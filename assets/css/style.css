@@ -1826,3 +1826,479 @@ body.v36-fast-mode .controls-wrapper {
         align-items: flex-start;
     }
 }
+
+/* ===============================
+   V32.1 FINANCE + ROLLING PRO
+   Kasa planlayıcı ve Rolling ekranı premium düzen.
+================================ */
+
+/* Finance layout tightening */
+.finance-plan-card .finance-card-head h3,
+.finance-plan-card .finance-card-head span {
+    letter-spacing: .3px;
+}
+
+.finance-tabs {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    padding: 8px !important;
+    border: 1px solid #262626 !important;
+    border-radius: 15px !important;
+    background: #050505 !important;
+    margin-bottom: 18px !important;
+}
+
+.finance-tabs .finance-tab {
+    min-height: 50px !important;
+    border-radius: 12px !important;
+    font-size: .95rem !important;
+    letter-spacing: .8px !important;
+    font-weight: 950 !important;
+    background: #151515 !important;
+    color: #dcdcdc !important;
+    border: 1px solid #303030 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.finance-tabs .finance-tab:not(.active):hover {
+    border-color: #4a4a4a !important;
+    background: #1d1d1d !important;
+}
+
+#finance-tab-bet.active {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+    border-color: #fbbf24 !important;
+    color: #120b00 !important;
+}
+
+#finance-tab-crypto.active {
+    background: linear-gradient(135deg, #60a5fa, #2563eb) !important;
+    border-color: #60a5fa !important;
+    color: #020817 !important;
+}
+
+/* Turn simple plan into a professional panel */
+.finance-panel-bet,
+#finance-panel-bet,
+#finance-panel-crypto {
+    padding-top: 4px !important;
+}
+
+.simple-plan-grid,
+#finance-panel-bet .simple-plan-grid,
+#finance-panel-crypto .simple-plan-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    align-items: stretch !important;
+}
+
+.finance-field {
+    position: relative !important;
+    padding: 13px !important;
+    border: 1px solid #292929 !important;
+    border-radius: 14px !important;
+    background: linear-gradient(180deg, #101010, #070707) !important;
+}
+
+.finance-field label {
+    display: block !important;
+    color: #a8a8a8 !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .9px !important;
+    margin-bottom: 8px !important;
+}
+
+.finance-input,
+.finance-field input,
+.finance-field select {
+    width: 100% !important;
+    min-height: 46px !important;
+    border: 1px solid #383838 !important;
+    border-radius: 11px !important;
+    background: #050505 !important;
+    color: #fff !important;
+    padding: 0 14px !important;
+    font-size: 1rem !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 900 !important;
+    outline: none !important;
+}
+
+.finance-field input:focus,
+.finance-field select:focus,
+.finance-input:focus {
+    border-color: #fbbf24 !important;
+    box-shadow: 0 0 0 3px rgba(251,191,36,.13) !important;
+}
+
+.finance-result-grid,
+.crypto-result-grid,
+.finance-output-grid,
+#finance-result-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin-top: 14px !important;
+}
+
+/* Generic metric cards inside planner */
+.finance-plan-card [id*="margin"],
+.finance-plan-card [id*="max"],
+.finance-plan-card [id*="position"],
+.finance-plan-card [id*="profit"] {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.finance-plan-card .terminal-v10-btn,
+.finance-plan-card button {
+    min-height: 44px;
+    border-radius: 11px;
+    font-weight: 950;
+    letter-spacing: .7px;
+}
+
+/* Cards that contain calculated values */
+.finance-plan-card .finance-card-body > div:not(.finance-tabs):not(.finance-tab-panel),
+.finance-plan-card .finance-tab-panel > div {
+    max-width: 100%;
+}
+
+.v321-result-card {
+    border: 1px solid #2b2b2b;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #101010, #070707);
+    padding: 14px;
+    min-height: 86px;
+}
+
+.v321-result-card span {
+    display: block;
+    color: #949494;
+    font-size: .72rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 8px;
+}
+
+.v321-result-card b {
+    display: block;
+    color: #fbbf24;
+    font-size: 1.35rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 950;
+}
+
+.v321-result-card small {
+    display: block;
+    color: #888;
+    font-size: .72rem;
+    margin-top: 4px;
+}
+
+.v321-action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.v321-action-row button {
+    min-height: 48px;
+    border-radius: 12px;
+    border: 1px solid #303030;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.v321-action-row .main {
+    background: #fbbf24;
+    color: #111;
+    border-color: #fbbf24;
+}
+
+.v321-action-row .good {
+    background: #10b981;
+    color: #03130d;
+    border-color: #10b981;
+}
+
+.v321-action-row .muted {
+    background: #171717;
+    color: #fff;
+}
+
+.v321-action-row .danger {
+    background: rgba(239,68,68,.2);
+    color: #fecaca;
+    border-color: rgba(239,68,68,.45);
+}
+
+/* Rolling modal full professional size */
+#rolling-excel-overlay .modal-header {
+    min-height: 74px !important;
+    padding: 16px 20px !important;
+}
+
+#rolling-excel-overlay .modal-config-bar {
+    min-height: 72px !important;
+    padding: 14px 20px !important;
+    gap: 18px !important;
+}
+
+#rolling-excel-overlay .modal-body-wrapper {
+    padding: 20px !important;
+}
+
+.rolling-toolbar-v32,
+.rolling-toolbar-v321 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 0 20px;
+}
+
+.rolling-toolbar-v321 button,
+.day-tools-v321 button {
+    min-height: 42px;
+    border: 1px solid #333;
+    border-radius: 11px;
+    background: #171717;
+    color: #fff;
+    font-weight: 950;
+    cursor: pointer;
+    padding: 0 16px;
+    letter-spacing: .4px;
+}
+
+.rolling-toolbar-v321 .gold,
+.day-tools-v321 .gold {
+    background: #fbbf24;
+    border-color: #fbbf24;
+    color: #111;
+}
+
+.day-row-capsule.v321 {
+    display: grid;
+    grid-template-columns: 170px 1fr 150px;
+    gap: 20px;
+    align-items: stretch;
+    padding: 20px;
+    border: 1px solid #292929;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #0f0f0f, #070707);
+    margin-bottom: 18px;
+}
+
+.day-info-v321 {
+    border-right: 1px solid #252525;
+    padding-right: 16px;
+}
+
+.day-info-v321 h3 {
+    color: #fbbf24;
+    font-size: 1.25rem;
+    margin: 0 0 10px;
+    letter-spacing: 1px;
+}
+
+.day-info-v321 span {
+    display: block;
+    color: #a7a7a7;
+    font-size: .78rem;
+    font-weight: 850;
+    line-height: 1.5;
+}
+
+.day-info-v321 b {
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.day-tools-v321 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.capsule-container.v321 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+    gap: 16px;
+    align-content: start;
+}
+
+.kapsul.v321 {
+    position: relative;
+    border: 1px solid #333;
+    background: #101010;
+    border-radius: 16px;
+    padding: 15px;
+    min-height: 205px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.16);
+}
+
+.kapsul.v321.win {
+    border-color: rgba(16,185,129,.65);
+    background: linear-gradient(180deg, rgba(16,185,129,.13), #0b0b0b);
+}
+
+.kapsul.v321.loss {
+    border-color: rgba(239,68,68,.65);
+    background: linear-gradient(180deg, rgba(239,68,68,.12), #0b0b0b);
+}
+
+.kapsul.v321 input {
+    width: 100%;
+    border: 1px solid #3a3a3a;
+    background: #050505;
+    color: #fff;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-weight: 850;
+    outline: none;
+}
+
+.kapsul.v321 input:focus {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 3px rgba(251,191,36,.12);
+}
+
+.k-note-input-v321 {
+    height: 48px;
+    font-size: .95rem;
+    margin-bottom: 12px;
+}
+
+.k-inputs-v321 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.k-inputs-v321 input {
+    height: 44px;
+}
+
+.k-actions.v321 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.k-actions.v321 button {
+    height: 42px;
+    border: none;
+    border-radius: 10px;
+    font-size: .82rem;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.k-actions.v321 .w {
+    background: #10b981;
+    color: #03130d;
+}
+
+.k-actions.v321 .l {
+    background: #ef4444;
+    color: #fff;
+}
+
+.k-undo.v321 {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: none;
+    background: #242424;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.k-result-v321 {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    justify-content: center;
+}
+
+.k-result-v321 .k-note-show {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 950;
+    padding-right: 34px;
+    line-height: 1.35;
+}
+
+.k-result-v321 b {
+    color: #fbbf24;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+}
+
+.k-result-v321 span {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 950;
+    font-size: 1.3rem;
+}
+
+.day-result.v321 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 950;
+    color: #fff;
+    font-size: 1.15rem;
+    border-left: 1px solid #252525;
+    padding-left: 16px;
+}
+
+.day-result.v321 small {
+    color: #888;
+    font-size: .75rem;
+    margin-bottom: 7px;
+}
+
+@media (max-width: 1250px) {
+    .day-row-capsule.v321 {
+        grid-template-columns: 1fr;
+    }
+
+    .day-info-v321,
+    .day-result.v321 {
+        border: none;
+        padding: 0;
+        align-items: flex-start;
+    }
+
+    .day-tools-v321 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .simple-plan-grid,
+    #finance-panel-bet .simple-plan-grid,
+    #finance-panel-crypto .simple-plan-grid,
+    .v321-action-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .capsule-container.v321 {
+        grid-template-columns: 1fr;
+    }
+}
