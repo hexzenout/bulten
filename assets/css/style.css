@@ -2245,3 +2245,37 @@ body.v36-fast-mode .controls-wrapper {
         grid-template-columns: 1fr !important;
     }
 }
+
+/* ===============================
+   V37 SOUND + SETTINGS CLEANUP
+   Ses sekmesi tek panel, Ayar sekmesi boş.
+================================ */
+
+.crypto-v28-panel[data-crypto-pane="sound"] .v28-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] .v28-card-title,
+.crypto-v28-panel[data-crypto-pane="sound"] .v28-sound-actions,
+.crypto-v28-panel[data-crypto-pane="sound"] .v28-form-grid {
+    display: none !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount {
+    display: block !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v32-sound-card {
+    display: block !important;
+    animation: none !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="settings"] {
+    min-height: 0 !important;
+    padding: 0 !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="settings"] > * {
+    display: none !important;
+}
+
+.crypto-v28-tab[data-crypto-panel="settings"] span::after {
+    content: "";
+}
