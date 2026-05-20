@@ -132,7 +132,8 @@
       btn.textContent = "ÇALIYOR...";
       setSoundSettings({ enabled: true });
       if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
-      if (window.V26AlarmAudio?.play) window.V26AlarmAudio.play("Test alarmı");
+      if (window.V26AlarmAudio?.testSelected) window.V26AlarmAudio.testSelected();
+      else if (window.V26AlarmAudio?.play) window.V26AlarmAudio.play("Test alarmı");
       setTimeout(() => {
         btn.classList.remove("testing");
         btn.textContent = "SEÇİLİ SESİ TEST ET";
@@ -179,7 +180,8 @@
           });
         }
 
-        setSoundSettings({ customName: file.name, sound: "custom", customDataUrl: "" });
+        localStorage.setItem(SOUND_KEY, JSON.stringify({ ...getSoundSettings(), customName: file.name, sound: "custom", customDataUrl: "", enabled: true }));
+        if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
         if (nameEl) {
           nameEl.textContent = file.name;
           nameEl.title = file.name;
