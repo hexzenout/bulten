@@ -19,11 +19,13 @@ function omega_OpenRollingExcel(days) {
             omega_RenderExcelTable();
         }
 
-        function omega_CloseRollingExcel() {
+        function omega_CloseRollingExcel(force = false) {
+            if(!force && /^#finance\/rolling\/\d+/.test(String(location.hash || ''))) return;
             document.getElementById('rolling-excel-overlay').classList.remove('show-modal');
             document.body.classList.remove('rolling-active');
             document.documentElement.classList.remove('rolling-hash-boot');
             setTimeout(() => { document.getElementById('rolling-excel-overlay').style.display = 'none'; }, 300);
+            if(force && /^#finance\/rolling\/\d+/.test(String(location.hash || ''))) history.replaceState(null, '', '#finance');
         }
 
         function omega_UpdateExcelConfig() {
@@ -761,6 +763,23 @@ function omega_OpenRollingExcel(days) {
         document.addEventListener('DOMContentLoaded', omega_CheckRollingHashOnLoad);
 
 
+
+        function omega_RollingHashGuardV41() {
+            const m = String(location.hash || '').match(/^#finance\/rolling\/(\d+)/);
+            if(!m) return;
+            const days = parseInt(m[1]);
+            if(![7,15,30,60,90].includes(days)) return;
+            let tries = 0;
+            const timer = setInterval(() => {
+                tries++;
+                if(typeof omega_SwitchMainTab === 'function') omega_SwitchMainTab('finance', document.getElementById('nav-finance'), false);
+                if(typeof omega_OpenRollingExcel === 'function') omega_OpenRollingExcel(days, true);
+                const overlay = document.getElementById('rolling-excel-overlay');
+                if((overlay && overlay.classList.contains('show-modal')) || tries > 12) clearInterval(timer);
+            }, 90);
+        }
+        window.addEventListener('DOMContentLoaded', omega_RollingHashGuardV41);
+        window.addEventListener('hashchange', omega_RollingHashGuardV41);
 /* ================= KASA CANLI TAKİP MERKEZİ V6 ================= */
         let _WATCH_FILTER = 'all';
         let _LIVE_SCORES_CACHE = null;
