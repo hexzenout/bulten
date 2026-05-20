@@ -2607,3 +2607,180 @@ body:has(#rolling-excel-overlay.show-modal) #omega-home-block {
     }
 }
 
+/* ===============================
+   V40 ROLLING + SOUND FILE WIDTH FIX
+   Rolling yatay genişleme, F5 arka plan sızıntısı ve özel ses dosyası alanı.
+================================ */
+
+/* Rolling F5 sırasında arkadaki kasa/ana sayfa görüntüsünü siyah perdeyle kes. */
+html.rolling-hash-boot body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: #050505;
+    z-index: 99996;
+}
+
+html.rolling-hash-boot main,
+html.rolling-hash-boot header,
+html.rolling-hash-boot nav,
+body.rolling-active main,
+body.rolling-active #omega-site-footer {
+    visibility: hidden !important;
+}
+
+#rolling-excel-overlay {
+    background: #050505 !important;
+    backdrop-filter: none !important;
+}
+
+#rolling-excel-overlay.show-modal {
+    background: #050505 !important;
+    z-index: 99998 !important;
+}
+
+#rolling-excel-overlay .modal-header,
+#rolling-excel-overlay .modal-config-bar,
+#rolling-excel-overlay .modal-body-wrapper {
+    background: #0b0b0b !important;
+}
+
+#rolling-excel-overlay .modal-body-wrapper {
+    overflow-x: hidden !important;
+}
+
+/* Rolling: aşağı büyütme değil, satır içinde sağa doğru genişletme. */
+.day-row-capsule.v32 {
+    grid-template-columns: 150px minmax(0, 1fr) 130px !important;
+    align-items: start !important;
+    min-width: 0 !important;
+}
+
+.day-info-v32 {
+    min-width: 0 !important;
+}
+
+.day-tools-v32 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 7px !important;
+    width: 100% !important;
+}
+
+.day-tools-v32 button {
+    width: 100% !important;
+    min-height: 34px !important;
+    padding: 0 8px !important;
+    white-space: nowrap !important;
+    font-size: .72rem !important;
+}
+
+.day-tools-v32 button:first-child,
+.day-tools-v32 button:last-child {
+    grid-column: 1 / -1 !important;
+}
+
+.capsule-container.v32 {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 12px !important;
+    padding: 2px 2px 8px !important;
+    scroll-behavior: smooth;
+}
+
+.capsule-container.v32::-webkit-scrollbar {
+    height: 8px;
+}
+
+.capsule-container.v32::-webkit-scrollbar-track {
+    background: #0b0b0b;
+    border-radius: 999px;
+}
+
+.capsule-container.v32::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 999px;
+}
+
+.kapsul.v32 {
+    flex: 0 0 260px !important;
+    width: 260px !important;
+    max-width: 260px !important;
+    min-height: 102px !important;
+    padding: 10px !important;
+}
+
+.kapsul.v32 input {
+    height: 34px !important;
+    margin-bottom: 5px !important;
+    font-size: .78em !important;
+}
+
+.kapsul.v32 .k-result {
+    min-height: 68px !important;
+}
+
+.kapsul.v32 .k-note-show {
+    font-size: .78em !important;
+    line-height: 1.25 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.k-actions.v32 {
+    grid-template-columns: 1fr 1fr !important;
+}
+
+/* Ses: Özel Ses Dosyası satırı tam genişlik kaplasın, dosya adı alanı görünsün. */
+.v32-sound-field:has(.v32-file-row) {
+    grid-column: 1 / -1 !important;
+}
+
+.v32-file-row {
+    display: grid !important;
+    grid-template-columns: 125px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+.v32-file-btn {
+    width: 125px !important;
+    min-width: 125px !important;
+}
+
+.v32-file-name {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 1100px) {
+    .day-row-capsule.v32 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .kapsul.v32 {
+        flex-basis: 230px !important;
+        width: 230px !important;
+        max-width: 230px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .v32-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
