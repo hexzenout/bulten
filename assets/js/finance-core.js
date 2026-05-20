@@ -201,20 +201,26 @@ function omega_OpenRollingExcel(days) {
         }
 
         function omega_SetFinanceMode(mode, refresh = true) {
-            _FINANCE_MODE = mode;
-            document.querySelectorAll('.finance-tab').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.finance-tab-panel').forEach(x => x.classList.remove('active'));
-            const tab = document.getElementById('finance-tab-' + mode);
-            const panel = document.getElementById('finance-panel-' + mode);
-            if(tab) tab.classList.add('active');
-            if(panel) panel.classList.add('active');
+            _FINANCE_MODE = mode === 'crypto' ? 'crypto' : 'bet';
+            document.querySelectorAll('.finance-tab').forEach(x => {
+                x.classList.remove('active');
+                x.setAttribute('aria-selected', 'false');
+            });
+            document.querySelectorAll('.finance-tab-panel').forEach(x => {
+                x.classList.remove('active');
+                x.style.display = 'none';
+            });
+            const tab = document.getElementById('finance-tab-' + _FINANCE_MODE);
+            const panel = document.getElementById('finance-panel-' + _FINANCE_MODE);
+            if(tab) { tab.classList.add('active'); tab.setAttribute('aria-selected', 'true'); }
+            if(panel) { panel.classList.add('active'); panel.style.display = 'block'; }
             if(refresh) { omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RenderDailyTradeGrid(); }
         }
 
         function omega_UpdateFinanceSettings() {
             _FINANCE_SETTINGS.startBank = parseFloat(document.getElementById('finance-start-bank')?.value) || 100;
             _FINANCE_SETTINGS.targetPct = parseFloat(document.getElementById('finance-target-pct')?.value) || 0;
-            _FINANCE_SETTINGS.tradeCount = Math.min(20, Math.max(1, parseInt(document.getElementById('finance-trade-count')?.value) || 20));
+            _FINANCE_SETTINGS.tradeCount = Math.min(50, Math.max(1, parseInt(document.getElementById('finance-trade-count')?.value) || 20));
             _FINANCE_SETTINGS.splitCount = Math.min(100, Math.max(1, parseInt(document.getElementById('finance-split-count')?.value) || 20));
             _FINANCE_SETTINGS.defaultOdds = parseFloat(document.getElementById('finance-default-odds')?.value) || 1.30;
             _FINANCE_SETTINGS.riskModel = document.getElementById('finance-risk-model')?.value || 'target';
@@ -224,7 +230,7 @@ function omega_OpenRollingExcel(days) {
         function omega_UpdateCryptoSettings() {
             _FINANCE_SETTINGS.startBank = parseFloat(document.getElementById('crypto-start-bank')?.value) || _FINANCE_SETTINGS.startBank || 100;
             _FINANCE_SETTINGS.cryptoTargetPct = parseFloat(document.getElementById('crypto-target-pct')?.value) || 0;
-            _FINANCE_SETTINGS.cryptoTradeCount = Math.min(20, Math.max(1, parseInt(document.getElementById('crypto-trade-count')?.value) || 20));
+            _FINANCE_SETTINGS.cryptoTradeCount = Math.min(50, Math.max(1, parseInt(document.getElementById('crypto-trade-count')?.value) || 20));
             _FINANCE_SETTINGS.cryptoSplitCount = Math.min(100, Math.max(1, parseInt(document.getElementById('crypto-split-count')?.value) || 20));
             _FINANCE_SETTINGS.cryptoTpPct = parseFloat(document.getElementById('crypto-tp-pct')?.value) || 1;
             _FINANCE_SETTINGS.cryptoLeverage = parseFloat(document.getElementById('crypto-leverage')?.value) || 1;
@@ -330,13 +336,15 @@ function omega_OpenRollingExcel(days) {
                     slot.type = _FINANCE_MODE;
                     if(!slot.name) slot.name = '';
                     slot.stake = Number(r.stake.toFixed(2));
-                    slot.odds = Number(r.odds.toFixed(4));
                     if(_FINANCE_MODE === 'crypto') {
+                        slot.odds = '';
                         slot.exchange = _FINANCE_SETTINGS.cryptoDefaultExchange || 'binance';
                         slot.quote = _FINANCE_SETTINGS.cryptoDefaultQuote || 'USDT';
                         slot.symbol = (_FINANCE_SETTINGS.cryptoDefaultSymbol || 'BTC').toUpperCase();
                         slot.side = _FINANCE_SETTINGS.cryptoDefaultSide || 'long';
                         slot.entry = slot.entry || '';
+                    } else {
+                        slot.odds = Number(r.odds.toFixed(4));
                     }
                     slot.status = 'pending';
                     applied++;
@@ -505,13 +513,13 @@ function omega_OpenRollingExcel(days) {
             const grid = document.getElementById('daily-trade-grid'); if(!grid) return;
             omega_RenderCryptoSymbolDatalist();
             const slots = omega_GetTodaySlots();
-            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Tür</th><th>İşlem / Not</th><th>Tutar</th><th>Oran / Çarpan</th><th>Canlı Takip</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
+            let html = `<table class="trade-table trade-table-v35"><thead><tr><th>#</th><th>Tür</th><th>Bahis / Kripto Detayı</th><th>Tutar / Marjin</th><th>Oran / K/Z</th><th>Canlı Takip</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
             slots.forEach((slot, idx) => {
                 const pnl = Number(slot.pnl || 0);
                 const pnlClass = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
                 const typeCls = slot.type === 'crypto' ? 'slot-type-crypto' : 'slot-type-bet';
                 const statusCls = slot.status === 'win' ? 'status-win' : slot.status === 'loss' ? 'status-loss' : slot.status === 'pending' ? 'status-pending' : 'status-empty';
-                const liveHtml = slot.type === 'crypto' ? omega_BuildCryptoLiveCell(slot, idx) : `<span class="crypto-live-pill">Skor modülü sonra</span>`;
+                const liveHtml = slot.type === 'crypto' ? omega_BuildCryptoLiveCell(slot, idx) : `<span class="crypto-live-pill bet">Bahis sonucu manuel</span>`;
                 const nameHtml = slot.type === 'crypto' ? `
                     <div class="slot-symbol-row">
                         <select class="slot-mini-input" onchange="omega_UpdateSlot(${idx}, 'exchange', this.value)"><option value="binance" ${slot.exchange !== 'okx' ? 'selected' : ''}>Binance</option><option value="okx" ${slot.exchange === 'okx' ? 'selected' : ''}>OKX</option></select>
@@ -519,15 +527,17 @@ function omega_OpenRollingExcel(days) {
                         <input class="slot-mini-input" list="crypto-symbol-list" value="${slot.symbol || ''}" placeholder="BTC" onchange="omega_UpdateSlot(${idx}, 'symbol', this.value)">
                         <select class="slot-mini-input" onchange="omega_UpdateSlot(${idx}, 'side', this.value)"><option value="long" ${(slot.side || 'long') === 'long' ? 'selected' : ''}>LONG</option><option value="short" ${slot.side === 'short' ? 'selected' : ''}>SHORT</option></select>
                     </div>
-                    <input type="text" value="${slot.name || ''}" placeholder="Not: BTC breakout, ETH long..." onchange="omega_UpdateSlot(${idx}, 'name', this.value)" style="margin-top:6px;">
-                    <input class="slot-mini-input" type="number" value="${slot.entry || ''}" placeholder="Giriş fiyatı" onchange="omega_UpdateSlot(${idx}, 'entry', this.value)" style="margin-top:6px;">
-                ` : `<input type="text" value="${slot.name || ''}" placeholder="Maç adı veya bahis notu" onchange="omega_UpdateSlot(${idx}, 'name', this.value)">`;
+                    <input type="text" value="${slot.name || ''}" placeholder="Alınan işlem notu: BTC Long, SOL Short..." onchange="omega_UpdateSlot(${idx}, 'name', this.value)" style="margin-top:6px;">
+                    <input class="slot-mini-input" type="number" value="${slot.entry || ''}" placeholder="Giriş fiyatı (opsiyonel)" onchange="omega_UpdateSlot(${idx}, 'entry', this.value)" style="margin-top:6px;">
+                ` : `<input type="text" value="${slot.name || ''}" placeholder="Oynanan maç / bahis notu" onchange="omega_UpdateSlot(${idx}, 'name', this.value)">`;
+                const oddsPlaceholder = slot.type === 'crypto' ? 'K/Z manuel $' : 'Alınan oran';
+                const oddsStep = slot.type === 'crypto' ? '0.01' : '0.01';
                 html += `<tr>
                     <td style="font-family:'JetBrains Mono'; color:var(--muted); font-weight:900;">${idx+1}</td>
                     <td><select class="${typeCls}" onchange="omega_UpdateSlot(${idx}, 'type', this.value)"><option value="bet" ${slot.type === 'bet' ? 'selected' : ''}>BAHİS</option><option value="crypto" ${slot.type === 'crypto' ? 'selected' : ''}>KRİPTO</option></select></td>
                     <td>${nameHtml}</td>
-                    <td><input class="slot-money-input" type="number" value="${slot.stake || ''}" placeholder="0.00" onchange="omega_UpdateSlot(${idx}, 'stake', this.value)"></td>
-                    <td><input class="slot-odds-input" type="number" value="${slot.odds || ''}" step="0.01" placeholder="1.30" onchange="omega_UpdateSlot(${idx}, 'odds', this.value)"></td>
+                    <td><input class="slot-money-input" type="number" value="${slot.stake || ''}" placeholder="${slot.type === 'crypto' ? 'Marjin / tutar' : 'Tutar'}" onchange="omega_UpdateSlot(${idx}, 'stake', this.value)"></td>
+                    <td><input class="slot-odds-input" type="number" value="${slot.odds || ''}" step="${oddsStep}" placeholder="${oddsPlaceholder}" onchange="omega_UpdateSlot(${idx}, 'odds', this.value)"></td>
                     <td class="live-cell">${liveHtml}</td>
                     <td><span class="status-badge ${statusCls}">${omega_StatusText(slot.status)}</span></td>
                     <td class="${pnlClass}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</td>
@@ -562,13 +572,20 @@ function omega_OpenRollingExcel(days) {
 
         function omega_ResolveDailySlot(index, result) {
             const slot = omega_GetTodaySlots()[index]; if(!slot) return;
-            const stake = parseFloat(slot.stake); const odds = parseFloat(slot.odds);
+            const stake = parseFloat(slot.stake);
+            const oddsOrPnl = parseFloat(slot.odds);
             if(isNaN(stake) || stake <= 0) { alert('Tutar / marjin gir.'); return; }
-            if(isNaN(odds) || odds <= 1) { alert('Oran / katsayı gir.'); return; }
-            const pnl = result === 'win' ? stake * (odds - 1) : -stake;
-            slot.status = result; slot.pnl = pnl; slot.resolvedAt = Date.now(); slot.name = slot.name || `${slot.type === 'crypto' ? 'CRYPTO' : 'BAHİS'} #${index+1}`;
+            let pnl;
+            if(slot.type === 'crypto') {
+                if(isNaN(oddsOrPnl)) { alert('Kripto satırı için K/Z tutarını gir. Örnek: 12.5'); return; }
+                pnl = result === 'win' ? Math.abs(oddsOrPnl) : -Math.abs(oddsOrPnl);
+            } else {
+                if(isNaN(oddsOrPnl) || oddsOrPnl <= 1) { alert('Bahis satırı için alınan oran gir.'); return; }
+                pnl = result === 'win' ? stake * (oddsOrPnl - 1) : -stake;
+            }
+            slot.status = result; slot.pnl = pnl; slot.resolvedAt = Date.now(); slot.name = slot.name || `${slot.type === 'crypto' ? 'KRİPTO' : 'BAHİS'} #${index+1}`;
             _WALLET_BALANCE += pnl; _BALANCE_HISTORY.push(Number(_WALLET_BALANCE.toFixed(2)));
-            _COMPLETED_LEDGER.unshift({ id: slot.resolvedAt, name: slot.name, type: slot.type, amt: stake, odds, res: result, pnl, bal: _WALLET_BALANCE });
+            _COMPLETED_LEDGER.unshift({ id: slot.resolvedAt, name: slot.name, type: slot.type, amt: stake, odds: oddsOrPnl || 0, res: result, pnl, bal: _WALLET_BALANCE });
             omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard(); omega_RenderApexSupremeChart();
         }
 
@@ -645,10 +662,50 @@ function omega_OpenRollingExcel(days) {
         }
 
         let _SUPREME_CHART_INSTANCE;
+        let _FINANCE_CHART_FILTER = localStorage.getItem('finance_chart_filter') || 'all';
+
+        function omega_SetFinanceChartFilter(filter) {
+            _FINANCE_CHART_FILTER = ['all','bet','crypto'].includes(filter) ? filter : 'all';
+            localStorage.setItem('finance_chart_filter', _FINANCE_CHART_FILTER);
+            document.querySelectorAll('.finance-chart-tabs button').forEach(btn => btn.classList.remove('active'));
+            const active = document.getElementById('finance-chart-tab-' + _FINANCE_CHART_FILTER);
+            if(active) active.classList.add('active');
+            omega_RenderApexSupremeChart();
+        }
+
+        function omega_BuildFilteredBalanceSeries(filter) {
+            const initial = Number((_BALANCE_HISTORY && _BALANCE_HISTORY[0]) || _FINANCE_SETTINGS.startBank || 100);
+            if(filter === 'all') {
+                const all = (_BALANCE_HISTORY && _BALANCE_HISTORY.length) ? _BALANCE_HISTORY.map(Number) : [Number(_WALLET_BALANCE || initial)];
+                return { balances: all.length ? all : [initial], hasData: all.length > 1 };
+            }
+            const done = (_COMPLETED_LEDGER || []).slice().reverse().filter(item => (item.type || 'bet') === filter);
+            const balances = [initial];
+            let bal = initial;
+            done.forEach(item => {
+                bal += Number(item.pnl || 0);
+                balances.push(Number(bal.toFixed(2)));
+            });
+            return { balances, hasData: done.length > 0 };
+        }
+
         function omega_RenderApexSupremeChart() {
             const chartDiv = document.querySelector('#omega-apex-chart-main'); if(!chartDiv) return;
-            if(_SUPREME_CHART_INSTANCE) _SUPREME_CHART_INSTANCE.destroy();
-            const balanceData = (_BALANCE_HISTORY && _BALANCE_HISTORY.length) ? _BALANCE_HISTORY.map(Number) : [Number(_WALLET_BALANCE||100)];
+            document.querySelectorAll('.finance-chart-tabs button').forEach(btn => btn.classList.remove('active'));
+            const active = document.getElementById('finance-chart-tab-' + _FINANCE_CHART_FILTER);
+            if(active) active.classList.add('active');
+
+            if(_SUPREME_CHART_INSTANCE) { try { _SUPREME_CHART_INSTANCE.destroy(); } catch(e){} _SUPREME_CHART_INSTANCE = null; }
+            const built = omega_BuildFilteredBalanceSeries(_FINANCE_CHART_FILTER);
+            const balanceData = built.balances;
+            if(!built.hasData) {
+                const label = _FINANCE_CHART_FILTER === 'crypto' ? 'kripto işlemi' : _FINANCE_CHART_FILTER === 'bet' ? 'bahis işlemi' : 'işlem';
+                chartDiv.innerHTML = `<div class="finance-empty-chart"><b>Henüz bakiye geçmişi yok</b><span>İlk ${label} kapandığında kasa eğrisi burada oluşacak.</span></div>`;
+                omega_RenderBarriers();
+                return;
+            }
+
+            chartDiv.innerHTML = '';
             const pnlData = balanceData.map((v, i) => i === 0 ? 0 : Number((v - balanceData[i-1]).toFixed(2)));
             const labels = balanceData.map((_, i) => i === 0 ? 'Başlangıç' : `${i}. işlem`);
             const minBal = Math.min(...balanceData);
@@ -657,12 +714,12 @@ function omega_OpenRollingExcel(days) {
             const annotations = { yaxis: visibleBarriers.map(v => ({ y:v, borderColor:'#34343a', strokeDashArray:5, label:{ text:'$'+v.toLocaleString('en-US'), style:{ background:'#151515', color:'#c8c8c8', fontSize:'10px' } } })) };
             const chartOptions = {
                 series:[
-                    { name:'Kasa', type:'line', data: balanceData },
-                    { name:'P/L', type:'column', data: pnlData }
+                    { name:_FINANCE_CHART_FILTER === 'all' ? 'Kasa' : (_FINANCE_CHART_FILTER === 'crypto' ? 'Kripto Kasa' : 'Bahis Kasa'), type:'line', data: balanceData },
+                    { name:'P/L', type:'column', data:pnlData }
                 ],
                 chart:{ type:'line', height:'100%', toolbar:{show:false}, background:'transparent', animations:{enabled:true, speed:420}, stacked:false },
                 theme:{ mode:'dark' },
-                colors:['#fbbf24', '#10b981'],
+                colors:[_FINANCE_CHART_FILTER === 'crypto' ? '#60a5fa' : '#fbbf24', '#10b981'],
                 stroke:{ width:[4,0], curve:'straight' },
                 plotOptions:{ bar:{ columnWidth:'42%', borderRadius:3, colors:{ ranges:[{ from:-999999999, to:-0.01, color:'#ef4444' }, { from:-0.009, to:0.009, color:'#fbbf24' }, { from:0.01, to:999999999, color:'#10b981' }] } } },
                 fill:{ opacity:[1,.42], type:['solid','solid'] },
@@ -677,7 +734,9 @@ function omega_OpenRollingExcel(days) {
                 legend:{ show:true, labels:{ colors:'#aaa' } },
                 tooltip:{ theme:'dark', shared:true, y:{ formatter:v=>'$'+Number(v).toFixed(2) } }
             };
-            _SUPREME_CHART_INSTANCE = new ApexCharts(chartDiv, chartOptions); _SUPREME_CHART_INSTANCE.render(); omega_RenderBarriers();
+            _SUPREME_CHART_INSTANCE = new ApexCharts(chartDiv, chartOptions);
+            _SUPREME_CHART_INSTANCE.render();
+            omega_RenderBarriers();
         }
 
         /* ================= KASA CANLI TAKİP MERKEZİ V6 ================= */
