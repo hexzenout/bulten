@@ -2091,3 +2091,157 @@ body.v36-fast-mode .controls-wrapper {
         grid-template-columns: 1fr;
     }
 }
+
+/* ===============================
+   V36 CRYPTO + FINANCE REFINEMENT
+   Not dosyasındaki toplu düzeltmeler.
+================================ */
+
+/* Kripto grafik: gereksiz canlı fiyat / değişim alanını ve açıklamaları gizle */
+.crypto-v28-info-grid,
+.crypto-v10-chart-caption,
+#crypto-v10-caption {
+    display: none !important;
+}
+
+.crypto-v10-price {
+    display: none !important;
+}
+
+#v10-quote option[value="USDC"],
+#crypto-default-quote option[value="USDC"],
+#v36-quote-select option[value="USDC"] {
+    display: none !important;
+}
+
+.v36-quote-locked select {
+    opacity: .85;
+}
+
+.crypto-v28-panel[data-crypto-pane="sound"] > *:not(#v28-sound-mount) {
+    display: none !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="settings"] .crypto-v28-settings-card {
+    margin-bottom: 12px;
+}
+
+.crypto-chart-context-menu {
+    position: fixed;
+    z-index: 99999;
+    min-width: 190px;
+    background: #080808;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 18px 55px rgba(0,0,0,.45);
+}
+
+.crypto-chart-context-menu b {
+    display: block;
+    padding: 8px 9px;
+    color: #fbbf24;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.crypto-chart-context-menu button {
+    display: block;
+    width: 100%;
+    min-height: 34px;
+    margin-top: 5px;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    background: #151515;
+    color: #fff;
+    font-weight: 850;
+    text-align: left;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.crypto-chart-context-menu button:hover {
+    background: #f97316;
+    border-color: #f97316;
+    color: #111;
+}
+
+/* Kripto plan: daha net alanlar */
+#v10-2x {
+    border-color: #10b981 !important;
+}
+
+.crypto-v10-metrics div span {
+    color: #aaa;
+}
+
+.crypto-v10-metrics div:nth-child(3) span {
+    font-size: 0;
+}
+
+.crypto-v10-metrics div:nth-child(3) span::after {
+    content: "2x Hedef Kârı";
+    font-size: .72rem;
+}
+
+/* Ayar paneli sade */
+.v36-settings-card b {
+    color: #f97316;
+}
+
+/* Finance hover/active kesin ayrım */
+#finance-tab-bet:hover {
+    border-color: #fbbf24 !important;
+    color: #fbbf24 !important;
+}
+
+#finance-tab-crypto:hover {
+    border-color: #60a5fa !important;
+    color: #60a5fa !important;
+}
+
+/* Rolling: üst global toolbar yok, kapsüller daha geniş */
+.rolling-toolbar-v32,
+.rolling-toolbar-rebuild,
+.rolling-toolbar-v321,
+.rolling-toolbar-v322 {
+    display: none !important;
+}
+
+.capsule-container.v32 {
+    grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)) !important;
+    gap: 14px !important;
+}
+
+.kapsul.v32 {
+    min-height: 160px !important;
+    padding: 13px !important;
+}
+
+.kapsul.v32 input {
+    min-height: 38px !important;
+    font-size: .92rem !important;
+}
+
+.kapsul.v32 input::placeholder {
+    opacity: 1;
+    color: #8c8c8c;
+}
+
+.k-actions.v32 {
+    gap: 8px !important;
+}
+
+.k-actions.v32 button {
+    min-height: 36px !important;
+    font-size: .76rem !important;
+}
+
+.day-row-capsule.v32 {
+    grid-template-columns: 122px 1fr 128px !important;
+}
+
+@media (max-width: 1200px) {
+    .day-row-capsule.v32 {
+        grid-template-columns: 1fr !important;
+    }
+}
