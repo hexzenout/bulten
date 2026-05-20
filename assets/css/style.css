@@ -3244,3 +3244,202 @@ html.rolling-hash-boot body::before {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* ===============================
+   V43 SOUND + FINANCE SPLIT + ROLLING RAIL
+   Rolling kutu düzenine dokunmadan ses dosyası, durdurma ve sol menü.
+================================ */
+
+/* Kasa yönetimi sol menüsü */
+.fin-terminal-wrapper.active {
+    display: grid !important;
+    grid-template-columns: 168px minmax(0, 1fr) !important;
+    gap: 16px !important;
+    align-items: start !important;
+}
+
+.finance-left-rail {
+    position: sticky;
+    top: 14px;
+    display: grid;
+    gap: 9px;
+    padding: 10px;
+    border: 1px solid #292929;
+    border-radius: 18px;
+    background: #0b0b0b;
+    z-index: 4;
+}
+
+.finance-rail-btn,
+.finance-rolling-rail-selector summary,
+.finance-rolling-rail-menu button {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #303030;
+    border-radius: 11px;
+    background: #151515;
+    color: #d8d8d8;
+    font-weight: 950;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: .4px;
+    font-size: .75rem;
+}
+
+.finance-rail-btn.bet:hover,
+.finance-rail-btn.bet:focus {
+    border-color: #fbbf24;
+    color: #fbbf24;
+}
+
+.finance-rail-btn.crypto:hover,
+.finance-rail-btn.crypto:focus {
+    border-color: #60a5fa;
+    color: #60a5fa;
+}
+
+.finance-rolling-rail-selector {
+    border-top: 1px solid #272727;
+    padding-top: 9px;
+}
+
+.finance-rolling-rail-selector summary {
+    list-style: none;
+    background: linear-gradient(135deg, #f97316, #fbbf24);
+    border-color: #f97316;
+    color: #111;
+}
+
+.finance-rolling-rail-selector summary::-webkit-details-marker {
+    display: none;
+}
+
+.finance-rolling-rail-menu {
+    display: grid;
+    gap: 7px;
+    margin-top: 8px;
+}
+
+.finance-rolling-rail-menu button {
+    min-height: 38px;
+    background: #111;
+    font-size: .70rem;
+}
+
+.finance-rolling-rail-menu button:hover {
+    border-color: #f97316;
+    color: #f97316;
+}
+
+/* Alttaki eski rolling kartını kaldır. Rolling artık sol menüde. */
+.finance-rolling-launch-card {
+    display: none !important;
+}
+
+/* Bahis/Kripto ayrımını daha net göster. */
+.finance-plan-card {
+    border-color: #333 !important;
+}
+
+.finance-mode-title.bet {
+    border-left: 4px solid #fbbf24 !important;
+}
+
+.finance-mode-title.crypto {
+    border-left: 4px solid #60a5fa !important;
+}
+
+#finance-panel-bet.active {
+    outline: 1px solid rgba(251,191,36,.16);
+    border-radius: 14px;
+}
+
+#finance-panel-crypto.active {
+    outline: 1px solid rgba(96,165,250,.16);
+    border-radius: 14px;
+}
+
+/* Ses: dosya adı alanı ve durdurma butonu. */
+.v32-sound-actions {
+    grid-template-columns: 1fr 1fr 1fr !important;
+}
+
+.v32-sound-actions button.danger,
+#v32-sound-stop {
+    background: rgba(239,68,68,.18) !important;
+    border-color: rgba(239,68,68,.45) !important;
+    color: #fecaca !important;
+}
+
+.v32-sound-actions button.danger:hover,
+#v32-sound-stop:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+.v32-custom-file-field {
+    grid-column: 1 / -1 !important;
+}
+
+.v32-file-row {
+    display: grid !important;
+    grid-template-columns: 130px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    align-items: stretch !important;
+}
+
+.v32-file-btn {
+    width: 130px !important;
+    min-width: 130px !important;
+}
+
+.v32-file-name {
+    display: flex !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 0 12px !important;
+    border: 1px solid #333 !important;
+    border-radius: 10px !important;
+    background: #050505 !important;
+    color: #fff !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 1200px) {
+    .fin-terminal-wrapper.active {
+        grid-template-columns: 1fr !important;
+    }
+
+    .finance-left-rail {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .finance-rolling-rail-selector {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 900px) {
+    .v32-sound-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
