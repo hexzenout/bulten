@@ -13,12 +13,16 @@ function omega_OpenRollingExcel(days) {
             const targetInput = document.getElementById('excel-target-bal-input');
             if(targetInput) targetInput.value = _ROLLING_DB[days].targetBal;
             document.getElementById('rolling-excel-overlay').style.display = 'flex';
+            document.documentElement.classList.remove('rolling-hash-boot');
+            document.body.classList.add('rolling-active');
             setTimeout(() => { document.getElementById('rolling-excel-overlay').classList.add('show-modal'); }, 10);
             omega_RenderExcelTable();
         }
 
         function omega_CloseRollingExcel() {
             document.getElementById('rolling-excel-overlay').classList.remove('show-modal');
+            document.body.classList.remove('rolling-active');
+            document.documentElement.classList.remove('rolling-hash-boot');
             setTimeout(() => { document.getElementById('rolling-excel-overlay').style.display = 'none'; }, 300);
         }
 
