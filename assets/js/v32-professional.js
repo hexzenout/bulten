@@ -61,6 +61,7 @@
         <div class="v32-sound-actions">
           <button id="v32-sound-toggle" class="${s.enabled ? "active" : ""}">${s.enabled ? "SES AÇIK" : "SESİ AÇ"}</button>
           <button id="v32-sound-test">SEÇİLİ SESİ TEST ET</button>
+          <button id="v32-sound-stop" class="danger">SESİ DURDUR</button>
         </div>
 
         <div class="v32-sound-grid">
@@ -116,6 +117,15 @@
       renderSoundPanel(true);
     };
 
+    qs("#v32-sound-stop").onclick = () => {
+      if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
+      const btn = qs("#v32-sound-test");
+      if (btn) {
+        btn.classList.remove("testing");
+        btn.textContent = "SEÇİLİ SESİ TEST ET";
+      }
+    };
+
     qs("#v32-sound-test").onclick = () => {
       const btn = qs("#v32-sound-test");
       btn.classList.add("testing");
@@ -147,15 +157,41 @@
       setSoundSettings({ customEnd: Number(e.target.value) });
     };
     qs("#v32-file-pick").onclick = () => qs("#v32-file-input")?.click();
-    qs("#v32-file-input").onchange = e => {
+    qs("#v32-file-input").onchange = async e => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        setSoundSettings({ customDataUrl: String(reader.result || ""), customName: file.name, sound: "custom" });
+      const nameEl = qs("#v32-file-name");
+      if (nameEl) {
+        nameEl.textContent = "Yükleniyor: " + file.name;
+        nameEl.title = file.name;
+      }
+
+      try {
+        let next;
+        if (window.V26AlarmAudio?.setCustomFile) {
+          next = await window.V26AlarmAudio.setCustomFile(file);
+        } else {
+          const reader = new FileReader();
+          next = await new Promise((resolve, reject) => {
+            reader.onload = () => resolve(setSoundSettings({ customDataUrl: String(reader.result || ""), customName: file.name, sound: "custom" }));
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+        }
+
+        setSoundSettings({ customName: file.name, sound: "custom", customDataUrl: "" });
+        if (nameEl) {
+          nameEl.textContent = file.name;
+          nameEl.title = file.name;
+        }
         renderSoundPanel(true);
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        if (nameEl) {
+          nameEl.textContent = "Dosya yüklenemedi";
+          nameEl.title = "Dosya yüklenemedi";
+        }
+        alert("Ses dosyası yüklenemedi. Daha küçük bir MP3/WAV dosyası dene.");
+      }
     };
   }
 
