@@ -2279,3 +2279,156 @@ body.v36-fast-mode .controls-wrapper {
 .crypto-v28-tab[data-crypto-panel="settings"] span::after {
     content: "";
 }
+
+/* ===============================
+   V38 STEP FIX: SOUND/SETTINGS LAYOUT + ROLLING HASH + CRYPTO CONTROLS
+================================ */
+
+/* Ayar tabı yer tutar ama işlevsizdir; böylece sidebar kaymaz. */
+.crypto-v28-tab-disabled {
+    opacity: .42 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(1);
+}
+
+.crypto-v28-tab-disabled:hover {
+    background: #151515 !important;
+    border-color: #303030 !important;
+    color: #aaa !important;
+}
+
+.crypto-v28-empty-settings {
+    min-height: 360px;
+    border: 1px dashed #2c2c2c;
+    border-radius: 14px;
+    background: #080808;
+}
+
+/* Ses paneli: eski Alarm Sesi kalıntılarını gösterme */
+.crypto-v28-panel[data-crypto-pane="sound"] > *:not(#v28-sound-mount),
+.crypto-v28-panel[data-crypto-pane="sound"] .alarm-sound-panel,
+.crypto-v28-panel[data-crypto-pane="sound"] .alarm-audio-panel,
+.crypto-v28-panel[data-crypto-pane="sound"] [class*="audio"]:not(.v32-sound-card):not(.v32-sound-card *),
+.crypto-v28-panel[data-crypto-pane="sound"] [class*="sound"]:not(.v32-sound-card):not(.v32-sound-card *) {
+    display: none !important;
+}
+
+#v28-sound-mount {
+    display: block !important;
+}
+
+/* Rolling F5 açılışında finance sayfası boş/ana sayfa hissi vermesin */
+body:has(#rolling-excel-overlay.show-modal) #omega-home-block {
+    display: none !important;
+}
+
+/* Kripto kontroller */
+.v38-chart-controls {
+    position: relative;
+}
+
+.v38-coin-field {
+    position: relative;
+    z-index: 20;
+}
+
+.v38-coin-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 9999;
+    max-height: 300px;
+    overflow: auto;
+    border: 1px solid #303030;
+    border-radius: 12px;
+    background: #070707;
+    box-shadow: 0 18px 50px rgba(0,0,0,.45);
+    padding: 6px;
+}
+
+.v38-coin-menu.show {
+    display: block;
+}
+
+.v38-coin-menu button {
+    width: 100%;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font-weight: 950;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.v38-coin-menu button:hover {
+    background: #f97316;
+    color: #111;
+}
+
+.v38-coin-menu span {
+    color: #999;
+    font-size: .75rem;
+}
+
+.v38-coin-menu button:hover span {
+    color: #111;
+}
+
+.v38-quote-locked select {
+    opacity: .9;
+}
+
+/* Kripto eski sağ panel gereksizleri */
+.crypto-v28-info-grid,
+.crypto-v10-chart-caption,
+#crypto-v10-caption,
+.crypto-v10-price {
+    display: none !important;
+}
+
+.crypto-chart-context-menu {
+    position: fixed;
+    z-index: 99999;
+    min-width: 190px;
+    background: #080808;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 18px 55px rgba(0,0,0,.45);
+}
+
+.crypto-chart-context-menu b {
+    display: block;
+    padding: 8px 9px;
+    color: #fbbf24;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.crypto-chart-context-menu button {
+    display: block;
+    width: 100%;
+    min-height: 34px;
+    margin-top: 5px;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    background: #151515;
+    color: #fff;
+    font-weight: 850;
+    text-align: left;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.crypto-chart-context-menu button:hover {
+    background: #f97316;
+    border-color: #f97316;
+    color: #111;
+}
