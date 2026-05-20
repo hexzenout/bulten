@@ -1828,14 +1828,18 @@ body.v36-fast-mode .controls-wrapper {
 }
 
 /* ===============================
-   V32.1 FINANCE + ROLLING PRO
-   Kasa planlayıcı ve Rolling ekranı premium düzen.
+   V32.2 FINANCE + ROLLING REPAIR
+   Kasa planı iki ayrı başlık, rolling bozulmadan büyütülmüş profesyonel düzen.
 ================================ */
 
-/* Finance layout tightening */
-.finance-plan-card .finance-card-head h3,
+/* Kasa planlayıcı ana görünüm */
+.finance-plan-card .finance-card-head h3 {
+    color: #fbbf24 !important;
+    letter-spacing: .5px;
+}
+
 .finance-plan-card .finance-card-head span {
-    letter-spacing: .3px;
+    color: #a5a5a5 !important;
 }
 
 .finance-tabs {
@@ -1843,28 +1847,27 @@ body.v36-fast-mode .controls-wrapper {
     grid-template-columns: 1fr 1fr !important;
     gap: 12px !important;
     padding: 8px !important;
-    border: 1px solid #262626 !important;
-    border-radius: 15px !important;
     background: #050505 !important;
-    margin-bottom: 18px !important;
+    border: 1px solid #262626 !important;
+    border-radius: 14px !important;
+    margin-bottom: 16px !important;
 }
 
 .finance-tabs .finance-tab {
-    min-height: 50px !important;
-    border-radius: 12px !important;
-    font-size: .95rem !important;
-    letter-spacing: .8px !important;
-    font-weight: 950 !important;
+    min-height: 48px !important;
+    border-radius: 11px !important;
     background: #151515 !important;
-    color: #dcdcdc !important;
+    color: #e9e9e9 !important;
     border: 1px solid #303030 !important;
+    font-weight: 950 !important;
+    letter-spacing: .6px !important;
     box-shadow: none !important;
     transform: none !important;
 }
 
-.finance-tabs .finance-tab:not(.active):hover {
-    border-color: #4a4a4a !important;
-    background: #1d1d1d !important;
+.finance-tabs .finance-tab:not(.active) {
+    background: #111 !important;
+    color: #9f9f9f !important;
 }
 
 #finance-tab-bet.active {
@@ -1879,426 +1882,369 @@ body.v36-fast-mode .controls-wrapper {
     color: #020817 !important;
 }
 
-/* Turn simple plan into a professional panel */
-.finance-panel-bet,
-#finance-panel-bet,
-#finance-panel-crypto {
-    padding-top: 4px !important;
+.v322-plan-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 14px;
+    margin: 0 0 14px;
+    border: 1px solid #2c2c2c;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #111, #070707);
 }
 
-.simple-plan-grid,
-#finance-panel-bet .simple-plan-grid,
-#finance-panel-crypto .simple-plan-grid {
+.v322-plan-title b {
+    font-size: 1rem;
+    font-weight: 950;
+    letter-spacing: .7px;
+}
+
+.v322-plan-title span {
+    color: #aaa;
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+#finance-panel-bet .v322-plan-title b { color: #fbbf24; }
+#finance-panel-crypto .v322-plan-title b { color: #60a5fa; }
+
+.finance-tab-panel {
+    display: none !important;
+}
+
+.finance-tab-panel.active {
+    display: block !important;
+}
+
+.finance-tab-panel .simple-plan-grid {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 14px !important;
-    align-items: stretch !important;
+    gap: 13px !important;
 }
 
 .finance-field {
-    position: relative !important;
-    padding: 13px !important;
-    border: 1px solid #292929 !important;
-    border-radius: 14px !important;
+    border: 1px solid #2c2c2c !important;
     background: linear-gradient(180deg, #101010, #070707) !important;
+    border-radius: 14px !important;
+    padding: 13px !important;
 }
 
 .finance-field label {
     display: block !important;
-    color: #a8a8a8 !important;
+    color: #b1b1b1 !important;
     font-size: .72rem !important;
     font-weight: 950 !important;
     text-transform: uppercase !important;
-    letter-spacing: .9px !important;
+    letter-spacing: .75px !important;
     margin-bottom: 8px !important;
 }
 
-.finance-input,
 .finance-field input,
-.finance-field select {
+.finance-field select,
+.finance-input,
+.finance-select {
     width: 100% !important;
-    min-height: 46px !important;
-    border: 1px solid #383838 !important;
-    border-radius: 11px !important;
+    min-height: 44px !important;
     background: #050505 !important;
+    border: 1px solid #383838 !important;
+    border-radius: 10px !important;
     color: #fff !important;
-    padding: 0 14px !important;
-    font-size: 1rem !important;
+    padding: 0 12px !important;
     font-family: 'JetBrains Mono', monospace !important;
+    font-size: .96rem !important;
     font-weight: 900 !important;
     outline: none !important;
 }
 
 .finance-field input:focus,
 .finance-field select:focus,
-.finance-input:focus {
+.finance-input:focus,
+.finance-select:focus {
     border-color: #fbbf24 !important;
-    box-shadow: 0 0 0 3px rgba(251,191,36,.13) !important;
+    box-shadow: 0 0 0 3px rgba(251,191,36,.12) !important;
 }
 
-.finance-result-grid,
-.crypto-result-grid,
-.finance-output-grid,
-#finance-result-grid {
+#finance-panel-crypto .finance-field input:focus,
+#finance-panel-crypto .finance-field select:focus {
+    border-color: #60a5fa !important;
+    box-shadow: 0 0 0 3px rgba(96,165,250,.13) !important;
+}
+
+.plan-summary-clean {
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
     gap: 12px !important;
     margin-top: 14px !important;
 }
 
-/* Generic metric cards inside planner */
-.finance-plan-card [id*="margin"],
-.finance-plan-card [id*="max"],
-.finance-plan-card [id*="position"],
-.finance-plan-card [id*="profit"] {
-    font-family: 'JetBrains Mono', monospace;
+.plan-metric {
+    min-height: 82px !important;
+    padding: 13px !important;
+    border-radius: 14px !important;
+    border: 1px solid #2e2e2e !important;
+    background: linear-gradient(180deg, #101010, #070707) !important;
 }
 
-.finance-plan-card .terminal-v10-btn,
-.finance-plan-card button {
-    min-height: 44px;
-    border-radius: 11px;
-    font-weight: 950;
-    letter-spacing: .7px;
+.plan-metric span {
+    color: #9d9d9d !important;
+    font-size: .72rem !important;
+    letter-spacing: .8px !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
 }
 
-/* Cards that contain calculated values */
-.finance-plan-card .finance-card-body > div:not(.finance-tabs):not(.finance-tab-panel),
-.finance-plan-card .finance-tab-panel > div {
-    max-width: 100%;
+.plan-metric b {
+    display: block;
+    margin-top: 8px;
+    font-size: 1.25rem !important;
+    font-family: 'JetBrains Mono', monospace !important;
 }
 
-.v321-result-card {
-    border: 1px solid #2b2b2b;
+.finance-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin-top: 14px !important;
+}
+
+.finance-actions .btn-finance {
+    min-height: 46px !important;
+    border-radius: 11px !important;
+    font-weight: 950 !important;
+    letter-spacing: .6px !important;
+}
+
+.simple-plan-help,
+.crypto-plan-note {
+    display: none !important;
+}
+
+/* Bakiye grafiği sade/pro görünüm */
+.balance-chart-wrap {
+    min-height: 330px;
+}
+
+#omega-apex-chart-main:empty::before {
+    content: "Henüz bakiye geçmişi yok. İşlem kapandıkça kasa eğrisi burada oluşacak.";
+    display: grid;
+    place-items: center;
+    min-height: 260px;
+    color: #a1a1a1;
+    border: 1px dashed #303030;
     border-radius: 14px;
-    background: linear-gradient(180deg, #101010, #070707);
-    padding: 14px;
-    min-height: 86px;
-}
-
-.v321-result-card span {
-    display: block;
-    color: #949494;
-    font-size: .72rem;
-    font-weight: 950;
-    text-transform: uppercase;
-    letter-spacing: .8px;
-    margin-bottom: 8px;
-}
-
-.v321-result-card b {
-    display: block;
-    color: #fbbf24;
-    font-size: 1.35rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 950;
-}
-
-.v321-result-card small {
-    display: block;
-    color: #888;
-    font-size: .72rem;
-    margin-top: 4px;
-}
-
-.v321-action-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 14px;
-}
-
-.v321-action-row button {
-    min-height: 48px;
-    border-radius: 12px;
-    border: 1px solid #303030;
-    font-weight: 950;
-    cursor: pointer;
-}
-
-.v321-action-row .main {
-    background: #fbbf24;
-    color: #111;
-    border-color: #fbbf24;
-}
-
-.v321-action-row .good {
-    background: #10b981;
-    color: #03130d;
-    border-color: #10b981;
-}
-
-.v321-action-row .muted {
-    background: #171717;
-    color: #fff;
-}
-
-.v321-action-row .danger {
-    background: rgba(239,68,68,.2);
-    color: #fecaca;
-    border-color: rgba(239,68,68,.45);
-}
-
-/* Rolling modal full professional size */
-#rolling-excel-overlay .modal-header {
-    min-height: 74px !important;
-    padding: 16px 20px !important;
-}
-
-#rolling-excel-overlay .modal-config-bar {
-    min-height: 72px !important;
-    padding: 14px 20px !important;
-    gap: 18px !important;
-}
-
-#rolling-excel-overlay .modal-body-wrapper {
-    padding: 20px !important;
-}
-
-.rolling-toolbar-v32,
-.rolling-toolbar-v321 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 14px 0 20px;
-}
-
-.rolling-toolbar-v321 button,
-.day-tools-v321 button {
-    min-height: 42px;
-    border: 1px solid #333;
-    border-radius: 11px;
-    background: #171717;
-    color: #fff;
-    font-weight: 950;
-    cursor: pointer;
-    padding: 0 16px;
-    letter-spacing: .4px;
-}
-
-.rolling-toolbar-v321 .gold,
-.day-tools-v321 .gold {
-    background: #fbbf24;
-    border-color: #fbbf24;
-    color: #111;
-}
-
-.day-row-capsule.v321 {
-    display: grid;
-    grid-template-columns: 170px 1fr 150px;
-    gap: 20px;
-    align-items: stretch;
+    background: #050505;
+    text-align: center;
     padding: 20px;
-    border: 1px solid #292929;
-    border-radius: 18px;
-    background: linear-gradient(180deg, #0f0f0f, #070707);
-    margin-bottom: 18px;
-}
-
-.day-info-v321 {
-    border-right: 1px solid #252525;
-    padding-right: 16px;
-}
-
-.day-info-v321 h3 {
-    color: #fbbf24;
-    font-size: 1.25rem;
-    margin: 0 0 10px;
-    letter-spacing: 1px;
-}
-
-.day-info-v321 span {
-    display: block;
-    color: #a7a7a7;
-    font-size: .78rem;
     font-weight: 850;
-    line-height: 1.5;
 }
 
-.day-info-v321 b {
+/* Rolling: bozulmadan büyütülmüş kartlar */
+#rolling-excel-overlay .modal-body-wrapper {
+    padding: 18px !important;
+}
+
+.rolling-toolbar-v322 {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 12px 0 18px;
+}
+
+.rolling-toolbar-v322 button,
+.day-tools-v322 button {
+    min-height: 38px;
+    padding: 0 13px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #171717;
+    color: #fff;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.rolling-toolbar-v322 .gold,
+.day-tools-v322 .gold {
+    background: #fbbf24;
+    border-color: #fbbf24;
+    color: #111;
+}
+
+.day-row-capsule.v322 {
+    display: grid;
+    grid-template-columns: 135px 1fr 120px;
+    gap: 15px;
+    align-items: stretch;
+    padding: 16px;
+    border: 1px solid #292929;
+    border-radius: 16px;
+    background: #0b0b0b;
+    margin-bottom: 15px;
+}
+
+.day-info-v322 h3 {
+    color: #fbbf24;
+    font-size: 1.12rem;
+    margin: 0 0 8px;
+    letter-spacing: .8px;
+}
+
+.day-info-v322 span {
+    display: block;
+    color: #aaa;
+    font-size: .76rem;
+    line-height: 1.45;
+    font-weight: 850;
+}
+
+.day-info-v322 b {
     color: #fff;
     font-family: 'JetBrains Mono', monospace;
 }
 
-.day-tools-v321 {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    margin-top: 16px;
+.day-tools-v322 {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 12px;
 }
 
-.capsule-container.v321 {
+.capsule-container.v322 {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+    gap: 12px;
     align-content: start;
 }
 
-.kapsul.v321 {
+.kapsul.v322 {
     position: relative;
     border: 1px solid #333;
+    border-radius: 14px;
     background: #101010;
-    border-radius: 16px;
-    padding: 15px;
-    min-height: 205px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.16);
+    padding: 12px;
+    min-height: 145px;
 }
 
-.kapsul.v321.win {
-    border-color: rgba(16,185,129,.65);
-    background: linear-gradient(180deg, rgba(16,185,129,.13), #0b0b0b);
+.kapsul.v322.win {
+    border-color: rgba(16,185,129,.6);
+    background: linear-gradient(180deg, rgba(16,185,129,.12), #0b0b0b);
 }
 
-.kapsul.v321.loss {
-    border-color: rgba(239,68,68,.65);
-    background: linear-gradient(180deg, rgba(239,68,68,.12), #0b0b0b);
+.kapsul.v322.loss {
+    border-color: rgba(239,68,68,.6);
+    background: linear-gradient(180deg, rgba(239,68,68,.11), #0b0b0b);
 }
 
-.kapsul.v321 input {
+.kapsul.v322 input {
     width: 100%;
+    height: 38px;
     border: 1px solid #3a3a3a;
+    border-radius: 9px;
     background: #050505;
     color: #fff;
-    border-radius: 10px;
-    padding: 0 12px;
+    padding: 0 10px;
     font-weight: 850;
+    margin-bottom: 8px;
     outline: none;
 }
 
-.kapsul.v321 input:focus {
+.kapsul.v322 input:focus {
     border-color: #fbbf24;
-    box-shadow: 0 0 0 3px rgba(251,191,36,.12);
+    box-shadow: 0 0 0 3px rgba(251,191,36,.11);
 }
 
-.k-note-input-v321 {
-    height: 48px;
-    font-size: .95rem;
-    margin-bottom: 12px;
-}
-
-.k-inputs-v321 {
+.k-inputs-v322 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
 }
 
-.k-inputs-v321 input {
-    height: 44px;
-}
-
-.k-actions.v321 {
+.k-actions.v322 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 14px;
+    gap: 8px;
+    margin-top: 8px;
 }
 
-.k-actions.v321 button {
-    height: 42px;
+.k-actions.v322 button {
+    height: 34px;
     border: none;
-    border-radius: 10px;
-    font-size: .82rem;
+    border-radius: 8px;
+    font-size: .76rem;
     font-weight: 950;
     cursor: pointer;
 }
 
-.k-actions.v321 .w {
-    background: #10b981;
-    color: #03130d;
-}
+.k-actions.v322 .w { background: #10b981; color: #03130d; }
+.k-actions.v322 .l { background: #ef4444; color: #fff; }
 
-.k-actions.v321 .l {
-    background: #ef4444;
-    color: #fff;
-}
-
-.k-undo.v321 {
+.k-undo.v322 {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 8px;
+    top: 8px;
+    width: 25px;
+    height: 25px;
     border: none;
-    background: #242424;
-    color: #fff;
-    width: 30px;
-    height: 30px;
     border-radius: 50%;
+    background: #272727;
+    color: #fff;
     cursor: pointer;
-    font-size: 1rem;
 }
 
-.k-result-v321 {
+.k-result-v322 {
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 9px;
     justify-content: center;
+    gap: 7px;
 }
 
-.k-result-v321 .k-note-show {
+.k-result-v322 .k-note-show {
     color: #fff;
-    font-size: 1rem;
+    font-size: .94rem;
     font-weight: 950;
-    padding-right: 34px;
-    line-height: 1.35;
+    padding-right: 28px;
 }
 
-.k-result-v321 b {
+.k-result-v322 b {
     color: #fbbf24;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.05rem;
 }
 
-.k-result-v321 span {
+.k-result-v322 span {
     font-family: 'JetBrains Mono', monospace;
     font-weight: 950;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
 }
 
-.day-result.v321 {
+.day-result.v322 {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-end;
+    border-left: 1px solid #272727;
+    padding-left: 12px;
+    color: #fff;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 950;
-    color: #fff;
-    font-size: 1.15rem;
-    border-left: 1px solid #252525;
-    padding-left: 16px;
 }
 
-.day-result.v321 small {
+.day-result.v322 small {
     color: #888;
-    font-size: .75rem;
-    margin-bottom: 7px;
+    font-size: .72rem;
+    margin-bottom: 6px;
 }
 
-@media (max-width: 1250px) {
-    .day-row-capsule.v321 {
-        grid-template-columns: 1fr;
-    }
-
-    .day-info-v321,
-    .day-result.v321 {
-        border: none;
-        padding: 0;
-        align-items: flex-start;
-    }
-
-    .day-tools-v321 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 900px) {
-    .simple-plan-grid,
-    #finance-panel-bet .simple-plan-grid,
-    #finance-panel-crypto .simple-plan-grid,
-    .v321-action-row {
+@media (max-width: 1200px) {
+    .day-row-capsule.v322,
+    .finance-tab-panel .simple-plan-grid,
+    .plan-summary-clean,
+    .finance-actions {
         grid-template-columns: 1fr !important;
     }
-
-    .capsule-container.v321 {
-        grid-template-columns: 1fr;
+    .day-result.v322 {
+        align-items: flex-start;
+        border-left: none;
+        padding-left: 0;
     }
 }
