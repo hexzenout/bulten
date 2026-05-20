@@ -4,7 +4,7 @@
 // Bu dosya V30 modülerleştirme adımıdır; davranış değiştirmez.
 // ===============================
 
-function omega_OpenRollingExcel(days) {
+function omega_OpenRollingExcel(days, skipHash = false) {
             _ACTIVE_EXCEL_DAYS = days;
             if(!_ROLLING_DB[days]) _ROLLING_DB[days] = { startBal: 100, targetBal: ROLLING_TARGETS[days], ops: {} };
             if(!_ROLLING_DB[days].targetBal) _ROLLING_DB[days].targetBal = ROLLING_TARGETS[days];
@@ -15,6 +15,7 @@ function omega_OpenRollingExcel(days) {
             document.getElementById('rolling-excel-overlay').style.display = 'flex';
             document.documentElement.classList.remove('rolling-hash-boot');
             document.body.classList.add('rolling-active');
+            if(!skipHash) history.replaceState(null, '', `#finance/rolling/${days}`);
             setTimeout(() => { document.getElementById('rolling-excel-overlay').classList.add('show-modal'); }, 10);
             omega_RenderExcelTable();
         }
@@ -750,36 +751,20 @@ function omega_OpenRollingExcel(days) {
             const m = String(location.hash || '').match(/^#finance\/rolling\/(\d+)/);
             if(!m) return;
             const days = parseInt(m[1]);
-            if([7,15,30,60,90].includes(days)) {
-                if(typeof omega_SwitchMainTab === 'function') {
-                    const el = document.getElementById('nav-finance');
-                    omega_SwitchMainTab('finance', el, false);
-                }
-                setTimeout(() => omega_OpenRollingExcel(days, true), 20);
-                setTimeout(() => omega_OpenRollingExcel(days, true), 220);
+            if(![7,15,30,60,90].includes(days)) return;
+            if(typeof omega_SwitchMainTab === 'function') {
+                const el = document.getElementById('nav-finance');
+                omega_SwitchMainTab('finance', el, false);
+            }
+            const run = () => omega_OpenRollingExcel(days, true);
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', run, { once:true });
+            } else {
+                requestAnimationFrame(run);
             }
         }
         window.addEventListener('hashchange', omega_CheckRollingHashOnLoad);
         document.addEventListener('DOMContentLoaded', omega_CheckRollingHashOnLoad);
-
-
-
-        function omega_RollingHashGuardV41() {
-            const m = String(location.hash || '').match(/^#finance\/rolling\/(\d+)/);
-            if(!m) return;
-            const days = parseInt(m[1]);
-            if(![7,15,30,60,90].includes(days)) return;
-            let tries = 0;
-            const timer = setInterval(() => {
-                tries++;
-                if(typeof omega_SwitchMainTab === 'function') omega_SwitchMainTab('finance', document.getElementById('nav-finance'), false);
-                if(typeof omega_OpenRollingExcel === 'function') omega_OpenRollingExcel(days, true);
-                const overlay = document.getElementById('rolling-excel-overlay');
-                if((overlay && overlay.classList.contains('show-modal')) || tries > 12) clearInterval(timer);
-            }, 90);
-        }
-        window.addEventListener('DOMContentLoaded', omega_RollingHashGuardV41);
-        window.addEventListener('hashchange', omega_RollingHashGuardV41);
 /* ================= KASA CANLI TAKİP MERKEZİ V6 ================= */
         let _WATCH_FILTER = 'all';
         let _LIVE_SCORES_CACHE = null;
