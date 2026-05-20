@@ -337,16 +337,24 @@
     return result;
   };
 
+  
+  document.addEventListener("click", function(e) {
+    const disabled = e.target.closest(".crypto-v28-tab-disabled");
+    if(disabled) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }, true);
+
   function boot() {
     prepareCryptoForm();
     renderSoundPanel();
     fixFinanceEmptyState();
-    setInterval(() => {
-      if (location.hash === "#crypto") {
-        prepareCryptoForm();
-      }
-      if (location.hash === "#finance") fixFinanceEmptyState();
-    }, 1200);
+    setTimeout(() => {
+      if (location.hash === "#crypto") prepareCryptoForm();
+      if (location.hash.startsWith("#finance")) fixFinanceEmptyState();
+    }, 700);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(boot, 800));
