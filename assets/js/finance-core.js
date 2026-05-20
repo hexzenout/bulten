@@ -749,7 +749,8 @@ function omega_OpenRollingExcel(days) {
                     const el = document.getElementById('nav-finance');
                     omega_SwitchMainTab('finance', el, false);
                 }
-                setTimeout(() => omega_OpenRollingExcel(days, true), 80);
+                setTimeout(() => omega_OpenRollingExcel(days, true), 20);
+                setTimeout(() => omega_OpenRollingExcel(days, true), 220);
             }
         }
         window.addEventListener('hashchange', omega_CheckRollingHashOnLoad);
