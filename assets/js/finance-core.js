@@ -739,7 +739,19 @@ function omega_OpenRollingExcel(days) {
             omega_RenderBarriers();
         }
 
-        /* ================= KASA CANLI TAKİP MERKEZİ V6 ================= */
+        
+        function omega_CheckRollingHashOnLoad() {
+            const m = String(location.hash || '').match(/^#finance\/rolling\/(\d+)/);
+            if(!m) return;
+            const days = parseInt(m[1]);
+            if([7,15,30,60,90].includes(days)) {
+                setTimeout(() => omega_OpenRollingExcel(days, true), 450);
+            }
+        }
+        window.addEventListener('hashchange', omega_CheckRollingHashOnLoad);
+        document.addEventListener('DOMContentLoaded', omega_CheckRollingHashOnLoad);
+
+/* ================= KASA CANLI TAKİP MERKEZİ V6 ================= */
         let _WATCH_FILTER = 'all';
         let _LIVE_SCORES_CACHE = null;
         let _LIVE_SCORES_TS = 0;
