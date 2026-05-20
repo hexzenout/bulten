@@ -93,7 +93,7 @@ async function omega_InitializeEngine() {
 
         function omega_SwitchMainTab(targetModule, clickedElement, updateHistory = true) {
             const keepRollingOpen = targetModule === 'finance' && /^#finance\/rolling\/\d+/.test(String(location.hash || ''));
-            if (!keepRollingOpen) omega_CloseRollingExcel();
+            if (!keepRollingOpen) omega_CloseRollingExcel(true);
             omega_CloseChannelManager();
 
             const topMenu = document.getElementById('main-dropdown-nav');
