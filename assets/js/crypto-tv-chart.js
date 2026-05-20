@@ -1,21 +1,20 @@
 // ===============================
-// V32 CRYPTO TV CHART
-// Lightweight Charts + gerçek zaman aralığı + coin arama + TP/Stop/LIQ çizgileri.
+// V34 CRYPTO TV CHART HOTFIX
+// Grafik canvas görünürlüğü, hızlı kontrol yükleme ve Binance/OKX mum grafiği.
 // ===============================
 
 (function () {
   const TF_OPTIONS = {
-    "1m":  { label: "1m",  binance: "1m",  okx: "1m",  limit: 1000 },
-    "5m":  { label: "5m",  binance: "5m",  okx: "5m",  limit: 1000 },
-    "15m": { label: "15m", binance: "15m", okx: "15m", limit: 1000 },
-    "1h":  { label: "1h",  binance: "1h",  okx: "1H",  limit: 1000 },
-    "4h":  { label: "4h",  binance: "4h",  okx: "4H",  limit: 1000 },
-    "1d":  { label: "1d",  binance: "1d",  okx: "1D",  limit: 700 }
+    "1m":  { label: "1m",  binance: "1m",  okx: "1m",  limit: 700 },
+    "5m":  { label: "5m",  binance: "5m",  okx: "5m",  limit: 700 },
+    "15m": { label: "15m", binance: "15m", okx: "15m", limit: 700 },
+    "1h":  { label: "1h",  binance: "1h",  okx: "1H",  limit: 700 },
+    "4h":  { label: "4h",  binance: "4h",  okx: "4H",  limit: 500 },
+    "1d":  { label: "1d",  binance: "1d",  okx: "1D",  limit: 365 }
   };
 
   const POPULAR = ["BTC","ETH","SOL","BNB","XRP","DOGE","ADA","AVAX","LINK","TON","TRX","DOT","MATIC","NEAR","ATOM","APT","ARB","OP","INJ","SUI","PEPE","WIF","FET","RNDR","LTC","BCH","ETC","UNI","AAVE","FIL"];
-
-  let activeTf = localStorage.getItem("v32_crypto_tf") || "5m";
+  let activeTf = localStorage.getItem("v34_crypto_tf") || localStorage.getItem("v32_crypto_tf") || "5m";
   let chart = null;
   let candleSeries = null;
   let priceLines = [];
@@ -30,7 +29,7 @@
   }
 
   function normalizeSymbol(v) {
-    return String(v || "BTC").trim().toUpperCase().replace(/[^A-Z0-9]/g, "") || "BTC";
+    return String(v || "BTC").trim().toUpperCase().replace(/USDT$|USDC$/,"").replace(/[^A-Z0-9]/g, "") || "BTC";
   }
 
   function ensureDatalist() {
@@ -43,17 +42,40 @@
     list.innerHTML = POPULAR.map(s => `<option value="${s}">${s}USDT</option>`).join("");
   }
 
-  function buildControls() {
-    const mini = qs(".crypto-v28-mini-panel");
-    if (!mini || qs("#v32-chart-controls")) return;
+  function getNativeValue(id, fallback) {
+    const el = qs("#" + id);
+    return el ? el.value : fallback;
+  }
 
+  function syncNativeFromControls() {
+    const sym = normalizeSymbol(qs("#v32-symbol-input")?.value || "BTC");
+    const ex = (qs("#v32-exchange-select")?.value || "binance").toLowerCase();
+    const quote = qs("#v32-quote-select")?.value || "USDT";
+
+    if (qs("#v10-symbol")) qs("#v10-symbol").value = sym;
+    if (qs("#v10-exchange")) qs("#v10-exchange").value = ex;
+    if (qs("#v10-quote")) qs("#v10-quote").value = quote;
+  }
+
+  function buildControls() {
     ensureDatalist();
 
-    mini.outerHTML = `
+    let host = qs("#v32-chart-controls");
+    if (host) return host;
+
+    const mini = qs(".crypto-v28-mini-panel");
+    const chartHead = qs(".crypto-v10-chart-head") || qs(".terminal-v10-chart-head") || qs(".crypto-v12-chart-wrap")?.parentElement;
+    if (!mini && !chartHead) return null;
+
+    const symbol = normalizeSymbol(getNativeValue("v10-symbol", "BTC"));
+    const exchange = (getNativeValue("v10-exchange", "binance") || "binance").toLowerCase();
+    const quote = getNativeValue("v10-quote", "USDT") || "USDT";
+
+    const html = `
       <div class="v32-chart-controls" id="v32-chart-controls">
         <div class="v32-field">
           <label>Coin Ara / Seç</label>
-          <input id="v32-symbol-input" list="crypto-symbol-list" value="${normalizeSymbol(qs("#v10-symbol")?.value || "BTC")}" placeholder="BTC, ETH, SOL...">
+          <input id="v32-symbol-input" list="crypto-symbol-list" value="${symbol}" placeholder="BTC, ETH, SOL...">
         </div>
         <div class="v32-field">
           <label>Borsa</label>
@@ -77,55 +99,36 @@
       </div>
     `;
 
-    syncControlsFromNative();
+    if (mini) mini.outerHTML = html;
+    else chartHead.insertAdjacentHTML("afterend", html);
 
-    qs("#v32-symbol-input")?.addEventListener("change", syncControlsToNativeAndRefresh);
-    qs("#v32-symbol-input")?.addEventListener("keydown", e => { if (e.key === "Enter") syncControlsToNativeAndRefresh(); });
-    qs("#v32-exchange-select")?.addEventListener("change", syncControlsToNativeAndRefresh);
-    qs("#v32-quote-select")?.addEventListener("change", syncControlsToNativeAndRefresh);
-    qs("#v32-refresh-chart")?.addEventListener("click", () => refresh(true));
+    qs("#v32-exchange-select").value = exchange === "okx" ? "okx" : "binance";
+    qs("#v32-quote-select").value = quote === "USDC" ? "USDC" : "USDT";
+
+    qs("#v32-symbol-input")?.addEventListener("change", () => { syncNativeFromControls(); refresh(true); });
+    qs("#v32-symbol-input")?.addEventListener("keydown", e => { if (e.key === "Enter") { syncNativeFromControls(); refresh(true); }});
+    qs("#v32-exchange-select")?.addEventListener("change", () => { syncNativeFromControls(); refresh(true); });
+    qs("#v32-quote-select")?.addEventListener("change", () => { syncNativeFromControls(); refresh(true); });
+    qs("#v32-refresh-chart")?.addEventListener("click", () => { syncNativeFromControls(); refresh(true); });
 
     document.querySelectorAll(".v32-tf-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         activeTf = btn.dataset.tf || "5m";
-        localStorage.setItem("v32_crypto_tf", activeTf);
+        localStorage.setItem("v34_crypto_tf", activeTf);
         document.querySelectorAll(".v32-tf-btn").forEach(x => x.classList.toggle("active", x === btn));
         refresh(true);
       });
     });
-  }
 
-  function syncControlsFromNative() {
-    const sym = normalizeSymbol(qs("#v10-symbol")?.value || "BTC");
-    const ex = (qs("#v10-exchange")?.value || "binance").toLowerCase();
-    const quote = qs("#v10-quote")?.value || "USDT";
-
-    const v32Sym = qs("#v32-symbol-input");
-    const v32Ex = qs("#v32-exchange-select");
-    const v32Quote = qs("#v32-quote-select");
-
-    if (v32Sym) v32Sym.value = sym;
-    if (v32Ex) v32Ex.value = ex === "okx" ? "okx" : "binance";
-    if (v32Quote) v32Quote.value = quote === "USDC" ? "USDC" : "USDT";
-  }
-
-  function syncControlsToNativeAndRefresh() {
-    const sym = normalizeSymbol(qs("#v32-symbol-input")?.value || "BTC");
-    const ex = (qs("#v32-exchange-select")?.value || "binance").toLowerCase();
-    const quote = qs("#v32-quote-select")?.value || "USDT";
-
-    if (qs("#v10-symbol")) qs("#v10-symbol").value = sym;
-    if (qs("#v10-exchange")) qs("#v10-exchange").value = ex;
-    if (qs("#v10-quote")) qs("#v10-quote").value = quote;
-
-    refresh(true);
+    return qs("#v32-chart-controls");
   }
 
   function ensureContainer() {
     const wrap = qs(".crypto-v12-chart-wrap");
     if (!wrap) return null;
 
-    wrap.querySelectorAll("canvas").forEach(c => c.style.display = "none");
+    const oldCanvas = qs("#crypto-v10-chart");
+    if (oldCanvas) oldCanvas.style.display = "none";
 
     let box = qs("#crypto-tv-chart");
     if (!box) {
@@ -134,6 +137,9 @@
       wrap.appendChild(box);
     }
 
+    box.style.display = "block";
+    box.style.visibility = "visible";
+    box.style.height = "520px";
     return box;
   }
 
@@ -142,12 +148,11 @@
     if (typeof window.omega_V10GetPlan === "function") {
       try { plan = window.omega_V10GetPlan() || {}; } catch (e) {}
     }
-
     return {
       ...plan,
-      symbol: normalizeSymbol(qs("#v32-symbol-input")?.value || qs("#v10-symbol")?.value || plan.symbol || "BTC"),
-      quote: qs("#v32-quote-select")?.value || qs("#v10-quote")?.value || plan.quote || "USDT",
-      exchange: (qs("#v32-exchange-select")?.value || qs("#v10-exchange")?.value || plan.exchange || "binance").toLowerCase()
+      symbol: normalizeSymbol(qs("#v32-symbol-input")?.value || getNativeValue("v10-symbol", plan.symbol || "BTC")),
+      quote: qs("#v32-quote-select")?.value || getNativeValue("v10-quote", plan.quote || "USDT"),
+      exchange: (qs("#v32-exchange-select")?.value || getNativeValue("v10-exchange", plan.exchange || "binance")).toLowerCase()
     };
   }
 
@@ -177,7 +182,7 @@
 
     const url = `https://api.binance.com/api/v3/klines?symbol=${encodeURIComponent(inst(plan))}&interval=${tf.binance}&limit=${tf.limit}`;
     const r = await fetch(url, { cache: "no-store" });
-    if (!r.ok) throw new Error("Binance mum verisi alınamadı");
+    if (!r.ok) throw new Error(`${inst(plan)} Binance mum verisi alınamadı`);
     const rows = await r.json();
     return rows.map(k => ({
       time: Math.floor(Number(k[0]) / 1000),
@@ -202,16 +207,23 @@
     if (c.addSeries && window.LightweightCharts?.CandlestickSeries) {
       return c.addSeries(window.LightweightCharts.CandlestickSeries, options);
     }
-
     if (c.addCandlestickSeries) return c.addCandlestickSeries(options);
     throw new Error("Lightweight Charts candlestick API bulunamadı");
   }
 
   function ensureChart() {
     const box = ensureContainer();
-    if (!box || !window.LightweightCharts) return null;
+    if (!box) return null;
 
-    if (chart && candleSeries) return { chart, candleSeries };
+    if (!window.LightweightCharts) {
+      box.innerHTML = '<div style="padding:32px;color:#f97316;font-weight:900">Grafik kütüphanesi yüklenemedi.</div>';
+      return null;
+    }
+
+    if (chart && candleSeries) {
+      setTimeout(() => chart.applyOptions({ width: box.clientWidth || 1200, height: box.clientHeight || 520 }), 0);
+      return { chart, candleSeries };
+    }
 
     box.innerHTML = "";
     chart = window.LightweightCharts.createChart(box, {
@@ -228,7 +240,10 @@
     candleSeries = createSeries(chart);
 
     if (resizeObserver) resizeObserver.disconnect();
-    resizeObserver = new ResizeObserver(() => chart.applyOptions({ width: box.clientWidth || 1200, height: box.clientHeight || 520 }));
+    resizeObserver = new ResizeObserver(() => {
+      if (!chart || !box) return;
+      chart.applyOptions({ width: box.clientWidth || 1200, height: box.clientHeight || 520 });
+    });
     resizeObserver.observe(box);
 
     box.addEventListener("dblclick", () => {
@@ -296,7 +311,7 @@
       change.className = pct >= 0 ? "up" : "down";
     }
 
-    if (cap) cap.textContent = "Mouse wheel zoom · sağ fiyat ekseni ölçekleme · sürükle/pan · çift tıkla sıfırla";
+    if (cap) cap.textContent = "TradingView Lightweight Charts · mouse wheel zoom · sağ fiyat ekseni ölçekleme · çift tıkla sıfırla";
     if (status) {
       status.textContent = "CANLI";
       status.className = "terminal-v10-live-dot ok";
@@ -333,7 +348,9 @@
       window._V10_PRICE = rows[rows.length - 1].close;
     } catch (e) {
       const cap = qs("#crypto-v10-caption");
+      const box = ensureContainer();
       if (cap) cap.textContent = e.message || "Grafik verisi alınamadı.";
+      if (box && !candleSeries) box.innerHTML = `<div style="padding:32px;color:#f97316;font-weight:900">${e.message || "Grafik verisi alınamadı."}</div>`;
       if (status) {
         status.textContent = "VERİ HATASI";
         status.className = "terminal-v10-live-dot err";
@@ -360,17 +377,25 @@
   window.omega_TVRefreshCryptoChart = refresh;
 
   function boot() {
+    if (!isCryptoVisible()) return;
     buildControls();
+    ensureContainer();
     refresh(true);
   }
 
-  document.addEventListener("DOMContentLoaded", () => setTimeout(boot, 900));
-  window.addEventListener("hashchange", () => { if (location.hash === "#crypto") setTimeout(boot, 300); });
+  // Script body sonunda yüklendiği için bekletmeden başlat.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+
+  window.addEventListener("hashchange", () => { if (location.hash === "#crypto") setTimeout(boot, 80); });
+
   document.addEventListener("change", (e) => {
     if (!isCryptoVisible()) return;
     if (e.target && ["v10-symbol", "v10-quote", "v10-exchange"].includes(e.target.id)) {
-      syncControlsFromNative();
-      setTimeout(() => refresh(true), 80);
+      setTimeout(() => { buildControls(); refresh(true); }, 50);
     }
   });
 })();
