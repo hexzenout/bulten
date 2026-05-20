@@ -317,84 +317,64 @@
                             </div>
                         </div>
 
-                        <div class="finance-card finance-plan-card finance-rebuild-card">
-    <div class="finance-card-head">
-        <div>
-            <h3><i class="fa-solid fa-sliders"></i> Planlayıcı</h3>
-            <span>Bahis ve kripto için ayrı risk planı</span>
-        </div>
-    </div>
+                        <div class="finance-card finance-plan-card">
+                            <div class="finance-card-head">
+                                <div><h3><i class="fa-solid fa-sliders"></i> Basit Kasa Planı</h3><span>Önce hesapla, sonra tabloya uygula</span></div>
+                            </div>
+                            <div class="finance-card-body">
+                                <div class="finance-tabs">
+                                    <button class="finance-tab active" id="finance-tab-bet" onclick="omega_SetFinanceMode('bet')"><i class="fa-solid fa-ticket"></i> BAHİS</button>
+                                    <button class="finance-tab" id="finance-tab-crypto" onclick="omega_SetFinanceMode('crypto')"><i class="fa-brands fa-bitcoin"></i> KRİPTO</button>
+                                </div>
 
-    <div class="finance-card-body">
-        <div class="finance-tabs finance-rebuild-tabs">
-            <button type="button" class="finance-tab active" id="finance-tab-bet" onclick="omega_SetFinanceMode('bet')">
-                <i class="fa-solid fa-ticket"></i> BAHİS PLANI
-            </button>
-            <button type="button" class="finance-tab" id="finance-tab-crypto" onclick="omega_SetFinanceMode('crypto')">
-                <i class="fa-brands fa-bitcoin"></i> KRİPTO RİSK
-            </button>
-        </div>
+                                <div class="finance-tab-panel active" id="finance-panel-bet">
+                                    <div class="simple-plan-grid">
+                                        <div class="finance-field"><label>Güncel Kasa</label><input id="finance-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankroll()"></div>
+                                        <div class="finance-field"><label>Kasayı Kaça Böleyim?</label><input id="finance-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <div class="finance-field"><label>Günde Kaç İşlem?</label><input id="finance-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <div class="finance-field"><label>Oran</label><input id="finance-default-odds" class="finance-input" type="number" value="1.30" step="0.01" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <div class="finance-field"><label>Günlük Hedef %</label><input id="finance-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateFinanceSettings()"></div>
+                                        <input id="finance-start-bank" type="hidden" value="100">
+                                        <select id="finance-risk-model" style="display:none"><option value="split" selected>Kasayı böl</option></select>
+                                    </div>
+                                </div>
 
-        <div class="finance-tab-panel active" id="finance-panel-bet">
-            <div class="finance-mode-title bet">
-                <div>
-                    <b>BAHİS PLANI</b>
-                    <span>Oran, kupon stake ve günlük hedef hesabı</span>
-                </div>
-                <i class="fa-solid fa-ticket"></i>
-            </div>
+                                <div class="finance-tab-panel" id="finance-panel-crypto">
+                                    <div class="simple-plan-grid">
+                                        <div class="finance-field"><label>Güncel Kasa</label><input id="crypto-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankrollFromCrypto()"></div>
+                                        <div class="finance-field"><label>Kasayı Kaça Böleyim?</label><input id="crypto-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Günde Kaç İşlem?</label><input id="crypto-trade-count" class="finance-input" type="number" value="20" min="1" max="20" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Kâr Al %</label><input id="crypto-tp-pct" class="finance-input" type="number" value="1" step="0.1" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Kaldıraç</label><input id="crypto-leverage" class="finance-input" type="number" value="10" step="1" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Günlük Hedef %</label><input id="crypto-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Borsa</label><select id="crypto-default-exchange" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="binance">Binance</option><option value="okx">OKX</option></select></div>
+                                        <div class="finance-field"><label>Parite</label><select id="crypto-default-quote" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="USDT">USDT</option><option value="USDC">USDC</option></select></div>
+                                        <div class="finance-field"><label>Varsayılan Coin</label><input id="crypto-default-symbol" list="crypto-symbol-list" class="finance-input" value="BTC" placeholder="BTC, ETH, SOL..." onchange="omega_UpdateCryptoSettings()"></div>
+                                        <div class="finance-field"><label>Yön</label><select id="crypto-default-side" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="long">LONG</option><option value="short">SHORT</option></select></div>
+                                        <input id="crypto-start-bank" type="hidden" value="100">
+                                    </div>
+                                    <datalist id="crypto-symbol-list"></datalist>
+                                    <div class="crypto-plan-note">Satırda coin sembolünü manuel yazabilirsin. Örnek: BTC, ETH, SOL, PEPE. Sistem seçtiğin borsaya ve USDT/USDC paritesine göre canlı fiyat + mini grafik çeker.</div>
+                                </div>
 
-            <div class="simple-plan-grid finance-rebuild-grid">
-                <div class="finance-field"><label>Kasa</label><input id="finance-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankroll()"></div>
-                <div class="finance-field"><label>Kasayı kaç kupona böleyim?</label><input id="finance-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateFinanceSettings()"></div>
-                <div class="finance-field"><label>Günlük bahis sayısı</label><input id="finance-trade-count" class="finance-input" type="number" value="20" min="1" max="50" onchange="omega_UpdateFinanceSettings()"></div>
-                <div class="finance-field"><label>Alınan oran</label><input id="finance-default-odds" class="finance-input" type="number" value="1.30" step="0.01" onchange="omega_UpdateFinanceSettings()"></div>
-                <div class="finance-field wide"><label>Günlük hedef %</label><input id="finance-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateFinanceSettings()"></div>
-                <input id="finance-start-bank" type="hidden" value="100">
-                <select id="finance-risk-model" style="display:none"><option value="split" selected>Kasayı böl</option></select>
-            </div>
-        </div>
+                                <div class="plan-summary-clean" id="finance-strategy-result">
+                                    <div class="plan-metric main"><span>Önerilen Tutar</span><b>$0.00</b></div>
+                                    <div class="plan-metric"><span>İşlem Başı Kâr</span><b>$0.00</b></div>
+                                    <div class="plan-metric"><span>Günlük Hedef</span><b>$0.00</b></div>
+                                    <div class="plan-metric good"><span>Model</span><b>Hazır</b></div>
+                                </div>
 
-        <div class="finance-tab-panel" id="finance-panel-crypto">
-            <div class="finance-mode-title crypto">
-                <div>
-                    <b>KRİPTO RİSK</b>
-                    <span>Coin, yön, kaldıraç ve risk dağılımı</span>
-                </div>
-                <i class="fa-brands fa-bitcoin"></i>
-            </div>
+                                <div class="finance-actions">
+                                    <button class="btn-finance gold" onclick="omega_CalculateStakePlan()">HESAPLA</button>
+                                    <button class="btn-finance green" onclick="omega_ApplyStakeToEmptySlots()">20 ALANA UYGULA</button>
+                                    <button class="btn-finance" onclick="omega_ClearTodaySlots()">GÜNÜ TEMİZLE</button>
+                                    <button class="btn-finance red" onclick="omega_ResetFinanceAll()">SIFIRLA</button>
+                                </div>
+                                <div class="simple-plan-help">Not: “20 alana uygula” kazandı/kaybetti olarak kapanmamış bütün satırlara önerilen tutarı yazar. Maç, coin veya işlem notunu günlük tabloda “İşlem / Not” alanına yazabilirsin.</div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="simple-plan-grid finance-rebuild-grid">
-                <div class="finance-field"><label>Kasa</label><input id="crypto-current-bank" class="finance-input" type="number" value="100" onchange="omega_SetCurrentBankrollFromCrypto()"></div>
-                <div class="finance-field"><label>Risk dağılımı</label><input id="crypto-split-count" class="finance-input" type="number" value="20" min="1" max="100" onchange="omega_UpdateCryptoSettings()"></div>
-                <div class="finance-field"><label>Günlük işlem sayısı</label><input id="crypto-trade-count" class="finance-input" type="number" value="20" min="1" max="50" onchange="omega_UpdateCryptoSettings()"></div>
-                <div class="finance-field"><label>Kâr al hedefi %</label><input id="crypto-tp-pct" class="finance-input" type="number" value="1" step="0.1" onchange="omega_UpdateCryptoSettings()"></div>
-                <div class="finance-field"><label>Kaldıraç</label><input id="crypto-leverage" class="finance-input" type="number" value="10" step="1" onchange="omega_UpdateCryptoSettings()"></div>
-                <div class="finance-field"><label>Günlük hedef %</label><input id="crypto-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateCryptoSettings()"></div>
-                <div class="finance-field"><label>Borsa</label><select id="crypto-default-exchange" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="binance">Binance</option><option value="okx">OKX</option></select></div>
-                <div class="finance-field"><label>Parite</label><select id="crypto-default-quote" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="USDT">USDT</option><option value="USDC">USDC</option></select></div>
-                <div class="finance-field"><label>Alınan işlem / Coin</label><input id="crypto-default-symbol" list="crypto-symbol-list" class="finance-input" value="BTC" placeholder="BTC, ETH, SOL..." onchange="omega_UpdateCryptoSettings()"></div>
-                <div class="finance-field"><label>Yön</label><select id="crypto-default-side" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="long">LONG</option><option value="short">SHORT</option></select></div>
-                <input id="crypto-start-bank" type="hidden" value="100">
-            </div>
-            <datalist id="crypto-symbol-list"></datalist>
-        </div>
-
-        <div class="plan-summary-clean finance-rebuild-summary" id="finance-strategy-result">
-            <div class="plan-metric main"><span>Önerilen Tutar</span><b>$0.00</b></div>
-            <div class="plan-metric"><span>İşlem Başı Kâr</span><b>$0.00</b></div>
-            <div class="plan-metric"><span>Günlük Hedef</span><b>$0.00</b></div>
-            <div class="plan-metric good"><span>Model</span><b>Hazır</b></div>
-        </div>
-
-        <div class="finance-actions finance-rebuild-actions">
-            <button class="btn-finance gold" onclick="omega_CalculateStakePlan()">HESAPLA</button>
-            <button class="btn-finance green" onclick="omega_ApplyStakeToEmptySlots()">ALANLARA UYGULA</button>
-            <button class="btn-finance" onclick="omega_ClearTodaySlots()">GÜNÜ TEMİZLE</button>
-            <button class="btn-finance red" onclick="omega_ResetFinanceAll()">SIFIRLA</button>
-        </div>
-    </div>
-</div>
 
                     <div class="finance-card finance-live-center">
                         <div class="finance-card-head">
@@ -512,6 +492,7 @@
 <script src="assets/js/crypto-tv-chart.js"></script>
 <script src="assets/js/v31-cleanup.js"></script>
 <script src="assets/js/v32-professional.js"></script>
+
 <script src="assets/js/v30-runtime.js"></script>
 <script src="assets/js/v30-healthcheck.js"></script>
 </body>
