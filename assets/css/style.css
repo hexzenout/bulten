@@ -1828,86 +1828,49 @@ body.v36-fast-mode .controls-wrapper {
 }
 
 /* ===============================
-   V32.2 FINANCE + ROLLING REPAIR
-   Kasa planı iki ayrı başlık, rolling bozulmadan büyütülmüş profesyonel düzen.
+   V33 FINANCE REBUILD
+   Kasa yönetimi ve rolling gerçek dosyalardan toparlandı.
 ================================ */
 
-/* Kasa planlayıcı ana görünüm */
-.finance-plan-card .finance-card-head h3 {
+.finance-rebuild-card .finance-card-head h3 {
     color: #fbbf24 !important;
     letter-spacing: .5px;
 }
 
-.finance-plan-card .finance-card-head span {
-    color: #a5a5a5 !important;
-}
-
-.finance-tabs {
+.finance-rebuild-tabs {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 12px !important;
     padding: 8px !important;
-    background: #050505 !important;
-    border: 1px solid #262626 !important;
+    border: 1px solid #292929 !important;
     border-radius: 14px !important;
+    background: #050505 !important;
     margin-bottom: 16px !important;
 }
 
-.finance-tabs .finance-tab {
-    min-height: 48px !important;
+.finance-rebuild-tabs .finance-tab {
+    min-height: 50px !important;
     border-radius: 11px !important;
-    background: #151515 !important;
-    color: #e9e9e9 !important;
     border: 1px solid #303030 !important;
+    background: #151515 !important;
+    color: #aaa !important;
     font-weight: 950 !important;
-    letter-spacing: .6px !important;
-    box-shadow: none !important;
+    letter-spacing: .7px !important;
     transform: none !important;
+    box-shadow: none !important;
 }
 
-.finance-tabs .finance-tab:not(.active) {
-    background: #111 !important;
-    color: #9f9f9f !important;
-}
-
-#finance-tab-bet.active {
+.finance-rebuild-tabs #finance-tab-bet.active {
     background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
     border-color: #fbbf24 !important;
-    color: #120b00 !important;
+    color: #111 !important;
 }
 
-#finance-tab-crypto.active {
+.finance-rebuild-tabs #finance-tab-crypto.active {
     background: linear-gradient(135deg, #60a5fa, #2563eb) !important;
     border-color: #60a5fa !important;
     color: #020817 !important;
 }
-
-.v322-plan-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 14px;
-    margin: 0 0 14px;
-    border: 1px solid #2c2c2c;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #111, #070707);
-}
-
-.v322-plan-title b {
-    font-size: 1rem;
-    font-weight: 950;
-    letter-spacing: .7px;
-}
-
-.v322-plan-title span {
-    color: #aaa;
-    font-size: .78rem;
-    font-weight: 800;
-}
-
-#finance-panel-bet .v322-plan-title b { color: #fbbf24; }
-#finance-panel-crypto .v322-plan-title b { color: #60a5fa; }
 
 .finance-tab-panel {
     display: none !important;
@@ -1917,37 +1880,74 @@ body.v36-fast-mode .controls-wrapper {
     display: block !important;
 }
 
-.finance-tab-panel .simple-plan-grid {
+.finance-mode-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    border: 1px solid #2b2b2b;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #101010, #070707);
+    margin-bottom: 14px;
+}
+
+.finance-mode-title b {
+    display: block;
+    font-size: 1rem;
+    font-weight: 950;
+    letter-spacing: .7px;
+}
+
+.finance-mode-title span {
+    display: block;
+    color: #aaa;
+    font-size: .78rem;
+    font-weight: 800;
+    margin-top: 4px;
+}
+
+.finance-mode-title.bet b,
+.finance-mode-title.bet i { color: #fbbf24; }
+
+.finance-mode-title.crypto b,
+.finance-mode-title.crypto i { color: #60a5fa; }
+
+.finance-rebuild-grid {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 13px !important;
 }
 
-.finance-field {
-    border: 1px solid #2c2c2c !important;
-    background: linear-gradient(180deg, #101010, #070707) !important;
-    border-radius: 14px !important;
+.finance-rebuild-grid .finance-field {
     padding: 13px !important;
+    border: 1px solid #2d2d2d !important;
+    border-radius: 14px !important;
+    background: linear-gradient(180deg, #101010, #070707) !important;
 }
 
-.finance-field label {
+.finance-rebuild-grid .finance-field.wide {
+    grid-column: span 2;
+}
+
+.finance-rebuild-grid .finance-field label {
     display: block !important;
-    color: #b1b1b1 !important;
+    color: #b2b2b2 !important;
     font-size: .72rem !important;
     font-weight: 950 !important;
     text-transform: uppercase !important;
-    letter-spacing: .75px !important;
+    letter-spacing: .8px !important;
     margin-bottom: 8px !important;
 }
 
-.finance-field input,
-.finance-field select,
-.finance-input,
-.finance-select {
+.finance-rebuild-grid .finance-input,
+.finance-rebuild-grid .finance-select,
+.finance-rebuild-grid input,
+.finance-rebuild-grid select {
     width: 100% !important;
     min-height: 44px !important;
     background: #050505 !important;
-    border: 1px solid #383838 !important;
+    border: 1px solid #3a3a3a !important;
     border-radius: 10px !important;
     color: #fff !important;
     padding: 0 12px !important;
@@ -1957,62 +1957,58 @@ body.v36-fast-mode .controls-wrapper {
     outline: none !important;
 }
 
-.finance-field input:focus,
-.finance-field select:focus,
-.finance-input:focus,
-.finance-select:focus {
+.finance-rebuild-grid input:focus,
+.finance-rebuild-grid select:focus {
     border-color: #fbbf24 !important;
-    box-shadow: 0 0 0 3px rgba(251,191,36,.12) !important;
+    box-shadow: 0 0 0 3px rgba(251,191,36,.13) !important;
 }
 
-#finance-panel-crypto .finance-field input:focus,
-#finance-panel-crypto .finance-field select:focus {
+#finance-panel-crypto .finance-rebuild-grid input:focus,
+#finance-panel-crypto .finance-rebuild-grid select:focus {
     border-color: #60a5fa !important;
     box-shadow: 0 0 0 3px rgba(96,165,250,.13) !important;
 }
 
-.plan-summary-clean {
+.finance-rebuild-summary {
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 12px !important;
     margin-top: 14px !important;
 }
 
-.plan-metric {
+.finance-rebuild-summary .plan-metric {
     min-height: 82px !important;
     padding: 13px !important;
-    border-radius: 14px !important;
     border: 1px solid #2e2e2e !important;
+    border-radius: 14px !important;
     background: linear-gradient(180deg, #101010, #070707) !important;
 }
 
-.plan-metric span {
-    color: #9d9d9d !important;
+.finance-rebuild-summary .plan-metric span {
+    color: #999 !important;
     font-size: .72rem !important;
-    letter-spacing: .8px !important;
     font-weight: 950 !important;
-    text-transform: uppercase !important;
+    letter-spacing: .8px !important;
 }
 
-.plan-metric b {
+.finance-rebuild-summary .plan-metric b {
     display: block;
     margin-top: 8px;
-    font-size: 1.25rem !important;
     font-family: 'JetBrains Mono', monospace !important;
+    font-size: 1.25rem !important;
 }
 
-.finance-actions {
+.finance-rebuild-actions {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 10px !important;
     margin-top: 14px !important;
 }
 
-.finance-actions .btn-finance {
+.finance-rebuild-actions .btn-finance {
     min-height: 46px !important;
     border-radius: 11px !important;
     font-weight: 950 !important;
-    letter-spacing: .6px !important;
 }
 
 .simple-plan-help,
@@ -2020,39 +2016,16 @@ body.v36-fast-mode .controls-wrapper {
     display: none !important;
 }
 
-/* Bakiye grafiği sade/pro görünüm */
-.balance-chart-wrap {
-    min-height: 330px;
-}
-
-#omega-apex-chart-main:empty::before {
-    content: "Henüz bakiye geçmişi yok. İşlem kapandıkça kasa eğrisi burada oluşacak.";
-    display: grid;
-    place-items: center;
-    min-height: 260px;
-    color: #a1a1a1;
-    border: 1px dashed #303030;
-    border-radius: 14px;
-    background: #050505;
-    text-align: center;
-    padding: 20px;
-    font-weight: 850;
-}
-
-/* Rolling: bozulmadan büyütülmüş kartlar */
-#rolling-excel-overlay .modal-body-wrapper {
-    padding: 18px !important;
-}
-
-.rolling-toolbar-v322 {
+/* Rolling repaired and controlled size */
+.rolling-toolbar-rebuild {
     display: flex;
-    gap: 12px;
     flex-wrap: wrap;
+    gap: 12px;
     padding: 12px 0 18px;
 }
 
-.rolling-toolbar-v322 button,
-.day-tools-v322 button {
+.rolling-toolbar-rebuild button,
+.rolling-day-tools button {
     min-height: 38px;
     padding: 0 13px;
     border-radius: 10px;
@@ -2063,33 +2036,32 @@ body.v36-fast-mode .controls-wrapper {
     cursor: pointer;
 }
 
-.rolling-toolbar-v322 .gold,
-.day-tools-v322 .gold {
+.rolling-toolbar-rebuild .gold,
+.rolling-day-tools .gold {
     background: #fbbf24;
     border-color: #fbbf24;
     color: #111;
 }
 
-.day-row-capsule.v322 {
-    display: grid;
-    grid-template-columns: 135px 1fr 120px;
-    gap: 15px;
-    align-items: stretch;
-    padding: 16px;
-    border: 1px solid #292929;
-    border-radius: 16px;
-    background: #0b0b0b;
-    margin-bottom: 15px;
+.rolling-rebuild-day {
+    display: grid !important;
+    grid-template-columns: 135px 1fr 120px !important;
+    gap: 15px !important;
+    align-items: stretch !important;
+    padding: 16px !important;
+    border: 1px solid #292929 !important;
+    border-radius: 16px !important;
+    background: #0b0b0b !important;
+    margin-bottom: 15px !important;
 }
 
-.day-info-v322 h3 {
-    color: #fbbf24;
-    font-size: 1.12rem;
-    margin: 0 0 8px;
-    letter-spacing: .8px;
+.rolling-rebuild-info h3 {
+    color: #fbbf24 !important;
+    font-size: 1.12rem !important;
+    margin: 0 0 8px !important;
 }
 
-.day-info-v322 span {
+.rolling-rebuild-info span {
     display: block;
     color: #aaa;
     font-size: .76rem;
@@ -2097,101 +2069,101 @@ body.v36-fast-mode .controls-wrapper {
     font-weight: 850;
 }
 
-.day-info-v322 b {
+.rolling-rebuild-info b {
     color: #fff;
     font-family: 'JetBrains Mono', monospace;
 }
 
-.day-tools-v322 {
+.rolling-day-tools {
     display: flex;
     flex-direction: column;
     gap: 7px;
     margin-top: 12px;
 }
 
-.capsule-container.v322 {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
-    gap: 12px;
-    align-content: start;
+.rolling-rebuild-capsules {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)) !important;
+    gap: 12px !important;
+    align-content: start !important;
 }
 
-.kapsul.v322 {
+.rolling-rebuild-card {
     position: relative;
-    border: 1px solid #333;
-    border-radius: 14px;
-    background: #101010;
-    padding: 12px;
-    min-height: 145px;
+    min-height: 145px !important;
+    padding: 12px !important;
+    border: 1px solid #333 !important;
+    border-radius: 14px !important;
+    background: #101010 !important;
 }
 
-.kapsul.v322.win {
-    border-color: rgba(16,185,129,.6);
-    background: linear-gradient(180deg, rgba(16,185,129,.12), #0b0b0b);
+.rolling-rebuild-card.win {
+    border-color: rgba(16,185,129,.6) !important;
+    background: linear-gradient(180deg, rgba(16,185,129,.12), #0b0b0b) !important;
 }
 
-.kapsul.v322.loss {
-    border-color: rgba(239,68,68,.6);
-    background: linear-gradient(180deg, rgba(239,68,68,.11), #0b0b0b);
+.rolling-rebuild-card.loss {
+    border-color: rgba(239,68,68,.6) !important;
+    background: linear-gradient(180deg, rgba(239,68,68,.11), #0b0b0b) !important;
 }
 
-.kapsul.v322 input {
-    width: 100%;
-    height: 38px;
-    border: 1px solid #3a3a3a;
-    border-radius: 9px;
-    background: #050505;
-    color: #fff;
-    padding: 0 10px;
-    font-weight: 850;
-    margin-bottom: 8px;
-    outline: none;
+.rolling-rebuild-card input {
+    width: 100% !important;
+    height: 38px !important;
+    border: 1px solid #3a3a3a !important;
+    border-radius: 9px !important;
+    background: #050505 !important;
+    color: #fff !important;
+    padding: 0 10px !important;
+    font-weight: 850 !important;
+    margin-bottom: 8px !important;
+    outline: none !important;
 }
 
-.kapsul.v322 input:focus {
-    border-color: #fbbf24;
-    box-shadow: 0 0 0 3px rgba(251,191,36,.11);
+.rolling-rebuild-card input:focus {
+    border-color: #fbbf24 !important;
+    box-shadow: 0 0 0 3px rgba(251,191,36,.11) !important;
 }
 
-.k-inputs-v322 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+.rolling-rebuild-inputs {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
 }
 
-.k-actions.v322 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 8px;
+.rolling-rebuild-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
 }
 
-.k-actions.v322 button {
-    height: 34px;
-    border: none;
-    border-radius: 8px;
-    font-size: .76rem;
-    font-weight: 950;
-    cursor: pointer;
+.rolling-rebuild-actions button {
+    height: 34px !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-size: .76rem !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
 }
 
-.k-actions.v322 .w { background: #10b981; color: #03130d; }
-.k-actions.v322 .l { background: #ef4444; color: #fff; }
+.rolling-rebuild-actions .w { background: #10b981 !important; color: #03130d !important; }
+.rolling-rebuild-actions .l { background: #ef4444 !important; color: #fff !important; }
 
-.k-undo.v322 {
-    position: absolute;
-    right: 8px;
-    top: 8px;
-    width: 25px;
-    height: 25px;
-    border: none;
-    border-radius: 50%;
-    background: #272727;
-    color: #fff;
-    cursor: pointer;
+.rolling-rebuild-undo {
+    position: absolute !important;
+    right: 8px !important;
+    top: 8px !important;
+    width: 25px !important;
+    height: 25px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background: #272727 !important;
+    color: #fff !important;
+    cursor: pointer !important;
 }
 
-.k-result-v322 {
+.rolling-rebuild-result {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -2199,52 +2171,55 @@ body.v36-fast-mode .controls-wrapper {
     gap: 7px;
 }
 
-.k-result-v322 .k-note-show {
+.rolling-rebuild-result .k-note-show {
     color: #fff;
     font-size: .94rem;
     font-weight: 950;
     padding-right: 28px;
 }
 
-.k-result-v322 b {
+.rolling-rebuild-result b {
     color: #fbbf24;
     font-family: 'JetBrains Mono', monospace;
 }
 
-.k-result-v322 span {
+.rolling-rebuild-result span {
     font-family: 'JetBrains Mono', monospace;
     font-weight: 950;
     font-size: 1.15rem;
 }
 
-.day-result.v322 {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    border-left: 1px solid #272727;
-    padding-left: 12px;
-    color: #fff;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 950;
+.rolling-rebuild-total {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-end !important;
+    border-left: 1px solid #272727 !important;
+    padding-left: 12px !important;
+    color: #fff !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 950 !important;
 }
 
-.day-result.v322 small {
+.rolling-rebuild-total small {
     color: #888;
     font-size: .72rem;
     margin-bottom: 6px;
 }
 
 @media (max-width: 1200px) {
-    .day-row-capsule.v322,
-    .finance-tab-panel .simple-plan-grid,
-    .plan-summary-clean,
-    .finance-actions {
+    .rolling-rebuild-day,
+    .finance-rebuild-grid,
+    .finance-rebuild-summary,
+    .finance-rebuild-actions {
         grid-template-columns: 1fr !important;
     }
-    .day-result.v322 {
-        align-items: flex-start;
-        border-left: none;
-        padding-left: 0;
+    .finance-rebuild-grid .finance-field.wide {
+        grid-column: auto;
+    }
+    .rolling-rebuild-total {
+        align-items: flex-start !important;
+        border-left: none !important;
+        padding-left: 0 !important;
     }
 }
