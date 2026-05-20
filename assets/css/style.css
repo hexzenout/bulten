@@ -1306,3 +1306,80 @@ body.v36-fast-mode .controls-wrapper {
 .m-lay-6 .matrix-unit {
     aspect-ratio: 16 / 10.5 !important;
 }
+
+/* ===============================
+   V31 CLEANUP: CRYPTO REAL CHART + FINANCE TAB FIX
+================================ */
+
+/* Eski işlevsiz grafik süreleri ve çizim paneli gizlendi */
+.crypto-v10-timeframes,
+.crypto-v12-toolbar,
+#drawing-v14-panel,
+#crypto-v12-hint,
+.crypto-v28-tab[data-crypto-panel="draw"],
+.crypto-v28-panel[data-crypto-pane="draw"] {
+    display: none !important;
+}
+
+/* Eski canvas yerine Lightweight Charts alanı */
+#crypto-v10-chart {
+    display: none !important;
+}
+
+#crypto-tv-chart {
+    width: 100%;
+    height: 520px;
+    min-height: 420px;
+    background: #050505;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.crypto-v12-chart-wrap {
+    min-height: 520px;
+    background: #050505;
+}
+
+/* Kripto üst açıklama kalabalığını azalt */
+.crypto-v28-mini-panel span,
+.crypto-v10-chart-caption {
+    color: var(--muted);
+    opacity: .72;
+}
+
+.crypto-v28-mini-panel b {
+    color: #f97316 !important;
+}
+
+/* Finans sekmeleri: aktif buton artık doğru butona geçer */
+.finance-tabs .finance-tab {
+    background: #161616 !important;
+    color: var(--text) !important;
+    border: 1px solid #292929 !important;
+    transition: none !important;
+}
+
+.finance-tabs .finance-tab.active {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+#finance-tab-bet.active {
+    background: var(--gold) !important;
+    border-color: var(--gold) !important;
+    color: #111 !important;
+}
+
+#finance-tab-crypto.active {
+    background: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #06111f !important;
+}
+
+.finance-tab-panel {
+    display: none;
+}
+
+.finance-tab-panel.active {
+    display: block;
+}
