@@ -92,7 +92,8 @@ async function omega_InitializeEngine() {
         });
 
         function omega_SwitchMainTab(targetModule, clickedElement, updateHistory = true) {
-            omega_CloseRollingExcel();
+            const keepRollingOpen = targetModule === 'finance' && /^#finance\/rolling\/\d+/.test(String(location.hash || ''));
+            if (!keepRollingOpen) omega_CloseRollingExcel();
             omega_CloseChannelManager();
 
             const topMenu = document.getElementById('main-dropdown-nav');
