@@ -347,10 +347,20 @@
     }
   }, true);
 
+  function reviveRollingFromHashV39() {
+    const m = String(location.hash || "").match(/^#finance\/rolling\/(\d+)/);
+    if (!m) return;
+    const days = Number(m[1]);
+    if ([7,15,30,60,90].includes(days) && typeof window.omega_OpenRollingExcel === "function") {
+      setTimeout(() => window.omega_OpenRollingExcel(days, true), 60);
+    }
+  }
+
   function boot() {
     prepareCryptoForm();
     renderSoundPanel();
     fixFinanceEmptyState();
+    reviveRollingFromHashV39();
     setTimeout(() => {
       if (location.hash === "#crypto") prepareCryptoForm();
       if (location.hash.startsWith("#finance")) fixFinanceEmptyState();
