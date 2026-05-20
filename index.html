@@ -195,18 +195,12 @@
                                     <select id="v10-exchange"><option value="binance">Binance</option><option value="okx">OKX</option></select>
 
                                     <label>Parite</label>
-                                    <select id="v10-quote"><option value="USDT">USDT</option><option value="USDC">USDC</option></select>
+                                    <select id="v10-quote"><option value="USDT">USDT</option></select>
 
                                     <label>Coin</label>
                                     <input id="v10-symbol" list="crypto-symbol-list" value="BTC" placeholder="BTC, ETH, SOL...">
                                 </div>
-
-                                <div class="crypto-v28-info-grid">
-                                    <div><span>Canlı Fiyat</span><b id="v28-live-price">$-</b></div>
-                                    <div><span>24s Değişim</span><b id="v28-change">0.00%</b></div>
-                                </div>
-
-                                <button class="terminal-v10-btn gold crypto-v28-full-btn" onclick="omega_V10RefreshCrypto(true)">GRAFİĞİ YENİLE</button>
+<button class="terminal-v10-btn gold crypto-v28-full-btn" onclick="omega_V10RefreshCrypto(true)">GRAFİĞİ YENİLE</button>
                             </div>
 
                             <div class="crypto-v28-panel" data-crypto-pane="plan">
@@ -226,6 +220,9 @@
                                     <label>Likidasyon</label>
                                     <input id="v10-liq" type="number" placeholder="Manuel LIQ" step="0.00000001">
 
+                                    <label>2x Kâr Fiyatı</label>
+                                    <input id="v10-2x" type="number" placeholder="Manuel 2x fiyatı" step="0.00000001">
+
                                     <label>Stop</label>
                                     <input id="v10-stop" type="number" placeholder="Stop fiyatı" step="0.00000001">
                                 </div>
@@ -239,7 +236,8 @@
                                 </div>
 
                                 <div class="crypto-v10-actions crypto-v28-two-btns">
-                                    <button class="terminal-v10-btn gold" onclick="omega_V10RefreshCrypto(true)">GRAFİĞİ YENİLE</button>
+                                    <button class="terminal-v10-btn gold" onclick="omega_V36AutoCalcPlan()">OTOMATİK HESAPLA</button>
+                                    <button class="terminal-v10-btn green" onclick="omega_V36ApplyPlanToChart()">GRAFİĞE UYGULA</button>
                                     <button class="terminal-v10-btn" onclick="omega_V10UseLiveAsEntry()">CANLIYI GİRİŞ YAP</button>
                                 </div>
 
@@ -272,11 +270,18 @@
                             </div>
 
                             <div class="crypto-v28-panel" data-crypto-pane="settings">
-                                <div class="crypto-v28-settings-card">
-                                    <b>Terminal Ayarları</b>
-                                    <span>Seçilen borsa, parite, coin ve zaman aralığı tarayıcıda kalıcı saklanır. PWA cache eski dosya tutarsa Ctrl+F5 veya site verilerini temizle.</span>
+                                <div class="crypto-v28-settings-card v36-settings-card">
+                                    <b>Grafik Ayarları</b>
+                                    <span>Varsayılan borsa, zaman aralığı ve çizgi görünümü.</span>
                                 </div>
-                                <button class="terminal-v10-btn red crypto-v28-full-btn" id="v28-reset-crypto-settings">KRİPTO AYARLARINI SIFIRLA</button>
+                                <div class="crypto-v10-form crypto-v28-form">
+                                    <label>Varsayılan Borsa</label>
+                                    <select id="v36-default-exchange"><option value="binance">Binance</option><option value="okx">OKX</option></select>
+                                    <label>Varsayılan Aralık</label>
+                                    <select id="v36-default-tf"><option value="1m">1m</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option></select>
+                                </div>
+                                <button class="terminal-v10-btn crypto-v28-full-btn" onclick="omega_V36SaveCryptoSettings()">AYARLARI KAYDET</button>
+                                <button class="terminal-v10-btn red crypto-v28-full-btn" onclick="omega_V36ClearChartLines()">GRAFİK ÇİZGİLERİNİ TEMİZLE</button>
                             </div>
                         </div>
                     </div>
@@ -355,7 +360,7 @@
                                         <div class="finance-field"><label>Kaldıraç</label><input id="crypto-leverage" class="finance-input" type="number" value="10" step="1" onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>Günlük Hedef %</label><input id="crypto-target-pct" class="finance-input" type="number" value="30" onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>Borsa</label><select id="crypto-default-exchange" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="binance">Binance</option><option value="okx">OKX</option></select></div>
-                                        <div class="finance-field"><label>Parite</label><select id="crypto-default-quote" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="USDT">USDT</option><option value="USDC">USDC</option></select></div>
+                                        <div class="finance-field"><label>Parite</label><select id="crypto-default-quote" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="USDT">USDT</option></select></div>
                                         <div class="finance-field"><label>Alınan işlem / Coin</label><input id="crypto-default-symbol" list="crypto-symbol-list" class="finance-input" value="BTC" placeholder="BTC, ETH, SOL..." onchange="omega_UpdateCryptoSettings()"></div>
                                         <div class="finance-field"><label>Yön</label><select id="crypto-default-side" class="finance-select" onchange="omega_UpdateCryptoSettings()"><option value="long">LONG</option><option value="short">SHORT</option></select></div>
                                         <input id="crypto-start-bank" type="hidden" value="100">
