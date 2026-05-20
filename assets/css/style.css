@@ -3443,3 +3443,296 @@ html.rolling-hash-boot body::before {
         min-width: 0 !important;
     }
 }
+
+/* ===============================
+   V44 FINANCE LAYOUT REAL SPLIT + SOUND PLAY FIX
+   Kasa yönetimi çökmesini düzeltir; bahis/kripto rolling sol menüsü ve ses testi.
+================================ */
+
+/* V43'te grid'e çevrilen ana finance wrapper içeriği daraltıyordu. Ana içerik tekrar tam genişlik. */
+.fin-terminal-wrapper {
+    width: min(1580px, calc(100% - 28px)) !important;
+    margin: 0 auto !important;
+}
+
+.fin-terminal-wrapper.active {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+    position: relative !important;
+    padding-left: 198px !important;
+    box-sizing: border-box !important;
+}
+
+.fin-terminal-wrapper.active > *:not(.finance-left-rail) {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.finance-clean-hero,
+.finance-kpi-row,
+.finance-main-grid,
+.finance-secondary-grid,
+.finance-card,
+.trade-table-wrap {
+    min-width: 0 !important;
+}
+
+.finance-left-rail {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 180px !important;
+    max-width: 180px !important;
+    display: grid !important;
+    gap: 11px !important;
+    padding: 10px !important;
+    border: 1px solid #2b2b2b !important;
+    border-radius: 18px !important;
+    background: #0b0b0b !important;
+    z-index: 5 !important;
+    box-shadow: 0 16px 40px rgba(0,0,0,.25);
+}
+
+.finance-rail-section {
+    display: grid;
+    gap: 7px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #252525;
+}
+
+.finance-rail-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.finance-rail-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 28px;
+    color: #aaa;
+    font-weight: 950;
+    font-size: .72rem;
+    letter-spacing: .7px;
+}
+
+.finance-rail-section.mode-bet .finance-rail-title,
+.finance-rail-section.mode-bet .finance-rail-title i {
+    color: #fbbf24;
+}
+
+.finance-rail-section.mode-crypto .finance-rail-title,
+.finance-rail-section.mode-crypto .finance-rail-title i {
+    color: #60a5fa;
+}
+
+.finance-rail-btn,
+.finance-rolling-rail-selector summary,
+.finance-rolling-rail-menu button {
+    width: 100% !important;
+    min-height: 38px !important;
+    border: 1px solid #303030 !important;
+    border-radius: 10px !important;
+    background: #151515 !important;
+    color: #e5e5e5 !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    letter-spacing: .35px !important;
+    font-size: .68rem !important;
+    text-align: center !important;
+}
+
+.finance-rail-btn.bet.active,
+.finance-rail-btn.bet:hover {
+    background: rgba(251,191,36,.16) !important;
+    border-color: #fbbf24 !important;
+    color: #fbbf24 !important;
+}
+
+.finance-rail-btn.crypto.active,
+.finance-rail-btn.crypto:hover {
+    background: rgba(96,165,250,.15) !important;
+    border-color: #60a5fa !important;
+    color: #60a5fa !important;
+}
+
+.finance-rolling-rail-selector {
+    padding-top: 2px !important;
+}
+
+.finance-rolling-rail-selector summary {
+    list-style: none !important;
+    min-height: 36px !important;
+}
+
+.finance-rolling-rail-selector summary::-webkit-details-marker {
+    display: none !important;
+}
+
+.finance-rolling-rail-selector.bet summary {
+    background: linear-gradient(135deg,#fbbf24,#f59e0b) !important;
+    border-color: #fbbf24 !important;
+    color: #111 !important;
+}
+
+.finance-rolling-rail-selector.crypto summary {
+    background: linear-gradient(135deg,#60a5fa,#2563eb) !important;
+    border-color: #60a5fa !important;
+    color: #06111f !important;
+}
+
+.finance-rolling-rail-menu {
+    display: grid !important;
+    gap: 6px !important;
+    margin-top: 7px !important;
+}
+
+.finance-rolling-rail-menu button {
+    min-height: 32px !important;
+    background: #101010 !important;
+    font-size: .63rem !important;
+}
+
+.finance-rolling-rail-selector.bet .finance-rolling-rail-menu button:hover {
+    border-color: #fbbf24 !important;
+    color: #fbbf24 !important;
+}
+
+.finance-rolling-rail-selector.crypto .finance-rolling-rail-menu button:hover {
+    border-color: #60a5fa !important;
+    color: #60a5fa !important;
+}
+
+/* Alttaki eski rolling kartı kesin gizli. */
+.finance-rolling-launch-card {
+    display: none !important;
+}
+
+/* Bahis/Kripto panelleri gerçek ayrım hissi. */
+.finance-plan-card {
+    border-color: #333 !important;
+}
+
+#finance-panel-bet.active {
+    border-left: 4px solid #fbbf24 !important;
+    padding-left: 10px !important;
+}
+
+#finance-panel-crypto.active {
+    border-left: 4px solid #60a5fa !important;
+    padding-left: 10px !important;
+}
+
+/* Özel ses dosyası: dosya adı tam görünsün, test ve durdurma net olsun. */
+.v32-custom-file-field {
+    grid-column: 1 / -1 !important;
+}
+
+.v32-file-row {
+    display: grid !important;
+    grid-template-columns: 125px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+}
+
+.v32-file-btn {
+    width: 125px !important;
+    min-width: 125px !important;
+}
+
+.v32-file-name {
+    display: block !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    max-height: 74px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    line-height: 1.25 !important;
+    padding: 10px 12px !important;
+    border: 1px solid #333 !important;
+    border-radius: 10px !important;
+    background: #050505 !important;
+    color: #fff !important;
+}
+
+.v32-sound-actions {
+    grid-template-columns: 1fr 1fr 1fr !important;
+}
+
+#v32-sound-stop,
+.v32-sound-actions button.danger {
+    background: rgba(239,68,68,.18) !important;
+    border-color: rgba(239,68,68,.45) !important;
+    color: #fecaca !important;
+}
+
+#v32-sound-stop:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+#v32-sound-test.testing {
+    background: #f97316 !important;
+    border-color: #f97316 !important;
+    color: #111 !important;
+}
+
+/* Rolling kutularına dokunma: sadece sol menü ve ana finance layout. */
+
+@media (max-width: 1280px) {
+    .fin-terminal-wrapper.active {
+        padding-left: 0 !important;
+    }
+
+    .finance-left-rail {
+        position: static !important;
+        width: 100% !important;
+        max-width: none !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+
+    .finance-rail-section {
+        border-bottom: none !important;
+        border-right: 1px solid #252525;
+        padding-right: 10px;
+    }
+
+    .finance-rail-section:last-child {
+        border-right: none;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .finance-left-rail {
+        grid-template-columns: 1fr !important;
+    }
+
+    .finance-rail-section {
+        border-right: none !important;
+        border-bottom: 1px solid #252525 !important;
+        padding-right: 0 !important;
+    }
+
+    .v32-sound-actions,
+    .v32-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
