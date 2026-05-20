@@ -209,24 +209,40 @@ function omega_OpenRollingExcel(days, skipHash = false) {
 
         
         function omega_FinanceRailAction(action) {
-            const financeBlock = document.getElementById('v19-finance-block');
             const smooth = { behavior: 'smooth', block: 'start' };
+
             if(action === 'bet' || action === 'crypto') {
                 omega_SetFinanceMode(action, true);
+                document.querySelectorAll('[data-finance-mode-btn]').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-finance-mode-btn') === action);
+                });
+                if(typeof omega_SetFinanceChartFilter === 'function') omega_SetFinanceChartFilter(action);
                 const plan = document.querySelector('.finance-plan-card');
                 if(plan) plan.scrollIntoView(smooth);
                 return;
             }
+
             if(action === 'chart') {
                 const chart = document.getElementById('omega-apex-chart-main')?.closest('.finance-card');
                 if(chart) chart.scrollIntoView(smooth);
                 return;
             }
+
             if(action === 'daily') {
                 const daily = document.getElementById('daily-trade-grid')?.closest('.finance-card');
                 if(daily) daily.scrollIntoView(smooth);
                 return;
             }
+        }
+
+        function omega_OpenModeRolling(mode, days) {
+            const safeMode = mode === 'crypto' ? 'crypto' : 'bet';
+            omega_SetFinanceMode(safeMode, true);
+            document.querySelectorAll('[data-finance-mode-btn]').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-finance-mode-btn') === safeMode);
+            });
+            localStorage.setItem('finance_rolling_mode', safeMode);
+            omega_OpenRollingExcel(days);
         }
 
 function omega_SetFinanceMode(mode, refresh = true) {
@@ -242,6 +258,7 @@ function omega_SetFinanceMode(mode, refresh = true) {
             const tab = document.getElementById('finance-tab-' + _FINANCE_MODE);
             const panel = document.getElementById('finance-panel-' + _FINANCE_MODE);
             if(tab) { tab.classList.add('active'); tab.setAttribute('aria-selected', 'true'); }
+            document.querySelectorAll('[data-finance-mode-btn]').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-finance-mode-btn') === _FINANCE_MODE));
             if(panel) { panel.classList.add('active'); panel.style.display = 'block'; }
             if(refresh) { omega_SaveFinanceAll(); omega_CalculateStakePlan(); omega_RenderDailyTradeGrid(); }
         }
