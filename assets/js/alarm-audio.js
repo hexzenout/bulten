@@ -1,3 +1,4 @@
+// v43_alarm_audio_blob
 // ===============================
 // V28 ALARM AUDIO MODULE
 // Floating panel yok. Ses ayarları Kripto Pro Panel > Ses sekmesine basılır.
@@ -22,6 +23,61 @@
   let ringTimers = [];
   let ringAudio = null;
   let isRinging = false;
+  let customObjectUrl = "";
+
+  const DB_NAME = "omega_alarm_audio_db";
+  const DB_STORE = "files";
+  const DB_KEY = "custom-audio";
+
+  function openAudioDb() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE);
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function saveCustomFileToDb(file) {
+    const db = await openAudioDb();
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(DB_STORE, "readwrite");
+      tx.objectStore(DB_STORE).put(file, DB_KEY);
+      tx.oncomplete = resolve;
+      tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+    if (customObjectUrl) URL.revokeObjectURL(customObjectUrl);
+    customObjectUrl = URL.createObjectURL(file);
+    settings.customDataUrl = "";
+    settings.customName = file.name;
+    settings.sound = "custom";
+    saveSettings();
+    return { ...settings };
+  }
+
+  async function loadCustomObjectUrlFromDb() {
+    if (customObjectUrl) return customObjectUrl;
+    if (!settings.customName) return "";
+    try {
+      const db = await openAudioDb();
+      const file = await new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, "readonly");
+        const req = tx.objectStore(DB_STORE).get(DB_KEY);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+      db.close();
+      if (!file) return "";
+      customObjectUrl = URL.createObjectURL(file);
+      return customObjectUrl;
+    } catch {
+      return "";
+    }
+  }
 
   function loadSettings() {
     try { return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(STORE_KEY) || "{}") }; }
@@ -109,32 +165,51 @@
   }
 
   function playCustomLoop(durationMs) {
-    if (!settings.customDataUrl) return false;
-
     const start = Math.max(0, Number(settings.customStart || 0));
     const end = Math.max(0, Number(settings.customEnd || 0));
 
-    ringAudio = new Audio(settings.customDataUrl);
-    ringAudio.volume = Math.max(0, Math.min(1, Number(settings.volume || 0.75)));
-    ringAudio.currentTime = start;
+    const playFromSrc = (src) => {
+      if (!src) return false;
 
-    ringAudio.ontimeupdate = () => {
-      if (end > start && ringAudio.currentTime >= end) {
-        ringAudio.currentTime = start;
-        ringAudio.play().catch(() => {});
-      }
+      ringAudio = new Audio(src);
+      ringAudio.volume = Math.max(0, Math.min(1, Number(settings.volume || 0.75)));
+      ringAudio.currentTime = start;
+
+      ringAudio.ontimeupdate = () => {
+        if (end > start && ringAudio.currentTime >= end) {
+          ringAudio.currentTime = start;
+          ringAudio.play().catch(() => {});
+        }
+      };
+
+      ringAudio.onended = () => {
+        if (isRinging) {
+          ringAudio.currentTime = start;
+          ringAudio.play().catch(() => {});
+        }
+      };
+
+      ringAudio.play().catch(() => notify("Özel ses çalamadı. Önce Ses Aç / Test butonunu kullan."));
+      ringTimers.push(setTimeout(stopAlarm, durationMs));
+      return true;
     };
 
-    ringAudio.onended = () => {
-      if (isRinging) {
-        ringAudio.currentTime = start;
-        ringAudio.play().catch(() => {});
-      }
-    };
+    const immediateSrc = customObjectUrl || settings.customDataUrl;
+    if (immediateSrc) return playFromSrc(immediateSrc);
 
-    ringAudio.play().catch(() => notify("Özel ses çalamadı. Önce Ses Aktif / Test butonunu kullan."));
-    ringTimers.push(setTimeout(stopAlarm, durationMs));
-    return true;
+    if (settings.customName) {
+      loadCustomObjectUrlFromDb().then(src => {
+        if (isRinging && src) playFromSrc(src);
+        else if (isRinging) {
+          playBuiltinOnce("digital");
+          notify("Özel ses bulunamadı. Varsayılan ses çalıyor.");
+        }
+      });
+      ringTimers.push(setTimeout(stopAlarm, durationMs));
+      return true;
+    }
+
+    return false;
   }
 
   function playAlarm(message = "Fiyat alarmı tetiklendi.") {
@@ -326,6 +401,7 @@
   }
 
   function boot() {
+    loadCustomObjectUrlFromDb();
     // V37: Görsel ses paneli artık sadece v32-professional.js tarafından çizilir.
     // Bu dosya yalnızca ses çalma, durdurma ve ayar saklama motoru olarak kalır.
     window.addEventListener("v26-alarm-fired", (e) => {
@@ -345,6 +421,12 @@
       updateUI();
     },
     getSettings: () => ({ ...settings }),
+    setCustomFile: async (file) => {
+      const next = await saveCustomFileToDb(file);
+      updateUI();
+      notify("Özel alarm sesi yüklendi: " + file.name);
+      return next;
+    },
     setSettings: (next) => {
       settings = { ...settings, ...next };
       settings.durationSec = Math.max(60, Number(settings.durationSec || 60));
