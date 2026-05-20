@@ -37,61 +37,135 @@ function omega_OpenRollingExcel(days) {
         }
 
         function omega_RenderExcelTable() {
-            const wrapper = document.getElementById('excel-body-content');
-            const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
-            let runningBalance = currentPlan.startBal;
-            let totalProfit = 0;
-            let htmlBuffer = "";
-            for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
-                const dayOps = currentPlan.ops[day] || [];
+    const wrapper = document.getElementById('excel-body-content');
+    const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+    if(!wrapper || !currentPlan) return;
+
+    let runningBalance = Number(currentPlan.startBal || 100);
+    let totalProfit = 0;
+    let htmlBuffer = `
+        <div class="rolling-toolbar-rebuild">
+            <button class="gold" onclick="omega_RollingSetAllSlots(10)">TÜM GÜNLERİ 10 İŞLEM YAP</button>
+            <button onclick="omega_RollingSetAllSlots(20)">TÜM GÜNLERİ 20 İŞLEM YAP</button>
+        </div>
+    `;
+
+    for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
+        if (!currentPlan.ops[day]) currentPlan.ops[day] = new Array(10).fill(null);
+        if (currentPlan.ops[day].length < 1) currentPlan.ops[day] = new Array(1).fill(null);
+
+        const dayOps = currentPlan.ops[day];
+        const dayStart = runningBalance;
+        let dayProfit = 0;
+
+        htmlBuffer += `
+        <div class="day-row-capsule rolling-rebuild-day">
+            <div class="day-info rolling-rebuild-info">
+                <h3>GÜN ${day}</h3>
+                <span>Başlangıç: <b>$${dayStart.toFixed(2)}</b></span>
+                <span class="day-profit">Gün P/L: <b id="day-pl-${day}">$0.00</b></span>
+                <div class="rolling-day-tools">
+                    <button class="gold" onclick="omega_RollingAddSlot(${day})">+ İŞLEM</button>
+                    <button onclick="omega_RollingRemoveSlot(${day})">- SİL</button>
+                    <button onclick="omega_RollingSetDaySlots(${day}, 10)">10</button>
+                    <button onclick="omega_RollingSetDaySlots(${day}, 20)">20</button>
+                    <button onclick="omega_RollingClearDay(${day})">TEMİZLE</button>
+                </div>
+            </div>
+            <div class="capsule-container rolling-rebuild-capsules">`;
+
+        for (let slot = 0; slot < dayOps.length; slot++) {
+            const op = dayOps[slot];
+            if (op) {
+                const amt = Number(op.amt || 0);
+                const odds = Number(op.odds || 0);
+                const pnl = op.res === 'win' ? (amt * odds) - amt : amt;
+                if (op.res === 'win') { runningBalance += pnl; totalProfit += pnl; dayProfit += pnl; }
+                else { runningBalance -= pnl; totalProfit -= pnl; dayProfit -= pnl; }
+
                 htmlBuffer += `
-                <div class="day-row-capsule">
-                    <div class="day-info"><h3>GÜN ${day}</h3><span>Sonuç</span></div>
-                    <div class="capsule-container">`;
-                for (let slot = 0; slot < 10; slot++) {
-                    if (dayOps[slot]) {
-                        const op = dayOps[slot];
-                        const sign = op.res === 'win' ? '+' : '-';
-                        const pnl = op.res === 'win' ? (op.amt * op.odds) - op.amt : op.amt;
-                        if (op.res === 'win') { runningBalance += pnl; totalProfit += pnl; }
-                        else { runningBalance -= pnl; totalProfit -= pnl; }
-                        htmlBuffer += `
-                            <div class="kapsul ${op.res}">
-                                <button class="k-undo" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al"><i class="fa-solid fa-xmark"></i></button>
-                                <div class="k-result">
-                                    <div class="k-note-show">${op.note || 'İşlem notu yok'}</div>
-                                    <b>$${op.amt} x ${op.odds}</b>
-                                    <span>${sign}$${pnl.toFixed(2)}</span>
-                                </div>
-                            </div>`;
-                    } else {
-                        htmlBuffer += `
-                            <div class="kapsul">
-                                <input type="text" class="k-note-input" id="e-n-${day}-${slot}" placeholder="Maç / coin / işlem notu">
-                                <div class="k-inputs">
-                                    <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
-                                    <input type="number" id="e-o-${day}-${slot}" placeholder="Oran / RR">
-                                </div>
-                                <div class="k-actions">
-                                    <button class="k-btn w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">KAZANDI</button>
-                                    <button class="k-btn l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">KAYBETTİ</button>
-                                </div>
-                            </div>`;
-                    }
-                }
-                htmlBuffer += `</div><div class="day-result">$${runningBalance.toFixed(2)}</div></div>`;
+                    <div class="kapsul rolling-rebuild-card ${op.res}">
+                        <button class="k-undo rolling-rebuild-undo" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
+                        <div class="rolling-rebuild-result">
+                            <div class="k-note-show">${op.note || 'İşlem notu yok'}</div>
+                            <b>$${amt} × ${odds}</b>
+                            <span>${op.res === 'win' ? '+' : '-'}$${pnl.toFixed(2)}</span>
+                        </div>
+                    </div>`;
+            } else {
+                htmlBuffer += `
+                    <div class="kapsul rolling-rebuild-card">
+                        <input type="text" class="k-note-input" id="e-n-${day}-${slot}" placeholder="Maç / coin / işlem notu">
+                        <div class="k-inputs rolling-rebuild-inputs">
+                            <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
+                            <input type="number" id="e-o-${day}-${slot}" placeholder="${slot.type === \'crypto\' ? \'R/R\' : \'Alınan oran\'}">
+                        </div>
+                        <div class="k-actions rolling-rebuild-actions">
+                            <button class="k-btn w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">KAZANDI</button>
+                            <button class="k-btn l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">KAYBETTİ</button>
+                        </div>
+                    </div>`;
             }
-            wrapper.innerHTML = htmlBuffer;
-            document.getElementById('excel-current-bal').innerText = `$${runningBalance.toFixed(2)}`;
-            const pnlElement = document.getElementById('excel-pnl');
-            pnlElement.innerText = (totalProfit >= 0 ? "+" : "") + "$" + totalProfit.toFixed(2);
-            pnlElement.style.color = totalProfit >= 0 ? 'var(--green)' : 'var(--red)';
-            const targetBal = currentPlan.targetBal || ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS];
-            const progressPercentage = Math.min((runningBalance / targetBal) * 100, 100);
-            const progressBar = document.getElementById('excel-progress-bar');
-            if(progressBar) progressBar.style.width = progressPercentage + "%";
-            omega_SaveRollingDB();
         }
+
+        htmlBuffer += `</div><div class="day-result rolling-rebuild-total"><small>Gün Sonu</small>$${runningBalance.toFixed(2)}</div></div>`;
+        htmlBuffer = htmlBuffer.replace(`id="day-pl-${day}">$0.00`, `id="day-pl-${day}" style="color:${dayProfit >= 0 ? 'var(--green)' : 'var(--red)'}">${dayProfit >= 0 ? '+' : ''}$${dayProfit.toFixed(2)}`);
+    }
+
+    wrapper.innerHTML = htmlBuffer;
+    document.getElementById('excel-current-bal').innerText = `$${runningBalance.toFixed(2)}`;
+    const pnlElement = document.getElementById('excel-pnl');
+    pnlElement.innerText = (totalProfit >= 0 ? "+" : "") + "$" + totalProfit.toFixed(2);
+    pnlElement.style.color = totalProfit >= 0 ? 'var(--green)' : 'var(--red)';
+    const targetBal = currentPlan.targetBal || ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS];
+    const progressPercentage = Math.min((runningBalance / targetBal) * 100, 100);
+    const progressBar = document.getElementById('excel-progress-bar');
+    if(progressBar) progressBar.style.width = progressPercentage + "%";
+    omega_SaveRollingDB();
+}
+
+function omega_RollingAddSlot(day) {
+    const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    currentPlan.ops[day].push(null);
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+}
+
+function omega_RollingRemoveSlot(day) {
+    const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    if (currentPlan.ops[day].length > 1) currentPlan.ops[day].pop();
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+}
+
+function omega_RollingSetDaySlots(day, count) {
+    const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    const filled = currentPlan.ops[day].filter(Boolean).length;
+    currentPlan.ops[day].length = Math.max(Number(count || 10), filled, 1);
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+}
+
+function omega_RollingSetAllSlots(count) {
+    const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+    for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
+        if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+        const filled = currentPlan.ops[day].filter(Boolean).length;
+        currentPlan.ops[day].length = Math.max(Number(count || 10), filled, 1);
+    }
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+}
+
+function omega_RollingClearDay(day) {
+    const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+    currentPlan.ops[day] = new Array(1).fill(null);
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+}
 
         function omega_ResolveExcelOp(day, slot, result) {
             const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || '').trim();
@@ -505,7 +579,7 @@ function omega_OpenRollingExcel(days) {
             const grid = document.getElementById('daily-trade-grid'); if(!grid) return;
             omega_RenderCryptoSymbolDatalist();
             const slots = omega_GetTodaySlots();
-            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Tür</th><th>İşlem / Not</th><th>Tutar</th><th>Oran / Çarpan</th><th>Canlı Takip</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
+            let html = `<table class="trade-table"><thead><tr><th>#</th><th>Tür</th><th>İşlem / Maç / Coin</th><th>Tutar</th><th>Oran / R/R</th><th>Canlı Takip</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
             slots.forEach((slot, idx) => {
                 const pnl = Number(slot.pnl || 0);
                 const pnlClass = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
