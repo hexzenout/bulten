@@ -4865,3 +4865,250 @@ body.omega-tab-finance #omega-rolling-block {
     color: var(--rolling-purple, #7E22CE) !important;
 }
 
+
+/* ===============================
+   V49.3 ROLLING MENU + MODAL COLORS + LIVE ROUTE + SOUND NOW PLAYING
+   sw.js / pwa.js / index.html değiştirilmedi.
+================================ */
+
+:root {
+    --rolling-purple: #7E22CE;
+    --rolling-purple-soft: rgba(126, 34, 206, .16);
+    --rolling-purple-border: rgba(126, 34, 206, .42);
+    --rolling-gold: #fbbf24;
+    --crypto-blue: #60a5fa;
+    --crypto-orange: #f97316;
+}
+
+/* Canlı takip dahil tüm non-rolling route'larda Rolling sızıntısını kapat. */
+body:not(.omega-tab-rolling) #omega-rolling-block,
+body.omega-tab-live #omega-rolling-block,
+body.omega-tab-crypto #omega-rolling-block,
+body.omega-tab-stream #omega-rolling-block,
+body.omega-tab-finance #omega-rolling-block,
+body.omega-tab-futbol #omega-rolling-block,
+body.omega-tab-basketbol #omega-rolling-block {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Rolling menüsü başlığı: Ana Sayfa gibi altın, hamburger beyaz. */
+.v49-rolling-rail-title,
+.rolling-v48-rail-toggle,
+.rolling-v49-rail-title span,
+.rolling-v48-rail-toggle span {
+    color: var(--rolling-gold) !important;
+    font-weight: 950 !important;
+    letter-spacing: .6px !important;
+}
+
+.v49-rolling-rail-title i,
+.rolling-v48-rail-toggle i {
+    color: #fff !important;
+}
+
+/* Menü altındaki BAHİS / KRİPTO yazıları aynı hizalı ve beyaz. */
+.rolling-v48-rail-tab {
+    justify-content: flex-start !important;
+    min-height: 46px !important;
+    padding: 0 16px !important;
+    gap: 12px !important;
+}
+
+.rolling-v48-rail-tab .rolling-v493-rail-label,
+.rolling-v48-rail-tab.bet .rolling-v493-rail-label,
+.rolling-v48-rail-tab.crypto .rolling-v493-rail-label,
+.rolling-v48-rail-tab.bet span:not(.rolling-v491-bet-icons),
+.rolling-v48-rail-tab.crypto span {
+    color: #fff !important;
+    font-size: .84rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .55px !important;
+    min-width: 70px !important;
+    text-align: left !important;
+}
+
+/* Bahis menüsündeki futbol+basketbol ikonları sol menüdeki gibi kalsın, mor olmasın. */
+.rolling-v491-bet-icons {
+    width: 34px !important;
+    min-width: 34px !important;
+    display: inline-flex !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
+    margin-right: 0 !important;
+}
+
+.rolling-v491-bet-icons i.fa-futbol {
+    color: var(--green) !important;
+}
+
+.rolling-v491-bet-icons i.fa-basketball {
+    color: var(--orange) !important;
+}
+
+/* Kripto logosu, Kripto Terminal yanındaki gibi turuncu. */
+.rolling-v493-crypto-icon,
+.rolling-v48-rail-tab.crypto i,
+.rolling-v47-card.crypto h3 i,
+.rolling-v493-title.crypto i,
+.rolling-v493-fold-title.crypto i {
+    color: var(--crypto-orange) !important;
+}
+
+/* Sağ içerikte BAHİS / KRİPTO ana başlık yazısı beyaz; ikonlar ayrı renkte. */
+.rolling-v493-title.bet span,
+.rolling-v493-title.crypto span,
+.rolling-v47-card.bet h3,
+.rolling-v47-card.crypto h3 {
+    color: #fff !important;
+}
+
+.rolling-v493-title.bet .rolling-v491-bet-icons i.fa-futbol {
+    color: var(--green) !important;
+}
+
+.rolling-v493-title.bet .rolling-v491-bet-icons i.fa-basketball {
+    color: var(--orange) !important;
+}
+
+/* Sağ içerikte Bahis Rolling ve Kombine Kupon Maçları başlıkları beyaz. */
+.rolling-v493-fold-title.bet,
+.rolling-v493-fold-title.bet i,
+.rolling-v493-fold-title.bet span,
+.rolling-v49-fold.bet summary,
+.rolling-v49-fold.bet summary i,
+.rolling-v49-fold.bet summary span {
+    color: #fff !important;
+}
+
+/* Kripto fold başlıkları: yazı beyaz, ikon turuncu/mavi bağlama uygun. */
+.rolling-v493-fold-title.crypto,
+.rolling-v493-fold-title.crypto span,
+.rolling-v49-fold.crypto summary,
+.rolling-v49-fold.crypto summary span {
+    color: #fff !important;
+}
+
+.rolling-v49-fold.crypto summary i {
+    color: var(--crypto-orange) !important;
+}
+
+/* BAHİS ROLLING butonları turuncu, KRİPTO ROLLING butonları mavi. */
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button span,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button {
+    color: var(--crypto-orange) !important;
+}
+
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:hover,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:focus {
+    border-color: var(--crypto-orange) !important;
+    box-shadow: 0 0 0 1px rgba(249,115,22,.25) inset !important;
+}
+
+.rolling-v47-roll-panel.crypto .rolling-v47-roll-buttons button span,
+.rolling-v47-roll-panel.crypto .rolling-v47-roll-buttons button {
+    color: var(--crypto-blue) !important;
+}
+
+.rolling-v47-roll-panel.crypto .rolling-v47-roll-buttons button:hover,
+.rolling-v47-roll-panel.crypto .rolling-v47-roll-buttons button:focus {
+    border-color: var(--crypto-blue) !important;
+    box-shadow: 0 0 0 1px rgba(96,165,250,.25) inset !important;
+}
+
+/* Açılan modal: KRİPTO/BAHİS 7 GÜNLÜK ROLLING başlığı altın sarısı. */
+#rolling-excel-overlay #excel-modal-title,
+#rolling-excel-overlay .excel-title,
+#rolling-excel-overlay h2 {
+    color: var(--rolling-gold) !important;
+}
+
+/* Modal GÜN yazısı: bahis mor, kripto mavi. */
+#rolling-excel-overlay[data-roll-mode="bet"] .day-info h3,
+#rolling-excel-overlay[data-roll-mode="bet"] .day-info-v32 h3 {
+    color: var(--rolling-purple) !important;
+}
+
+#rolling-excel-overlay[data-roll-mode="crypto"] .day-info h3,
+#rolling-excel-overlay[data-roll-mode="crypto"] .day-info-v32 h3 {
+    color: var(--crypto-blue) !important;
+}
+
+/* Modal placeholder netliği. */
+#rolling-excel-overlay .kapsul input::placeholder,
+#rolling-excel-overlay .kapsul.v32 input::placeholder,
+#rolling-excel-overlay .k-note-input::placeholder {
+    color: #e5e5e5 !important;
+    opacity: .98 !important;
+    font-weight: 950 !important;
+}
+
+/* Özel ses: Dosya seç yanındaki alanı müzik çalar gibi yap. */
+.v493-now-playing {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    line-height: 1 !important;
+    padding: 0 13px !important;
+    border: 1px solid rgba(249,115,22,.55) !important;
+    border-radius: 14px !important;
+    background:
+        linear-gradient(90deg, rgba(249,115,22,.14), rgba(0,0,0,.05)),
+        #080808 !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.03) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    white-space: nowrap !important;
+    scrollbar-width: thin !important;
+    cursor: help !important;
+}
+
+.v493-now-playing::before {
+    content: "ŞU AN ÇALAN";
+    flex: 0 0 auto;
+    color: var(--crypto-orange) !important;
+    font-size: .62rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .7px !important;
+    margin-right: 2px !important;
+}
+
+.v493-now-playing i {
+    color: var(--crypto-orange) !important;
+    flex: 0 0 auto !important;
+    animation: v493MusicPulse 1.3s infinite ease-in-out;
+}
+
+.v493-now-playing-text {
+    display: inline-block !important;
+    min-width: max-content !important;
+    color: #fff !important;
+    font-weight: 950 !important;
+    letter-spacing: .2px !important;
+    padding-right: 20px !important;
+}
+
+@keyframes v493MusicPulse {
+    0%, 100% { transform: scale(1); opacity: .75; }
+    50% { transform: scale(1.12); opacity: 1; }
+}
+
+.v493-now-playing::-webkit-scrollbar {
+    height: 7px;
+}
+.v493-now-playing::-webkit-scrollbar-track {
+    background: #050505;
+}
+.v493-now-playing::-webkit-scrollbar-thumb {
+    background: var(--crypto-orange);
+    border-radius: 99px;
+}
+
