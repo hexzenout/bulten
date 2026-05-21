@@ -220,7 +220,8 @@ function omega_OpenRollingExcel(days, skipHash = false) {
         window.addEventListener('hashchange', () => setTimeout(omega_RemoveOldRollingLaunchCard, 60));
         setTimeout(omega_RemoveOldRollingLaunchCard, 300);
 
-function omega_FinanceRailAction(action) {
+
+        function omega_FinanceRailAction(action) {
             const smooth = { behavior: 'smooth', block: 'start' };
 
             if(action === 'bet' || action === 'crypto') {
@@ -256,6 +257,17 @@ function omega_FinanceRailAction(action) {
             localStorage.setItem('finance_rolling_mode', safeMode);
             omega_OpenRollingExcel(days);
         }
+
+        function omega_RemoveOldRollingLaunchCard() {
+            document.querySelectorAll('.finance-rolling-launch-card, .finance-rolling-selector, .finance-rolling-options').forEach(el => {
+                const card = el.closest('.finance-card') || el;
+                if(card && card.parentNode) card.remove();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', omega_RemoveOldRollingLaunchCard);
+        window.addEventListener('hashchange', () => setTimeout(omega_RemoveOldRollingLaunchCard, 50));
+        setTimeout(omega_RemoveOldRollingLaunchCard, 250);
 
 function omega_SetFinanceMode(mode, refresh = true) {
             _FINANCE_MODE = mode === 'crypto' ? 'crypto' : 'bet';
