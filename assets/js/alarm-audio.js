@@ -117,13 +117,14 @@
   }
 
   async function addCustomFile(file) {
-    const okType = !!file && (String(file.type || "").startsWith("audio/") || /\.(mp3|wav|ogg|m4a|aac|flac|webm)$/i.test(file.name || ""));
-    if (!okType) throw new Error("Ses dosyası seç.");
+    const extOk = !!file && /\.(mp3|wav|ogg|m4a|aac|flac|webm)$/i.test(file.name || "");
+    const typeOk = !!file && String(file.type || "").startsWith("audio/");
+    if (!file || !(typeOk || extOk)) throw new Error("Ses dosyası seç.");
     const id = "aud_" + Date.now() + "_" + Math.random().toString(36).slice(2);
     const row = {
       id,
-      name: file.name,
-      type: file.type,
+      name: file.name || "ozel-ses",
+      type: file.type || "audio/mpeg",
       size: file.size,
       createdAt: Date.now(),
       blob: file
@@ -131,9 +132,10 @@
     await dbPut(row);
     settings.sound = "custom";
     settings.enabled = true;
+    settings.volume = 1;
     settings.selectedCustomId = id;
     saveSettings();
-    notify("Özel ses yüklendi: " + file.name);
+    notify("Özel ses yüklendi: " + row.name);
     return row;
   }
 
@@ -203,7 +205,7 @@
     notify("Alarm durduruldu.");
   }
 
-  async async async function playCustomLoop(durationMs) {
+  async function playCustomLoop(durationMs) {
     const src = await getObjectUrl(settings.selectedCustomId);
     if (!src) {
       notify("Seçili özel ses bulunamadı.");
