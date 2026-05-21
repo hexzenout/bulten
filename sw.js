@@ -1,4 +1,4 @@
-const CACHE_NAME = "v28-terminal-cache-v1";
+const CACHE_NAME = "v46a-clean-foundation-cache-v1";
 const CORE_ASSETS = [
   "./",
   "./index.html",
