@@ -34,6 +34,7 @@
     if (!Array.isArray(state.modeSlots.bet)) state.modeSlots.bet = createSlots("bet", 5);
     if (!Array.isArray(state.modeSlots.crypto)) state.modeSlots.crypto = createSlots("crypto", 5);
     if (!state.rowCounts || typeof state.rowCounts !== "object") state.rowCounts = { bet: 5, crypto: 5 };
+    if (!state.quickPlan || typeof state.quickPlan !== "object") state.quickPlan = { start: 100, target: 1000 };
     state.rowCounts.bet = Math.max(1, Math.min(20, Number(state.rowCounts.bet || 5)));
     state.rowCounts.crypto = Math.max(1, Math.min(20, Number(state.rowCounts.crypto || 5)));
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
@@ -128,10 +129,10 @@
     const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
     const pnlHead = isCrypto ? "PNL" : "K/Z";
-    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
+    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
       const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td>${i + 1}</td><td><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Kâr %" : "Oran"}"></td><td>${status}</td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button><button type="button" class="pending" data-mode="${mode}" data-slot="${i}" data-status="pending">BEKLİYOR</button></div></td></tr>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Kâr %" : "Oran"}"></td><td>${status}</td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button><button type="button" class="pending" data-mode="${mode}" data-slot="${i}" data-status="pending">BEKLİYOR</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModePanel(mode, state) {
@@ -188,6 +189,11 @@
             <div><span>Rolling P/L</span><b class="${rollSum.pnlTotal >= 0 ? "pos" : "neg"}">${money(rollSum.pnlTotal)}</b></div>
             <div><span>Toplam</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${money(totalPnl)}</b></div>
           </div>
+          <div class="rolling-v495-quick-plan">
+            <label><span>BAŞLANGIÇ:</span><input type="number" step="1" data-rolling-quick="start" value="${Number(state.quickPlan?.start || 100)}"></label>
+            <label><span>HEDEF:</span><input type="number" step="1" data-rolling-quick="target" value="${Number(state.quickPlan?.target || 1000)}"></label>
+            <label><span>GÜNCEL:</span><b>${money(Number(state.quickPlan?.start || 100) + totalPnl)}</b></label>
+          </div>
         </div>
 
         <div class="rolling-v48-layout v49-rolling-layout">
@@ -214,13 +220,35 @@
       } else state.rowCounts[mode] = Math.max(1, current - 1);
       saveState(state); renderModule();
     }));
-    mount.querySelectorAll("input[data-mode]").forEach(input => input.addEventListener("input", () => {
-      const mode = input.dataset.mode, i = Number(input.dataset.slot), key = input.dataset.key;
+    mount.querySelectorAll("input[data-mode]").forEach(input => {
+      const saveInput = () => {
+        const mode = input.dataset.mode, i = Number(input.dataset.slot), key = input.dataset.key;
+        const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
+        if (!list[i]) list[i] = createSlot(mode, i);
+        list[i][key] = input.value;
+        list[i].type = mode;
+        recalcSlot(list[i]);
+        saveState(state);
+      };
+      input.addEventListener("input", saveInput);
+      input.addEventListener("change", () => { saveInput(); renderModule(); });
+    });
+    mount.querySelectorAll("[data-clear-row]").forEach(btn => btn.addEventListener("click", () => {
+      const [mode, slotRaw] = String(btn.dataset.clearRow || "bet:0").split(":");
+      const i = Number(slotRaw || 0);
       const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
-      if (!list[i]) list[i] = createSlot(mode, i);
-      list[i][key] = input.value; list[i].type = mode; recalcSlot(list[i]); saveState(state);
-      clearTimeout(window.__rollingV48Refresh); window.__rollingV48Refresh = setTimeout(renderModule, 350);
+      list[i] = createSlot(mode, i);
+      saveState(state);
+      renderModule();
     }));
+    mount.querySelectorAll("[data-rolling-quick]").forEach(input => {
+      input.addEventListener("input", () => {
+        state.quickPlan = state.quickPlan || { start: 100, target: 1000 };
+        state.quickPlan[input.dataset.rollingQuick] = Number(input.value || 0);
+        saveState(state);
+      });
+      input.addEventListener("change", () => renderModule());
+    });
     mount.querySelectorAll("button[data-status]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.mode, i = Number(btn.dataset.slot);
       const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
