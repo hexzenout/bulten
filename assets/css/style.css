@@ -5966,3 +5966,216 @@ summary.rolling-v494-combine-title i {
     }
 }
 
+
+/* ===============================
+   V49.9 WIDE CUSTOM SOUND TIMELINE
+   index.html / sw.js / pwa.js değiştirilmedi.
+================================ */
+
+/* V28 sound header sağ açıklaması boşsa alan kaplamasın. */
+.crypto-v28-panel:has(#v28-sound-mount) .crypto-v28-panel-head span,
+.crypto-v28-panel:has(#v28-sound-mount) .crypto-v28-sub,
+.crypto-v28-panel:has(#v28-sound-mount) small {
+    display: none !important;
+}
+
+/* Alarm süresi ve ses seviyesi kaldırıldı; grid tek alana düşer. */
+.v499-sound-grid {
+    grid-template-columns: 1fr !important;
+}
+
+.v499-sound-card .v32-sound-field:has(#v32-duration),
+.v499-sound-card .v32-sound-field:has(#v32-volume),
+.v499-sound-card .v32-sound-field:has(#v32-start),
+.v499-sound-card .v32-sound-field:has(#v32-end),
+.v499-sound-card #v32-duration,
+.v499-sound-card #v32-volume,
+.v499-sound-card #v32-start,
+.v499-sound-card #v32-end {
+    display: none !important;
+}
+
+/* Özel ses player geniş alan. */
+.v499-custom-sound-panel {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    gap: 14px !important;
+}
+
+.v499-custom-select-row {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 92px !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.v499-song-select {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v499-inline-toggle.playing {
+    background: rgba(16,185,129,.18) !important;
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+}
+
+/* Büyük dolum / segment alanı */
+.v499-player-box {
+    display: grid !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 14px !important;
+    border: 1px solid rgba(249,115,22,.34) !important;
+    border-radius: 18px !important;
+    background: linear-gradient(180deg, rgba(249,115,22,.08), rgba(0,0,0,.05)), #070707 !important;
+    box-sizing: border-box !important;
+}
+
+.v499-player-time {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 46px !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.v499-player-time span,
+.v499-player-time strong {
+    color: #fbbf24 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+}
+
+.v499-player-time b {
+    color: #bdbdbd !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v499-timeline {
+    position: relative !important;
+    height: 54px !important;
+    border-radius: 999px !important;
+    background: #111 !important;
+    border: 1px solid #2d2d2d !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.v499-selection-fill {
+    position: absolute !important;
+    top: 18px !important;
+    height: 16px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, rgba(16,185,129,.55), rgba(249,115,22,.65)) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+.v499-timeline input[type="range"] {
+    position: absolute !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: calc(100% - 20px) !important;
+    min-width: 0 !important;
+    background: transparent !important;
+    margin: 0 !important;
+    pointer-events: auto !important;
+}
+
+.v499-progress {
+    top: 16px !important;
+    z-index: 2 !important;
+    accent-color: #f97316 !important;
+}
+
+.v499-seg-range {
+    top: 30px !important;
+    z-index: 3 !important;
+    height: 18px !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+}
+
+.v499-seg-range::-webkit-slider-runnable-track {
+    height: 2px !important;
+    background: transparent !important;
+}
+
+.v499-seg-range::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 17px !important;
+    height: 17px !important;
+    border-radius: 50% !important;
+    border: 2px solid #050505 !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.18) !important;
+    cursor: pointer !important;
+}
+
+.v499-seg-range.start::-webkit-slider-thumb {
+    background: #10b981 !important;
+}
+
+.v499-seg-range.end::-webkit-slider-thumb {
+    background: #f97316 !important;
+}
+
+.v499-seg-range::-moz-range-track {
+    height: 2px !important;
+    background: transparent !important;
+}
+
+.v499-seg-range::-moz-range-thumb {
+    width: 17px !important;
+    height: 17px !important;
+    border-radius: 50% !important;
+    border: 2px solid #050505 !important;
+    cursor: pointer !important;
+}
+
+.v499-seg-range.start::-moz-range-thumb {
+    background: #10b981 !important;
+}
+
+.v499-seg-range.end::-moz-range-thumb {
+    background: #f97316 !important;
+}
+
+#v499-apply-segment {
+    min-height: 42px !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 13px !important;
+    background: #10b981 !important;
+    color: #04120d !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+#v499-apply-segment:hover {
+    filter: brightness(1.08);
+}
+
+/* Dosya seç satırı daha sade ve sığar. */
+.v499-file-row {
+    grid-template-columns: 126px minmax(0, 1fr) !important;
+}
+
+@media (max-width: 900px) {
+    .v499-custom-select-row,
+    .v499-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v499-player-time {
+        grid-template-columns: 42px minmax(0, 1fr) 42px !important;
+    }
+}
+
