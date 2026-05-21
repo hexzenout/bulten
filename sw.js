@@ -1,4 +1,4 @@
-// V46D SERVICE WORKER SELF DESTRUCT
+// V47 SERVICE WORKER SELF DESTRUCT
 self.addEventListener("install", event => self.skipWaiting());
 self.addEventListener("activate", event => {
   event.waitUntil(
