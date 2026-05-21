@@ -32,29 +32,37 @@
     </header>
     <nav class="accordion-menu" id="main-dropdown-nav">
         <div class="nav-container">
-            <div class="nav-link" id="nav-home" onclick="window.location.href='https://hexzenout.github.io/bulten/'">
-                <i class="fa-solid fa-house"></i> ANA SAYFA
+            <div class="nav-link" id="nav-home" onclick="omega_SwitchMainTab('futbol', document.getElementById('nav-futbol'))">
+                <span class="nav-main-label"><i class="fa-solid fa-house"></i> ANA SAYFA</span>
+                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('futbol', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
             </div>
             <div class="nav-link active" id="nav-futbol" onclick="omega_SwitchMainTab('futbol', this)">
-                <i class="fa-solid fa-futbol"></i> FUTBOL
+                <span class="nav-main-label"><i class="fa-solid fa-futbol"></i> FUTBOL</span>
+                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('futbol', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
             </div>
             <div class="nav-link" id="nav-basketbol" onclick="omega_SwitchMainTab('basketbol', this)">
-                <i class="fa-solid fa-basketball"></i> BASKETBOL
+                <span class="nav-main-label"><i class="fa-solid fa-basketball"></i> BASKETBOL</span>
+                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('basketbol', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
             </div>
             <div class="nav-link" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)">
-                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
+                <span class="nav-main-label"><i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN</span>
+                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('stream', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
             </div>
             <div class="nav-link" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
-                <i class="fa-solid fa-star"></i> FAVORİLERİM
+                <span class="nav-main-label"><i class="fa-solid fa-star"></i> FAVORİLERİM</span>
+                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('favs', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
             </div>
             <div class="nav-link" id="nav-live" onclick="omega_SwitchMainTab('live', this)">
-                <i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP
+                <span class="nav-main-label"><i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP</span>
+                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('live', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
             </div>
             <div class="nav-link" id="nav-crypto" onclick="omega_SwitchMainTab('crypto', this)">
-                <i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL
+                <span class="nav-main-label"><i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL</span>
+                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('crypto', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
             </div>
             <div class="nav-link" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
-                <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
+                <span class="nav-main-label"><i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ</span>
+                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('finance', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
             </div>
         </div>
     </nav>
@@ -286,6 +294,7 @@
 
                     
                     
+                    
                     <aside class="finance-left-rolling-rail finance-left-rail">
                         <div class="finance-rail-section mode-bet">
                             <div class="finance-rail-title"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></div>
@@ -469,22 +478,7 @@
                             <div class="finance-card-head"><div><h3><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</h3><span>Son işlemler</span></div></div>
                             <div class="ledger-panel-scroll"><table class="supreme-data-table" id="omega-data-table"></table></div>
                         </div>
-                        <div class="finance-card finance-rolling-launch-card">
-                            <div class="finance-card-head"><div><h3><i class="fa-solid fa-layer-group"></i> Rolling</h3><span>Sol Rolling butonundan hızlı seç</span></div></div>
-                            <div class="finance-card-body">
-                                <details class="finance-rolling-selector">
-                                    <summary><i class="fa-solid fa-chart-line"></i><b>ROLLING SEÇ</b><span>Planı aç</span></summary>
-                                    <div class="finance-rolling-options">
-                                        <button onclick="omega_OpenRollingExcel(7)"><b>7</b><span>GÜN</span></button>
-                                        <button onclick="omega_OpenRollingExcel(15)"><b>15</b><span>GÜN</span></button>
-                                        <button onclick="omega_OpenRollingExcel(30)"><b>30</b><span>GÜN</span></button>
-                                        <button onclick="omega_OpenRollingExcel(60)"><b>60</b><span>GÜN</span></button>
-                                        <button onclick="omega_OpenRollingExcel(90)"><b>90</b><span>GÜN</span></button>
-                                    </div>
-                                </details>
-                            </div>
-                        </div>
-                    </div>
+</div>
                 </div>
 
                 <div id="omega-site-footer" style="margin-top: auto; padding-top: 100px; padding-bottom: 50px; text-align: center; color: var(--border-bright); font-family: 'JetBrains Mono'; font-size: 0.85em; font-weight: 800; letter-spacing: 2px;">
