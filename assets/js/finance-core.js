@@ -63,6 +63,8 @@ function omega_GetRollingModeV46D() {
             const currentPlan = _ROLLING_DB[omega_GetRollingPlanKeyV47(_ACTIVE_EXCEL_DAYS)];
             const rollMode = omega_GetRollingModeV46D();
             const isCrypto = rollMode === 'crypto';
+            const overlay = document.getElementById('rolling-excel-overlay');
+            if (overlay) overlay.setAttribute('data-roll-mode', rollMode);
             let runningBalance = currentPlan.startBal;
             let totalProfit = 0;
             let htmlBuffer = "";
