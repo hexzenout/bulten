@@ -14,6 +14,9 @@
     odds: 1.30,
     targetPct: 30,
     chartFilter: "all",
+    activeView: "home",
+    railCollapsed: false,
+    modeSlots: null,
 
     cryptoRiskPct: 1,
     cryptoLeverage: 10,
@@ -50,6 +53,7 @@
         merged.slots = clone(DEFAULT_STATE.slots);
       }
 
+      if (!merged.activeView) merged.activeView = 'home';
       return merged;
     } catch (e) {
       return clone(DEFAULT_STATE);
@@ -59,6 +63,66 @@
   function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
+
+
+  function createSlots(type = "bet") {
+    return Array.from({ length: 20 }, (_, i) => ({
+      id: i + 1,
+      type,
+      name: "",
+      stake: "",
+      odds: type === "bet" ? "1.30" : "2",
+      status: "pending",
+      pnl: 0
+    }));
+  }
+
+  function ensureModeSlots() {
+    if (!state.modeSlots || typeof state.modeSlots !== "object") {
+      const old = Array.isArray(state.slots) ? state.slots : clone(DEFAULT_STATE.slots);
+      state.modeSlots = {
+        bet: old.map((s, i) => ({ ...createSlots("bet")[i], ...s, type: "bet" })),
+        crypto: createSlots("crypto")
+      };
+    }
+
+    if (!Array.isArray(state.modeSlots.bet) || state.modeSlots.bet.length !== 20) {
+      state.modeSlots.bet = createSlots("bet");
+    }
+
+    if (!Array.isArray(state.modeSlots.crypto) || state.modeSlots.crypto.length !== 20) {
+      state.modeSlots.crypto = createSlots("crypto");
+    }
+
+    state.modeSlots.bet.forEach(s => s.type = "bet");
+    state.modeSlots.crypto.forEach(s => s.type = "crypto");
+  }
+
+  function activeSlots() {
+    ensureModeSlots();
+    return state.mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
+  }
+
+  function setActiveSlots(slots) {
+    ensureModeSlots();
+    if (state.mode === "crypto") state.modeSlots.crypto = slots;
+    else state.modeSlots.bet = slots;
+  }
+
+  function allModeSlots() {
+    ensureModeSlots();
+    return [...state.modeSlots.bet, ...state.modeSlots.crypto];
+  }
+
+  function setView(view, mode = null) {
+    if (mode) state.mode = mode;
+    state.activeView = view;
+    if (view === "betPlan" || view === "betDaily") state.mode = "bet";
+    if (view === "cryptoRisk" || view === "cryptoDaily") state.mode = "crypto";
+    saveState();
+    renderRoot();
+  }
+
 
   function money(v) {
     const n = Number(v || 0);
@@ -878,27 +942,154 @@
         }
       }
 
+
+
+      /* V46D mode split */
+      .v46d-finance-root.rail-collapsed .finance-clean-rail {
+        display: none !important;
+      }
+
+      .v46d-finance-root.rail-collapsed .finance-clean-layout {
+        grid-template-columns: 1fr !important;
+      }
+
+      .finance-mobile-rail-toggle,
+      .finance-clean-rail-top {
+        min-height: 42px;
+        border: 1px solid #333;
+        border-radius: 12px;
+        background: #151515;
+        color: #fff;
+        font-weight: 950;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+      }
+
+      .finance-mobile-rail-toggle {
+        width: 100%;
+        margin-bottom: 10px;
+        display: none;
+      }
+
+      .finance-clean-rail-section summary.finance-clean-rail-title {
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .finance-clean-rail-section summary.finance-clean-rail-title::-webkit-details-marker {
+        display: none;
+      }
+
+      .finance-clean-rail-body {
+        display: grid;
+        gap: 8px;
+      }
+
+      .finance-mode-home {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .finance-mode-card {
+        min-height: 210px;
+        border: 1px solid #2d2d2d;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #151515, #080808);
+        color: #fff;
+        cursor: pointer;
+        padding: 22px;
+        text-align: left;
+        display: grid;
+        align-content: center;
+        gap: 10px;
+        transition: .18s;
+      }
+
+      .finance-mode-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--gold);
+      }
+
+      .finance-mode-card.crypto:hover {
+        border-color: #60a5fa;
+      }
+
+      .finance-mode-card i {
+        font-size: 1.8em;
+        color: var(--gold);
+      }
+
+      .finance-mode-card.crypto i {
+        color: #60a5fa;
+      }
+
+      .finance-mode-card b {
+        font-size: 1.05em;
+        font-weight: 950;
+        letter-spacing: .7px;
+      }
+
+      .finance-mode-card span {
+        color: #aaa;
+        font-weight: 750;
+        line-height: 1.5;
+      }
+
+      .finance-fixed-type {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 72px;
+        min-height: 30px;
+        border-radius: 999px;
+        font-weight: 950;
+        font-size: .72em;
+      }
+
+      .finance-fixed-type.bet {
+        background: rgba(251,191,36,.15);
+        color: #fbbf24;
+      }
+
+      .finance-fixed-type.crypto {
+        background: rgba(96,165,250,.15);
+        color: #60a5fa;
+      }
+
+      @media(max-width: 900px) {
+        .finance-mobile-rail-toggle {
+          display: flex;
+        }
+        .finance-mode-home {
+          grid-template-columns: 1fr;
+        }
+      }
+
     `;
 
     document.head.appendChild(style);
   }
 
   function totalPnl() {
-    return state.slots.reduce((sum, s) => {
+    return activeSlots().reduce((sum, s) => {
       if (s.status === "win" || s.status === "loss") return sum + Number(s.pnl || 0);
       return sum;
     }, 0);
   }
 
   function openRisk() {
-    return state.slots.reduce((sum, s) => {
+    return activeSlots().reduce((sum, s) => {
       if (s.status === "pending" && Number(s.stake) > 0) return sum + Number(s.stake);
       return sum;
     }, 0);
   }
 
   function settledSlots() {
-    return state.slots.filter(s => s.status === "win" || s.status === "loss");
+    return activeSlots().filter(s => s.status === "win" || s.status === "loss");
   }
 
   function winRate() {
@@ -950,64 +1141,90 @@
 
   function renderRoot() {
     injectFinanceStyles();
+    ensureModeSlots();
 
     const root = qs("v19-finance-block");
     if (!root) return;
 
+    const view = state.activeView || "home";
+    const isBetView = view === "betPlan" || view === "betDaily";
+    const isCryptoView = view === "cryptoRisk" || view === "cryptoDaily";
+    const showPlan = view === "betPlan" || view === "cryptoRisk";
+    const showDaily = view === "betDaily" || view === "cryptoDaily";
+    const showChart = isBetView || isCryptoView;
+
+    const modeTitle = state.mode === "crypto" ? "KRİPTO" : "BAHİS";
+    const chartTitle = state.mode === "crypto" ? "Kripto Kasa Eğrisi" : "Bahis Kasa Eğrisi";
+    const chartSub = state.mode === "crypto"
+      ? "Aktif/kapanan kripto işlemlerinden gelen P/L eğrisi."
+      : "Kombine kupon ve bahis sonuçlarından gelen kasa eğrisi.";
+    const dailyTitle = state.mode === "crypto" ? "Aktif Kripto İşlemleri" : "Kombine Kupon Maçları";
+    const dailySub = state.mode === "crypto"
+      ? "Toplu kripto işlemlerini, manuel PNL / kâr yüzdesi ile takip et."
+      : "Kombine kupon maçlarını, tutar ve oranla takip et.";
+
     root.innerHTML = `
-      <div class="finance-clean-root v46c-finance-root">
+      <div class="finance-clean-root v46d-finance-root ${state.railCollapsed ? "rail-collapsed" : ""}">
+        <button class="finance-mobile-rail-toggle" id="finance-rail-toggle">
+          <i class="fa-solid fa-bars"></i><span>KASA MENÜSÜ</span>
+        </button>
+
         <div class="finance-clean-layout">
           <aside class="finance-clean-rail">
-            <div class="finance-clean-rail-section bet">
-              <div class="finance-clean-rail-title"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></div>
-              <button class="finance-clean-rail-btn bet ${state.mode === "bet" ? "active" : ""}" data-fin-action="bet">
-                <i class="fa-solid fa-sliders"></i><span>BAHİS PLANI</span>
-              </button>
-              <details class="finance-clean-rail-roll bet" open>
-                <summary><i class="fa-solid fa-layer-group"></i><span>BAHİS ROLLING</span></summary>
-                <div>
-                  <button data-mode-roll="bet:7">7 GÜN ROLLING</button>
-                  <button data-mode-roll="bet:15">15 GÜN ROLLING</button>
-                  <button data-mode-roll="bet:30">30 GÜN ROLLING</button>
-                  <button data-mode-roll="bet:60">60 GÜN ROLLING</button>
-                  <button data-mode-roll="bet:90">90 GÜN ROLLING</button>
-                </div>
-              </details>
-            </div>
+            <button class="finance-clean-rail-top" data-fin-action="toggleRail">
+              <i class="fa-solid fa-bars"></i><span>KASA MENÜSÜ</span>
+            </button>
 
-            <div class="finance-clean-rail-section crypto">
-              <div class="finance-clean-rail-title"><i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span></div>
-              <button class="finance-clean-rail-btn crypto ${state.mode === "crypto" ? "active" : ""}" data-fin-action="crypto">
-                <i class="fa-solid fa-sliders"></i><span>KRİPTO RİSK</span>
-              </button>
-              <details class="finance-clean-rail-roll crypto" open>
-                <summary><i class="fa-solid fa-layer-group"></i><span>KRİPTO ROLLING</span></summary>
-                <div>
-                  <button data-mode-roll="crypto:7">7 GÜN ROLLING</button>
-                  <button data-mode-roll="crypto:15">15 GÜN ROLLING</button>
-                  <button data-mode-roll="crypto:30">30 GÜN ROLLING</button>
-                  <button data-mode-roll="crypto:60">60 GÜN ROLLING</button>
-                  <button data-mode-roll="crypto:90">90 GÜN ROLLING</button>
-                </div>
-              </details>
-            </div>
+            <details class="finance-clean-rail-section bet" open>
+              <summary class="finance-clean-rail-title"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></summary>
+              <div class="finance-clean-rail-body">
+                <button class="finance-clean-rail-btn bet ${view === "betPlan" ? "active" : ""}" data-fin-action="betPlan">
+                  <i class="fa-solid fa-sliders"></i><span>BAHİS PLANI</span>
+                </button>
+                <details class="finance-clean-rail-roll bet">
+                  <summary><i class="fa-solid fa-layer-group"></i><span>BAHİS ROLLING</span></summary>
+                  <div>
+                    <button data-mode-roll="bet:7">7 GÜN ROLLING</button>
+                    <button data-mode-roll="bet:15">15 GÜN ROLLING</button>
+                    <button data-mode-roll="bet:30">30 GÜN ROLLING</button>
+                    <button data-mode-roll="bet:60">60 GÜN ROLLING</button>
+                    <button data-mode-roll="bet:90">90 GÜN ROLLING</button>
+                  </div>
+                </details>
+                <button class="finance-clean-rail-btn bet ${view === "betDaily" ? "active" : ""}" data-fin-action="betDaily">
+                  <i class="fa-solid fa-table-cells"></i><span>KOMBİNE KUPON MAÇLARI</span>
+                </button>
+              </div>
+            </details>
 
-            <div class="finance-clean-rail-section tools">
-              <div class="finance-clean-rail-title"><i class="fa-solid fa-wallet"></i><span>KASA</span></div>
-              <button class="finance-clean-rail-btn" data-fin-action="chart">
-                <i class="fa-solid fa-chart-line"></i><span>KASA EĞRİSİ</span>
-              </button>
-              <button class="finance-clean-rail-btn" data-fin-action="daily">
-                <i class="fa-solid fa-table-cells"></i><span>GÜNLÜK DEFTER</span>
-              </button>
-            </div>
+            <details class="finance-clean-rail-section crypto" open>
+              <summary class="finance-clean-rail-title"><i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span></summary>
+              <div class="finance-clean-rail-body">
+                <button class="finance-clean-rail-btn crypto ${view === "cryptoRisk" ? "active" : ""}" data-fin-action="cryptoRisk">
+                  <i class="fa-solid fa-sliders"></i><span>KRİPTO RİSK</span>
+                </button>
+                <details class="finance-clean-rail-roll crypto">
+                  <summary><i class="fa-solid fa-layer-group"></i><span>KRİPTO ROLLING</span></summary>
+                  <div>
+                    <button data-mode-roll="crypto:7">7 GÜN ROLLING</button>
+                    <button data-mode-roll="crypto:15">15 GÜN ROLLING</button>
+                    <button data-mode-roll="crypto:30">30 GÜN ROLLING</button>
+                    <button data-mode-roll="crypto:60">60 GÜN ROLLING</button>
+                    <button data-mode-roll="crypto:90">90 GÜN ROLLING</button>
+                  </div>
+                </details>
+                <button class="finance-clean-rail-btn crypto ${view === "cryptoDaily" ? "active" : ""}" data-fin-action="cryptoDaily">
+                  <i class="fa-solid fa-chart-simple"></i><span>AKTİF KRİPTO İŞLEMLERİ</span>
+                </button>
+              </div>
+            </details>
           </aside>
 
           <div class="finance-clean-main">
             <div class="finance-clean-top">
               <div>
                 <h2><i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ</h2>
-                <p>Bahis ve kripto için ayrı plan, kasa eğrisi, günlük işlem defteri ve rolling kayıtları.</p>
+                <p>${view === "home" ? "Bahis veya kripto tarafını seç; sadece ilgili plan, eğri ve işlem defteri açılır." : modeTitle + " modu aktif."}</p>
               </div>
               <div class="finance-clean-balance-box">
                 <span>Güncel Kasa</span>
@@ -1015,92 +1232,100 @@
               </div>
             </div>
 
-            <div class="finance-clean-kpis">
-              <div class="finance-clean-kpi gold"><span>Başlangıç Kasa</span><b id="finance-clean-kpi-bank">$0.00</b></div>
-              <div class="finance-clean-kpi"><span>Günlük P/L</span><b id="finance-clean-kpi-day">$0.00</b></div>
-              <div class="finance-clean-kpi"><span>Toplam P/L</span><b id="finance-clean-kpi-total">$0.00</b></div>
-              <div class="finance-clean-kpi"><span>Açık Risk</span><b id="finance-clean-kpi-risk">$0.00</b></div>
-              <div class="finance-clean-kpi"><span>Winrate</span><b id="finance-clean-kpi-winrate">%0.00</b></div>
-              <div class="finance-clean-kpi"><span>ROI</span><b id="finance-clean-kpi-roi">%0.00</b></div>
-            </div>
-
-            <div class="finance-clean-grid">
-              <div class="finance-clean-card finance-clean-chart-card" id="finance-clean-chart-card">
-                <div class="finance-clean-head finance-clean-chart-head">
-                  <div>
-                    <h3><i class="fa-solid fa-chart-line"></i> Kasa Eğrisi</h3>
-                    <span>Kapattığın bahis/kripto işlemleri kasa performansına dönüşür.</span>
-                  </div>
-                  <div class="finance-clean-chart-filters">
-                    <button class="${(state.chartFilter || "all") === "all" ? "active" : ""}" data-chart-filter="all">TÜMÜ</button>
-                    <button class="${state.chartFilter === "bet" ? "active" : ""}" data-chart-filter="bet">BAHİS</button>
-                    <button class="${state.chartFilter === "crypto" ? "active" : ""}" data-chart-filter="crypto">KRİPTO</button>
-                  </div>
-                </div>
-                <div class="finance-clean-body">
-                  <div class="finance-clean-chart-summary" id="finance-clean-chart-summary"></div>
-                  <div id="finance-clean-chart" class="finance-clean-chart"></div>
-                  <div class="finance-clean-chart-empty" id="finance-clean-chart-empty">
-                    <b>Henüz kapatılmış işlem yok.</b>
-                    <span>Kazandı / Kaybetti dediğin satırlar burada kasa eğrisine dönüşecek.</span>
-                  </div>
-                  <div class="finance-clean-barriers" id="finance-clean-barriers"></div>
-                </div>
+            ${view === "home" ? `
+              <div class="finance-mode-home">
+                <button class="finance-mode-card bet" data-fin-action="betPlan">
+                  <i class="fa-solid fa-ticket"></i>
+                  <b>BAHİS YÖNETİMİ</b>
+                  <span>Bahis planı, kombine kupon maçları, bahis kasa eğrisi ve bahis rolling.</span>
+                </button>
+                <button class="finance-mode-card crypto" data-fin-action="cryptoRisk">
+                  <i class="fa-brands fa-bitcoin"></i>
+                  <b>KRİPTO YÖNETİMİ</b>
+                  <span>Kripto risk planı, aktif kripto işlemleri, P/L eğrisi ve kripto rolling.</span>
+                </button>
+              </div>
+            ` : `
+              <div class="finance-clean-kpis">
+                <div class="finance-clean-kpi gold"><span>Başlangıç Kasa</span><b id="finance-clean-kpi-bank">$0.00</b></div>
+                <div class="finance-clean-kpi"><span>${state.mode === "crypto" ? "Gün P/L" : "Gün K/Z"}</span><b id="finance-clean-kpi-day">$0.00</b></div>
+                <div class="finance-clean-kpi"><span>Toplam P/L</span><b id="finance-clean-kpi-total">$0.00</b></div>
+                <div class="finance-clean-kpi"><span>Açık Risk</span><b id="finance-clean-kpi-risk">$0.00</b></div>
+                <div class="finance-clean-kpi"><span>Winrate</span><b id="finance-clean-kpi-winrate">%0.00</b></div>
+                <div class="finance-clean-kpi"><span>ROI</span><b id="finance-clean-kpi-roi">%0.00</b></div>
               </div>
 
-              <div class="finance-clean-card" id="finance-clean-plan-card">
+              ${showChart ? `
+                <div class="finance-clean-card finance-clean-chart-card" id="finance-clean-chart-card">
+                  <div class="finance-clean-head finance-clean-chart-head">
+                    <div>
+                      <h3><i class="fa-solid fa-chart-line"></i> ${chartTitle}</h3>
+                      <span>${chartSub}</span>
+                    </div>
+                  </div>
+                  <div class="finance-clean-body">
+                    <div class="finance-clean-chart-summary" id="finance-clean-chart-summary"></div>
+                    <div id="finance-clean-chart" class="finance-clean-chart"></div>
+                    <div class="finance-clean-chart-empty" id="finance-clean-chart-empty">
+                      <b>Henüz kapatılmış ${state.mode === "crypto" ? "kripto işlemi" : "bahis kaydı"} yok.</b>
+                      <span>Kazandı/Kaybetti veya Kazanç/Kayıp dediğin satırlar burada kasa eğrisine dönüşecek.</span>
+                    </div>
+                    <div class="finance-clean-barriers" id="finance-clean-barriers"></div>
+                  </div>
+                </div>
+              ` : ""}
+
+              ${showPlan ? `
+                <div class="finance-clean-card" id="finance-clean-plan-card">
+                  <div class="finance-clean-head">
+                    <div>
+                      <h3><i class="fa-solid fa-calculator"></i> ${state.mode === "crypto" ? "Kripto Risk" : "Bahis Planı"}</h3>
+                      <span>${state.mode === "crypto" ? "Risk, kaldıraç, stop ve hedef kâr hesabı." : "Kasa bölme, kupon tutarı, oran ve hedef hesaplama."}</span>
+                    </div>
+                  </div>
+                  <div class="finance-clean-body">
+                    <div id="finance-clean-plan-form"></div>
+                    <div id="finance-clean-plan-result" class="finance-clean-result"></div>
+                    <div class="finance-clean-actions">
+                      <button class="finance-clean-btn gold" id="finance-clean-calc-btn">HESAPLA</button>
+                      <button class="finance-clean-btn green" id="finance-clean-apply-btn">20 ALANA UYGULA</button>
+                      <button class="finance-clean-btn" id="finance-clean-clear-btn">GÜNÜ TEMİZLE</button>
+                      <button class="finance-clean-btn red" id="finance-clean-reset-btn">SIFIRLA</button>
+                    </div>
+                  </div>
+                </div>
+              ` : ""}
+
+              ${showDaily ? `
+                <div class="finance-clean-card" id="finance-clean-daily-card">
+                  <div class="finance-clean-head">
+                    <div>
+                      <h3><i class="fa-solid fa-table-cells"></i> ${dailyTitle}</h3>
+                      <span>${dailySub}</span>
+                    </div>
+                  </div>
+                  <div class="finance-clean-body">
+                    <div id="finance-clean-slots" class="finance-clean-table-wrap"></div>
+                  </div>
+                </div>
+              ` : ""}
+
+              <div class="finance-clean-card finance-clean-data-card">
                 <div class="finance-clean-head">
                   <div>
-                    <h3><i class="fa-solid fa-calculator"></i> Planlayıcı</h3>
-                    <span>Bahis ve kripto için ayrı risk/stake hesabı</span>
+                    <h3><i class="fa-solid fa-database"></i> ${modeTitle} Verisi</h3>
+                    <span>Yedekleme ve hızlı temizlik</span>
                   </div>
                 </div>
                 <div class="finance-clean-body">
-                  <div class="finance-clean-tabs">
-                    <button class="finance-clean-tab bet ${state.mode === "bet" ? "active" : ""}" data-fin-mode="bet">BAHİS PLANI</button>
-                    <button class="finance-clean-tab crypto ${state.mode === "crypto" ? "active" : ""}" data-fin-mode="crypto">KRİPTO RİSK</button>
-                  </div>
-
-                  <div id="finance-clean-plan-form"></div>
-                  <div id="finance-clean-plan-result" class="finance-clean-result"></div>
-
                   <div class="finance-clean-actions">
-                    <button class="finance-clean-btn gold" id="finance-clean-calc-btn">HESAPLA</button>
-                    <button class="finance-clean-btn green" id="finance-clean-apply-btn">20 ALANA UYGULA</button>
-                    <button class="finance-clean-btn" id="finance-clean-clear-btn">GÜNÜ TEMİZLE</button>
-                    <button class="finance-clean-btn red" id="finance-clean-reset-btn">SIFIRLA</button>
+                    <button class="finance-clean-btn" id="finance-clean-export-btn">DIŞA AKTAR</button>
+                    <button class="finance-clean-btn" id="finance-clean-import-btn">İÇE AKTAR</button>
                   </div>
+                  <input type="file" id="finance-clean-import-file" accept=".json" style="display:none;">
                 </div>
               </div>
-            </div>
-
-            <div class="finance-clean-card" id="finance-clean-daily-card">
-              <div class="finance-clean-head">
-                <div>
-                  <h3><i class="fa-solid fa-table-cells"></i> Günlük 20 İşlem Defteri</h3>
-                  <span>Bahis için maç/oran; kripto için coin/işlem notu ve manuel K/Z takibi</span>
-                </div>
-              </div>
-              <div class="finance-clean-body">
-                <div id="finance-clean-slots" class="finance-clean-table-wrap"></div>
-              </div>
-            </div>
-
-            <div class="finance-clean-card finance-clean-data-card">
-              <div class="finance-clean-head">
-                <div>
-                  <h3><i class="fa-solid fa-database"></i> Veri</h3>
-                  <span>Yedekleme ve hızlı temizlik</span>
-                </div>
-              </div>
-              <div class="finance-clean-body">
-                <div class="finance-clean-actions">
-                  <button class="finance-clean-btn" id="finance-clean-export-btn">DIŞA AKTAR</button>
-                  <button class="finance-clean-btn" id="finance-clean-import-btn">İÇE AKTAR</button>
-                </div>
-                <input type="file" id="finance-clean-import-file" accept=".json" style="display:none;">
-              </div>
-            </div>
+            `}
           </div>
         </div>
       </div>
@@ -1122,15 +1347,15 @@
             <input id="fin-bank" type="number" value="${state.bank}">
           </div>
           <div class="finance-clean-field">
-            <label>Kasayı Kaça Böleyim?</label>
+            <label>Kasayı Kaç Kupona Böleyim?</label>
             <input id="fin-split" type="number" min="1" max="200" value="${state.split}">
           </div>
           <div class="finance-clean-field">
-            <label>Günlük İşlem</label>
+            <label>Günlük Kupon Sayısı</label>
             <input id="fin-trade-count" type="number" min="1" max="20" value="${state.tradeCount}">
           </div>
           <div class="finance-clean-field">
-            <label>Oran</label>
+            <label>Ortalama Oran</label>
             <input id="fin-odds" type="number" step="0.01" value="${state.odds}">
           </div>
           <div class="finance-clean-field">
@@ -1284,38 +1509,45 @@
     const box = qs("finance-clean-slots");
     if (!box) return;
 
+    const slots = activeSlots();
+    const isCrypto = state.mode === "crypto";
+    const typeLabel = isCrypto ? "Kripto" : "Bahis";
+    const noteLabel = isCrypto ? "AKTİF İŞLEM" : "MAÇ";
+    const notePlaceholder = isCrypto ? "BTC Long TP1 / ETH Short" : "Arsenal - Üst 2.5";
+    const valueLabel = isCrypto ? "KÂR %" : "ORAN";
+    const winLabel = isCrypto ? "KAZANÇ" : "KAZANDI";
+    const lossLabel = isCrypto ? "KAYIP" : "KAYBETTİ";
+    const statusWin = isCrypto ? "KAZANÇ" : "KAZANDI";
+    const statusLoss = isCrypto ? "KAYIP" : "KAYBETTİ";
+
     let html = `
       <table class="finance-clean-table">
         <thead>
           <tr>
             <th>#</th>
             <th>Tür</th>
-            <th>İşlem / Maç / Coin</th>
+            <th>${noteLabel}</th>
             <th>Tutar</th>
-            <th>Oran / R:R</th>
+            <th>${valueLabel}</th>
             <th>Durum</th>
-            <th>K/Z</th>
+            <th>${isCrypto ? "PNL" : "K/Z"}</th>
             <th>İşlem</th>
           </tr>
         </thead>
         <tbody>
     `;
 
-    state.slots.forEach((s, i) => {
+    slots.forEach((s, i) => {
+      s.type = isCrypto ? "crypto" : "bet";
       const pnlClass = Number(s.pnl) >= 0 ? "finance-clean-pnl-pos" : "finance-clean-pnl-neg";
-      const statusText = s.status === "win" ? "KAZANDI" : s.status === "loss" ? "KAYBETTİ" : "BEKLİYOR";
+      const statusText = s.status === "win" ? statusWin : s.status === "loss" ? statusLoss : "BEKLİYOR";
 
       html += `
         <tr>
           <td>${i + 1}</td>
+          <td><span class="finance-fixed-type ${isCrypto ? "crypto" : "bet"}">${typeLabel}</span></td>
           <td>
-            <select data-slot="${i}" data-key="type">
-              <option value="bet" ${s.type === "bet" ? "selected" : ""}>Bahis</option>
-              <option value="crypto" ${s.type === "crypto" ? "selected" : ""}>Kripto</option>
-            </select>
-          </td>
-          <td>
-            <input data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="Arsenal Üst 2.5 / BTC Long">
+            <input data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePlaceholder}">
           </td>
           <td>
             <input data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake}">
@@ -1327,8 +1559,8 @@
           <td class="${pnlClass}">${money(s.pnl)}</td>
           <td>
             <div class="finance-clean-mini-actions">
-              <button class="win" data-action="win" data-slot="${i}">KAZANDI</button>
-              <button class="loss" data-action="loss" data-slot="${i}">KAYBETTİ</button>
+              <button class="win" data-action="win" data-slot="${i}">${winLabel}</button>
+              <button class="loss" data-action="loss" data-slot="${i}">${lossLabel}</button>
               <button class="pending" data-action="pending" data-slot="${i}">BEKLİYOR</button>
             </div>
           </td>
@@ -1343,11 +1575,13 @@
 
     box.innerHTML = html;
 
-    box.querySelectorAll("input, select").forEach(el => {
+    box.querySelectorAll("input").forEach(el => {
       el.addEventListener("input", () => {
         const i = Number(el.dataset.slot);
         const key = el.dataset.key;
-        state.slots[i][key] = el.value;
+        const slots = activeSlots();
+        slots[i][key] = el.value;
+        slots[i].type = isCrypto ? "crypto" : "bet";
         recalcSlot(i);
         saveState();
         renderKpis();
@@ -1359,32 +1593,36 @@
       btn.addEventListener("click", () => {
         const i = Number(btn.dataset.slot);
         const action = btn.dataset.action;
+        const slots = activeSlots();
 
-        state.slots[i].status = action;
+        slots[i].status = action;
+        slots[i].type = isCrypto ? "crypto" : "bet";
         recalcSlot(i);
 
         saveState();
         renderAll();
 
-        if (action === "win") showToast("İşlem kazandı olarak kapandı.");
-        if (action === "loss") showToast("İşlem kaybetti olarak kapandı.");
+        if (action === "win") showToast(isCrypto ? "İşlem kazanç olarak kapandı." : "Bahis kazandı olarak kapandı.");
+        if (action === "loss") showToast(isCrypto ? "İşlem kayıp olarak kapandı." : "Bahis kaybetti olarak kapandı.");
       });
     });
   }
 
   function recalcSlot(i) {
-    const s = state.slots[i];
+    const slots = activeSlots();
+    const s = slots[i];
     const stake = Number(s.stake || 0);
-    const odds = Number(s.odds || 1);
+    const odds = Number(s.odds || (state.mode === "crypto" ? 0 : 1));
 
     if (s.status === "win") {
       if (s.type === "bet") {
         s.pnl = stake * (odds - 1);
       } else {
-        s.pnl = stake * odds;
+        s.pnl = stake * (odds / 100);
       }
     } else if (s.status === "loss") {
-      s.pnl = -stake;
+      if (s.type === "bet") s.pnl = -stake;
+      else s.pnl = -Math.abs(stake * (odds / 100));
     } else {
       s.pnl = 0;
     }
@@ -1394,10 +1632,10 @@
     const el = qs("finance-clean-chart");
     if (!el || typeof ApexCharts === "undefined") return;
 
-    const filter = state.chartFilter || "all";
-    const settled = state.slots
+    const filter = state.mode === "crypto" ? "crypto" : "bet";
+    const settled = activeSlots()
       .map((s, i) => ({ ...s, idx: i + 1 }))
-      .filter(s => (s.status === "win" || s.status === "loss") && (filter === "all" || s.type === filter));
+      .filter(s => (s.status === "win" || s.status === "loss"));
 
     const points = [];
     let balance = Number(state.bank || 0);
@@ -1525,50 +1763,40 @@
   }
 
   function bindRoot() {
-    document.querySelectorAll("[data-fin-mode]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        state.mode = btn.dataset.finMode;
-        saveState();
-        renderRoot();
-      });
+    qs("finance-rail-toggle")?.addEventListener("click", () => {
+      state.railCollapsed = !state.railCollapsed;
+      saveState();
+      renderRoot();
     });
 
     document.querySelectorAll("[data-fin-action]").forEach(btn => {
       btn.addEventListener("click", () => {
         const action = btn.dataset.finAction;
-        const smooth = { behavior: "smooth", block: "start" };
-
-        if (action === "bet" || action === "crypto") {
-          state.mode = action;
+        if (action === "toggleRail") {
+          state.railCollapsed = !state.railCollapsed;
           saveState();
           renderRoot();
-          setTimeout(() => qs("finance-clean-plan-card")?.scrollIntoView(smooth), 30);
           return;
         }
-
-        if (action === "chart") qs("finance-clean-chart-card")?.scrollIntoView(smooth);
-        if (action === "daily") qs("finance-clean-daily-card")?.scrollIntoView(smooth);
+        if (action === "home") return setView("home");
+        if (action === "betPlan") return setView("betPlan", "bet");
+        if (action === "betDaily") return setView("betDaily", "bet");
+        if (action === "cryptoRisk") return setView("cryptoRisk", "crypto");
+        if (action === "cryptoDaily") return setView("cryptoDaily", "crypto");
       });
     });
 
     document.querySelectorAll("[data-mode-roll]").forEach(btn => {
       btn.addEventListener("click", () => {
         const [mode, dayRaw] = String(btn.dataset.modeRoll || "bet:7").split(":");
-        state.mode = mode === "crypto" ? "crypto" : "bet";
+        const safeMode = mode === "crypto" ? "crypto" : "bet";
+        state.mode = safeMode;
+        state.activeView = safeMode === "crypto" ? "cryptoDaily" : "betDaily";
         saveState();
         const days = Number(dayRaw || 7);
-        localStorage.setItem("finance_rolling_mode", state.mode);
+        localStorage.setItem("finance_rolling_mode", safeMode);
         if (typeof window.omega_OpenRollingExcel === "function") window.omega_OpenRollingExcel(days);
         else showToast("Rolling modülü bulunamadı.");
-      });
-    });
-
-    document.querySelectorAll("[data-chart-filter]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        state.chartFilter = btn.dataset.chartFilter || "all";
-        saveState();
-        renderRoot();
-        setTimeout(() => qs("finance-clean-chart-card")?.scrollIntoView({ behavior: "smooth", block: "start" }), 30);
       });
     });
 
@@ -1584,8 +1812,8 @@
     });
 
     qs("finance-clean-clear-btn")?.addEventListener("click", () => {
-      if (!confirm("Bugünkü 20 işlem satırı temizlensin mi?")) return;
-      state.slots = clone(DEFAULT_STATE.slots);
+      if (!confirm("Bugünkü aktif alanlar temizlensin mi?")) return;
+      setActiveSlots(createSlots(state.mode === "crypto" ? "crypto" : "bet"));
       saveState();
       renderAll();
       showToast("Gün temizlendi.");
@@ -1594,6 +1822,7 @@
     qs("finance-clean-reset-btn")?.addEventListener("click", () => {
       if (!confirm("Kasa Yönetimi tamamen sıfırlansın mı?")) return;
       state = clone(DEFAULT_STATE);
+      state.activeView = "home";
       saveState();
       renderRoot();
       showToast("Kasa sıfırlandı.");
@@ -1622,11 +1851,12 @@
   function applyPlanToSlots() {
     const amount = renderPlanResult(false);
     const count = Math.max(1, Math.min(20, Number(state.tradeCount || 20)));
+    const slots = activeSlots();
 
     let applied = 0;
 
-    for (let i = 0; i < state.slots.length && applied < count; i++) {
-      const s = state.slots[i];
+    for (let i = 0; i < slots.length && applied < count; i++) {
+      const s = slots[i];
 
       if (s.status === "win" || s.status === "loss") continue;
 
@@ -1669,9 +1899,7 @@
         const imported = JSON.parse(reader.result);
         state = { ...clone(DEFAULT_STATE), ...imported };
 
-        if (!Array.isArray(state.slots) || state.slots.length !== 20) {
-          state.slots = clone(DEFAULT_STATE.slots);
-        }
+        ensureModeSlots();
 
         saveState();
         renderRoot();
@@ -1725,7 +1953,7 @@
   };
 
   window.omega_ClearTodaySlots = function () {
-    state.slots = clone(DEFAULT_STATE.slots);
+    setActiveSlots(createSlots(state.mode === "crypto" ? "crypto" : "bet"));
     saveState();
     renderAll();
   };
