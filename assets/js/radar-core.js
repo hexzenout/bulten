@@ -91,10 +91,27 @@ async function omega_InitializeEngine() {
             }
         });
 
+
+        function omega_HardHideRollingV493() {
+            const rollingBlock = document.getElementById('omega-rolling-block');
+            if (rollingBlock) {
+                rollingBlock.style.display = 'none';
+                rollingBlock.style.visibility = 'hidden';
+                rollingBlock.style.height = '0';
+                rollingBlock.style.maxHeight = '0';
+                rollingBlock.style.overflow = 'hidden';
+                rollingBlock.removeAttribute('data-visible');
+                rollingBlock.setAttribute('aria-hidden', 'true');
+            }
+            document.body.classList.remove('omega-tab-rolling', 'rolling-active');
+            document.documentElement.classList.remove('rolling-hash-boot');
+        }
+
         function omega_SwitchMainTab(targetModule, clickedElement, updateHistory = true) {
             const keepRollingOpen = (targetModule === 'finance' || targetModule === 'rolling') && /^#(finance|rolling)\/rolling\/\d+/.test(String(location.hash || ''));
             if (!keepRollingOpen) omega_CloseRollingExcel(true);
             omega_CloseChannelManager();
+            if (targetModule !== 'rolling') omega_HardHideRollingV493();
 
             const topMenu = document.getElementById('main-dropdown-nav');
             if(topMenu) topMenu.classList.remove('active-menu');
@@ -164,6 +181,10 @@ async function omega_InitializeEngine() {
                 if (rollingBlock) {
                     rollingBlock.setAttribute('data-visible', 'true');
                     rollingBlock.removeAttribute('aria-hidden');
+                    rollingBlock.style.visibility = 'visible';
+                    rollingBlock.style.height = 'auto';
+                    rollingBlock.style.maxHeight = 'none';
+                    rollingBlock.style.overflow = 'visible';
                     rollingBlock.style.display = 'block';
                 }
                 if (titleElem) titleElem.innerHTML = '<span class="module-title-rolling"><i class="fa-solid fa-layer-group"></i> / ROLLING</span>';
