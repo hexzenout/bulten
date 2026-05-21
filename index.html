@@ -12,7 +12,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<link rel="stylesheet" href="assets/css/style.css?v=v46d"> 
+<link rel="stylesheet" href="assets/css/style.css?v=v47"> 
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f0f0f">    
 </head>
@@ -32,30 +32,15 @@
     </header>
     <nav class="accordion-menu" id="main-dropdown-nav">
         <div class="nav-container">
-            <div class="nav-link" id="nav-home" onclick="window.location.href='https://hexzenout.github.io/bulten/'">
-                <i class="fa-solid fa-house"></i> ANA SAYFA
-            </div>
-            <div class="nav-link active" id="nav-futbol" onclick="omega_SwitchMainTab('futbol', this)">
-                <i class="fa-solid fa-futbol"></i> FUTBOL
-            </div>
-            <div class="nav-link" id="nav-basketbol" onclick="omega_SwitchMainTab('basketbol', this)">
-                <i class="fa-solid fa-basketball"></i> BASKETBOL
-            </div>
-            <div class="nav-link" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)">
-                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
-            </div>
-            <div class="nav-link" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
-                <i class="fa-solid fa-star"></i> FAVORİLERİM
-            </div>
-            <div class="nav-link" id="nav-live" onclick="omega_SwitchMainTab('live', this)">
-                <i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP
-            </div>
-            <div class="nav-link" id="nav-crypto" onclick="omega_SwitchMainTab('crypto', this)">
-                <i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL
-            </div>
-            <div class="nav-link" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
-                <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
-            </div>
+            <a class="nav-link" id="nav-home" href="#futbol"><i class="fa-solid fa-house"></i> ANA SAYFA</a>
+            <a class="nav-link active" id="nav-futbol" href="#futbol"><i class="fa-solid fa-futbol"></i> FUTBOL</a>
+            <a class="nav-link" id="nav-basketbol" href="#basketbol"><i class="fa-solid fa-basketball"></i> BASKETBOL</a>
+            <a class="nav-link" id="nav-rolling" href="#rolling"><i class="fa-solid fa-layer-group"></i> ROLLING</a>
+            <a class="nav-link" id="nav-stream" href="#stream"><i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN</a>
+            <a class="nav-link" id="nav-favs" href="#favs"><i class="fa-solid fa-star"></i> FAVORİLERİM</a>
+            <a class="nav-link" id="nav-live" href="#live"><i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP</a>
+            <a class="nav-link" id="nav-crypto" href="#crypto"><i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL</a>
+            <a class="nav-link" id="nav-finance" href="#finance"><i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ</a>
         </div>
     </nav>
 
@@ -281,6 +266,11 @@
                     </div>
                 </div>
 
+
+
+                <div id="omega-rolling-block" class="omega-rolling-standalone" style="display:none;">
+                    <div id="omega-rolling-render"></div>
+                </div>
 
                 <div class="fin-terminal-wrapper" id="v19-finance-block">
 
@@ -515,27 +505,28 @@
     </div>
 
     <!-- V30 modular core scripts -->
-<script src="assets/js/omega-core.js?v=v46d"></script>
-<script src="assets/js/radar-core.js?v=v46d"></script>
-<script src="assets/js/stream-core.js?v=v46d"></script>
-<script src="assets/js/finance-core.js?v=v46d"></script>
-<script src="assets/js/live-center-core.js?v=v46d"></script>
-<script src="assets/js/daily-trade-core.js?v=v46d"></script>
-<script src="assets/js/crypto-core.js?v=v46d"></script>
-<script src="assets/js/finance.js?v=v46d"></script>
-<script src="assets/js/crypto.js?v=v46d"></script>
-<script src="assets/js/alarm-audio.js?v=v46d"></script>
-<script src="assets/js/alarm-center.js?v=v46d"></script>
-<script src="assets/js/app-fixes.js?v=v46d"></script>
-<script src="assets/js/pwa.js?v=v46d"></script>
-<script type="module" src="assets/js/firebase.js?v=v46d"></script>
-<script src="assets/js/v28-crypto-panel.js?v=v46d"></script>
+<script src="assets/js/omega-core.js?v=v47"></script>
+<script src="assets/js/radar-core.js?v=v47"></script>
+<script src="assets/js/stream-core.js?v=v47"></script>
+<script src="assets/js/finance-core.js?v=v47"></script>
+<script src="assets/js/live-center-core.js?v=v47"></script>
+<script src="assets/js/daily-trade-core.js?v=v47"></script>
+<script src="assets/js/crypto-core.js?v=v47"></script>
+<script src="assets/js/rolling-module.js?v=v47"></script>
+<script src="assets/js/finance.js?v=v47"></script>
+<script src="assets/js/crypto.js?v=v47"></script>
+<script src="assets/js/alarm-audio.js?v=v47"></script>
+<script src="assets/js/alarm-center.js?v=v47"></script>
+<script src="assets/js/app-fixes.js?v=v47"></script>
+<script src="assets/js/pwa.js?v=v47"></script>
+<script type="module" src="assets/js/firebase.js?v=v47"></script>
+<script src="assets/js/v28-crypto-panel.js?v=v47"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/crypto-tv-chart.js?v=v46d"></script>
-<script src="assets/js/v31-cleanup.js?v=v46d"></script>
-<script src="assets/js/v32-professional.js?v=v46d"></script>
+<script src="assets/js/crypto-tv-chart.js?v=v47"></script>
+<script src="assets/js/v31-cleanup.js?v=v47"></script>
+<script src="assets/js/v32-professional.js?v=v47"></script>
 
-<script src="assets/js/v30-runtime.js?v=v46d"></script>
-<script src="assets/js/v30-healthcheck.js?v=v46d"></script>
+<script src="assets/js/v30-runtime.js?v=v47"></script>
+<script src="assets/js/v30-healthcheck.js?v=v47"></script>
 </body>
 </html>
