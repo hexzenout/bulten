@@ -92,7 +92,7 @@ async function omega_InitializeEngine() {
         });
 
         function omega_SwitchMainTab(targetModule, clickedElement, updateHistory = true) {
-            const keepRollingOpen = targetModule === 'finance' && /^#finance\/rolling\/\d+/.test(String(location.hash || ''));
+            const keepRollingOpen = (targetModule === 'finance' || targetModule === 'rolling') && /^#(finance|rolling)\/rolling\/\d+/.test(String(location.hash || ''));
             if (!keepRollingOpen) omega_CloseRollingExcel(true);
             omega_CloseChannelManager();
 
@@ -104,22 +104,24 @@ async function omega_InitializeEngine() {
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
             if(clickedElement) clickedElement.classList.add('active');
 
-            document.getElementById('omega-radar-block').style.display = 'none';
-            document.getElementById('omega-favs-block').style.display = 'none';
-            document.getElementById('omega-stream-block').style.display = 'none';
-            document.getElementById('v19-finance-block').classList.remove('active');
+            const radarBlock = document.getElementById('omega-radar-block');
+            const favsBlock = document.getElementById('omega-favs-block');
+            const streamBlock = document.getElementById('omega-stream-block');
+            const rollingBlock = document.getElementById('omega-rolling-block');
+            const financeBlock = document.getElementById('v19-finance-block');
+
+            if (radarBlock) radarBlock.style.display = 'none';
+            if (favsBlock) favsBlock.style.display = 'none';
+            if (streamBlock) streamBlock.style.display = 'none';
+            if (rollingBlock) rollingBlock.style.display = 'none';
+            if (financeBlock) financeBlock.classList.remove('active');
 
             const centerWrapper = document.querySelector('.center-wrapper');
-
-            if(targetModule === 'stream') {
-                centerWrapper.style.maxWidth = '1800px';
-                omega_BuildStreamMatrix(_ACTIVE_LAYOUT);
-            } else if(targetModule === 'finance') {
-                centerWrapper.style.maxWidth = '1700px';
-            } else if(targetModule === 'crypto') {
-                centerWrapper.style.maxWidth = '1850px';
-            } else {
-                centerWrapper.style.maxWidth = '1000px';
+            if(centerWrapper) {
+                if(targetModule === 'stream') centerWrapper.style.maxWidth = '1800px';
+                else if(targetModule === 'finance' || targetModule === 'rolling') centerWrapper.style.maxWidth = '1700px';
+                else if(targetModule === 'crypto') centerWrapper.style.maxWidth = '1850px';
+                else centerWrapper.style.maxWidth = '1000px';
             }
 
             const titleElem = document.getElementById('active-module-name');
@@ -140,33 +142,46 @@ async function omega_InitializeEngine() {
                     if (dropLabel) dropLabel.innerHTML = 'TÜM LİGLER';
                 }
 
-                document.getElementById('omega-radar-block').style.display = 'block';
+                if (radarBlock) radarBlock.style.display = 'block';
 
-                titleElem.innerHTML = targetModule === 'futbol'
-                    ? '<span style="color:var(--green)">/ FUTBOL</span>'
-                    : '<span style="color:var(--orange)">/ BASKETBOL</span>';
+                if (titleElem) {
+                    titleElem.innerHTML = targetModule === 'futbol'
+                        ? '<span style="color:var(--green)">/ FUTBOL</span>'
+                        : '<span style="color:var(--orange)">/ BASKETBOL</span>';
+                }
 
                 omega_BuildUIComponents();
                 omega_ExecuteRadarFilter();
 
+            } else if(targetModule === 'rolling') {
+                _ACTIVE_TAB = 'rolling';
+                if (rollingBlock) rollingBlock.style.display = 'block';
+                if (titleElem) titleElem.innerHTML = '<span style="color:#f97316">/ ROLLING</span>';
+                if (typeof omega_RenderRollingModule === 'function') omega_RenderRollingModule();
+
             } else if(targetModule === 'favs') {
                 _ACTIVE_TAB = 'favs';
-                document.getElementById('omega-favs-block').style.display = 'block';
-                titleElem.innerHTML = '<span style="color:var(--red)">/ FAVORİLERİM</span>';
+                if (favsBlock) favsBlock.style.display = 'block';
+                if (titleElem) titleElem.innerHTML = '<span style="color:var(--red)">/ FAVORİLERİM</span>';
                 omega_ExecuteRadarFilter();
 
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
-                document.getElementById('omega-stream-block').style.display = 'block';
-                titleElem.innerHTML = '<span style="color:#7E22CE">/ CANLI YAYIN</span>';
+                if (streamBlock) streamBlock.style.display = 'block';
+                if (titleElem) titleElem.innerHTML = '<span style="color:#7E22CE">/ CANLI YAYIN</span>';
 
             } else if(targetModule === 'finance') {
                 _ACTIVE_TAB = 'finance';
-                document.getElementById('v19-finance-block').classList.add('active');
-                titleElem.innerHTML = '<span style="color:var(--green)">/ KASA YÖNETİMİ</span>';
-                omega_RefreshFinanceDashboard();
-                setTimeout(omega_RenderApexSupremeChart, 250);
-                setTimeout(() => { omega_RenderDailyTradeGrid(); omega_RefreshCryptoLive(true); }, 450);
+                if (financeBlock) financeBlock.classList.add('active');
+                if (titleElem) titleElem.innerHTML = '<span style="color:var(--green)">/ KASA YÖNETİMİ</span>';
+                if (typeof omega_RefreshFinanceDashboard === 'function') omega_RefreshFinanceDashboard();
+                if (typeof omega_RenderApexSupremeChart === 'function') setTimeout(omega_RenderApexSupremeChart, 250);
+                if (typeof omega_RenderDailyTradeGrid === 'function' || typeof omega_RefreshCryptoLive === 'function') {
+                    setTimeout(() => {
+                        if (typeof omega_RenderDailyTradeGrid === 'function') omega_RenderDailyTradeGrid();
+                        if (typeof omega_RefreshCryptoLive === 'function') omega_RefreshCryptoLive(true);
+                    }, 450);
+                }
             }
         }
 
