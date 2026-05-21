@@ -12,7 +12,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<link rel="stylesheet" href="assets/css/style.css?v=v46b"> 
+<link rel="stylesheet" href="assets/css/style.css?v=v46c"> 
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f0f0f">    
 </head>
@@ -32,14 +32,30 @@
     </header>
     <nav class="accordion-menu" id="main-dropdown-nav">
         <div class="nav-container">
-            <a class="nav-link" id="nav-home" href="#futbol"><i class="fa-solid fa-house"></i> ANA SAYFA</a>
-            <a class="nav-link active" id="nav-futbol" href="#futbol"><i class="fa-solid fa-futbol"></i> FUTBOL</a>
-            <a class="nav-link" id="nav-basketbol" href="#basketbol"><i class="fa-solid fa-basketball"></i> BASKETBOL</a>
-            <a class="nav-link" id="nav-stream" href="#stream"><i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN</a>
-            <a class="nav-link" id="nav-favs" href="#favs"><i class="fa-solid fa-star"></i> FAVORİLERİM</a>
-            <a class="nav-link" id="nav-live" href="#live"><i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP</a>
-            <a class="nav-link" id="nav-crypto" href="#crypto"><i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL</a>
-            <a class="nav-link" id="nav-finance" href="#finance"><i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ</a>
+            <div class="nav-link" id="nav-home" onclick="window.location.href='https://hexzenout.github.io/bulten/'">
+                <i class="fa-solid fa-house"></i> ANA SAYFA
+            </div>
+            <div class="nav-link active" id="nav-futbol" onclick="omega_SwitchMainTab('futbol', this)">
+                <i class="fa-solid fa-futbol"></i> FUTBOL
+            </div>
+            <div class="nav-link" id="nav-basketbol" onclick="omega_SwitchMainTab('basketbol', this)">
+                <i class="fa-solid fa-basketball"></i> BASKETBOL
+            </div>
+            <div class="nav-link" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)">
+                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
+            </div>
+            <div class="nav-link" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
+                <i class="fa-solid fa-star"></i> FAVORİLERİM
+            </div>
+            <div class="nav-link" id="nav-live" onclick="omega_SwitchMainTab('live', this)">
+                <i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP
+            </div>
+            <div class="nav-link" id="nav-crypto" onclick="omega_SwitchMainTab('crypto', this)">
+                <i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL
+            </div>
+            <div class="nav-link" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
+                <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
+            </div>
         </div>
     </nav>
 
@@ -270,7 +286,6 @@
 
                     
                     
-                    
                     <aside class="finance-left-rolling-rail finance-left-rail">
                         <div class="finance-rail-section mode-bet">
                             <div class="finance-rail-title"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></div>
@@ -280,11 +295,11 @@
                             <details class="finance-rolling-rail-selector bet" open>
                                 <summary><i class="fa-solid fa-layer-group"></i><span>BAHİS ROLLING</span></summary>
                                 <div class="finance-rolling-rail-menu">
-                                    <button type="button" onclick="omega_OpenModeRolling('bet', 7)">7 GÜN ROLLING</button>
-                                    <button type="button" onclick="omega_OpenModeRolling('bet', 15)">15 GÜN ROLLING</button>
-                                    <button type="button" onclick="omega_OpenModeRolling('bet', 30)">30 GÜN ROLLING</button>
-                                    <button type="button" onclick="omega_OpenModeRolling('bet', 60)">60 GÜN ROLLING</button>
-                                    <button type="button" onclick="omega_OpenModeRolling('bet', 90)">90 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 7)">7 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 15)">15 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 30)">30 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 60)">60 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('bet', 90)">90 GÜN ROLLING</button>
                                 </div>
                             </details>
                         </div>
@@ -297,11 +312,11 @@
                             <details class="finance-rolling-rail-selector crypto" open>
                                 <summary><i class="fa-solid fa-layer-group"></i><span>KRİPTO ROLLING</span></summary>
                                 <div class="finance-rolling-rail-menu">
-                                    <button type="button" onclick="omega_OpenModeRolling('crypto', 7)">7 GÜN ROLLING</button>
-                                    <button type="button" onclick="omega_OpenModeRolling('crypto', 15)">15 GÜN ROLLING</button>
-                                    <button type="button" onclick="omega_OpenModeRolling('crypto', 30)">30 GÜN ROLLING</button>
-                                    <button type="button" onclick="omega_OpenModeRolling('crypto', 60)">60 GÜN ROLLING</button>
-                                    <button type="button" onclick="omega_OpenModeRolling('crypto', 90)">90 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 7)">7 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 15)">15 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 30)">30 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 60)">60 GÜN ROLLING</button>
+                                    <button onclick="omega_OpenModeRolling('crypto', 90)">90 GÜN ROLLING</button>
                                 </div>
                             </details>
                         </div>
@@ -478,6 +493,7 @@
             <div class="config-item" style="margin-left:auto;"><label>P/L:</label><span id="excel-pnl" style="font-family:'JetBrains Mono'; font-size:1.1em; font-weight:800; color:#fff;">$0.00</span></div>
         </div>
         <div class="modal-body-wrapper">
+            <div style="color:#8f8f8f; font-size:.78em; font-weight:750; margin-bottom:14px; line-height:1.5;">Her kapsülde maç adı, coin veya işlem notu yazabilirsin. Örnek: <b style="color:var(--gold)">Arsenal Üst 2.5</b> veya <b style="color:var(--gold)">BTC Long TP1</b>.</div>
             <div id="excel-body-content" style="display: flex; flex-direction: column;"></div>
         </div>
     </div>
@@ -500,27 +516,27 @@
     </div>
 
     <!-- V30 modular core scripts -->
-<script src="assets/js/omega-core.js?v=v46b"></script>
-<script src="assets/js/radar-core.js?v=v46b"></script>
-<script src="assets/js/stream-core.js?v=v46b"></script>
-<script src="assets/js/finance-core.js?v=v46b"></script>
-<script src="assets/js/live-center-core.js?v=v46b"></script>
-<script src="assets/js/daily-trade-core.js?v=v46b"></script>
-<script src="assets/js/crypto-core.js?v=v46b"></script>
-<script src="assets/js/finance.js?v=v46b"></script>
-<script src="assets/js/crypto.js?v=v46b"></script>
-<script src="assets/js/alarm-audio.js?v=v46b"></script>
-<script src="assets/js/alarm-center.js?v=v46b"></script>
-<script src="assets/js/app-fixes.js?v=v46b"></script>
-<script src="assets/js/pwa.js?v=v46b"></script>
-<script type="module" src="assets/js/firebase.js?v=v46b"></script>
-<script src="assets/js/v28-crypto-panel.js?v=v46b"></script>
+<script src="assets/js/omega-core.js?v=v46c"></script>
+<script src="assets/js/radar-core.js?v=v46c"></script>
+<script src="assets/js/stream-core.js?v=v46c"></script>
+<script src="assets/js/finance-core.js?v=v46c"></script>
+<script src="assets/js/live-center-core.js?v=v46c"></script>
+<script src="assets/js/daily-trade-core.js?v=v46c"></script>
+<script src="assets/js/crypto-core.js?v=v46c"></script>
+<script src="assets/js/finance.js?v=v46c"></script>
+<script src="assets/js/crypto.js?v=v46c"></script>
+<script src="assets/js/alarm-audio.js?v=v46c"></script>
+<script src="assets/js/alarm-center.js?v=v46c"></script>
+<script src="assets/js/app-fixes.js?v=v46c"></script>
+<script src="assets/js/pwa.js?v=v46c"></script>
+<script type="module" src="assets/js/firebase.js?v=v46c"></script>
+<script src="assets/js/v28-crypto-panel.js?v=v46c"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/crypto-tv-chart.js?v=v46b"></script>
-<script src="assets/js/v31-cleanup.js?v=v46b"></script>
-<script src="assets/js/v32-professional.js?v=v46b"></script>
+<script src="assets/js/crypto-tv-chart.js?v=v46c"></script>
+<script src="assets/js/v31-cleanup.js?v=v46c"></script>
+<script src="assets/js/v32-professional.js?v=v46c"></script>
 
-<script src="assets/js/v30-runtime.js?v=v46b"></script>
-<script src="assets/js/v30-healthcheck.js?v=v46b"></script>
+<script src="assets/js/v30-runtime.js?v=v46c"></script>
+<script src="assets/js/v30-healthcheck.js?v=v46c"></script>
 </body>
 </html>
