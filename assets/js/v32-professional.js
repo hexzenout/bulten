@@ -114,7 +114,7 @@
 
           <div class="v32-file-row v47-file-row v49-file-row">
             <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-            <div class="v32-file-name v47-file-name v49-file-name v493-now-playing" id="v32-file-name" title="Dosya seçilmedi"><i class="fa-solid fa-music"></i><span class="v493-now-playing-text">Dosya seçilmedi</span></div>
+            <div class="v32-file-name v47-file-name v49-file-name v493-now-playing v494-now-playing" id="v32-file-name" title="Dosya seçilmedi"><i class="fa-solid fa-music"></i><span class="v493-now-playing-text">Dosya seçilmedi</span><button type="button" id="v494-now-stop" class="v494-now-stop" title="Çalan sesi durdur">DURDUR</button></div>
             <input id="v32-file-input" type="file" accept="audio/*" hidden>
           </div>
         </div>
@@ -220,6 +220,21 @@
         }
       }, { passive: false });
     }
+
+    const nowStop = qs("#v494-now-stop");
+    if (nowStop) {
+      nowStop.dataset.bound = "v494-now-stop-click-v494";
+      nowStop.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
+        const btn = qs("#v32-sound-test");
+        if (btn) {
+          btn.classList.remove("testing");
+          btn.textContent = "OYNAT";
+        }
+      };
+    }
   }
 
   function setV493NowPlaying(text) {
@@ -230,6 +245,7 @@
     const span = box.querySelector(".v493-now-playing-text");
     if (span) span.textContent = clean;
     else box.textContent = clean;
+    box.scrollLeft = 0;
   }
 
   async function renderSoundLibrary() {
