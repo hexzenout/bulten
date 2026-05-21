@@ -40,20 +40,19 @@
   function renderSoundPanel(force = false) {
     const mount = qs("#v28-sound-mount");
     if (!mount) return;
-    if (mount.dataset.ready === "v32" && !force) return;
     const pane = mount.closest(".crypto-v28-panel");
     if (pane) {
       Array.from(pane.children).forEach(child => { if (child !== mount) child.remove(); });
     }
 
-    const s = getSoundSettings();
-    mount.dataset.ready = "v32";
+    const s = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
+    mount.dataset.ready = "v46b";
     mount.innerHTML = `
-      <div class="v32-sound-card">
+      <div class="v32-sound-card v46b-sound-card">
         <div class="v32-sound-head">
           <div>
             <b>Alarm Ses Merkezi</b>
-            <span>Ses, özel şarkı, çalma süresi ve seçili aralık.</span>
+            <span>Özel ses kütüphanesi, test, durdurma ve zaman aralığı.</span>
           </div>
           <span class="terminal-v10-live-dot ${s.enabled ? "ok" : ""}">${s.enabled ? "SES AÇIK" : "SES KAPALI"}</span>
         </div>
@@ -78,22 +77,13 @@
           </div>
 
           <div class="v32-sound-field">
-            <label>Alarm Çalma Süresi <span class="v32-slider-value" id="v32-duration-label">${s.durationSec}s</span></label>
+            <label>Alarm Çalma Süresi <span class="v32-slider-value" id="v32-duration-label">${Math.max(60, Number(s.durationSec || 60))}s</span></label>
             <input id="v32-duration" type="range" min="60" max="180" step="10" value="${Math.max(60, Number(s.durationSec || 60))}">
           </div>
 
           <div class="v32-sound-field">
             <label>Ses Seviyesi <span class="v32-slider-value" id="v32-volume-label">${Math.round(Number(s.volume || .75) * 100)}%</span></label>
             <input id="v32-volume" type="range" min="0" max="1" step="0.05" value="${Number(s.volume || .75)}">
-          </div>
-
-          <div class="v32-sound-field v32-custom-file-field">
-            <label>Özel Ses Dosyası</label>
-            <div class="v32-file-row">
-              <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-              <div class="v32-file-name" id="v32-file-name" title="${s.customName || "Henüz özel ses seçilmedi"}">${s.customName || "Henüz özel ses seçilmedi"}</div>
-              <input id="v32-file-input" type="file" accept="audio/*" hidden>
-            </div>
           </div>
 
           <div class="v32-sound-field">
@@ -105,15 +95,32 @@
             <label>Bitiş Saniyesi <span class="v32-slider-value" id="v32-end-label">${Number(s.customEnd || 0)}s</span></label>
             <input id="v32-end" type="range" min="0" max="180" step="1" value="${Number(s.customEnd || 0)}">
           </div>
+
+          <div class="v32-sound-field v32-custom-file-field">
+            <label>Özel Ses Kütüphanesi</label>
+            <div class="v32-file-row">
+              <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
+              <div class="v32-file-name" id="v32-file-name">Yüklenen özel sesler aşağıda listelenir.</div>
+              <input id="v32-file-input" type="file" accept="audio/*" hidden>
+            </div>
+            <div class="v46b-sound-library" id="v46b-sound-library">
+              <div class="v46b-sound-empty">Henüz özel ses yüklenmedi.</div>
+            </div>
+          </div>
         </div>
       </div>
     `;
 
     qs("#v32-sound-type").value = s.sound || "digital";
 
+    const applySettings = next => {
+      if (window.V26AlarmAudio?.setSettings) window.V26AlarmAudio.setSettings(next);
+      setSoundSettings(next);
+    };
+
     qs("#v32-sound-toggle").onclick = () => {
-      const next = setSoundSettings({ enabled: true });
       if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
+      applySettings({ enabled: true });
       renderSoundPanel(true);
     };
 
@@ -126,77 +133,106 @@
       }
     };
 
-    qs("#v32-sound-test").onclick = () => {
+    qs("#v32-sound-test").onclick = async () => {
       const btn = qs("#v32-sound-test");
       btn.classList.add("testing");
       btn.textContent = "ÇALIYOR...";
-      setSoundSettings({ enabled: true });
-      if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
-      if (window.V26AlarmAudio?.testSelected) window.V26AlarmAudio.testSelected();
-      else if (window.V26AlarmAudio?.play) window.V26AlarmAudio.play("Test alarmı");
+      if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
       setTimeout(() => {
         btn.classList.remove("testing");
         btn.textContent = "SEÇİLİ SESİ TEST ET";
       }, 1600);
     };
 
-    qs("#v32-sound-type").onchange = e => setSoundSettings({ sound: e.target.value });
+    qs("#v32-sound-type").onchange = e => applySettings({ sound: e.target.value });
     qs("#v32-duration").oninput = e => {
       qs("#v32-duration-label").textContent = e.target.value + "s";
-      setSoundSettings({ durationSec: Number(e.target.value) });
+      applySettings({ durationSec: Number(e.target.value) });
     };
     qs("#v32-volume").oninput = e => {
       qs("#v32-volume-label").textContent = Math.round(Number(e.target.value) * 100) + "%";
-      setSoundSettings({ volume: Number(e.target.value) });
+      applySettings({ volume: Number(e.target.value) });
     };
     qs("#v32-start").oninput = e => {
       qs("#v32-start-label").textContent = e.target.value + "s";
-      setSoundSettings({ customStart: Number(e.target.value) });
+      applySettings({ customStart: Number(e.target.value) });
     };
     qs("#v32-end").oninput = e => {
       qs("#v32-end-label").textContent = e.target.value + "s";
-      setSoundSettings({ customEnd: Number(e.target.value) });
+      applySettings({ customEnd: Number(e.target.value) });
     };
+
     qs("#v32-file-pick").onclick = () => qs("#v32-file-input")?.click();
     qs("#v32-file-input").onchange = async e => {
       const file = e.target.files?.[0];
       if (!file) return;
       const nameEl = qs("#v32-file-name");
-      if (nameEl) {
-        nameEl.textContent = "Yükleniyor: " + file.name;
-        nameEl.title = file.name;
-      }
-
+      nameEl.textContent = "Yükleniyor: " + file.name;
       try {
-        let next;
-        if (window.V26AlarmAudio?.setCustomFile) {
-          next = await window.V26AlarmAudio.setCustomFile(file);
-        } else {
-          const reader = new FileReader();
-          next = await new Promise((resolve, reject) => {
-            reader.onload = () => resolve(setSoundSettings({ customDataUrl: String(reader.result || ""), customName: file.name, sound: "custom" }));
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-          });
+        if (window.V26AlarmAudio?.addCustomFile) {
+          await window.V26AlarmAudio.addCustomFile(file);
         }
-
-        localStorage.setItem(SOUND_KEY, JSON.stringify({ ...getSoundSettings(), customName: file.name, sound: "custom", customDataUrl: "", enabled: true }));
-        if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
-        if (nameEl) {
-          nameEl.textContent = file.name;
-          nameEl.title = file.name;
-        }
-        renderSoundPanel(true);
+        nameEl.textContent = file.name;
+        await renderSoundLibrary();
       } catch (err) {
-        if (nameEl) {
-          nameEl.textContent = "Dosya yüklenemedi";
-          nameEl.title = "Dosya yüklenemedi";
-        }
-        alert("Ses dosyası yüklenemedi. Daha küçük bir MP3/WAV dosyası dene.");
+        nameEl.textContent = "Dosya yüklenemedi.";
+        alert("Ses dosyası yüklenemedi. MP3/WAV gibi geçerli bir ses dosyası seç.");
       }
     };
+
+    renderSoundLibrary();
   }
 
+  async function renderSoundLibrary() {
+    const box = qs("#v46b-sound-library");
+    if (!box || !window.V26AlarmAudio?.listCustomFiles) return;
+    const s = window.V26AlarmAudio.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
+    const files = await window.V26AlarmAudio.listCustomFiles();
+    if (!files.length) {
+      box.innerHTML = `<div class="v46b-sound-empty">Henüz özel ses yüklenmedi.</div>`;
+      return;
+    }
+
+    box.innerHTML = files.map(file => {
+      const active = file.id === s.selectedCustomId;
+      const size = file.size ? (file.size / 1024 / 1024).toFixed(2) + " MB" : "";
+      return `
+        <div class="v46b-sound-item ${active ? "active" : ""}" data-id="${file.id}">
+          <div class="v46b-sound-name" title="${file.name}">${file.name}<span>${active ? "AKTİF" : size}</span></div>
+          <div class="v46b-sound-item-actions">
+            <button type="button" data-act="select">AKTİF YAP</button>
+            <button type="button" data-act="test">TEST</button>
+            <button type="button" data-act="remove" class="danger">×</button>
+          </div>
+        </div>`;
+    }).join("");
+
+    box.querySelectorAll("button").forEach(btn => {
+      btn.onclick = async e => {
+        const item = e.target.closest(".v46b-sound-item");
+        const id = item?.dataset.id;
+        if (!id) return;
+        const act = e.target.dataset.act;
+        if (act === "select") {
+          await window.V26AlarmAudio.selectCustomFile(id);
+          renderSoundPanel(true);
+        }
+        if (act === "test") {
+          await window.V26AlarmAudio.selectCustomFile(id);
+          await window.V26AlarmAudio.testSelected();
+          renderSoundPanel(true);
+        }
+        if (act === "remove") {
+          if (confirm("Bu özel sesi kaldırayım mı?")) {
+            await window.V26AlarmAudio.removeCustomFile(id);
+            renderSoundPanel(true);
+          }
+        }
+      };
+    });
+  }
+
+  
   function prepareCryptoForm() {
     let list = qs("#crypto-symbol-list");
     if (!list) {
