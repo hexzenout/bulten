@@ -81,3 +81,15 @@ window.addEventListener('popstate', (e) => {
         /* Daily trade / tracking table overrides moved to assets/js/daily-trade-core.js */
 
         /* Crypto module functions moved to assets/js/crypto-core.js */
+
+
+        function omega_OpenMainTabNew(tab, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
+            const safeTab = validTabs.includes(tab) ? tab : 'futbol';
+            const base = window.location.origin + window.location.pathname;
+            window.open(base + '#' + safeTab, '_blank', 'noopener,noreferrer');
+        }
