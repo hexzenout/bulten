@@ -3246,32 +3246,228 @@ html.rolling-hash-boot body::before {
 }
 
 /* ===============================
-   V46A CLEAN FOUNDATION
-   Çakışan eski finance/nav/sound blokları temizlendikten sonra güvenli temel.
+   V43 SOUND + FINANCE SPLIT + ROLLING RAIL
+   Rolling kutu düzenine dokunmadan ses dosyası, durdurma ve sol menü.
 ================================ */
 
-/* Finance ana alanı: sol menü + sağ içerik. Rolling kutularına dokunmaz. */
+/* Kasa yönetimi sol menüsü */
+.fin-terminal-wrapper.active {
+    display: grid !important;
+    grid-template-columns: 168px minmax(0, 1fr) !important;
+    gap: 16px !important;
+    align-items: start !important;
+}
+
+.finance-left-rail {
+    position: sticky;
+    top: 14px;
+    display: grid;
+    gap: 9px;
+    padding: 10px;
+    border: 1px solid #292929;
+    border-radius: 18px;
+    background: #0b0b0b;
+    z-index: 4;
+}
+
+.finance-rail-btn,
+.finance-rolling-rail-selector summary,
+.finance-rolling-rail-menu button {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #303030;
+    border-radius: 11px;
+    background: #151515;
+    color: #d8d8d8;
+    font-weight: 950;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: .4px;
+    font-size: .75rem;
+}
+
+.finance-rail-btn.bet:hover,
+.finance-rail-btn.bet:focus {
+    border-color: #fbbf24;
+    color: #fbbf24;
+}
+
+.finance-rail-btn.crypto:hover,
+.finance-rail-btn.crypto:focus {
+    border-color: #60a5fa;
+    color: #60a5fa;
+}
+
+.finance-rolling-rail-selector {
+    border-top: 1px solid #272727;
+    padding-top: 9px;
+}
+
+.finance-rolling-rail-selector summary {
+    list-style: none;
+    background: linear-gradient(135deg, #f97316, #fbbf24);
+    border-color: #f97316;
+    color: #111;
+}
+
+.finance-rolling-rail-selector summary::-webkit-details-marker {
+    display: none;
+}
+
+.finance-rolling-rail-menu {
+    display: grid;
+    gap: 7px;
+    margin-top: 8px;
+}
+
+.finance-rolling-rail-menu button {
+    min-height: 38px;
+    background: #111;
+    font-size: .70rem;
+}
+
+.finance-rolling-rail-menu button:hover {
+    border-color: #f97316;
+    color: #f97316;
+}
+
+/* Alttaki eski rolling kartını kaldır. Rolling artık sol menüde. */
+.finance-rolling-launch-card {
+    display: none !important;
+}
+
+/* Bahis/Kripto ayrımını daha net göster. */
+.finance-plan-card {
+    border-color: #333 !important;
+}
+
+.finance-mode-title.bet {
+    border-left: 4px solid #fbbf24 !important;
+}
+
+.finance-mode-title.crypto {
+    border-left: 4px solid #60a5fa !important;
+}
+
+#finance-panel-bet.active {
+    outline: 1px solid rgba(251,191,36,.16);
+    border-radius: 14px;
+}
+
+#finance-panel-crypto.active {
+    outline: 1px solid rgba(96,165,250,.16);
+    border-radius: 14px;
+}
+
+/* Ses: dosya adı alanı ve durdurma butonu. */
+.v32-sound-actions {
+    grid-template-columns: 1fr 1fr 1fr !important;
+}
+
+.v32-sound-actions button.danger,
+#v32-sound-stop {
+    background: rgba(239,68,68,.18) !important;
+    border-color: rgba(239,68,68,.45) !important;
+    color: #fecaca !important;
+}
+
+.v32-sound-actions button.danger:hover,
+#v32-sound-stop:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+.v32-custom-file-field {
+    grid-column: 1 / -1 !important;
+}
+
+.v32-file-row {
+    display: grid !important;
+    grid-template-columns: 130px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    align-items: stretch !important;
+}
+
+.v32-file-btn {
+    width: 130px !important;
+    min-width: 130px !important;
+}
+
+.v32-file-name {
+    display: flex !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 0 12px !important;
+    border: 1px solid #333 !important;
+    border-radius: 10px !important;
+    background: #050505 !important;
+    color: #fff !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 1200px) {
+    .fin-terminal-wrapper.active {
+        grid-template-columns: 1fr !important;
+    }
+
+    .finance-left-rail {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .finance-rolling-rail-selector {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 900px) {
+    .v32-sound-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+/* ===============================
+   V44 FINANCE LAYOUT REAL SPLIT + SOUND PLAY FIX
+   Kasa yönetimi çökmesini düzeltir; bahis/kripto rolling sol menüsü ve ses testi.
+================================ */
+
+/* V43'te grid'e çevrilen ana finance wrapper içeriği daraltıyordu. Ana içerik tekrar tam genişlik. */
 .fin-terminal-wrapper {
-    width: min(1600px, calc(100% - 28px)) !important;
+    width: min(1580px, calc(100% - 28px)) !important;
     margin: 0 auto !important;
 }
 
 .fin-terminal-wrapper.active {
-    display: grid !important;
-    grid-template-columns: 220px minmax(0, 1fr) !important;
-    gap: 18px !important;
-    align-items: start !important;
-}
-
-.fin-terminal-wrapper.active > .finance-left-rail {
-    grid-column: 1 !important;
-    grid-row: 1 / span 40 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+    position: relative !important;
+    padding-left: 198px !important;
+    box-sizing: border-box !important;
 }
 
 .fin-terminal-wrapper.active > *:not(.finance-left-rail) {
-    grid-column: 2 !important;
-    min-width: 0 !important;
     width: 100% !important;
+    min-width: 0 !important;
     box-sizing: border-box !important;
 }
 
@@ -3280,67 +3476,66 @@ html.rolling-hash-boot body::before {
 .finance-main-grid,
 .finance-secondary-grid,
 .finance-card,
-.trade-table-wrap,
-.balance-chart-wrap {
+.trade-table-wrap {
     min-width: 0 !important;
 }
 
-/* Sol finance rail sadece zemin olarak korunur. V46B'de gerçek rebuild yapılacak. */
 .finance-left-rail {
-    position: sticky !important;
-    top: 78px !important;
-    width: 220px !important;
-    max-width: 220px !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 180px !important;
+    max-width: 180px !important;
     display: grid !important;
-    gap: 12px !important;
-    padding: 11px !important;
+    gap: 11px !important;
+    padding: 10px !important;
     border: 1px solid #2b2b2b !important;
     border-radius: 18px !important;
     background: #0b0b0b !important;
     z-index: 5 !important;
-    box-shadow: 0 16px 42px rgba(0,0,0,.30);
+    box-shadow: 0 16px 40px rgba(0,0,0,.25);
 }
 
 .finance-rail-section {
-    display: grid !important;
-    gap: 8px !important;
-    padding-bottom: 11px !important;
-    border-bottom: 1px solid #242424 !important;
+    display: grid;
+    gap: 7px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #252525;
 }
 
 .finance-rail-section:last-child {
-    border-bottom: none !important;
-    padding-bottom: 0 !important;
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .finance-rail-title {
-    min-height: 26px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    font-weight: 950 !important;
-    letter-spacing: .8px !important;
-    font-size: .73rem !important;
-    color: #aaa !important;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 28px;
+    color: #aaa;
+    font-weight: 950;
+    font-size: .72rem;
+    letter-spacing: .7px;
 }
 
 .finance-rail-section.mode-bet .finance-rail-title,
 .finance-rail-section.mode-bet .finance-rail-title i {
-    color: #fbbf24 !important;
+    color: #fbbf24;
 }
 
 .finance-rail-section.mode-crypto .finance-rail-title,
 .finance-rail-section.mode-crypto .finance-rail-title i {
-    color: #60a5fa !important;
+    color: #60a5fa;
 }
 
 .finance-rail-btn,
 .finance-rolling-rail-selector summary,
 .finance-rolling-rail-menu button {
     width: 100% !important;
-    min-height: 39px !important;
+    min-height: 38px !important;
     border: 1px solid #303030 !important;
-    border-radius: 11px !important;
+    border-radius: 10px !important;
     background: #151515 !important;
     color: #e5e5e5 !important;
     font-weight: 950 !important;
@@ -3348,8 +3543,8 @@ html.rolling-hash-boot body::before {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 8px !important;
-    letter-spacing: .3px !important;
+    gap: 7px !important;
+    letter-spacing: .35px !important;
     font-size: .68rem !important;
     text-align: center !important;
 }
@@ -3368,8 +3563,13 @@ html.rolling-hash-boot body::before {
     color: #60a5fa !important;
 }
 
+.finance-rolling-rail-selector {
+    padding-top: 2px !important;
+}
+
 .finance-rolling-rail-selector summary {
     list-style: none !important;
+    min-height: 36px !important;
 }
 
 .finance-rolling-rail-selector summary::-webkit-details-marker {
@@ -3390,38 +3590,61 @@ html.rolling-hash-boot body::before {
 
 .finance-rolling-rail-menu {
     display: grid !important;
-    gap: 7px !important;
-    margin-top: 8px !important;
+    gap: 6px !important;
+    margin-top: 7px !important;
 }
 
 .finance-rolling-rail-menu button {
-    min-height: 33px !important;
+    min-height: 32px !important;
     background: #101010 !important;
     font-size: .63rem !important;
 }
 
-/* Eski alttaki rolling kart HTML'den kaldırıldı; kalıntı varsa yine görünmesin. */
-.finance-rolling-launch-card,
-.finance-rolling-selector,
-.finance-rolling-options {
+.finance-rolling-rail-selector.bet .finance-rolling-rail-menu button:hover {
+    border-color: #fbbf24 !important;
+    color: #fbbf24 !important;
+}
+
+.finance-rolling-rail-selector.crypto .finance-rolling-rail-menu button:hover {
+    border-color: #60a5fa !important;
+    color: #60a5fa !important;
+}
+
+/* Alttaki eski rolling kartı kesin gizli. */
+.finance-rolling-launch-card {
     display: none !important;
 }
 
-/* Eski yeni-sekme ikon sisteminin olası kalıntıları görünmesin. V46B'de gerçek <a href> menü gelecek. */
-.nav-new-tab-btn {
-    display: none !important;
+/* Bahis/Kripto panelleri gerçek ayrım hissi. */
+.finance-plan-card {
+    border-color: #333 !important;
 }
 
-/* Ses dosya adı alanı şimdilik okunabilir kalsın; V46B'de özel ses kütüphanesi kurulacak. */
+#finance-panel-bet.active {
+    border-left: 4px solid #fbbf24 !important;
+    padding-left: 10px !important;
+}
+
+#finance-panel-crypto.active {
+    border-left: 4px solid #60a5fa !important;
+    padding-left: 10px !important;
+}
+
+/* Özel ses dosyası: dosya adı tam görünsün, test ve durdurma net olsun. */
 .v32-custom-file-field {
     grid-column: 1 / -1 !important;
 }
 
 .v32-file-row {
     display: grid !important;
-    grid-template-columns: 130px minmax(0, 1fr) !important;
+    grid-template-columns: 125px minmax(0, 1fr) !important;
     gap: 12px !important;
     width: 100% !important;
+}
+
+.v32-file-btn {
+    width: 125px !important;
+    min-width: 125px !important;
 }
 
 .v32-file-name {
@@ -3429,7 +3652,7 @@ html.rolling-hash-boot body::before {
     min-width: 0 !important;
     width: 100% !important;
     min-height: 44px !important;
-    max-height: 76px !important;
+    max-height: 74px !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     white-space: normal !important;
@@ -3443,14 +3666,34 @@ html.rolling-hash-boot body::before {
     color: #fff !important;
 }
 
+.v32-sound-actions {
+    grid-template-columns: 1fr 1fr 1fr !important;
+}
+
+#v32-sound-stop,
+.v32-sound-actions button.danger {
+    background: rgba(239,68,68,.18) !important;
+    border-color: rgba(239,68,68,.45) !important;
+    color: #fecaca !important;
+}
+
+#v32-sound-stop:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+#v32-sound-test.testing {
+    background: #f97316 !important;
+    border-color: #f97316 !important;
+    color: #111 !important;
+}
+
+/* Rolling kutularına dokunma: sadece sol menü ve ana finance layout. */
+
 @media (max-width: 1280px) {
     .fin-terminal-wrapper.active {
-        grid-template-columns: 1fr !important;
-    }
-
-    .fin-terminal-wrapper.active > .finance-left-rail,
-    .fin-terminal-wrapper.active > *:not(.finance-left-rail) {
-        grid-column: 1 !important;
+        padding-left: 0 !important;
     }
 
     .finance-left-rail {
@@ -3462,13 +3705,13 @@ html.rolling-hash-boot body::before {
 
     .finance-rail-section {
         border-bottom: none !important;
-        border-right: 1px solid #242424 !important;
-        padding-right: 10px !important;
+        border-right: 1px solid #252525;
+        padding-right: 10px;
     }
 
     .finance-rail-section:last-child {
-        border-right: none !important;
-        padding-right: 0 !important;
+        border-right: none;
+        padding-right: 0;
     }
 }
 
@@ -3479,11 +3722,37 @@ html.rolling-hash-boot body::before {
 
     .finance-rail-section {
         border-right: none !important;
-        border-bottom: 1px solid #242424 !important;
+        border-bottom: 1px solid #252525 !important;
         padding-right: 0 !important;
     }
 
+    .v32-sound-actions,
     .v32-file-row {
         grid-template-columns: 1fr !important;
     }
+
+    .v32-file-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+/* ===============================
+   V46A2 FORCE REMOVE OLD ROLLING CARD
+   Eski alttaki Rolling kartını DOM + CSS seviyesinde kaldırma.
+================================ */
+
+.finance-rolling-launch-card,
+.finance-rolling-selector,
+.finance-rolling-options {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
 }
