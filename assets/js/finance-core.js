@@ -209,7 +209,18 @@ function omega_OpenRollingExcel(days, skipHash = false) {
 
         
         
-        function omega_FinanceRailAction(action) {
+        function omega_RemoveOldRollingLaunchCard() {
+            document.querySelectorAll('.finance-rolling-launch-card, .finance-rolling-selector, .finance-rolling-options').forEach(el => {
+                const card = el.closest('.finance-card') || el;
+                if(card && card.parentNode) card.remove();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', omega_RemoveOldRollingLaunchCard);
+        window.addEventListener('hashchange', () => setTimeout(omega_RemoveOldRollingLaunchCard, 60));
+        setTimeout(omega_RemoveOldRollingLaunchCard, 300);
+
+function omega_FinanceRailAction(action) {
             const smooth = { behavior: 'smooth', block: 'start' };
 
             if(action === 'bet' || action === 'crypto') {
