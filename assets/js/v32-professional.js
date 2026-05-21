@@ -37,6 +37,160 @@
     return merged;
   }
 
+  let v498PreviewAudio = null;
+  let v498PreviewUrl = "";
+  let v498PreviewTimer = null;
+
+  function v498FormatTime(sec) {
+    sec = Math.max(0, Number(sec || 0));
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${String(s).padStart(2, "0")}`;
+  }
+
+  function v498StopPreview() {
+    if (v498PreviewTimer) {
+      clearTimeout(v498PreviewTimer);
+      v498PreviewTimer = null;
+    }
+    if (v498PreviewAudio) {
+      try {
+        v498PreviewAudio.pause();
+        v498PreviewAudio.currentTime = 0;
+      } catch {}
+    }
+    v498PreviewAudio = null;
+    const btn = qs("#v498-inline-toggle") || qs("#v497-inline-toggle");
+    if (btn) btn.classList.remove("playing");
+    const testBtn = qs("#v32-sound-test");
+    if (testBtn) {
+      testBtn.classList.remove("testing");
+      testBtn.textContent = "OYNAT";
+    }
+  }
+
+  async function v498GetSelectedAudioRow() {
+    const id = qs("#v47-custom-select")?.value || (window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings().selectedCustomId : "");
+    if (!id || !window.V26AlarmAudio?.listCustomFiles) return null;
+    const rows = await window.V26AlarmAudio.listCustomFiles();
+    return rows.find(row => row.id === id) || null;
+  }
+
+  function v498SetProgress(current = 0, duration = 0) {
+    const bar = qs("#v498-preview-progress");
+    const cur = qs("#v498-time-current");
+    const total = qs("#v498-time-total");
+    if (bar) {
+      bar.max = Math.max(1, Math.floor(duration || 1));
+      bar.value = Math.min(Number(bar.max || 1), Math.floor(current || 0));
+    }
+    if (cur) cur.textContent = v498FormatTime(current);
+    if (total) total.textContent = v498FormatTime(duration);
+  }
+
+  function v498SyncSegmentLabels() {
+    const start = Number(qs("#v498-seg-start")?.value || 0);
+    const end = Number(qs("#v498-seg-end")?.value || 0);
+    const sLabel = qs("#v498-start-label");
+    const eLabel = qs("#v498-end-label");
+    if (sLabel) sLabel.textContent = v498FormatTime(start);
+    if (eLabel) eLabel.textContent = v498FormatTime(end);
+  }
+
+  async function v498LoadPreviewMeta() {
+    const row = await v498GetSelectedAudioRow();
+    const settings = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
+    if (!row || !row.blob) {
+      v498SetProgress(0, 0);
+      v498SyncSegmentLabels();
+      return;
+    }
+
+    const url = URL.createObjectURL(row.blob);
+    const audio = new Audio(url);
+    audio.preload = "metadata";
+    audio.onloadedmetadata = () => {
+      const duration = Math.max(1, Math.floor(audio.duration || 1));
+      const start = Math.max(0, Math.min(duration, Number(settings.customStart || 0)));
+      const rawEnd = Number(settings.customEnd || 0);
+      const end = rawEnd > start ? Math.min(duration, rawEnd) : duration;
+
+      const progress = qs("#v498-preview-progress");
+      const startRange = qs("#v498-seg-start");
+      const endRange = qs("#v498-seg-end");
+
+      [progress, startRange, endRange].forEach(el => {
+        if (!el) return;
+        el.max = duration;
+      });
+
+      if (startRange) startRange.value = Math.floor(start);
+      if (endRange) endRange.value = Math.floor(end);
+      v498SetProgress(start, duration);
+      v498SyncSegmentLabels();
+
+      URL.revokeObjectURL(url);
+    };
+    audio.onerror = () => URL.revokeObjectURL(url);
+  }
+
+  async function v498PlayPreview() {
+    const row = await v498GetSelectedAudioRow();
+    if (!row || !row.blob) {
+      alert("Önce özel ses seç.");
+      return;
+    }
+
+    v498StopPreview();
+
+    if (v498PreviewUrl) {
+      URL.revokeObjectURL(v498PreviewUrl);
+      v498PreviewUrl = "";
+    }
+
+    const durationSetting = Math.max(1, Number((window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings()).durationSec || 60));
+    const start = Math.max(0, Number(qs("#v498-seg-start")?.value || 0));
+    const selectedEnd = Math.max(0, Number(qs("#v498-seg-end")?.value || 0));
+
+    v498PreviewUrl = URL.createObjectURL(row.blob);
+    v498PreviewAudio = new Audio(v498PreviewUrl);
+    v498PreviewAudio.volume = Math.max(0, Math.min(1, Number(qs("#v32-volume")?.value || 0.75)));
+
+    v498PreviewAudio.onloadedmetadata = async () => {
+      const duration = Math.max(1, Number(v498PreviewAudio.duration || 1));
+      const end = selectedEnd > start ? Math.min(duration, selectedEnd) : duration;
+      v498PreviewAudio.currentTime = Math.min(start, duration);
+
+      const stopAt = Math.min(end, start + durationSetting);
+      const hardMs = Math.max(500, (stopAt - start) * 1000 + 150);
+
+      v498PreviewAudio.ontimeupdate = () => {
+        if (!v498PreviewAudio) return;
+        v498SetProgress(v498PreviewAudio.currentTime, duration);
+        if (v498PreviewAudio.currentTime >= stopAt) v498StopPreview();
+      };
+
+      v498PreviewAudio.onended = v498StopPreview;
+      v498PreviewAudio.onerror = v498StopPreview;
+
+      const btn = qs("#v498-inline-toggle") || qs("#v497-inline-toggle");
+      if (btn) btn.classList.add("playing");
+      const testBtn = qs("#v32-sound-test");
+      if (testBtn) {
+        testBtn.classList.add("testing");
+        testBtn.textContent = "ÇALIYOR...";
+      }
+
+      try {
+        await v498PreviewAudio.play();
+        v498PreviewTimer = setTimeout(v498StopPreview, hardMs);
+      } catch {
+        v498StopPreview();
+        alert("Ses çalınamadı. Dosyayı tekrar seçip deneyin.");
+      }
+    };
+  }
+
   function renderSoundPanel(force = false) {
     const mount = qs("#v28-sound-mount");
     if (!mount) return;
@@ -47,14 +201,14 @@
 
     const s = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
     const isCustom = (s.sound || "custom") === "custom";
+    const startSec = Math.max(0, Number(s.customStart || 0));
+    const endSec = Math.max(startSec + 1, Number(s.customEnd || 0) || 180);
 
-    mount.dataset.ready = "v497";
+    mount.dataset.ready = "v498";
     mount.innerHTML = `
-      <div class="v32-sound-card v49-sound-card v497-sound-card">
+      <div class="v32-sound-card v49-sound-card v497-sound-card v498-sound-card">
         <div class="v32-sound-head v497-sound-head">
-          <div>
-            <b>Alarm Ses Merkezi</b>
-          </div>
+          <div><b>Alarm Ses Merkezi</b></div>
         </div>
 
         <div class="v32-sound-actions v49-sound-actions v497-sound-actions">
@@ -84,31 +238,33 @@
             <label>Ses Seviyesi <span class="v32-slider-value" id="v32-volume-label">${Math.round(Number(s.volume || .75) * 100)}%</span></label>
             <input id="v32-volume" type="range" min="0" max="1" step="0.05" value="${Number(s.volume || .75)}">
           </div>
-
-          <div class="v32-sound-field">
-            <label>Başlangıç Saniyesi <span class="v32-slider-value" id="v32-start-label">${Number(s.customStart || 0)}s</span></label>
-            <input id="v32-start" type="range" min="0" max="180" step="1" value="${Number(s.customStart || 0)}">
-          </div>
-
-          <div class="v32-sound-field">
-            <label>Bitiş Saniyesi <span class="v32-slider-value" id="v32-end-label">${Number(s.customEnd || 0)}s</span></label>
-            <input id="v32-end" type="range" min="0" max="180" step="1" value="${Number(s.customEnd || 0)}">
-          </div>
         </div>
 
-        <div class="v47-custom-sound-panel v49-custom-sound-panel v497-custom-sound-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
+        <div class="v47-custom-sound-panel v49-custom-sound-panel v497-custom-sound-panel v498-custom-sound-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
           <div class="v47-custom-head v497-custom-head">
-            <div>
-              <b><i class="fa-solid fa-music"></i> Özel Ses Kütüphanesi</b>
-            </div>
+            <div><b><i class="fa-solid fa-music"></i> Özel Ses Kütüphanesi</b></div>
           </div>
 
           <div class="v47-custom-select-row v49-custom-select-row v497-custom-select-row">
-            <button type="button" id="v497-inline-toggle" class="v497-inline-toggle" title="Seçili özel sesi oynat / durdur">
+            <button type="button" id="v498-inline-toggle" class="v497-inline-toggle v498-inline-toggle" title="Seçili özel sesi oynat / durdur">
               <i class="fa-solid fa-play"></i><i class="fa-solid fa-pause"></i>
             </button>
             <select id="v47-custom-select" class="v497-song-select" title="Özel ses seç"><option value="">Özel ses seç...</option></select>
             <button type="button" id="v47-custom-remove" class="danger" title="Seçili özel sesi kaldır">KALDIR</button>
+          </div>
+
+          <div class="v498-preview-box">
+            <div class="v498-time-row">
+              <span id="v498-time-current">0:00</span>
+              <input id="v498-preview-progress" type="range" min="0" max="1" step="1" value="0">
+              <span id="v498-time-total">0:00</span>
+            </div>
+
+            <div class="v498-segment-grid">
+              <label>Başlangıç <b id="v498-start-label">${v498FormatTime(startSec)}</b><input id="v498-seg-start" type="range" min="0" max="180" step="1" value="${startSec}"></label>
+              <label>Bitiş <b id="v498-end-label">${v498FormatTime(endSec)}</b><input id="v498-seg-end" type="range" min="0" max="180" step="1" value="${endSec}"></label>
+              <button type="button" id="v498-apply-segment">AKTİF ET</button>
+            </div>
           </div>
 
           <div class="v32-file-row v47-file-row v49-file-row v497-file-row">
@@ -128,30 +284,14 @@
     };
 
     const stopSound = () => {
+      v498StopPreview();
       if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
-      const btn = qs("#v32-sound-test");
-      if (btn) {
-        btn.classList.remove("testing");
-        btn.textContent = "OYNAT";
-      }
-      qs("#v497-inline-toggle")?.classList.remove("playing");
     };
 
     qs("#v32-sound-stop").onclick = stopSound;
 
     qs("#v32-sound-test").onclick = async () => {
-      const btn = qs("#v32-sound-test");
-      btn.classList.add("testing");
-      btn.textContent = "ÇALIYOR...";
-      if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
-      if (window.V26AlarmAudio?.setSettings) window.V26AlarmAudio.setSettings({ enabled: true });
-      if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
-      qs("#v497-inline-toggle")?.classList.add("playing");
-      setTimeout(() => {
-        btn.classList.remove("testing");
-        btn.textContent = "OYNAT";
-        qs("#v497-inline-toggle")?.classList.remove("playing");
-      }, 1600);
+      await v498PlayPreview();
     };
 
     qs("#v32-sound-type").onchange = e => {
@@ -163,17 +303,11 @@
       qs("#v32-duration-label").textContent = e.target.value + "s";
       applySettings({ durationSec: Number(e.target.value) });
     };
+
     qs("#v32-volume").oninput = e => {
       qs("#v32-volume-label").textContent = Math.round(Number(e.target.value) * 100) + "%";
       applySettings({ volume: Number(e.target.value) });
-    };
-    qs("#v32-start").oninput = e => {
-      qs("#v32-start-label").textContent = e.target.value + "s";
-      applySettings({ customStart: Number(e.target.value) });
-    };
-    qs("#v32-end").oninput = e => {
-      qs("#v32-end-label").textContent = e.target.value + "s";
-      applySettings({ customEnd: Number(e.target.value) });
+      if (v498PreviewAudio) v498PreviewAudio.volume = Number(e.target.value);
     };
 
     qs("#v32-file-pick").onclick = () => qs("#v32-file-input")?.click();
@@ -187,6 +321,7 @@
         applySettings({ sound: "custom" });
         if (note) note.textContent = file.name;
         await renderSoundLibrary();
+        await v498LoadPreviewMeta();
       } catch (err) {
         if (note) note.textContent = "Dosya yüklenemedi.";
         alert("Ses dosyası yüklenemedi. MP3/WAV gibi geçerli bir ses dosyası seç.");
@@ -196,23 +331,22 @@
     qs("#v47-custom-select").onchange = async e => {
       const id = e.target.value;
       if (!id) return;
+      v498StopPreview();
       if (window.V26AlarmAudio?.selectCustomFile) await window.V26AlarmAudio.selectCustomFile(id);
       applySettings({ sound: "custom" });
-      renderSoundPanel(true);
+      await renderSoundLibrary();
+      await v498LoadPreviewMeta();
     };
 
-    qs("#v497-inline-toggle").onclick = async e => {
+    qs("#v498-inline-toggle").onclick = async e => {
       e.preventDefault();
       e.stopPropagation();
-      const btn = qs("#v497-inline-toggle");
+      const btn = qs("#v498-inline-toggle");
       if (btn.classList.contains("playing")) {
         stopSound();
         return;
       }
-      if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
-      if (window.V26AlarmAudio?.setSettings) window.V26AlarmAudio.setSettings({ enabled: true, sound: "custom" });
-      if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
-      btn.classList.add("playing");
+      await v498PlayPreview();
     };
 
     qs("#v47-custom-remove").onclick = async () => {
@@ -224,7 +358,36 @@
       renderSoundPanel(true);
     };
 
-    renderSoundLibrary();
+    qs("#v498-preview-progress").addEventListener("input", e => {
+      if (v498PreviewAudio) {
+        v498PreviewAudio.currentTime = Number(e.target.value || 0);
+        v498SetProgress(v498PreviewAudio.currentTime, v498PreviewAudio.duration || Number(e.target.max || 1));
+      }
+    });
+
+    ["#v498-seg-start", "#v498-seg-end"].forEach(sel => {
+      qs(sel)?.addEventListener("input", () => {
+        const startInput = qs("#v498-seg-start");
+        const endInput = qs("#v498-seg-end");
+        let start = Number(startInput?.value || 0);
+        let end = Number(endInput?.value || 0);
+        if (end <= start) {
+          end = start + 1;
+          if (endInput) endInput.value = end;
+        }
+        v498SyncSegmentLabels();
+      });
+    });
+
+    qs("#v498-apply-segment").onclick = () => {
+      let start = Number(qs("#v498-seg-start")?.value || 0);
+      let end = Number(qs("#v498-seg-end")?.value || 0);
+      if (end <= start) end = start + 1;
+      applySettings({ sound: "custom", customStart: start, customEnd: end });
+      alert(`Alarm aralığı aktif edildi: ${v498FormatTime(start)} - ${v498FormatTime(end)}`);
+    };
+
+    renderSoundLibrary().then(v498LoadPreviewMeta);
   }
 
   function setV493NowPlaying(text) {
@@ -262,7 +425,6 @@
     }
   }
 
-  
   function prepareCryptoForm() {
     let list = qs("#crypto-symbol-list");
     if (!list) {
