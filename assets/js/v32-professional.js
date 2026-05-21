@@ -46,28 +46,17 @@
     }
 
     const s = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
-    mount.dataset.ready = "v46d";
+    const isCustom = (s.sound || "digital") === "custom";
+
+    mount.dataset.ready = "v47";
     mount.innerHTML = `
-      <div class="v32-sound-card v46d-sound-card">
+      <div class="v32-sound-card v47-sound-card">
         <div class="v32-sound-head">
           <div>
             <b>Alarm Ses Merkezi</b>
-            <span>Özel ses, zaman aralığı, test ve durdurma tek merkezde.</span>
+            <span>Ses tipi, süre, seviye ve seçili alarm testleri.</span>
           </div>
-        </div>
-
-        <div class="v46d-sound-library-top">
-          <label>Özel Ses</label>
-          <div class="v46d-sound-select-row">
-            <select id="v46d-custom-select"><option value="">Özel ses seç...</option></select>
-            <button type="button" id="v46d-custom-test">TEST</button>
-            <button type="button" id="v46d-custom-remove" class="danger">×</button>
-          </div>
-          <div class="v32-file-row">
-            <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-            <div class="v32-file-name" id="v32-file-name">MP3/WAV yükle; listeden seç, test et veya kaldır.</div>
-            <input id="v32-file-input" type="file" accept="audio/*" hidden>
-          </div>
+          <span class="terminal-v10-live-dot ${s.enabled ? "ok" : ""}">${s.enabled ? "SES AÇIK" : "SES KAPALI"}</span>
         </div>
 
         <div class="v32-sound-actions">
@@ -80,11 +69,11 @@
           <div class="v32-sound-field">
             <label>Ses Tipi</label>
             <select id="v32-sound-type">
-              <option value="custom">Özel Ses</option>
               <option value="digital">Dijital Uyarı</option>
               <option value="bip">Standart Bip</option>
               <option value="chime">Yumuşak Chime</option>
               <option value="siren">Siren</option>
+              <option value="custom">Özel Ses</option>
               <option value="silent">Sessiz</option>
             </select>
           </div>
@@ -109,10 +98,31 @@
             <input id="v32-end" type="range" min="0" max="180" step="1" value="${Number(s.customEnd || 0)}">
           </div>
         </div>
+
+        <div class="v47-custom-sound-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
+          <div class="v47-custom-head">
+            <div>
+              <b><i class="fa-solid fa-music"></i> Özel Ses Kütüphanesi</b>
+              <span>Bu bölüm sadece Ses Tipi “Özel Ses” seçiliyken açılır.</span>
+            </div>
+          </div>
+
+          <div class="v47-custom-select-row">
+            <select id="v47-custom-select"><option value="">Özel ses seç...</option></select>
+            <button type="button" id="v47-custom-test">TEST</button>
+            <button type="button" id="v47-custom-remove" class="danger">×</button>
+          </div>
+
+          <div class="v32-file-row v47-file-row">
+            <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
+            <div class="v32-file-name v47-file-name" id="v32-file-name" title="Dosya seçilmedi">Dosya seçilmedi. Uzun dosya adları burada mouse tekerleği ile kaydırılabilir.</div>
+            <input id="v32-file-input" type="file" accept="audio/*" hidden>
+          </div>
+        </div>
       </div>
     `;
 
-    qs("#v32-sound-type").value = s.sound || "custom";
+    qs("#v32-sound-type").value = s.sound || "digital";
 
     const applySettings = next => {
       if (window.V26AlarmAudio?.setSettings) window.V26AlarmAudio.setSettings(next);
@@ -145,7 +155,11 @@
       }, 1600);
     };
 
-    qs("#v32-sound-type").onchange = e => applySettings({ sound: e.target.value });
+    qs("#v32-sound-type").onchange = e => {
+      applySettings({ sound: e.target.value });
+      renderSoundPanel(true);
+    };
+
     qs("#v32-duration").oninput = e => {
       qs("#v32-duration-label").textContent = e.target.value + "s";
       applySettings({ durationSec: Number(e.target.value) });
@@ -169,32 +183,36 @@
       if (!file) return;
       const nameEl = qs("#v32-file-name");
       nameEl.textContent = "Yükleniyor: " + file.name;
+      nameEl.title = file.name;
       try {
         if (window.V26AlarmAudio?.addCustomFile) await window.V26AlarmAudio.addCustomFile(file);
+        applySettings({ sound: "custom" });
         nameEl.textContent = file.name;
+        nameEl.title = file.name;
         await renderSoundLibrary();
       } catch (err) {
         nameEl.textContent = "Dosya yüklenemedi.";
+        nameEl.title = "Dosya yüklenemedi.";
         alert("Ses dosyası yüklenemedi. MP3/WAV gibi geçerli bir ses dosyası seç.");
       }
     };
 
-    qs("#v46d-custom-select").onchange = async e => {
+    qs("#v47-custom-select").onchange = async e => {
       const id = e.target.value;
       if (!id) return;
-      await window.V26AlarmAudio.selectCustomFile(id);
+      if (window.V26AlarmAudio?.selectCustomFile) await window.V26AlarmAudio.selectCustomFile(id);
       applySettings({ sound: "custom" });
       renderSoundPanel(true);
     };
 
-    qs("#v46d-custom-test").onclick = async () => {
-      const id = qs("#v46d-custom-select")?.value;
+    qs("#v47-custom-test").onclick = async () => {
+      const id = qs("#v47-custom-select")?.value;
       if (id && window.V26AlarmAudio?.selectCustomFile) await window.V26AlarmAudio.selectCustomFile(id);
       if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
     };
 
-    qs("#v46d-custom-remove").onclick = async () => {
-      const id = qs("#v46d-custom-select")?.value;
+    qs("#v47-custom-remove").onclick = async () => {
+      const id = qs("#v47-custom-select")?.value;
       if (!id) return alert("Kaldırılacak özel sesi seç.");
       if (!confirm("Bu özel sesi kaldırayım mı?")) return;
       await window.V26AlarmAudio.removeCustomFile(id);
@@ -202,10 +220,20 @@
     };
 
     renderSoundLibrary();
+
+    const fileNameBox = qs("#v32-file-name");
+    if (fileNameBox) {
+      fileNameBox.addEventListener("wheel", e => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          fileNameBox.scrollLeft += e.deltaY;
+          e.preventDefault();
+        }
+      }, { passive: false });
+    }
   }
 
   async function renderSoundLibrary() {
-    const select = qs("#v46d-custom-select");
+    const select = qs("#v47-custom-select");
     if (!select || !window.V26AlarmAudio?.listCustomFiles) return;
     const s = window.V26AlarmAudio.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
     const files = await window.V26AlarmAudio.listCustomFiles();
@@ -213,14 +241,15 @@
     select.innerHTML = `<option value="">Özel ses seç...</option>` + files.map(file => {
       const active = file.id === s.selectedCustomId;
       const size = file.size ? (file.size / 1024 / 1024).toFixed(2) + " MB" : "";
-      return `<option value="${file.id}" ${active ? "selected" : ""}>${active ? "✓ " : ""}${file.name} ${size ? "· " + size : ""}</option>`;
+      return `<option value="${file.id}" ${active ? "selected" : ""}>${active ? "✓ " : ""}${file.name}${size ? " · " + size : ""}</option>`;
     }).join("");
 
     const nameEl = qs("#v32-file-name");
     if (nameEl) {
       const current = files.find(f => f.id === s.selectedCustomId);
-      nameEl.textContent = current ? `Aktif: ${current.name}` : "MP3/WAV yükle; listeden seç, test et veya kaldır.";
-      nameEl.title = nameEl.textContent;
+      const text = current ? `Aktif: ${current.name}` : "Dosya seçilmedi. Uzun dosya adları burada mouse tekerleği ile kaydırılabilir.";
+      nameEl.textContent = text;
+      nameEl.title = text;
     }
   }
 
