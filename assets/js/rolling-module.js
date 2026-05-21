@@ -123,7 +123,7 @@
     const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 5)));
     const visible = slots.slice(0, rowCount);
     const noteHead = isCrypto ? "AKTİF İŞLEM" : "MAÇ";
-    const notePH = isCrypto ? "Long / Short" : "MS / 2.5 ÜST";
+    const notePH = isCrypto ? "İşlem" : "Maç";
     const valHead = isCrypto ? "KÂR %" : "ORAN";
     const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
@@ -144,7 +144,7 @@
       <section class="rolling-v47-card ${mode} v49-mode-card">
         <div class="rolling-v47-head">
           <div>
-            <h3><i class="${isCrypto ? "fa-brands fa-bitcoin" : "fa-solid fa-ticket"}"></i> ${isCrypto ? "KRİPTO" : "BAHİS"}</h3>
+            <h3>${isCrypto ? '<i class="fa-brands fa-bitcoin"></i>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} ${isCrypto ? "KRİPTO" : "BAHİS"}</h3>
           </div>
           <div class="rolling-v47-mini">
             <span>${sum.settled} kapalı · Rolling ${money(rollSum.pnlTotal)}</span>
@@ -193,7 +193,7 @@
         <div class="rolling-v48-layout v49-rolling-layout">
           <aside class="rolling-v48-rail v49-rolling-rail">
             <div class="rolling-v48-rail-toggle v49-rolling-rail-title"><i class="fa-solid fa-bars"></i><span>ROLLING MENÜSÜ</span></div>
-            <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></button>
+            <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span><span>BAHİS</span></button>
             <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span></button>
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
