@@ -8,7 +8,7 @@
     graph: ["Grafik Kontrolü", "Borsa, parite, coin ve zaman aralığı"],
     plan: ["İşlem Planı", "TP / SL / LIQ ve risk hesabı"],
     alarm: ["Alarm Merkezi", "Aktif alarmlar ve geçmiş"],
-    sound: ["Ses Ayarları", "Özel ses, süre ve test"],
+    sound: ["Ses Ayarları", ""],
     draw: ["Çizimler", "Alarm çizgisi, fiyat çizgisi ve trend"],
     settings: ["Ayarlar", "Terminal verileri ve görünüm"]
   };
