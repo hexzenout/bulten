@@ -4643,3 +4643,225 @@ body.omega-tab-finance #omega-rolling-block {
     }
 }
 
+
+/* ===============================
+   V49.1 ROLLING COLOR + ICON + MODAL TEXT FIX
+   sw.js / pwa.js değiştirilmedi.
+================================ */
+
+:root {
+    --rolling-purple: #7E22CE;
+    --rolling-purple-soft: rgba(126, 34, 206, .16);
+    --rolling-purple-border: rgba(126, 34, 206, .42);
+}
+
+/* ROLLING tarafında kalan turuncu/sarı vurguları mor yap. */
+#nav-rolling i,
+#nav-rolling.active i,
+.module-title-rolling,
+.module-title-rolling i,
+.rolling-v47-hero h2,
+.rolling-v47-hero h2 i,
+.v48-rolling-hero h2,
+.v48-rolling-hero h2 i,
+.rolling-v49-rail-title,
+.rolling-v49-rail-title i,
+.rolling-v48-rail-toggle,
+.rolling-v48-rail-toggle i,
+.rolling-v47-roll-buttons button span {
+    color: var(--rolling-purple) !important;
+}
+
+#nav-rolling.active,
+.rolling-v49-rail-title {
+    background: var(--rolling-purple-soft) !important;
+    border-color: var(--rolling-purple-border) !important;
+}
+
+/* Bahis tarafı artık kırmızı değil mor. */
+.rolling-v48-rail-tab.bet.active,
+.rolling-v48-rail-tab.bet:hover,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:hover,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:focus {
+    border-color: var(--rolling-purple) !important;
+    background: var(--rolling-purple-soft) !important;
+    color: #e9d5ff !important;
+}
+
+.rolling-v48-rail-tab.bet i,
+.rolling-v48-rail-tab.bet span,
+.rolling-v47-card.bet h3,
+.rolling-v47-card.bet h3 i,
+.rolling-v49-fold.bet summary,
+.rolling-v49-fold.bet summary i,
+.rolling-v47-roll-panel.bet h4,
+.rolling-v47-roll-panel.bet h4 i,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button span {
+    color: var(--rolling-purple) !important;
+}
+
+.rolling-v47-type.bet {
+    background: var(--rolling-purple-soft) !important;
+    color: #e9d5ff !important;
+}
+
+.rolling-v47-roll-panel.bet {
+    border-color: var(--rolling-purple-border) !important;
+}
+
+/* Kalan sarı sol şeritleri tamamen kaldır. */
+.rolling-v47-card.bet,
+.v49-mode-card.bet,
+.rolling-v49-fold.bet,
+.rolling-v47-roll-panel.bet {
+    box-shadow: none !important;
+}
+
+.rolling-v47-card.bet,
+.v49-mode-card.bet {
+    border-left: 1px solid #292929 !important;
+}
+
+/* BAHİS ve BAHİS ROLLING solundaki sarı strip/çizgi kalıntısı olmasın. */
+.rolling-v47-card.bet::before,
+.rolling-v47-card.bet::after,
+.v49-mode-card.bet::before,
+.v49-mode-card.bet::after,
+.rolling-v49-fold.bet::before,
+.rolling-v49-fold.bet::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* BAHİS logosu: sol menüdeki Futbol + Basketbol ikonları yan yana. */
+.rolling-v491-bet-icons {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    margin-right: 7px !important;
+    vertical-align: middle !important;
+}
+
+.rolling-v491-bet-icons i {
+    width: auto !important;
+    margin: 0 !important;
+    font-size: .98em !important;
+}
+
+.rolling-v491-bet-icons i.fa-futbol {
+    color: var(--green) !important;
+}
+
+.rolling-v491-bet-icons i.fa-basketball {
+    color: var(--orange) !important;
+}
+
+/* Bahis başlığında ikon çifti yanında yazı mor kalır. */
+.rolling-v47-card.bet h3 .rolling-v491-bet-icons + span,
+.rolling-v48-rail-tab.bet .rolling-v491-bet-icons + span {
+    color: var(--rolling-purple) !important;
+}
+
+/* Modal kutu yazıları daha görünür ve sade. */
+.kapsul.v32 input[id^="e-n-"],
+.k-note-input {
+    min-width: 160px !important;
+}
+
+.kapsul.v32 input::placeholder,
+.k-note-input::placeholder {
+    color: #d7d7d7 !important;
+    opacity: .95 !important;
+    font-weight: 850 !important;
+}
+
+/* Eski kırmızı bahis hover kalıntılarını morla ez. */
+.rolling-v48-row-controls button:hover {
+    background: var(--rolling-purple) !important;
+    border-color: var(--rolling-purple) !important;
+    color: #fff !important;
+}
+
+@media (max-width: 900px) {
+    .rolling-v491-bet-icons {
+        margin-right: 4px !important;
+    }
+}
+
+
+/* ===============================
+   V49.2 ROLLING MODAL BET/CRYPTO TEXT SPLIT
+   sw.js / pwa.js değiştirilmedi.
+================================ */
+
+/* Açılan 7/15/30/60/90 Rolling modalında eski sarı/turuncu vurguları mor tona yaklaştır. */
+#rolling-excel-overlay #excel-modal-title,
+#rolling-excel-overlay .excel-title,
+#rolling-excel-overlay h2,
+#rolling-excel-overlay h3 {
+    color: var(--rolling-purple, #7E22CE) !important;
+}
+
+/* Modal input yazıları sade ve okunaklı. */
+#rolling-excel-overlay .kapsul input,
+#rolling-excel-overlay .kapsul.v32 input,
+#rolling-excel-overlay .k-note-input {
+    font-weight: 900 !important;
+    color: #fff !important;
+}
+
+#rolling-excel-overlay .kapsul input::placeholder,
+#rolling-excel-overlay .kapsul.v32 input::placeholder,
+#rolling-excel-overlay .k-note-input::placeholder {
+    color: #d9d9d9 !important;
+    opacity: .98 !important;
+    font-weight: 950 !important;
+}
+
+/* RR kelimesi görünmesin diye alanlar daha temiz. */
+#rolling-excel-overlay input[id^="e-o-"] {
+    min-width: 120px !important;
+}
+
+/* Bahis/Kripto modal butonları: eski sarı veya karışık renkleri ez. */
+#rolling-excel-overlay .k-actions .w,
+#rolling-excel-overlay .k-actions.v32 .w,
+#rolling-excel-overlay .k-btn.w {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #07110d !important;
+}
+
+#rolling-excel-overlay .k-actions .l,
+#rolling-excel-overlay .k-actions.v32 .l,
+#rolling-excel-overlay .k-btn.l {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* Gün bilgisi: Bahis için Gün K/Z, Kripto için Gün P/L yazısı JS tarafından gelir; burada görünürlüğü güçlendiriyoruz. */
+#rolling-excel-overlay .day-info span,
+#rolling-excel-overlay .day-info-v32 span,
+#rolling-excel-overlay .day-result span,
+#rolling-excel-overlay .day-result small {
+    color: #bdbdbd !important;
+    font-weight: 900 !important;
+}
+
+/* V49.1'deki mor renkleri en sonda tekrar garantiye al. */
+.rolling-v47-card.bet,
+.v49-mode-card.bet {
+    border-left: 1px solid #292929 !important;
+    box-shadow: none !important;
+}
+
+.rolling-v47-card.bet h3,
+.rolling-v47-card.bet h3 i,
+.rolling-v49-fold.bet summary,
+.rolling-v49-fold.bet summary i,
+.rolling-v48-rail-tab.bet span {
+    color: var(--rolling-purple, #7E22CE) !important;
+}
+
