@@ -114,7 +114,7 @@
 
           <div class="v32-file-row v47-file-row v49-file-row">
             <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-            <div class="v32-file-name v47-file-name v49-file-name v493-now-playing v494-now-playing" id="v32-file-name" title="Dosya seçilmedi"><i class="fa-solid fa-music"></i><span class="v493-now-playing-text">Dosya seçilmedi</span><button type="button" id="v494-now-stop" class="v494-now-stop" title="Çalan sesi durdur">DURDUR</button></div>
+            <div class="v32-file-name v47-file-name v49-file-name v493-now-playing v494-now-playing v496-now-playing" id="v32-file-name" title="Dosya seçilmedi"><span class="v496-play-badge">ÇALIYOR</span><i class="fa-solid fa-music"></i><span class="v493-now-playing-text">Dosya seçilmedi</span><button type="button" id="v494-now-stop" class="v494-now-stop" title="Çalan sesi durdur">DURDUR</button></div>
             <input id="v32-file-input" type="file" accept="audio/*" hidden>
           </div>
         </div>
