@@ -5371,3 +5371,156 @@ body.omega-tab-basketbol #omega-rolling-block {
     }
 }
 
+
+/* ===============================
+   V49.5 ROLLING INPUT STABILITY + FINAL COLOR + QUICK PLAN
+   index.html / sw.js / pwa.js değiştirilmedi.
+================================ */
+
+:root {
+    --rolling-purple: #7E22CE;
+    --rolling-gold: #fbbf24;
+    --crypto-blue: #60a5fa;
+}
+
+/* Rolling üst başlık: ROLLING yazısı ve logosu altın; Ana Sayfa breadcrumb'a dokunmaz. */
+.rolling-v47-hero h2,
+.rolling-v47-hero h2 i,
+.v48-rolling-hero h2,
+.v48-rolling-hero h2 i {
+    color: var(--rolling-gold) !important;
+}
+
+/* Sağ karttaki BAHİS kesin beyaz. */
+.rolling-v47-card.bet .rolling-v493-title.bet,
+.rolling-v47-card.bet .rolling-v493-title.bet span,
+.rolling-v47-card.bet h3,
+.rolling-v47-card.bet h3 span {
+    color: #fff !important;
+}
+
+/* BAHİS ROLLING logosu ve yazısı altın sarısı. */
+.rolling-v494-bet-roll-title,
+.rolling-v494-bet-roll-title i,
+.rolling-v494-bet-roll-title span,
+.rolling-v49-fold.bet > summary.rolling-v494-bet-roll-title,
+.rolling-v49-fold.bet > summary.rolling-v494-bet-roll-title i,
+.rolling-v49-fold.bet > summary.rolling-v494-bet-roll-title span {
+    color: var(--rolling-gold) !important;
+}
+
+/* KOMBİNE KUPON MAÇLARI yazısı beyaz, logosu altın sarısı. */
+.rolling-v494-combine-title,
+.rolling-v494-combine-title span {
+    color: #fff !important;
+}
+.rolling-v494-combine-title i {
+    color: var(--rolling-gold) !important;
+}
+
+/* AKTİF KRİPTO İŞLEMLERİ mavi şerit tamamen yok; logo mavi. */
+.rolling-v494-active-title,
+.rolling-v494-active-title span {
+    color: #fff !important;
+}
+.rolling-v494-active-title i {
+    color: var(--crypto-blue) !important;
+}
+.rolling-v47-card.crypto,
+.v49-mode-card.crypto,
+.rolling-v49-fold.crypto,
+.rolling-v49-fold.crypto[open] {
+    border-left: 1px solid #292929 !important;
+    box-shadow: none !important;
+}
+.rolling-v47-card.crypto::before,
+.rolling-v47-card.crypto::after,
+.v49-mode-card.crypto::before,
+.v49-mode-card.crypto::after,
+.rolling-v49-fold.crypto::before,
+.rolling-v49-fold.crypto::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Kombine/Aktif tablo satır temizleme çarpısı. */
+.rolling-v495-row-clear {
+    width: 30px !important;
+    height: 30px !important;
+    border: 1px solid rgba(239,68,68,.45) !important;
+    border-radius: 9px !important;
+    background: rgba(239,68,68,.12) !important;
+    color: #fecaca !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+}
+.rolling-v495-row-clear:hover {
+    background: #ef4444 !important;
+    color: #fff !important;
+    border-color: #ef4444 !important;
+}
+.rolling-v495-row-clear i {
+    font-size: .82rem !important;
+}
+
+/* Yazı yazarken takılmayı azalt: input focus sırasında animasyon/transition kapalı. */
+.rolling-v47-table input,
+.rolling-v47-table input:focus {
+    transition: none !important;
+    animation: none !important;
+    will-change: auto !important;
+}
+.rolling-v47-table tr:focus-within {
+    outline: 1px solid rgba(251,191,36,.25);
+    outline-offset: -1px;
+}
+
+/* Rolling üst KPI yanına başlangıç/hedef/güncel alanı. */
+.rolling-v495-quick-plan {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(130px, 1fr)) !important;
+    gap: 8px !important;
+    min-width: 430px !important;
+}
+.rolling-v495-quick-plan label {
+    border: 1px solid #2a2a2a !important;
+    border-radius: 13px !important;
+    background: #0b0b0b !important;
+    padding: 10px 12px !important;
+    display: grid !important;
+    gap: 6px !important;
+}
+.rolling-v495-quick-plan span {
+    color: #a3a3a3 !important;
+    font-size: .62rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .6px !important;
+}
+.rolling-v495-quick-plan input,
+.rolling-v495-quick-plan b {
+    width: 100% !important;
+    min-height: 34px !important;
+    border: 1px solid #333 !important;
+    border-radius: 9px !important;
+    background: #050505 !important;
+    color: var(--rolling-gold) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 950 !important;
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+}
+.rolling-v495-quick-plan b {
+    display: flex !important;
+    align-items: center !important;
+    color: #fff !important;
+}
+
+@media (max-width: 1100px) {
+    .rolling-v495-quick-plan {
+        min-width: 0 !important;
+        grid-template-columns: 1fr !important;
+    }
+}
+
