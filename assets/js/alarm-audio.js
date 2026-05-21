@@ -202,7 +202,7 @@
     notify("Alarm durduruldu.");
   }
 
-  async function playCustomLoop(durationMs) {
+  async async function playCustomLoop(durationMs) {
     const src = await getObjectUrl(settings.selectedCustomId);
     if (!src) {
       notify("Seçili özel ses bulunamadı.");
@@ -217,24 +217,23 @@
     ringAudio.volume = Math.max(0, Math.min(1, Number(settings.volume || 0.75)));
     ringAudio.currentTime = start;
 
-    ringAudio.ontimeupdate = () => {
+    const stopFromAudio = () => {
       if (!isRinging) return;
-      if (end > start && ringAudio.currentTime >= end) {
-        ringAudio.currentTime = start;
-        ringAudio.play().catch(() => {});
-      }
+      stopAlarm();
     };
 
-    ringAudio.onended = () => {
-      if (!isRinging) return;
-      ringAudio.currentTime = start;
-      ringAudio.play().catch(() => {});
+    ringAudio.ontimeupdate = () => {
+      if (!isRinging || !ringAudio) return;
+      if (end > start && ringAudio.currentTime >= end) stopFromAudio();
     };
+
+    ringAudio.onended = stopFromAudio;
+    ringAudio.onerror = stopFromAudio;
 
     try {
       await ringAudio.play();
     } catch (err) {
-      notify("Özel ses çalamadı. Dosyayı tekrar seçip Test Et'e bas.");
+      notify("Özel ses çalamadı. Dosyayı tekrar seçip Oynat'a bas.");
       playBuiltinLoop(durationMs);
       return;
     }
@@ -300,6 +299,8 @@
     },
     addCustomFile,
     listCustomFiles: dbGetAll,
+    getCustomFile: dbGet,
+    getCustomUrl: getObjectUrl,
     removeCustomFile: async id => {
       await dbDelete(id);
       if (settings.selectedCustomId === id) {
