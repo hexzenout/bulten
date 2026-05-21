@@ -13,6 +13,7 @@
     tradeCount: 20,
     odds: 1.30,
     targetPct: 30,
+    chartFilter: "all",
 
     cryptoRiskPct: 1,
     cryptoLeverage: 10,
@@ -606,6 +607,277 @@
           grid-template-columns: repeat(2, 1fr);
         }
       }
+
+
+      /* V46C finance.js gerçek çözüm: eski alttaki rolling kartı artık yok, sol rail burada. */
+      .finance-clean-layout {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .finance-clean-main {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .finance-clean-rail {
+        position: sticky;
+        top: 78px;
+        display: grid;
+        gap: 12px;
+        padding: 11px;
+        border: 1px solid #2b2b2b;
+        border-radius: 18px;
+        background: #0b0b0b;
+        box-shadow: 0 16px 42px rgba(0,0,0,.34);
+      }
+
+      .finance-clean-rail-section {
+        display: grid;
+        gap: 8px;
+        padding-bottom: 11px;
+        border-bottom: 1px solid #242424;
+      }
+
+      .finance-clean-rail-section:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .finance-clean-rail-title {
+        min-height: 26px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 950;
+        letter-spacing: .8px;
+        font-size: .73em;
+        color: #aaa;
+      }
+
+      .finance-clean-rail-section.bet .finance-clean-rail-title,
+      .finance-clean-rail-section.bet .finance-clean-rail-title i {
+        color: #fbbf24;
+      }
+
+      .finance-clean-rail-section.crypto .finance-clean-rail-title,
+      .finance-clean-rail-section.crypto .finance-clean-rail-title i {
+        color: #60a5fa;
+      }
+
+      .finance-clean-rail-btn,
+      .finance-clean-rail-roll summary,
+      .finance-clean-rail-roll button {
+        width: 100%;
+        min-height: 38px;
+        border: 1px solid #303030;
+        border-radius: 11px;
+        background: #151515;
+        color: #e5e5e5;
+        font-weight: 950;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        letter-spacing: .3px;
+        font-size: .68em;
+        text-align: center;
+      }
+
+      .finance-clean-rail-btn.bet.active,
+      .finance-clean-rail-btn.bet:hover {
+        background: rgba(251,191,36,.16);
+        border-color: #fbbf24;
+        color: #fbbf24;
+      }
+
+      .finance-clean-rail-btn.crypto.active,
+      .finance-clean-rail-btn.crypto:hover {
+        background: rgba(96,165,250,.15);
+        border-color: #60a5fa;
+        color: #60a5fa;
+      }
+
+      .finance-clean-rail-roll summary {
+        list-style: none;
+      }
+
+      .finance-clean-rail-roll summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .finance-clean-rail-roll.bet summary {
+        background: linear-gradient(135deg,#fbbf24,#f59e0b);
+        border-color: #fbbf24;
+        color: #111;
+      }
+
+      .finance-clean-rail-roll.crypto summary {
+        background: linear-gradient(135deg,#60a5fa,#2563eb);
+        border-color: #60a5fa;
+        color: #06111f;
+      }
+
+      .finance-clean-rail-roll > div {
+        display: grid;
+        gap: 7px;
+        margin-top: 8px;
+      }
+
+      .finance-clean-rail-roll button {
+        min-height: 33px;
+        background: #101010;
+        font-size: .63em;
+      }
+
+      .finance-clean-chart-head {
+        align-items: flex-start;
+      }
+
+      .finance-clean-chart-filters {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .finance-clean-chart-filters button {
+        min-height: 32px;
+        border: 1px solid #333;
+        border-radius: 999px;
+        padding: 0 12px;
+        background: #111;
+        color: #aaa;
+        font-weight: 950;
+        cursor: pointer;
+        font-size: .68em;
+      }
+
+      .finance-clean-chart-filters button.active,
+      .finance-clean-chart-filters button:hover {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #111;
+      }
+
+      .finance-clean-chart-card .finance-clean-body {
+        position: relative;
+      }
+
+      .finance-clean-chart-summary {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .finance-clean-chart-summary div {
+        border: 1px solid #292929;
+        border-radius: 12px;
+        background: #0b0b0b;
+        padding: 10px;
+      }
+
+      .finance-clean-chart-summary span {
+        display: block;
+        color: #888;
+        font-size: .62em;
+        font-weight: 950;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      .finance-clean-chart-summary b {
+        color: #fff;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .86em;
+      }
+
+      .finance-clean-chart-summary b.pos {
+        color: var(--green);
+      }
+
+      .finance-clean-chart-summary b.neg {
+        color: var(--red);
+      }
+
+      .finance-clean-chart-empty {
+        display: none;
+        place-items: center;
+        gap: 5px;
+        min-height: 86px;
+        border: 1px dashed #333;
+        border-radius: 14px;
+        background: #080808;
+        color: #aaa;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .finance-clean-chart-empty b {
+        color: #fbbf24;
+        font-size: .92em;
+      }
+
+      .finance-clean-chart-empty span {
+        color: #888;
+        font-size: .78em;
+        font-weight: 700;
+      }
+
+      .finance-clean-secondary,
+      .finance-clean-rolling,
+      .finance-clean-roll {
+        display: none !important;
+      }
+
+      @media(max-width: 1150px) {
+        .finance-clean-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .finance-clean-rail {
+          position: static;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .finance-clean-rail-section {
+          border-bottom: none;
+          border-right: 1px solid #242424;
+          padding-right: 10px;
+        }
+
+        .finance-clean-rail-section:last-child {
+          border-right: none;
+          padding-right: 0;
+        }
+
+        .finance-clean-chart-summary {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media(max-width: 720px) {
+        .finance-clean-rail {
+          grid-template-columns: 1fr;
+        }
+
+        .finance-clean-rail-section {
+          border-right: none;
+          border-bottom: 1px solid #242424;
+          padding-right: 0;
+        }
+
+        .finance-clean-chart-summary {
+          grid-template-columns: 1fr;
+        }
+      }
+
     `;
 
     document.head.appendChild(style);
@@ -683,111 +955,151 @@
     if (!root) return;
 
     root.innerHTML = `
-      <div class="finance-clean-root">
-        <div class="finance-clean-top">
-          <div>
-            <h2><i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ</h2>
-            <p>Bahis ve kripto için sade bankroll planı, günlük 20 işlem defteri, P/L grafiği ve rolling kayıtları.</p>
-          </div>
-          <div class="finance-clean-balance-box">
-            <span>Güncel Kasa</span>
-            <b id="finance-clean-current-bank">$0.00</b>
-          </div>
-        </div>
+      <div class="finance-clean-root v46c-finance-root">
+        <div class="finance-clean-layout">
+          <aside class="finance-clean-rail">
+            <div class="finance-clean-rail-section bet">
+              <div class="finance-clean-rail-title"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></div>
+              <button class="finance-clean-rail-btn bet ${state.mode === "bet" ? "active" : ""}" data-fin-action="bet">
+                <i class="fa-solid fa-sliders"></i><span>BAHİS PLANI</span>
+              </button>
+              <details class="finance-clean-rail-roll bet" open>
+                <summary><i class="fa-solid fa-layer-group"></i><span>BAHİS ROLLING</span></summary>
+                <div>
+                  <button data-mode-roll="bet:7">7 GÜN ROLLING</button>
+                  <button data-mode-roll="bet:15">15 GÜN ROLLING</button>
+                  <button data-mode-roll="bet:30">30 GÜN ROLLING</button>
+                  <button data-mode-roll="bet:60">60 GÜN ROLLING</button>
+                  <button data-mode-roll="bet:90">90 GÜN ROLLING</button>
+                </div>
+              </details>
+            </div>
 
-        <div class="finance-clean-kpis">
-          <div class="finance-clean-kpi gold"><span>Başlangıç Kasa</span><b id="finance-clean-kpi-bank">$0.00</b></div>
-          <div class="finance-clean-kpi"><span>Günlük P/L</span><b id="finance-clean-kpi-day">$0.00</b></div>
-          <div class="finance-clean-kpi"><span>Toplam P/L</span><b id="finance-clean-kpi-total">$0.00</b></div>
-          <div class="finance-clean-kpi"><span>Açık Risk</span><b id="finance-clean-kpi-risk">$0.00</b></div>
-          <div class="finance-clean-kpi"><span>Winrate</span><b id="finance-clean-kpi-winrate">%0.00</b></div>
-          <div class="finance-clean-kpi"><span>ROI</span><b id="finance-clean-kpi-roi">%0.00</b></div>
-        </div>
+            <div class="finance-clean-rail-section crypto">
+              <div class="finance-clean-rail-title"><i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span></div>
+              <button class="finance-clean-rail-btn crypto ${state.mode === "crypto" ? "active" : ""}" data-fin-action="crypto">
+                <i class="fa-solid fa-sliders"></i><span>KRİPTO RİSK</span>
+              </button>
+              <details class="finance-clean-rail-roll crypto" open>
+                <summary><i class="fa-solid fa-layer-group"></i><span>KRİPTO ROLLING</span></summary>
+                <div>
+                  <button data-mode-roll="crypto:7">7 GÜN ROLLING</button>
+                  <button data-mode-roll="crypto:15">15 GÜN ROLLING</button>
+                  <button data-mode-roll="crypto:30">30 GÜN ROLLING</button>
+                  <button data-mode-roll="crypto:60">60 GÜN ROLLING</button>
+                  <button data-mode-roll="crypto:90">90 GÜN ROLLING</button>
+                </div>
+              </details>
+            </div>
 
-        <div class="finance-clean-grid">
-          <div class="finance-clean-card">
-            <div class="finance-clean-head">
+            <div class="finance-clean-rail-section tools">
+              <div class="finance-clean-rail-title"><i class="fa-solid fa-wallet"></i><span>KASA</span></div>
+              <button class="finance-clean-rail-btn" data-fin-action="chart">
+                <i class="fa-solid fa-chart-line"></i><span>KASA EĞRİSİ</span>
+              </button>
+              <button class="finance-clean-rail-btn" data-fin-action="daily">
+                <i class="fa-solid fa-table-cells"></i><span>GÜNLÜK DEFTER</span>
+              </button>
+            </div>
+          </aside>
+
+          <div class="finance-clean-main">
+            <div class="finance-clean-top">
               <div>
-                <h3><i class="fa-solid fa-chart-line"></i> Bakiye Grafiği</h3>
-                <span>Kasa bariyerleri ve P/L eğrisi</span>
+                <h2><i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ</h2>
+                <p>Bahis ve kripto için ayrı plan, kasa eğrisi, günlük işlem defteri ve rolling kayıtları.</p>
+              </div>
+              <div class="finance-clean-balance-box">
+                <span>Güncel Kasa</span>
+                <b id="finance-clean-current-bank">$0.00</b>
               </div>
             </div>
-            <div class="finance-clean-body">
-              <div id="finance-clean-chart" class="finance-clean-chart"></div>
-              <div class="finance-clean-barriers" id="finance-clean-barriers"></div>
-            </div>
-          </div>
 
-          <div class="finance-clean-card">
-            <div class="finance-clean-head">
-              <div>
-                <h3><i class="fa-solid fa-calculator"></i> Planlayıcı</h3>
-                <span>Sade risk ve stake hesabı</span>
-              </div>
+            <div class="finance-clean-kpis">
+              <div class="finance-clean-kpi gold"><span>Başlangıç Kasa</span><b id="finance-clean-kpi-bank">$0.00</b></div>
+              <div class="finance-clean-kpi"><span>Günlük P/L</span><b id="finance-clean-kpi-day">$0.00</b></div>
+              <div class="finance-clean-kpi"><span>Toplam P/L</span><b id="finance-clean-kpi-total">$0.00</b></div>
+              <div class="finance-clean-kpi"><span>Açık Risk</span><b id="finance-clean-kpi-risk">$0.00</b></div>
+              <div class="finance-clean-kpi"><span>Winrate</span><b id="finance-clean-kpi-winrate">%0.00</b></div>
+              <div class="finance-clean-kpi"><span>ROI</span><b id="finance-clean-kpi-roi">%0.00</b></div>
             </div>
-            <div class="finance-clean-body">
-              <div class="finance-clean-tabs">
-                <button class="finance-clean-tab bet ${state.mode === "bet" ? "active" : ""}" data-fin-mode="bet">BAHİS PLANI</button>
-                <button class="finance-clean-tab crypto ${state.mode === "crypto" ? "active" : ""}" data-fin-mode="crypto">KRİPTO RİSK</button>
+
+            <div class="finance-clean-grid">
+              <div class="finance-clean-card finance-clean-chart-card" id="finance-clean-chart-card">
+                <div class="finance-clean-head finance-clean-chart-head">
+                  <div>
+                    <h3><i class="fa-solid fa-chart-line"></i> Kasa Eğrisi</h3>
+                    <span>Kapattığın bahis/kripto işlemleri kasa performansına dönüşür.</span>
+                  </div>
+                  <div class="finance-clean-chart-filters">
+                    <button class="${(state.chartFilter || "all") === "all" ? "active" : ""}" data-chart-filter="all">TÜMÜ</button>
+                    <button class="${state.chartFilter === "bet" ? "active" : ""}" data-chart-filter="bet">BAHİS</button>
+                    <button class="${state.chartFilter === "crypto" ? "active" : ""}" data-chart-filter="crypto">KRİPTO</button>
+                  </div>
+                </div>
+                <div class="finance-clean-body">
+                  <div class="finance-clean-chart-summary" id="finance-clean-chart-summary"></div>
+                  <div id="finance-clean-chart" class="finance-clean-chart"></div>
+                  <div class="finance-clean-chart-empty" id="finance-clean-chart-empty">
+                    <b>Henüz kapatılmış işlem yok.</b>
+                    <span>Kazandı / Kaybetti dediğin satırlar burada kasa eğrisine dönüşecek.</span>
+                  </div>
+                  <div class="finance-clean-barriers" id="finance-clean-barriers"></div>
+                </div>
               </div>
 
-              <div id="finance-clean-plan-form"></div>
-              <div id="finance-clean-plan-result" class="finance-clean-result"></div>
+              <div class="finance-clean-card" id="finance-clean-plan-card">
+                <div class="finance-clean-head">
+                  <div>
+                    <h3><i class="fa-solid fa-calculator"></i> Planlayıcı</h3>
+                    <span>Bahis ve kripto için ayrı risk/stake hesabı</span>
+                  </div>
+                </div>
+                <div class="finance-clean-body">
+                  <div class="finance-clean-tabs">
+                    <button class="finance-clean-tab bet ${state.mode === "bet" ? "active" : ""}" data-fin-mode="bet">BAHİS PLANI</button>
+                    <button class="finance-clean-tab crypto ${state.mode === "crypto" ? "active" : ""}" data-fin-mode="crypto">KRİPTO RİSK</button>
+                  </div>
 
-              <div class="finance-clean-actions">
-                <button class="finance-clean-btn gold" id="finance-clean-calc-btn">HESAPLA</button>
-                <button class="finance-clean-btn green" id="finance-clean-apply-btn">20 ALANA UYGULA</button>
-                <button class="finance-clean-btn" id="finance-clean-clear-btn">GÜNÜ TEMİZLE</button>
-                <button class="finance-clean-btn red" id="finance-clean-reset-btn">SIFIRLA</button>
-              </div>
-            </div>
-          </div>
-        </div>
+                  <div id="finance-clean-plan-form"></div>
+                  <div id="finance-clean-plan-result" class="finance-clean-result"></div>
 
-        <div class="finance-clean-card">
-          <div class="finance-clean-head">
-            <div>
-              <h3><i class="fa-solid fa-table-cells"></i> Günlük 20 İşlem Defteri</h3>
-              <span>Maç / coin / işlem adı yaz, sonucu kapat, kasa etkisini takip et</span>
+                  <div class="finance-clean-actions">
+                    <button class="finance-clean-btn gold" id="finance-clean-calc-btn">HESAPLA</button>
+                    <button class="finance-clean-btn green" id="finance-clean-apply-btn">20 ALANA UYGULA</button>
+                    <button class="finance-clean-btn" id="finance-clean-clear-btn">GÜNÜ TEMİZLE</button>
+                    <button class="finance-clean-btn red" id="finance-clean-reset-btn">SIFIRLA</button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="finance-clean-body">
-            <div id="finance-clean-slots" class="finance-clean-table-wrap"></div>
-          </div>
-        </div>
 
-        <div class="finance-clean-secondary">
-          <div class="finance-clean-card">
-            <div class="finance-clean-head">
-              <div>
-                <h3><i class="fa-solid fa-layer-group"></i> Rolling</h3>
-                <span>Eski rolling ekranını not alanlarıyla kullanmaya devam</span>
+            <div class="finance-clean-card" id="finance-clean-daily-card">
+              <div class="finance-clean-head">
+                <div>
+                  <h3><i class="fa-solid fa-table-cells"></i> Günlük 20 İşlem Defteri</h3>
+                  <span>Bahis için maç/oran; kripto için coin/işlem notu ve manuel K/Z takibi</span>
+                </div>
+              </div>
+              <div class="finance-clean-body">
+                <div id="finance-clean-slots" class="finance-clean-table-wrap"></div>
               </div>
             </div>
-            <div class="finance-clean-body">
-              <div class="finance-clean-rolling">
-                <div class="finance-clean-roll" data-roll="7"><span>7 GÜN</span><b>ROLLING</b></div>
-                <div class="finance-clean-roll" data-roll="15"><span>15 GÜN</span><b>ROLLING</b></div>
-                <div class="finance-clean-roll" data-roll="30"><span>30 GÜN</span><b>ROLLING</b></div>
-                <div class="finance-clean-roll" data-roll="60"><span>60 GÜN</span><b>ROLLING</b></div>
-                <div class="finance-clean-roll" data-roll="90"><span>90 GÜN</span><b>ROLLING</b></div>
-              </div>
-            </div>
-          </div>
 
-          <div class="finance-clean-card">
-            <div class="finance-clean-head">
-              <div>
-                <h3><i class="fa-solid fa-database"></i> Veri</h3>
-                <span>Yedekleme ve hızlı temizlik</span>
+            <div class="finance-clean-card finance-clean-data-card">
+              <div class="finance-clean-head">
+                <div>
+                  <h3><i class="fa-solid fa-database"></i> Veri</h3>
+                  <span>Yedekleme ve hızlı temizlik</span>
+                </div>
               </div>
-            </div>
-            <div class="finance-clean-body">
-              <div class="finance-clean-actions">
-                <button class="finance-clean-btn" id="finance-clean-export-btn">DIŞA AKTAR</button>
-                <button class="finance-clean-btn" id="finance-clean-import-btn">İÇE AKTAR</button>
+              <div class="finance-clean-body">
+                <div class="finance-clean-actions">
+                  <button class="finance-clean-btn" id="finance-clean-export-btn">DIŞA AKTAR</button>
+                  <button class="finance-clean-btn" id="finance-clean-import-btn">İÇE AKTAR</button>
+                </div>
+                <input type="file" id="finance-clean-import-file" accept=".json" style="display:none;">
               </div>
-              <input type="file" id="finance-clean-import-file" accept=".json" style="display:none;">
             </div>
           </div>
         </div>
@@ -1082,6 +1394,11 @@
     const el = qs("finance-clean-chart");
     if (!el || typeof ApexCharts === "undefined") return;
 
+    const filter = state.chartFilter || "all";
+    const settled = state.slots
+      .map((s, i) => ({ ...s, idx: i + 1 }))
+      .filter(s => (s.status === "win" || s.status === "loss") && (filter === "all" || s.type === filter));
+
     const points = [];
     let balance = Number(state.bank || 0);
 
@@ -1090,68 +1407,93 @@
       y: Number(balance.toFixed(2))
     });
 
-    state.slots.forEach((s, i) => {
-      if (s.status === "win" || s.status === "loss") {
-        balance += Number(s.pnl || 0);
-        points.push({
-          x: String(i + 1),
-          y: Number(balance.toFixed(2))
-        });
-      }
+    settled.forEach((s) => {
+      balance += Number(s.pnl || 0);
+      points.push({
+        x: String(s.idx),
+        y: Number(balance.toFixed(2))
+      });
     });
 
-    if (points.length === 1) {
-      points.push({ x: "Bugün", y: Number(balance.toFixed(2)) });
+    const empty = qs("finance-clean-chart-empty");
+    if (empty) empty.style.display = settled.length ? "none" : "grid";
+
+    if (!settled.length) {
+      points.push({ x: "Bekliyor", y: Number(balance.toFixed(2)) });
+    }
+
+    const wins = settled.filter(s => s.status === "win").length;
+    const losses = settled.filter(s => s.status === "loss").length;
+    const pnl = settled.reduce((sum, s) => sum + Number(s.pnl || 0), 0);
+    const used = settled.reduce((sum, s) => sum + Number(s.stake || 0), 0);
+    const roiVal = used ? (pnl / used) * 100 : 0;
+
+    const summary = qs("finance-clean-chart-summary");
+    if (summary) {
+      summary.innerHTML = `
+        <div><span>Filtre</span><b>${filter === "all" ? "TÜMÜ" : filter === "bet" ? "BAHİS" : "KRİPTO"}</b></div>
+        <div><span>Kapalı İşlem</span><b>${settled.length}</b></div>
+        <div><span>Kazanç / Kayıp</span><b>${wins} / ${losses}</b></div>
+        <div><span>Seçili P/L</span><b class="${pnl >= 0 ? "pos" : "neg"}">${money(pnl)}</b></div>
+        <div><span>Seçili ROI</span><b class="${roiVal >= 0 ? "pos" : "neg"}">${pct(roiVal)}</b></div>
+      `;
     }
 
     const options = {
       chart: {
         type: "area",
-        height: 310,
+        height: 330,
         background: "transparent",
-        toolbar: { show: false },
-        animations: { enabled: true }
+        toolbar: {
+          show: true,
+          tools: { download: false, selection: false, zoom: true, zoomin: true, zoomout: true, pan: true, reset: true }
+        },
+        animations: { enabled: true, speed: 260 }
       },
       theme: { mode: "dark" },
       series: [{
-        name: "Kasa",
+        name: filter === "all" ? "Kasa Eğrisi" : filter === "bet" ? "Bahis Kasa Eğrisi" : "Kripto Kasa Eğrisi",
         data: points
       }],
-      stroke: {
-        curve: "smooth",
-        width: 3
-      },
+      stroke: { curve: "smooth", width: 3 },
+      markers: { size: settled.length ? 4 : 0, strokeWidth: 0 },
       fill: {
         type: "gradient",
-        gradient: {
-          shadeIntensity: 0.4,
-          opacityFrom: 0.35,
-          opacityTo: 0.02
-        }
+        gradient: { shadeIntensity: 0.45, opacityFrom: 0.34, opacityTo: 0.03 }
       },
       grid: {
-        borderColor: "#222"
+        borderColor: "#242424",
+        strokeDashArray: 4,
+        padding: { left: 8, right: 18 }
       },
       xaxis: {
-        labels: { style: { colors: "#888" } }
+        labels: { style: { colors: "#8f8f8f", fontSize: "11px" } },
+        axisBorder: { color: "#333" },
+        axisTicks: { color: "#333" }
       },
       yaxis: {
         labels: {
-          style: { colors: "#888" },
+          style: { colors: "#8f8f8f", fontSize: "11px" },
           formatter: v => "$" + Number(v).toFixed(0)
         }
       },
       tooltip: {
-        y: {
-          formatter: v => money(v)
-        }
+        theme: "dark",
+        y: { formatter: v => money(v) }
       },
-      colors: ["#fbbf24"]
+      colors: [filter === "crypto" ? "#60a5fa" : filter === "bet" ? "#fbbf24" : "#22c55e"],
+      annotations: {
+        yaxis: [{
+          y: Number(state.bank || 0),
+          borderColor: "#666",
+          strokeDashArray: 6,
+          label: { text: "Başlangıç", style: { color: "#fff", background: "#333" } }
+        }]
+      }
     };
 
-    if (chart) {
-      chart.updateOptions(options);
-    } else {
+    if (chart) chart.updateOptions(options, true, true);
+    else {
       chart = new ApexCharts(el, options);
       chart.render();
     }
@@ -1187,7 +1529,46 @@
       btn.addEventListener("click", () => {
         state.mode = btn.dataset.finMode;
         saveState();
-        renderAll();
+        renderRoot();
+      });
+    });
+
+    document.querySelectorAll("[data-fin-action]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const action = btn.dataset.finAction;
+        const smooth = { behavior: "smooth", block: "start" };
+
+        if (action === "bet" || action === "crypto") {
+          state.mode = action;
+          saveState();
+          renderRoot();
+          setTimeout(() => qs("finance-clean-plan-card")?.scrollIntoView(smooth), 30);
+          return;
+        }
+
+        if (action === "chart") qs("finance-clean-chart-card")?.scrollIntoView(smooth);
+        if (action === "daily") qs("finance-clean-daily-card")?.scrollIntoView(smooth);
+      });
+    });
+
+    document.querySelectorAll("[data-mode-roll]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const [mode, dayRaw] = String(btn.dataset.modeRoll || "bet:7").split(":");
+        state.mode = mode === "crypto" ? "crypto" : "bet";
+        saveState();
+        const days = Number(dayRaw || 7);
+        localStorage.setItem("finance_rolling_mode", state.mode);
+        if (typeof window.omega_OpenRollingExcel === "function") window.omega_OpenRollingExcel(days);
+        else showToast("Rolling modülü bulunamadı.");
+      });
+    });
+
+    document.querySelectorAll("[data-chart-filter]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.chartFilter = btn.dataset.chartFilter || "all";
+        saveState();
+        renderRoot();
+        setTimeout(() => qs("finance-clean-chart-card")?.scrollIntoView({ behavior: "smooth", block: "start" }), 30);
       });
     });
 
@@ -1221,17 +1602,6 @@
     qs("finance-clean-export-btn")?.addEventListener("click", exportFinance);
     qs("finance-clean-import-btn")?.addEventListener("click", () => qs("finance-clean-import-file")?.click());
     qs("finance-clean-import-file")?.addEventListener("change", importFinance);
-
-    document.querySelectorAll("[data-roll]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const days = Number(btn.dataset.roll);
-        if (typeof window.omega_OpenRollingExcel === "function") {
-          window.omega_OpenRollingExcel(days);
-        } else {
-          showToast("Rolling modülü bulunamadı.");
-        }
-      });
-    });
   }
 
   function readPlanInputs() {
