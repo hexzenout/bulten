@@ -144,7 +144,7 @@
       <section class="rolling-v47-card ${mode} v49-mode-card">
         <div class="rolling-v47-head">
           <div>
-            <h3>${isCrypto ? '<i class="fa-brands fa-bitcoin"></i>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} ${isCrypto ? "KRİPTO" : "BAHİS"}</h3>
+            <h3 class="${isCrypto ? "rolling-v493-title crypto" : "rolling-v493-title bet"}">${isCrypto ? '<i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} <span>${isCrypto ? "KRİPTO" : "BAHİS"}</span></h3>
           </div>
           <div class="rolling-v47-mini">
             <span>${sum.settled} kapalı · Rolling ${money(rollSum.pnlTotal)}</span>
@@ -153,14 +153,14 @@
         </div>
 
         <details class="rolling-v49-fold ${mode}" open>
-          <summary><i class="fa-solid fa-layer-group"></i> ${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</summary>
+          <summary class="${isCrypto ? "rolling-v493-fold-title crypto" : "rolling-v493-fold-title bet"}"><i class="fa-solid fa-layer-group"></i> <span>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
           <div class="rolling-v47-roll-panel ${mode}">
             <div class="rolling-v47-roll-buttons">${renderRollingButtons(mode)}</div>
           </div>
         </details>
 
         <details class="rolling-v49-fold ${mode}" open>
-          <summary><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> ${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "KOMBİNE KUPON MAÇLARI"}</summary>
+          <summary class="${isCrypto ? "rolling-v493-fold-title crypto" : "rolling-v493-fold-title bet"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "KOMBİNE KUPON MAÇLARI"}</span></summary>
           <div class="rolling-v47-section-title">
             <div>${renderRowControls(mode, state)}</div>
             <button type="button" data-clear="${mode}">${isCrypto ? "KRİPTOYU TEMİZLE" : "BAHİSİ TEMİZLE"}</button>
@@ -193,8 +193,8 @@
         <div class="rolling-v48-layout v49-rolling-layout">
           <aside class="rolling-v48-rail v49-rolling-rail">
             <div class="rolling-v48-rail-toggle v49-rolling-rail-title"><i class="fa-solid fa-bars"></i><span>ROLLING MENÜSÜ</span></div>
-            <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span><span>BAHİS</span></button>
-            <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span></button>
+            <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span><span class="rolling-v493-rail-label">BAHİS</span></button>
+            <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><span class="rolling-v493-rail-label">KRİPTO</span></button>
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
         </div>
