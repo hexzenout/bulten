@@ -1,4 +1,4 @@
-// V46C CACHE RESET
+// V46D CACHE RESET
 (function () {
   async function resetOldCaches() {
     try {
@@ -15,12 +15,12 @@
     }
   }
   window.addEventListener("load", () => {
-    const doneKey = "omega_cache_reset_done_v46c";
+    const doneKey = "omega_cache_reset_done_v46d";
     if (localStorage.getItem(doneKey) !== "1") {
       localStorage.setItem(doneKey, "1");
       resetOldCaches().then(() => {
         const url = new URL(location.href);
-        url.searchParams.set("v", "v46c");
+        url.searchParams.set("v", "v46d");
         location.replace(url.toString());
       });
     }
