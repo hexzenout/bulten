@@ -4374,3 +4374,272 @@ body:not(.omega-tab-rolling) #omega-rolling-block {
     }
 }
 
+
+/* ===============================
+   V49 DEV POLISH: STREAM + ROLLING + SOUND + ROUTE GUARD
+================================ */
+
+/* Route guard: Rolling yalnızca #rolling sekmesi aktifken görünür. */
+#omega-rolling-block {
+    display: none !important;
+}
+body.omega-tab-rolling #omega-rolling-block[data-visible="true"] {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    pointer-events: auto !important;
+}
+body:not(.omega-tab-rolling) #omega-rolling-block,
+body.omega-tab-crypto #omega-rolling-block,
+body.omega-tab-stream #omega-rolling-block,
+body.omega-tab-futbol #omega-rolling-block,
+body.omega-tab-basketbol #omega-rolling-block,
+body.omega-tab-finance #omega-rolling-block {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Üst breadcrumb renkleri */
+.module-title-stream {
+    color: var(--green) !important;
+    font-weight: 950 !important;
+}
+.module-title-stream i {
+    color: var(--green) !important;
+}
+.module-title-rolling {
+    color: #7E22CE !important;
+    font-weight: 950 !important;
+}
+.module-title-rolling i {
+    color: #7E22CE !important;
+}
+
+/* Sol menü ROLLING mor tona alınır. */
+#nav-rolling,
+#nav-rolling.active {
+    color: var(--text) !important;
+}
+#nav-rolling i,
+#nav-rolling.active i {
+    color: #7E22CE !important;
+}
+#nav-rolling.active {
+    background: rgba(126,34,206,.16) !important;
+}
+
+/* Rolling layout sol menü */
+.v49-rolling-layout {
+    display: grid !important;
+    grid-template-columns: 230px minmax(0, 1fr) !important;
+    gap: 16px !important;
+    align-items: start !important;
+}
+.v49-rolling-rail {
+    position: sticky !important;
+    top: 78px !important;
+    display: grid !important;
+    gap: 10px !important;
+}
+.v49-rolling-rail-title {
+    cursor: default !important;
+    color: #fff !important;
+    background: #111 !important;
+    border-color: #333 !important;
+}
+.v49-rolling-rail-title i {
+    color: #fff !important;
+}
+.v49-rolling-page.rail-collapsed .rolling-v48-rail {
+    display: grid !important;
+}
+.v49-rolling-page.rail-collapsed .v48-rolling-layout {
+    grid-template-columns: 230px minmax(0, 1fr) !important;
+}
+
+/* Bahis renkleri kırmızıya geçer. */
+.rolling-v48-rail-tab.bet.active,
+.rolling-v48-rail-tab.bet:hover {
+    border-color: #ef4444 !important;
+    background: rgba(239,68,68,.16) !important;
+    color: #fecaca !important;
+}
+.rolling-v48-rail-tab.bet i,
+.rolling-v47-card.bet h3,
+.rolling-v47-card.bet h3 i,
+.rolling-v49-fold.bet summary,
+.rolling-v49-fold.bet summary i {
+    color: #ef4444 !important;
+}
+.rolling-v47-card.bet {
+    border-left: 4px solid #ef4444 !important;
+}
+.rolling-v47-type.bet {
+    background: rgba(239,68,68,.16) !important;
+    color: #fecaca !important;
+}
+.rolling-v47-roll-panel.bet {
+    border-color: rgba(239,68,68,.35) !important;
+}
+.rolling-v47-roll-panel.bet h4,
+.rolling-v47-roll-panel.bet h4 i {
+    color: #ef4444 !important;
+}
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:hover,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:focus {
+    border-color: #ef4444 !important;
+}
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button span {
+    color: #ef4444 !important;
+}
+.rolling-v48-row-controls button:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* Kripto mavisi korunur. */
+.rolling-v48-rail-tab.crypto.active,
+.rolling-v48-rail-tab.crypto:hover {
+    border-color: #60a5fa !important;
+    background: rgba(96,165,250,.14) !important;
+    color: #bfdbfe !important;
+}
+
+/* Rolling içindeki iki alan açılır/kapanır ama tasarım bozulmaz. */
+.rolling-v49-fold {
+    border-top: 1px solid #232323;
+    padding: 14px;
+}
+.rolling-v49-fold summary {
+    list-style: none;
+    cursor: pointer;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 950;
+    letter-spacing: .4px;
+    color: #fff;
+}
+.rolling-v49-fold summary::-webkit-details-marker {
+    display: none;
+}
+.rolling-v49-fold summary::after {
+    content: "AÇ / KAPAT";
+    margin-left: auto;
+    color: #888;
+    font-size: .62rem;
+    border: 1px solid #333;
+    border-radius: 999px;
+    padding: 5px 8px;
+}
+.rolling-v49-fold[open] summary::after {
+    color: #fff;
+    border-color: #444;
+}
+
+/* Canlı Yayın başlangıç ve boş ekran sorunu için daha kararlı görünüm */
+#omega-stream-block .stream-master-grid.active:empty::before {
+    content: "Yayın ekranı hazırlanıyor...";
+    display: grid;
+    place-items: center;
+    min-height: 260px;
+    border: 1px dashed #333;
+    border-radius: 14px;
+    color: #aaa;
+    font-weight: 900;
+}
+
+/* Ses merkezi sadeleştirme */
+.v49-sound-card .v49-sound-actions {
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 10px !important;
+}
+.v49-sound-card .v49-sound-actions button {
+    min-height: 48px !important;
+    white-space: nowrap !important;
+    line-height: 1.1 !important;
+    font-weight: 950 !important;
+}
+.v49-custom-sound-panel {
+    display: none !important;
+    grid-column: 1 / -1 !important;
+    padding: 16px !important;
+    border-radius: 18px !important;
+    border: 1px solid #333 !important;
+    background: #090909 !important;
+}
+.v49-custom-sound-panel.show {
+    display: grid !important;
+    gap: 12px !important;
+}
+.v49-custom-select-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 100px !important;
+    gap: 10px !important;
+}
+.v49-custom-select-row select,
+.v49-custom-select-row button {
+    min-height: 46px !important;
+    border-radius: 12px !important;
+    font-weight: 950 !important;
+}
+.v49-custom-select-row select {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+.v49-file-row {
+    grid-template-columns: 145px minmax(0, 1fr) !important;
+    gap: 12px !important;
+}
+.v49-file-name {
+    display: block !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    line-height: 46px !important;
+    white-space: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    text-overflow: clip !important;
+    padding: 0 12px !important;
+    scrollbar-width: thin;
+    cursor: help;
+}
+.v49-file-name::-webkit-scrollbar {
+    height: 7px;
+}
+.v49-file-name::-webkit-scrollbar-track {
+    background: #080808;
+}
+.v49-file-name::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 99px;
+}
+
+@media (max-width: 1200px) {
+    .v49-rolling-layout,
+    .v49-rolling-page.rail-collapsed .v48-rolling-layout {
+        grid-template-columns: 1fr !important;
+    }
+    .v49-rolling-rail {
+        position: static !important;
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .v49-sound-card .v49-sound-actions,
+    .v49-custom-select-row,
+    .v49-file-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
