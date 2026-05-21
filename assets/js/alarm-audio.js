@@ -202,7 +202,7 @@
     notify("Alarm durduruldu.");
   }
 
-  async async function playCustomLoop(durationMs) {
+  async async async function playCustomLoop(durationMs) {
     const src = await getObjectUrl(settings.selectedCustomId);
     if (!src) {
       notify("Seçili özel ses bulunamadı.");
@@ -214,7 +214,7 @@
     const end = Math.max(0, Number(settings.customEnd || 0));
 
     ringAudio = new Audio(src);
-    ringAudio.volume = Math.max(0, Math.min(1, Number(settings.volume || 0.75)));
+    ringAudio.volume = 1;
     ringAudio.currentTime = start;
 
     const stopFromAudio = () => {
@@ -238,7 +238,9 @@
       return;
     }
 
-    ringTimers.push(setTimeout(stopAlarm, durationMs));
+    if (!(end > start)) {
+      ringTimers.push(setTimeout(stopAlarm, Math.max(60, Number(settings.durationSec || 60)) * 1000));
+    }
   }
 
   function playBuiltinLoop(durationMs) {
@@ -294,6 +296,7 @@
     getSettings: () => ({ ...settings }),
     setSettings: next => {
       settings = { ...settings, ...next };
+      settings.volume = 1;
       settings.durationSec = Math.max(60, Number(settings.durationSec || 60));
       saveSettings();
     },
