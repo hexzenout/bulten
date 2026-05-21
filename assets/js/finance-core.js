@@ -208,6 +208,7 @@ function omega_OpenRollingExcel(days, skipHash = false) {
         }
 
         
+        
         function omega_FinanceRailAction(action) {
             const smooth = { behavior: 'smooth', block: 'start' };
 
