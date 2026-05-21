@@ -61,7 +61,7 @@
 
         <div class="v32-sound-actions">
           <button id="v32-sound-toggle" class="${s.enabled ? "active" : ""}">${s.enabled ? "SES AÇIK" : "SESİ AÇ"}</button>
-          <button id="v32-sound-test">SEÇİLİ SESİ TEST ET</button>
+          <button id="v32-sound-test">SEÇİLİ SESİ DENE</button>
           <button id="v32-sound-stop" class="danger">SESİ DURDUR</button>
         </div>
 
@@ -69,11 +69,11 @@
           <div class="v32-sound-field">
             <label>Ses Tipi</label>
             <select id="v32-sound-type">
+              <option value="custom">Özel Ses</option>
               <option value="digital">Dijital Uyarı</option>
               <option value="bip">Standart Bip</option>
               <option value="chime">Yumuşak Chime</option>
               <option value="siren">Siren</option>
-              <option value="custom">Özel Ses</option>
               <option value="silent">Sessiz</option>
             </select>
           </div>
@@ -109,8 +109,8 @@
 
           <div class="v47-custom-select-row">
             <select id="v47-custom-select"><option value="">Özel ses seç...</option></select>
-            <button type="button" id="v47-custom-test">TEST</button>
-            <button type="button" id="v47-custom-remove" class="danger">×</button>
+            <button type="button" id="v47-custom-test">ÖZEL SESİ DENE</button>
+            <button type="button" id="v47-custom-remove" class="danger" title="Seçili özel sesi kaldır">KALDIR</button>
           </div>
 
           <div class="v32-file-row v47-file-row">
@@ -140,7 +140,7 @@
       const btn = qs("#v32-sound-test");
       if (btn) {
         btn.classList.remove("testing");
-        btn.textContent = "SEÇİLİ SESİ TEST ET";
+        btn.textContent = "SEÇİLİ SESİ DENE";
       }
     };
 
@@ -151,7 +151,7 @@
       if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
       setTimeout(() => {
         btn.classList.remove("testing");
-        btn.textContent = "SEÇİLİ SESİ TEST ET";
+        btn.textContent = "SEÇİLİ SESİ DENE";
       }, 1600);
     };
 
