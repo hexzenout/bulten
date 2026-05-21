@@ -3246,45 +3246,11 @@ html.rolling-hash-boot body::before {
 }
 
 /* ===============================
-   V45 FINANCE CLEAN REBUILD + NAV NEW TAB
-   Kasa yönetimi sol menü gerçek ayrım + eski rolling kart kaldırma + yeni sekme sistemi.
+   V46A CLEAN FOUNDATION
+   Çakışan eski finance/nav/sound blokları temizlendikten sonra güvenli temel.
 ================================ */
 
-/* Ana sol menüde yeni sekme ikonu */
-.nav-link {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 10px !important;
-}
-
-.nav-main-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-}
-
-.nav-new-tab-btn {
-    width: 28px;
-    height: 28px;
-    border: 1px solid #343434;
-    border-radius: 8px;
-    background: #101010;
-    color: #aaa;
-    display: inline-grid;
-    place-items: center;
-    cursor: pointer;
-    flex: 0 0 auto;
-}
-
-.nav-new-tab-btn:hover {
-    background: #fbbf24;
-    border-color: #fbbf24;
-    color: #111;
-}
-
-/* Finance ana wrapper: sol rail ayrı, içerik ayrı. */
+/* Finance ana alanı: sol menü + sağ içerik. Rolling kutularına dokunmaz. */
 .fin-terminal-wrapper {
     width: min(1600px, calc(100% - 28px)) !important;
     margin: 0 auto !important;
@@ -3293,14 +3259,13 @@ html.rolling-hash-boot body::before {
 .fin-terminal-wrapper.active {
     display: grid !important;
     grid-template-columns: 220px minmax(0, 1fr) !important;
-    align-items: start !important;
     gap: 18px !important;
-    box-sizing: border-box !important;
+    align-items: start !important;
 }
 
 .fin-terminal-wrapper.active > .finance-left-rail {
     grid-column: 1 !important;
-    grid-row: 1 / span 30 !important;
+    grid-row: 1 / span 40 !important;
 }
 
 .fin-terminal-wrapper.active > *:not(.finance-left-rail) {
@@ -3320,7 +3285,7 @@ html.rolling-hash-boot body::before {
     min-width: 0 !important;
 }
 
-/* Sol finance rail */
+/* Sol finance rail sadece zemin olarak korunur. V46B'de gerçek rebuild yapılacak. */
 .finance-left-rail {
     position: sticky !important;
     top: 78px !important;
@@ -3333,7 +3298,7 @@ html.rolling-hash-boot body::before {
     border-radius: 18px !important;
     background: #0b0b0b !important;
     z-index: 5 !important;
-    box-shadow: 0 16px 42px rgba(0,0,0,.34);
+    box-shadow: 0 16px 42px rgba(0,0,0,.30);
 }
 
 .finance-rail-section {
@@ -3435,35 +3400,19 @@ html.rolling-hash-boot body::before {
     font-size: .63rem !important;
 }
 
-.finance-rolling-rail-selector.bet .finance-rolling-rail-menu button:hover {
-    border-color: #fbbf24 !important;
-    color: #fbbf24 !important;
-}
-
-.finance-rolling-rail-selector.crypto .finance-rolling-rail-menu button:hover {
-    border-color: #60a5fa !important;
-    color: #60a5fa !important;
-}
-
-/* Eski alttaki rolling kart hem DOM'dan kaldırıldı, hem varsa kesin gizli. */
+/* Eski alttaki rolling kart HTML'den kaldırıldı; kalıntı varsa yine görünmesin. */
 .finance-rolling-launch-card,
 .finance-rolling-selector,
 .finance-rolling-options {
     display: none !important;
 }
 
-/* Bahis / Kripto plan ayrımı */
-#finance-panel-bet.active {
-    border-left: 4px solid #fbbf24 !important;
-    padding-left: 12px !important;
+/* Eski yeni-sekme ikon sisteminin olası kalıntıları görünmesin. V46B'de gerçek <a href> menü gelecek. */
+.nav-new-tab-btn {
+    display: none !important;
 }
 
-#finance-panel-crypto.active {
-    border-left: 4px solid #60a5fa !important;
-    padding-left: 12px !important;
-}
-
-/* Ses dosyası adı görünürlüğü korunur */
+/* Ses dosya adı alanı şimdilik okunabilir kalsın; V46B'de özel ses kütüphanesi kurulacak. */
 .v32-custom-file-field {
     grid-column: 1 / -1 !important;
 }
