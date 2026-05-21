@@ -48,24 +48,21 @@
     const s = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
     const isCustom = (s.sound || "custom") === "custom";
 
-    mount.dataset.ready = "v49";
+    mount.dataset.ready = "v497";
     mount.innerHTML = `
-      <div class="v32-sound-card v49-sound-card">
-        <div class="v32-sound-head">
+      <div class="v32-sound-card v49-sound-card v497-sound-card">
+        <div class="v32-sound-head v497-sound-head">
           <div>
             <b>Alarm Ses Merkezi</b>
-            <span>Tek oynat/durdur kontrolü, özel ses kütüphanesi ve zaman aralığı.</span>
           </div>
-          <span class="terminal-v10-live-dot ${s.enabled ? "ok" : ""}">${s.enabled ? "SES AÇIK" : "SES KAPALI"}</span>
         </div>
 
-        <div class="v32-sound-actions v49-sound-actions">
-          <button id="v32-sound-toggle" class="${s.enabled ? "active" : ""}">${s.enabled ? "SES AÇIK" : "SESİ AÇ"}</button>
+        <div class="v32-sound-actions v49-sound-actions v497-sound-actions">
           <button id="v32-sound-test">OYNAT</button>
           <button id="v32-sound-stop" class="danger">DURDUR</button>
         </div>
 
-        <div class="v32-sound-grid">
+        <div class="v32-sound-grid v497-sound-grid">
           <div class="v32-sound-field">
             <label>Ses Tipi</label>
             <select id="v32-sound-type">
@@ -99,22 +96,24 @@
           </div>
         </div>
 
-        <div class="v47-custom-sound-panel v49-custom-sound-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
-          <div class="v47-custom-head">
+        <div class="v47-custom-sound-panel v49-custom-sound-panel v497-custom-sound-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
+          <div class="v47-custom-head v497-custom-head">
             <div>
               <b><i class="fa-solid fa-music"></i> Özel Ses Kütüphanesi</b>
-              <span>Ses Tipi “Özel Ses” seçiliyken aktif olur. Şarkı adının tamamı için üstüne gel veya alanı tekerlekle kaydır.</span>
             </div>
           </div>
 
-          <div class="v47-custom-select-row v49-custom-select-row">
-            <select id="v47-custom-select" title="Özel ses seç"><option value="">Özel ses seç...</option></select>
+          <div class="v47-custom-select-row v49-custom-select-row v497-custom-select-row">
+            <button type="button" id="v497-inline-toggle" class="v497-inline-toggle" title="Seçili özel sesi oynat / durdur">
+              <i class="fa-solid fa-play"></i><i class="fa-solid fa-pause"></i>
+            </button>
+            <select id="v47-custom-select" class="v497-song-select" title="Özel ses seç"><option value="">Özel ses seç...</option></select>
             <button type="button" id="v47-custom-remove" class="danger" title="Seçili özel sesi kaldır">KALDIR</button>
           </div>
 
-          <div class="v32-file-row v47-file-row v49-file-row">
+          <div class="v32-file-row v47-file-row v49-file-row v497-file-row">
             <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-            <div class="v32-file-name v47-file-name v49-file-name v493-now-playing v494-now-playing v496-now-playing" id="v32-file-name" title="Dosya seçilmedi"><span class="v496-play-badge">ÇALIYOR</span><i class="fa-solid fa-music"></i><span class="v493-now-playing-text">Dosya seçilmedi</span><button type="button" id="v494-now-stop" class="v494-now-stop" title="Çalan sesi durdur">DURDUR</button></div>
+            <span class="v497-upload-note" id="v497-upload-note">Dosya seçilmedi</span>
             <input id="v32-file-input" type="file" accept="audio/*" hidden>
           </div>
         </div>
@@ -128,29 +127,30 @@
       setSoundSettings(next);
     };
 
-    qs("#v32-sound-toggle").onclick = () => {
-      if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
-      applySettings({ enabled: true });
-      renderSoundPanel(true);
-    };
-
-    qs("#v32-sound-stop").onclick = () => {
+    const stopSound = () => {
       if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
       const btn = qs("#v32-sound-test");
       if (btn) {
         btn.classList.remove("testing");
         btn.textContent = "OYNAT";
       }
+      qs("#v497-inline-toggle")?.classList.remove("playing");
     };
+
+    qs("#v32-sound-stop").onclick = stopSound;
 
     qs("#v32-sound-test").onclick = async () => {
       const btn = qs("#v32-sound-test");
       btn.classList.add("testing");
       btn.textContent = "ÇALIYOR...";
+      if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
+      if (window.V26AlarmAudio?.setSettings) window.V26AlarmAudio.setSettings({ enabled: true });
       if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
+      qs("#v497-inline-toggle")?.classList.add("playing");
       setTimeout(() => {
         btn.classList.remove("testing");
         btn.textContent = "OYNAT";
+        qs("#v497-inline-toggle")?.classList.remove("playing");
       }, 1600);
     };
 
@@ -180,15 +180,15 @@
     qs("#v32-file-input").onchange = async e => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const nameEl = qs("#v32-file-name");
-      setV493NowPlaying("Yükleniyor: " + file.name);
+      const note = qs("#v497-upload-note");
+      if (note) note.textContent = "Yükleniyor: " + file.name;
       try {
         if (window.V26AlarmAudio?.addCustomFile) await window.V26AlarmAudio.addCustomFile(file);
         applySettings({ sound: "custom" });
-        setV493NowPlaying(file.name);
+        if (note) note.textContent = file.name;
         await renderSoundLibrary();
       } catch (err) {
-        setV493NowPlaying("Dosya yüklenemedi.");
+        if (note) note.textContent = "Dosya yüklenemedi.";
         alert("Ses dosyası yüklenemedi. MP3/WAV gibi geçerli bir ses dosyası seç.");
       }
     };
@@ -201,51 +201,41 @@
       renderSoundPanel(true);
     };
 
+    qs("#v497-inline-toggle").onclick = async e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const btn = qs("#v497-inline-toggle");
+      if (btn.classList.contains("playing")) {
+        stopSound();
+        return;
+      }
+      if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
+      if (window.V26AlarmAudio?.setSettings) window.V26AlarmAudio.setSettings({ enabled: true, sound: "custom" });
+      if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
+      btn.classList.add("playing");
+    };
+
     qs("#v47-custom-remove").onclick = async () => {
       const id = qs("#v47-custom-select")?.value;
       if (!id) return alert("Kaldırılacak özel sesi seç.");
       if (!confirm("Bu özel sesi kaldırayım mı?")) return;
+      stopSound();
       await window.V26AlarmAudio.removeCustomFile(id);
       renderSoundPanel(true);
     };
 
     renderSoundLibrary();
-
-    const fileNameBox = qs("#v32-file-name");
-    if (fileNameBox) {
-      fileNameBox.addEventListener("wheel", e => {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          fileNameBox.scrollLeft += e.deltaY;
-          e.preventDefault();
-        }
-      }, { passive: false });
-    }
-
-    const nowStop = qs("#v494-now-stop");
-    if (nowStop) {
-      nowStop.dataset.bound = "v494-now-stop-click-v494";
-      nowStop.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
-        const btn = qs("#v32-sound-test");
-        if (btn) {
-          btn.classList.remove("testing");
-          btn.textContent = "OYNAT";
-        }
-      };
-    }
   }
 
   function setV493NowPlaying(text) {
-    const box = qs("#v32-file-name");
-    if (!box) return;
     const clean = text || "Dosya seçilmedi";
-    box.title = clean;
-    const span = box.querySelector(".v493-now-playing-text");
-    if (span) span.textContent = clean;
-    else box.textContent = clean;
-    box.scrollLeft = 0;
+    const select = qs("#v47-custom-select");
+    if (select) select.title = clean;
+    const note = qs("#v497-upload-note");
+    if (note) {
+      note.textContent = clean;
+      note.title = clean;
+    }
   }
 
   async function renderSoundLibrary() {
@@ -264,10 +254,11 @@
     const current = files.find(f => f.id === s.selectedCustomId);
     select.title = current ? current.name : "Özel ses seç";
 
-    const nameEl = qs("#v32-file-name");
-    if (nameEl) {
-      const text = current ? `Aktif: ${current.name}` : "Dosya seçilmedi. Uzun dosya adları burada mouse tekerleği ile kaydırılabilir.";
-      setV493NowPlaying(text);
+    const noteEl = qs("#v497-upload-note");
+    if (noteEl) {
+      const text = current ? `Aktif: ${current.name}` : "Dosya seçilmedi";
+      noteEl.textContent = text;
+      noteEl.title = text;
     }
   }
 
