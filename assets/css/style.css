@@ -5524,3 +5524,162 @@ body.omega-tab-basketbol #omega-rolling-block {
     }
 }
 
+
+/* ===============================
+   V49.6 SOUND PLAYER OVERFLOW FIX
+   index.html / sw.js / pwa.js değiştirilmedi.
+================================ */
+
+/* Özel Ses paneli sağ kolonun dışına taşmasın. */
+.v47-custom-sound-panel,
+.v49-custom-sound-panel,
+.v493-custom-sound-panel,
+.v496-custom-sound-panel {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+/* Dosya seç + çalan şarkı satırı: panel içinde kalır. */
+.v49-file-row,
+.v47-file-row,
+.v32-file-row {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: 126px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+}
+
+/* Eski min-width 420px taşırıyordu; tamamen sıfırlandı. */
+.v496-now-playing,
+.v494-now-playing,
+.v493-now-playing {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    display: grid !important;
+    grid-template-columns: auto 18px minmax(0, 1fr) 76px !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 8px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    border: 1px solid rgba(249,115,22,.60) !important;
+    border-radius: 14px !important;
+    background: linear-gradient(90deg, rgba(249,115,22,.16), rgba(0,0,0,.08)), #080808 !important;
+}
+
+/* Pseudo label önce butonu sıkıştırıyordu; kapatıldı. */
+.v496-now-playing::before,
+.v494-now-playing::before,
+.v493-now-playing::before {
+    content: none !important;
+    display: none !important;
+}
+
+.v496-play-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 54px !important;
+    height: 28px !important;
+    border-radius: 999px !important;
+    background: rgba(249,115,22,.16) !important;
+    color: #f97316 !important;
+    font-size: .58rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .5px !important;
+}
+
+.v496-now-playing i,
+.v494-now-playing i,
+.v493-now-playing i {
+    color: #f97316 !important;
+    font-size: .95rem !important;
+    width: 18px !important;
+    min-width: 18px !important;
+    justify-self: center !important;
+}
+
+.v493-now-playing-text {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    transform: none !important;
+    animation: none !important;
+    color: #fff !important;
+    font-weight: 950 !important;
+    line-height: 1.1 !important;
+}
+
+/* Hover'da artık butonun üstüne akan marquee yok; title tam adı gösterir. */
+.v496-now-playing:hover .v493-now-playing-text,
+.v494-now-playing:hover .v493-now-playing-text,
+.v493-now-playing:hover .v493-now-playing-text {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+.v494-now-stop {
+    width: 76px !important;
+    min-width: 76px !important;
+    max-width: 76px !important;
+    height: 34px !important;
+    border: 1px solid rgba(239,68,68,.55) !important;
+    border-radius: 10px !important;
+    background: rgba(239,68,68,.18) !important;
+    color: #fecaca !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 5 !important;
+    pointer-events: auto !important;
+}
+
+.v494-now-stop:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* Dosya seç butonu da taşma yapmasın. */
+.v32-file-btn,
+#v32-file-pick {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 126px !important;
+    box-sizing: border-box !important;
+}
+
+/* Sağ panel daraldığında tek kolona düşsün. */
+@media (max-width: 980px) {
+    .v49-file-row,
+    .v47-file-row,
+    .v32-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-btn,
+    #v32-file-pick {
+        max-width: none !important;
+    }
+
+    .v496-now-playing,
+    .v494-now-playing,
+    .v493-now-playing {
+        grid-template-columns: auto 18px minmax(0, 1fr) 76px !important;
+    }
+}
+
