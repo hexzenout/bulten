@@ -238,9 +238,7 @@
       return;
     }
 
-    if (!(end > start)) {
-      ringTimers.push(setTimeout(stopAlarm, Math.max(60, Number(settings.durationSec || 60)) * 1000));
-    }
+    ringTimers.push(setTimeout(stopAlarm, durationMs));
   }
 
   function playBuiltinLoop(durationMs) {
