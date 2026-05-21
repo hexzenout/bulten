@@ -46,15 +46,28 @@
     }
 
     const s = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
-    mount.dataset.ready = "v46b";
+    mount.dataset.ready = "v46d";
     mount.innerHTML = `
-      <div class="v32-sound-card v46b-sound-card">
+      <div class="v32-sound-card v46d-sound-card">
         <div class="v32-sound-head">
           <div>
             <b>Alarm Ses Merkezi</b>
-            <span>Özel ses kütüphanesi, test, durdurma ve zaman aralığı.</span>
+            <span>Özel ses, zaman aralığı, test ve durdurma tek merkezde.</span>
           </div>
-          <span class="terminal-v10-live-dot ${s.enabled ? "ok" : ""}">${s.enabled ? "SES AÇIK" : "SES KAPALI"}</span>
+        </div>
+
+        <div class="v46d-sound-library-top">
+          <label>Özel Ses</label>
+          <div class="v46d-sound-select-row">
+            <select id="v46d-custom-select"><option value="">Özel ses seç...</option></select>
+            <button type="button" id="v46d-custom-test">TEST</button>
+            <button type="button" id="v46d-custom-remove" class="danger">×</button>
+          </div>
+          <div class="v32-file-row">
+            <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
+            <div class="v32-file-name" id="v32-file-name">MP3/WAV yükle; listeden seç, test et veya kaldır.</div>
+            <input id="v32-file-input" type="file" accept="audio/*" hidden>
+          </div>
         </div>
 
         <div class="v32-sound-actions">
@@ -67,11 +80,11 @@
           <div class="v32-sound-field">
             <label>Ses Tipi</label>
             <select id="v32-sound-type">
+              <option value="custom">Özel Ses</option>
               <option value="digital">Dijital Uyarı</option>
               <option value="bip">Standart Bip</option>
               <option value="chime">Yumuşak Chime</option>
               <option value="siren">Siren</option>
-              <option value="custom">Özel Ses</option>
               <option value="silent">Sessiz</option>
             </select>
           </div>
@@ -95,23 +108,11 @@
             <label>Bitiş Saniyesi <span class="v32-slider-value" id="v32-end-label">${Number(s.customEnd || 0)}s</span></label>
             <input id="v32-end" type="range" min="0" max="180" step="1" value="${Number(s.customEnd || 0)}">
           </div>
-
-          <div class="v32-sound-field v32-custom-file-field">
-            <label>Özel Ses Kütüphanesi</label>
-            <div class="v32-file-row">
-              <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-              <div class="v32-file-name" id="v32-file-name">Yüklenen özel sesler aşağıda listelenir.</div>
-              <input id="v32-file-input" type="file" accept="audio/*" hidden>
-            </div>
-            <div class="v46b-sound-library" id="v46b-sound-library">
-              <div class="v46b-sound-empty">Henüz özel ses yüklenmedi.</div>
-            </div>
-          </div>
         </div>
       </div>
     `;
 
-    qs("#v32-sound-type").value = s.sound || "digital";
+    qs("#v32-sound-type").value = s.sound || "custom";
 
     const applySettings = next => {
       if (window.V26AlarmAudio?.setSettings) window.V26AlarmAudio.setSettings(next);
@@ -169,9 +170,7 @@
       const nameEl = qs("#v32-file-name");
       nameEl.textContent = "Yükleniyor: " + file.name;
       try {
-        if (window.V26AlarmAudio?.addCustomFile) {
-          await window.V26AlarmAudio.addCustomFile(file);
-        }
+        if (window.V26AlarmAudio?.addCustomFile) await window.V26AlarmAudio.addCustomFile(file);
         nameEl.textContent = file.name;
         await renderSoundLibrary();
       } catch (err) {
@@ -180,56 +179,49 @@
       }
     };
 
+    qs("#v46d-custom-select").onchange = async e => {
+      const id = e.target.value;
+      if (!id) return;
+      await window.V26AlarmAudio.selectCustomFile(id);
+      applySettings({ sound: "custom" });
+      renderSoundPanel(true);
+    };
+
+    qs("#v46d-custom-test").onclick = async () => {
+      const id = qs("#v46d-custom-select")?.value;
+      if (id && window.V26AlarmAudio?.selectCustomFile) await window.V26AlarmAudio.selectCustomFile(id);
+      if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
+    };
+
+    qs("#v46d-custom-remove").onclick = async () => {
+      const id = qs("#v46d-custom-select")?.value;
+      if (!id) return alert("Kaldırılacak özel sesi seç.");
+      if (!confirm("Bu özel sesi kaldırayım mı?")) return;
+      await window.V26AlarmAudio.removeCustomFile(id);
+      renderSoundPanel(true);
+    };
+
     renderSoundLibrary();
   }
 
   async function renderSoundLibrary() {
-    const box = qs("#v46b-sound-library");
-    if (!box || !window.V26AlarmAudio?.listCustomFiles) return;
+    const select = qs("#v46d-custom-select");
+    if (!select || !window.V26AlarmAudio?.listCustomFiles) return;
     const s = window.V26AlarmAudio.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
     const files = await window.V26AlarmAudio.listCustomFiles();
-    if (!files.length) {
-      box.innerHTML = `<div class="v46b-sound-empty">Henüz özel ses yüklenmedi.</div>`;
-      return;
-    }
 
-    box.innerHTML = files.map(file => {
+    select.innerHTML = `<option value="">Özel ses seç...</option>` + files.map(file => {
       const active = file.id === s.selectedCustomId;
       const size = file.size ? (file.size / 1024 / 1024).toFixed(2) + " MB" : "";
-      return `
-        <div class="v46b-sound-item ${active ? "active" : ""}" data-id="${file.id}">
-          <div class="v46b-sound-name" title="${file.name}">${file.name}<span>${active ? "AKTİF" : size}</span></div>
-          <div class="v46b-sound-item-actions">
-            <button type="button" data-act="select">AKTİF YAP</button>
-            <button type="button" data-act="test">TEST</button>
-            <button type="button" data-act="remove" class="danger">×</button>
-          </div>
-        </div>`;
+      return `<option value="${file.id}" ${active ? "selected" : ""}>${active ? "✓ " : ""}${file.name} ${size ? "· " + size : ""}</option>`;
     }).join("");
 
-    box.querySelectorAll("button").forEach(btn => {
-      btn.onclick = async e => {
-        const item = e.target.closest(".v46b-sound-item");
-        const id = item?.dataset.id;
-        if (!id) return;
-        const act = e.target.dataset.act;
-        if (act === "select") {
-          await window.V26AlarmAudio.selectCustomFile(id);
-          renderSoundPanel(true);
-        }
-        if (act === "test") {
-          await window.V26AlarmAudio.selectCustomFile(id);
-          await window.V26AlarmAudio.testSelected();
-          renderSoundPanel(true);
-        }
-        if (act === "remove") {
-          if (confirm("Bu özel sesi kaldırayım mı?")) {
-            await window.V26AlarmAudio.removeCustomFile(id);
-            renderSoundPanel(true);
-          }
-        }
-      };
-    });
+    const nameEl = qs("#v32-file-name");
+    if (nameEl) {
+      const current = files.find(f => f.id === s.selectedCustomId);
+      nameEl.textContent = current ? `Aktif: ${current.name}` : "MP3/WAV yükle; listeden seç, test et veya kaldır.";
+      nameEl.title = nameEl.textContent;
+    }
   }
 
   
