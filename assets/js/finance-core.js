@@ -4,11 +4,16 @@
 // Bu dosya V30 modülerleştirme adımıdır; davranış değiştirmez.
 // ===============================
 
-function omega_OpenRollingExcel(days, skipHash = false) {
+function omega_GetRollingModeV46D() {
+            return localStorage.getItem('finance_rolling_mode') === 'crypto' ? 'crypto' : 'bet';
+        }
+
+        function omega_OpenRollingExcel(days, skipHash = false) {
             _ACTIVE_EXCEL_DAYS = days;
             if(!_ROLLING_DB[days]) _ROLLING_DB[days] = { startBal: 100, targetBal: ROLLING_TARGETS[days], ops: {} };
             if(!_ROLLING_DB[days].targetBal) _ROLLING_DB[days].targetBal = ROLLING_TARGETS[days];
-            document.getElementById('excel-modal-title').innerHTML = `${days} GÜNLÜK ROLLING`;
+            const rollMode = omega_GetRollingModeV46D();
+            document.getElementById('excel-modal-title').innerHTML = `${rollMode === 'crypto' ? 'KRİPTO' : 'BAHİS'} ${days} GÜNLÜK ROLLING`;
             document.getElementById('excel-start-bal').value = _ROLLING_DB[days].startBal;
             const targetInput = document.getElementById('excel-target-bal-input');
             if(targetInput) targetInput.value = _ROLLING_DB[days].targetBal;
@@ -46,47 +51,53 @@ function omega_OpenRollingExcel(days, skipHash = false) {
         function omega_RenderExcelTable() {
             const wrapper = document.getElementById('excel-body-content');
             const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+            const rollMode = omega_GetRollingModeV46D();
+            const isCrypto = rollMode === 'crypto';
             let runningBalance = currentPlan.startBal;
             let totalProfit = 0;
             let htmlBuffer = "";
             for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
                 const dayOps = currentPlan.ops[day] || [];
+                let dayProfit = 0;
                 htmlBuffer += `
                 <div class="day-row-capsule">
-                    <div class="day-info"><h3>GÜN ${day}</h3><span>Sonuç</span></div>
+                    <div class="day-info"><h3>GÜN ${day}</h3><span>${isCrypto ? 'Gün P/L' : 'Gün K/Z'}</span></div>
                     <div class="capsule-container">`;
                 for (let slot = 0; slot < 10; slot++) {
                     if (dayOps[slot]) {
                         const op = dayOps[slot];
                         const sign = op.res === 'win' ? '+' : '-';
-                        const pnl = op.res === 'win' ? (op.amt * op.odds) - op.amt : op.amt;
-                        if (op.res === 'win') { runningBalance += pnl; totalProfit += pnl; }
-                        else { runningBalance -= pnl; totalProfit -= pnl; }
+                        const raw = parseFloat(op.odds);
+                        const pnl = isCrypto
+                            ? Math.abs(op.amt * (raw / 100))
+                            : (op.res === 'win' ? (op.amt * raw) - op.amt : op.amt);
+                        if (op.res === 'win') { runningBalance += pnl; totalProfit += pnl; dayProfit += pnl; }
+                        else { runningBalance -= pnl; totalProfit -= pnl; dayProfit -= pnl; }
                         htmlBuffer += `
                             <div class="kapsul ${op.res}">
                                 <button class="k-undo" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al"><i class="fa-solid fa-xmark"></i></button>
                                 <div class="k-result">
-                                    <div class="k-note-show">${op.note || 'İşlem notu yok'}</div>
-                                    <b>$${op.amt} x ${op.odds}</b>
+                                    <div class="k-note-show">${op.note || (isCrypto ? 'İşlem notu yok' : 'Maç notu yok')}</div>
+                                    <b>${isCrypto ? `$${op.amt} · %${op.odds}` : `$${op.amt} x ${op.odds}`}</b>
                                     <span>${sign}$${pnl.toFixed(2)}</span>
                                 </div>
                             </div>`;
                     } else {
                         htmlBuffer += `
                             <div class="kapsul">
-                                <input type="text" class="k-note-input" id="e-n-${day}-${slot}" placeholder="Maç / coin / işlem notu">
+                                <input type="text" class="k-note-input" id="e-n-${day}-${slot}" placeholder="${isCrypto ? 'İşlem' : 'Maç'}">
                                 <div class="k-inputs">
                                     <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
-                                    <input type="number" id="e-o-${day}-${slot}" placeholder="Oran / RR">
+                                    <input type="number" id="e-o-${day}-${slot}" placeholder="${isCrypto ? 'Kâr yüzdesi' : 'Oran'}">
                                 </div>
                                 <div class="k-actions">
-                                    <button class="k-btn w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">KAZANDI</button>
-                                    <button class="k-btn l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">KAYBETTİ</button>
+                                    <button class="k-btn w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCrypto ? 'KAZANÇ' : 'KAZANDI'}</button>
+                                    <button class="k-btn l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCrypto ? 'KAYIP' : 'KAYBETTİ'}</button>
                                 </div>
                             </div>`;
                     }
                 }
-                htmlBuffer += `</div><div class="day-result">$${runningBalance.toFixed(2)}</div></div>`;
+                htmlBuffer += `</div><div class="day-result"><span>${isCrypto ? 'Gün P/L' : 'Gün K/Z'}</span><b>${dayProfit >= 0 ? '+' : ''}$${dayProfit.toFixed(2)}</b></div></div>`;
             }
             wrapper.innerHTML = htmlBuffer;
             document.getElementById('excel-current-bal').innerText = `$${runningBalance.toFixed(2)}`;
@@ -105,7 +116,7 @@ function omega_OpenRollingExcel(days, skipHash = false) {
             const amt = parseFloat(document.getElementById(`e-a-${day}-${slot}`).value);
             const odds = parseFloat(document.getElementById(`e-o-${day}-${slot}`).value);
             if (isNaN(amt) || isNaN(odds)) {
-                if (typeof omega_ShowFinanceToast === 'function') omega_ShowFinanceToast('Tutar ve oran/RR alanını doldur.');
+                if (typeof omega_ShowFinanceToast === 'function') omega_ShowFinanceToast('Tutar ve ilgili oran/yüzde alanını doldur.');
                 return;
             }
             const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
