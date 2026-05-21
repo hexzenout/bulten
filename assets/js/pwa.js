@@ -1,8 +1,4 @@
-// ===============================
-// V46B CACHE RESET
-// Eski service worker/cache kaynaklı “güncelleme görünmüyor” sorununu bitirir.
-// ===============================
-
+// V46C CACHE RESET
 (function () {
   async function resetOldCaches() {
     try {
@@ -14,21 +10,18 @@
         const regs = await navigator.serviceWorker.getRegistrations();
         await Promise.all(regs.map(r => r.unregister()));
       }
-      localStorage.setItem("omega_cache_reset_v46b", String(Date.now()));
     } catch (err) {
-      console.warn("Cache temizliği yapılamadı:", err);
+      console.warn("Cache reset hata:", err);
     }
   }
-
   window.addEventListener("load", () => {
-    if (localStorage.getItem("omega_cache_reset_done_v46b") !== "1") {
-      localStorage.setItem("omega_cache_reset_done_v46b", "1");
+    const doneKey = "omega_cache_reset_done_v46c";
+    if (localStorage.getItem(doneKey) !== "1") {
+      localStorage.setItem(doneKey, "1");
       resetOldCaches().then(() => {
-        if (!location.search.includes("v=v46b")) {
-          const url = new URL(location.href);
-          url.searchParams.set("v", "v46b");
-          location.replace(url.toString());
-        }
+        const url = new URL(location.href);
+        url.searchParams.set("v", "v46c");
+        location.replace(url.toString());
       });
     }
   });
