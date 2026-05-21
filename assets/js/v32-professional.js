@@ -395,7 +395,16 @@
     }
   }
 
-  function boot() {
+  
+  function omega_RemoveOldRollingLaunchCardV46A2() {
+    document.querySelectorAll(".finance-rolling-launch-card, .finance-rolling-selector, .finance-rolling-options").forEach(el => {
+      const card = el.closest(".finance-card") || el;
+      if (card && card.parentNode) card.remove();
+    });
+  }
+
+function boot() {
+    omega_RemoveOldRollingLaunchCardV46A2();
     prepareCryptoForm();
     renderSoundPanel();
     fixFinanceEmptyState();
