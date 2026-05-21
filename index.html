@@ -12,7 +12,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<link rel="stylesheet" href="assets/css/style.css"> 
+<link rel="stylesheet" href="assets/css/style.css?v=v46a"> 
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f0f0f">    
 </head>
@@ -32,37 +32,29 @@
     </header>
     <nav class="accordion-menu" id="main-dropdown-nav">
         <div class="nav-container">
-            <div class="nav-link" id="nav-home" onclick="omega_SwitchMainTab('futbol', document.getElementById('nav-futbol'))">
-                <span class="nav-main-label"><i class="fa-solid fa-house"></i> ANA SAYFA</span>
-                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('futbol', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
+            <div class="nav-link" id="nav-home" onclick="window.location.href='https://hexzenout.github.io/bulten/'">
+                <i class="fa-solid fa-house"></i> ANA SAYFA
             </div>
             <div class="nav-link active" id="nav-futbol" onclick="omega_SwitchMainTab('futbol', this)">
-                <span class="nav-main-label"><i class="fa-solid fa-futbol"></i> FUTBOL</span>
-                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('futbol', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
+                <i class="fa-solid fa-futbol"></i> FUTBOL
             </div>
             <div class="nav-link" id="nav-basketbol" onclick="omega_SwitchMainTab('basketbol', this)">
-                <span class="nav-main-label"><i class="fa-solid fa-basketball"></i> BASKETBOL</span>
-                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('basketbol', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
+                <i class="fa-solid fa-basketball"></i> BASKETBOL
             </div>
             <div class="nav-link" id="nav-stream" onclick="omega_SwitchMainTab('stream', this)">
-                <span class="nav-main-label"><i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN</span>
-                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('stream', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
+                <i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN
             </div>
             <div class="nav-link" id="nav-favs" onclick="omega_SwitchMainTab('favs', this)">
-                <span class="nav-main-label"><i class="fa-solid fa-star"></i> FAVORİLERİM</span>
-                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('favs', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
+                <i class="fa-solid fa-star"></i> FAVORİLERİM
             </div>
             <div class="nav-link" id="nav-live" onclick="omega_SwitchMainTab('live', this)">
-                <span class="nav-main-label"><i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP</span>
-                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('live', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
+                <i class="fa-solid fa-tower-broadcast"></i> CANLI TAKİP
             </div>
             <div class="nav-link" id="nav-crypto" onclick="omega_SwitchMainTab('crypto', this)">
-                <span class="nav-main-label"><i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL</span>
-                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('crypto', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
+                <i class="fa-brands fa-bitcoin"></i> KRİPTO TERMİNAL
             </div>
             <div class="nav-link" id="nav-finance" onclick="omega_SwitchMainTab('finance', this)">
-                <span class="nav-main-label"><i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ</span>
-                <button class="nav-new-tab-btn" type="button" title="Yeni sekmede aç" onclick="omega_OpenMainTabNew('finance', event)"><i class="fa-solid fa-up-right-from-square"></i></button>
+                <i class="fa-solid fa-wallet"></i> KASA YÖNETİMİ
             </div>
         </div>
     </nav>
@@ -292,7 +284,6 @@
 
                 <div class="fin-terminal-wrapper" id="v19-finance-block">
 
-                    
                     
                     
                     <aside class="finance-left-rolling-rail finance-left-rail">
@@ -525,27 +516,27 @@
     </div>
 
     <!-- V30 modular core scripts -->
-<script src="assets/js/omega-core.js"></script>
-<script src="assets/js/radar-core.js"></script>
-<script src="assets/js/stream-core.js"></script>
-<script src="assets/js/finance-core.js"></script>
-<script src="assets/js/live-center-core.js"></script>
-<script src="assets/js/daily-trade-core.js"></script>
-<script src="assets/js/crypto-core.js"></script>
-<script src="assets/js/finance.js"></script>
-<script src="assets/js/crypto.js"></script>
-<script src="assets/js/alarm-audio.js"></script>
-<script src="assets/js/alarm-center.js"></script>
-<script src="assets/js/app-fixes.js"></script>
-<script src="assets/js/pwa.js"></script>
-<script type="module" src="assets/js/firebase.js"></script>
-<script src="assets/js/v28-crypto-panel.js"></script>
+<script src="assets/js/omega-core.js?v=v46a"></script>
+<script src="assets/js/radar-core.js?v=v46a"></script>
+<script src="assets/js/stream-core.js?v=v46a"></script>
+<script src="assets/js/finance-core.js?v=v46a"></script>
+<script src="assets/js/live-center-core.js?v=v46a"></script>
+<script src="assets/js/daily-trade-core.js?v=v46a"></script>
+<script src="assets/js/crypto-core.js?v=v46a"></script>
+<script src="assets/js/finance.js?v=v46a"></script>
+<script src="assets/js/crypto.js?v=v46a"></script>
+<script src="assets/js/alarm-audio.js?v=v46a"></script>
+<script src="assets/js/alarm-center.js?v=v46a"></script>
+<script src="assets/js/app-fixes.js?v=v46a"></script>
+<script src="assets/js/pwa.js?v=v46a"></script>
+<script type="module" src="assets/js/firebase.js?v=v46a"></script>
+<script src="assets/js/v28-crypto-panel.js?v=v46a"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/crypto-tv-chart.js"></script>
-<script src="assets/js/v31-cleanup.js"></script>
-<script src="assets/js/v32-professional.js"></script>
+<script src="assets/js/crypto-tv-chart.js?v=v46a"></script>
+<script src="assets/js/v31-cleanup.js?v=v46a"></script>
+<script src="assets/js/v32-professional.js?v=v46a"></script>
 
-<script src="assets/js/v30-runtime.js"></script>
-<script src="assets/js/v30-healthcheck.js"></script>
+<script src="assets/js/v30-runtime.js?v=v46a"></script>
+<script src="assets/js/v30-healthcheck.js?v=v46a"></script>
 </body>
 </html>
