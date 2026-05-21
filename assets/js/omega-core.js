@@ -83,13 +83,14 @@ window.addEventListener('popstate', (e) => {
         /* Crypto module functions moved to assets/js/crypto-core.js */
 
 
-        function omega_OpenMainTabNew(tab, event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
+        function omega_HandleHashRouteV46B() {
+            const rawHash = window.location.hash.replace('#', '') || 'futbol';
+            const hash = rawHash.split('/')[0] || 'futbol';
             const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
-            const safeTab = validTabs.includes(tab) ? tab : 'futbol';
-            const base = window.location.origin + window.location.pathname;
-            window.open(base + '#' + safeTab, '_blank', 'noopener,noreferrer');
+            if (validTabs.includes(hash)) {
+                const el = document.getElementById('nav-' + hash);
+                if (typeof omega_SwitchMainTab === 'function') omega_SwitchMainTab(hash, el, false);
+            }
         }
+
+        window.addEventListener('hashchange', omega_HandleHashRouteV46B);
