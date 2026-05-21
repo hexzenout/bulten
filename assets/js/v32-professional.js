@@ -114,7 +114,7 @@
 
           <div class="v32-file-row v47-file-row v49-file-row">
             <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-            <div class="v32-file-name v47-file-name v49-file-name" id="v32-file-name" title="Dosya seçilmedi">Dosya seçilmedi. Uzun dosya adları burada mouse tekerleği ile kaydırılabilir.</div>
+            <div class="v32-file-name v47-file-name v49-file-name v493-now-playing" id="v32-file-name" title="Dosya seçilmedi"><i class="fa-solid fa-music"></i><span class="v493-now-playing-text">Dosya seçilmedi</span></div>
             <input id="v32-file-input" type="file" accept="audio/*" hidden>
           </div>
         </div>
@@ -181,17 +181,14 @@
       const file = e.target.files?.[0];
       if (!file) return;
       const nameEl = qs("#v32-file-name");
-      nameEl.textContent = "Yükleniyor: " + file.name;
-      nameEl.title = file.name;
+      setV493NowPlaying("Yükleniyor: " + file.name);
       try {
         if (window.V26AlarmAudio?.addCustomFile) await window.V26AlarmAudio.addCustomFile(file);
         applySettings({ sound: "custom" });
-        nameEl.textContent = file.name;
-        nameEl.title = file.name;
+        setV493NowPlaying(file.name);
         await renderSoundLibrary();
       } catch (err) {
-        nameEl.textContent = "Dosya yüklenemedi.";
-        nameEl.title = "Dosya yüklenemedi.";
+        setV493NowPlaying("Dosya yüklenemedi.");
         alert("Ses dosyası yüklenemedi. MP3/WAV gibi geçerli bir ses dosyası seç.");
       }
     };
@@ -225,6 +222,16 @@
     }
   }
 
+  function setV493NowPlaying(text) {
+    const box = qs("#v32-file-name");
+    if (!box) return;
+    const clean = text || "Dosya seçilmedi";
+    box.title = clean;
+    const span = box.querySelector(".v493-now-playing-text");
+    if (span) span.textContent = clean;
+    else box.textContent = clean;
+  }
+
   async function renderSoundLibrary() {
     const select = qs("#v47-custom-select");
     if (!select || !window.V26AlarmAudio?.listCustomFiles) return;
@@ -244,8 +251,7 @@
     const nameEl = qs("#v32-file-name");
     if (nameEl) {
       const text = current ? `Aktif: ${current.name}` : "Dosya seçilmedi. Uzun dosya adları burada mouse tekerleği ile kaydırılabilir.";
-      nameEl.textContent = text;
-      nameEl.title = text;
+      setV493NowPlaying(text);
     }
   }
 
@@ -337,6 +343,8 @@
     const currentPlan = ensureRollingPlan();
     const rollModeV491 = localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
     const isCryptoV491 = rollModeV491 === "crypto";
+    const overlayV493 = qs("#rolling-excel-overlay");
+    if (overlayV493) overlayV493.setAttribute("data-roll-mode", rollModeV491);
     let runningBalance = Number(currentPlan.startBal || 100);
     let totalProfit = 0;
     let htmlBuffer = "";
