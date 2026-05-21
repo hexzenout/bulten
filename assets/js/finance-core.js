@@ -8,38 +8,48 @@ function omega_GetRollingModeV46D() {
             return localStorage.getItem('finance_rolling_mode') === 'crypto' ? 'crypto' : 'bet';
         }
 
+        function omega_GetRollingPlanKeyV47(days) {
+            const mode = omega_GetRollingModeV46D();
+            return `${mode}_${days}`;
+        }
+
         function omega_OpenRollingExcel(days, skipHash = false) {
             _ACTIVE_EXCEL_DAYS = days;
-            if(!_ROLLING_DB[days]) _ROLLING_DB[days] = { startBal: 100, targetBal: ROLLING_TARGETS[days], ops: {} };
-            if(!_ROLLING_DB[days].targetBal) _ROLLING_DB[days].targetBal = ROLLING_TARGETS[days];
             const rollMode = omega_GetRollingModeV46D();
+            const planKey = omega_GetRollingPlanKeyV47(days);
+            if(!_ROLLING_DB[planKey]) _ROLLING_DB[planKey] = { startBal: 100, targetBal: ROLLING_TARGETS[days], ops: {}, mode: rollMode, days };
+            if(!_ROLLING_DB[planKey].targetBal) _ROLLING_DB[planKey].targetBal = ROLLING_TARGETS[days];
             document.getElementById('excel-modal-title').innerHTML = `${rollMode === 'crypto' ? 'KRİPTO' : 'BAHİS'} ${days} GÜNLÜK ROLLING`;
-            document.getElementById('excel-start-bal').value = _ROLLING_DB[days].startBal;
+            document.getElementById('excel-start-bal').value = _ROLLING_DB[planKey].startBal;
             const targetInput = document.getElementById('excel-target-bal-input');
-            if(targetInput) targetInput.value = _ROLLING_DB[days].targetBal;
+            if(targetInput) targetInput.value = _ROLLING_DB[planKey].targetBal;
             document.getElementById('rolling-excel-overlay').style.display = 'flex';
             document.documentElement.classList.remove('rolling-hash-boot');
             document.body.classList.add('rolling-active');
-            if(!skipHash) history.replaceState(null, '', `#finance/rolling/${days}`);
+            if(!skipHash) {
+                const baseHash = (document.getElementById('omega-rolling-block') && getComputedStyle(document.getElementById('omega-rolling-block')).display !== 'none') ? 'rolling' : 'finance';
+                history.replaceState(null, '', `#${baseHash}/rolling/${days}`);
+            }
             setTimeout(() => { document.getElementById('rolling-excel-overlay').classList.add('show-modal'); }, 10);
             omega_RenderExcelTable();
         }
 
         function omega_CloseRollingExcel(force = false) {
-            if(!force && /^#finance\/rolling\/\d+/.test(String(location.hash || ''))) return;
+            if(!force && /^#(finance|rolling)\/rolling\/\d+/.test(String(location.hash || ''))) return;
             document.getElementById('rolling-excel-overlay').classList.remove('show-modal');
             document.body.classList.remove('rolling-active');
             document.documentElement.classList.remove('rolling-hash-boot');
             setTimeout(() => { document.getElementById('rolling-excel-overlay').style.display = 'none'; }, 300);
-            if(force && /^#finance\/rolling\/\d+/.test(String(location.hash || ''))) history.replaceState(null, '', '#finance');
+            if(force && /^#(finance|rolling)\/rolling\/\d+/.test(String(location.hash || ''))) history.replaceState(null, '', (document.getElementById('omega-rolling-block') && getComputedStyle(document.getElementById('omega-rolling-block')).display !== 'none') ? '#rolling' : '#finance');
         }
 
         function omega_UpdateExcelConfig() {
             const newBal = parseFloat(document.getElementById('excel-start-bal').value);
             const newTarget = parseFloat(document.getElementById('excel-target-bal-input')?.value);
-            if(!_ROLLING_DB[_ACTIVE_EXCEL_DAYS]) _ROLLING_DB[_ACTIVE_EXCEL_DAYS] = { startBal: 100, targetBal: ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS], ops: {} };
-            if(!isNaN(newBal)) _ROLLING_DB[_ACTIVE_EXCEL_DAYS].startBal = newBal;
-            if(!isNaN(newTarget) && newTarget > 0) _ROLLING_DB[_ACTIVE_EXCEL_DAYS].targetBal = newTarget;
+            const planKey = omega_GetRollingPlanKeyV47(_ACTIVE_EXCEL_DAYS);
+            if(!_ROLLING_DB[planKey]) _ROLLING_DB[planKey] = { startBal: 100, targetBal: ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS], ops: {}, mode: omega_GetRollingModeV46D(), days: _ACTIVE_EXCEL_DAYS };
+            if(!isNaN(newBal)) _ROLLING_DB[planKey].startBal = newBal;
+            if(!isNaN(newTarget) && newTarget > 0) _ROLLING_DB[planKey].targetBal = newTarget;
             omega_SaveRollingDB();
             omega_RenderExcelTable();
         }
@@ -50,7 +60,7 @@ function omega_GetRollingModeV46D() {
 
         function omega_RenderExcelTable() {
             const wrapper = document.getElementById('excel-body-content');
-            const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+            const currentPlan = _ROLLING_DB[omega_GetRollingPlanKeyV47(_ACTIVE_EXCEL_DAYS)];
             const rollMode = omega_GetRollingModeV46D();
             const isCrypto = rollMode === 'crypto';
             let runningBalance = currentPlan.startBal;
@@ -119,7 +129,7 @@ function omega_GetRollingModeV46D() {
                 if (typeof omega_ShowFinanceToast === 'function') omega_ShowFinanceToast('Tutar ve ilgili oran/yüzde alanını doldur.');
                 return;
             }
-            const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+            const currentPlan = _ROLLING_DB[omega_GetRollingPlanKeyV47(_ACTIVE_EXCEL_DAYS)];
             if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
             currentPlan.ops[day][slot] = { note, amt, odds, res: result };
             omega_SaveRollingDB();
@@ -127,7 +137,7 @@ function omega_GetRollingModeV46D() {
         }
 
         function omega_UndoExcelOp(day, slot) {
-            const currentPlan = _ROLLING_DB[_ACTIVE_EXCEL_DAYS];
+            const currentPlan = _ROLLING_DB[omega_GetRollingPlanKeyV47(_ACTIVE_EXCEL_DAYS)];
             if (currentPlan.ops[day] && currentPlan.ops[day][slot]) {
                 currentPlan.ops[day].splice(slot, 1);
                 omega_SaveRollingDB();
