@@ -5851,3 +5851,118 @@ summary.rolling-v494-combine-title i {
     }
 }
 
+
+/* ===============================
+   V49.8 CUSTOM SOUND SEGMENT PLAYER
+   index.html / sw.js / pwa.js değiştirilmedi.
+   alarm-audio.js değişti çünkü otomatik durma ve segment alarm davranışı gerçek ses motorunda gerekli.
+================================ */
+
+.v498-sound-card {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.v498-custom-sound-panel {
+    display: none !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.v498-custom-sound-panel.show {
+    display: grid !important;
+    gap: 12px !important;
+}
+
+.v498-preview-box {
+    display: grid !important;
+    gap: 12px !important;
+    border: 1px solid rgba(249,115,22,.32) !important;
+    border-radius: 16px !important;
+    background: #070707 !important;
+    padding: 12px !important;
+}
+
+.v498-time-row {
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr) 42px !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.v498-time-row span {
+    color: #fbbf24 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+    text-align: center !important;
+}
+
+#v498-preview-progress {
+    width: 100% !important;
+    min-width: 0 !important;
+    accent-color: #f97316 !important;
+}
+
+.v498-segment-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 98px !important;
+    gap: 10px !important;
+    align-items: end !important;
+}
+
+.v498-segment-grid label {
+    display: grid !important;
+    gap: 6px !important;
+    color: #aaa !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .4px !important;
+}
+
+.v498-segment-grid label b {
+    color: #fff !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: .78rem !important;
+}
+
+.v498-segment-grid input[type="range"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    accent-color: #f97316 !important;
+}
+
+#v498-apply-segment {
+    height: 42px !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 12px !important;
+    background: #10b981 !important;
+    color: #04120d !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+#v498-apply-segment:hover {
+    filter: brightness(1.08);
+}
+
+.v498-inline-toggle.playing {
+    background: rgba(16,185,129,.18) !important;
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+}
+
+@media (max-width: 900px) {
+    .v498-time-row {
+        grid-template-columns: 38px minmax(0, 1fr) 38px !important;
+    }
+
+    .v498-segment-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #v498-apply-segment {
+        width: 100% !important;
+    }
+}
+
