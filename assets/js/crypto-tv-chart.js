@@ -93,7 +93,7 @@
 
     function renderMenu() {
       const q = normalizeSymbol(input.value || "");
-      const hits = (q ? POPULAR.filter(x => x.includes(q)) : POPULAR).slice(0, 12);
+      const hits = (q ? POPULAR.filter(x => x.includes(q) || (x + 'USDT').includes(q)) : POPULAR).slice(0, 24);
       menu.innerHTML = hits.map(x => `<button type="button" data-symbol="${x}">${x}<span>${x}USDT</span></button>`).join("");
       menu.classList.add("show");
     }
