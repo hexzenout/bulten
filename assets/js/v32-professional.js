@@ -335,6 +335,8 @@
     const wrapper = qs("#excel-body-content");
     if (!wrapper) return;
     const currentPlan = ensureRollingPlan();
+    const rollModeV491 = localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
+    const isCryptoV491 = rollModeV491 === "crypto";
     let runningBalance = Number(currentPlan.startBal || 100);
     let totalProfit = 0;
     let htmlBuffer = "";
@@ -352,7 +354,7 @@
         if (op) {
           const amt = Number(op.amt || 0);
           const odds = Number(op.odds || 0);
-          const pnl = op.res === "win" ? (amt * odds) - amt : amt;
+          const pnl = isCryptoV491 ? Math.abs(amt * (odds / 100)) : (op.res === "win" ? (amt * odds) - amt : amt);
           if (op.res === "win") { runningBalance += pnl; totalProfit += pnl; dayProfit += pnl; }
           else { runningBalance -= pnl; totalProfit -= pnl; dayProfit -= pnl; }
 
@@ -360,7 +362,7 @@
             <div class="kapsul v32 ${op.res}">
               <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
               <div class="k-result">
-                <div class="k-note-show">${op.note || "İşlem notu yok"}</div>
+                <div class="k-note-show">${op.note || (isCryptoV491 ? "İşlem" : "Maç")}</div>
                 <b>$${amt} x ${odds}</b>
                 <span>${op.res === "win" ? "+" : "-"}$${pnl.toFixed(2)}</span>
               </div>
@@ -369,12 +371,12 @@
         } else {
           cards.push(`
             <div class="kapsul v32">
-              <input type="text" id="e-n-${day}-${slot}" placeholder="Maç / coin / işlem">
+              <input type="text" id="e-n-${day}-${slot}" placeholder="${isCryptoV491 ? 'İşlem' : 'Maç'}">
               <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
-              <input type="number" id="e-o-${day}-${slot}" placeholder="Oran / RR">
+              <input type="number" id="e-o-${day}-${slot}" placeholder="${isCryptoV491 ? 'Kâr %' : 'Oran'}">
               <div class="k-actions v32">
-                <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">KAZANDI</button>
-                <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">KAYBETTİ</button>
+                <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
+                <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>
               </div>
             </div>
           `);
@@ -386,7 +388,7 @@
           <div class="day-info-v32">
             <h3>GÜN ${day}</h3>
             <span>Başlangıç: $${dayStart.toFixed(2)}</span>
-            <span>Gün P/L: ${(dayProfit >= 0 ? "+" : "")}$${dayProfit.toFixed(2)}</span>
+            <span>${isCryptoV491 ? "Gün P/L" : "Gün K/Z"}: ${(dayProfit >= 0 ? "+" : "")}$${dayProfit.toFixed(2)}</span>
             <div class="day-tools-v32">
               <button class="gold" onclick="omega_RollingAddSlot(${day})">+ İŞLEM</button>
               <button onclick="omega_RollingRemoveSlot(${day})">- SİL</button>
