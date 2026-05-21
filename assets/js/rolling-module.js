@@ -123,7 +123,7 @@
     const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 5)));
     const visible = slots.slice(0, rowCount);
     const noteHead = isCrypto ? "AKTİF İŞLEM" : "MAÇ";
-    const notePH = isCrypto ? "BTC Long TP1 / ETH Short" : "Arsenal Üst 2.5 / Kupon notu";
+    const notePH = isCrypto ? "Long / Short" : "MS / 2.5 ÜST";
     const valHead = isCrypto ? "KÂR %" : "ORAN";
     const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
@@ -139,7 +139,35 @@
     const slots = isCrypto ? state.modeSlots.crypto : state.modeSlots.bet;
     const sum = slotSummary(slots);
     const rollSum = rollingSummary(mode);
-    return `<section class="rolling-v47-card ${mode}"><div class="rolling-v47-head"><div><h3><i class="${isCrypto ? "fa-brands fa-bitcoin" : "fa-solid fa-ticket"}"></i> ${isCrypto ? "KRİPTO" : "BAHİS"}</h3><span>${isCrypto ? "Kripto rolling ve aktif kripto işlemleri" : "Bahis rolling ve kombine kupon maçları"}</span></div><div class="rolling-v47-mini"><span>${sum.settled} kapalı · Rolling ${money(rollSum.pnlTotal)}</span><b class="${(sum.pnl + rollSum.pnlTotal) >= 0 ? "pos" : "neg"}">${money(sum.pnl + rollSum.pnlTotal)}</b></div></div><div class="rolling-v47-roll-panel ${mode}"><h4><i class="fa-solid fa-layer-group"></i> ${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</h4><div class="rolling-v47-roll-buttons">${renderRollingButtons(mode)}</div></div><div class="rolling-v47-section-title"><div><h4><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> ${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "KOMBİNE KUPON MAÇLARI"}</h4>${renderRowControls(mode, state)}</div><button type="button" data-clear="${mode}">${isCrypto ? "KRİPTOYU TEMİZLE" : "BAHİSİ TEMİZLE"}</button></div>${renderTable(mode, slots, state)}</section>`;
+    const total = sum.pnl + rollSum.pnlTotal;
+    return `
+      <section class="rolling-v47-card ${mode} v49-mode-card">
+        <div class="rolling-v47-head">
+          <div>
+            <h3><i class="${isCrypto ? "fa-brands fa-bitcoin" : "fa-solid fa-ticket"}"></i> ${isCrypto ? "KRİPTO" : "BAHİS"}</h3>
+          </div>
+          <div class="rolling-v47-mini">
+            <span>${sum.settled} kapalı · Rolling ${money(rollSum.pnlTotal)}</span>
+            <b class="${total >= 0 ? "pos" : "neg"}">${money(total)}</b>
+          </div>
+        </div>
+
+        <details class="rolling-v49-fold ${mode}" open>
+          <summary><i class="fa-solid fa-layer-group"></i> ${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</summary>
+          <div class="rolling-v47-roll-panel ${mode}">
+            <div class="rolling-v47-roll-buttons">${renderRollingButtons(mode)}</div>
+          </div>
+        </details>
+
+        <details class="rolling-v49-fold ${mode}" open>
+          <summary><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> ${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "KOMBİNE KUPON MAÇLARI"}</summary>
+          <div class="rolling-v47-section-title">
+            <div>${renderRowControls(mode, state)}</div>
+            <button type="button" data-clear="${mode}">${isCrypto ? "KRİPTOYU TEMİZLE" : "BAHİSİ TEMİZLE"}</button>
+          </div>
+          ${renderTable(mode, slots, state)}
+        </details>
+      </section>`;
   }
   function renderModule() {
     const mount = qs("omega-rolling-render");
@@ -150,13 +178,31 @@
     const rollSum = rollingSummary();
     const totalPnl = betSum.pnl + cryptoSum.pnl + rollSum.pnlTotal;
     const mode = activeMode();
-    const collapsed = railCollapsed();
-    mount.innerHTML = `<div class="rolling-v47-page v48-rolling-page ${collapsed ? "rail-collapsed" : ""}"><div class="rolling-v47-hero v48-rolling-hero"><div><h2><i class="fa-solid fa-layer-group"></i> ROLLING</h2></div><div class="rolling-v47-hero-kpis"><div><span>Bahis P/L</span><b class="${betSum.pnl >= 0 ? "pos" : "neg"}">${money(betSum.pnl)}</b></div><div><span>Kripto P/L</span><b class="${cryptoSum.pnl >= 0 ? "pos" : "neg"}">${money(cryptoSum.pnl)}</b></div><div><span>Rolling P/L</span><b class="${rollSum.pnlTotal >= 0 ? "pos" : "neg"}">${money(rollSum.pnlTotal)}</b></div><div><span>Toplam</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${money(totalPnl)}</b></div></div></div><div class="rolling-v48-layout"><aside class="rolling-v48-rail"><button type="button" class="rolling-v48-rail-toggle" data-roll-toggle><i class="fa-solid fa-bars"></i><span>ROLLING MENÜSÜ</span></button><button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></button><button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span></button></aside><main class="rolling-v48-main">${renderModePanel(mode, state)}</main></div></div>`;
+    mount.innerHTML = `
+      <div class="rolling-v47-page v48-rolling-page v49-rolling-page">
+        <div class="rolling-v47-hero v48-rolling-hero">
+          <div><h2><i class="fa-solid fa-layer-group"></i> ROLLING</h2></div>
+          <div class="rolling-v47-hero-kpis">
+            <div><span>Bahis P/L</span><b class="${betSum.pnl >= 0 ? "pos" : "neg"}">${money(betSum.pnl)}</b></div>
+            <div><span>Kripto P/L</span><b class="${cryptoSum.pnl >= 0 ? "pos" : "neg"}">${money(cryptoSum.pnl)}</b></div>
+            <div><span>Rolling P/L</span><b class="${rollSum.pnlTotal >= 0 ? "pos" : "neg"}">${money(rollSum.pnlTotal)}</b></div>
+            <div><span>Toplam</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${money(totalPnl)}</b></div>
+          </div>
+        </div>
+
+        <div class="rolling-v48-layout v49-rolling-layout">
+          <aside class="rolling-v48-rail v49-rolling-rail">
+            <div class="rolling-v48-rail-toggle v49-rolling-rail-title"><i class="fa-solid fa-bars"></i><span>ROLLING MENÜSÜ</span></div>
+            <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><i class="fa-solid fa-ticket"></i><span>BAHİS</span></button>
+            <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><i class="fa-brands fa-bitcoin"></i><span>KRİPTO</span></button>
+          </aside>
+          <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
+        </div>
+      </div>`;
     bindEvents(mount, state);
   }
   function bindEvents(mount, state) {
     mount.querySelectorAll("[data-roll-tab]").forEach(btn => btn.addEventListener("click", () => { setActiveMode(btn.dataset.rollTab); renderModule(); }));
-    mount.querySelectorAll("[data-roll-toggle]").forEach(btn => btn.addEventListener("click", () => { setRailCollapsed(!railCollapsed()); renderModule(); }));
     mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => { const [mode, days] = String(btn.dataset.roll || "bet:7").split(":"); openRolling(mode, Number(days || 7)); }));
     mount.querySelectorAll("[data-row-op]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, op] = String(btn.dataset.rowOp || "bet:plus").split(":");
