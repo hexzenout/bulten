@@ -87,7 +87,7 @@ function omega_GetRollingModeV46D() {
                             <div class="kapsul ${op.res}">
                                 <button class="k-undo" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al"><i class="fa-solid fa-xmark"></i></button>
                                 <div class="k-result">
-                                    <div class="k-note-show">${op.note || (isCrypto ? 'İşlem notu yok' : 'Maç notu yok')}</div>
+                                    <div class="k-note-show">${op.note || (isCrypto ? 'Long / Short' : 'MS / 2.5 ÜST')}</div>
                                     <b>${isCrypto ? `$${op.amt} · %${op.odds}` : `$${op.amt} x ${op.odds}`}</b>
                                     <span>${sign}$${pnl.toFixed(2)}</span>
                                 </div>
@@ -95,7 +95,7 @@ function omega_GetRollingModeV46D() {
                     } else {
                         htmlBuffer += `
                             <div class="kapsul">
-                                <input type="text" class="k-note-input" id="e-n-${day}-${slot}" placeholder="${isCrypto ? 'İşlem' : 'Maç'}">
+                                <input type="text" class="k-note-input" id="e-n-${day}-${slot}" placeholder="${isCrypto ? 'Long / Short' : 'MS / 2.5 ÜST'}">
                                 <div class="k-inputs">
                                     <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
                                     <input type="number" id="e-o-${day}-${slot}" placeholder="${isCrypto ? 'Kâr yüzdesi' : 'Oran'}">
