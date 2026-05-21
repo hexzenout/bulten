@@ -37,7 +37,7 @@ let _MASTER_DB = [];
         window.addEventListener('DOMContentLoaded', () => {
             const rawHash = window.location.hash.replace('#', '') || 'futbol';
             const hash = rawHash.split('/')[0] || 'futbol';
-            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
+            const validTabs = ['futbol', 'basketbol', 'rolling', 'stream', 'favs', 'live', 'crypto', 'finance'];
             if (validTabs.includes(hash)) {
                 omega_SwitchMainTab(hash, document.getElementById('nav-' + hash), false);
             } else {
@@ -50,7 +50,7 @@ let _MASTER_DB = [];
         function omega_HandleHashRouteV38() {
             const rawHash = window.location.hash.replace('#', '') || 'futbol';
             const hash = rawHash.split('/')[0] || 'futbol';
-            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
+            const validTabs = ['futbol', 'basketbol', 'rolling', 'stream', 'favs', 'live', 'crypto', 'finance'];
             if (validTabs.includes(hash)) {
                 const el = document.getElementById('nav-' + hash);
                 omega_SwitchMainTab(hash, el, false);
@@ -86,7 +86,7 @@ window.addEventListener('popstate', (e) => {
         function omega_HandleHashRouteV46B() {
             const rawHash = window.location.hash.replace('#', '') || 'futbol';
             const hash = rawHash.split('/')[0] || 'futbol';
-            const validTabs = ['futbol', 'basketbol', 'stream', 'favs', 'live', 'crypto', 'finance'];
+            const validTabs = ['futbol', 'basketbol', 'rolling', 'stream', 'favs', 'live', 'crypto', 'finance'];
             if (validTabs.includes(hash)) {
                 const el = document.getElementById('nav-' + hash);
                 if (typeof omega_SwitchMainTab === 'function') omega_SwitchMainTab(hash, el, false);
