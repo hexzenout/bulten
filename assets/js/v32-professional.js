@@ -46,23 +46,23 @@
     }
 
     const s = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
-    const isCustom = (s.sound || "digital") === "custom";
+    const isCustom = (s.sound || "custom") === "custom";
 
-    mount.dataset.ready = "v47";
+    mount.dataset.ready = "v49";
     mount.innerHTML = `
-      <div class="v32-sound-card v47-sound-card">
+      <div class="v32-sound-card v49-sound-card">
         <div class="v32-sound-head">
           <div>
             <b>Alarm Ses Merkezi</b>
-            <span>Ses tipi, süre, seviye ve seçili alarm testleri.</span>
+            <span>Tek oynat/durdur kontrolü, özel ses kütüphanesi ve zaman aralığı.</span>
           </div>
           <span class="terminal-v10-live-dot ${s.enabled ? "ok" : ""}">${s.enabled ? "SES AÇIK" : "SES KAPALI"}</span>
         </div>
 
-        <div class="v32-sound-actions">
+        <div class="v32-sound-actions v49-sound-actions">
           <button id="v32-sound-toggle" class="${s.enabled ? "active" : ""}">${s.enabled ? "SES AÇIK" : "SESİ AÇ"}</button>
-          <button id="v32-sound-test">SEÇİLİ SESİ DENE</button>
-          <button id="v32-sound-stop" class="danger">SESİ DURDUR</button>
+          <button id="v32-sound-test">OYNAT</button>
+          <button id="v32-sound-stop" class="danger">DURDUR</button>
         </div>
 
         <div class="v32-sound-grid">
@@ -99,30 +99,29 @@
           </div>
         </div>
 
-        <div class="v47-custom-sound-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
+        <div class="v47-custom-sound-panel v49-custom-sound-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
           <div class="v47-custom-head">
             <div>
               <b><i class="fa-solid fa-music"></i> Özel Ses Kütüphanesi</b>
-              <span>Bu bölüm sadece Ses Tipi “Özel Ses” seçiliyken açılır.</span>
+              <span>Ses Tipi “Özel Ses” seçiliyken aktif olur. Şarkı adının tamamı için üstüne gel veya alanı tekerlekle kaydır.</span>
             </div>
           </div>
 
-          <div class="v47-custom-select-row">
-            <select id="v47-custom-select"><option value="">Özel ses seç...</option></select>
-            <button type="button" id="v47-custom-test">ÖZEL SESİ DENE</button>
+          <div class="v47-custom-select-row v49-custom-select-row">
+            <select id="v47-custom-select" title="Özel ses seç"><option value="">Özel ses seç...</option></select>
             <button type="button" id="v47-custom-remove" class="danger" title="Seçili özel sesi kaldır">KALDIR</button>
           </div>
 
-          <div class="v32-file-row v47-file-row">
+          <div class="v32-file-row v47-file-row v49-file-row">
             <button type="button" class="v32-file-btn" id="v32-file-pick">DOSYA SEÇ</button>
-            <div class="v32-file-name v47-file-name" id="v32-file-name" title="Dosya seçilmedi">Dosya seçilmedi. Uzun dosya adları burada mouse tekerleği ile kaydırılabilir.</div>
+            <div class="v32-file-name v47-file-name v49-file-name" id="v32-file-name" title="Dosya seçilmedi">Dosya seçilmedi. Uzun dosya adları burada mouse tekerleği ile kaydırılabilir.</div>
             <input id="v32-file-input" type="file" accept="audio/*" hidden>
           </div>
         </div>
       </div>
     `;
 
-    qs("#v32-sound-type").value = s.sound || "digital";
+    qs("#v32-sound-type").value = s.sound || "custom";
 
     const applySettings = next => {
       if (window.V26AlarmAudio?.setSettings) window.V26AlarmAudio.setSettings(next);
@@ -140,7 +139,7 @@
       const btn = qs("#v32-sound-test");
       if (btn) {
         btn.classList.remove("testing");
-        btn.textContent = "SEÇİLİ SESİ DENE";
+        btn.textContent = "OYNAT";
       }
     };
 
@@ -151,7 +150,7 @@
       if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
       setTimeout(() => {
         btn.classList.remove("testing");
-        btn.textContent = "SEÇİLİ SESİ DENE";
+        btn.textContent = "OYNAT";
       }, 1600);
     };
 
@@ -205,12 +204,6 @@
       renderSoundPanel(true);
     };
 
-    qs("#v47-custom-test").onclick = async () => {
-      const id = qs("#v47-custom-select")?.value;
-      if (id && window.V26AlarmAudio?.selectCustomFile) await window.V26AlarmAudio.selectCustomFile(id);
-      if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
-    };
-
     qs("#v47-custom-remove").onclick = async () => {
       const id = qs("#v47-custom-select")?.value;
       if (!id) return alert("Kaldırılacak özel sesi seç.");
@@ -241,12 +234,15 @@
     select.innerHTML = `<option value="">Özel ses seç...</option>` + files.map(file => {
       const active = file.id === s.selectedCustomId;
       const size = file.size ? (file.size / 1024 / 1024).toFixed(2) + " MB" : "";
-      return `<option value="${file.id}" ${active ? "selected" : ""}>${active ? "✓ " : ""}${file.name}${size ? " · " + size : ""}</option>`;
+      const label = `${active ? "✓ " : ""}${file.name}${size ? " · " + size : ""}`;
+      return `<option value="${file.id}" ${active ? "selected" : ""}>${label}</option>`;
     }).join("");
+
+    const current = files.find(f => f.id === s.selectedCustomId);
+    select.title = current ? current.name : "Özel ses seç";
 
     const nameEl = qs("#v32-file-name");
     if (nameEl) {
-      const current = files.find(f => f.id === s.selectedCustomId);
       const text = current ? `Aktif: ${current.name}` : "Dosya seçilmedi. Uzun dosya adları burada mouse tekerleği ile kaydırılabilir.";
       nameEl.textContent = text;
       nameEl.title = text;
