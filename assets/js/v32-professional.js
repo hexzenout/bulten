@@ -39,42 +39,51 @@
     return merged;
   }
 
-  let v502PreviewAudio = null;
-  let v502PreviewUrl = "";
-  let v502PreviewTimer = null;
-  let v502Duration = 1;
-  let v502Drag = null;
-  let v502RangeOffset = 0;
+  let v503PreviewAudio = null;
+  let v503PreviewUrl = "";
+  let v503PreviewTimer = null;
+  let v503Duration = 1;
 
-  function v502Time(sec) {
+  function v503Format(sec) {
     sec = Math.max(0, Number(sec || 0));
     const m = Math.floor(sec / 60);
     const s = Math.floor(sec % 60);
     return `${m}:${String(s).padStart(2, "0")}`;
   }
 
-  function v502StopPreview() {
-    if (v502PreviewTimer) {
-      clearTimeout(v502PreviewTimer);
-      v502PreviewTimer = null;
+  function v503IsAudioFile(file) {
+    if (!file) return false;
+    const typeOk = String(file.type || "").startsWith("audio/");
+    const extOk = /\.(mp3|wav|ogg|m4a|aac|flac|webm)$/i.test(file.name || "");
+    return typeOk || extOk;
+  }
+
+  function v503Stop() {
+    if (v503PreviewTimer) {
+      clearTimeout(v503PreviewTimer);
+      v503PreviewTimer = null;
     }
-    if (v502PreviewAudio) {
-      try { v502PreviewAudio.pause(); } catch {}
+    if (v503PreviewAudio) {
+      try {
+        v503PreviewAudio.pause();
+        v503PreviewAudio.currentTime = 0;
+      } catch {}
     }
-    if (v502PreviewUrl) {
-      try { URL.revokeObjectURL(v502PreviewUrl); } catch {}
+    if (v503PreviewUrl) {
+      try { URL.revokeObjectURL(v503PreviewUrl); } catch {}
     }
-    v502PreviewAudio = null;
-    v502PreviewUrl = "";
-    qs("#v502-inline-play")?.classList.remove("playing");
-    const btn = qs("#v32-sound-test");
-    if (btn) {
-      btn.classList.remove("testing");
-      btn.textContent = "OYNAT";
+    v503PreviewAudio = null;
+    v503PreviewUrl = "";
+    qs("#v503-play-selected")?.classList.remove("playing");
+    qs("#v503-play-range")?.classList.remove("playing");
+    const top = qs("#v32-sound-test");
+    if (top) {
+      top.classList.remove("testing");
+      top.textContent = "OYNAT";
     }
   }
 
-  function v502ApplySettings(next) {
+  function v503Settings(next) {
     const current = getSoundSettings();
     const live = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : {};
     const merged = { ...current, ...live, ...next, volume: 1 };
@@ -84,138 +93,232 @@
     return merged;
   }
 
-  async function v502Rows() {
-    if (!window.V26AlarmAudio?.listCustomFiles) return [];
-    try { return await window.V26AlarmAudio.listCustomFiles(); } catch { return []; }
+  async function v503Rows() {
+    try {
+      return window.V26AlarmAudio?.listCustomFiles ? await window.V26AlarmAudio.listCustomFiles() : [];
+    } catch {
+      return [];
+    }
   }
 
-  async function v502SelectedRow() {
-    const selectId = qs("#v47-custom-select")?.value;
-    const liveId = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings().selectedCustomId : "";
-    const id = selectId || liveId;
+  async function v503SelectedRow() {
+    const id = qs("#v47-custom-select")?.value || (window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings().selectedCustomId : "");
     if (!id) return null;
-    const rows = await v502Rows();
+    const rows = await v503Rows();
     return rows.find(row => row.id === id) || null;
   }
 
-  function v502ParseTime(text, fallback = 0) {
-    const raw = String(text || "").trim();
-    if (!raw) return fallback;
-    if (raw.includes(":")) {
-      const parts = raw.split(":").map(v => Number(v || 0));
-      if (parts.length >= 2 && parts.every(Number.isFinite)) return Math.max(0, Math.floor(parts[0] * 60 + parts[1]));
-    }
-    const n = Number(raw.replace(",", "."));
-    return Number.isFinite(n) ? Math.max(0, Math.floor(n)) : fallback;
-  }
-
-  function v502Segment() {
-    const s = qs("#v502-start");
-    const e = qs("#v502-end");
-    const max = Math.max(1, v502Duration || Number(s?.max || e?.max || 1));
-    let start = Math.max(0, Math.min(max - 1, Number(s?.value || 0)));
-    let end = Math.max(1, Math.min(max, Number(e?.value || max)));
+  function v503Segment() {
+    const sEl = qs("#v503-start");
+    const eEl = qs("#v503-end");
+    const max = Math.max(1, Number(sEl?.max || eEl?.max || v503Duration || 1));
+    let start = Math.max(0, Math.min(max - 1, Number(sEl?.value || 0)));
+    let end = Math.max(1, Math.min(max, Number(eEl?.value || max)));
     if (end <= start) end = Math.min(max, start + 1);
-    if (s) s.value = Math.floor(start);
-    if (e) e.value = Math.floor(end);
+    if (sEl) sEl.value = Math.floor(start);
+    if (eEl) eEl.value = Math.floor(end);
     return { start, end, max };
   }
 
-  function v502SetSegment(start, end) {
-    const max = Math.max(1, v502Duration || 1);
-    start = Math.max(0, Math.min(max - 1, Number(start || 0)));
-    end = Math.max(1, Math.min(max, Number(end || max)));
-    if (end <= start) end = Math.min(max, start + 1);
-    const s = qs("#v502-start");
-    const e = qs("#v502-end");
-    if (s) s.value = Math.floor(start);
-    if (e) e.value = Math.floor(end);
-    v502RenderRange();
-  }
+  function v503UpdateUI(current = null) {
+    const { start, end, max } = v503Segment();
+    const fill = qs("#v503-fill");
+    const leftHandle = qs("#v503-left-handle");
+    const rightHandle = qs("#v503-right-handle");
+    const label = qs("#v503-range-label");
+    const currentLabel = qs("#v503-current");
+    const totalLabel = qs("#v503-total");
+    const playhead = qs("#v503-playhead");
+    const progress = qs("#v503-progress");
 
-  function v502SetProgress(current = 0) {
-    const p = qs("#v502-progress-fill");
-    const t = qs("#v502-current-time");
-    const pct = Math.max(0, Math.min(100, (Number(current || 0) / Math.max(1, v502Duration)) * 100));
-    if (p) p.style.width = `${pct}%`;
-    if (t) t.textContent = v502Time(current);
-  }
-
-  function v502RenderRange() {
-    const { start, end, max } = v502Segment();
     const left = (start / max) * 100;
     const right = (end / max) * 100;
-    const width = Math.max(0, right - left);
-    const fill = qs("#v502-range-fill");
-    const leftHandle = qs("#v502-left-handle");
-    const rightHandle = qs("#v502-right-handle");
     if (fill) {
       fill.style.left = `${left}%`;
-      fill.style.width = `${width}%`;
+      fill.style.width = `${Math.max(0, right - left)}%`;
     }
-    if (leftHandle) leftHandle.style.left = `${left}%`;
-    if (rightHandle) rightHandle.style.left = `${right}%`;
-    const label = qs("#v502-range-label");
-    if (label) label.textContent = `${v502Time(start)} - ${v502Time(end)}`;
-    const startBox = qs("#v502-start-box");
-    const endBox = qs("#v502-end-box");
-    if (startBox) startBox.value = v502Time(start);
-    if (endBox) endBox.value = v502Time(end);
+    if (leftHandle) {
+      leftHandle.style.left = `${left}%`;
+      leftHandle.querySelector("span") && (leftHandle.querySelector("span").textContent = v503Format(start));
+    }
+    if (rightHandle) {
+      rightHandle.style.left = `${right}%`;
+      rightHandle.querySelector("span") && (rightHandle.querySelector("span").textContent = v503Format(end));
+    }
+    if (label) label.textContent = `${v503Format(start)} - ${v503Format(end)}`;
+    if (currentLabel) currentLabel.textContent = v503Format(current ?? start);
+    if (totalLabel) totalLabel.textContent = v503Format(max);
+    if (progress) {
+      progress.max = Math.floor(max);
+      progress.value = Math.floor(current ?? start);
+    }
+    if (playhead) {
+      const pct = Math.max(0, Math.min(100, ((current ?? start) / max) * 100));
+      playhead.style.left = `${pct}%`;
+    }
   }
 
-  function v502TrackSeconds(ev) {
-    const track = qs("#v502-track");
-    if (!track) return 0;
-    const rect = track.getBoundingClientRect();
-    const clientX = ev.touches?.[0]?.clientX ?? ev.clientX;
-    const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    return Math.round(pct * Math.max(1, v502Duration));
+  async function v503LoadMeta() {
+    const row = await v503SelectedRow();
+    if (!row?.blob) {
+      v503Duration = 1;
+      v503UpdateUI(0);
+      return;
+    }
+    const url = URL.createObjectURL(row.blob);
+    const audio = new Audio(url);
+    audio.preload = "metadata";
+    audio.onloadedmetadata = () => {
+      const duration = Math.max(1, Math.floor(audio.duration || 1));
+      v503Duration = duration;
+      const live = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
+      const start = Math.max(0, Math.min(duration - 1, Number(live.customStart || 0)));
+      const rawEnd = Number(live.customEnd || 0);
+      const end = rawEnd > start ? Math.min(duration, rawEnd) : duration;
+      ["#v503-progress", "#v503-start", "#v503-end"].forEach(sel => {
+        const el = qs(sel);
+        if (el) el.max = duration;
+      });
+      if (qs("#v503-start")) qs("#v503-start").value = Math.floor(start);
+      if (qs("#v503-end")) qs("#v503-end").value = Math.floor(end);
+      v503UpdateUI(start);
+      URL.revokeObjectURL(url);
+    };
+    audio.onerror = () => URL.revokeObjectURL(url);
   }
 
-  function v502BindTrack() {
-    const track = qs("#v502-track");
-    if (!track || track.dataset.bound === "v502") return;
-    track.dataset.bound = "v502";
+  async function v503PlayCustomRange() {
+    const row = await v503SelectedRow();
+    if (!row?.blob) {
+      alert("Önce özel ses seç veya dosya yükle.");
+      return;
+    }
+    v503Stop();
+    const { start, end } = v503Segment();
+    v503PreviewUrl = URL.createObjectURL(row.blob);
+    v503PreviewAudio = new Audio(v503PreviewUrl);
+    v503PreviewAudio.volume = 1;
 
-    const modeFor = (sec, target) => {
-      const { start, end } = v502Segment();
-      if (target?.id === "v502-left-handle") return "left";
-      if (target?.id === "v502-right-handle") return "right";
-      if (target?.id === "v502-range-fill" || (sec > start && sec < end)) {
-        v502RangeOffset = sec - start;
+    v503PreviewAudio.onloadedmetadata = async () => {
+      const duration = Math.max(1, Number(v503PreviewAudio.duration || 1));
+      const safeStart = Math.min(start, duration - 0.1);
+      const safeEnd = Math.min(end > safeStart ? end : duration, duration);
+      v503PreviewAudio.currentTime = safeStart;
+      v503UpdateUI(safeStart);
+
+      v503PreviewAudio.ontimeupdate = () => {
+        if (!v503PreviewAudio) return;
+        v503UpdateUI(v503PreviewAudio.currentTime);
+        if (v503PreviewAudio.currentTime >= safeEnd) v503Stop();
+      };
+      v503PreviewAudio.onended = v503Stop;
+      v503PreviewAudio.onerror = v503Stop;
+
+      qs("#v503-play-selected")?.classList.add("playing");
+      qs("#v503-play-range")?.classList.add("playing");
+      const top = qs("#v32-sound-test");
+      if (top) {
+        top.classList.add("testing");
+        top.textContent = "ÇALIYOR...";
+      }
+
+      try {
+        await v503PreviewAudio.play();
+        v503PreviewTimer = setTimeout(v503Stop, Math.max(500, (safeEnd - safeStart) * 1000 + 250));
+      } catch {
+        v503Stop();
+        alert("Ses çalınamadı. Dosyayı tekrar seçip deneyin.");
+      }
+    };
+  }
+
+  async function v503PlaySelectedSound() {
+    const type = qs("#v32-sound-type")?.value || "custom";
+    if (type === "custom") return v503PlayCustomRange();
+    v503Stop();
+    if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
+    v503Settings({ enabled: true, sound: type, volume: 1 });
+    const top = qs("#v32-sound-test");
+    if (top) {
+      top.classList.add("testing");
+      top.textContent = "ÇALIYOR...";
+    }
+    if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
+    setTimeout(() => {
+      const top = qs("#v32-sound-test");
+      if (top) {
+        top.classList.remove("testing");
+        top.textContent = "OYNAT";
+      }
+    }, 1800);
+  }
+
+  function v503BindRange() {
+    const track = qs("#v503-track");
+    const sEl = qs("#v503-start");
+    const eEl = qs("#v503-end");
+    if (!track || !sEl || !eEl || track.dataset.bound === "1") return;
+    track.dataset.bound = "1";
+
+    const secFromEvent = ev => {
+      const rect = track.getBoundingClientRect();
+      const clientX = ev.touches?.[0]?.clientX ?? ev.clientX;
+      const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      return Math.round(pct * Math.max(1, Number(sEl.max || v503Duration || 1)));
+    };
+
+    let drag = null;
+    let rangeOffset = 0;
+
+    const setRange = (start, end) => {
+      const max = Math.max(1, Number(sEl.max || eEl.max || v503Duration || 1));
+      start = Math.max(0, Math.min(max - 1, Number(start)));
+      end = Math.max(1, Math.min(max, Number(end)));
+      if (end <= start) end = Math.min(max, start + 1);
+      sEl.value = Math.floor(start);
+      eEl.value = Math.floor(end);
+      v503UpdateUI();
+    };
+
+    const chooseDrag = (sec, target) => {
+      const { start, end } = v503Segment();
+      if (target?.id === "v503-left-handle" || target?.closest?.("#v503-left-handle")) return "start";
+      if (target?.id === "v503-right-handle" || target?.closest?.("#v503-right-handle")) return "end";
+      if (target?.id === "v503-fill" || (sec > start && sec < end)) {
+        rangeOffset = sec - start;
         return "range";
       }
-      return Math.abs(sec - start) <= Math.abs(sec - end) ? "left" : "right";
+      return Math.abs(sec - start) <= Math.abs(sec - end) ? "start" : "end";
     };
 
-    const apply = (sec) => {
-      const { start, end, max } = v502Segment();
+    const apply = sec => {
+      const { start, end, max } = v503Segment();
       const len = Math.max(1, end - start);
-      if (v502Drag === "left") v502SetSegment(Math.min(sec, end - 1), end);
-      else if (v502Drag === "right") v502SetSegment(start, Math.max(sec, start + 1));
-      else if (v502Drag === "range") {
-        const ns = Math.max(0, Math.min(max - len, sec - v502RangeOffset));
-        v502SetSegment(ns, ns + len);
+      if (drag === "start") setRange(Math.min(sec, end - 1), end);
+      else if (drag === "end") setRange(start, Math.max(sec, start + 1));
+      else if (drag === "range") {
+        let nextStart = Math.max(0, Math.min(max - len, sec - rangeOffset));
+        setRange(nextStart, nextStart + len);
       }
     };
 
-    const down = (ev) => {
+    const down = ev => {
       ev.preventDefault();
-      const sec = v502TrackSeconds(ev);
-      v502Drag = modeFor(sec, ev.target);
+      const sec = secFromEvent(ev);
+      drag = chooseDrag(sec, ev.target);
       apply(sec);
       document.addEventListener("mousemove", move);
       document.addEventListener("mouseup", up);
       document.addEventListener("touchmove", move, { passive: false });
       document.addEventListener("touchend", up);
     };
-    const move = (ev) => {
+    const move = ev => {
+      if (!drag) return;
       ev.preventDefault();
-      if (!v502Drag) return;
-      apply(v502TrackSeconds(ev));
+      apply(secFromEvent(ev));
     };
     const up = () => {
-      v502Drag = null;
+      drag = null;
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
       document.removeEventListener("touchmove", move);
@@ -224,122 +327,33 @@
 
     track.addEventListener("mousedown", down);
     track.addEventListener("touchstart", down, { passive: false });
-  }
 
-  async function v502LoadMeta() {
-    const row = await v502SelectedRow();
-    if (!row?.blob) {
-      v502Duration = 1;
-      v502SetProgress(0);
-      v502SetSegment(0, 1);
-      return;
-    }
-    const url = URL.createObjectURL(row.blob);
-    const a = new Audio(url);
-    a.preload = "metadata";
-    a.onloadedmetadata = () => {
-      v502Duration = Math.max(1, Math.floor(a.duration || 1));
-      const live = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
-      const start = Math.max(0, Math.min(v502Duration - 1, Number(live.customStart || 0)));
-      const rawEnd = Number(live.customEnd || 0);
-      const end = rawEnd > start ? Math.min(v502Duration, rawEnd) : v502Duration;
-      const total = qs("#v502-total-time");
-      if (total) total.textContent = v502Time(v502Duration);
-      const startInp = qs("#v502-start");
-      const endInp = qs("#v502-end");
-      if (startInp) startInp.max = v502Duration;
-      if (endInp) endInp.max = v502Duration;
-      v502SetSegment(start, end);
-      v502SetProgress(start);
-      v502BindTrack();
-      URL.revokeObjectURL(url);
-    };
-    a.onerror = () => URL.revokeObjectURL(url);
-  }
-
-  async function v502PlayCustom() {
-    const row = await v502SelectedRow();
-    if (!row?.blob) {
-      alert("Önce özel ses seç veya dosya yükle.");
-      return;
-    }
-    v502StopPreview();
-    const { start, end } = v502Segment();
-    v502PreviewUrl = URL.createObjectURL(row.blob);
-    v502PreviewAudio = new Audio(v502PreviewUrl);
-    v502PreviewAudio.volume = 1;
-    v502PreviewAudio.onloadedmetadata = async () => {
-      const dur = Math.max(1, Number(v502PreviewAudio.duration || 1));
-      const safeStart = Math.min(start, dur - 0.1);
-      const safeEnd = Math.min(end > safeStart ? end : dur, dur);
-      v502PreviewAudio.currentTime = safeStart;
-      v502SetProgress(safeStart);
-      qs("#v502-inline-play")?.classList.add("playing");
-      const top = qs("#v32-sound-test");
-      if (top) {
-        top.classList.add("testing");
-        top.textContent = "ÇALIYOR...";
-      }
-      v502PreviewAudio.ontimeupdate = () => {
-        if (!v502PreviewAudio) return;
-        v502SetProgress(v502PreviewAudio.currentTime);
-        if (v502PreviewAudio.currentTime >= safeEnd) v502StopPreview();
-      };
-      v502PreviewAudio.onended = v502StopPreview;
-      v502PreviewAudio.onerror = v502StopPreview;
-      try {
-        await v502PreviewAudio.play();
-        v502PreviewTimer = setTimeout(v502StopPreview, Math.max(500, (safeEnd - safeStart) * 1000 + 250));
-      } catch {
-        v502StopPreview();
-        alert("Ses çalınamadı. Dosyayı tekrar seçip deneyin.");
-      }
-    };
-  }
-
-  async function v502PlaySelected() {
-    const type = qs("#v32-sound-type")?.value || "custom";
-    if (type === "custom") return v502PlayCustom();
-
-    v502StopPreview();
-    if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
-    if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
-    v502ApplySettings({ enabled: true, sound: type, volume: 1 });
-    const top = qs("#v32-sound-test");
-    if (top) {
-      top.classList.add("testing");
-      top.textContent = "ÇALIYOR...";
-    }
-    if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
-    setTimeout(() => {
-      if (top) {
-        top.classList.remove("testing");
-        top.textContent = "OYNAT";
-      }
-    }, 1800);
+    [sEl, eEl].forEach(el => el.addEventListener("input", () => v503UpdateUI()));
   }
 
   function renderSoundPanel(force = false) {
     const mount = qs("#v28-sound-mount");
     if (!mount) return;
     const pane = mount.closest(".crypto-v28-panel");
-    if (pane) Array.from(pane.children).forEach(child => { if (child !== mount) child.remove(); });
+    if (pane) {
+      Array.from(pane.children).forEach(child => { if (child !== mount) child.remove(); });
+    }
 
     const s = window.V26AlarmAudio?.getSettings ? window.V26AlarmAudio.getSettings() : getSoundSettings();
     const isCustom = (s.sound || "custom") === "custom";
-    v502ApplySettings({ sound: s.sound || "custom", volume: 1 });
+    v503Settings({ sound: s.sound || "custom", volume: 1 });
 
-    mount.dataset.ready = "v502";
+    mount.dataset.ready = "v503";
     mount.innerHTML = `
-      <div class="v502-sound-card">
-        <div class="v502-head"><b>Alarm Ses Merkezi</b></div>
+      <div class="v503-sound-card">
+        <div class="v503-head"><b>Alarm Ses Merkezi</b></div>
 
-        <div class="v502-main-actions">
+        <div class="v503-main-actions">
           <button id="v32-sound-test">OYNAT</button>
           <button id="v32-sound-stop" class="danger">DURDUR</button>
         </div>
 
-        <div class="v502-type-row">
+        <div class="v503-type-row">
           <label>Ses Tipi</label>
           <select id="v32-sound-type">
             <option value="custom">Özel Ses</option>
@@ -351,43 +365,42 @@
           </select>
         </div>
 
-        <div class="v502-custom ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
-          <div class="v502-library-title"><i class="fa-solid fa-music"></i><b>Özel Ses Kütüphanesi</b></div>
+        <div class="v503-custom ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
+          <div class="v503-library-title"><i class="fa-solid fa-music"></i><b>Özel Ses Kütüphanesi</b></div>
 
-          <div class="v502-select-row">
-            <button type="button" id="v502-inline-play" class="v502-inline-play">OYNAT</button>
-            <select id="v47-custom-select" class="v502-song-select"><option value="">Özel ses seç...</option></select>
+          <div class="v503-select-row">
+            <select id="v47-custom-select" title="Özel ses seç"><option value="">Özel ses seç...</option></select>
+            <button type="button" id="v503-play-selected">OYNAT</button>
             <button type="button" id="v47-custom-remove" class="danger">KALDIR</button>
           </div>
 
-          <div class="v502-trim">
-            <div class="v502-time-row">
-              <span id="v502-current-time">0:00</span>
-              <b>Alarm Aralığı: <strong id="v502-range-label">0:00 - 0:00</strong></b>
-              <span id="v502-total-time">0:00</span>
+          <div class="v503-trim-box">
+            <div class="v503-time-row">
+              <span id="v503-current">0:00</span>
+              <b>Seçili aralık: <strong id="v503-range-label">0:00 - 0:00</strong></b>
+              <span id="v503-total">0:00</span>
             </div>
 
-            <div class="v502-track" id="v502-track">
-              <div class="v502-progress-base"></div>
-              <div class="v502-progress-fill" id="v502-progress-fill"></div>
-              <div class="v502-range-fill" id="v502-range-fill"></div>
-              <button type="button" class="v502-handle left" id="v502-left-handle" aria-label="Başlangıç">[</button>
-              <button type="button" class="v502-handle right" id="v502-right-handle" aria-label="Bitiş">]</button>
+            <div id="v503-track" class="v503-track">
+              <div class="v503-track-bg"></div>
+              <div id="v503-fill" class="v503-fill"></div>
+              <div id="v503-playhead" class="v503-playhead"></div>
+              <button type="button" id="v503-left-handle" class="v503-handle left"><span>0:00</span>[</button>
+              <button type="button" id="v503-right-handle" class="v503-handle right"><span>0:00</span>]</button>
+              <input id="v503-progress" type="range" min="0" max="1" step="1" value="0" hidden>
+              <input id="v503-start" type="range" min="0" max="1" step="1" value="0" hidden>
+              <input id="v503-end" type="range" min="0" max="1" step="1" value="1" hidden>
             </div>
 
-            <input id="v502-start" type="hidden" value="0" max="1">
-            <input id="v502-end" type="hidden" value="1" max="1">
-
-            <div class="v502-manual">
-              <label>Başlangıç <input id="v502-start-box" value="0:00"></label>
-              <label>Bitiş <input id="v502-end-box" value="0:00"></label>
-              <button type="button" id="v502-apply">BU ARALIĞI ALARM YAP</button>
+            <div class="v503-range-actions">
+              <button type="button" id="v503-play-range">ARALIĞI DİNLE</button>
+              <button type="button" id="v503-apply-range">BU ARALIĞI ALARM YAP</button>
             </div>
           </div>
 
-          <div class="v502-file-row">
+          <div class="v503-file-row">
             <button type="button" id="v32-file-pick">DOSYA SEÇ</button>
-            <span id="v497-upload-note">Dosya seçilmedi</span>
+            <span id="v503-file-note">Dosya seçilmedi</span>
             <input id="v32-file-input" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.webm" hidden>
           </div>
         </div>
@@ -397,42 +410,58 @@
     qs("#v32-sound-type").value = s.sound || "custom";
 
     const stopAll = () => {
-      v502StopPreview();
+      v503Stop();
       if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
     };
 
     qs("#v32-sound-stop").onclick = stopAll;
-    qs("#v32-sound-test").onclick = v502PlaySelected;
+    qs("#v32-sound-test").onclick = v503PlaySelectedSound;
 
     qs("#v32-sound-type").onchange = e => {
-      v502ApplySettings({ sound: e.target.value, volume: 1 });
+      const type = e.target.value;
+      v503Settings({ sound: type, volume: 1 });
       renderSoundPanel(true);
     };
 
+    qs("#v503-play-selected").onclick = v503PlayCustomRange;
+    qs("#v503-play-range").onclick = v503PlayCustomRange;
+
+    qs("#v503-apply-range").onclick = () => {
+      const { start, end } = v503Segment();
+      v503Settings({ sound: "custom", customStart: start, customEnd: end, volume: 1 });
+      const btn = qs("#v503-apply-range");
+      if (btn) {
+        btn.textContent = `AKTİF: ${v503Format(start)} - ${v503Format(end)}`;
+        setTimeout(() => btn.textContent = "BU ARALIĞI ALARM YAP", 1800);
+      }
+    };
+
     qs("#v32-file-pick").onclick = () => qs("#v32-file-input")?.click();
+
     qs("#v32-file-input").onchange = async e => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const note = qs("#v497-upload-note");
+      const note = qs("#v503-file-note");
       if (note) note.textContent = "Yükleniyor: " + file.name;
+
       try {
+        if (!v503IsAudioFile(file)) throw new Error("Ses dosyası seç.");
         let row = null;
         if (window.V26AlarmAudio?.addCustomFile) row = await window.V26AlarmAudio.addCustomFile(file);
         if (!row?.id) throw new Error("Dosya kaydedilemedi.");
         if (window.V26AlarmAudio?.selectCustomFile) await window.V26AlarmAudio.selectCustomFile(row.id);
-        v502ApplySettings({ sound: "custom", selectedCustomId: row.id, volume: 1 });
+        v503Settings({ sound: "custom", selectedCustomId: row.id, volume: 1 });
         await renderSoundLibrary();
-        const sel = qs("#v47-custom-select");
-        if (sel) sel.value = row.id;
-        await v502LoadMeta();
+        const select = qs("#v47-custom-select");
+        if (select) select.value = row.id;
         if (note) {
-          note.textContent = "Aktif: " + file.name;
-          note.title = file.name;
+          note.textContent = "Aktif: " + row.name;
+          note.title = row.name;
         }
+        await v503LoadMeta();
       } catch (err) {
-        console.error("Özel ses yükleme hatası:", err);
         if (note) note.textContent = "Dosya yüklenemedi.";
-        alert("Ses dosyası yüklenemedi. MP3/WAV gibi geçerli bir ses dosyası seç.");
+        alert("Ses dosyası yüklenemedi. MP3/WAV/OGG/M4A/AAC/FLAC/WEBM gibi geçerli bir ses dosyası seç.");
       } finally {
         e.target.value = "";
       }
@@ -443,15 +472,9 @@
       if (!id) return;
       stopAll();
       if (window.V26AlarmAudio?.selectCustomFile) await window.V26AlarmAudio.selectCustomFile(id);
-      v502ApplySettings({ sound: "custom", selectedCustomId: id, volume: 1 });
+      v503Settings({ sound: "custom", selectedCustomId: id, volume: 1 });
       await renderSoundLibrary();
-      await v502LoadMeta();
-    };
-
-    qs("#v502-inline-play").onclick = async e => {
-      e.preventDefault();
-      if (qs("#v502-inline-play")?.classList.contains("playing")) stopAll();
-      else await v502PlayCustom();
+      await v503LoadMeta();
     };
 
     qs("#v47-custom-remove").onclick = async () => {
@@ -460,37 +483,17 @@
       if (!confirm("Bu özel sesi kaldırayım mı?")) return;
       stopAll();
       await window.V26AlarmAudio.removeCustomFile(id);
-      await renderSoundLibrary();
-      await v502LoadMeta();
+      renderSoundPanel(true);
     };
 
-    qs("#v502-start-box")?.addEventListener("change", e => {
-      const { end } = v502Segment();
-      v502SetSegment(v502ParseTime(e.target.value, 0), end);
-    });
-    qs("#v502-end-box")?.addEventListener("change", e => {
-      const { start } = v502Segment();
-      v502SetSegment(start, v502ParseTime(e.target.value, v502Duration));
-    });
-
-    qs("#v502-apply").onclick = () => {
-      const { start, end } = v502Segment();
-      v502ApplySettings({ sound: "custom", customStart: start, customEnd: end, volume: 1 });
-      const btn = qs("#v502-apply");
-      if (btn) {
-        btn.textContent = `AKTİF: ${v502Time(start)} - ${v502Time(end)}`;
-        setTimeout(() => btn.textContent = "BU ARALIĞI ALARM YAP", 1600);
-      }
-    };
-
-    renderSoundLibrary().then(v502LoadMeta).then(v502BindTrack);
+    renderSoundLibrary().then(() => v503LoadMeta().then(v503BindRange));
   }
 
   function setV493NowPlaying(text) {
-    const note = qs("#v497-upload-note");
+    const note = qs("#v503-file-note");
     if (note) {
       note.textContent = text || "Dosya seçilmedi";
-      note.title = text || "Dosya seçilmedi";
+      note.title = text || "";
     }
   }
 
@@ -502,8 +505,7 @@
 
     select.innerHTML = `<option value="">Özel ses seç...</option>` + files.map(file => {
       const active = file.id === s.selectedCustomId;
-      const size = file.size ? (file.size / 1024 / 1024).toFixed(2) + " MB" : "";
-      const label = `${active ? "✓ " : ""}${file.name}${size ? " · " + size : ""}`;
+      const label = `${active ? "✓ " : ""}${file.name}`;
       return `<option value="${file.id}" ${active ? "selected" : ""}>${label}</option>`;
     }).join("");
 
@@ -511,7 +513,7 @@
     if (current) select.value = current.id;
     select.title = current ? current.name : "Özel ses seç";
 
-    const note = qs("#v497-upload-note");
+    const note = qs("#v503-file-note");
     if (note) {
       const text = current ? `Aktif: ${current.name}` : "Dosya seçilmedi";
       note.textContent = text;
