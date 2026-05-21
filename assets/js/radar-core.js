@@ -121,7 +121,10 @@ async function omega_InitializeEngine() {
             if (rollingBlock) {
                 rollingBlock.style.display = 'none';
                 rollingBlock.removeAttribute('data-visible');
+                rollingBlock.setAttribute('aria-hidden', 'true');
             }
+            document.documentElement.classList.remove('rolling-hash-boot');
+            document.body.classList.remove('rolling-active');
             if (financeBlock) financeBlock.classList.remove('active');
 
             const centerWrapper = document.querySelector('.center-wrapper');
@@ -160,9 +163,10 @@ async function omega_InitializeEngine() {
                 _ACTIVE_TAB = 'rolling';
                 if (rollingBlock) {
                     rollingBlock.setAttribute('data-visible', 'true');
+                    rollingBlock.removeAttribute('aria-hidden');
                     rollingBlock.style.display = 'block';
                 }
-                if (titleElem) titleElem.innerHTML = '<span style="color:var(--gold)">/ ROLLING</span>';
+                if (titleElem) titleElem.innerHTML = '<span class="module-title-rolling"><i class="fa-solid fa-layer-group"></i> / ROLLING</span>';
                 if (typeof omega_RenderRollingModule === 'function') omega_RenderRollingModule();
 
             } else if(targetModule === 'favs') {
@@ -174,10 +178,21 @@ async function omega_InitializeEngine() {
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 if (streamBlock) streamBlock.style.display = 'block';
-                if (titleElem) titleElem.innerHTML = '<span style="color:#7E22CE">/ CANLI YAYIN</span>';
+                if (titleElem) titleElem.innerHTML = '<span class="module-title-stream"><i class="fa-solid fa-satellite-dish"></i> / CANLI YAYIN</span>';
+                setTimeout(() => {
+                    if (typeof omega_BootStreamV49 === 'function') omega_BootStreamV49();
+                    else if (typeof omega_BuildStreamMatrix === 'function') omega_BuildStreamMatrix(1);
+                }, 40);
 
             } else if(targetModule === 'crypto') {
                 _ACTIVE_TAB = 'crypto';
+                if (rollingBlock) {
+                    rollingBlock.style.display = 'none';
+                    rollingBlock.removeAttribute('data-visible');
+                    rollingBlock.setAttribute('aria-hidden', 'true');
+                }
+                document.body.classList.remove('omega-tab-rolling','rolling-active');
+                document.documentElement.classList.remove('rolling-hash-boot');
                 if (cryptoBlock) cryptoBlock.style.display = 'block';
                 if (titleElem) titleElem.innerHTML = '<span style="color:#f97316">/ KRİPTO TERMİNAL</span>';
                 if (typeof window.omega_TVRefreshCryptoChart === 'function') setTimeout(() => window.omega_TVRefreshCryptoChart(true), 80);
