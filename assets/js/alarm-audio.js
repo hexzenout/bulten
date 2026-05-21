@@ -117,7 +117,8 @@
   }
 
   async function addCustomFile(file) {
-    if (!file || !file.type.startsWith("audio/")) throw new Error("Ses dosyası seç.");
+    const okType = !!file && (String(file.type || "").startsWith("audio/") || /\.(mp3|wav|ogg|m4a|aac|flac|webm)$/i.test(file.name || ""));
+    if (!okType) throw new Error("Ses dosyası seç.");
     const id = "aud_" + Date.now() + "_" + Math.random().toString(36).slice(2);
     const row = {
       id,
