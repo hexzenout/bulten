@@ -1,18 +1,7 @@
 {
-  "up": "02:55",
-  "matches": [
-    {
-      "name": "Club Nacional - Universitario",
-      "league": "CONMEBOL Libertadores",
-      "score": "0 - 0",
-      "home_goals": 0,
-      "away_goals": 0,
-      "minute": 90,
-      "status": "Second Half",
-      "updated": "2026-05-21 02:55:46"
-    }
-  ],
+  "up": "14:56",
+  "matches": [],
   "logs": [
-    "key#1 OK live=1"
+    "key#1 OK live=0"
   ]
 }
