@@ -13,7 +13,7 @@ let _MASTER_DB = [];
         let _FAV_MATCHES = JSON.parse(localStorage.getItem('v19_fav_m')) || [];
         let _ROLLING_DB = JSON.parse(localStorage.getItem('v19_rolling')) || {};
         let _CHANNELS_DB = JSON.parse(localStorage.getItem('v19_channels')) || [];
-        let _ACTIVE_LAYOUT = parseInt(localStorage.getItem('v19_layout')) || 6;
+        let _ACTIVE_LAYOUT = parseInt(localStorage.getItem('v49_stream_layout')) || 1;
         let _ACTIVE_STREAMS = JSON.parse(localStorage.getItem('v19_streams')) || ["","","","","",""];
 
         const HIERARCHY_SCORES = {
