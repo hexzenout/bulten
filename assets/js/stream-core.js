@@ -75,12 +75,12 @@ function omega_OpenChannelManager() {
         }
 
         function omega_BuildStreamMatrix(numScreens) {
-            numScreens = Number(numScreens || 6);
+            numScreens = Number(numScreens || 1);
 
             const scrollY = window.scrollY || window.pageYOffset || 0;
 
             _ACTIVE_LAYOUT = numScreens;
-            localStorage.setItem('v19_layout', numScreens);
+            localStorage.setItem('v49_stream_layout', numScreens);
 
             const gridContainer = document.getElementById('omega-matrix-grid');
             if (!gridContainer) return;
@@ -148,3 +148,14 @@ function omega_OpenChannelManager() {
             _ACTIVE_STREAMS[id-1] = "";
             localStorage.setItem('v19_streams', JSON.stringify(_ACTIVE_STREAMS));
         }
+
+
+function omega_BootStreamV49() {
+    const grid = document.getElementById('omega-matrix-grid');
+    if (!grid) return;
+    const saved = parseInt(localStorage.getItem('v49_stream_layout') || '1');
+    const layout = [1,2,4,6].includes(saved) ? saved : 1;
+    if (!grid.children.length || !grid.classList.contains('m-lay-' + layout)) {
+        omega_BuildStreamMatrix(layout);
+    }
+}
