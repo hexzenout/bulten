@@ -1,0 +1,517 @@
+/* Route guard: Rolling yalnızca #rolling sekmesi aktifken görünür. */
+#omega-rolling-block {
+    display: none !important;
+}
+body.omega-tab-rolling #omega-rolling-block[data-visible="true"] {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    pointer-events: auto !important;
+}
+body:not(.omega-tab-rolling) #omega-rolling-block,
+body.omega-tab-crypto #omega-rolling-block,
+body.omega-tab-stream #omega-rolling-block,
+body.omega-tab-futbol #omega-rolling-block,
+body.omega-tab-basketbol #omega-rolling-block,
+body.omega-tab-finance #omega-rolling-block {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Üst breadcrumb renkleri */
+.module-title-stream {
+    color: var(--green) !important;
+    font-weight: 950 !important;
+}
+.module-title-stream i {
+    color: var(--green) !important;
+}
+.module-title-rolling {
+    color: #7E22CE !important;
+    font-weight: 950 !important;
+}
+.module-title-rolling i {
+    color: #7E22CE !important;
+}
+
+/* Sol menü ROLLING mor tona alınır. */
+#nav-rolling,
+#nav-rolling.active {
+    color: var(--text) !important;
+}
+#nav-rolling i,
+#nav-rolling.active i {
+    color: #7E22CE !important;
+}
+#nav-rolling.active {
+    background: rgba(126,34,206,.16) !important;
+}
+
+/* Rolling layout sol menü */
+.v49-rolling-layout {
+    display: grid !important;
+    grid-template-columns: 230px minmax(0, 1fr) !important;
+    gap: 16px !important;
+    align-items: start !important;
+}
+.v49-rolling-rail {
+    position: sticky !important;
+    top: 78px !important;
+    display: grid !important;
+    gap: 10px !important;
+}
+.v49-rolling-rail-title {
+    cursor: default !important;
+    color: #fff !important;
+    background: #111 !important;
+    border-color: #333 !important;
+}
+.v49-rolling-rail-title i {
+    color: #fff !important;
+}
+.v49-rolling-page.rail-collapsed .rolling-v48-rail {
+    display: grid !important;
+}
+.v49-rolling-page.rail-collapsed .v48-rolling-layout {
+    grid-template-columns: 230px minmax(0, 1fr) !important;
+}
+
+/* Bahis renkleri kırmızıya geçer. */
+.rolling-v48-rail-tab.bet.active,
+.rolling-v48-rail-tab.bet:hover {
+    border-color: #ef4444 !important;
+    background: rgba(239,68,68,.16) !important;
+    color: #fecaca !important;
+}
+.rolling-v48-rail-tab.bet i,
+.rolling-v47-card.bet h3,
+.rolling-v47-card.bet h3 i,
+.rolling-v49-fold.bet summary,
+.rolling-v49-fold.bet summary i {
+    color: #ef4444 !important;
+}
+.rolling-v47-card.bet {
+    border-left: 4px solid #ef4444 !important;
+}
+.rolling-v47-type.bet {
+    background: rgba(239,68,68,.16) !important;
+    color: #fecaca !important;
+}
+.rolling-v47-roll-panel.bet {
+    border-color: rgba(239,68,68,.35) !important;
+}
+.rolling-v47-roll-panel.bet h4,
+.rolling-v47-roll-panel.bet h4 i {
+    color: #ef4444 !important;
+}
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:hover,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:focus {
+    border-color: #ef4444 !important;
+}
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button span {
+    color: #ef4444 !important;
+}
+.rolling-v48-row-controls button:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* Kripto mavisi korunur. */
+.rolling-v48-rail-tab.crypto.active,
+.rolling-v48-rail-tab.crypto:hover {
+    border-color: #60a5fa !important;
+    background: rgba(96,165,250,.14) !important;
+    color: #bfdbfe !important;
+}
+
+/* Rolling içindeki iki alan açılır/kapanır ama tasarım bozulmaz. */
+.rolling-v49-fold {
+    border-top: 1px solid #232323;
+    padding: 14px;
+}
+.rolling-v49-fold summary {
+    list-style: none;
+    cursor: pointer;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 950;
+    letter-spacing: .4px;
+    color: #fff;
+}
+.rolling-v49-fold summary::-webkit-details-marker {
+    display: none;
+}
+.rolling-v49-fold summary::after {
+    content: "AÇ / KAPAT";
+    margin-left: auto;
+    color: #888;
+    font-size: .62rem;
+    border: 1px solid #333;
+    border-radius: 999px;
+    padding: 5px 8px;
+}
+.rolling-v49-fold[open] summary::after {
+    color: #fff;
+    border-color: #444;
+}
+
+/* Canlı Yayın başlangıç ve boş ekran sorunu için daha kararlı görünüm */
+#omega-stream-block .stream-master-grid.active:empty::before {
+    content: "Yayın ekranı hazırlanıyor...";
+    display: grid;
+    place-items: center;
+    min-height: 260px;
+    border: 1px dashed #333;
+    border-radius: 14px;
+    color: #aaa;
+    font-weight: 900;
+}
+
+/* Ses merkezi sadeleştirme */
+.v49-sound-card .v49-sound-actions {
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 10px !important;
+}
+.v49-sound-card .v49-sound-actions button {
+    min-height: 48px !important;
+    white-space: nowrap !important;
+    line-height: 1.1 !important;
+    font-weight: 950 !important;
+}
+.v49-custom-sound-panel {
+    display: none !important;
+    grid-column: 1 / -1 !important;
+    padding: 16px !important;
+    border-radius: 18px !important;
+    border: 1px solid #333 !important;
+    background: #090909 !important;
+}
+.v49-custom-sound-panel.show {
+    display: grid !important;
+    gap: 12px !important;
+}
+.v49-custom-select-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 100px !important;
+    gap: 10px !important;
+}
+.v49-custom-select-row select,
+.v49-custom-select-row button {
+    min-height: 46px !important;
+    border-radius: 12px !important;
+    font-weight: 950 !important;
+}
+.v49-custom-select-row select {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+.v49-file-row {
+    grid-template-columns: 145px minmax(0, 1fr) !important;
+    gap: 12px !important;
+}
+.v49-file-name {
+    display: block !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    line-height: 46px !important;
+    white-space: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    text-overflow: clip !important;
+    padding: 0 12px !important;
+    scrollbar-width: thin;
+    cursor: help;
+}
+.v49-file-name::-webkit-scrollbar {
+    height: 7px;
+}
+.v49-file-name::-webkit-scrollbar-track {
+    background: #080808;
+}
+.v49-file-name::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 99px;
+}
+
+@media (max-width: 1200px) {
+    .v49-rolling-layout,
+    .v49-rolling-page.rail-collapsed .v48-rolling-layout {
+        grid-template-columns: 1fr !important;
+    }
+    .v49-rolling-rail {
+        position: static !important;
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .v49-sound-card .v49-sound-actions,
+    .v49-custom-select-row,
+    .v49-file-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* ===============================
+   V49.1 ROLLING COLOR + ICON + MODAL TEXT FIX
+   sw.js / pwa.js değiştirilmedi.
+================================ */
+
+:root {
+    --rolling-purple: #7E22CE;
+    --rolling-purple-soft: rgba(126, 34, 206, .16);
+    --rolling-purple-border: rgba(126, 34, 206, .42);
+}
+
+/* ROLLING tarafında kalan turuncu/sarı vurguları mor yap. */
+#nav-rolling i,
+#nav-rolling.active i,
+.module-title-rolling,
+.module-title-rolling i,
+.rolling-v47-hero h2,
+.rolling-v47-hero h2 i,
+.v48-rolling-hero h2,
+.v48-rolling-hero h2 i,
+.rolling-v49-rail-title,
+.rolling-v49-rail-title i,
+.rolling-v48-rail-toggle,
+.rolling-v48-rail-toggle i,
+.rolling-v47-roll-buttons button span {
+    color: var(--rolling-purple) !important;
+}
+
+#nav-rolling.active,
+.rolling-v49-rail-title {
+    background: var(--rolling-purple-soft) !important;
+    border-color: var(--rolling-purple-border) !important;
+}
+
+/* Bahis tarafı artık kırmızı değil mor. */
+.rolling-v48-rail-tab.bet.active,
+.rolling-v48-rail-tab.bet:hover,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:hover,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button:focus {
+    border-color: var(--rolling-purple) !important;
+    background: var(--rolling-purple-soft) !important;
+    color: #e9d5ff !important;
+}
+
+.rolling-v48-rail-tab.bet i,
+.rolling-v48-rail-tab.bet span,
+.rolling-v47-card.bet h3,
+.rolling-v47-card.bet h3 i,
+.rolling-v49-fold.bet summary,
+.rolling-v49-fold.bet summary i,
+.rolling-v47-roll-panel.bet h4,
+.rolling-v47-roll-panel.bet h4 i,
+.rolling-v47-roll-panel.bet .rolling-v47-roll-buttons button span {
+    color: var(--rolling-purple) !important;
+}
+
+.rolling-v47-type.bet {
+    background: var(--rolling-purple-soft) !important;
+    color: #e9d5ff !important;
+}
+
+.rolling-v47-roll-panel.bet {
+    border-color: var(--rolling-purple-border) !important;
+}
+
+/* Kalan sarı sol şeritleri tamamen kaldır. */
+.rolling-v47-card.bet,
+.v49-mode-card.bet,
+.rolling-v49-fold.bet,
+.rolling-v47-roll-panel.bet {
+    box-shadow: none !important;
+}
+
+.rolling-v47-card.bet,
+.v49-mode-card.bet {
+    border-left: 1px solid #292929 !important;
+}
+
+/* BAHİS ve BAHİS ROLLING solundaki sarı strip/çizgi kalıntısı olmasın. */
+.rolling-v47-card.bet::before,
+.rolling-v47-card.bet::after,
+.v49-mode-card.bet::before,
+.v49-mode-card.bet::after,
+.rolling-v49-fold.bet::before,
+.rolling-v49-fold.bet::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* BAHİS logosu: sol menüdeki Futbol + Basketbol ikonları yan yana. */
+.rolling-v491-bet-icons {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    margin-right: 7px !important;
+    vertical-align: middle !important;
+}
+
+.rolling-v491-bet-icons i {
+    width: auto !important;
+    margin: 0 !important;
+    font-size: .98em !important;
+}
+
+.rolling-v491-bet-icons i.fa-futbol {
+    color: var(--green) !important;
+}
+
+.rolling-v491-bet-icons i.fa-basketball {
+    color: var(--orange) !important;
+}
+
+/* Bahis başlığında ikon çifti yanında yazı mor kalır. */
+.rolling-v47-card.bet h3 .rolling-v491-bet-icons + span,
+.rolling-v48-rail-tab.bet .rolling-v491-bet-icons + span {
+    color: var(--rolling-purple) !important;
+}
+
+/* Modal kutu yazıları daha görünür ve sade. */
+.kapsul.v32 input[id^="e-n-"],
+.k-note-input {
+    min-width: 160px !important;
+}
+
+.kapsul.v32 input::placeholder,
+.k-note-input::placeholder {
+    color: #d7d7d7 !important;
+    opacity: .95 !important;
+    font-weight: 850 !important;
+}
+
+/* Eski kırmızı bahis hover kalıntılarını morla ez. */
+.rolling-v48-row-controls button:hover {
+    background: var(--rolling-purple) !important;
+    border-color: var(--rolling-purple) !important;
+    color: #fff !important;
+}
+
+@media (max-width: 900px) {
+    .rolling-v491-bet-icons {
+        margin-right: 4px !important;
+    }
+}
+
+
+/* ===============================
+   V49.2 ROLLING MODAL BET/CRYPTO TEXT SPLIT
+   sw.js / pwa.js değiştirilmedi.
+================================ */
+
+/* Açılan 7/15/30/60/90 Rolling modalında eski sarı/turuncu vurguları mor tona yaklaştır. */
+#rolling-excel-overlay #excel-modal-title,
+#rolling-excel-overlay .excel-title,
+#rolling-excel-overlay h2,
+#rolling-excel-overlay h3 {
+    color: var(--rolling-purple, #7E22CE) !important;
+}
+
+/* Modal input yazıları sade ve okunaklı. */
+#rolling-excel-overlay .kapsul input,
+#rolling-excel-overlay .kapsul.v32 input,
+#rolling-excel-overlay .k-note-input {
+    font-weight: 900 !important;
+    color: #fff !important;
+}
+
+#rolling-excel-overlay .kapsul input::placeholder,
+#rolling-excel-overlay .kapsul.v32 input::placeholder,
+#rolling-excel-overlay .k-note-input::placeholder {
+    color: #d9d9d9 !important;
+    opacity: .98 !important;
+    font-weight: 950 !important;
+}
+
+/* RR kelimesi görünmesin diye alanlar daha temiz. */
+#rolling-excel-overlay input[id^="e-o-"] {
+    min-width: 120px !important;
+}
+
+/* Bahis/Kripto modal butonları: eski sarı veya karışık renkleri ez. */
+#rolling-excel-overlay .k-actions .w,
+#rolling-excel-overlay .k-actions.v32 .w,
+#rolling-excel-overlay .k-btn.w {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #07110d !important;
+}
+
+#rolling-excel-overlay .k-actions .l,
+#rolling-excel-overlay .k-actions.v32 .l,
+#rolling-excel-overlay .k-btn.l {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* Gün bilgisi: Bahis için Gün K/Z, Kripto için Gün P/L yazısı JS tarafından gelir; burada görünürlüğü güçlendiriyoruz. */
+#rolling-excel-overlay .day-info span,
+#rolling-excel-overlay .day-info-v32 span,
+#rolling-excel-overlay .day-result span,
+#rolling-excel-overlay .day-result small {
+    color: #bdbdbd !important;
+    font-weight: 900 !important;
+}
+
+/* V49.1'deki mor renkleri en sonda tekrar garantiye al. */
+.rolling-v47-card.bet,
+.v49-mode-card.bet {
+    border-left: 1px solid #292929 !important;
+    box-shadow: none !important;
+}
+
+.rolling-v47-card.bet h3,
+.rolling-v47-card.bet h3 i,
+.rolling-v49-fold.bet summary,
+.rolling-v49-fold.bet summary i,
+.rolling-v48-rail-tab.bet span {
+    color: var(--rolling-purple, #7E22CE) !important;
+}
+
+
+/* ===============================
+   V49.3 ROLLING MENU + MODAL COLORS + LIVE ROUTE + SOUND NOW PLAYING
+   sw.js / pwa.js / index.html değiştirilmedi.
+================================ */
+
+:root {
+    --rolling-purple: #7E22CE;
+    --rolling-purple-soft: rgba(126, 34, 206, .16);
+    --rolling-purple-border: rgba(126, 34, 206, .42);
+    --rolling-gold: #fbbf24;
+    --crypto-blue: #60a5fa;
+    --crypto-orange: #f97316;
+}
+
+/* Canlı takip dahil tüm non-rolling route'larda Rolling sızıntısını kapat. */
+body:not(.omega-tab-rolling) #omega-rolling-block,
+body.omega-tab-live #omega-rolling-block,
+body.omega-tab-crypto #omega-rolling-block,
+body.omega-tab-stream #omega-rolling-block,
+body.omega-tab-finance #omega-rolling-block,
+body.omega-tab-futbol #omega-rolling-block,
+body.omega-tab-basketbol #omega-rolling-block {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}

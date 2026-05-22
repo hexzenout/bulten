@@ -1,0 +1,540 @@
+   V32 FINAL COLOR + ROUTE FIX
+   - Sol menü ikonları eski mantıkta.
+   - Sol menü yazıları beyaz.
+   - Kripto başlıkları turuncu.
+   - Canlı yayın üst yazısı lila, ama sol menü yazısı beyaz.
+   - F5 sırasında yanlış ana sayfa filtreleri kısa süre gizlenir.
+================================ */
+
+:root {
+    --v32-orange: #f97316;
+    --v32-stream-purple: #7E22CE;
+    --v32-stream-blue: #3b82f6;
+}
+
+/* Sol menü: yazılar beyaz */
+.accordion-menu #nav-stream,
+.accordion-menu #nav-stream span,
+.accordion-menu #nav-stream b,
+.accordion-menu #nav-crypto,
+.accordion-menu #nav-crypto span,
+.accordion-menu #nav-crypto b {
+    color: var(--text) !important;
+}
+
+/* Sol menü: Canlı Yayın İkonu (Sabit Mavi) */
+.accordion-menu #nav-stream i,
+.accordion-menu #nav-stream svg,
+.accordion-menu #nav-stream svg path {
+    color: #3b82f6 !important; /* Mavi renk sabitlendi */
+    fill: #3b82f6 !important;
+}
+
+/* Aktif olduğunda da rengi koru */
+.accordion-menu #nav-stream.active i {
+    color: #3b82f6 !important;
+}
+
+.accordion-menu #nav-crypto i,
+.accordion-menu #nav-crypto svg,
+.accordion-menu #nav-crypto svg path {
+    color: var(--v32-orange) !important;
+    fill: var(--v32-orange) !important;
+}
+
+/* Kripto iç başlıkları ve sembol yazıları turuncu */
+#omega-crypto-block .terminal-v10-hero.crypto h2,
+#omega-crypto-block .terminal-v10-hero.crypto h2 i,
+#omega-crypto-block .crypto-v10-chart-head h3,
+#omega-crypto-block .crypto-v10-chart-head h3 i,
+#omega-crypto-block .crypto-v10-title,
+#omega-crypto-block .crypto-symbol-title,
+#omega-crypto-block .crypto-v10-symbol,
+#omega-crypto-block .crypto-v28-title,
+#omega-crypto-block h1,
+#omega-crypto-block h2,
+#omega-crypto-block h3,
+#omega-crypto-block [id*="symbol"],
+#omega-crypto-block [class*="symbol"],
+#omega-crypto-block [class*="coin-title"] {
+    color: var(--v32-orange) !important;
+}
+
+/* Route flash fix - hızlı */
+body:not(.omega-route-ready) #home-section,
+body:not(.omega-route-ready) #football-section,
+body:not(.omega-route-ready) #basketball-section,
+body:not(.omega-route-ready) #omega-stream-block,
+body:not(.omega-route-ready) #omega-crypto-block,
+body:not(.omega-route-ready) #omega-live-block,
+body:not(.omega-route-ready) #omega-finance-block,
+body:not(.omega-route-ready) #favs-section,
+body:not(.omega-route-ready) #favorites-section {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+body.omega-route-ready #home-section,
+body.omega-route-ready #football-section,
+body.omega-route-ready #basketball-section,
+body.omega-route-ready #omega-stream-block,
+body.omega-route-ready #omega-crypto-block,
+body.omega-route-ready #omega-live-block,
+body.omega-route-ready #omega-finance-block,
+body.omega-route-ready #favs-section,
+body.omega-route-ready #favorites-section {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ===============================
+   V34 ROUTE FLASH FIX - STRONG + FAST
+   F5 sırasında ana sayfa/radar filtrelerinin görünmesini engeller.
+================================ */
+
+body:not(.omega-route-ready) #omega-radar-block,
+body:not(.omega-route-ready) #omega-favs-block,
+body:not(.omega-route-ready) #omega-stream-block,
+body:not(.omega-route-ready) #omega-crypto-block,
+body:not(.omega-route-ready) #omega-live-block,
+body:not(.omega-route-ready) #v19-finance-block,
+body:not(.omega-route-ready) #omega-finance-block {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+body.omega-route-ready #omega-radar-block,
+body.omega-route-ready #omega-favs-block,
+body.omega-route-ready #omega-stream-block,
+body.omega-route-ready #omega-crypto-block,
+body.omega-route-ready #omega-live-block,
+body.omega-route-ready #v19-finance-block,
+body.omega-route-ready #omega-finance-block {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ===============================
+   V35 CRYPTO TIMEFRAME + STREAM SMOOTH FIX
+================================ */
+
+.crypto-v10-timeframes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.crypto-v10-timeframes .v35-tf,
+.crypto-v10-timeframes .tf-v10 {
+    min-width: 54px;
+    cursor: pointer;
+}
+
+.crypto-v10-timeframes .v35-tf.active,
+.crypto-v10-timeframes .tf-v10.active {
+    background: #f97316 !important;
+    border-color: #f97316 !important;
+    color: #171000 !important;
+    box-shadow: none !important;
+}
+
+#omega-matrix-grid {
+    transition: min-height 0.18s ease, opacity 0.12s ease;
+}
+
+/* ===============================
+   V36 SPEED MODE
+   Stream geçişleri ve Lig/Saat sıralama geçişleri maksimum stabil hıza çekildi.
+================================ */
+
+.stream-master-grid,
+.matrix-unit,
+.league-container-pro,
+.match-card-pro,
+.sort-btn,
+.filter-panel,
+.controls-wrapper,
+.btn-stream-layout {
+    transition-duration: 0.04s !important;
+    animation-duration: 0.04s !important;
+}
+
+#omega-matrix-grid {
+    transition: min-height 0.05s ease, opacity 0.04s ease !important;
+}
+
+body.v36-fast-mode .league-container-pro,
+body.v36-fast-mode .match-card-pro,
+body.v36-fast-mode #radar-render-output,
+body.v36-fast-mode .controls-wrapper {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* ===============================
+   V37 STREAM INSTANT LAYOUT FIX
+   1/2/4/6 geçişleri kilitsiz, gecikmesiz ve hizalı.
+================================ */
+
+.stream-master-grid,
+.stream-master-grid.active,
+#omega-matrix-grid {
+    transition: none !important;
+    animation: none !important;
+    align-items: stretch !important;
+}
+
+.matrix-unit {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+}
+
+.m-lay-1 {
+    grid-template-columns: 1fr !important;
+}
+
+.m-lay-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.m-lay-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.m-lay-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    align-items: stretch !important;
+}
+
+.m-lay-6 .matrix-unit {
+    aspect-ratio: 16 / 10.5 !important;
+}
+
+/* ===============================
+   V31 CLEANUP: CRYPTO REAL CHART + FINANCE TAB FIX
+================================ */
+
+/* Eski işlevsiz grafik süreleri ve çizim paneli gizlendi */
+.crypto-v10-timeframes,
+.crypto-v12-toolbar,
+#drawing-v14-panel,
+#crypto-v12-hint,
+.crypto-v28-tab[data-crypto-panel="draw"],
+.crypto-v28-panel[data-crypto-pane="draw"] {
+    display: none !important;
+}
+
+/* Eski canvas yerine Lightweight Charts alanı */
+#crypto-v10-chart {
+    display: none !important;
+}
+
+#crypto-tv-chart {
+    width: 100%;
+    height: 520px;
+    min-height: 420px;
+    background: #050505;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.crypto-v12-chart-wrap {
+    min-height: 520px;
+    background: #050505;
+}
+
+/* Kripto üst açıklama kalabalığını azalt */
+.crypto-v28-mini-panel span,
+.crypto-v10-chart-caption {
+    color: var(--muted);
+    opacity: .72;
+}
+
+.crypto-v28-mini-panel b {
+    color: #f97316 !important;
+}
+
+/* Finans sekmeleri: aktif buton artık doğru butona geçer */
+.finance-tabs .finance-tab {
+    background: #161616 !important;
+    color: var(--text) !important;
+    border: 1px solid #292929 !important;
+    transition: none !important;
+}
+
+.finance-tabs .finance-tab.active {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+#finance-tab-bet.active {
+    background: var(--gold) !important;
+    border-color: var(--gold) !important;
+    color: #111 !important;
+}
+
+#finance-tab-crypto.active {
+    background: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #06111f !important;
+}
+
+.finance-tab-panel {
+    display: none;
+}
+
+.finance-tab-panel.active {
+    display: block;
+}
+
+/* ===============================
+   V32 PROFESSIONAL CLEANUP
+   Kripto grafik, ses paneli, kasa ve rolling profesyonel düzen.
+================================ */
+
+/* Crypto: tek grafik alanı */
+.crypto-v12-chart-wrap {
+    position: relative;
+    min-height: 520px !important;
+    height: 520px !important;
+    overflow: hidden !important;
+    background: #050505 !important;
+}
+
+#crypto-v10-chart,
+#crypto-v12-hint,
+#drawing-v14-panel,
+.crypto-v12-toolbar,
+.crypto-v13-toolbar,
+.crypto-v28-tab[data-crypto-panel="draw"],
+.crypto-v28-panel[data-crypto-pane="draw"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+}
+
+#crypto-tv-chart {
+    display: block !important;
+    width: 100% !important;
+    height: 520px !important;
+    min-height: 520px !important;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #050505;
+}
+
+.v32-chart-controls {
+    display: grid;
+    grid-template-columns: 1.1fr .8fr .8fr 1.3fr auto;
+    gap: 10px;
+    align-items: end;
+    padding: 12px;
+    margin: 10px 0 12px;
+    border: 1px solid #262626;
+    border-radius: 12px;
+    background: #0b0b0b;
+}
+
+.v32-field label {
+    display: block;
+    font-size: .72rem;
+    color: #a3a3a3;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 6px;
+}
+
+.v32-field input,
+.v32-field select {
+    width: 100%;
+    min-height: 38px;
+    border: 1px solid #303030;
+    border-radius: 9px;
+    background: #050505;
+    color: #fff;
+    font-weight: 850;
+    padding: 0 12px;
+    outline: none;
+}
+
+.v32-field input:focus,
+.v32-field select:focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 2px rgba(249,115,22,.16);
+}
+
+.v32-tf-row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.v32-tf-btn {
+    min-height: 38px;
+    padding: 0 10px;
+    border: 1px solid #303030;
+    background: #151515;
+    color: #d6d6d6;
+    border-radius: 8px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.v32-tf-btn.active {
+    background: #f97316 !important;
+    border-color: #f97316 !important;
+    color: #130b03 !important;
+}
+
+.v32-refresh-btn {
+    min-height: 38px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 9px;
+    background: var(--gold);
+    color: #111;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.crypto-v28-tab i {
+    font-size: 1.05rem;
+}
+
+.crypto-v28-tab[data-crypto-panel="graph"] i::before { content: "\f201"; }
+.crypto-v28-tab[data-crypto-panel="plan"] i::before { content: "\f0ae"; }
+.crypto-v28-tab[data-crypto-panel="alarm"] i::before { content: "\f0f3"; }
+.crypto-v28-tab[data-crypto-panel="sound"] i::before { content: "\f028"; }
+.crypto-v28-tab[data-crypto-panel="settings"] i::before { content: "\f1de"; }
+
+/* Sound panel */
+.v32-sound-card {
+    border: 1px solid #2d2d2d;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #101010, #070707);
+    padding: 18px;
+}
+
+.v32-sound-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.v32-sound-head b {
+    color: #f97316;
+    font-size: 1.15rem;
+    letter-spacing: .8px;
+}
+
+.v32-sound-head span {
+    display: block;
+    color: #bdbdbd;
+    font-size: .82rem;
+    margin-top: 4px;
+}
+
+.v32-sound-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.v32-sound-actions button,
+.v32-file-btn {
+    min-height: 44px;
+    border-radius: 10px;
+    border: 1px solid #343434;
+    background: #171717;
+    color: #fff;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.v32-sound-actions button.active {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #04120d !important;
+}
+
+.v32-sound-actions button.testing {
+    background: #f97316 !important;
+    border-color: #f97316 !important;
+    color: #130b03 !important;
+}
+
+.v32-sound-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.v32-sound-field {
+    border: 1px solid #252525;
+    background: #080808;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.v32-sound-field label {
+    display: block;
+    color: #aaa;
+    font-size: .72rem;
+    font-weight: 950;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.v32-sound-field select,
+.v32-sound-field input[type="number"] {
+    width: 100%;
+    height: 38px;
+    background: #050505;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    padding: 0 10px;
+    font-weight: 850;
+}
+
+.v32-sound-field input[type="range"] {
+    width: 100%;
+    accent-color: #f97316;
+}
+
+.v32-file-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.v32-file-name {
+    flex: 1;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border: 1px dashed #3a3a3a;
+    border-radius: 9px;
+    color: #fbbf24;
+    font-weight: 850;
+    background: #050505;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.v32-slider-value {
+    color: #fbbf24;
+    font-weight: 950;
+    margin-left: 6px;
+}
