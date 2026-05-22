@@ -1,18 +1,3 @@
-/* CANLI YAYIN FLASH FIX */
-.accordion-menu #nav-stream i,
-.accordion-menu #nav-stream svg,
-.module-title-stream,
-.module-title-stream i {
-    color: #7E22CE !important;
-    fill: #7E22CE !important;
-    transition: none !important;
-}
-.accordion-menu #nav-stream.active {
-    background: rgba(126, 34, 206, 0.15) !important;
-    transition: none !important;
-}
-
-
 /* ===============================
    V508 SOUND ROOT + HEADER MENU FINAL FIX
    sw.js / pwa.js değiştirilmedi.
