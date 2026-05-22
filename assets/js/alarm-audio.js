@@ -1,6 +1,6 @@
 // ===============================
-// V49.9F CLEAN SOUND ENGINE
-// Builtin sesler + özel ses yükleme/oynatma + seçili aralık.
+// V50.7 CLEAN SOUND ENGINE
+// Builtin sesler + özel ses yükleme/oynatma.
 // ===============================
 
 (function () {
@@ -22,8 +22,8 @@
   let audioCtx = null;
   let ringAudio = null;
   let ringTimers = [];
-  let isRinging = false;
   let objectUrls = new Map();
+  let isRinging = false;
 
   function loadSettings() {
     try {
@@ -130,14 +130,7 @@
   async function addCustomFile(file) {
     if (!isAcceptedAudioFile(file)) throw new Error("Geçerli ses dosyası seç.");
     const id = "aud_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-    const row = {
-      id,
-      name: file.name || "Özel Ses",
-      type: file.type || "audio/*",
-      size: file.size || 0,
-      createdAt: Date.now(),
-      blob: file
-    };
+    const row = { id, name: file.name || "Özel Ses", type: file.type || "audio/*", size: file.size || 0, createdAt: Date.now(), blob: file };
     await dbPut(row);
     settings.sound = "custom";
     settings.enabled = true;
@@ -238,33 +231,26 @@
       playBuiltinLoop(durationMs);
       return;
     }
-
     const start = Math.max(0, Number(settings.customStart || 0));
     const end = Math.max(0, Number(settings.customEnd || 0));
-
     ringAudio = new Audio(src);
     ringAudio.volume = 1;
     ringAudio.currentTime = start;
 
-    const stopFromAudio = () => {
-      if (isRinging) stopAlarm();
-    };
-
+    const stopFromAudio = () => { if (isRinging) stopAlarm(); };
     ringAudio.ontimeupdate = () => {
       if (!isRinging || !ringAudio) return;
       if (end > start && ringAudio.currentTime >= end) stopFromAudio();
     };
     ringAudio.onended = stopFromAudio;
     ringAudio.onerror = stopFromAudio;
-
     try {
       await ringAudio.play();
-    } catch (err) {
+    } catch {
       notify("Özel ses çalamadı. Dosyayı tekrar seçip OYNAT'a bas.");
       playBuiltinLoop(durationMs);
       return;
     }
-
     ringTimers.push(setTimeout(stopAlarm, durationMs));
   }
 
@@ -273,22 +259,17 @@
     settings.enabled = true;
     settings.volume = 1;
     saveSettings();
-
     stopAlarm();
     isRinging = true;
     document.body.classList.add("v28-alarm-ringing");
     window.dispatchEvent(new CustomEvent("v46b-audio-ringing", { detail: { ringing: true } }));
-
     const durationMs = Math.max(3, Number(settings.durationSec || 60)) * 1000;
-
     if (settings.sound === "custom") await playCustom(durationMs);
     else playBuiltinLoop(durationMs);
   }
 
   function boot() {
-    window.addEventListener("v26-alarm-fired", e => {
-      playAlarm(e.detail?.message || "Fiyat alarmı tetiklendi.");
-    });
+    window.addEventListener("v26-alarm-fired", e => playAlarm(e.detail?.message || "Fiyat alarmı tetiklendi."));
   }
 
   window.V26AlarmAudio = {
