@@ -6872,3 +6872,165 @@ summary.rolling-v494-combine-title i {
     }
 }
 
+
+/* ===============================
+   V50.5 SOUND RESTORE + CACHE VERSION
+   sw.js / pwa.js değiştirilmedi.
+================================ */
+
+#v28-sound-mount {
+    display: block !important;
+    visibility: visible !important;
+    min-height: 1px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="sound"].active #v28-sound-mount,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount {
+    display: block !important;
+    visibility: visible !important;
+}
+
+.v505-sound-card {
+    display: grid !important;
+    gap: 14px !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    padding: 16px !important;
+    border: 1px solid #262626 !important;
+    border-radius: 18px !important;
+    background: #090909 !important;
+}
+
+.v505-sound-head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.v505-sound-head b {
+    color: #f97316 !important;
+    font-size: 1.05rem !important;
+    font-weight: 950 !important;
+}
+
+.v505-sound-head span {
+    color: #777 !important;
+    font-size: .72rem !important;
+    font-weight: 850 !important;
+}
+
+.v505-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+}
+
+.v505-actions button,
+.v505-file-row button,
+.v505-select-row button {
+    min-height: 44px !important;
+    border-radius: 12px !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+.v505-field {
+    display: grid !important;
+    gap: 8px !important;
+}
+
+.v505-field label {
+    color: #aaa !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .6px !important;
+}
+
+.v505-field select,
+.v505-select-row select {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    border: 1px solid #333 !important;
+    border-radius: 12px !important;
+    background: #050505 !important;
+    color: #fff !important;
+    padding: 0 12px !important;
+    font-weight: 950 !important;
+    box-sizing: border-box !important;
+}
+
+.v505-custom-panel {
+    display: none !important;
+    gap: 12px !important;
+    padding: 14px !important;
+    border: 1px solid #2b2b2b !important;
+    border-radius: 16px !important;
+    background: #070707 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.v505-custom-panel.show {
+    display: grid !important;
+}
+
+.v505-library-title {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    color: #f97316 !important;
+    font-weight: 950 !important;
+}
+
+.v505-select-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 92px !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.v505-file-row {
+    display: grid !important;
+    grid-template-columns: 126px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.v505-file-row span {
+    min-width: 0 !important;
+    color: #aaa !important;
+    font-size: .78rem !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v505-actions .testing {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #04120d !important;
+}
+
+/* Bu restore panelinde eski trim/player denemeleri kesin görünmez. */
+.v50-player-box,
+.v501-trim-box,
+.v499-player-box,
+.v498-preview-box,
+.v501-trim-track,
+.v499-timeline,
+.v50-timeline {
+    display: none !important;
+}
+
+@media (max-width: 900px) {
+    .v505-select-row,
+    .v505-file-row,
+    .v505-actions {
+        grid-template-columns: 1fr !important;
+    }
+}
+
