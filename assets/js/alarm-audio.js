@@ -1,6 +1,6 @@
 // ===============================
-// V50.4 EMERGENCY SOUND ENGINE RESTORE
-// Temiz ses motoru: builtin sesler + özel ses yükleme/oynatma.
+// V50.5 SOUND ENGINE CLEAN RESTORE
+// Builtin sesler + özel ses yükleme/oynatma.
 // ===============================
 
 (function () {
@@ -279,11 +279,8 @@
 
     const durationMs = Math.max(3, Number(settings.durationSec || 60)) * 1000;
 
-    if (settings.sound === "custom") {
-      await playCustom(durationMs);
-    } else {
-      playBuiltinLoop(durationMs);
-    }
+    if (settings.sound === "custom") await playCustom(durationMs);
+    else playBuiltinLoop(durationMs);
   }
 
   function boot() {
