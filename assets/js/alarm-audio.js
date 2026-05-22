@@ -1,17 +1,17 @@
 // ===============================
-// V46B ALARM AUDIO LIBRARY
-// IndexedDB özel ses kütüphanesi + test/durdur/kaldır.
+// V50.4 EMERGENCY SOUND ENGINE RESTORE
+// Temiz ses motoru: builtin sesler + özel ses yükleme/oynatma.
 // ===============================
 
 (function () {
   const SETTINGS_KEY = "v28_alarm_audio_settings";
-  const DB_NAME = "omega_alarm_audio_library_v46b";
-  const STORE = "tracks";
+  const DB_NAME = "omega_alarm_audio_db";
+  const STORE = "custom_sounds";
 
   const DEFAULTS = {
-    enabled: false,
+    enabled: true,
     sound: "digital",
-    volume: 0.75,
+    volume: 1,
     durationSec: 60,
     customStart: 0,
     customEnd: 0,
@@ -20,21 +20,21 @@
 
   let settings = loadSettings();
   let audioCtx = null;
-  let unlocked = false;
-  let isRinging = false;
   let ringAudio = null;
   let ringTimers = [];
+  let isRinging = false;
   let objectUrls = new Map();
 
   function loadSettings() {
     try {
-      return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") };
+      return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"), volume: 1 };
     } catch {
       return { ...DEFAULTS };
     }
   }
 
   function saveSettings() {
+    settings.volume = 1;
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     window.dispatchEvent(new CustomEvent("v46b-audio-settings-updated", { detail: { settings: { ...settings } } }));
   }
@@ -50,7 +50,12 @@
     el.textContent = text;
     el.classList.add("show");
     clearTimeout(window.__v28AlarmNoticeTimer);
-    window.__v28AlarmNoticeTimer = setTimeout(() => el.classList.remove("show"), 4500);
+    window.__v28AlarmNoticeTimer = setTimeout(() => el.classList.remove("show"), 3500);
+  }
+
+  function ensureAudioContext() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
   }
 
   function openDb() {
@@ -74,7 +79,7 @@
       req.onerror = () => reject(req.error);
     });
     db.close();
-    return rows.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+    return rows.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   }
 
   async function dbGet(id) {
@@ -116,24 +121,28 @@
     }
   }
 
+  function isAcceptedAudioFile(file) {
+    if (!file) return false;
+    if (file.type && file.type.startsWith("audio/")) return true;
+    return /\.(mp3|wav|ogg|m4a|aac|flac|webm|opus)$/i.test(file.name || "");
+  }
+
   async function addCustomFile(file) {
-    const extOk = !!file && /\.(mp3|wav|ogg|m4a|aac|flac|webm)$/i.test(file.name || "");
-    const typeOk = !!file && String(file.type || "").startsWith("audio/");
-    if (!file || !(typeOk || extOk)) throw new Error("Ses dosyası seç.");
+    if (!isAcceptedAudioFile(file)) throw new Error("Geçerli ses dosyası seç.");
     const id = "aud_" + Date.now() + "_" + Math.random().toString(36).slice(2);
     const row = {
       id,
-      name: file.name || "ozel-ses",
-      type: file.type || "audio/mpeg",
-      size: file.size,
+      name: file.name || "Özel Ses",
+      type: file.type || "audio/*",
+      size: file.size || 0,
       createdAt: Date.now(),
       blob: file
     };
     await dbPut(row);
     settings.sound = "custom";
     settings.enabled = true;
-    settings.volume = 1;
     settings.selectedCustomId = id;
+    settings.volume = 1;
     saveSettings();
     notify("Özel ses yüklendi: " + row.name);
     return row;
@@ -149,42 +158,6 @@
     return url;
   }
 
-  function ensureAudioContext() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    unlocked = true;
-  }
-
-  function beep(freq, duration, type = "sine", volume = 0.05, delay = 0) {
-    try {
-      ensureAudioContext();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = type;
-      osc.frequency.value = freq;
-      gain.gain.value = Math.max(0, Math.min(1, Number(settings.volume || 0.75))) * volume;
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      const start = audioCtx.currentTime + delay;
-      osc.start(start);
-      osc.stop(start + duration);
-    } catch {}
-  }
-
-  function playBuiltinOnce(soundName) {
-    if (soundName === "silent") return;
-    if (soundName === "bip") { beep(980, .22, "sine", .07); return; }
-    if (soundName === "chime") { beep(660, .14, "sine", .05); beep(990, .22, "sine", .05, .16); return; }
-    if (soundName === "siren") {
-      for (let i=0;i<5;i++) beep(i % 2 ? 760 : 430, .14, "square", .055, i*.16);
-      return;
-    }
-    beep(1180, .08, "square", .045, 0);
-    beep(870, .08, "square", .045, .11);
-    beep(1180, .08, "square", .045, .22);
-    beep(870, .16, "square", .045, .33);
-  }
-
   function clearTimers() {
     ringTimers.forEach(t => clearTimeout(t));
     ringTimers = [];
@@ -192,6 +165,7 @@
 
   function stopAlarm() {
     clearTimers();
+    isRinging = false;
     if (ringAudio) {
       try {
         ringAudio.pause();
@@ -199,13 +173,63 @@
       } catch {}
     }
     ringAudio = null;
-    isRinging = false;
     document.body.classList.remove("v28-alarm-ringing");
     window.dispatchEvent(new CustomEvent("v46b-audio-ringing", { detail: { ringing: false } }));
-    notify("Alarm durduruldu.");
   }
 
-  async function playCustomLoop(durationMs) {
+  function beep(freq, duration, type = "sine", delay = 0) {
+    try {
+      ensureAudioContext();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.value = 0.12;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      const now = audioCtx.currentTime + delay;
+      osc.start(now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration / 1000);
+      osc.stop(now + duration / 1000 + 0.03);
+    } catch {}
+  }
+
+  function playBuiltinOnce(kind) {
+    if (kind === "silent") return;
+    if (kind === "bip") {
+      beep(920, 180, "square", 0);
+      beep(720, 160, "square", 0.22);
+      return;
+    }
+    if (kind === "chime") {
+      beep(660, 180, "sine", 0);
+      beep(880, 220, "sine", 0.18);
+      beep(1175, 260, "sine", 0.38);
+      return;
+    }
+    if (kind === "siren") {
+      beep(580, 260, "sawtooth", 0);
+      beep(980, 260, "sawtooth", 0.27);
+      return;
+    }
+    beep(740, 180, "triangle", 0);
+    beep(1040, 180, "triangle", 0.2);
+  }
+
+  function playBuiltinLoop(durationMs) {
+    const kind = settings.sound || "digital";
+    playBuiltinOnce(kind);
+    const every = kind === "siren" ? 700 : 1100;
+    const count = Math.max(1, Math.ceil(durationMs / every));
+    for (let i = 1; i < count; i++) {
+      ringTimers.push(setTimeout(() => {
+        if (isRinging) playBuiltinOnce(kind);
+      }, i * every));
+    }
+    ringTimers.push(setTimeout(stopAlarm, durationMs));
+  }
+
+  async function playCustom(durationMs) {
     const src = await getObjectUrl(settings.selectedCustomId);
     if (!src) {
       notify("Seçili özel ses bulunamadı.");
@@ -221,22 +245,20 @@
     ringAudio.currentTime = start;
 
     const stopFromAudio = () => {
-      if (!isRinging) return;
-      stopAlarm();
+      if (isRinging) stopAlarm();
     };
 
     ringAudio.ontimeupdate = () => {
       if (!isRinging || !ringAudio) return;
       if (end > start && ringAudio.currentTime >= end) stopFromAudio();
     };
-
     ringAudio.onended = stopFromAudio;
     ringAudio.onerror = stopFromAudio;
 
     try {
       await ringAudio.play();
     } catch (err) {
-      notify("Özel ses çalamadı. Dosyayı tekrar seçip Oynat'a bas.");
+      notify("Özel ses çalamadı. Dosyayı tekrar seçip OYNAT'a bas.");
       playBuiltinLoop(durationMs);
       return;
     }
@@ -244,31 +266,21 @@
     ringTimers.push(setTimeout(stopAlarm, durationMs));
   }
 
-  function playBuiltinLoop(durationMs) {
-    const every = settings.sound === "siren" ? 900 : 1200;
-    const count = Math.ceil(durationMs / every);
-    for (let i=0;i<count;i++) {
-      ringTimers.push(setTimeout(() => { if (isRinging) playBuiltinOnce(settings.sound); }, i*every));
-    }
-    ringTimers.push(setTimeout(stopAlarm, durationMs));
-  }
-
-  async function playAlarm(message = "Fiyat alarmı tetiklendi.") {
-    if (!settings.enabled || !unlocked) {
-      notify("Alarm tetiklendi ama ses kapalı. Ses sekmesinden SES AÇ yap.");
-      return;
-    }
+  async function playAlarm(message = "Alarm sesi test edildi.") {
+    ensureAudioContext();
+    settings.enabled = true;
+    settings.volume = 1;
+    saveSettings();
 
     stopAlarm();
     isRinging = true;
     document.body.classList.add("v28-alarm-ringing");
     window.dispatchEvent(new CustomEvent("v46b-audio-ringing", { detail: { ringing: true } }));
 
-    const durationMs = Math.max(60, Number(settings.durationSec || 60)) * 1000;
-    notify(message + " Alarm çalıyor.");
+    const durationMs = Math.max(3, Number(settings.durationSec || 60)) * 1000;
 
     if (settings.sound === "custom") {
-      await playCustomLoop(durationMs);
+      await playCustom(durationMs);
     } else {
       playBuiltinLoop(durationMs);
     }
@@ -282,23 +294,18 @@
 
   window.V26AlarmAudio = {
     play: playAlarm,
-    testSelected: async () => {
-      ensureAudioContext();
-      settings.enabled = true;
-      saveSettings();
-      await playAlarm("Alarm sesi test edildi.");
-    },
+    testSelected: async () => playAlarm("Alarm sesi test edildi."),
     stop: stopAlarm,
     unlock: () => {
       ensureAudioContext();
       settings.enabled = true;
+      settings.volume = 1;
       saveSettings();
     },
-    getSettings: () => ({ ...settings }),
+    getSettings: () => ({ ...settings, volume: 1 }),
     setSettings: next => {
-      settings = { ...settings, ...next };
-      settings.volume = 1;
-      settings.durationSec = Math.max(60, Number(settings.durationSec || 60));
+      settings = { ...settings, ...next, volume: 1 };
+      settings.durationSec = Math.max(3, Number(settings.durationSec || 60));
       saveSettings();
     },
     addCustomFile,
@@ -316,10 +323,11 @@
     },
     selectCustomFile: async id => {
       const row = await dbGet(id);
-      if (!row) throw new Error("Ses bulunamadı");
+      if (!row) throw new Error("Ses bulunamadı.");
       settings.selectedCustomId = id;
       settings.sound = "custom";
       settings.enabled = true;
+      settings.volume = 1;
       saveSettings();
       notify("Aktif özel ses: " + row.name);
       return row;
