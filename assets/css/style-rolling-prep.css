@@ -1,10 +1,19 @@
-/* Ses paneli: eski Alarm Sesi kalıntılarını gösterme */
+/* Ses paneli güvenli görünürlük.
+   Eski geniş [class*="sound"] / [class*="audio"] gizleme kuralı kaldırıldı.
+   O kural yeni ses kartlarını da gizlediği için Ses Ayarları altında içerik kayboluyordu. */
 .crypto-v28-panel[data-crypto-pane="sound"] > *:not(#v28-sound-mount),
 .crypto-v28-panel[data-crypto-pane="sound"] .alarm-sound-panel,
-.crypto-v28-panel[data-crypto-pane="sound"] .alarm-audio-panel,
-.crypto-v28-panel[data-crypto-pane="sound"] [class*="audio"]:not(.v32-sound-card):not(.v32-sound-card *),
-.crypto-v28-panel[data-crypto-pane="sound"] [class*="sound"]:not(.v32-sound-card):not(.v32-sound-card *) {
+.crypto-v28-panel[data-crypto-pane="sound"] .alarm-audio-panel {
     display: none !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v32-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v499f-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v507-sound-card {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 #v28-sound-mount {
