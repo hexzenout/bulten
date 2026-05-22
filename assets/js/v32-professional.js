@@ -329,7 +329,7 @@
 
     mount.dataset.ready = "v499f";
     mount.innerHTML = `
-      <div class="v499f-sound-card">
+      <div class="v32-sound-card v499f-sound-card">
         <div class="v499f-sound-head"><b>Alarm Ses Merkezi</b></div>
 
         <div class="v499f-actions">
