@@ -377,19 +377,22 @@
     const soundType = s.sound || "digital";
     const isCustom = soundType === "custom";
 
-    mount.dataset.ready = "v504";
+    mount.dataset.ready = "v505";
+    mount.style.display = "block";
+    mount.style.visibility = "visible";
     mount.innerHTML = `
-      <div class="v504-sound-card">
-        <div class="v504-sound-head">
+      <div class="v505-sound-card">
+        <div class="v505-sound-head">
           <b>Alarm Ses Merkezi</b>
+          <span>Stabil ses paneli</span>
         </div>
 
-        <div class="v504-actions">
+        <div class="v505-actions">
           <button type="button" id="v32-sound-test">OYNAT</button>
           <button type="button" id="v32-sound-stop" class="danger">DURDUR</button>
         </div>
 
-        <div class="v504-field">
+        <div class="v505-field">
           <label>Ses Tipi</label>
           <select id="v32-sound-type">
             <option value="custom">Özel Ses</option>
@@ -401,22 +404,17 @@
           </select>
         </div>
 
-        <div class="v504-custom-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
-          <div class="v504-library-title">
-            <i class="fa-solid fa-music"></i>
-            <b>Özel Ses Kütüphanesi</b>
-          </div>
+        <div class="v505-custom-panel ${isCustom ? "show" : ""}" id="v47-custom-sound-panel">
+          <div class="v505-library-title"><i class="fa-solid fa-music"></i><b>Özel Ses Kütüphanesi</b></div>
 
-          <div class="v504-select-row">
-            <select id="v47-custom-select" title="Özel ses seç">
-              <option value="">Özel ses seç...</option>
-            </select>
+          <div class="v505-select-row">
+            <select id="v47-custom-select" title="Özel ses seç"><option value="">Özel ses seç...</option></select>
             <button type="button" id="v47-custom-remove" class="danger">KALDIR</button>
           </div>
 
-          <div class="v504-file-row">
+          <div class="v505-file-row">
             <button type="button" id="v32-file-pick">DOSYA SEÇ</button>
-            <span id="v504-file-note">Dosya seçilmedi</span>
+            <span id="v505-file-note">Dosya seçilmedi</span>
             <input id="v32-file-input" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.webm,.opus" hidden>
           </div>
         </div>
@@ -467,7 +465,7 @@
       const file = e.target.files?.[0];
       if (!file) return;
 
-      const note = qs("#v504-file-note");
+      const note = qs("#v505-file-note");
       if (note) {
         note.textContent = "Yükleniyor: " + file.name;
         note.title = file.name;
@@ -533,7 +531,7 @@
     if (current) select.value = current.id;
     select.title = current ? current.name : "Özel ses seç";
 
-    const note = qs("#v504-file-note");
+    const note = qs("#v505-file-note");
     if (note) {
       const text = current ? "Aktif: " + current.name : "Dosya seçilmedi";
       note.textContent = text;
@@ -755,6 +753,7 @@ function boot() {
     omega_RemoveOldRollingLaunchCardV46A2();
     prepareCryptoForm();
     renderSoundPanel();
+    setTimeout(() => { renderSoundPanel(true); document.body.dataset.v505SoundRetry = 'v505-forced-sound-retry'; }, 900);
     fixFinanceEmptyState();
     reviveRollingFromHashV39();
     setTimeout(() => {
