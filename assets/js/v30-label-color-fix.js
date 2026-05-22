@@ -3,7 +3,7 @@
 // Sadece şu alanları düzeltir:
 // 1) Sol menüde CANLI YAYIN ve KRİPTO TERMİNAL eski renklerine döner.
 // 2) Üst bar / KRİPTO TERMİNAL kahverengi olur.
-// 3) Üst bar / CANLI YAYIN koyu lila olur.
+// 3) Üst bar / CANLI YAYIN mavi olur.
 // 4) Kripto Terminal içindeki büyük başlık kahverengi olur.
 // 5) Canlı Yayın içindeki büyük başlık koyu lila olur.
 // Başka buton, kart, grafik, Futbol, Basketbol renklerine dokunmaz.
@@ -11,7 +11,7 @@
 
 (function () {
   const CRYPTO_TOP_COLOR = "#8B5A2B";   // kahverengi
-  const STREAM_TOP_COLOR = "#7E22CE";   // koyu lila / mor
+  const STREAM_TOP_COLOR = "#3B82F6";   // koyu lila / mor
 
   function qsa(sel) {
     return Array.from(document.querySelectorAll(sel));
