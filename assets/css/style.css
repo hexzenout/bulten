@@ -1122,12 +1122,17 @@ body.v26-footer-ready #omega-site-footer {
     color: var(--text) !important;
 }
 
-/* Sol menü: ikonlar */
+/* Sol menü: Canlı Yayın İkonu (Sabit Mavi) */
 .accordion-menu #nav-stream i,
 .accordion-menu #nav-stream svg,
 .accordion-menu #nav-stream svg path {
-    color: var(--v32-stream-blue) !important;
-    fill: var(--v32-stream-blue) !important;
+    color: #3b82f6 !important; /* Mavi renk sabitlendi */
+    fill: #3b82f6 !important;
+}
+
+/* Aktif olduğunda da rengi koru */
+.accordion-menu #nav-stream.active i {
+    color: #3b82f6 !important;
 }
 
 .accordion-menu #nav-crypto i,
