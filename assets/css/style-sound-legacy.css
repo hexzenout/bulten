@@ -1,0 +1,946 @@
+/* ===============================
+   V49.6 SOUND PLAYER OVERFLOW FIX
+   index.html / sw.js / pwa.js değiştirilmedi.
+================================ */
+
+/* Özel Ses paneli sağ kolonun dışına taşmasın. */
+.v47-custom-sound-panel,
+.v49-custom-sound-panel,
+.v493-custom-sound-panel,
+.v496-custom-sound-panel {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+/* Dosya seç + çalan şarkı satırı: panel içinde kalır. */
+.v49-file-row,
+.v47-file-row,
+.v32-file-row {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: 126px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+}
+
+/* Eski min-width 420px taşırıyordu; tamamen sıfırlandı. */
+.v496-now-playing,
+.v494-now-playing,
+.v493-now-playing {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    display: grid !important;
+    grid-template-columns: auto 18px minmax(0, 1fr) 76px !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 8px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    border: 1px solid rgba(249,115,22,.60) !important;
+    border-radius: 14px !important;
+    background: linear-gradient(90deg, rgba(249,115,22,.16), rgba(0,0,0,.08)), #080808 !important;
+}
+
+/* Pseudo label önce butonu sıkıştırıyordu; kapatıldı. */
+.v496-now-playing::before,
+.v494-now-playing::before,
+.v493-now-playing::before {
+    content: none !important;
+    display: none !important;
+}
+
+.v496-play-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 54px !important;
+    height: 28px !important;
+    border-radius: 999px !important;
+    background: rgba(249,115,22,.16) !important;
+    color: #f97316 !important;
+    font-size: .58rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .5px !important;
+}
+
+.v496-now-playing i,
+.v494-now-playing i,
+.v493-now-playing i {
+    color: #f97316 !important;
+    font-size: .95rem !important;
+    width: 18px !important;
+    min-width: 18px !important;
+    justify-self: center !important;
+}
+
+.v493-now-playing-text {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    transform: none !important;
+    animation: none !important;
+    color: #fff !important;
+    font-weight: 950 !important;
+    line-height: 1.1 !important;
+}
+
+/* Hover'da artık butonun üstüne akan marquee yok; title tam adı gösterir. */
+.v496-now-playing:hover .v493-now-playing-text,
+.v494-now-playing:hover .v493-now-playing-text,
+.v493-now-playing:hover .v493-now-playing-text {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+.v494-now-stop {
+    width: 76px !important;
+    min-width: 76px !important;
+    max-width: 76px !important;
+    height: 34px !important;
+    border: 1px solid rgba(239,68,68,.55) !important;
+    border-radius: 10px !important;
+    background: rgba(239,68,68,.18) !important;
+    color: #fecaca !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 5 !important;
+    pointer-events: auto !important;
+}
+
+.v494-now-stop:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* Dosya seç butonu da taşma yapmasın. */
+.v32-file-btn,
+#v32-file-pick {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 126px !important;
+    box-sizing: border-box !important;
+}
+
+/* Sağ panel daraldığında tek kolona düşsün. */
+@media (max-width: 980px) {
+    .v49-file-row,
+    .v47-file-row,
+    .v32-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-btn,
+    #v32-file-pick {
+        max-width: none !important;
+    }
+
+    .v496-now-playing,
+    .v494-now-playing,
+    .v493-now-playing {
+        grid-template-columns: auto 18px minmax(0, 1fr) 76px !important;
+    }
+}
+
+
+/* ===============================
+   V49.7 SOUND LIBRARY CLEAN REBUILD + ROLLING COLOR FINAL
+   index.html / sw.js / pwa.js değiştirilmedi.
+================================ */
+
+:root {
+    --rolling-gold: #fbbf24;
+    --rolling-purple: #7E22CE;
+    --rolling-green: #10b981;
+}
+
+/* Gereksiz iki SES AÇIK alanını ve eski açıklamaları kaldır/gizle. */
+.v497-sound-card .terminal-v10-live-dot,
+.v497-sound-card #v32-sound-toggle,
+.v497-sound-card .v32-sound-head span,
+.v497-custom-head span {
+    display: none !important;
+}
+
+.v497-sound-card {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.v497-sound-actions {
+    grid-template-columns: 1fr 1fr !important;
+}
+
+.v497-sound-actions button {
+    min-height: 44px !important;
+}
+
+/* Özel ses alanı: ayrı player kutusu yok, tek satır içinde play/pause + şarkı + kaldır. */
+.v497-custom-sound-panel {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    padding: 14px !important;
+}
+
+.v497-custom-select-row {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 92px !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.v497-inline-toggle {
+    min-width: 46px !important;
+    width: 46px !important;
+    height: 44px !important;
+    border: 1px solid rgba(249,115,22,.55) !important;
+    border-radius: 13px !important;
+    background: rgba(249,115,22,.16) !important;
+    color: #f97316 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    cursor: pointer !important;
+}
+
+.v497-inline-toggle i {
+    font-size: .82rem !important;
+    line-height: 1 !important;
+}
+
+.v497-inline-toggle .fa-pause {
+    display: none !important;
+}
+
+.v497-inline-toggle.playing .fa-play {
+    display: none !important;
+}
+
+.v497-inline-toggle.playing .fa-pause {
+    display: inline-block !important;
+}
+
+.v497-song-select,
+#v47-custom-select.v497-song-select {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    border: 1px solid rgba(249,115,22,.45) !important;
+    border-radius: 13px !important;
+    background: #080808 !important;
+    color: #fff !important;
+    font-weight: 950 !important;
+    padding: 0 12px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Kayan yazı etkisi select içinde sağlıklı yapılamaz; tam isim title'da görünür. */
+.v497-song-select:hover {
+    border-color: #f97316 !important;
+}
+
+#v47-custom-remove {
+    min-width: 92px !important;
+    width: 92px !important;
+    height: 44px !important;
+    border-radius: 13px !important;
+}
+
+/* KALDIR altındaki eski işlevsiz player kutusu kaldırıldı. */
+.v493-now-playing,
+.v494-now-playing,
+.v496-now-playing,
+#v32-file-name {
+    display: none !important;
+}
+
+/* Dosya seç satırı sade. */
+.v497-file-row {
+    display: grid !important;
+    grid-template-columns: 126px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+    margin-top: 10px !important;
+}
+
+.v497-upload-note {
+    min-width: 0 !important;
+    color: #aaa !important;
+    font-size: .78rem !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Kombine Kupon Maçları sembolü kesin mor. */
+.rolling-v494-combine-title i,
+.rolling-v49-fold.bet .rolling-v494-combine-title i,
+summary.rolling-v494-combine-title i {
+    color: var(--rolling-purple) !important;
+}
+
+/* Başlangıç / Hedef kutularındaki sayı renkleri yeşil. */
+.rolling-v495-quick-plan input[data-rolling-quick="start"],
+.rolling-v495-quick-plan input[data-rolling-quick="target"],
+.rolling-v495-quick-plan label:nth-child(1) input,
+.rolling-v495-quick-plan label:nth-child(2) input {
+    color: var(--rolling-green) !important;
+}
+
+/* GÜNCEL beyaz/yeşil dengeli kalsın. */
+.rolling-v495-quick-plan label:nth-child(3) b {
+    color: #fff !important;
+}
+
+@media (max-width: 900px) {
+    .v497-custom-select-row,
+    .v497-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v497-inline-toggle,
+    #v47-custom-remove {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+
+/* ===============================
+   V49.8 CUSTOM SOUND SEGMENT PLAYER
+   index.html / sw.js / pwa.js değiştirilmedi.
+   alarm-audio.js değişti çünkü otomatik durma ve segment alarm davranışı gerçek ses motorunda gerekli.
+================================ */
+
+.v498-sound-card {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.v498-custom-sound-panel {
+    display: none !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.v498-custom-sound-panel.show {
+    display: grid !important;
+    gap: 12px !important;
+}
+
+.v498-preview-box {
+    display: grid !important;
+    gap: 12px !important;
+    border: 1px solid rgba(249,115,22,.32) !important;
+    border-radius: 16px !important;
+    background: #070707 !important;
+    padding: 12px !important;
+}
+
+.v498-time-row {
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr) 42px !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.v498-time-row span {
+    color: #fbbf24 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+    text-align: center !important;
+}
+
+#v498-preview-progress {
+    width: 100% !important;
+    min-width: 0 !important;
+    accent-color: #f97316 !important;
+}
+
+.v498-segment-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 98px !important;
+    gap: 10px !important;
+    align-items: end !important;
+}
+
+.v498-segment-grid label {
+    display: grid !important;
+    gap: 6px !important;
+    color: #aaa !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .4px !important;
+}
+
+.v498-segment-grid label b {
+    color: #fff !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: .78rem !important;
+}
+
+.v498-segment-grid input[type="range"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    accent-color: #f97316 !important;
+}
+
+#v498-apply-segment {
+    height: 42px !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 12px !important;
+    background: #10b981 !important;
+    color: #04120d !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+#v498-apply-segment:hover {
+    filter: brightness(1.08);
+}
+
+.v498-inline-toggle.playing {
+    background: rgba(16,185,129,.18) !important;
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+}
+
+@media (max-width: 900px) {
+    .v498-time-row {
+        grid-template-columns: 38px minmax(0, 1fr) 38px !important;
+    }
+
+    .v498-segment-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #v498-apply-segment {
+        width: 100% !important;
+    }
+}
+
+
+/* ===============================
+   V49.9 WIDE CUSTOM SOUND TIMELINE
+   index.html / sw.js / pwa.js değiştirilmedi.
+================================ */
+
+/* V28 sound header sağ açıklaması boşsa alan kaplamasın. */
+.crypto-v28-panel:has(#v28-sound-mount) .crypto-v28-panel-head span,
+.crypto-v28-panel:has(#v28-sound-mount) .crypto-v28-sub,
+.crypto-v28-panel:has(#v28-sound-mount) small {
+    display: none !important;
+}
+
+/* Alarm süresi ve ses seviyesi kaldırıldı; grid tek alana düşer. */
+.v499-sound-grid {
+    grid-template-columns: 1fr !important;
+}
+
+.v499-sound-card .v32-sound-field:has(#v32-duration),
+.v499-sound-card .v32-sound-field:has(#v32-volume),
+.v499-sound-card .v32-sound-field:has(#v32-start),
+.v499-sound-card .v32-sound-field:has(#v32-end),
+.v499-sound-card #v32-duration,
+.v499-sound-card #v32-volume,
+.v499-sound-card #v32-start,
+.v499-sound-card #v32-end {
+    display: none !important;
+}
+
+/* Özel ses player geniş alan. */
+.v499-custom-sound-panel {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    gap: 14px !important;
+}
+
+.v499-custom-select-row {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 92px !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.v499-song-select {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v499-inline-toggle.playing {
+    background: rgba(16,185,129,.18) !important;
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+}
+
+/* Büyük dolum / segment alanı */
+.v499-player-box {
+    display: grid !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 14px !important;
+    border: 1px solid rgba(249,115,22,.34) !important;
+    border-radius: 18px !important;
+    background: linear-gradient(180deg, rgba(249,115,22,.08), rgba(0,0,0,.05)), #070707 !important;
+    box-sizing: border-box !important;
+}
+
+.v499-player-time {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 46px !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.v499-player-time span,
+.v499-player-time strong {
+    color: #fbbf24 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+}
+
+.v499-player-time b {
+    color: #bdbdbd !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v499-timeline {
+    position: relative !important;
+    height: 54px !important;
+    border-radius: 999px !important;
+    background: #111 !important;
+    border: 1px solid #2d2d2d !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.v499-selection-fill {
+    position: absolute !important;
+    top: 18px !important;
+    height: 16px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, rgba(16,185,129,.55), rgba(249,115,22,.65)) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+.v499-timeline input[type="range"] {
+    position: absolute !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: calc(100% - 20px) !important;
+    min-width: 0 !important;
+    background: transparent !important;
+    margin: 0 !important;
+    pointer-events: auto !important;
+}
+
+.v499-progress {
+    top: 16px !important;
+    z-index: 2 !important;
+    accent-color: #f97316 !important;
+}
+
+.v499-seg-range {
+    top: 30px !important;
+    z-index: 3 !important;
+    height: 18px !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+}
+
+.v499-seg-range::-webkit-slider-runnable-track {
+    height: 2px !important;
+    background: transparent !important;
+}
+
+.v499-seg-range::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 17px !important;
+    height: 17px !important;
+    border-radius: 50% !important;
+    border: 2px solid #050505 !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.18) !important;
+    cursor: pointer !important;
+}
+
+.v499-seg-range.start::-webkit-slider-thumb {
+    background: #10b981 !important;
+}
+
+.v499-seg-range.end::-webkit-slider-thumb {
+    background: #f97316 !important;
+}
+
+.v499-seg-range::-moz-range-track {
+    height: 2px !important;
+    background: transparent !important;
+}
+
+.v499-seg-range::-moz-range-thumb {
+    width: 17px !important;
+    height: 17px !important;
+    border-radius: 50% !important;
+    border: 2px solid #050505 !important;
+    cursor: pointer !important;
+}
+
+.v499-seg-range.start::-moz-range-thumb {
+    background: #10b981 !important;
+}
+
+.v499-seg-range.end::-moz-range-thumb {
+    background: #f97316 !important;
+}
+
+#v499-apply-segment {
+    min-height: 42px !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 13px !important;
+    background: #10b981 !important;
+    color: #04120d !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+#v499-apply-segment:hover {
+    filter: brightness(1.08);
+}
+
+/* Dosya seç satırı daha sade ve sığar. */
+.v499-file-row {
+    grid-template-columns: 126px minmax(0, 1fr) !important;
+}
+
+@media (max-width: 900px) {
+    .v499-custom-select-row,
+    .v499-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v499-player-time {
+        grid-template-columns: 42px minmax(0, 1fr) 42px !important;
+    }
+}
+
+
+/* ===============================
+   V49.9F SOUND WIDE TIMELINE FIX
+   index.html / sw.js / pwa.js değiştirilmedi.
+================================ */
+
+#v28-sound-mount {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.v499f-sound-card {
+    display: grid !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    padding: 16px !important;
+    border: 1px solid #262626 !important;
+    border-radius: 18px !important;
+    background: #090909 !important;
+}
+
+.v499f-sound-head b {
+    color: #f97316 !important;
+    font-size: 1.05rem !important;
+    font-weight: 950 !important;
+}
+
+.v499f-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+}
+
+.v499f-actions button,
+.v499f-file-row button,
+.v499f-select-row button {
+    min-height: 44px !important;
+    border-radius: 12px !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+.v499f-actions .testing {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #04120d !important;
+}
+
+.v499f-field {
+    display: grid !important;
+    gap: 8px !important;
+}
+
+.v499f-field label {
+    color: #aaa !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .6px !important;
+}
+
+.v499f-field select,
+.v499f-select-row select {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    border: 1px solid #333 !important;
+    border-radius: 12px !important;
+    background: #050505 !important;
+    color: #fff !important;
+    padding: 0 12px !important;
+    font-weight: 950 !important;
+    box-sizing: border-box !important;
+}
+
+.v499f-custom {
+    display: none !important;
+    gap: 14px !important;
+    padding: 14px !important;
+    border: 1px solid #2b2b2b !important;
+    border-radius: 16px !important;
+    background: #070707 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.v499f-custom.show {
+    display: grid !important;
+}
+
+.v499f-library-title {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    color: #f97316 !important;
+    font-weight: 950 !important;
+}
+
+.v499f-select-row {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 92px !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.v499f-play {
+    width: 46px !important;
+    min-width: 46px !important;
+    height: 44px !important;
+    border: 1px solid rgba(249,115,22,.55) !important;
+    border-radius: 13px !important;
+    background: rgba(249,115,22,.16) !important;
+    color: #f97316 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.v499f-play .fa-pause {
+    display: none !important;
+}
+
+.v499f-play.playing .fa-play {
+    display: none !important;
+}
+
+.v499f-play.playing .fa-pause {
+    display: inline-block !important;
+}
+
+.v499f-play.playing {
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+    background: rgba(16,185,129,.18) !important;
+}
+
+.v499f-player {
+    display: grid !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 14px !important;
+    border: 1px solid rgba(249,115,22,.34) !important;
+    border-radius: 18px !important;
+    background: linear-gradient(180deg, rgba(249,115,22,.08), rgba(0,0,0,.05)), #070707 !important;
+    box-sizing: border-box !important;
+}
+
+.v499f-player-time {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 46px !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.v499f-player-time span,
+.v499f-player-time strong {
+    color: #fbbf24 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+}
+
+.v499f-player-time b {
+    color: #bdbdbd !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v499f-track {
+    position: relative !important;
+    height: 72px !important;
+    border-radius: 18px !important;
+    background: #111 !important;
+    border: 1px solid #2d2d2d !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    padding: 0 12px !important;
+    cursor: crosshair !important;
+    touch-action: none !important;
+    user-select: none !important;
+}
+
+.v499f-wave {
+    position: absolute !important;
+    inset: 18px 14px 22px 14px !important;
+    border-radius: 12px !important;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 2px, transparent 2px 10px),
+      linear-gradient(180deg, transparent 0 15%, rgba(16,185,129,.35) 15% 45%, rgba(249,115,22,.45) 45% 72%, transparent 72% 100%) !important;
+}
+
+.v499f-fill {
+    position: absolute !important;
+    top: 20px !important;
+    height: 28px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, rgba(16,185,129,.60), rgba(249,115,22,.70)) !important;
+    box-shadow: 0 0 0 1px rgba(249,115,22,.28), 0 0 18px rgba(249,115,22,.18) !important;
+    pointer-events: auto !important;
+    cursor: grab !important;
+    z-index: 2 !important;
+}
+
+.v499f-fill:active {
+    cursor: grabbing !important;
+}
+
+.v499f-handle {
+    position: absolute !important;
+    top: 15px !important;
+    width: 24px !important;
+    height: 38px !important;
+    transform: translateX(-50%) !important;
+    border: 1px solid rgba(255,255,255,.25) !important;
+    border-radius: 10px !important;
+    background: #f97316 !important;
+    color: #050505 !important;
+    font-weight: 950 !important;
+    font-size: 1.05rem !important;
+    display: grid !important;
+    place-items: center !important;
+    z-index: 4 !important;
+    cursor: ew-resize !important;
+    padding: 0 !important;
+}
+
+.v499f-handle.start {
+    background: #10b981 !important;
+}
+
+#v499f-progress {
+    position: absolute !important;
+    left: 12px !important;
+    width: calc(100% - 24px) !important;
+    bottom: 8px !important;
+    z-index: 5 !important;
+    accent-color: #f97316 !important;
+}
+
+#v499f-start,
+#v499f-end {
+    display: none !important;
+}
+
+#v499f-apply {
+    min-height: 42px !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 13px !important;
+    background: #10b981 !important;
+    color: #04120d !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+.v499f-file-row {
+    display: grid !important;
+    grid-template-columns: 126px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.v499f-file-row span {
+    min-width: 0 !important;
+    color: #aaa !important;
+    font-size: .78rem !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+@media (max-width: 900px) {
+    .v499f-select-row,
+    .v499f-file-row,
+    .v499f-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v499f-play,
+    #v47-custom-remove {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
