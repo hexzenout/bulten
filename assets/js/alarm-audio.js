@@ -1,6 +1,6 @@
 // ===============================
-// V50.6 CLEAN SOUND ENGINE
-// Builtin sesler + özel ses yükleme/oynatma.
+// V49.9F CLEAN SOUND ENGINE
+// Builtin sesler + özel ses yükleme/oynatma + seçili aralık.
 // ===============================
 
 (function () {
@@ -50,7 +50,7 @@
     el.textContent = text;
     el.classList.add("show");
     clearTimeout(window.__v28AlarmNoticeTimer);
-    window.__v28AlarmNoticeTimer = setTimeout(() => el.classList.remove("show"), 3500);
+    window.__v28AlarmNoticeTimer = setTimeout(() => el.classList.remove("show"), 3000);
   }
 
   function ensureAudioContext() {
@@ -142,6 +142,8 @@
     settings.sound = "custom";
     settings.enabled = true;
     settings.selectedCustomId = id;
+    settings.customStart = 0;
+    settings.customEnd = 0;
     settings.volume = 1;
     saveSettings();
     notify("Özel ses yüklendi: " + row.name);
@@ -314,6 +316,8 @@
       if (settings.selectedCustomId === id) {
         settings.selectedCustomId = "";
         settings.sound = "digital";
+        settings.customStart = 0;
+        settings.customEnd = 0;
         saveSettings();
       }
       notify("Özel ses kaldırıldı.");
