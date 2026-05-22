@@ -6489,3 +6489,141 @@ summary.rolling-v494-combine-title i {
     background: rgba(126, 34, 206, 0.15) !important;
     transition: none !important;
 }
+
+
+/* ===============================
+   V508 SOUND ROOT + HEADER MENU FINAL FIX
+   sw.js / pwa.js değiştirilmedi.
+================================ */
+
+:root {
+    --v508-purple: #7E22CE;
+    --v508-blue: #3b82f6;
+    --v508-gold: #fbbf24;
+    --v508-orange: #f97316;
+    --v508-green: #10b981;
+    --v508-red: #ef4444;
+}
+
+/* Eski V38 kuralı [class*="sound"] olan yeni kartları gizliyordu.
+   Bu blok ve v32-sound-card sınıfı ses panelini kökten geri getirir. */
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v32-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v507-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v499f-sound-card {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v507-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v499f-sound-card {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Header aktif modülünde ikon/simge yok. */
+.header-title-box #active-module-name i,
+.header-title-box #active-module-name svg,
+.header-title-box #active-module-name .fa,
+.header-title-box #active-module-name .fa-solid,
+.header-title-box #active-module-name .fa-regular,
+.header-title-box #active-module-name .fa-brands,
+.header-title-box #active-module-name [class*="fa-"],
+.header-title-box #active-module-name [class*="icon"],
+.header-title-box #active-module-name [class*="Icon"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.header-title-box #active-module-name::before,
+.header-title-box #active-module-name::after,
+.header-title-box #active-module-name span::before,
+.header-title-box #active-module-name span::after {
+    content: none !important;
+    display: none !important;
+}
+
+.header-title-box #active-module-name {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0 !important;
+    margin-left: 6px !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .5px !important;
+}
+
+.header-title-box #active-module-name .v508-title-rolling {
+    color: var(--v508-purple) !important;
+}
+
+.header-title-box #active-module-name .v508-title-stream {
+    color: var(--v508-blue) !important;
+}
+
+/* Hamburger menü: bütün nav-link'lerde otomatik mor şerit. */
+.accordion-menu .nav-link {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.accordion-menu .nav-link::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 8px !important;
+    bottom: 8px !important;
+    width: 4px !important;
+    border-radius: 0 999px 999px 0 !important;
+    background: var(--v508-purple) !important;
+    opacity: 0 !important;
+    transform: scaleY(.25) !important;
+    transform-origin: center !important;
+    transition: opacity .18s ease, transform .18s ease !important;
+    pointer-events: none !important;
+}
+
+.accordion-menu .nav-link:hover::before,
+.accordion-menu .nav-link.active::before {
+    opacity: 1 !important;
+    transform: scaleY(1) !important;
+}
+
+.accordion-menu .nav-link:hover {
+    background: rgba(126,34,206,.14) !important;
+}
+
+.accordion-menu .nav-link.active {
+    background: rgba(126,34,206,.20) !important;
+    color: #fff !important;
+    font-weight: 950 !important;
+}
+
+.accordion-menu #nav-home > i { color: var(--v508-gold) !important; }
+.accordion-menu #nav-futbol > i { color: var(--v508-green) !important; }
+.accordion-menu #nav-basketbol > i { color: var(--v508-orange) !important; }
+.accordion-menu #nav-rolling > i { color: var(--v508-purple) !important; }
+.accordion-menu #nav-favs > i { color: var(--v508-red) !important; }
+.accordion-menu #nav-live > i { color: var(--v508-blue) !important; }
+.accordion-menu #nav-crypto > i { color: var(--v508-orange) !important; }
+.accordion-menu #nav-finance > i { color: var(--v508-green) !important; }
+
+/* CANLI YAYIN menü ikonu kesin mavi. */
+.accordion-menu #nav-stream > i,
+.accordion-menu #nav-stream:hover > i,
+.accordion-menu #nav-stream.active > i,
+.accordion-menu #nav-stream svg,
+.accordion-menu #nav-stream svg path {
+    color: var(--v508-blue) !important;
+    fill: var(--v508-blue) !important;
+}
+
