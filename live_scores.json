@@ -1,18 +1,7 @@
 {
-  "up": "01:51",
-  "matches": [
-    {
-      "name": "Deportivo La Guaira - Independ. Rivadavia",
-      "league": "CONMEBOL Libertadores",
-      "score": "1 - 2",
-      "home_goals": 1,
-      "away_goals": 2,
-      "minute": 45,
-      "status": "Halftime",
-      "updated": "2026-05-22 01:51:27"
-    }
-  ],
+  "up": "13:35",
+  "matches": [],
   "logs": [
-    "key#1 OK live=1"
+    "key#1 OK live=0"
   ]
 }
