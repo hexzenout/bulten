@@ -187,7 +187,7 @@ async function omega_InitializeEngine() {
                     rollingBlock.style.overflow = 'visible';
                     rollingBlock.style.display = 'block';
                 }
-                if (titleElem) titleElem.innerHTML = '<span class="module-title-rolling"><i class="fa-solid fa-layer-group"></i> / ROLLING</span>';
+                if (titleElem) titleElem.innerHTML = '<span class="v508-title-rolling" style="color:#7E22CE">/ ROLLING</span>';
                 if (typeof omega_RenderRollingModule === 'function') omega_RenderRollingModule();
 
             } else if(targetModule === 'favs') {
@@ -199,7 +199,7 @@ async function omega_InitializeEngine() {
             } else if(targetModule === 'stream') {
                 _ACTIVE_TAB = 'stream';
                 if (streamBlock) streamBlock.style.display = 'block';
-                if (titleElem) titleElem.innerHTML = '<span class="module-title-stream"><i class="fa-solid fa-satellite-dish"></i> / CANLI YAYIN</span>';
+                if (titleElem) titleElem.innerHTML = '<span class="v508-title-stream" style="color:#3b82f6">/ CANLI YAYIN</span>';
                 setTimeout(() => {
                     if (typeof omega_BootStreamV49 === 'function') omega_BootStreamV49();
                     else if (typeof omega_BuildStreamMatrix === 'function') omega_BuildStreamMatrix(1);
