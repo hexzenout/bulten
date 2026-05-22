@@ -319,7 +319,7 @@
     if (mount.dataset.ready === "v507" && mount.querySelector(".v507-sound-card")) return;
     mount.dataset.ready = "v507";
     mount.innerHTML = `
-      <div class="v507-sound-card">
+      <div class="v32-sound-card v507-sound-card">
         <div class="v507-sound-head"><b>Alarm Ses Merkezi</b></div>
         <div class="v507-actions"><button id="v507-sound-test" type="button">OYNAT</button><button id="v507-sound-stop" type="button" class="danger">DURDUR</button></div>
         <div class="v507-field"><label>Ses Tipi</label><select id="v507-sound-type"><option value="custom">Özel Ses</option><option value="digital">Dijital Uyarı</option><option value="bip">Standart Bip</option><option value="chime">Yumuşak Chime</option><option value="siren">Siren</option><option value="silent">Sessiz</option></select></div>
@@ -406,7 +406,7 @@
     if (sub) sub.textContent = t[1];
 
     localStorage.setItem("v28_crypto_panel", name);
-    if (name === "sound") setTimeout(renderSoundRootV507, 0);
+    if (name === "sound") { setTimeout(renderSoundRootV507, 0); setTimeout(renderSoundRootV507, 250); setTimeout(renderSoundRootV507, 900); window.__v508SoundRetry = true; }
   }
 
   function bindTabs() {
@@ -519,7 +519,7 @@
 
   const streamName = qs("#active-module-name");
   if (streamName && location.hash === "#stream") {
-    streamName.innerHTML = '<span style="color:#7E22CE">/ CANLI YAYIN</span>';
+    streamName.innerHTML = '<span class="v508-title-stream" style="color:#3b82f6">/ CANLI YAYIN</span>';
   }
 }
   function patchHashBoot() {
@@ -538,7 +538,7 @@
     robustTimeframeBinding();
     syncHeaderClones();
     hardCleanup();
-    if ((localStorage.getItem("v28_crypto_panel") || "graph") === "sound") setTimeout(renderSoundRootV507, 0);
+    if ((localStorage.getItem("v28_crypto_panel") || "graph") === "sound") { setTimeout(renderSoundRootV507, 0); setTimeout(renderSoundRootV507, 250); setTimeout(renderSoundRootV507, 900); }
     patchHashBoot();
 
     setInterval(() => {
