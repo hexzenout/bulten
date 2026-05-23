@@ -1106,3 +1106,86 @@
     color: #38bdf8 !important;
 }
 
+
+/* ===============================
+   V525 SOUND PLAY FROM PROGRESS + COMPACT REMOVE + THIN HANDLES
+================================ */
+
+/* KALDIR butonu dışarı taşmasın. */
+.v512-select-row {
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr) 76px !important;
+    gap: 8px !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+#v512-remove {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 76px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    font-size: .68rem !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+}
+
+#v512-custom-select {
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+/* Gri tutamaçlar daha ince; içinde sembol görünmez. */
+.v512-handle,
+.v512-handle.start,
+.v512-handle.end {
+    width: 9px !important;
+    min-width: 9px !important;
+    max-width: 9px !important;
+    height: 34px !important;
+    top: 17px !important;
+    border-radius: 5px !important;
+    background: #3f3f46 !important;
+    border: 2px solid #d4d4d8 !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.6), 0 0 10px rgba(255,255,255,.10) !important;
+}
+
+.v512-handle::before,
+.v512-handle::after {
+    content: none !important;
+    display: none !important;
+}
+
+.v512-track {
+    width: calc(100% - 42px) !important;
+    margin-left: 21px !important;
+    margin-right: 21px !important;
+}
+
+#v512-progress {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+@media (max-width: 760px) {
+    .v512-select-row {
+        grid-template-columns: 42px minmax(0, 1fr) 72px !important;
+        gap: 7px !important;
+    }
+
+    #v512-remove {
+        max-width: 72px !important;
+        font-size: .64rem !important;
+    }
+}
+
