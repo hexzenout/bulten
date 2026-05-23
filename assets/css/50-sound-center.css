@@ -937,3 +937,51 @@
     }
 }
 
+
+/* ===============================
+   V522 SOUND RANGE NARROW TRACK + HANDLE VISIBILITY
+   Baş/son tutamaçlar dışarı taşmaz, bar biraz daralır.
+================================ */
+
+.v512-track {
+    width: calc(100% - 28px) !important;
+    margin-left: 14px !important;
+    margin-right: 14px !important;
+    overflow: visible !important;
+    height: 68px !important;
+}
+
+.v512-wave {
+    left: 10px !important;
+    right: 10px !important;
+    inset-top: auto !important;
+}
+
+.v512-fill {
+    height: 20px !important;
+    top: 24px !important;
+}
+
+.v512-handle,
+.v512-handle.start,
+.v512-handle.end {
+    width: 13px !important;
+    min-width: 13px !important;
+    height: 34px !important;
+    top: 17px !important;
+    border-radius: 5px !important;
+    background: #3f3f46 !important;
+    border: 2px solid #c4c4cc !important;
+    z-index: 9 !important;
+}
+
+#v512-progress {
+    left: 10px !important;
+    width: calc(100% - 20px) !important;
+}
+
+.v512-time strong,
+#v512-range-label {
+    color: #38bdf8 !important;
+}
+
