@@ -118,7 +118,7 @@ async function omega_InitializeEngine() {
 
             if (updateHistory) history.pushState({ tab: targetModule }, '', '#' + targetModule);
 
-            document.body.classList.remove('omega-tab-futbol','omega-tab-basketbol','omega-tab-rolling','omega-tab-stream','omega-tab-favs','omega-tab-live','omega-tab-crypto','omega-tab-finance');
+            document.body.classList.remove('omega-tab-futbol','omega-tab-basketbol','omega-tab-rolling','omega-tab-stream','omega-tab-favs','omega-tab-live','omega-tab-odds','omega-tab-crypto','omega-tab-finance');
             document.body.classList.add('omega-tab-' + targetModule);
 
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
@@ -130,11 +130,13 @@ async function omega_InitializeEngine() {
             const rollingBlock = document.getElementById('omega-rolling-block');
             const cryptoBlock = document.getElementById('omega-crypto-block');
             const financeBlock = document.getElementById('v19-finance-block');
+            const oddsBlock = document.getElementById('omega-odds-block');
 
             if (radarBlock) radarBlock.style.display = 'none';
             if (favsBlock) favsBlock.style.display = 'none';
             if (streamBlock) streamBlock.style.display = 'none';
             if (cryptoBlock) cryptoBlock.style.display = 'none';
+            if (oddsBlock) oddsBlock.style.display = 'none';
             if (rollingBlock) {
                 rollingBlock.style.display = 'none';
                 rollingBlock.removeAttribute('data-visible');
@@ -148,7 +150,7 @@ async function omega_InitializeEngine() {
             if(centerWrapper) {
                 if(targetModule === 'stream') centerWrapper.style.maxWidth = '1800px';
                 else if(targetModule === 'finance' || targetModule === 'rolling') centerWrapper.style.maxWidth = '1700px';
-                else if(targetModule === 'crypto') centerWrapper.style.maxWidth = '1850px';
+                else if(targetModule === 'crypto' || targetModule === 'odds') centerWrapper.style.maxWidth = '1850px';
                 else centerWrapper.style.maxWidth = '1000px';
             }
 
