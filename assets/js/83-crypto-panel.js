@@ -185,15 +185,25 @@
       alert("Önce özel ses seç veya dosya yükle.");
       return;
     }
-    v512StopPreview();
+
     const { start, end } = v512Segment();
+    const requestedProgress = Number(qs("#v512-progress")?.value || 0);
+
+    v512StopPreview();
+
     v512PreviewUrl = URL.createObjectURL(row.blob);
     v512PreviewAudio = new Audio(v512PreviewUrl);
     v512PreviewAudio.volume = 1;
     v512PreviewAudio.onloadedmetadata = async () => {
       const total = Math.max(1, Number(v512PreviewAudio.duration || 1));
-      const safeStart = Math.min(start, total - 0.1);
-      const safeEnd = Math.min(end > safeStart ? end : total, total);
+      const safeEnd = Math.min(end > start ? end : total, total);
+
+      // V525: Dolum çubuğu neredeyse oynatma oradan başlar.
+      // Eğer progress bitiş aralığının dışındaysa güvenli şekilde başlangıca döner.
+      let safeStart = Math.max(0, Math.min(requestedProgress, total - 0.1));
+      if (safeEnd > start && safeStart >= safeEnd) safeStart = start;
+      safeStart = Math.min(safeStart, total - 0.1);
+
       v512PreviewAudio.currentTime = safeStart;
       v512Update(safeStart);
       v512PreviewAudio.ontimeupdate = () => {
@@ -367,7 +377,7 @@
           <div class="v512-select-row"><button type="button" id="v512-play-custom" class="v512-play"><i class="fa-solid fa-play"></i><i class="fa-solid fa-pause"></i></button><select id="v512-custom-select"><option value="">Özel ses seç...</option></select><button type="button" id="v512-remove" class="danger">KALDIR</button></div>
           <div class="v512-player">
             <div class="v512-time"><span id="v512-current">0:00</span><b>Alarm Aralığı: <strong id="v512-range-label">0:00 - 0:00</strong></b><span id="v512-total">0:00</span></div>
-            <div class="v512-track" id="v512-track"><div class="v512-wave"></div><div class="v512-fill" id="v512-fill"></div><button type="button" class="v512-handle start" id="v512-start-handle">⇔</button><button type="button" class="v512-handle end" id="v512-end-handle">⇔</button><input id="v512-progress" type="range" min="0" max="1" step="1" value="0"><input id="v512-start" type="range" min="0" max="1" step="1" value="0" hidden><input id="v512-end" type="range" min="0" max="1" step="1" value="1" hidden></div>
+            <div class="v512-track" id="v512-track"><div class="v512-wave"></div><div class="v512-fill" id="v512-fill"></div><button type="button" class="v512-handle start" id="v512-start-handle" aria-label="Başlangıç tutamağı"></button><button type="button" class="v512-handle end" id="v512-end-handle" aria-label="Bitiş tutamağı"></button><input id="v512-progress" type="range" min="0" max="1" step="1" value="0"><input id="v512-start" type="range" min="0" max="1" step="1" value="0" hidden><input id="v512-end" type="range" min="0" max="1" step="1" value="1" hidden></div>
             <button type="button" id="v512-apply">BU ARALIĞI ALARM YAP</button>
           </div>
           <div class="v512-file-row"><button type="button" id="v512-file-pick">DOSYA SEÇ</button><span id="v512-file-note">Dosya seçilmedi</span><input id="v512-file-input" type="file" accept="audio/*,.mp3,.mpeg,.wav,.ogg,.oga,.m4a,.aac,.flac,.webm,.opus,.mp4" hidden></div>
