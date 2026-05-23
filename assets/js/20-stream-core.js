@@ -78,8 +78,8 @@ function omega_OpenChannelManager() {
             numScreens = Number(numScreens || 1);
             if (![1,2,4,6].includes(numScreens)) numScreens = 1;
             const now = Date.now();
-            if (window.__v522_stream_building && window.__v522_stream_building.layout === numScreens && now - window.__v522_stream_building.ts < 120) return;
-            window.__v522_stream_building = { layout: numScreens, ts: now };
+            if (window.__v523_stream_building && window.__v523_stream_building.layout === numScreens && now - window.__v523_stream_building.ts < 120) return;
+            window.__v523_stream_building = { layout: numScreens, ts: now };
 
             const scrollY = window.scrollY || window.pageYOffset || 0;
 
@@ -165,16 +165,16 @@ function omega_BootStreamV49(forceOne = false) {
 
     if (!streamVisible && !forceOne) return;
 
-    const saved = parseInt(localStorage.getItem('v49_stream_layout') || '1', 10);
+    const saved = parseInt(localStorage.getItem('v49_stream_layout') || String(_ACTIVE_LAYOUT || 1), 10);
     const layout = [1,2,4,6].includes(saved) ? saved : 1;
 
-    // V522: Kullanıcı 2/4/6 ekrana geçtikten sonra tekrar 1 ekrana zorlanmasın.
-    // Sadece grid boşsa veya mevcut layout ile kayıtlı layout farklıysa render et.
+    // V523: forceOne artık 1 ekrana sıfırlamaz. Eski router hâlâ forceOne=true çağırsa bile
+    // kullanıcı 2/4/6 seçimini korur; sadece boş/uyumsuz grid varsa yeniden basar.
     if (!grid.children.length || !grid.classList.contains('m-lay-' + layout)) {
         omega_BuildStreamMatrix(layout);
     }
 
-    window.__v522_stream_ready = true;
+    window.__v523_stream_ready = true;
 }
 
 window.addEventListener('hashchange', () => {
