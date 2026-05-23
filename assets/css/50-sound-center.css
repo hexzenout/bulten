@@ -1189,3 +1189,136 @@
     }
 }
 
+
+/* ===============================
+   V526 SOUND HANDLE CLICK + RESUME + MARQUEE + REMOVE FIT
+================================ */
+
+/* Alarm ses merkezi çok hafif genişlesin; yazılar daha rahat sığsın. */
+.crypto-v28-panel[data-crypto-pane="sound"],
+#v28-sound-mount {
+    max-width: 920px !important;
+}
+
+.v512-sound-card {
+    width: min(100%, 900px) !important;
+    max-width: 900px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+}
+
+/* KALDIR butonu taşmasın; kırmızı arka plan kutunun dışına çıkmasın. */
+.v512-select-row {
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr) 62px !important;
+    gap: 8px !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.v512-select-row button,
+#v512-remove,
+#v512-play-custom {
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#v512-remove {
+    width: 62px !important;
+    max-width: 62px !important;
+    min-width: 62px !important;
+    justify-self: end !important;
+    padding: 0 4px !important;
+    font-size: .62rem !important;
+    line-height: 1 !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+}
+
+/* Aktif şarkı adı müzik çalar gibi kayan yazı olsun, dışarı taşmasın. */
+#v512-file-note {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+}
+
+#v512-file-note .v526-marquee {
+    display: inline-block !important;
+    min-width: 100% !important;
+    padding-left: 100% !important;
+    will-change: transform !important;
+    animation: v526Marquee 11s linear infinite !important;
+    color: #22c55e !important;
+    font-weight: 950 !important;
+}
+
+#v512-file-note .v526-static-note {
+    display: inline-block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    color: #22c55e !important;
+    font-weight: 950 !important;
+}
+
+@keyframes v526Marquee {
+    0% { transform: translateX(0); }
+    12% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+/* Gri tutamaçlar biraz daha ince; içine sembol yok. */
+.v512-handle,
+.v512-handle.start,
+.v512-handle.end {
+    width: 8px !important;
+    min-width: 8px !important;
+    max-width: 8px !important;
+    height: 32px !important;
+    top: 18px !important;
+    border-radius: 5px !important;
+    background: #3f3f46 !important;
+    border: 2px solid #d4d4d8 !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+.v512-handle::before,
+.v512-handle::after {
+    content: none !important;
+    display: none !important;
+}
+
+.v512-track {
+    width: calc(100% - 44px) !important;
+    margin-left: 22px !important;
+    margin-right: 22px !important;
+}
+
+@media (max-width: 760px) {
+    .v512-select-row {
+        grid-template-columns: 42px minmax(0, 1fr) 58px !important;
+    }
+
+    #v512-remove {
+        width: 58px !important;
+        max-width: 58px !important;
+        min-width: 58px !important;
+        font-size: .58rem !important;
+    }
+}
+
