@@ -89,6 +89,28 @@
     if (card) card.classList.add("v32-sound-card");
   }
 
+
+  function forceCryptoGraphIfBase() {
+    const raw = String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
+    if (raw && raw !== "crypto") return;
+    try { localStorage.setItem("v28_crypto_panel", "graph"); } catch {}
+
+    const graphTab = document.querySelector('.crypto-v28-tab[data-crypto-panel="graph"]');
+    const graphPanel = document.querySelector('.crypto-v28-panel[data-crypto-pane="graph"]');
+
+    document.querySelectorAll(".crypto-v28-tab").forEach(btn => {
+      btn.classList.toggle("active", btn === graphTab);
+    });
+    document.querySelectorAll(".crypto-v28-panel").forEach(panel => {
+      panel.classList.toggle("active", panel === graphPanel);
+    });
+
+    const title = document.getElementById("crypto-v28-panel-title");
+    const sub = document.getElementById("crypto-v28-panel-subtitle");
+    if (title) title.textContent = "Grafik Kontrolü";
+    if (sub) sub.textContent = "Borsa, parite, coin ve zaman aralığı";
+  }
+
   function patchSwitch() {
     if (typeof window.omega_SwitchMainTab !== "function" || window.omega_SwitchMainTab.__v512) return;
     const original = window.omega_SwitchMainTab;
@@ -97,8 +119,10 @@
       let k = targetModule;
       if (k === "canli" || k === "canli-yayin") k = "stream";
       if (k === "stream") {
-        try { localStorage.setItem("v49_stream_layout", "1"); } catch {}
-        setTimeout(() => { if (typeof window.omega_BootStreamV49 === "function") window.omega_BootStreamV49(true); }, 70);
+        setTimeout(() => { if (typeof window.omega_BootStreamV49 === "function") window.omega_BootStreamV49(false); }, 70);
+      }
+      if (k === "crypto") {
+        forceCryptoGraphIfBase();
       }
       setTimeout(() => apply(k), 0);
       setTimeout(() => { apply(k); forceSoundIfNeeded(); }, 80);
@@ -112,6 +136,7 @@
     patchSwitch();
     apply();
     forceSoundIfNeeded();
+    forceCryptoGraphIfBase();
 
     document.addEventListener("click", e => {
       const link = e.target.closest("#main-dropdown-nav .nav-link");
@@ -119,8 +144,9 @@
         const k = link.id.replace(/^nav-/, "");
         if (MAP[k]) {
           if (k === "stream") {
-            try { localStorage.setItem("v49_stream_layout", "1"); } catch {}
+            // V523: kullanıcı layout seçimi korunur; 1 ekrana sıfırlama yok.
           }
+          if (k === "crypto") forceCryptoGraphIfBase();
           setTimeout(() => apply(k), 0);
           setTimeout(() => apply(k), 100);
         }
