@@ -171,11 +171,30 @@
   function v526SetFileNote(text, marquee = true) {
     const note = qs("#v512-file-note");
     if (!note) return;
-    const safe = String(text || "Dosya seçilmedi");
+    const safe = String(text || "Dosya seçilmedi").replace(/^Aktif:\s*/i, "").trim() || "Dosya seçilmedi";
     note.title = safe;
     note.textContent = "";
+
+    if (marquee && safe !== "Dosya seçilmedi") {
+      const wrap = document.createElement("span");
+      wrap.className = "v527-marquee-wrap";
+
+      const one = document.createElement("span");
+      one.className = "v527-marquee-item";
+      one.textContent = safe;
+
+      const two = document.createElement("span");
+      two.className = "v527-marquee-item";
+      two.textContent = safe;
+
+      wrap.appendChild(one);
+      wrap.appendChild(two);
+      note.appendChild(wrap);
+      return;
+    }
+
     const span = document.createElement("span");
-    span.className = marquee ? "v526-marquee" : "v526-static-note";
+    span.className = "v526-static-note";
     span.textContent = safe;
     note.appendChild(span);
   }
@@ -193,7 +212,7 @@
     const current = files.find(f => f.id === s.selectedCustomId);
     if (current) select.value = current.id;
     select.title = current ? current.name : "Özel ses seç";
-    v526SetFileNote(current ? "Aktif: " + v523CleanAudioName(current.name) : "Dosya seçilmedi", !!current);
+    v526SetFileNote(current ? v523CleanAudioName(current.name) : "Dosya seçilmedi", !!current);
   }
 
   async function v512PlayCustom() {
@@ -420,7 +439,7 @@
         await v512RenderLibrary();
         if (qs("#v512-custom-select") && row?.id) qs("#v512-custom-select").value = row.id;
         await v512LoadMeta();
-        v526SetFileNote("Aktif: " + v523CleanAudioName(row?.name || file.name), true);
+        v526SetFileNote(v523CleanAudioName(row?.name || file.name), true);
       } catch (err) {
         console.warn("V512 sound upload error", err);
         v526SetFileNote("Dosya yüklenemedi.", false);
