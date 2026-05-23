@@ -1322,3 +1322,60 @@
     }
 }
 
+
+/* ===============================
+   V527 SOUND MARQUEE FINAL
+   "Aktif:" yazısı kaldırıldı.
+   Kayan yazı daha yavaş akar ve boşlukta kaybolmaz.
+================================ */
+
+#v512-file-note {
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+#v512-file-note .v526-marquee {
+    display: none !important;
+}
+
+#v512-file-note .v527-marquee-wrap {
+    display: inline-flex !important;
+    align-items: center !important;
+    width: max-content !important;
+    min-width: 200% !important;
+    will-change: transform !important;
+    animation: v527MarqueeLoop 26s linear infinite !important;
+    color: #22c55e !important;
+    font-weight: 950 !important;
+}
+
+#v512-file-note .v527-marquee-item {
+    display: inline-block !important;
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+    padding-right: 46px !important;
+    color: #22c55e !important;
+}
+
+#v512-file-note .v526-static-note {
+    display: inline-block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    color: #22c55e !important;
+    font-weight: 950 !important;
+}
+
+@keyframes v527MarqueeLoop {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
