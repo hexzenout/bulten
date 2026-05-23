@@ -1,0 +1,217 @@
+{
+  "version": "v528",
+  "updatedAt": "2026-05-24T00:00:00+03:00",
+  "note": "V528 Oran Terminali başlangıç kaynak listesi. Bu dosya panel kaynaklarını tanımlar; canlı veri çekme motoru sonraki aşamada bağlanır.",
+  "groups": [
+    {
+      "id": "xbet_family",
+      "name": "X-Altyapısı",
+      "sites": [
+        "1xbet",
+        "betandyou"
+      ]
+    },
+    {
+      "id": "move_family",
+      "name": "Move/Holigan Altyapısı",
+      "sites": [
+        "betsmove",
+        "holigan"
+      ]
+    },
+    {
+      "id": "tb_family",
+      "name": "Türkbet/Betsat Altyapısı",
+      "sites": [
+        "turkbet",
+        "betsat"
+      ]
+    },
+    {
+      "id": "reference",
+      "name": "Referans Piyasa",
+      "sites": [
+        "pinnacle",
+        "bet365",
+        "polymarket"
+      ]
+    }
+  ],
+  "sites": [
+    {
+      "id": "1xbet",
+      "name": "1xbet",
+      "url": "https://tinyurl.com/1xturkey",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "xbet_family"
+    },
+    {
+      "id": "betsmove",
+      "name": "Betsmove",
+      "url": "https://dub.is/betsmovetelegram",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "move_family"
+    },
+    {
+      "id": "holigan",
+      "name": "Holigan",
+      "url": "http://dub.run/holiguncel",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "move_family"
+    },
+    {
+      "id": "betandyou",
+      "name": "Betandyou",
+      "url": "https://bit.ly/3UzfE7i",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "xbet_family"
+    },
+    {
+      "id": "tempobet",
+      "name": "Tempobet",
+      "url": "https://www.3002tempobet.com/",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "nesine",
+      "name": "Nesine",
+      "url": "https://www.nesine.com",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "local"
+    },
+    {
+      "id": "iddaa",
+      "name": "İddaa",
+      "url": "https://www.iddaa.com",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "local"
+    },
+    {
+      "id": "turkbet",
+      "name": "Türkbet",
+      "url": "https://bit.ly/TB-Telegram2026",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "tb_family"
+    },
+    {
+      "id": "betsat",
+      "name": "Betsat",
+      "url": "https://bit.ly/BS-Telegram2026",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "tb_family"
+    },
+    {
+      "id": "gamdom",
+      "name": "Gamdom",
+      "url": "http://shrtio.com/GamdomTR",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "stake",
+      "name": "Stake",
+      "url": "https://t2m.io/stakeguncel",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "masterbetting",
+      "name": "Masterbetting",
+      "url": "https://cutt.ly/Masterbetting",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "pusulabet",
+      "name": "Pusulabet",
+      "url": "http://cutt.ly/PusulaTelegram",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "polymarket",
+      "name": "Polymarket",
+      "url": "https://polymarket.com/",
+      "type": "prediction_market",
+      "enabled": true,
+      "group": "reference",
+      "reference": true
+    },
+    {
+      "id": "bet365",
+      "name": "Bet365",
+      "url": "",
+      "type": "reference",
+      "enabled": true,
+      "group": "reference",
+      "reference": true
+    },
+    {
+      "id": "pinnacle",
+      "name": "Pinnacle",
+      "url": "",
+      "type": "reference",
+      "enabled": true,
+      "group": "reference",
+      "reference": true
+    }
+  ],
+  "marketGroups": [
+    {
+      "id": "football_goals",
+      "name": "Futbol Gol",
+      "markets": [
+        "total_goals_1_5",
+        "total_goals_2_5",
+        "total_goals_3_5"
+      ]
+    },
+    {
+      "id": "football_corners",
+      "name": "Korner",
+      "markets": [
+        "corners_6_5",
+        "corners_7_5",
+        "corners_8_5",
+        "corners_9_5"
+      ]
+    },
+    {
+      "id": "football_cards",
+      "name": "Kart",
+      "markets": [
+        "cards_3_5",
+        "cards_4_5",
+        "cards_5_5"
+      ]
+    },
+    {
+      "id": "basket_totals",
+      "name": "Basket Toplam Sayı",
+      "markets": [
+        "basket_total_points"
+      ]
+    },
+    {
+      "id": "match_winner",
+      "name": "Maç Sonucu",
+      "markets": [
+        "match_winner"
+      ]
+    }
+  ]
+}
