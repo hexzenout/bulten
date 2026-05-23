@@ -801,3 +801,49 @@
     padding: 28px !important;
 }
 
+
+
+/* ===============================
+   V514 ROLLING HISTORY LOCATION + QUICK PLAN COLORS
+================================ */
+
+.rolling-v495-quick-plan input[data-rolling-quick="start"],
+.rolling-v495-quick-plan label:nth-child(1) input {
+    color: #10b981 !important;
+}
+
+.rolling-v495-quick-plan input[data-rolling-quick="target"],
+.rolling-v495-quick-plan label:nth-child(2) input {
+    color: #fbbf24 !important;
+}
+
+.rolling-v47-head .v512-history-btn {
+    display: none !important;
+}
+
+.v514-row-controls {
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.v514-row-controls .v514-history-inline {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-left: 6px !important;
+    min-height: 30px !important;
+    padding: 0 10px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(126,34,206,.45) !important;
+    background: rgba(126,34,206,.16) !important;
+    color: #d8b4fe !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+.v514-row-controls .v514-history-inline.crypto {
+    border-color: rgba(96,165,250,.45) !important;
+    background: rgba(96,165,250,.13) !important;
+    color: #bfdbfe !important;
+}
