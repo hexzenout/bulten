@@ -609,3 +609,151 @@
     }
 }
 
+
+
+/* ===============================
+   V514 SOUND CENTER STABLE UI FIX
+   Dropdown kapanması/flicker, süre/bar yanıp sönmesi ve sade timeline rengi.
+================================ */
+
+.v512-sound-card,
+.v512-sound-card *,
+.v514-sound-card,
+.v514-sound-card * {
+    animation: none !important;
+}
+
+.v512-sound-card {
+    border-color: rgba(249,115,22,.28) !important;
+    background: linear-gradient(180deg, rgba(249,115,22,.055), rgba(0,0,0,.02)), #090909 !important;
+}
+
+.v512-sound-head {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.v512-sound-head b {
+    color: #f97316 !important;
+}
+
+.v514-sound-note,
+.v514-sound-status {
+    color: #a3a3a3 !important;
+    font-size: .72rem !important;
+    font-weight: 850 !important;
+    letter-spacing: .2px !important;
+}
+
+.v514-sound-status {
+    border: 1px solid rgba(255,255,255,.08) !important;
+    background: rgba(255,255,255,.025) !important;
+    border-radius: 12px !important;
+    padding: 9px 10px !important;
+}
+
+#v512-sound-test {
+    background: rgba(16,185,129,.18) !important;
+    border-color: rgba(16,185,129,.55) !important;
+    color: #bbf7d0 !important;
+}
+
+#v512-sound-test.testing {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: #04120d !important;
+}
+
+#v512-sound-stop,
+#v512-remove {
+    background: rgba(239,68,68,.14) !important;
+    border-color: rgba(239,68,68,.45) !important;
+    color: #fecaca !important;
+}
+
+#v512-file-pick {
+    background: rgba(249,115,22,.16) !important;
+    border-color: rgba(249,115,22,.55) !important;
+    color: #fed7aa !important;
+}
+
+.v512-play {
+    background: rgba(249,115,22,.12) !important;
+    border-color: rgba(249,115,22,.45) !important;
+    color: #fdba74 !important;
+}
+
+.v512-play.playing {
+    background: rgba(249,115,22,.22) !important;
+    border-color: #f97316 !important;
+    color: #fed7aa !important;
+}
+
+.v512-time span,
+.v512-time strong {
+    color: #fdba74 !important;
+}
+
+.v512-time b {
+    color: #d4d4d4 !important;
+}
+
+.v512-track {
+    background: #111 !important;
+    border-color: rgba(249,115,22,.22) !important;
+    box-shadow: none !important;
+}
+
+.v512-wave {
+    opacity: .55 !important;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 2px, transparent 2px 11px),
+      linear-gradient(180deg, transparent 0 18%, rgba(249,115,22,.22) 18% 72%, transparent 72% 100%) !important;
+    filter: none !important;
+}
+
+.v512-fill {
+    background: rgba(249,115,22,.38) !important;
+    border: 1px solid rgba(249,115,22,.55) !important;
+    box-shadow: none !important;
+    transition: none !important;
+}
+
+.v512-handle {
+    background: #3f3f46 !important;
+    border-color: #71717a !important;
+    color: #f4f4f5 !important;
+    box-shadow: none !important;
+}
+
+.v512-handle.start,
+.v512-handle.end {
+    background: #3f3f46 !important;
+    border-color: #71717a !important;
+    color: #f4f4f5 !important;
+}
+
+#v512-progress {
+    accent-color: #f97316 !important;
+}
+
+#v512-apply {
+    background: rgba(249,115,22,.18) !important;
+    border-color: rgba(249,115,22,.60) !important;
+    color: #fed7aa !important;
+}
+
+#v512-sound-type,
+#v512-custom-select {
+    background: #070707 !important;
+    color: #fff !important;
+    border-color: rgba(249,115,22,.22) !important;
+}
+
+#v512-sound-type:focus,
+#v512-custom-select:focus {
+    outline: 1px solid rgba(249,115,22,.42) !important;
+    outline-offset: 2px !important;
+}
