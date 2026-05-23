@@ -60,10 +60,10 @@
 
   function mimeFromName(name) {
     const n = String(name || "").toLowerCase();
-    if (n.endsWith(".mp3")) return "audio/mpeg";
+    if (n.endsWith(".mp3") || n.endsWith(".mpeg")) return "audio/mpeg";
     if (n.endsWith(".wav")) return "audio/wav";
-    if (n.endsWith(".ogg") || n.endsWith(".opus")) return "audio/ogg";
-    if (n.endsWith(".m4a")) return "audio/mp4";
+    if (n.endsWith(".ogg") || n.endsWith(".oga") || n.endsWith(".opus")) return "audio/ogg";
+    if (n.endsWith(".m4a") || n.endsWith(".mp4")) return "audio/mp4";
     if (n.endsWith(".aac")) return "audio/aac";
     if (n.endsWith(".flac")) return "audio/flac";
     if (n.endsWith(".webm")) return "audio/webm";
@@ -78,14 +78,44 @@
 
   function openDb() {
     return new Promise((resolve, reject) => {
-      const req = indexedDB.open(DB_NAME, 1);
-      req.onupgradeneeded = () => {
-        const db = req.result;
-        if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE, { keyPath: "id" });
+      const requestOpen = (version) => {
+        const req = version ? indexedDB.open(DB_NAME, version) : indexedDB.open(DB_NAME);
+
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(STORE)) {
+            db.createObjectStore(STORE, { keyPath: "id" });
+          }
+        };
+
+        req.onsuccess = () => {
+          const db = req.result;
+          if (db.objectStoreNames.contains(STORE)) {
+            resolve(db);
+            return;
+          }
+
+          // Eski bozuk DB sürümü store oluşturmadan kalmışsa otomatik onar.
+          const nextVersion = db.version + 1;
+          db.close();
+
+          const repair = indexedDB.open(DB_NAME, nextVersion);
+          repair.onupgradeneeded = () => {
+            const rdb = repair.result;
+            if (!rdb.objectStoreNames.contains(STORE)) {
+              rdb.createObjectStore(STORE, { keyPath: "id" });
+            }
+          };
+          repair.onsuccess = () => resolve(repair.result);
+          repair.onerror = () => reject(repair.error || new Error("IndexedDB repair failed"));
+          repair.onblocked = () => reject(new Error("IndexedDB repair blocked"));
+        };
+
+        req.onerror = () => reject(req.error || new Error("IndexedDB open failed"));
+        req.onblocked = () => reject(new Error("IndexedDB blocked"));
       };
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
-      req.onblocked = () => reject(new Error("IndexedDB blocked"));
+
+      requestOpen();
     });
   }
 
