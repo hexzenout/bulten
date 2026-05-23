@@ -546,7 +546,7 @@
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
             if(clickedElement) clickedElement.classList.add('active');
 
-            ['omega-radar-block','omega-favs-block','omega-stream-block','omega-live-block','omega-crypto-block'].forEach(id => {
+            ['omega-radar-block','omega-favs-block','omega-stream-block','omega-live-block','omega-crypto-block','omega-odds-block'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
