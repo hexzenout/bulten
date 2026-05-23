@@ -217,12 +217,29 @@
     setTimeout(() => { if (top) { top.classList.remove("testing"); top.textContent = "OYNAT"; } }, 1200);
   }
 
+  function v512Seek(sec) {
+    sec = Math.max(0, Number(sec || 0));
+    const progress = qs("#v512-progress");
+    if (progress) progress.value = Math.floor(sec);
+    if (v512PreviewAudio) {
+      try { v512PreviewAudio.currentTime = sec; } catch {}
+    }
+    v512Update(sec);
+  }
+
+  function v512ResetHandlesToFull() {
+    const max = Math.max(1, Number(qs("#v512-end")?.max || qs("#v512-start")?.max || v512Duration || 1));
+    if (qs("#v512-start")) qs("#v512-start").value = 0;
+    if (qs("#v512-end")) qs("#v512-end").value = max;
+    v512Seek(0);
+  }
+
   function v512BindTimeline() {
     const track = qs("#v512-track");
     const startInput = qs("#v512-start");
     const endInput = qs("#v512-end");
-    if (!track || !startInput || !endInput || track.dataset.bound === "v512") return;
-    track.dataset.bound = "v512";
+    if (!track || !startInput || !endInput || track.dataset.bound === "v522") return;
+    track.dataset.bound = "v522";
 
     const secFromEvent = ev => {
       const rect = track.getBoundingClientRect();
@@ -230,7 +247,8 @@
       const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       return Math.round(pct * Math.max(1, Number(startInput.max || endInput.max || v512Duration || 1)));
     };
-    let mode = null, offset = 0;
+
+    let mode = null, offset = 0, dragged = false;
     const choose = (sec, target) => {
       const { start, end } = v512Segment();
       if (target?.id === "v512-start-handle") return "start";
@@ -238,20 +256,32 @@
       if (target?.id === "v512-fill" || (sec > start && sec < end)) { offset = sec - start; return "range"; }
       return Math.abs(sec - start) <= Math.abs(sec - end) ? "start" : "end";
     };
+
     const apply = sec => {
+      dragged = true;
       const { start, end, max } = v512Segment();
       const len = Math.max(1, end - start);
-      if (mode === "start") startInput.value = Math.min(sec, end - 1);
-      else if (mode === "end") endInput.value = Math.max(sec, start + 1);
-      else if (mode === "range") {
+      let seekTo = sec;
+
+      if (mode === "start") {
+        startInput.value = Math.min(sec, end - 1);
+        seekTo = Number(startInput.value || 0);
+      } else if (mode === "end") {
+        endInput.value = Math.max(sec, start + 1);
+        seekTo = Number(endInput.value || 0);
+      } else if (mode === "range") {
         const ns = Math.max(0, Math.min(max - len, sec - offset));
         startInput.value = Math.floor(ns);
         endInput.value = Math.floor(ns + len);
+        seekTo = ns;
       }
-      v512Update();
+
+      v512Seek(seekTo);
     };
+
     const down = ev => {
       ev.preventDefault();
+      dragged = false;
       const sec = secFromEvent(ev);
       mode = choose(sec, ev.target);
       apply(sec);
@@ -260,16 +290,41 @@
       document.addEventListener("touchmove", move, { passive: false });
       document.addEventListener("touchend", up);
     };
-    const move = ev => { ev.preventDefault(); if (mode) apply(secFromEvent(ev)); };
-    const up = () => {
+
+    const move = ev => {
+      ev.preventDefault();
+      if (mode) apply(secFromEvent(ev));
+    };
+
+    const up = ev => {
+      const lastMode = mode;
       mode = null;
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
       document.removeEventListener("touchmove", move);
       document.removeEventListener("touchend", up);
+
+      // Başlangıç tutamağına tıklayınca müzik başlangıç saniyesinden başlasın.
+      if (lastMode === "start" && !dragged) {
+        v512Seek(Number(startInput.value || 0));
+      }
     };
+
     track.addEventListener("mousedown", down);
     track.addEventListener("touchstart", down, { passive: false });
+
+    qs("#v512-start-handle")?.addEventListener("click", ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      v512Seek(Number(startInput.value || 0));
+      if (!v512PreviewAudio) v512PlayCustom();
+    });
+
+    qs("#v512-end-handle")?.addEventListener("click", ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      v512Seek(Number(endInput.value || 0));
+    });
   }
 
   function renderSoundRootV512(force = false) {
@@ -348,9 +403,11 @@
     qs("#v512-apply").onclick = () => {
       const { start, end } = v512Segment();
       v512SetSettings({ sound: "custom", customStart: start, customEnd: end, volume: 1, enabled: true });
+      v512StopPreview();
+      v512ResetHandlesToFull();
       const btn = qs("#v512-apply");
-      btn.textContent = `AKTİF: ${v512Time(start)} - ${v512Time(end)}`;
-      setTimeout(() => btn.textContent = "BU ARALIĞI ALARM YAP", 1600);
+      btn.textContent = `ALARM KAYDEDİLDİ: ${v512Time(start)} - ${v512Time(end)}`;
+      setTimeout(() => btn.textContent = "BU ARALIĞI ALARM YAP", 1800);
     };
     v512RenderLibrary().then(() => v512LoadMeta().then(v512BindTimeline));
   }
