@@ -624,3 +624,180 @@
         grid-template-columns: 1fr !important;
     }
 }
+
+
+/* ===============================
+   V512 ROLLING HISTORY + QUICK PLAN COLORS
+================================ */
+
+.rolling-v495-quick-plan input[data-rolling-quick="start"],
+.rolling-v495-quick-plan label:nth-child(1) input {
+    color: #10b981 !important;
+    border-color: rgba(16,185,129,.38) !important;
+}
+
+.rolling-v495-quick-plan input[data-rolling-quick="target"],
+.rolling-v495-quick-plan label:nth-child(2) input {
+    color: #fbbf24 !important;
+    border-color: rgba(251,191,36,.38) !important;
+}
+
+.v512-history-btn {
+    margin-left: 10px !important;
+    min-height: 30px !important;
+    padding: 0 10px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(126,34,206,.45) !important;
+    background: rgba(126,34,206,.16) !important;
+    color: #d8b4fe !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .45px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+}
+
+.v512-history-btn.crypto {
+    border-color: rgba(96,165,250,.45) !important;
+    background: rgba(96,165,250,.14) !important;
+    color: #bfdbfe !important;
+}
+
+.v512-history-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    background: rgba(0,0,0,.72) !important;
+    backdrop-filter: blur(8px) !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 22px !important;
+}
+
+.v512-history-modal {
+    width: min(980px, 96vw) !important;
+    max-height: 86vh !important;
+    overflow: hidden !important;
+    display: grid !important;
+    grid-template-rows: auto auto minmax(0, 1fr) !important;
+    border: 1px solid rgba(126,34,206,.42) !important;
+    border-radius: 22px !important;
+    background: #080808 !important;
+    box-shadow: 0 24px 80px rgba(0,0,0,.55) !important;
+}
+
+.v512-history-modal.crypto {
+    border-color: rgba(96,165,250,.38) !important;
+}
+
+.v512-history-head {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    align-items: center !important;
+    padding: 16px 18px !important;
+    border-bottom: 1px solid #202020 !important;
+}
+
+.v512-history-head b {
+    color: #fff !important;
+    font-size: .98rem !important;
+    font-weight: 950 !important;
+}
+
+.v512-history-head span {
+    display: block !important;
+    margin-top: 4px !important;
+    color: #aaa !important;
+    font-size: .76rem !important;
+    font-weight: 800 !important;
+}
+
+.v512-history-head button {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(239,68,68,.45) !important;
+    background: rgba(239,68,68,.14) !important;
+    color: #fecaca !important;
+    font-size: 1.2rem !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+.v512-history-filters {
+    display: flex !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    padding: 12px 18px !important;
+    border-bottom: 1px solid #202020 !important;
+}
+
+.v512-history-filters button {
+    min-height: 32px !important;
+    border-radius: 999px !important;
+    border: 1px solid #333 !important;
+    background: #111 !important;
+    color: #aaa !important;
+    padding: 0 12px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+}
+
+.v512-history-filters button.active {
+    background: #7E22CE !important;
+    border-color: #7E22CE !important;
+    color: #fff !important;
+}
+
+.v512-history-table-wrap {
+    overflow: auto !important;
+    padding: 0 18px 18px !important;
+}
+
+.v512-history-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    min-width: 760px !important;
+}
+
+.v512-history-table th,
+.v512-history-table td {
+    padding: 11px 10px !important;
+    border-bottom: 1px solid #1f1f1f !important;
+    text-align: left !important;
+    font-size: .78rem !important;
+}
+
+.v512-history-table th {
+    color: #888 !important;
+    font-size: .68rem !important;
+    letter-spacing: .6px !important;
+    text-transform: uppercase !important;
+}
+
+.v512-history-status {
+    padding: 5px 8px !important;
+    border-radius: 999px !important;
+    font-weight: 950 !important;
+    font-size: .68rem !important;
+}
+
+.v512-history-status.win {
+    background: rgba(16,185,129,.16) !important;
+    color: #86efac !important;
+}
+
+.v512-history-status.loss {
+    background: rgba(239,68,68,.16) !important;
+    color: #fecaca !important;
+}
+
+.v512-history-empty {
+    text-align: center !important;
+    color: #888 !important;
+    padding: 28px !important;
+}
+
