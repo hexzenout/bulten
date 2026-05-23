@@ -1157,3 +1157,108 @@
     display: none !important;
 }
 
+
+/* ===============================
+   V521 ETHEREUM SVG + CRYPTO BUTTON HOVER FIX
+   Ethereum gerçek SVG ikonla gelir.
+   Kripto bölümündeki -/+ hover rengi mavi olur, bahis aynı kalır.
+================================ */
+
+/* Kripto menü ikon hizası: Bahis ile aynı kolon, KRİPTO yazısı sağa kaymaz. */
+.rolling-v48-rail-tab.bet,
+.rolling-v48-rail-tab.crypto {
+    display: grid !important;
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+    align-items: center !important;
+    justify-items: start !important;
+    column-gap: 12px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    text-align: left !important;
+}
+
+.rolling-v48-rail-tab.bet .rolling-v491-bet-icons,
+.rolling-v48-rail-tab.crypto .rolling-v518-crypto-icons {
+    grid-column: 1 !important;
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    height: 18px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.rolling-v48-rail-tab.bet .rolling-v493-rail-label,
+.rolling-v48-rail-tab.crypto .rolling-v493-rail-label {
+    grid-column: 2 !important;
+    justify-self: start !important;
+    align-self: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    text-align: left !important;
+    transform: none !important;
+}
+
+.rolling-v518-crypto-icons .rolling-v493-crypto-icon {
+    width: 14px !important;
+    min-width: 14px !important;
+    height: 16px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 1rem !important;
+    line-height: 1 !important;
+    color: #f97316 !important;
+    fill: #f97316 !important;
+}
+
+.rolling-v521-ethereum-svg {
+    width: 14px !important;
+    min-width: 14px !important;
+    max-width: 14px !important;
+    height: 17px !important;
+    min-height: 17px !important;
+    max-height: 17px !important;
+    display: inline-block !important;
+    object-fit: contain !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+/* Eski Font Awesome Ethereum rengi/ölçeği kalıntılarını SVG üstünde etkisiz bırak. */
+.rolling-v518-crypto-icons .rolling-v518-ethereum-icon.rolling-v521-ethereum-svg {
+    color: initial !important;
+    fill: initial !important;
+    font-size: initial !important;
+    transform: none !important;
+}
+
+/* Eski tek Bitcoin ikon kalıntısı görünmesin. */
+.rolling-v48-rail-tab.crypto > i.rolling-v493-crypto-icon {
+    display: none !important;
+}
+
+/* Bahis -/+ hover mevcut mor/durumunu korur; yalnız kripto panelindeki -/+ butonları mavi olur. */
+.rolling-v47-card.crypto .rolling-v48-row-controls button[data-row-op],
+.rolling-v47-card.crypto .v514-row-controls button[data-row-op] {
+    border-color: rgba(96,165,250,.38) !important;
+}
+
+.rolling-v47-card.crypto .rolling-v48-row-controls button[data-row-op]:hover,
+.rolling-v47-card.crypto .v514-row-controls button[data-row-op]:hover {
+    background: rgba(96,165,250,.20) !important;
+    border-color: rgba(96,165,250,.75) !important;
+    color: #bfdbfe !important;
+    box-shadow: 0 0 0 1px rgba(96,165,250,.16), 0 0 14px rgba(96,165,250,.14) !important;
+}
+
