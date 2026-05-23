@@ -538,3 +538,51 @@ body.v36-fast-mode .controls-wrapper {
     font-weight: 950;
     margin-left: 6px;
 }
+
+
+/* ===============================
+   V514 CRYPTO COLOR RESTORE
+   Kripto Terminal başlıkları ve yan sekme renkleri eski turuncu vurgusuna döner.
+================================ */
+
+#nav-crypto > i,
+#nav-crypto.active > i,
+#nav-crypto:hover > i {
+    color: #f97316 !important;
+}
+
+#omega-crypto-block .crypto-v28-title,
+#omega-crypto-block .crypto-v28-title i,
+#omega-crypto-block .terminal-v10-hero.crypto h2,
+#omega-crypto-block .terminal-v10-hero.crypto h2 i,
+#omega-crypto-block #crypto-v28-panel-title,
+#omega-crypto-block .crypto-v28-panel-head h3,
+#omega-crypto-block .crypto-v28-panel-head h3 i,
+#omega-crypto-block .v32-sound-head b,
+#omega-crypto-block .v512-sound-head b {
+    color: #f97316 !important;
+}
+
+#omega-crypto-block .crypto-v28-tab i,
+#omega-crypto-block .crypto-v28-tab.active i {
+    color: #f97316 !important;
+}
+
+#omega-crypto-block .crypto-v28-tab span {
+    color: #e5e5e5 !important;
+}
+
+#omega-crypto-block .crypto-v28-tab.active span,
+#omega-crypto-block .crypto-v28-tab:hover span {
+    color: #fff !important;
+}
+
+#omega-crypto-block .crypto-v28-panel-head span,
+#omega-crypto-block #crypto-v28-panel-subtitle {
+    color: #a3a3a3 !important;
+}
+
+#omega-crypto-block .crypto-v28-tab.active {
+    border-color: rgba(249,115,22,.42) !important;
+    background: rgba(249,115,22,.10) !important;
+}
