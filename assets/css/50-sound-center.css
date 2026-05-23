@@ -985,3 +985,52 @@
     color: #38bdf8 !important;
 }
 
+
+/* ===============================
+   V523 SOUND RANGE FINAL BEHAVIOR CSS
+   Daha dar bar, baş/son tutamaç görünür, dosya uzantısı/MB alanı yok.
+================================ */
+
+.v512-track {
+    width: calc(100% - 36px) !important;
+    margin-left: 18px !important;
+    margin-right: 18px !important;
+    overflow: visible !important;
+}
+
+.v512-fill {
+    height: 18px !important;
+    top: 25px !important;
+}
+
+.v512-handle,
+.v512-handle.start,
+.v512-handle.end {
+    width: 12px !important;
+    min-width: 12px !important;
+    height: 34px !important;
+    top: 17px !important;
+    border-radius: 5px !important;
+    background: #3f3f46 !important;
+    border: 2px solid #d4d4d8 !important;
+    color: #f8fafc !important;
+    opacity: 1 !important;
+    z-index: 10 !important;
+}
+
+.v512-handle.end {
+    cursor: default !important;
+}
+
+#v512-progress {
+    left: 14px !important;
+    width: calc(100% - 28px) !important;
+}
+
+#v512-file-note,
+.v512-file-row span {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
