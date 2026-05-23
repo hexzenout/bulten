@@ -1,6 +1,7 @@
 // ===============================
-// V508 HEADER MENU + SOUND FINAL SYNC
-// Header ikon temizliği, stream mavi, rolling ikonsuz, genel mor şerit state.
+// V512 HEADER MENU + SOUND ROUTE SYNC
+// Header ikon temizliği, stream mavi, rolling ikonsuz, genel mor şerit state,
+// kripto alt sekme hash desteği ve ses paneli güvenli çağrı.
 // ===============================
 
 (function () {
@@ -48,8 +49,14 @@
     document.querySelectorAll("#main-dropdown-nav .nav-link").forEach(a => a.classList.remove("active"));
     const item = MAP[key];
     if (item?.id) document.getElementById(item.id)?.classList.add("active");
+
     const streamIcon = document.querySelector("#nav-stream > i");
     if (streamIcon) streamIcon.style.setProperty("color", "#3b82f6", "important");
+
+    const streamLink = document.getElementById("nav-stream");
+    if (streamLink) {
+      streamLink.style.setProperty("--v508-menu-strip", "#7E22CE");
+    }
   }
 
   function cleanHeaderIcons() {
@@ -68,35 +75,37 @@
     lock = false;
   }
 
+  function forceSoundIfNeeded() {
+    const isSoundHash = /^#crypto\/sound/i.test(String(location.hash || ""));
+    const panel = document.querySelector('.crypto-v28-panel[data-crypto-pane="sound"].active');
+    const mount = document.getElementById("v28-sound-mount");
+    if ((!panel && !isSoundHash) || !mount) return;
+
+    try {
+      if (typeof window.V512RenderSoundCenter === "function") window.V512RenderSoundCenter(false);
+    } catch {}
+
+    const card = mount.querySelector(".v512-sound-card, .v507-sound-card, .v499f-sound-card, .v32-sound-card");
+    if (card) card.classList.add("v32-sound-card");
+  }
+
   function patchSwitch() {
-    if (typeof window.omega_SwitchMainTab !== "function" || window.omega_SwitchMainTab.__v508) return;
+    if (typeof window.omega_SwitchMainTab !== "function" || window.omega_SwitchMainTab.__v512) return;
     const original = window.omega_SwitchMainTab;
     window.omega_SwitchMainTab = function (targetModule, clickedElement, updateHistory) {
       const result = original.apply(this, arguments);
       let k = targetModule;
       if (k === "canli" || k === "canli-yayin") k = "stream";
+      if (k === "stream") {
+        try { localStorage.setItem("v49_stream_layout", "1"); } catch {}
+        setTimeout(() => { if (typeof window.omega_BootStreamV49 === "function") window.omega_BootStreamV49(true); }, 70);
+      }
       setTimeout(() => apply(k), 0);
-      setTimeout(() => apply(k), 80);
-      setTimeout(() => apply(k), 250);
+      setTimeout(() => { apply(k); forceSoundIfNeeded(); }, 80);
+      setTimeout(() => { apply(k); forceSoundIfNeeded(); }, 250);
       return result;
     };
-    window.omega_SwitchMainTab.__v508 = true;
-  }
-
-  function forceSoundIfNeeded() {
-    const panel = document.querySelector('.crypto-v28-panel[data-crypto-pane="sound"].active');
-    const mount = document.getElementById("v28-sound-mount");
-    if (!panel || !mount) return;
-
-    // v28 root renderer varsa çağır; yoksa v32 fallback'i tetikler.
-    if (!mount.querySelector(".v507-sound-card, .v499f-sound-card, .v32-sound-card")) {
-      try {
-        if (typeof window.renderSoundRootV507 === "function") window.renderSoundRootV507();
-      } catch {}
-    }
-
-    const card = mount.querySelector(".v507-sound-card, .v499f-sound-card, .v32-sound-card");
-    if (card) card.classList.add("v32-sound-card");
+    window.omega_SwitchMainTab.__v512 = true;
   }
 
   function boot() {
@@ -109,6 +118,9 @@
       if (link?.id) {
         const k = link.id.replace(/^nav-/, "");
         if (MAP[k]) {
+          if (k === "stream") {
+            try { localStorage.setItem("v49_stream_layout", "1"); } catch {}
+          }
           setTimeout(() => apply(k), 0);
           setTimeout(() => apply(k), 100);
         }
@@ -131,6 +143,8 @@
     window.addEventListener("hashchange", () => {
       setTimeout(() => { patchSwitch(); apply(); forceSoundIfNeeded(); }, 0);
       setTimeout(() => { apply(); forceSoundIfNeeded(); }, 250);
+      const key = keyFromHash();
+      if (key === "stream") setTimeout(() => { if (typeof window.omega_BootStreamV49 === "function") window.omega_BootStreamV49(true); }, 120);
     });
 
     setTimeout(() => { patchSwitch(); apply(); forceSoundIfNeeded(); }, 300);
