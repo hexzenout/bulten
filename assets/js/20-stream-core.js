@@ -76,6 +76,10 @@ function omega_OpenChannelManager() {
 
         function omega_BuildStreamMatrix(numScreens) {
             numScreens = Number(numScreens || 1);
+            if (![1,2,4,6].includes(numScreens)) numScreens = 1;
+            const now = Date.now();
+            if (window.__v522_stream_building && window.__v522_stream_building.layout === numScreens && now - window.__v522_stream_building.ts < 120) return;
+            window.__v522_stream_building = { layout: numScreens, ts: now };
 
             const scrollY = window.scrollY || window.pageYOffset || 0;
 
@@ -154,25 +158,28 @@ function omega_BootStreamV49(forceOne = false) {
     const grid = document.getElementById('omega-matrix-grid');
     if (!grid) return;
 
-    const streamVisible = String(location.hash || '').replace('#','').split('/')[0] === 'stream'
+    const currentTab = String(location.hash || '').replace('#','').split('/')[0];
+    const streamVisible = currentTab === 'stream'
         || document.body.classList.contains('omega-tab-stream')
         || document.getElementById('omega-stream-block')?.style.display === 'block';
 
-    const shouldReset = forceOne || streamVisible && window.__v512_last_stream_entry !== 'stream';
-    const layout = shouldReset ? 1 : ([1,2,4,6].includes(parseInt(localStorage.getItem('v49_stream_layout') || '1')) ? parseInt(localStorage.getItem('v49_stream_layout') || '1') : 1);
+    if (!streamVisible && !forceOne) return;
 
-    if (shouldReset) {
-        localStorage.setItem('v49_stream_layout', '1');
-        window.__v512_last_stream_entry = 'stream';
-    }
+    const saved = parseInt(localStorage.getItem('v49_stream_layout') || '1', 10);
+    const layout = [1,2,4,6].includes(saved) ? saved : 1;
 
-    if (!grid.children.length || !grid.classList.contains('m-lay-' + layout) || shouldReset) {
+    // V522: Kullanıcı 2/4/6 ekrana geçtikten sonra tekrar 1 ekrana zorlanmasın.
+    // Sadece grid boşsa veya mevcut layout ile kayıtlı layout farklıysa render et.
+    if (!grid.children.length || !grid.classList.contains('m-lay-' + layout)) {
         omega_BuildStreamMatrix(layout);
     }
+
+    window.__v522_stream_ready = true;
 }
 
 window.addEventListener('hashchange', () => {
     const tab = String(location.hash || '').replace('#','').split('/')[0];
-    if (tab !== 'stream') window.__v512_last_stream_entry = '';
-    if (tab === 'stream') setTimeout(() => omega_BootStreamV49(true), 80);
+    if (tab === 'stream') {
+        setTimeout(() => omega_BootStreamV49(false), 30);
+    }
 });
