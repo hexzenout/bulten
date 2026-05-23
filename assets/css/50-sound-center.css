@@ -866,3 +866,74 @@
         font-size: .68rem !important;
     }
 }
+
+
+/* ===============================
+   V518 SOUND RANGE VISIBILITY POLISH
+   Gri aralık tutamaçları daha görünür, alarm aralığı süresi farklı renk.
+================================ */
+
+.v512-time {
+    grid-template-columns: 46px minmax(190px, 1fr) 46px !important;
+    gap: 8px !important;
+}
+
+.v512-time b {
+    color: #d4d4d8 !important;
+    font-size: .68rem !important;
+}
+
+.v512-time strong,
+#v512-range-label {
+    color: #38bdf8 !important;
+    font-size: .74rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .1px !important;
+    text-shadow: none !important;
+}
+
+.v512-time > span {
+    color: #fdba74 !important;
+    font-size: .74rem !important;
+}
+
+.v512-handle,
+.v512-handle.start,
+.v512-handle.end {
+    width: 15px !important;
+    height: 36px !important;
+    top: 16px !important;
+    border-radius: 6px !important;
+    background: #3f3f46 !important;
+    border: 2px solid #a1a1aa !important;
+    color: #f8fafc !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.55), 0 0 10px rgba(255,255,255,.10) !important;
+    opacity: 1 !important;
+}
+
+.v512-handle:hover,
+.v512-handle:active {
+    background: #52525b !important;
+    border-color: #d4d4d8 !important;
+}
+
+.v512-fill {
+    background: rgba(249,115,22,.42) !important;
+    border: 1px solid rgba(249,115,22,.70) !important;
+}
+
+@media (max-width: 760px) {
+    .v512-time {
+        grid-template-columns: 42px minmax(165px, 1fr) 42px !important;
+    }
+    .v512-time b {
+        font-size: .63rem !important;
+    }
+    .v512-time strong,
+    #v512-range-label {
+        font-size: .68rem !important;
+    }
+}
+
