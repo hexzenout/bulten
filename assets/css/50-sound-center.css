@@ -1034,3 +1034,75 @@
     text-overflow: ellipsis !important;
 }
 
+
+/* ===============================
+   V524 SOUND RANGE HANDLE + PROGRESS FINAL
+   İki gri tutamaç baş/sonda görünür.
+   Son tutamaçta çift taraflı ok kalır ama süreyi hareket ettirmez.
+   Dolum çubuğu bağımsız ileri/geri tıklanabilir.
+================================ */
+
+.v512-track {
+    width: calc(100% - 40px) !important;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+    overflow: visible !important;
+}
+
+.v512-fill {
+    height: 18px !important;
+    top: 25px !important;
+}
+
+.v512-handle,
+.v512-handle.start,
+.v512-handle.end {
+    width: 18px !important;
+    min-width: 18px !important;
+    height: 34px !important;
+    top: 17px !important;
+    border-radius: 7px !important;
+    background: #3f3f46 !important;
+    border: 2px solid #d4d4d8 !important;
+    color: #f8fafc !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    cursor: ew-resize !important;
+    opacity: 1 !important;
+    z-index: 12 !important;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.6), 0 0 10px rgba(255,255,255,.12) !important;
+}
+
+.v512-handle.end {
+    cursor: ew-resize !important;
+}
+
+#v512-progress {
+    left: 10px !important;
+    width: calc(100% - 20px) !important;
+    bottom: 4px !important;
+    height: 22px !important;
+    z-index: 11 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    accent-color: #f97316 !important;
+}
+
+#v512-progress::-webkit-slider-thumb {
+    cursor: pointer !important;
+}
+
+#v512-progress::-moz-range-thumb {
+    cursor: pointer !important;
+}
+
+.v512-wave {
+    pointer-events: auto !important;
+}
+
+.v512-time strong,
+#v512-range-label {
+    color: #38bdf8 !important;
+}
+
