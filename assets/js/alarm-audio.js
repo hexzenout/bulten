@@ -1,6 +1,6 @@
 // ===============================
-// V50.7 CLEAN SOUND ENGINE
-// Builtin sesler + özel ses yükleme/oynatma.
+// V512 CLEAN SOUND ENGINE
+// Builtin sesler + özel ses yükleme/oynatma + seçili aralık.
 // ===============================
 
 (function () {
@@ -22,8 +22,8 @@
   let audioCtx = null;
   let ringAudio = null;
   let ringTimers = [];
-  let objectUrls = new Map();
   let isRinging = false;
+  let objectUrls = new Map();
 
   function loadSettings() {
     try {
@@ -58,6 +58,24 @@
     if (audioCtx.state === "suspended") audioCtx.resume();
   }
 
+  function mimeFromName(name) {
+    const n = String(name || "").toLowerCase();
+    if (n.endsWith(".mp3")) return "audio/mpeg";
+    if (n.endsWith(".wav")) return "audio/wav";
+    if (n.endsWith(".ogg") || n.endsWith(".opus")) return "audio/ogg";
+    if (n.endsWith(".m4a")) return "audio/mp4";
+    if (n.endsWith(".aac")) return "audio/aac";
+    if (n.endsWith(".flac")) return "audio/flac";
+    if (n.endsWith(".webm")) return "audio/webm";
+    return "audio/*";
+  }
+
+  function isAcceptedAudioFile(file) {
+    if (!file) return false;
+    if (file.type && file.type.startsWith("audio/")) return true;
+    return /\.(mp3|wav|ogg|m4a|aac|flac|webm|opus)$/i.test(file.name || "");
+  }
+
   function openDb() {
     return new Promise((resolve, reject) => {
       const req = indexedDB.open(DB_NAME, 1);
@@ -67,6 +85,7 @@
       };
       req.onsuccess = () => resolve(req.result);
       req.onerror = () => reject(req.error);
+      req.onblocked = () => reject(new Error("IndexedDB blocked"));
     });
   }
 
@@ -102,6 +121,7 @@
       tx.objectStore(STORE).put(row);
       tx.oncomplete = resolve;
       tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error || new Error("IndexedDB transaction aborted"));
     });
     db.close();
   }
@@ -121,16 +141,20 @@
     }
   }
 
-  function isAcceptedAudioFile(file) {
-    if (!file) return false;
-    if (file.type && file.type.startsWith("audio/")) return true;
-    return /\.(mp3|wav|ogg|m4a|aac|flac|webm|opus)$/i.test(file.name || "");
-  }
-
   async function addCustomFile(file) {
     if (!isAcceptedAudioFile(file)) throw new Error("Geçerli ses dosyası seç.");
     const id = "aud_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-    const row = { id, name: file.name || "Özel Ses", type: file.type || "audio/*", size: file.size || 0, createdAt: Date.now(), blob: file };
+    const type = file.type && file.type.startsWith("audio/") ? file.type : mimeFromName(file.name);
+    const buf = await file.arrayBuffer();
+    const blob = new Blob([buf], { type });
+    const row = {
+      id,
+      name: file.name || "Özel Ses",
+      type,
+      size: file.size || blob.size || 0,
+      createdAt: Date.now(),
+      blob
+    };
     await dbPut(row);
     settings.sound = "custom";
     settings.enabled = true;
@@ -231,26 +255,39 @@
       playBuiltinLoop(durationMs);
       return;
     }
+
     const start = Math.max(0, Number(settings.customStart || 0));
     const end = Math.max(0, Number(settings.customEnd || 0));
+
     ringAudio = new Audio(src);
     ringAudio.volume = 1;
-    ringAudio.currentTime = start;
 
-    const stopFromAudio = () => { if (isRinging) stopAlarm(); };
+    ringAudio.onloadedmetadata = () => {
+      try {
+        const total = Math.max(0, Number(ringAudio.duration || 0));
+        ringAudio.currentTime = total ? Math.min(start, Math.max(0, total - 0.1)) : start;
+      } catch {}
+    };
+
+    const stopFromAudio = () => {
+      if (isRinging) stopAlarm();
+    };
+
     ringAudio.ontimeupdate = () => {
       if (!isRinging || !ringAudio) return;
       if (end > start && ringAudio.currentTime >= end) stopFromAudio();
     };
     ringAudio.onended = stopFromAudio;
     ringAudio.onerror = stopFromAudio;
+
     try {
       await ringAudio.play();
-    } catch {
+    } catch (err) {
       notify("Özel ses çalamadı. Dosyayı tekrar seçip OYNAT'a bas.");
       playBuiltinLoop(durationMs);
       return;
     }
+
     ringTimers.push(setTimeout(stopAlarm, durationMs));
   }
 
@@ -259,17 +296,22 @@
     settings.enabled = true;
     settings.volume = 1;
     saveSettings();
+
     stopAlarm();
     isRinging = true;
     document.body.classList.add("v28-alarm-ringing");
     window.dispatchEvent(new CustomEvent("v46b-audio-ringing", { detail: { ringing: true } }));
+
     const durationMs = Math.max(3, Number(settings.durationSec || 60)) * 1000;
+
     if (settings.sound === "custom") await playCustom(durationMs);
     else playBuiltinLoop(durationMs);
   }
 
   function boot() {
-    window.addEventListener("v26-alarm-fired", e => playAlarm(e.detail?.message || "Fiyat alarmı tetiklendi."));
+    window.addEventListener("v26-alarm-fired", e => {
+      playAlarm(e.detail?.message || "Fiyat alarmı tetiklendi.");
+    });
   }
 
   window.V26AlarmAudio = {
