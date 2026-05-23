@@ -515,3 +515,13 @@ body.omega-tab-basketbol #omega-rolling-block {
     overflow: hidden !important;
     pointer-events: none !important;
 }
+
+
+/* ===============================
+   V514 STREAM EMPTY FLASH FIX
+   F5 sırasında "Yayın ekranı hazırlanıyor..." yazısı görünmesin.
+================================ */
+#omega-stream-block .stream-master-grid.active:empty::before {
+    content: none !important;
+    display: none !important;
+}
