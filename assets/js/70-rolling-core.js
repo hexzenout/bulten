@@ -316,7 +316,7 @@
           <aside class="rolling-v48-rail v49-rolling-rail">
             <div class="rolling-v48-rail-toggle v49-rolling-rail-title"><i class="fa-solid fa-bars"></i><span>ROLLING MENÜSÜ</span></div>
             <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span><span class="rolling-v493-rail-label">BAHİS</span></button>
-            <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><span class="rolling-v493-rail-label">KRİPTO</span></button>
+            <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><i class="fa-brands fa-ethereum rolling-v518-ethereum-icon"></i></span><span class="rolling-v493-rail-label">KRİPTO</span></button>
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
         </div>
