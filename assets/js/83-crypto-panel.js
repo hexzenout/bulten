@@ -124,24 +124,29 @@
     if (!row?.blob) {
       v512Duration = 1;
       ["#v512-progress","#v512-start","#v512-end"].forEach(sel => { const el = qs(sel); if (el) el.max = 1; });
+      if (qs("#v512-start")) qs("#v512-start").value = 0;
       if (qs("#v512-end")) qs("#v512-end").value = 1;
+      if (qs("#v512-progress")) qs("#v512-progress").value = 0;
       v512Update(0);
       return;
     }
+
     const url = URL.createObjectURL(row.blob);
     const a = new Audio(url);
     a.preload = "metadata";
     a.onloadedmetadata = () => {
       const total = Math.max(1, Math.floor(a.duration || 1));
       v512Duration = total;
-      const st = v512Settings();
-      const start = Math.max(0, Math.min(total - 1, Number(st.customStart || 0)));
-      const rawEnd = Number(st.customEnd || 0);
-      const end = rawEnd > start ? Math.min(total, rawEnd) : total;
+
       ["#v512-progress","#v512-start","#v512-end"].forEach(sel => { const el = qs(sel); if (el) el.max = total; });
-      if (qs("#v512-start")) qs("#v512-start").value = Math.floor(start);
-      if (qs("#v512-end")) qs("#v512-end").value = Math.floor(end);
-      v512Update(start);
+
+      // V524: Sayfa açıldığında/F5 sonrası görsel tutamaçlar her zaman başta ve sonda dursun.
+      // Kayıtlı alarm aralığı localStorage'da kalır; sadece düzenleme ekranı temiz başlar.
+      if (qs("#v512-start")) qs("#v512-start").value = 0;
+      if (qs("#v512-end")) qs("#v512-end").value = total;
+      if (qs("#v512-progress")) qs("#v512-progress").value = 0;
+
+      v512Update(0);
       URL.revokeObjectURL(url);
     };
     a.onerror = () => URL.revokeObjectURL(url);
@@ -244,8 +249,9 @@
     const track = qs("#v512-track");
     const startInput = qs("#v512-start");
     const endInput = qs("#v512-end");
-    if (!track || !startInput || !endInput || track.dataset.bound === "v523") return;
-    track.dataset.bound = "v523";
+    const progress = qs("#v512-progress");
+    if (!track || !startInput || !endInput || track.dataset.bound === "v524") return;
+    track.dataset.bound = "v524";
 
     const secFromEvent = ev => {
       const rect = track.getBoundingClientRect();
@@ -254,18 +260,26 @@
       return Math.round(pct * Math.max(1, Number(startInput.max || endInput.max || v512Duration || 1)));
     };
 
-    let mode = null, offset = 0, didMove = false;
+    let mode = null, offset = 0;
 
     const choose = (sec, target) => {
       const { start, end } = v512Segment();
+
       if (target?.id === "v512-start-handle") return "start";
       if (target?.id === "v512-end-handle") return "end";
-      if (target?.id === "v512-fill" || (sec > start && sec < end)) { offset = sec - start; return "range"; }
-      return Math.abs(sec - start) <= Math.abs(sec - end) ? "start" : "end";
+
+      // Dolum çubuğu/progress bağımsız çalışsın: boş bara veya progress'e tıklayınca sadece süre ilerler.
+      if (target?.id === "v512-progress" || target === track || target?.id === "v512-wave") return "progress";
+
+      if (target?.id === "v512-fill" || (sec > start && sec < end)) {
+        offset = sec - start;
+        return "range";
+      }
+
+      return "progress";
     };
 
-    const apply = (sec, fromMove = true) => {
-      if (fromMove) didMove = true;
+    const apply = (sec) => {
       const { start, end, max } = v512Segment();
       const len = Math.max(1, end - start);
 
@@ -273,23 +287,26 @@
         startInput.value = Math.min(sec, end - 1);
         v512Seek(Number(startInput.value || 0));
       } else if (mode === "end") {
-        // V523: Son tutamaç pasif. Sadece bitiş aralığını ayarlar, süre/progress oraya zıplamaz.
+        // Son tutamaç sadece bitiş aralığını ayarlar; süre/progress oraya gitmez.
         endInput.value = Math.max(sec, start + 1);
         v512Update();
       } else if (mode === "range") {
+        // Seçili turuncu aralık sürüklenince progress başlangıçla beraber gelir.
         const ns = Math.max(0, Math.min(max - len, sec - offset));
         startInput.value = Math.floor(ns);
         endInput.value = Math.floor(ns + len);
         v512Seek(ns);
+      } else if (mode === "progress") {
+        // Dolum çubuğu tamamen bağımsız: ileri/geri tıklama ve sürükleme aktif.
+        v512Seek(sec);
       }
     };
 
     const down = ev => {
       ev.preventDefault();
-      didMove = false;
       const sec = secFromEvent(ev);
       mode = choose(sec, ev.target);
-      apply(sec, false);
+      apply(sec);
       document.addEventListener("mousemove", move);
       document.addEventListener("mouseup", up);
       document.addEventListener("touchmove", move, { passive: false });
@@ -298,7 +315,7 @@
 
     const move = ev => {
       ev.preventDefault();
-      if (mode) apply(secFromEvent(ev), true);
+      if (mode) apply(secFromEvent(ev));
     };
 
     const up = () => {
@@ -312,6 +329,10 @@
     track.addEventListener("mousedown", down);
     track.addEventListener("touchstart", down, { passive: false });
 
+    progress?.addEventListener("input", e => {
+      v512Seek(Number(e.target.value || 0));
+    });
+
     qs("#v512-start-handle")?.addEventListener("click", ev => {
       ev.preventDefault();
       ev.stopPropagation();
@@ -321,7 +342,7 @@
     });
 
     qs("#v512-end-handle")?.addEventListener("click", ev => {
-      // V523: bitiş tutamağı tıklamada/pasifte süreyi oynatmaz.
+      // Bitiş tutamağı tıklamada süreyi oynatmaz; yalnızca tutamaç olarak kalır.
       ev.preventDefault();
       ev.stopPropagation();
       v512Update();
@@ -346,7 +367,7 @@
           <div class="v512-select-row"><button type="button" id="v512-play-custom" class="v512-play"><i class="fa-solid fa-play"></i><i class="fa-solid fa-pause"></i></button><select id="v512-custom-select"><option value="">Özel ses seç...</option></select><button type="button" id="v512-remove" class="danger">KALDIR</button></div>
           <div class="v512-player">
             <div class="v512-time"><span id="v512-current">0:00</span><b>Alarm Aralığı: <strong id="v512-range-label">0:00 - 0:00</strong></b><span id="v512-total">0:00</span></div>
-            <div class="v512-track" id="v512-track"><div class="v512-wave"></div><div class="v512-fill" id="v512-fill"></div><button type="button" class="v512-handle start" id="v512-start-handle">[</button><button type="button" class="v512-handle end" id="v512-end-handle">]</button><input id="v512-progress" type="range" min="0" max="1" step="1" value="0"><input id="v512-start" type="range" min="0" max="1" step="1" value="0" hidden><input id="v512-end" type="range" min="0" max="1" step="1" value="1" hidden></div>
+            <div class="v512-track" id="v512-track"><div class="v512-wave"></div><div class="v512-fill" id="v512-fill"></div><button type="button" class="v512-handle start" id="v512-start-handle">⇔</button><button type="button" class="v512-handle end" id="v512-end-handle">⇔</button><input id="v512-progress" type="range" min="0" max="1" step="1" value="0"><input id="v512-start" type="range" min="0" max="1" step="1" value="0" hidden><input id="v512-end" type="range" min="0" max="1" step="1" value="1" hidden></div>
             <button type="button" id="v512-apply">BU ARALIĞI ALARM YAP</button>
           </div>
           <div class="v512-file-row"><button type="button" id="v512-file-pick">DOSYA SEÇ</button><span id="v512-file-note">Dosya seçilmedi</span><input id="v512-file-input" type="file" accept="audio/*,.mp3,.mpeg,.wav,.ogg,.oga,.m4a,.aac,.flac,.webm,.opus,.mp4" hidden></div>
@@ -397,9 +418,7 @@
       renderSoundRootV512(true);
     };
     qs("#v512-progress").addEventListener("input", e => {
-      const sec = Number(e.target.value || 0);
-      if (v512PreviewAudio) v512PreviewAudio.currentTime = sec;
-      v512Update(sec);
+      v512Seek(Number(e.target.value || 0));
     });
     qs("#v512-apply").onclick = () => {
       const { start, end } = v512Segment();
