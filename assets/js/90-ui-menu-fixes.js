@@ -12,6 +12,7 @@
     stream: { id: "nav-stream", label: "CANLI YAYIN", color: "#3b82f6", cls: "v508-title-stream" },
     favs: { id: "nav-favs", label: "FAVORİLERİM", color: "#ef4444", cls: "v508-title-favs" },
     live: { id: "nav-live", label: "CANLI TAKİP", color: "#3b82f6", cls: "v508-title-live" },
+    odds: { id: "nav-odds", label: "ORAN TERMİNALİ", color: "#a855f7", cls: "v508-title-odds" },
     crypto: { id: "nav-crypto", label: "KRİPTO TERMİNAL", color: "#f97316", cls: "v508-title-crypto" },
     finance: { id: "nav-finance", label: "KASA YÖNETİMİ", color: "#10b981", cls: "v508-title-finance" },
     home: { id: "nav-home", label: "", color: "#fbbf24", cls: "v508-title-home" }
@@ -27,6 +28,7 @@
     if (raw.startsWith("futbol")) return "futbol";
     if (raw.startsWith("favs") || raw.startsWith("favori")) return "favs";
     if (raw.startsWith("live")) return "live";
+    if (raw.startsWith("odds")) return "odds";
     if (raw.startsWith("crypto")) return "crypto";
     if (raw.startsWith("finance")) return "finance";
     const active = document.querySelector("#main-dropdown-nav .nav-link.active");
