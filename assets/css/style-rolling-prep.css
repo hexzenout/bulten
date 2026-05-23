@@ -10,7 +10,8 @@
 .crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount,
 .crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v32-sound-card,
 .crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v499f-sound-card,
-.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v507-sound-card {
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v507-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v512-sound-card {
     display: grid !important;
     visibility: visible !important;
     opacity: 1 !important;
