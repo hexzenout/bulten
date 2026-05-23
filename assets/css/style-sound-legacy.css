@@ -289,3 +289,323 @@
         min-width: 0 !important;
     }
 }
+
+
+/* ===============================
+   V512 SOUND CENTER FINAL FIX
+   Tek kaynak: v28-crypto-panel.js / renderSoundRootV512
+================================ */
+
+#v28-sound-mount {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.v512-sound-card {
+    display: grid !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    padding: 16px !important;
+    border: 1px solid #262626 !important;
+    border-radius: 18px !important;
+    background: #090909 !important;
+}
+
+.v512-sound-head b {
+    color: #f97316 !important;
+    font-size: 1.05rem !important;
+    font-weight: 950 !important;
+}
+
+.v512-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+}
+
+.v512-actions button,
+.v512-file-row button,
+.v512-select-row button {
+    min-height: 44px !important;
+    border-radius: 12px !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+#v512-sound-test {
+    background: #10b981 !important;
+    border: 1px solid #10b981 !important;
+    color: #04120d !important;
+}
+
+#v512-sound-stop,
+#v512-remove {
+    background: rgba(239,68,68,.18) !important;
+    border: 1px solid rgba(239,68,68,.55) !important;
+    color: #fecaca !important;
+}
+
+#v512-sound-stop:hover,
+#v512-remove:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+.v512-actions .testing {
+    background: #fbbf24 !important;
+    border-color: #fbbf24 !important;
+    color: #1a1200 !important;
+}
+
+.v512-field {
+    display: grid !important;
+    gap: 8px !important;
+}
+
+.v512-field label {
+    color: #aaa !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .6px !important;
+}
+
+.v512-field select,
+.v512-select-row select {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    border: 1px solid #333 !important;
+    border-radius: 12px !important;
+    background: #050505 !important;
+    color: #fff !important;
+    padding: 0 12px !important;
+    font-weight: 950 !important;
+    box-sizing: border-box !important;
+}
+
+.v512-custom {
+    display: none !important;
+    gap: 14px !important;
+    padding: 14px !important;
+    border: 1px solid #2b2b2b !important;
+    border-radius: 16px !important;
+    background: #070707 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.v512-custom.show {
+    display: grid !important;
+}
+
+.v512-library-title {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    color: #f97316 !important;
+    font-weight: 950 !important;
+}
+
+.v512-select-row {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 92px !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.v512-play {
+    width: 46px !important;
+    min-width: 46px !important;
+    height: 44px !important;
+    border: 1px solid rgba(249,115,22,.55) !important;
+    border-radius: 13px !important;
+    background: rgba(249,115,22,.16) !important;
+    color: #f97316 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.v512-play .fa-pause {
+    display: none !important;
+}
+
+.v512-play.playing .fa-play {
+    display: none !important;
+}
+
+.v512-play.playing .fa-pause {
+    display: inline-block !important;
+}
+
+.v512-play.playing {
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+    background: rgba(16,185,129,.18) !important;
+}
+
+.v512-player {
+    display: grid !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 14px !important;
+    border: 1px solid rgba(249,115,22,.34) !important;
+    border-radius: 18px !important;
+    background: linear-gradient(180deg, rgba(249,115,22,.08), rgba(0,0,0,.05)), #070707 !important;
+    box-sizing: border-box !important;
+}
+
+.v512-time {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) 46px !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.v512-time span,
+.v512-time strong {
+    color: #fbbf24 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+}
+
+.v512-time b {
+    color: #bdbdbd !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v512-track {
+    position: relative !important;
+    height: 78px !important;
+    border-radius: 18px !important;
+    background: #111 !important;
+    border: 1px solid #2d2d2d !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    padding: 0 12px !important;
+    cursor: crosshair !important;
+    touch-action: none !important;
+    user-select: none !important;
+}
+
+.v512-wave {
+    position: absolute !important;
+    inset: 18px 14px 24px 14px !important;
+    border-radius: 12px !important;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 2px, transparent 2px 10px),
+      linear-gradient(180deg, transparent 0 15%, rgba(16,185,129,.35) 15% 45%, rgba(249,115,22,.45) 45% 72%, transparent 72% 100%) !important;
+}
+
+.v512-fill {
+    position: absolute !important;
+    top: 20px !important;
+    height: 30px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, rgba(16,185,129,.60), rgba(249,115,22,.70)) !important;
+    box-shadow: 0 0 0 1px rgba(249,115,22,.28), 0 0 18px rgba(249,115,22,.18) !important;
+    pointer-events: auto !important;
+    cursor: grab !important;
+    z-index: 2 !important;
+}
+
+.v512-fill:active {
+    cursor: grabbing !important;
+}
+
+.v512-handle {
+    position: absolute !important;
+    top: 15px !important;
+    width: 26px !important;
+    height: 40px !important;
+    transform: translateX(-50%) !important;
+    border: 1px solid rgba(255,255,255,.25) !important;
+    border-radius: 10px !important;
+    background: #f97316 !important;
+    color: #050505 !important;
+    font-weight: 950 !important;
+    font-size: 1.08rem !important;
+    display: grid !important;
+    place-items: center !important;
+    z-index: 4 !important;
+    cursor: ew-resize !important;
+    padding: 0 !important;
+}
+
+.v512-handle.start {
+    background: #10b981 !important;
+}
+
+#v512-progress {
+    position: absolute !important;
+    left: 12px !important;
+    width: calc(100% - 24px) !important;
+    bottom: 8px !important;
+    z-index: 5 !important;
+    accent-color: #f97316 !important;
+}
+
+#v512-start,
+#v512-end {
+    display: none !important;
+}
+
+#v512-apply {
+    min-height: 42px !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 13px !important;
+    background: #10b981 !important;
+    color: #04120d !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+.v512-file-row {
+    display: grid !important;
+    grid-template-columns: 126px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+#v512-file-pick {
+    background: rgba(249,115,22,.18) !important;
+    border: 1px solid rgba(249,115,22,.55) !important;
+    color: #fed7aa !important;
+}
+
+.v512-file-row span {
+    min-width: 0 !important;
+    color: #aaa !important;
+    font-size: .78rem !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+@media (max-width: 900px) {
+    .v512-select-row,
+    .v512-file-row,
+    .v512-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v512-play,
+    #v512-remove {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
