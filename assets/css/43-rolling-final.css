@@ -923,3 +923,57 @@
 .v515-history-row:hover {
     filter: brightness(1.12) !important;
 }
+
+
+/* ===============================
+   V518 ROLLING RAIL CRYPTO ICON ALIGNMENT
+   Kripto menüsünde Bitcoin + Ethereum ikonları bahis ikonlarıyla aynı genişlikte/hizada.
+================================ */
+
+.rolling-v48-rail-tab.crypto {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+}
+
+.rolling-v518-crypto-icons {
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 0 0 34px !important;
+}
+
+.rolling-v518-crypto-icons i {
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 0 0 auto !important;
+    font-size: .96rem !important;
+    line-height: 1 !important;
+}
+
+.rolling-v518-crypto-icons .rolling-v493-crypto-icon {
+    color: #f97316 !important;
+}
+
+.rolling-v518-crypto-icons .rolling-v518-ethereum-icon {
+    color: #60a5fa !important;
+}
+
+.rolling-v48-rail-tab.crypto .rolling-v493-rail-label {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    min-width: 70px !important;
+    text-align: left !important;
+}
+
+.rolling-v48-rail-tab.crypto > i.rolling-v493-crypto-icon {
+    display: none !important;
+}
+
