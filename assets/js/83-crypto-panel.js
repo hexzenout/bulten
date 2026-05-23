@@ -147,6 +147,12 @@
     a.onerror = () => URL.revokeObjectURL(url);
   }
 
+  function v523CleanAudioName(name) {
+    return String(name || "Özel Ses")
+      .replace(/\.(mp3|mpeg|wav|ogg|oga|m4a|aac|flac|webm|opus|mp4)$/i, "")
+      .trim() || "Özel Ses";
+  }
+
   async function v512RenderLibrary() {
     const select = qs("#v512-custom-select");
     if (!select) return;
@@ -154,15 +160,15 @@
     const files = await v512Rows();
     select.innerHTML = `<option value="">Özel ses seç...</option>` + files.map(file => {
       const active = file.id === s.selectedCustomId;
-      const size = file.size ? (file.size / 1024 / 1024).toFixed(2) + " MB" : "";
-      return `<option value="${file.id}" ${active ? "selected" : ""}>${active ? "✓ " : ""}${file.name}${size ? " · " + size : ""}</option>`;
+      const label = v523CleanAudioName(file.name);
+      return `<option value="${file.id}" ${active ? "selected" : ""}>${active ? "✓ " : ""}${label}</option>`;
     }).join("");
     const current = files.find(f => f.id === s.selectedCustomId);
     if (current) select.value = current.id;
     select.title = current ? current.name : "Özel ses seç";
     const note = qs("#v512-file-note");
     if (note) {
-      const text = current ? "Aktif: " + current.name : "Dosya seçilmedi";
+      const text = current ? "Aktif: " + v523CleanAudioName(current.name) : "Dosya seçilmedi";
       note.textContent = text;
       note.title = text;
     }
@@ -238,8 +244,8 @@
     const track = qs("#v512-track");
     const startInput = qs("#v512-start");
     const endInput = qs("#v512-end");
-    if (!track || !startInput || !endInput || track.dataset.bound === "v522") return;
-    track.dataset.bound = "v522";
+    if (!track || !startInput || !endInput || track.dataset.bound === "v523") return;
+    track.dataset.bound = "v523";
 
     const secFromEvent = ev => {
       const rect = track.getBoundingClientRect();
@@ -248,7 +254,8 @@
       return Math.round(pct * Math.max(1, Number(startInput.max || endInput.max || v512Duration || 1)));
     };
 
-    let mode = null, offset = 0, dragged = false;
+    let mode = null, offset = 0, didMove = false;
+
     const choose = (sec, target) => {
       const { start, end } = v512Segment();
       if (target?.id === "v512-start-handle") return "start";
@@ -257,34 +264,32 @@
       return Math.abs(sec - start) <= Math.abs(sec - end) ? "start" : "end";
     };
 
-    const apply = sec => {
-      dragged = true;
+    const apply = (sec, fromMove = true) => {
+      if (fromMove) didMove = true;
       const { start, end, max } = v512Segment();
       const len = Math.max(1, end - start);
-      let seekTo = sec;
 
       if (mode === "start") {
         startInput.value = Math.min(sec, end - 1);
-        seekTo = Number(startInput.value || 0);
+        v512Seek(Number(startInput.value || 0));
       } else if (mode === "end") {
+        // V523: Son tutamaç pasif. Sadece bitiş aralığını ayarlar, süre/progress oraya zıplamaz.
         endInput.value = Math.max(sec, start + 1);
-        seekTo = Number(endInput.value || 0);
+        v512Update();
       } else if (mode === "range") {
         const ns = Math.max(0, Math.min(max - len, sec - offset));
         startInput.value = Math.floor(ns);
         endInput.value = Math.floor(ns + len);
-        seekTo = ns;
+        v512Seek(ns);
       }
-
-      v512Seek(seekTo);
     };
 
     const down = ev => {
       ev.preventDefault();
-      dragged = false;
+      didMove = false;
       const sec = secFromEvent(ev);
       mode = choose(sec, ev.target);
-      apply(sec);
+      apply(sec, false);
       document.addEventListener("mousemove", move);
       document.addEventListener("mouseup", up);
       document.addEventListener("touchmove", move, { passive: false });
@@ -293,21 +298,15 @@
 
     const move = ev => {
       ev.preventDefault();
-      if (mode) apply(secFromEvent(ev));
+      if (mode) apply(secFromEvent(ev), true);
     };
 
-    const up = ev => {
-      const lastMode = mode;
+    const up = () => {
       mode = null;
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
       document.removeEventListener("touchmove", move);
       document.removeEventListener("touchend", up);
-
-      // Başlangıç tutamağına tıklayınca müzik başlangıç saniyesinden başlasın.
-      if (lastMode === "start" && !dragged) {
-        v512Seek(Number(startInput.value || 0));
-      }
     };
 
     track.addEventListener("mousedown", down);
@@ -316,14 +315,16 @@
     qs("#v512-start-handle")?.addEventListener("click", ev => {
       ev.preventDefault();
       ev.stopPropagation();
-      v512Seek(Number(startInput.value || 0));
+      const start = Number(startInput.value || 0);
+      v512Seek(start);
       if (!v512PreviewAudio) v512PlayCustom();
     });
 
     qs("#v512-end-handle")?.addEventListener("click", ev => {
+      // V523: bitiş tutamağı tıklamada/pasifte süreyi oynatmaz.
       ev.preventDefault();
       ev.stopPropagation();
-      v512Seek(Number(endInput.value || 0));
+      v512Update();
     });
   }
 
@@ -362,7 +363,7 @@
       const file = e.target.files?.[0];
       if (!file) return;
       const note = qs("#v512-file-note");
-      if (note) { note.textContent = "Yükleniyor: " + file.name; note.title = file.name; }
+      if (note) { note.textContent = "Yükleniyor: " + v523CleanAudioName(file.name); note.title = v523CleanAudioName(file.name); }
       try {
         if (!window.V26AlarmAudio?.addCustomFile) throw new Error("Ses motoru hazır değil.");
         const row = await window.V26AlarmAudio.addCustomFile(file);
@@ -371,7 +372,7 @@
         await v512RenderLibrary();
         if (qs("#v512-custom-select") && row?.id) qs("#v512-custom-select").value = row.id;
         await v512LoadMeta();
-        if (note) { note.textContent = "Aktif: " + (row?.name || file.name); note.title = row?.name || file.name; }
+        if (note) { note.textContent = "Aktif: " + v523CleanAudioName(row?.name || file.name); note.title = v523CleanAudioName(row?.name || file.name); }
       } catch (err) {
         console.warn("V512 sound upload error", err);
         if (note) note.textContent = "Dosya yüklenemedi.";
