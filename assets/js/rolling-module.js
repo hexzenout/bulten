@@ -229,7 +229,8 @@
   }
   function renderRowControls(mode, state) {
     const count = Number(state.rowCounts?.[mode] || 5);
-    return `<div class="rolling-v48-row-controls"><span>${count} alan</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button></div>`;
+    const label = mode === "crypto" ? "Kripto" : "Bahis";
+    return `<div class="rolling-v48-row-controls v514-row-controls"><span>${count} ${label}</span><button type="button" class="v512-history-btn ${mode} v514-history-inline" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> GEÇMİŞ</button><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button></div>`;
   }
   function escapeHtml(str) {
     return String(str || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
@@ -260,7 +261,7 @@
       <section class="rolling-v47-card ${mode} v49-mode-card">
         <div class="rolling-v47-head">
           <div>
-            <h3 class="${isCrypto ? "rolling-v493-title crypto" : "rolling-v493-title bet"}">${isCrypto ? '<i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} <span>${isCrypto ? "KRİPTO" : "BAHİS"}</span><button type="button" class="v512-history-btn ${mode}" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> GEÇMİŞ</button></h3>
+            <h3 class="${isCrypto ? "rolling-v493-title crypto" : "rolling-v493-title bet"}">${isCrypto ? '<i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} <span>${isCrypto ? "KRİPTO" : "BAHİS"}</span></h3>
           </div>
           <div class="rolling-v47-mini">
             <span>${sum.settled} kapalı · Rolling ${money(rollSum.pnlTotal)}</span>
