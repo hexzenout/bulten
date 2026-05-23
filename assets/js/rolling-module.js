@@ -8,6 +8,9 @@
   const ROLLING_KEY = "v19_rolling";
   const PAGE_MODE_KEY = "v48_rolling_page_mode";
   const RAIL_KEY = "v48_rolling_rail_collapsed";
+  const HISTORY_KEY = "v512_rolling_history_v1";
+  let HISTORY_OPEN_MODE = null;
+  let HISTORY_FILTER = "today";
 
   const DEFAULT_STATE = {
     bank: 1000,
@@ -20,6 +23,118 @@
     const n = Number(v || 0);
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
+  function loadHistory() {
+    try {
+      const h = JSON.parse(localStorage.getItem(HISTORY_KEY) || "{}");
+      return {
+        bet: Array.isArray(h.bet) ? h.bet : [],
+        crypto: Array.isArray(h.crypto) ? h.crypto : []
+      };
+    } catch {
+      return { bet: [], crypto: [] };
+    }
+  }
+  function saveHistory(h) {
+    const twoYearsAgo = Date.now() - 730 * 24 * 60 * 60 * 1000;
+    h.bet = (h.bet || []).filter(x => Number(x.ts || 0) >= twoYearsAgo).slice(0, 1200);
+    h.crypto = (h.crypto || []).filter(x => Number(x.ts || 0) >= twoYearsAgo).slice(0, 1200);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+  }
+  function addHistoryRecord(mode, slot, index) {
+    if (!slot || (slot.status !== "win" && slot.status !== "loss")) return;
+    const h = loadHistory();
+    const now = Date.now();
+    const rec = {
+      id: "rh_" + now + "_" + Math.random().toString(36).slice(2),
+      mode,
+      ts: now,
+      row: index + 1,
+      name: String(slot.name || "").trim() || (mode === "crypto" ? "Kripto işlem" : "Bahis / maç"),
+      stake: Number(slot.stake || 0),
+      odds: Number(slot.odds || 0),
+      status: slot.status,
+      pnl: Number(slot.pnl || 0)
+    };
+    h[mode].unshift(rec);
+    saveHistory(h);
+    slot.historyId = rec.id;
+    slot.historyStatus = slot.status;
+  }
+  function historyFilterLabel(filter) {
+    return ({ today: "Bugün", yesterday: "Dün", week: "Bu Hafta", month: "Bu Ay", year: "Bu Yıl", twoYears: "Son 2 Yıl", all: "Tümü" })[filter] || "Bugün";
+  }
+  function filterHistoryRows(rows, filter) {
+    const now = new Date();
+    const start = new Date(now);
+    start.setHours(0,0,0,0);
+    const tsStart = start.getTime();
+    if (filter === "today") return rows.filter(r => r.ts >= tsStart);
+    if (filter === "yesterday") {
+      const y0 = tsStart - 86400000;
+      return rows.filter(r => r.ts >= y0 && r.ts < tsStart);
+    }
+    if (filter === "week") {
+      const d = new Date(start);
+      const day = (d.getDay() + 6) % 7;
+      d.setDate(d.getDate() - day);
+      return rows.filter(r => r.ts >= d.getTime());
+    }
+    if (filter === "month") {
+      const d = new Date(start.getFullYear(), start.getMonth(), 1);
+      return rows.filter(r => r.ts >= d.getTime());
+    }
+    if (filter === "year") {
+      const d = new Date(start.getFullYear(), 0, 1);
+      return rows.filter(r => r.ts >= d.getTime());
+    }
+    if (filter === "twoYears") return rows.filter(r => r.ts >= Date.now() - 730 * 86400000);
+    return rows;
+  }
+  function formatDateTime(ts) {
+    try {
+      return new Date(Number(ts || Date.now())).toLocaleString("tr-TR", { dateStyle: "short", timeStyle: "short" });
+    } catch { return "-"; }
+  }
+  function renderHistoryModal() {
+    if (!HISTORY_OPEN_MODE) return "";
+    const mode = HISTORY_OPEN_MODE === "crypto" ? "crypto" : "bet";
+    const isCrypto = mode === "crypto";
+    const all = loadHistory()[mode] || [];
+    const rows = filterHistoryRows(all, HISTORY_FILTER);
+    const pnl = rows.reduce((s, r) => s + Number(r.pnl || 0), 0);
+    const wins = rows.filter(r => r.status === "win").length;
+    const losses = rows.filter(r => r.status === "loss").length;
+    const filters = ["today","yesterday","week","month","year","twoYears","all"].map(f => `<button type="button" class="${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${historyFilterLabel(f)}</button>`).join("");
+    const body = rows.length ? rows.map(r => `
+      <tr>
+        <td>${escapeHtml(formatDateTime(r.ts))}</td>
+        <td>${escapeHtml(r.name)}</td>
+        <td>${money(r.stake)}</td>
+        <td>${isCrypto ? escapeHtml(String(r.odds || 0)) + "%" : escapeHtml(String(r.odds || 0))}</td>
+        <td><span class="v512-history-status ${r.status}">${r.status === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</span></td>
+        <td class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${money(r.pnl)}</td>
+      </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede geçmiş kaydı yok.</td></tr>`;
+    return `
+      <div class="v512-history-overlay">
+        <div class="v512-history-modal ${mode}">
+          <div class="v512-history-head">
+            <div>
+              <b>${isCrypto ? "KRİPTO İŞLEM GEÇMİŞİ" : "BAHİS GEÇMİŞİ"}</b>
+              <span>${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · ${wins} kazanç / ${losses} kayıp · P/L ${money(pnl)}</span>
+            </div>
+            <button type="button" data-history-close>×</button>
+          </div>
+          <div class="v512-history-filters">${filters}</div>
+          <div class="v512-history-table-wrap">
+            <table class="v512-history-table">
+              <thead><tr><th>Tarih / Saat</th><th>${isCrypto ? "İşlem" : "Maç / Not"}</th><th>Tutar</th><th>${isCrypto ? "Kâr %" : "Oran"}</th><th>Sonuç</th><th>P/L</th></tr></thead>
+              <tbody>${body}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>`;
+  }
+
   function createSlot(type = "bet", i = 0) {
     return { id: i + 1, type, name: "", stake: "", odds: type === "bet" ? "1.30" : "2", status: "pending", pnl: 0 };
   }
@@ -145,7 +260,7 @@
       <section class="rolling-v47-card ${mode} v49-mode-card">
         <div class="rolling-v47-head">
           <div>
-            <h3 class="${isCrypto ? "rolling-v493-title crypto" : "rolling-v493-title bet"}">${isCrypto ? '<i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} <span>${isCrypto ? "KRİPTO" : "BAHİS"}</span></h3>
+            <h3 class="${isCrypto ? "rolling-v493-title crypto" : "rolling-v493-title bet"}">${isCrypto ? '<i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} <span>${isCrypto ? "KRİPTO" : "BAHİS"}</span><button type="button" class="v512-history-btn ${mode}" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> GEÇMİŞ</button></h3>
           </div>
           <div class="rolling-v47-mini">
             <span>${sum.settled} kapalı · Rolling ${money(rollSum.pnlTotal)}</span>
@@ -204,6 +319,7 @@
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
         </div>
+        ${renderHistoryModal()}
       </div>`;
     bindEvents(mount, state);
   }
@@ -249,11 +365,32 @@
       });
       input.addEventListener("change", () => renderModule());
     });
+    mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
+      HISTORY_OPEN_MODE = btn.dataset.historyOpen === "crypto" ? "crypto" : "bet";
+      HISTORY_FILTER = "today";
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-history-close]").forEach(btn => btn.addEventListener("click", () => {
+      HISTORY_OPEN_MODE = null;
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-history-filter]").forEach(btn => btn.addEventListener("click", () => {
+      HISTORY_FILTER = btn.dataset.historyFilter || "today";
+      renderModule();
+    }));
     mount.querySelectorAll("button[data-status]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.mode, i = Number(btn.dataset.slot);
       const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
       if (!list[i]) list[i] = createSlot(mode, i);
-      list[i].type = mode; list[i].status = btn.dataset.status; recalcSlot(list[i]); saveState(state); renderModule();
+      const prevStatus = list[i].status;
+      list[i].type = mode;
+      list[i].status = btn.dataset.status;
+      recalcSlot(list[i]);
+      if ((list[i].status === "win" || list[i].status === "loss") && (prevStatus !== list[i].status || list[i].historyStatus !== list[i].status)) {
+        addHistoryRecord(mode, list[i], i);
+      }
+      saveState(state);
+      renderModule();
     }));
     mount.querySelectorAll("button[data-clear]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.clear;
