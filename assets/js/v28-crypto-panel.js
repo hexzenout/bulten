@@ -278,11 +278,11 @@
     const s = v512Settings();
     const soundType = s.sound || "digital";
     const isCustom = soundType === "custom";
-    if (!force && mount.dataset.ready === "v512" && mount.querySelector(".v512-sound-card")) return;
-    mount.dataset.ready = "v512";
+    if (!force && (mount.dataset.ready === "v512" || mount.dataset.ready === "v514") && mount.querySelector(".v512-sound-card")) return;
+    mount.dataset.ready = "v514";
     mount.innerHTML = `
-      <div class="v512-sound-card">
-        <div class="v512-sound-head"><b>Alarm Ses Merkezi</b></div>
+      <div class="v512-sound-card v514-sound-card">
+        <div class="v512-sound-head"><b>Alarm Ses Merkezi</b><span class="v514-sound-note">Maksimum ses · Özel dosya · Aralık alarmı</span></div>
         <div class="v512-actions"><button id="v512-sound-test" type="button">OYNAT</button><button id="v512-sound-stop" type="button" class="danger">DURDUR</button></div>
         <div class="v512-field"><label>Ses Tipi</label><select id="v512-sound-type"><option value="custom">Özel Ses</option><option value="digital">Dijital Uyarı</option><option value="bip">Standart Bip</option><option value="chime">Yumuşak Chime</option><option value="siren">Siren</option><option value="silent">Sessiz</option></select></div>
         <div class="v512-custom ${isCustom ? "show" : ""}" id="v512-custom-panel">
@@ -293,7 +293,7 @@
             <div class="v512-track" id="v512-track"><div class="v512-wave"></div><div class="v512-fill" id="v512-fill"></div><button type="button" class="v512-handle start" id="v512-start-handle">[</button><button type="button" class="v512-handle end" id="v512-end-handle">]</button><input id="v512-progress" type="range" min="0" max="1" step="1" value="0"><input id="v512-start" type="range" min="0" max="1" step="1" value="0" hidden><input id="v512-end" type="range" min="0" max="1" step="1" value="1" hidden></div>
             <button type="button" id="v512-apply">BU ARALIĞI ALARM YAP</button>
           </div>
-          <div class="v512-file-row"><button type="button" id="v512-file-pick">DOSYA SEÇ</button><span id="v512-file-note">Dosya seçilmedi</span><input id="v512-file-input" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.webm,.opus" hidden></div>
+          <div class="v512-file-row"><button type="button" id="v512-file-pick">DOSYA SEÇ</button><span id="v512-file-note">Dosya seçilmedi</span><input id="v512-file-input" type="file" accept="audio/*,.mp3,.mpeg,.wav,.ogg,.oga,.m4a,.aac,.flac,.webm,.opus,.mp4" hidden></div><div class="v514-sound-status">Desteklenen dosyalar: MP3, WAV, OGG, M4A, AAC, FLAC, WEBM. Aralığı seçip “BU ARALIĞI ALARM YAP” ile kaydedebilirsin.</div>
         </div>
       </div>
     `;
@@ -520,13 +520,19 @@
     patchHashBoot();
 
     setInterval(() => {
-      bindTabs();
+      // V514: bindTabs/renderSoundRoot'u her saniye çalıştırmak select/dropdown kapanmasına
+      // ve timeline/süre yanıp sönmesine sebep oluyordu. Sadece eksikse yeniden bas.
       bindSettings();
       robustTimeframeBinding();
       syncHeaderClones();
       hardCleanup();
-      if ((panelFromHash() || localStorage.getItem("v28_crypto_panel") || "graph") === "sound") renderSoundRootV512();
-    }, 1000);
+
+      const activePanel = panelFromHash() || localStorage.getItem("v28_crypto_panel") || "graph";
+      if (activePanel === "sound") {
+        const mount = qs("#v28-sound-mount");
+        if (mount && !mount.querySelector(".v512-sound-card")) renderSoundRootV512(true);
+      }
+    }, 2500);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
