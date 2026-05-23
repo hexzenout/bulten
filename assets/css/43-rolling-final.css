@@ -847,3 +847,79 @@
     background: rgba(96,165,250,.13) !important;
     color: #bfdbfe !important;
 }
+
+
+/* ===============================
+   V515 ROLLING ROW HISTORY + CRYPTO TITLE SPACING
+================================ */
+
+/* Üst KRİPTO/BAHİS başlığında ikon ile yazı arasındaki gereksiz boşluğu kapat. */
+.rolling-v47-head h3,
+.rolling-v493-title,
+.rolling-v493-title.crypto,
+.rolling-v493-title.bet {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 7px !important;
+    white-space: nowrap !important;
+}
+
+.rolling-v493-title.crypto i,
+.rolling-v493-title.bet i,
+.rolling-v493-title .rolling-v493-crypto-icon,
+.rolling-v493-title .rolling-v491-bet-icons {
+    margin-right: 0 !important;
+    flex: 0 0 auto !important;
+}
+
+.rolling-v493-title.crypto span,
+.rolling-v493-title.bet span {
+    margin-left: 0 !important;
+}
+
+/* V514'te yanlışlıkla sayaç alanına alınan geçmiş butonu orada görünmesin. */
+.v514-row-controls .v512-history-btn,
+.rolling-v48-row-controls .v512-history-btn:not(.v515-history-row) {
+    display: none !important;
+}
+
+/* Geçmiş butonu sadece ilk satırdaki Bahis/Kripto rozetinin sağında görünür. */
+.v515-type-history-cell {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: max-content !important;
+}
+
+.v515-type-history-cell .rolling-v47-type {
+    margin: 0 !important;
+}
+
+.v515-history-row {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-height: 27px !important;
+    padding: 0 9px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(126,34,206,.48) !important;
+    background: rgba(126,34,206,.15) !important;
+    color: #d8b4fe !important;
+    font-size: .64rem !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+.v515-history-row.crypto {
+    border-color: rgba(96,165,250,.45) !important;
+    background: rgba(96,165,250,.13) !important;
+    color: #bfdbfe !important;
+}
+
+.v515-history-row:hover {
+    filter: brightness(1.12) !important;
+}
