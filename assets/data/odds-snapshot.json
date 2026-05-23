@@ -1,0 +1,272 @@
+{
+  "version": "v528-demo",
+  "generatedAt": "2026-05-24T00:00:00+03:00",
+  "mode": "demo",
+  "warning": "Bu dosya V528 panelini çalıştıran demo veridir. Gerçek oran akışı sonraki backend/veri motoru aşamasında bu şemaya beslenecek.",
+  "records": [
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "match_winner",
+      "marketLabel": "Maç Sonucu",
+      "line": null,
+      "outcome": "1",
+      "bookmaker": "betsmove",
+      "opening": 2.18,
+      "history": [
+        2.15,
+        2.12,
+        2.1,
+        2.08
+      ],
+      "current": 2.08,
+      "updatedAt": "19:40",
+      "referenceProb": 0.46
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "match_winner",
+      "marketLabel": "Maç Sonucu",
+      "line": null,
+      "outcome": "X",
+      "bookmaker": "turkbet",
+      "opening": 3.7,
+      "history": [
+        3.68,
+        3.65,
+        3.62,
+        3.6
+      ],
+      "current": 3.6,
+      "updatedAt": "19:40",
+      "referenceProb": 0.27
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "match_winner",
+      "marketLabel": "Maç Sonucu",
+      "line": null,
+      "outcome": "2",
+      "bookmaker": "1xbet",
+      "opening": 4.05,
+      "history": [
+        4.1,
+        4.18,
+        4.22,
+        4.25
+      ],
+      "current": 4.25,
+      "updatedAt": "19:40",
+      "referenceProb": 0.24
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "total_goals_2_5",
+      "marketLabel": "2.5 Gol",
+      "line": 2.5,
+      "outcome": "Üst",
+      "bookmaker": "pinnacle",
+      "opening": 1.9,
+      "history": [
+        1.84,
+        1.78,
+        1.72,
+        1.66
+      ],
+      "current": 1.66,
+      "updatedAt": "19:35",
+      "referenceProb": 0.6
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "total_goals_2_5",
+      "marketLabel": "2.5 Gol",
+      "line": 2.5,
+      "outcome": "Üst",
+      "bookmaker": "nesine",
+      "opening": 1.9,
+      "history": [
+        1.9,
+        1.88,
+        1.86,
+        1.85
+      ],
+      "current": 1.85,
+      "updatedAt": "19:36",
+      "referenceProb": 0.6
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "corners_8_5",
+      "marketLabel": "8.5 Korner",
+      "line": 8.5,
+      "outcome": "Üst",
+      "bookmaker": "holigan",
+      "opening": 1.92,
+      "history": [
+        1.91,
+        1.91,
+        1.89,
+        1.88
+      ],
+      "current": 1.88,
+      "updatedAt": "19:37",
+      "referenceProb": 0.54
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "corners_9_5",
+      "marketLabel": "9.5 Korner",
+      "line": 9.5,
+      "outcome": "Üst",
+      "bookmaker": "betsat",
+      "opening": 2.06,
+      "history": [
+        2.06,
+        2.04,
+        2.03,
+        2.01
+      ],
+      "current": 2.01,
+      "updatedAt": "19:38",
+      "referenceProb": 0.48
+    },
+    {
+      "matchId": "efes-fb-2026-05-25",
+      "sport": "basketball",
+      "league": "Euroleague",
+      "kickoff": "2026-05-25T21:30:00+03:00",
+      "match": "Anadolu Efes - Fenerbahçe Beko",
+      "market": "basket_total_points",
+      "marketLabel": "Toplam Sayı",
+      "line": 162.5,
+      "outcome": "Üst",
+      "bookmaker": "1xbet",
+      "opening": 1.91,
+      "history": [
+        1.91,
+        1.9,
+        1.9,
+        1.88
+      ],
+      "current": 1.88,
+      "updatedAt": "19:30",
+      "referenceProb": 0.53
+    },
+    {
+      "matchId": "efes-fb-2026-05-25",
+      "sport": "basketball",
+      "league": "Euroleague",
+      "kickoff": "2026-05-25T21:30:00+03:00",
+      "match": "Anadolu Efes - Fenerbahçe Beko",
+      "market": "basket_total_points",
+      "marketLabel": "Toplam Sayı",
+      "line": 166.5,
+      "outcome": "Alt",
+      "bookmaker": "tempobet",
+      "opening": 1.88,
+      "history": [
+        1.89,
+        1.9,
+        1.9,
+        1.91
+      ],
+      "current": 1.91,
+      "updatedAt": "19:31",
+      "referenceProb": 0.52
+    },
+    {
+      "matchId": "efes-fb-2026-05-25",
+      "sport": "basketball",
+      "league": "Euroleague",
+      "kickoff": "2026-05-25T21:30:00+03:00",
+      "match": "Anadolu Efes - Fenerbahçe Beko",
+      "market": "basket_total_points",
+      "marketLabel": "Toplam Sayı",
+      "line": 164.5,
+      "outcome": "Üst",
+      "bookmaker": "pinnacle",
+      "opening": 1.86,
+      "history": [
+        1.84,
+        1.82,
+        1.8,
+        1.78
+      ],
+      "current": 1.78,
+      "updatedAt": "19:31",
+      "referenceProb": 0.56
+    },
+    {
+      "matchId": "ars-mci-2026-05-26",
+      "sport": "football",
+      "league": "İngiltere Premier League",
+      "kickoff": "2026-05-26T19:30:00+03:00",
+      "match": "Arsenal - Manchester City",
+      "market": "match_winner",
+      "marketLabel": "Maç Sonucu",
+      "line": null,
+      "outcome": "1",
+      "bookmaker": "polymarket",
+      "opening": 1.55,
+      "history": [
+        1.5,
+        1.48,
+        1.46,
+        1.43
+      ],
+      "current": 1.43,
+      "updatedAt": "18:50",
+      "referenceProb": 0.7
+    },
+    {
+      "matchId": "ars-mci-2026-05-26",
+      "sport": "football",
+      "league": "İngiltere Premier League",
+      "kickoff": "2026-05-26T19:30:00+03:00",
+      "match": "Arsenal - Manchester City",
+      "market": "match_winner",
+      "marketLabel": "Maç Sonucu",
+      "line": null,
+      "outcome": "1",
+      "bookmaker": "stake",
+      "opening": 2.05,
+      "history": [
+        2.04,
+        2.03,
+        2.01,
+        2.0
+      ],
+      "current": 2.0,
+      "updatedAt": "18:51",
+      "referenceProb": 0.7
+    }
+  ]
+}
