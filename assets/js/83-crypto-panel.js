@@ -55,6 +55,9 @@
   }
 
   function v512StopPreview() {
+    // V526: DURDUR sonrası tekrar oynatınca kaldığı saniyeden devam etsin.
+    const keepSec = v512PreviewAudio ? Number(v512PreviewAudio.currentTime || 0) : Number(qs("#v512-progress")?.value || 0);
+
     if (v512PreviewTimer) {
       clearTimeout(v512PreviewTimer);
       v512PreviewTimer = null;
@@ -67,6 +70,13 @@
     }
     v512PreviewAudio = null;
     v512PreviewUrl = "";
+
+    if (Number.isFinite(keepSec) && keepSec > 0) {
+      const progress = qs("#v512-progress");
+      if (progress) progress.value = Math.floor(keepSec);
+      v512Update(keepSec);
+    }
+
     qs("#v512-play-custom")?.classList.remove("playing");
     const test = qs("#v512-sound-test");
     if (test) {
@@ -158,6 +168,18 @@
       .trim() || "Özel Ses";
   }
 
+  function v526SetFileNote(text, marquee = true) {
+    const note = qs("#v512-file-note");
+    if (!note) return;
+    const safe = String(text || "Dosya seçilmedi");
+    note.title = safe;
+    note.textContent = "";
+    const span = document.createElement("span");
+    span.className = marquee ? "v526-marquee" : "v526-static-note";
+    span.textContent = safe;
+    note.appendChild(span);
+  }
+
   async function v512RenderLibrary() {
     const select = qs("#v512-custom-select");
     if (!select) return;
@@ -171,12 +193,7 @@
     const current = files.find(f => f.id === s.selectedCustomId);
     if (current) select.value = current.id;
     select.title = current ? current.name : "Özel ses seç";
-    const note = qs("#v512-file-note");
-    if (note) {
-      const text = current ? "Aktif: " + v523CleanAudioName(current.name) : "Dosya seçilmedi";
-      note.textContent = text;
-      note.title = text;
-    }
+    v526SetFileNote(current ? "Aktif: " + v523CleanAudioName(current.name) : "Dosya seçilmedi", !!current);
   }
 
   async function v512PlayCustom() {
@@ -260,17 +277,17 @@
     const startInput = qs("#v512-start");
     const endInput = qs("#v512-end");
     const progress = qs("#v512-progress");
-    if (!track || !startInput || !endInput || track.dataset.bound === "v524") return;
-    track.dataset.bound = "v524";
+    if (!track || !startInput || !endInput || track.dataset.bound === "v526") return;
+    track.dataset.bound = "v526";
 
+    const clientXOf = ev => ev.touches?.[0]?.clientX ?? ev.clientX;
     const secFromEvent = ev => {
       const rect = track.getBoundingClientRect();
-      const clientX = ev.touches?.[0]?.clientX ?? ev.clientX;
-      const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const pct = Math.max(0, Math.min(1, (clientXOf(ev) - rect.left) / rect.width));
       return Math.round(pct * Math.max(1, Number(startInput.max || endInput.max || v512Duration || 1)));
     };
 
-    let mode = null, offset = 0;
+    let mode = null, offset = 0, startClientX = 0, handleDown = false, movedEnough = false;
 
     const choose = (sec, target) => {
       const { start, end } = v512Segment();
@@ -278,7 +295,6 @@
       if (target?.id === "v512-start-handle") return "start";
       if (target?.id === "v512-end-handle") return "end";
 
-      // Dolum çubuğu/progress bağımsız çalışsın: boş bara veya progress'e tıklayınca sadece süre ilerler.
       if (target?.id === "v512-progress" || target === track || target?.id === "v512-wave") return "progress";
 
       if (target?.id === "v512-fill" || (sec > start && sec < end)) {
@@ -297,17 +313,14 @@
         startInput.value = Math.min(sec, end - 1);
         v512Seek(Number(startInput.value || 0));
       } else if (mode === "end") {
-        // Son tutamaç sadece bitiş aralığını ayarlar; süre/progress oraya gitmez.
         endInput.value = Math.max(sec, start + 1);
         v512Update();
       } else if (mode === "range") {
-        // Seçili turuncu aralık sürüklenince progress başlangıçla beraber gelir.
         const ns = Math.max(0, Math.min(max - len, sec - offset));
         startInput.value = Math.floor(ns);
         endInput.value = Math.floor(ns + len);
         v512Seek(ns);
       } else if (mode === "progress") {
-        // Dolum çubuğu tamamen bağımsız: ileri/geri tıklama ve sürükleme aktif.
         v512Seek(sec);
       }
     };
@@ -316,7 +329,14 @@
       ev.preventDefault();
       const sec = secFromEvent(ev);
       mode = choose(sec, ev.target);
-      apply(sec);
+      startClientX = clientXOf(ev);
+      handleDown = ev.target?.id === "v512-start-handle" || ev.target?.id === "v512-end-handle";
+      movedEnough = false;
+
+      // V526: Gri tutamaçların ortasına tek tıklayınca tutamaç kaymasın.
+      // Sadece gerçekten sürükleme varsa hareket ettir.
+      if (!handleDown) apply(sec);
+
       document.addEventListener("mousemove", move);
       document.addEventListener("mouseup", up);
       document.addEventListener("touchmove", move, { passive: false });
@@ -325,11 +345,24 @@
 
     const move = ev => {
       ev.preventDefault();
-      if (mode) apply(secFromEvent(ev));
+      if (!mode) return;
+      if (handleDown && Math.abs(clientXOf(ev) - startClientX) < 4) return;
+      movedEnough = true;
+      apply(secFromEvent(ev));
     };
 
     const up = () => {
+      // Başlangıç tutamağına sadece tıklanırsa: süreyi oraya al, müziği oradan başlat.
+      if (handleDown && !movedEnough && mode === "start") {
+        const start = Number(startInput.value || 0);
+        v512Seek(start);
+        if (!v512PreviewAudio) v512PlayCustom();
+      }
+
       mode = null;
+      handleDown = false;
+      movedEnough = false;
+
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
       document.removeEventListener("touchmove", move);
@@ -341,21 +374,6 @@
 
     progress?.addEventListener("input", e => {
       v512Seek(Number(e.target.value || 0));
-    });
-
-    qs("#v512-start-handle")?.addEventListener("click", ev => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      const start = Number(startInput.value || 0);
-      v512Seek(start);
-      if (!v512PreviewAudio) v512PlayCustom();
-    });
-
-    qs("#v512-end-handle")?.addEventListener("click", ev => {
-      // Bitiş tutamağı tıklamada süreyi oynatmaz; yalnızca tutamaç olarak kalır.
-      ev.preventDefault();
-      ev.stopPropagation();
-      v512Update();
     });
   }
 
@@ -393,8 +411,7 @@
     qs("#v512-file-input").onchange = async e => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const note = qs("#v512-file-note");
-      if (note) { note.textContent = "Yükleniyor: " + v523CleanAudioName(file.name); note.title = v523CleanAudioName(file.name); }
+      v526SetFileNote("Yükleniyor: " + v523CleanAudioName(file.name), false);
       try {
         if (!window.V26AlarmAudio?.addCustomFile) throw new Error("Ses motoru hazır değil.");
         const row = await window.V26AlarmAudio.addCustomFile(file);
@@ -403,10 +420,10 @@
         await v512RenderLibrary();
         if (qs("#v512-custom-select") && row?.id) qs("#v512-custom-select").value = row.id;
         await v512LoadMeta();
-        if (note) { note.textContent = "Aktif: " + v523CleanAudioName(row?.name || file.name); note.title = v523CleanAudioName(row?.name || file.name); }
+        v526SetFileNote("Aktif: " + v523CleanAudioName(row?.name || file.name), true);
       } catch (err) {
         console.warn("V512 sound upload error", err);
-        if (note) note.textContent = "Dosya yüklenemedi.";
+        v526SetFileNote("Dosya yüklenemedi.", false);
         alert("Ses dosyası yüklenemedi. MP3/WAV/OGG/M4A/AAC/FLAC/WEBM gibi geçerli bir ses dosyası seç.");
       } finally { e.target.value = ""; }
     };
