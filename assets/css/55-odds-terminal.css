@@ -2084,3 +2084,136 @@
     }
 }
 
+/* ===============================
+   V538 ORAN TERMİNALİ SPOR BAZLI MARKET + KOYU GRİ DROPDOWN
+================================ */
+
+/* Bahis Türü / Market içindeki mavi düzenin tamamı koyu griye çekildi. */
+.v536-market-toggle,
+.v537-market-toggle,
+.v536-market-menu.open .v536-market-toggle,
+.v537-market-menu.open .v537-market-toggle,
+.v535-market-toggle,
+.v535-market-menu.open .v535-market-toggle {
+    border-color: rgba(255,255,255,.16) !important;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.025)),
+        #1c2027 !important;
+    color: #e5e7eb !important;
+    box-shadow: none !important;
+}
+
+.v536-market-toggle span,
+.v537-market-toggle span,
+.v535-market-toggle span,
+.v536-market-toggle b,
+.v537-market-toggle b,
+.v535-market-toggle b,
+.v536-market-toggle i,
+.v537-market-toggle i,
+.v535-market-toggle i {
+    color: #e5e7eb !important;
+}
+
+.v536-market-toggle span,
+.v537-market-toggle span,
+.v535-market-toggle span {
+    color: #a3a3a3 !important;
+}
+
+/* Açılan dropdown ve altındaki tüm seçili/sonuç alanları artık mavi değil. */
+.v536-market-dropdown,
+.v537-market-dropdown,
+.v535-market-dropdown {
+    border-color: rgba(255,255,255,.16) !important;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.022)),
+        #151922 !important;
+}
+
+.v536-market-dropdown #odds-v533-market-search,
+.v537-market-dropdown #odds-v533-market-search,
+.v535-market-dropdown #odds-v533-market-search {
+    border-color: rgba(255,255,255,.16) !important;
+    background: #101318 !important;
+    color: #f8fafc !important;
+}
+
+.v536-market-dropdown #odds-v533-market-search:focus,
+.v537-market-dropdown #odds-v533-market-search:focus,
+.v535-market-dropdown #odds-v533-market-search:focus {
+    border-color: rgba(251,191,36,.70) !important;
+    box-shadow: 0 0 0 3px rgba(251,191,36,.12) !important;
+}
+
+.v536-market-dropdown .v533-selected-market,
+.v537-market-dropdown .v533-selected-market,
+.v535-market-dropdown .v533-selected-market {
+    background: rgba(255,255,255,.065) !important;
+    color: #e5e7eb !important;
+}
+
+.v536-market-dropdown .v533-selected-market span,
+.v537-market-dropdown .v533-selected-market span,
+.v535-market-dropdown .v533-selected-market span {
+    color: #e5e7eb !important;
+}
+
+.v536-market-dropdown .v533-selected-market button,
+.v537-market-dropdown .v533-selected-market button,
+.v535-market-dropdown .v533-selected-market button {
+    background: #2a2f38 !important;
+    color: #f5f5f5 !important;
+}
+
+/* V535'ten kalan mavi kategori/list item stillerini ez. */
+.v535-market-dropdown .v533-market-results button,
+.v535-market-dropdown .v533-market-results button.cat,
+.v535-market-dropdown .v533-market-results button:hover {
+    background: #101318 !important;
+    border-color: rgba(255,255,255,.10) !important;
+}
+
+.v535-market-dropdown .v533-market-results b,
+.v535-market-dropdown .v533-market-results small {
+    color: #e5e7eb !important;
+}
+
+/* V538 spor bazlı dropdown notu */
+.v536-market-menu::after,
+.v537-market-menu::after {
+    content: attr(data-sport-note);
+}
+
+/* Futbol/Basketbol/Tümü seçimleri daha işlevsel görünsün. */
+.v531-sport-switch button.active.all {
+    background: rgba(251,191,36,.16) !important;
+    border-color: rgba(251,191,36,.45) !important;
+    color: #fde68a !important;
+}
+
+.v531-sport-switch button.active.football {
+    background: rgba(34,197,94,.16) !important;
+    border-color: rgba(34,197,94,.50) !important;
+    color: #bbf7d0 !important;
+}
+
+.v531-sport-switch button.active.basketball {
+    background: rgba(249,115,22,.16) !important;
+    border-color: rgba(249,115,22,.50) !important;
+    color: #fed7aa !important;
+}
+
+/* Kategori listesinde açık/kapalı daha net. */
+.v537-market-cat.closed .v537-cat-toggle b {
+    color: #d4d4d8 !important;
+}
+
+.v537-market-cat.open {
+    background: #121821 !important;
+}
+
+.v537-market-cat.open .v537-cat-toggle {
+    background: rgba(251,191,36,.055) !important;
+}
+
