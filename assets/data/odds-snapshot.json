@@ -1,5 +1,5 @@
 {
-  "version": "v530-demo",
+  "version": "v538-demo",
   "generatedAt": "2026-05-24T00:00:00+03:00",
   "mode": "demo",
   "warning": "V530 demo verisidir. Gerçek oran akışı backend/API/JSON üretici motorla aynı şemaya beslenecek.",
@@ -423,6 +423,250 @@
       "current": 2.0,
       "updatedAt": "18:51",
       "referenceProb": 0.7
+    },
+    {
+      "matchId": "bjk-ts-2026-05-27",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-27T20:00:00+03:00",
+      "match": "Beşiktaş - Trabzonspor",
+      "market": "total_goals_over_2_0",
+      "marketLabel": "Genel 2 Gol Üst",
+      "line": 2.0,
+      "outcome": "Üst",
+      "bookmaker": "1xbet",
+      "opening": 1.66,
+      "history": [
+        1.68,
+        1.7,
+        1.72,
+        1.75
+      ],
+      "current": 1.75,
+      "updatedAt": "18:22",
+      "referenceProb": 0.62,
+      "info": "2 golde iade, 3 golde kazanım mantığı için demo market."
+    },
+    {
+      "matchId": "bjk-ts-2026-05-27",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-27T20:00:00+03:00",
+      "match": "Beşiktaş - Trabzonspor",
+      "market": "total_goals_over_2_0",
+      "marketLabel": "Genel 2 Gol Üst",
+      "line": 2.0,
+      "outcome": "Üst",
+      "bookmaker": "betsmove",
+      "opening": 1.7,
+      "history": [
+        1.7,
+        1.72,
+        1.73,
+        1.78
+      ],
+      "current": 1.78,
+      "updatedAt": "18:23",
+      "referenceProb": 0.62
+    },
+    {
+      "matchId": "bjk-ts-2026-05-27",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-27T20:00:00+03:00",
+      "match": "Beşiktaş - Trabzonspor",
+      "market": "team1_goals_over_1_0",
+      "marketLabel": "Takım 1 1 Gol Üst",
+      "line": 1.0,
+      "outcome": "Üst",
+      "bookmaker": "holigan",
+      "opening": 1.58,
+      "history": [
+        1.57,
+        1.56,
+        1.55,
+        1.54
+      ],
+      "current": 1.54,
+      "updatedAt": "18:25",
+      "referenceProb": 0.71
+    },
+    {
+      "matchId": "bjk-ts-2026-05-27",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-27T20:00:00+03:00",
+      "match": "Beşiktaş - Trabzonspor",
+      "market": "first_half_total_goals_over_1_0",
+      "marketLabel": "İlk Yarı 1 Gol Üst",
+      "line": 1.0,
+      "outcome": "Üst",
+      "bookmaker": "tempobet",
+      "opening": 1.92,
+      "history": [
+        1.91,
+        1.89,
+        1.87,
+        1.85
+      ],
+      "current": 1.85,
+      "updatedAt": "18:26",
+      "referenceProb": 0.58
+    },
+    {
+      "matchId": "bjk-ts-2026-05-27",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-27T20:00:00+03:00",
+      "match": "Beşiktaş - Trabzonspor",
+      "market": "second_half_total_goals_over_1_0",
+      "marketLabel": "İkinci Yarı 1 Gol Üst",
+      "line": 1.0,
+      "outcome": "Üst",
+      "bookmaker": "stake",
+      "opening": 1.72,
+      "history": [
+        1.73,
+        1.74,
+        1.76,
+        1.79
+      ],
+      "current": 1.79,
+      "updatedAt": "18:27",
+      "referenceProb": 0.63
+    },
+    {
+      "matchId": "bjk-ts-2026-05-27",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-27T20:00:00+03:00",
+      "match": "Beşiktaş - Trabzonspor",
+      "market": "offsides_total",
+      "marketLabel": "Ofsayt Alt / Üst",
+      "line": 3.5,
+      "outcome": "Üst",
+      "bookmaker": "betsat",
+      "opening": 1.88,
+      "history": [
+        1.88,
+        1.87,
+        1.86,
+        1.84
+      ],
+      "current": 1.84,
+      "updatedAt": "18:29",
+      "referenceProb": 0.55
+    },
+    {
+      "matchId": "bjk-ts-2026-05-27",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-27T20:00:00+03:00",
+      "match": "Beşiktaş - Trabzonspor",
+      "market": "total_passes",
+      "marketLabel": "Toplam Pas Sayısı",
+      "line": 780.5,
+      "outcome": "Üst",
+      "bookmaker": "pinnacle",
+      "opening": 1.9,
+      "history": [
+        1.89,
+        1.88,
+        1.87,
+        1.86
+      ],
+      "current": 1.86,
+      "updatedAt": "18:30",
+      "referenceProb": 0.56
+    },
+    {
+      "matchId": "lal-bos-2026-05-28",
+      "sport": "basketball",
+      "league": "NBA",
+      "kickoff": "2026-05-28T04:30:00+03:00",
+      "match": "Los Angeles Lakers - Boston Celtics",
+      "market": "basket_total_points",
+      "marketLabel": "Toplam Sayı",
+      "line": 221.5,
+      "outcome": "Üst",
+      "bookmaker": "1xbet",
+      "opening": 1.91,
+      "history": [
+        1.9,
+        1.89,
+        1.88,
+        1.87
+      ],
+      "current": 1.87,
+      "updatedAt": "22:10",
+      "referenceProb": 0.54
+    },
+    {
+      "matchId": "lal-bos-2026-05-28",
+      "sport": "basketball",
+      "league": "NBA",
+      "kickoff": "2026-05-28T04:30:00+03:00",
+      "match": "Los Angeles Lakers - Boston Celtics",
+      "market": "basket_total_points",
+      "marketLabel": "Toplam Sayı",
+      "line": 224.5,
+      "outcome": "Alt",
+      "bookmaker": "tempobet",
+      "opening": 1.88,
+      "history": [
+        1.89,
+        1.9,
+        1.91,
+        1.92
+      ],
+      "current": 1.92,
+      "updatedAt": "22:10",
+      "referenceProb": 0.53
+    },
+    {
+      "matchId": "lal-bos-2026-05-28",
+      "sport": "basketball",
+      "league": "NBA",
+      "kickoff": "2026-05-28T04:30:00+03:00",
+      "match": "Los Angeles Lakers - Boston Celtics",
+      "market": "player_points",
+      "marketLabel": "Oyuncu Sayı",
+      "line": 27.5,
+      "outcome": "Üst",
+      "bookmaker": "stake",
+      "opening": 1.95,
+      "history": [
+        1.94,
+        1.92,
+        1.9,
+        1.88
+      ],
+      "current": 1.88,
+      "updatedAt": "22:12",
+      "referenceProb": 0.57,
+      "info": "Basketbol oyuncu istatistiği demo marketi."
+    },
+    {
+      "matchId": "lal-bos-2026-05-28",
+      "sport": "basketball",
+      "league": "NBA",
+      "kickoff": "2026-05-28T04:30:00+03:00",
+      "match": "Los Angeles Lakers - Boston Celtics",
+      "market": "player_assists",
+      "marketLabel": "Oyuncu Asist",
+      "line": 7.5,
+      "outcome": "Üst",
+      "bookmaker": "betsmove",
+      "opening": 2.05,
+      "history": [
+        2.02,
+        2.0,
+        1.98,
+        1.96
+      ],
+      "current": 1.96,
+      "updatedAt": "22:14",
+      "referenceProb": 0.55
     }
   ]
 }
