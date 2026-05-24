@@ -208,7 +208,7 @@
     const label = direction === "up" ? "Oran yükseldi" : direction === "down" ? "Oran düştü" : "Oran aynı";
     return `<button type="button" class="v533-history-compact ${direction}" data-history-pop="1" aria-label="${escapeAttr(label)}">
       <span class="v533-history-main"><em>${escapeHtml(money(opening))}</em><i class="fa-solid ${icon}"></i><b>${escapeHtml(money(current))}</b></span>
-      <small>${parts.length - 2} ara değişim</small>
+      <small>Diğer değişimler</small>
       <span class="v533-history-pop">${parts.map(p => `<span><em>${escapeHtml(p.label)}</em><b>${escapeHtml(p.value)}</b></span>`).join("")}</span>
     </button>`;
   }
@@ -837,7 +837,9 @@
 
     const openMarketDrawer = qs("[data-market-drawer-toggle]");
     if (openMarketDrawer) {
-      openMarketDrawer.addEventListener("click", () => {
+      openMarketDrawer.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         state.marketPickerOpen = !state.marketPickerOpen;
         saveLocalState();
         render();
@@ -849,6 +851,29 @@
       saveLocalState();
       render();
     });
+
+    if (state.marketPickerOpen && !window.__v539OddsOutsideCloseBound) {
+      window.__v539OddsOutsideCloseBound = true;
+      setTimeout(() => {
+        const outsideClose = (ev) => {
+          const menu = ev.target.closest(".v536-market-menu, .v537-market-menu, .v535-market-menu");
+          const oddsVisible = document.body.classList.contains("omega-tab-odds");
+          if (!oddsVisible || !state.marketPickerOpen) {
+            document.removeEventListener("pointerdown", outsideClose, true);
+            window.__v539OddsOutsideCloseBound = false;
+            return;
+          }
+          if (menu) return;
+          state.marketPickerOpen = false;
+          state.marketSearch = "";
+          saveLocalState();
+          document.removeEventListener("pointerdown", outsideClose, true);
+          window.__v539OddsOutsideCloseBound = false;
+          render();
+        };
+        document.addEventListener("pointerdown", outsideClose, true);
+      }, 0);
+    }
 
     const marketSearch = qs("#odds-v533-market-search");
     if (marketSearch) {
