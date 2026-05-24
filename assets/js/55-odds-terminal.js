@@ -484,4 +484,117 @@
     const key = String(location.hash || "").replace(/^#\/?/, "").split("/")[0];
     if (key === "odds") setTimeout(() => window.omega_RenderOddsTerminal?.(), 20);
   });
+
+  // V529 HARD ROUTE FIX:
+  // Eski router bazı dosyalarda #odds dalını tanımadığı için Oran Terminali görünmeyebiliyordu.
+  // Bu bölüm nav + block'u garanti eder ve #odds rotasını kendi başına açar.
+  function ensureOddsDom() {
+    const navContainer = document.querySelector("#main-dropdown-nav .nav-container") || document.getElementById("main-dropdown-nav");
+    if (navContainer && !document.getElementById("nav-odds")) {
+      const a = document.createElement("a");
+      a.className = "nav-link";
+      a.id = "nav-odds";
+      a.href = "#odds";
+      a.innerHTML = '<i class="fa-solid fa-chart-line"></i> ORAN TERMİNALİ';
+      const crypto = document.getElementById("nav-crypto");
+      if (crypto && crypto.parentNode === navContainer) navContainer.insertBefore(a, crypto);
+      else navContainer.appendChild(a);
+    }
+
+    const wrapper = document.querySelector(".center-wrapper");
+    if (wrapper && !document.getElementById("omega-odds-block")) {
+      const block = document.createElement("div");
+      block.id = "omega-odds-block";
+      block.className = "omega-odds-terminal";
+      block.style.display = "none";
+      block.innerHTML = '<div id="omega-odds-render"></div>';
+      const rolling = document.getElementById("omega-rolling-block");
+      if (rolling && rolling.parentNode === wrapper) wrapper.insertBefore(block, rolling);
+      else wrapper.appendChild(block);
+    }
+  }
+
+  async function showOddsTerminal(updateHash = false) {
+    ensureOddsDom();
+
+    if (updateHash && String(location.hash || "") !== "#odds") {
+      history.pushState({ tab: "odds" }, "", "#odds");
+    }
+
+    const hideIds = [
+      "omega-radar-block",
+      "omega-favs-block",
+      "omega-stream-block",
+      "omega-live-block",
+      "omega-live-center-block",
+      "omega-crypto-block",
+      "omega-rolling-block"
+    ];
+    hideIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = "none";
+        if (id === "omega-rolling-block") {
+          el.removeAttribute("data-visible");
+          el.setAttribute("aria-hidden", "true");
+        }
+      }
+    });
+
+    const fin = document.getElementById("v19-finance-block");
+    if (fin) fin.classList.remove("active");
+
+    document.body.classList.remove(
+      "omega-tab-futbol",
+      "omega-tab-basketbol",
+      "omega-tab-rolling",
+      "omega-tab-stream",
+      "omega-tab-favs",
+      "omega-tab-live",
+      "omega-tab-crypto",
+      "omega-tab-finance"
+    );
+    document.body.classList.add("omega-tab-odds");
+    document.body.classList.remove("rolling-active");
+    document.documentElement.classList.remove("rolling-hash-boot");
+
+    document.querySelectorAll(".nav-link").forEach(a => a.classList.remove("active"));
+    document.getElementById("nav-odds")?.classList.add("active");
+
+    const title = document.getElementById("active-module-name");
+    if (title) title.innerHTML = '<span style="color:#a855f7">/ ORAN TERMİNALİ</span>';
+
+    const center = document.querySelector(".center-wrapper");
+    if (center) center.style.maxWidth = "1850px";
+
+    const oddsBlock = document.getElementById("omega-odds-block");
+    if (oddsBlock) oddsBlock.style.display = "block";
+
+    await window.omega_RenderOddsTerminal?.();
+
+    const menu = document.getElementById("main-dropdown-nav");
+    if (menu) menu.classList.remove("active-menu");
+  }
+
+  window.omega_ShowOddsTerminal = showOddsTerminal;
+
+  document.addEventListener("click", e => {
+    const link = e.target.closest("#nav-odds, a[href='#odds']");
+    if (!link) return;
+    e.preventDefault();
+    e.stopPropagation();
+    showOddsTerminal(true);
+  }, true);
+
+  window.addEventListener("hashchange", () => {
+    const key = String(location.hash || "").replace(/^#\/?/, "").split("/")[0];
+    if (key === "odds") setTimeout(() => showOddsTerminal(false), 0);
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    ensureOddsDom();
+    const key = String(location.hash || "").replace(/^#\/?/, "").split("/")[0];
+    if (key === "odds") setTimeout(() => showOddsTerminal(false), 0);
+  });
+
 })();
