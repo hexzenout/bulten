@@ -343,19 +343,19 @@
 
   function renderIntelligenceHub() {
     const items = criticalInsights();
-    return `<section class="v534-intel-page">
-      <div class="v534-intel-title">
+    return `<section class="v536-intel-page">
+      <div class="v536-intel-title">
         <div>
           <span>İSTİHBARAT</span>
           <h3>Ciddi Avantajlı Bahisler</h3>
-          <p>Burada sadece güçlü değer farkı, barem farkı veya sert oran hareketi olan sinyaller listelenir. Grafik kaldırıldı; bu alan ayrı sekme olarak çalışır.</p>
+          <p>Bu alan ayrı sekmedir. Sadece güçlü değer farkı, barem farkı veya sert oran hareketi olan sinyalleri kart olarak gösterir; grafik yok.</p>
         </div>
         <button type="button" data-odds-action="toggle-alarm" class="${state.alarmEnabled ? "active" : ""}">${state.alarmEnabled ? "Avantaj Alarmı Açık" : "Avantaj Alarmı Kapalı"}</button>
       </div>
-      <div class="v534-intel-controls">
+      <div class="v536-intel-controls">
         <label>Alarm Hassasiyeti <input id="v533-alarm-sensitivity" type="range" min="0" max="1" step="0.05" value="${Number(state.alarmSensitivity || 0.4)}"></label>
       </div>
-      <div class="v534-intel-grid">
+      <div class="v536-intel-grid">
         ${items.length ? items.map(x => `<article>
           <strong>${escapeHtml(x.type)}</strong>
           <b>${escapeHtml(x.row?.match || x.lineGap?.match || "-")}</b>
@@ -409,31 +409,30 @@
             ${tabButton("drops", "Oran Düşüş Uyarısı")}
             ${tabButton("sources", "Kaynak Siteler")}
           </div>
-          <div class="odds-v528-filters v530-filters v531-filters v533-filters v534-filters">
+          <div class="odds-v528-filters v530-filters v531-filters v533-filters v534-filters v536-filters">
             <div class="v531-sport-switch" role="group" aria-label="Spor seçimi">
               <button type="button" class="${state.sport === "all" ? "active all" : "all"}" data-odds-sport-btn="all">TÜMÜ</button>
               <button type="button" class="${state.sport === "football" ? "active football" : "football"}" data-odds-sport-btn="football"><i class="fa-solid fa-futbol"></i> FUTBOL</button>
               <button type="button" class="${state.sport === "basketball" ? "active basketball" : "basketball"}" data-odds-sport-btn="basketball"><i class="fa-solid fa-basketball"></i> BASKETBOL</button>
             </div>
-            <button type="button" class="v534-market-toggle" data-market-drawer-toggle="1">
-              <span>Bahis Türü / Market</span>
-              <b>${escapeHtml(selectedMarketLabel())}</b>
-              <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <input id="odds-v528-search" type="search" placeholder="Maç, site, market ara..." value="${escapeHtml(state.search || "")}">
+
+            <div class="v536-market-menu ${state.marketPickerOpen ? "open" : ""}">
+              <button type="button" class="v536-market-toggle" data-market-drawer-toggle="1" aria-expanded="${state.marketPickerOpen ? "true" : "false"}">
+                <span>Bahis Türü / Market</span>
+                <b>${escapeHtml(selectedMarketLabel())}</b>
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+
+              ${state.marketPickerOpen ? `<div class="v536-market-dropdown">
+                <input id="odds-v533-market-search" type="search" placeholder="Korner, 2.5, şut, kart, ofsayt, pas, 60 dakika..." value="${escapeAttr(state.marketSearch || "")}">
+                <div class="v533-selected-market">
+                  <span>${escapeHtml(selectedMarketLabel())}</span>
+                  ${(state.marketCategory !== "all" || state.marketId !== "all") ? `<button type="button" data-market-reset="1">Sıfırla</button>` : ""}
+                </div>
+                <div class="v533-market-results">${marketResultsHtml()}</div>
+              </div>` : ""}
+            </div>
           </div>
-          ${state.marketPickerOpen ? `<div class="v534-market-drawer">
-            <div class="v534-market-drawer-head">
-              <div><b>Bahis türü / market ara</b><span>Korner, 2.5, şut, kart, ofsayt, pas, 60 dakika gibi yaz.</span></div>
-              <button type="button" data-market-drawer-close="1"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <input id="odds-v533-market-search" type="search" placeholder="Örn: 2.5, korner, şut, kart, 60 dakika, ofsayt, pas..." value="${escapeAttr(state.marketSearch || "")}">
-            <div class="v533-selected-market">
-              <span>${escapeHtml(selectedMarketLabel())}</span>
-              ${(state.marketCategory !== "all" || state.marketId !== "all") ? `<button type="button" data-market-reset="1">Sıfırla</button>` : ""}
-            </div>
-            <div class="v533-market-results">${marketResultsHtml()}</div>
-          </div>` : ""}
         </div>
 
         <div class="odds-v528-content">${content()}</div>
@@ -656,6 +655,8 @@
     qsa("[data-odds-tab]").forEach(btn => {
       btn.addEventListener("click", () => {
         state.tab = btn.dataset.oddsTab || "opportunities";
+        state.marketPickerOpen = false;
+        state.marketSearch = "";
         saveLocalState();
         render();
       });
@@ -701,6 +702,8 @@
     qsa("[data-odds-sport-btn]").forEach(btn => {
       btn.addEventListener("click", () => {
         state.sport = btn.dataset.oddsSportBtn || "all";
+        state.marketPickerOpen = false;
+        state.marketSearch = "";
         saveLocalState();
         render();
       });
@@ -731,16 +734,12 @@
           box.innerHTML = marketResultsHtml();
           bindMarketButtons(box);
         }
-      });
-    }
-
-    const search = qs("#odds-v528-search");
-    if (search) {
-      search.addEventListener("input", () => {
-        state.search = search.value || "";
-        saveLocalState();
-        clearTimeout(window.__v534OddsSearchTimer);
-        window.__v534OddsSearchTimer = setTimeout(() => render(), 260);
+        const input = qs("#odds-v533-market-search");
+        if (input) {
+          input.focus({ preventScroll: true });
+          const len = input.value.length;
+          try { input.setSelectionRange(len, len); } catch {}
+        }
       });
     }
 
