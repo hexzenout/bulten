@@ -22,11 +22,34 @@
   <link rel="stylesheet" href="assets/css/41-rolling-main.css?v=v517">
   <link rel="stylesheet" href="assets/css/42-rolling-route.css?v=v517">
   <link rel="stylesheet" href="assets/css/43-rolling-final.css?v=v521">
-  <link rel="stylesheet" href="assets/css/50-sound-center.css?v=v527">
-  <link rel="stylesheet" href="assets/css/55-odds-terminal.css?v=v533">
+  <link rel="stylesheet" href="assets/css/50-sound-center.css?v=v534">
+  <link rel="stylesheet" href="assets/css/55-odds-terminal.css?v=v534">
   <link rel="stylesheet" href="assets/css/90-final-fixes.css?v=v517"> 
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f0f0f">    
+
+<style id="v534-preboot-flicker-guard">
+html.v534-stream-preboot #omega-stream-block,
+html.v534-sound-preboot #v28-sound-mount {
+    visibility: hidden !important;
+}
+html.v534-stream-preboot #omega-stream-block::before,
+html.v534-sound-preboot #v28-sound-mount::before {
+    content: "";
+    display: block;
+    min-height: 280px;
+}
+</style>
+<script id="v534-preboot-flicker-guard-script">
+(function(){
+  try {
+    var h = String(location.hash || "");
+    if (h.indexOf("#stream") === 0) document.documentElement.classList.add("v534-stream-preboot");
+    if (h.indexOf("#crypto/sound") === 0) document.documentElement.classList.add("v534-sound-preboot");
+  } catch(e) {}
+})();
+</script>
+
 </head>
 <body>
     <header class="top-status-bar">
@@ -525,11 +548,11 @@
     <!-- V30 modular core scripts -->
 <script src="assets/js/00-omega-core.js?v=v528"></script>
 <script src="assets/js/10-radar-core.js?v=v529"></script>
-<script src="assets/js/20-stream-core.js?v=v523"></script>
+<script src="assets/js/20-stream-core.js?v=v534"></script>
 <script src="assets/js/30-finance-core.js?v=v517"></script>
 <script src="assets/js/40-live-center-core.js?v=v517"></script>
 <script src="assets/js/50-daily-trade-core.js?v=v517"></script>
-<script src="assets/js/55-odds-terminal.js?v=v533"></script>
+<script src="assets/js/55-odds-terminal.js?v=v534"></script>
     <script src="assets/js/60-crypto-core.js?v=v529"></script>
 <script src="assets/js/70-rolling-core.js?v=v521"></script>
 <script src="assets/js/71-finance-ui.js?v=v517"></script>
@@ -539,7 +562,7 @@
 <script src="assets/js/80-app-fixes.js?v=v517"></script>
 <script src="assets/js/pwa.js?v=v517"></script>
 <script type="module" src="assets/js/82-firebase-core.js?v=v517"></script>
-<script src="assets/js/83-crypto-panel.js?v=v527"></script>
+<script src="assets/js/83-crypto-panel.js?v=v534"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <script src="assets/js/84-crypto-tv-chart.js?v=v517"></script>
 <script src="assets/js/85-cleanup-core.js?v=v517"></script>
