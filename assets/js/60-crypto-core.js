@@ -554,7 +554,7 @@
             if(fin) fin.classList.remove('active');
 
             const centerWrapper = document.querySelector('.center-wrapper');
-            if(centerWrapper) centerWrapper.style.maxWidth = targetModule === 'crypto' ? '1800px' : '1500px';
+            if(centerWrapper) centerWrapper.style.maxWidth = (targetModule === 'crypto' || targetModule === 'odds') ? '1850px' : '1500px';
             const titleElem = document.getElementById('active-module-name');
 
             if(targetModule === 'live') {
@@ -564,6 +564,13 @@
                 if(titleElem) titleElem.innerHTML = '<span style="color:var(--blue-accent)">/ CANLI TAKİP</span>';
                 omega_RefreshLiveCenter(true);
                 setTimeout(omega_RenderLivePageMirror, 300);
+            } else if(targetModule === 'odds') {
+                _ACTIVE_TAB = 'odds';
+                const oddsBlock = document.getElementById('omega-odds-block');
+                if (oddsBlock) oddsBlock.style.display = 'block';
+                if (centerWrapper) centerWrapper.style.maxWidth = '1850px';
+                if (titleElem) titleElem.innerHTML = '<span style="color:#a855f7">/ ORAN TERMİNALİ</span>';
+                if (typeof window.omega_RenderOddsTerminal === 'function') setTimeout(() => window.omega_RenderOddsTerminal(), 0);
             } else if(targetModule === 'crypto') {
                 _ACTIVE_TAB = 'crypto';
                 const cryptoBlock = document.getElementById('omega-crypto-block');
