@@ -1,19 +1,19 @@
 // ===============================
-// V528 ORAN TERMİNALİ
-// Frontend odds terminal scaffold: kaynaklar, karşılaştırma, barem farkı,
-// drop alarmı, arbitraj ve value hesaplama.
-// Canlı veri çekme backend/veri motoru sonraki aşamada bağlanacak.
+// V530 ORAN TERMİNALİ TÜRKÇE + FUTBOL MARKET KATALOĞU
 // ===============================
 
 (function () {
   const DATA_SOURCES = "assets/data/odds-sources.json";
   const DATA_SNAPSHOT = "assets/data/odds-snapshot.json";
-  const STORE_KEY = "v528_odds_terminal_state";
+  const STORE_KEY = "v530_odds_terminal_state";
 
   const state = {
     tab: "opportunities",
     sport: "all",
     search: "",
+    marketCategory: "all",
+    marketId: "all",
+    selectedCompareKey: "",
     minDropPct: 8,
     minValuePct: 5,
     minLineGap: 1.5,
@@ -22,16 +22,8 @@
     lastLoadedAt: null
   };
 
-  const FALLBACK_SOURCES = {
-    sites: [],
-    groups: [],
-    marketGroups: []
-  };
-
-  const FALLBACK_SNAPSHOT = {
-    mode: "empty",
-    records: []
-  };
+  const FALLBACK_SOURCES = { sites: [], groups: [], marketCategories: [] };
+  const FALLBACK_SNAPSHOT = { mode: "empty", records: [] };
 
   function qs(sel, root = document) { return root.querySelector(sel); }
   function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
@@ -41,9 +33,14 @@
     return Number.isFinite(x) ? x.toFixed(2) : "-";
   }
 
-  function pct(n) {
+  function signedPct(n) {
     const x = Number(n || 0);
     return Number.isFinite(x) ? (x >= 0 ? "+" : "") + x.toFixed(1) + "%" : "-";
+  }
+
+  function plainPct(n) {
+    const x = Number(n || 0);
+    return Number.isFinite(x) ? x.toFixed(1) + "%" : "-";
   }
 
   function readLocalState() {
@@ -59,6 +56,9 @@
         tab: state.tab,
         sport: state.sport,
         search: state.search,
+        marketCategory: state.marketCategory,
+        marketId: state.marketId,
+        selectedCompareKey: state.selectedCompareKey,
         minDropPct: state.minDropPct,
         minValuePct: state.minValuePct,
         minLineGap: state.minLineGap
@@ -72,19 +72,33 @@
       if (!res.ok) throw new Error("HTTP " + res.status);
       return await res.json();
     } catch (err) {
-      console.warn("Odds terminal JSON yüklenemedi:", url, err);
+      console.warn("Oran Terminali JSON yüklenemedi:", url, err);
       return fallback;
     }
   }
 
-  function records() {
+  function marketCategories() {
+    return state.sources?.marketCategories || [];
+  }
+
+  function marketMap() {
+    const map = {};
+    marketCategories().forEach(cat => (cat.markets || []).forEach(m => map[m.id] = { ...m, categoryId: cat.id, categoryName: cat.name }));
+    return map;
+  }
+
+  function records(raw = false) {
     const list = state.snapshot?.records || [];
+    if (raw) return list;
     const search = String(state.search || "").toLowerCase().trim();
     return list.filter(r => {
       const sportOk = state.sport === "all" || r.sport === state.sport;
-      const searchOk = !search || [r.match, r.league, r.bookmaker, r.marketLabel, r.outcome]
+      const category = marketMap()[r.market]?.categoryId || "";
+      const categoryOk = state.marketCategory === "all" || category === state.marketCategory;
+      const marketOk = state.marketId === "all" || r.market === state.marketId;
+      const searchOk = !search || [r.match, r.league, r.bookmaker, r.marketLabel, r.outcome, r.info]
         .join(" ").toLowerCase().includes(search);
-      return sportOk && searchOk;
+      return sportOk && categoryOk && marketOk && searchOk;
     });
   }
 
@@ -106,9 +120,9 @@
 
   function historyText(r) {
     const history = Array.isArray(r.history) ? r.history.slice(-4) : [];
-    const parts = [`İlk ${money(r.opening)}`];
-    history.forEach((h, idx) => parts.push(`${idx + 1}. ${money(h)}`));
-    parts.push(`Güncel ${money(r.current)}`);
+    const parts = [`İlk Oran ${money(r.opening)}`];
+    history.forEach((h, idx) => parts.push(`${idx + 1}. Değişim ${money(h)}`));
+    parts.push(`Güncel Oran ${money(r.current)}`);
     return parts.join(" → ");
   }
 
@@ -201,6 +215,19 @@
     return Object.values(map).sort((a, b) => a.match.localeCompare(b.match));
   }
 
+  function compareGroups() {
+    const buckets = {};
+    records().forEach(r => {
+      const key = [r.matchId, r.market, r.line ?? "", r.outcome].join("|");
+      if (!buckets[key]) buckets[key] = [];
+      buckets[key].push(r);
+    });
+    return Object.entries(buckets)
+      .map(([key, arr]) => ({ key, rows: arr.sort((a, b) => Number(b.current) - Number(a.current)) }))
+      .filter(g => g.rows.length >= 2)
+      .sort((a, b) => b.rows.length - a.rows.length);
+  }
+
   function summary() {
     const list = records();
     const sourceCount = state.sources?.sites?.length || 0;
@@ -212,7 +239,8 @@
       drops: getDropAlerts(list).length,
       values: getValueAlerts(list).length,
       lineGaps: getLineGaps(list).length,
-      arbs: getArbs(list).length
+      arbs: getArbs(list).length,
+      markets: marketCategories().reduce((sum, c) => sum + (c.markets?.length || 0), 0)
     };
   }
 
@@ -224,37 +252,48 @@
         <div class="odds-v528-hero">
           <div>
             <div class="odds-v528-kicker"><i class="fa-solid fa-chart-line"></i> ORAN TERMİNALİ</div>
-            <h2>Arbitraj · Value · Barem Farkı · Drop Alarmı</h2>
-            <p>${mode}. Gerçek zamanlı veri motoru sonraki aşamada bu JSON şemasına bağlanacak.</p>
+            <h2>Değerli Oran · Oran Düşüş Alarmı · Barem Farkı · Teorik Arbitraj</h2>
+            <p>${mode}. Terimler Türkçeleştirildi. Gerçek oran motoru bağlanınca aynı ekran tüm sitelerdeki oranları canlı karşılaştıracak.</p>
           </div>
           <button type="button" class="odds-v528-refresh" data-odds-action="refresh"><i class="fa-solid fa-rotate"></i> VERİYİ YENİLE</button>
         </div>
 
         <div class="odds-v528-kpis">
-          <div><span>Kaynak</span><b>${s.sources}</b></div>
+          <div><span>Kaynak Site</span><b>${s.sources}</b></div>
           <div><span>Maç</span><b>${s.matches}</b></div>
           <div><span>Oran Satırı</span><b>${s.records}</b></div>
+          <div><span>Market Türü</span><b>${s.markets}</b></div>
           <div class="${s.arbs ? "hot" : ""}"><span>Arbitraj</span><b>${s.arbs}</b></div>
-          <div class="${s.values ? "hot" : ""}"><span>Value</span><b>${s.values}</b></div>
+          <div class="${s.values ? "hot" : ""}"><span>Değerli Oran</span><b>${s.values}</b></div>
           <div class="${s.lineGaps ? "hot" : ""}"><span>Barem Farkı</span><b>${s.lineGaps}</b></div>
-          <div class="${s.drops ? "hot" : ""}"><span>Drop</span><b>${s.drops}</b></div>
+          <div class="${s.drops ? "hot" : ""}"><span>Oran Düşüşü</span><b>${s.drops}</b></div>
         </div>
 
         <div class="odds-v528-toolbar">
           <div class="odds-v528-tabs">
             ${tabButton("opportunities", "Canlı Fırsatlar")}
-            ${tabButton("compare", "Oran Karşılaştırma")}
-            ${tabButton("arbitrage", "Arbitraj")}
-            ${tabButton("value", "Value Avcısı")}
+            ${tabButton("all-sites", "Tüm Sitelerde Karşılaştır")}
+            ${tabButton("compare", "En İyi Oranlar")}
+            ${tabButton("markets", "Bahis Türleri")}
+            ${tabButton("arbitrage", "Teorik Arbitraj")}
+            ${tabButton("value", "Değerli Oran")}
             ${tabButton("lines", "Barem Farkı")}
-            ${tabButton("drops", "Drop Alarmı")}
-            ${tabButton("sources", "Kaynaklar")}
+            ${tabButton("drops", "Oran Düşüş Alarmı")}
+            ${tabButton("sources", "Kaynak Siteler")}
           </div>
-          <div class="odds-v528-filters">
+          <div class="odds-v528-filters v530-filters">
             <select id="odds-v528-sport">
               <option value="all">Tüm Sporlar</option>
               <option value="football">Futbol</option>
               <option value="basketball">Basketbol</option>
+            </select>
+            <select id="odds-v530-category">
+              <option value="all">Tüm Bahis Türleri</option>
+              ${marketCategories().map(c => `<option value="${escapeAttr(c.id)}">${escapeHtml(c.name)}</option>`).join("")}
+            </select>
+            <select id="odds-v530-market">
+              <option value="all">Tüm Marketler</option>
+              ${marketOptionsHtml()}
             </select>
             <input id="odds-v528-search" type="search" placeholder="Maç, site, market ara..." value="${escapeHtml(state.search || "")}">
           </div>
@@ -268,8 +307,15 @@
     return `<button type="button" class="${state.tab === key ? "active" : ""}" data-odds-tab="${key}">${label}</button>`;
   }
 
+  function marketOptionsHtml() {
+    const cats = marketCategories().filter(c => state.marketCategory === "all" || c.id === state.marketCategory);
+    return cats.map(cat => (cat.markets || []).map(m => `<option value="${escapeAttr(m.id)}">${escapeHtml(cat.name)} · ${escapeHtml(m.name)}</option>`).join("")).join("");
+  }
+
   function content() {
+    if (state.tab === "all-sites") return renderAllSitesCompare();
     if (state.tab === "compare") return renderCompare();
+    if (state.tab === "markets") return renderMarkets();
     if (state.tab === "arbitrage") return renderArbs();
     if (state.tab === "value") return renderValue();
     if (state.tab === "lines") return renderLines();
@@ -286,10 +332,10 @@
 
     return `
       <div class="odds-v528-grid">
-        ${panel("Value Sinyalleri", renderValueList(values), "purple")}
+        ${panel("Değerli Oran Sinyalleri", renderValueList(values), "purple")}
         ${panel("Teorik Arbitraj", renderArbList(arbs), "green")}
         ${panel("Barem Farkı Dedektörü", renderLineList(lines), "blue")}
-        ${panel("Drop Alarmı", renderDropList(drops), "red")}
+        ${panel("Oran Düşüş Alarmı", renderDropList(drops), "red")}
       </div>`;
   }
 
@@ -300,11 +346,50 @@
     </section>`;
   }
 
+  function renderAllSitesCompare() {
+    const groups = compareGroups();
+    if (!groups.length) return empty("Aynı market için en az iki sitede oran gelince burada tüm siteler yan yana görünecek.");
+    return `<div class="v530-compare-list">${groups.map(g => {
+      const first = g.rows[0];
+      const best = first;
+      return `<section class="v530-compare-card">
+        <div class="v530-compare-head">
+          <div><b>${escapeHtml(first.match)}</b><small>${escapeHtml(first.marketLabel)} · ${first.line ?? "-"} · ${escapeHtml(first.outcome)}</small></div>
+          <span>En iyi: ${bookTag(best.bookmaker)} ${money(best.current)}</span>
+        </div>
+        <div class="v530-site-odds-grid">
+          ${g.rows.map(r => `<div class="v530-site-odd ${r === best ? "best" : ""}">
+            ${bookTag(r.bookmaker)}
+            <b>${money(r.current)}</b>
+            <small>${escapeHtml(historyText(r))}</small>
+            ${r.info ? `<em>${escapeHtml(r.info)}</em>` : ""}
+          </div>`).join("")}
+        </div>
+      </section>`;
+    }).join("")}</div>`;
+  }
+
+  function renderMarkets() {
+    const cats = marketCategories();
+    return `<div class="v530-market-catalog">
+      ${cats.map(cat => `<section class="v530-market-cat">
+        <div class="v530-market-cat-head">
+          <h3>${escapeHtml(cat.name)}</h3>
+          <span>${(cat.markets || []).length} market</span>
+        </div>
+        <p>${escapeHtml(cat.desc || "")}</p>
+        <div class="v530-market-tags">
+          ${(cat.markets || []).map(m => `<button type="button" data-market-pick="${escapeAttr(m.id)}" data-category-pick="${escapeAttr(cat.id)}">${escapeHtml(m.name)}</button>`).join("")}
+        </div>
+      </section>`).join("")}
+    </div>`;
+  }
+
   function renderCompare() {
     const rows = bestByMarket();
     if (!rows.length) return empty("Veri bulunamadı.");
     return `<div class="odds-v528-table-wrap"><table class="odds-v528-table">
-      <thead><tr><th>Maç</th><th>Market</th><th>Barem</th><th>Seçim</th><th>En iyi site</th><th>Güncel</th><th>Oran akışı</th></tr></thead>
+      <thead><tr><th>Maç</th><th>Market</th><th>Barem</th><th>Seçim</th><th>En İyi Site</th><th>Güncel Oran</th><th>Oran Akışı</th></tr></thead>
       <tbody>${rows.map(r => `<tr>
         <td><b>${escapeHtml(r.match)}</b><small>${escapeHtml(r.league || "")}</small></td>
         <td>${escapeHtml(r.marketLabel)}</td>
@@ -312,21 +397,19 @@
         <td>${escapeHtml(r.outcome)}</td>
         <td>${bookTag(r.bookmaker)}</td>
         <td class="odd">${money(r.current)}</td>
-        <td class="flow">${escapeHtml(historyText(r))}</td>
+        <td class="flow">${escapeHtml(historyText(r))}${r.info ? `<small>${escapeHtml(r.info)}</small>` : ""}</td>
       </tr>`).join("")}</tbody>
     </table></div>`;
   }
 
-  function renderArbs() {
-    return renderArbList(getArbs(), true);
-  }
+  function renderArbs() { return renderArbList(getArbs(), true); }
 
-  function renderArbList(list, full = false) {
+  function renderArbList(list) {
     if (!list.length) return empty("Teorik arbitraj yakalanmadı.");
     return `<div class="odds-v528-cards">${list.map(a => `
       <article class="odds-v528-card arb">
         <div><b>${escapeHtml(a.match)}</b><small>${escapeHtml(a.league || "")}</small></div>
-        <div class="odds-v528-big">${pct(a.profitPct)}</div>
+        <div class="odds-v528-big">${signedPct(a.profitPct)}</div>
         <div class="odds-v528-mini">
           <span>1: ${bookTag(a.best["1"].bookmaker)} ${money(a.best["1"].current)}</span>
           <span>X: ${bookTag(a.best["X"].bookmaker)} ${money(a.best["X"].current)}</span>
@@ -335,57 +418,53 @@
       </article>`).join("")}</div>`;
   }
 
-  function renderValue() {
-    return renderValueList(getValueAlerts(), true);
-  }
+  function renderValue() { return renderValueList(getValueAlerts(), true); }
 
   function renderValueList(list) {
-    if (!list.length) return empty("Value eşiğini geçen oran yok.");
+    if (!list.length) return empty("Değerli oran eşiğini geçen oran yok.");
     return `<div class="odds-v528-cards">${list.map(r => `
       <article class="odds-v528-card value">
         <div><b>${escapeHtml(r.match)}</b><small>${escapeHtml(r.marketLabel)} · ${escapeHtml(r.outcome)}</small></div>
-        <div class="odds-v528-big">${pct(r.evPct)}</div>
+        <div class="odds-v528-big">${signedPct(r.evPct)}</div>
         <div class="odds-v528-mini">
           <span>${bookTag(r.bookmaker)} ${money(r.current)}</span>
-          <span>Ref: ${pct(r.refPct).replace("+","")}</span>
-          <span>Implied: ${pct(r.impliedPct).replace("+","")}</span>
+          <span>Referans Olasılık: ${plainPct(r.refPct)}</span>
+          <span>Sitenin Verdiği Olasılık: ${plainPct(r.impliedPct)}</span>
         </div>
+        ${r.info ? `<p class="v530-info">${escapeHtml(r.info)}</p>` : ""}
       </article>`).join("")}</div>`;
   }
 
-  function renderLines() {
-    return renderLineList(getLineGaps(), true);
-  }
+  function renderLines() { return renderLineList(getLineGaps(), true); }
 
   function renderLineList(list) {
     if (!list.length) return empty("Barem farkı yok.");
     return `<div class="odds-v528-cards">${list.map(x => `
       <article class="odds-v528-card linegap">
         <div><b>${escapeHtml(x.match)}</b><small>${escapeHtml(x.marketLabel)} · ${escapeHtml(x.low.outcome)}</small></div>
-        <div class="odds-v528-big">${x.gap.toFixed(1)} fark</div>
+        <div class="odds-v528-big">${x.gap.toFixed(1)} barem farkı</div>
         <div class="odds-v528-mini">
-          <span>Düşük: ${bookTag(x.low.bookmaker)} ${x.low.line} · ${money(x.low.current)}</span>
-          <span>Yüksek: ${bookTag(x.high.bookmaker)} ${x.high.line} · ${money(x.high.current)}</span>
+          <span>Düşük Barem: ${bookTag(x.low.bookmaker)} ${x.low.line} · ${money(x.low.current)}</span>
+          <span>Yüksek Barem: ${bookTag(x.high.bookmaker)} ${x.high.line} · ${money(x.high.current)}</span>
         </div>
       </article>`).join("")}</div>`;
   }
 
-  function renderDrops() {
-    return renderDropList(getDropAlerts(), true);
-  }
+  function renderDrops() { return renderDropList(getDropAlerts(), true); }
 
   function renderDropList(list) {
-    if (!list.length) return empty("Drop eşiğini geçen düşüş yok.");
+    if (!list.length) return empty("Oran düşüş eşiğini geçen düşüş yok.");
     return `<div class="odds-v528-cards">${list.map(r => `
       <article class="odds-v528-card drop">
         <div><b>${escapeHtml(r.match)}</b><small>${escapeHtml(r.marketLabel)} · ${escapeHtml(r.outcome)}</small></div>
-        <div class="odds-v528-big">${pct(r.changePct)}</div>
+        <div class="odds-v528-big">${signedPct(r.changePct)}</div>
         <div class="odds-v528-mini">
           <span>${bookTag(r.bookmaker)}</span>
-          <span>İlk: ${money(r.opening)}</span>
-          <span>Güncel: ${money(r.current)}</span>
+          <span>İlk Oran: ${money(r.opening)}</span>
+          <span>Güncel Oran: ${money(r.current)}</span>
           <span>${escapeHtml(historyText(r))}</span>
         </div>
+        ${r.info ? `<p class="v530-info">${escapeHtml(r.info)}</p>` : ""}
       </article>`).join("")}</div>`;
   }
 
@@ -396,7 +475,7 @@
       <thead><tr><th>Site</th><th>Tip</th><th>Altyapı</th><th>Durum</th><th>Link</th></tr></thead>
       <tbody>${sites.map(s => `<tr>
         <td><b>${escapeHtml(s.name)}</b><small>${escapeHtml(s.id)}</small></td>
-        <td>${escapeHtml(s.type || "-")}</td>
+        <td>${s.reference ? "Referans Kaynak" : "Bahis Sitesi"}</td>
         <td>${escapeHtml(groupName(s.id))}</td>
         <td><span class="odds-v528-status ${s.enabled ? "on" : "off"}">${s.enabled ? "Aktif" : "Kapalı"}</span></td>
         <td>${s.url ? `<a class="odds-v528-open" href="${escapeAttr(s.url)}" target="_blank" rel="noopener noreferrer">AÇ</a>` : `<span class="muted">Backend/API bekliyor</span>`}</td>
@@ -404,9 +483,7 @@
     </table></div>`;
   }
 
-  function empty(text) {
-    return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`;
-  }
+  function empty(text) { return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`; }
 
   function bookTag(id) {
     const s = sitesMap()[id];
@@ -423,11 +500,42 @@
       });
     });
 
+    qsa("[data-market-pick]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.marketCategory = btn.dataset.categoryPick || "all";
+        state.marketId = btn.dataset.marketPick || "all";
+        state.tab = "all-sites";
+        saveLocalState();
+        render();
+      });
+    });
+
     const sport = qs("#odds-v528-sport");
     if (sport) {
       sport.value = state.sport || "all";
       sport.addEventListener("change", () => {
         state.sport = sport.value || "all";
+        saveLocalState();
+        render();
+      });
+    }
+
+    const cat = qs("#odds-v530-category");
+    if (cat) {
+      cat.value = state.marketCategory || "all";
+      cat.addEventListener("change", () => {
+        state.marketCategory = cat.value || "all";
+        state.marketId = "all";
+        saveLocalState();
+        render();
+      });
+    }
+
+    const market = qs("#odds-v530-market");
+    if (market) {
+      market.value = state.marketId || "all";
+      market.addEventListener("change", () => {
+        state.marketId = market.value || "all";
         saveLocalState();
         render();
       });
@@ -465,9 +573,7 @@
     return String(str ?? "").replace(/[&<>"']/g, s => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[s]));
   }
 
-  function escapeAttr(str) {
-    return escapeHtml(str).replace(/`/g, "&#96;");
-  }
+  function escapeAttr(str) { return escapeHtml(str).replace(/`/g, "&#96;"); }
 
   window.omega_RenderOddsTerminal = async function () {
     readLocalState();
@@ -480,14 +586,6 @@
     render();
   };
 
-  window.addEventListener("hashchange", () => {
-    const key = String(location.hash || "").replace(/^#\/?/, "").split("/")[0];
-    if (key === "odds") setTimeout(() => window.omega_RenderOddsTerminal?.(), 20);
-  });
-
-  // V529 HARD ROUTE FIX:
-  // Eski router bazı dosyalarda #odds dalını tanımadığı için Oran Terminali görünmeyebiliyordu.
-  // Bu bölüm nav + block'u garanti eder ve #odds rotasını kendi başına açar.
   function ensureOddsDom() {
     const navContainer = document.querySelector("#main-dropdown-nav .nav-container") || document.getElementById("main-dropdown-nav");
     if (navContainer && !document.getElementById("nav-odds")) {
@@ -521,15 +619,7 @@
       history.pushState({ tab: "odds" }, "", "#odds");
     }
 
-    const hideIds = [
-      "omega-radar-block",
-      "omega-favs-block",
-      "omega-stream-block",
-      "omega-live-block",
-      "omega-live-center-block",
-      "omega-crypto-block",
-      "omega-rolling-block"
-    ];
+    const hideIds = ["omega-radar-block","omega-favs-block","omega-stream-block","omega-live-block","omega-live-center-block","omega-crypto-block","omega-rolling-block"];
     hideIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) {
@@ -544,16 +634,7 @@
     const fin = document.getElementById("v19-finance-block");
     if (fin) fin.classList.remove("active");
 
-    document.body.classList.remove(
-      "omega-tab-futbol",
-      "omega-tab-basketbol",
-      "omega-tab-rolling",
-      "omega-tab-stream",
-      "omega-tab-favs",
-      "omega-tab-live",
-      "omega-tab-crypto",
-      "omega-tab-finance"
-    );
+    document.body.classList.remove("omega-tab-futbol","omega-tab-basketbol","omega-tab-rolling","omega-tab-stream","omega-tab-favs","omega-tab-live","omega-tab-crypto","omega-tab-finance");
     document.body.classList.add("omega-tab-odds");
     document.body.classList.remove("rolling-active");
     document.documentElement.classList.remove("rolling-hash-boot");
@@ -596,5 +677,4 @@
     const key = String(location.hash || "").replace(/^#\/?/, "").split("/")[0];
     if (key === "odds") setTimeout(() => showOddsTerminal(false), 0);
   });
-
 })();
