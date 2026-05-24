@@ -1,5 +1,5 @@
 {
-  "version": "v536",
+  "version": "v538",
   "updatedAt": "2026-05-24T00:00:00+03:00",
   "note": "V530: Türkçeleştirilmiş Oran Terminali, futbol bahis türleri kataloğu ve tüm sitelerde karşılaştırma altyapısı.",
   "groups": [
@@ -192,7 +192,8 @@
           "id": "both_teams_to_score",
           "name": "İki Takım da Gol Atar"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "gol_alt_ust",
@@ -230,8 +231,45 @@
         {
           "id": "team2_scores",
           "name": "Takım 2 Gol Atar"
+        },
+        {
+          "id": "total_goals_over_1_0",
+          "name": "Genel 1 Gol Üst"
+        },
+        {
+          "id": "total_goals_over_2_0",
+          "name": "Genel 2 Gol Üst"
+        },
+        {
+          "id": "total_goals_over_3_0",
+          "name": "Genel 3 Gol Üst"
+        },
+        {
+          "id": "team1_goals_over_1_0",
+          "name": "Takım 1 1 Gol Üst"
+        },
+        {
+          "id": "team1_goals_over_2_0",
+          "name": "Takım 1 2 Gol Üst"
+        },
+        {
+          "id": "team1_goals_over_3_0",
+          "name": "Takım 1 3 Gol Üst"
+        },
+        {
+          "id": "team2_goals_over_1_0",
+          "name": "Takım 2 1 Gol Üst"
+        },
+        {
+          "id": "team2_goals_over_2_0",
+          "name": "Takım 2 2 Gol Üst"
+        },
+        {
+          "id": "team2_goals_over_3_0",
+          "name": "Takım 2 3 Gol Üst"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "ilk_yari_ikinci_yari",
@@ -273,8 +311,41 @@
         {
           "id": "team2_second_half_goal",
           "name": "Takım 2 2. Yarı Gol Atar"
+        },
+        {
+          "id": "first_half_total_goals_over_1_0",
+          "name": "İlk Yarı 1 Gol Üst"
+        },
+        {
+          "id": "first_half_total_goals_over_2_0",
+          "name": "İlk Yarı 2 Gol Üst"
+        },
+        {
+          "id": "first_half_team1_goals_over_1_0",
+          "name": "İlk Yarı Takım 1 1 Gol Üst"
+        },
+        {
+          "id": "first_half_team2_goals_over_1_0",
+          "name": "İlk Yarı Takım 2 1 Gol Üst"
+        },
+        {
+          "id": "second_half_total_goals_over_1_0",
+          "name": "İkinci Yarı 1 Gol Üst"
+        },
+        {
+          "id": "second_half_total_goals_over_2_0",
+          "name": "İkinci Yarı 2 Gol Üst"
+        },
+        {
+          "id": "second_half_team1_goals_over_1_0",
+          "name": "İkinci Yarı Takım 1 1 Gol Üst"
+        },
+        {
+          "id": "second_half_team2_goals_over_1_0",
+          "name": "İkinci Yarı Takım 2 1 Gol Üst"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "dakika_gol",
@@ -305,7 +376,8 @@
           "id": "team2_goal_by_60",
           "name": "Takım 2 İlk 60 Dakikaya Kadar Gol Atar"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "ard_arda_gol",
@@ -348,7 +420,8 @@
           "id": "any_team_no_4_consecutive_goals",
           "name": "Herhangi Bir Takım Ard Arda 4 Gol Atamaz"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "handikap",
@@ -383,7 +456,8 @@
           "id": "first_half_team_not_lose_by_2",
           "name": "İlk Yarı 2 Fark Yemez"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "kornerler",
@@ -418,7 +492,8 @@
           "id": "team2_corners",
           "name": "Takım 2 Korner Alt / Üst"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "kartlar",
@@ -445,7 +520,8 @@
           "id": "team2_cards",
           "name": "Takım 2 Kart Alt / Üst"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "sutlar",
@@ -484,7 +560,8 @@
           "id": "team2_shots_on_target",
           "name": "Takım 2 İsabetli Şut Alt / Üst"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "faul_tac_top",
@@ -523,7 +600,8 @@
           "id": "possession_team2",
           "name": "Takım 2 Topla Oynama %"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "oyuncu",
@@ -554,7 +632,8 @@
           "id": "player_assist",
           "name": "Oyuncu Asist Yapar"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "var_ofsayt",
@@ -585,7 +664,8 @@
           "id": "team2_offsides",
           "name": "Takım 2 Ofsayt Alt / Üst"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "paslar",
@@ -612,7 +692,8 @@
           "id": "team2_pass_accuracy",
           "name": "Takım 2 Pas İsabet Yüzdesi"
         }
-      ]
+      ],
+      "sport": "football"
     },
     {
       "id": "basketbol_marketleri",
@@ -671,7 +752,8 @@
           "id": "player_turnovers",
           "name": "Oyuncu Top Kaybı Alt / Üst"
         }
-      ]
+      ],
+      "sport": "basketball"
     }
   ],
   "turkishTerms": {
