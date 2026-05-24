@@ -203,7 +203,24 @@
       ],
       "current": 1.87,
       "updatedAt": "19:43",
-      "referenceProb": 0.55
+      "referenceProb": 0.55,
+      "confidence": 84,
+      "pressure": [
+        10,
+        13,
+        16,
+        18,
+        25,
+        31,
+        30,
+        35,
+        43,
+        48,
+        46,
+        52,
+        59,
+        61
+      ]
     },
     {
       "matchId": "gs-fb-2026-05-25",
@@ -226,7 +243,28 @@
       "current": 1.2,
       "updatedAt": "19:44",
       "referenceProb": 0.86,
-      "info": "Demo bilgi: iki takımın son maçlarında ilk 60 dakikada gol yüzdesi yüksek."
+      "info": "Demo bilgi: iki takımın son maçlarında ilk 60 dakikada gol yüzdesi yüksek.",
+      "confidence": 91,
+      "pressure": [
+        18,
+        28,
+        21,
+        19,
+        36,
+        24,
+        39,
+        37,
+        38,
+        34,
+        29,
+        27,
+        20,
+        26,
+        31,
+        39,
+        45,
+        43
+      ]
     },
     {
       "matchId": "gs-fb-2026-05-25",
@@ -249,7 +287,8 @@
       "current": 1.27,
       "updatedAt": "19:45",
       "referenceProb": 0.82,
-      "info": "Özellikle dengeli maçlarda ard arda 3 gol atamama marketi takip edilir."
+      "info": "Özellikle dengeli maçlarda ard arda 3 gol atamama marketi takip edilir.",
+      "confidence": 82
     },
     {
       "matchId": "gs-fb-2026-05-25",
@@ -272,7 +311,8 @@
       "current": 1.38,
       "updatedAt": "19:46",
       "referenceProb": 0.78,
-      "info": "Zayıf takımın 3 fark yememe marketi için handikap kontrolü."
+      "info": "Zayıf takımın 3 fark yememe marketi için handikap kontrolü.",
+      "confidence": 82
     },
     {
       "matchId": "efes-fb-2026-05-25",
