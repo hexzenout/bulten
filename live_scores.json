@@ -1,18 +1,7 @@
 {
-  "up": "01:39",
-  "matches": [
-    {
-      "name": "Minnesota United FC - Real Salt Lake",
-      "league": "Major League Soccer",
-      "score": "1 - 1",
-      "home_goals": 1,
-      "away_goals": 1,
-      "minute": 90,
-      "status": "Second Half",
-      "updated": "2026-05-24 01:39:11"
-    }
-  ],
+  "up": "11:05",
+  "matches": [],
   "logs": [
-    "key#1 OK live=1"
+    "key#1 OK live=0"
   ]
 }
