@@ -1,8 +1,8 @@
 {
-  "version": "v528-demo",
+  "version": "v530-demo",
   "generatedAt": "2026-05-24T00:00:00+03:00",
   "mode": "demo",
-  "warning": "Bu dosya V528 panelini çalıştıran demo veridir. Gerçek oran akışı sonraki backend/veri motoru aşamasında bu şemaya beslenecek.",
+  "warning": "V530 demo verisidir. Gerçek oran akışı backend/API/JSON üretici motorla aynı şemaya beslenecek.",
   "records": [
     {
       "matchId": "gs-fb-2026-05-25",
@@ -24,7 +24,8 @@
       ],
       "current": 2.08,
       "updatedAt": "19:40",
-      "referenceProb": 0.46
+      "referenceProb": 0.46,
+      "info": "Betsmove/Holigan grubu maç sonucu tarafında yüksek kalmış."
     },
     {
       "matchId": "gs-fb-2026-05-25",
@@ -90,7 +91,8 @@
       ],
       "current": 1.66,
       "updatedAt": "19:35",
-      "referenceProb": 0.6
+      "referenceProb": 0.6,
+      "info": "Referans piyasada sert düşüş."
     },
     {
       "matchId": "gs-fb-2026-05-25",
@@ -112,7 +114,8 @@
       ],
       "current": 1.85,
       "updatedAt": "19:36",
-      "referenceProb": 0.6
+      "referenceProb": 0.6,
+      "info": "Referans düşmüşken yerel piyasa daha yüksek kalmış."
     },
     {
       "matchId": "gs-fb-2026-05-25",
@@ -157,6 +160,119 @@
       "current": 2.01,
       "updatedAt": "19:38",
       "referenceProb": 0.48
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "yellow_cards",
+      "marketLabel": "Sarı Kart",
+      "line": 4.5,
+      "outcome": "Üst",
+      "bookmaker": "tempobet",
+      "opening": 1.95,
+      "history": [
+        1.94,
+        1.92,
+        1.89,
+        1.86
+      ],
+      "current": 1.86,
+      "updatedAt": "19:42",
+      "referenceProb": 0.56
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "shots_on_target",
+      "marketLabel": "İsabetli Şut",
+      "line": 8.5,
+      "outcome": "Üst",
+      "bookmaker": "stake",
+      "opening": 1.92,
+      "history": [
+        1.91,
+        1.9,
+        1.88,
+        1.87
+      ],
+      "current": 1.87,
+      "updatedAt": "19:43",
+      "referenceProb": 0.55
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "goal_by_60",
+      "marketLabel": "İlk 60 Dakikada Gol Olur",
+      "line": 60,
+      "outcome": "Evet",
+      "bookmaker": "1xbet",
+      "opening": 1.24,
+      "history": [
+        1.23,
+        1.22,
+        1.21,
+        1.2
+      ],
+      "current": 1.2,
+      "updatedAt": "19:44",
+      "referenceProb": 0.86,
+      "info": "Demo bilgi: iki takımın son maçlarında ilk 60 dakikada gol yüzdesi yüksek."
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "any_team_no_3_consecutive_goals",
+      "marketLabel": "Herhangi Bir Takım Ard Arda 3 Gol Atamaz",
+      "line": 3,
+      "outcome": "Evet",
+      "bookmaker": "holigan",
+      "opening": 1.31,
+      "history": [
+        1.3,
+        1.29,
+        1.28,
+        1.27
+      ],
+      "current": 1.27,
+      "updatedAt": "19:45",
+      "referenceProb": 0.82,
+      "info": "Özellikle dengeli maçlarda ard arda 3 gol atamama marketi takip edilir."
+    },
+    {
+      "matchId": "gs-fb-2026-05-25",
+      "sport": "football",
+      "league": "Türkiye Süper Lig",
+      "kickoff": "2026-05-25T20:00:00+03:00",
+      "match": "Galatasaray - Fenerbahçe",
+      "market": "team2_not_lose_by_3",
+      "marketLabel": "Takım 2 3 Fark Yemez",
+      "line": 2.5,
+      "outcome": "+2.5",
+      "bookmaker": "nesine",
+      "opening": 1.42,
+      "history": [
+        1.41,
+        1.4,
+        1.39,
+        1.38
+      ],
+      "current": 1.38,
+      "updatedAt": "19:46",
+      "referenceProb": 0.78,
+      "info": "Zayıf takımın 3 fark yememe marketi için handikap kontrolü."
     },
     {
       "matchId": "efes-fb-2026-05-25",
