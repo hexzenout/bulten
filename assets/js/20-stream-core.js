@@ -175,6 +175,7 @@ function omega_BootStreamV49(forceOne = false) {
     }
 
     window.__v523_stream_ready = true;
+    document.documentElement.classList.remove('v534-stream-preboot');
 }
 
 window.addEventListener('hashchange', () => {
@@ -183,3 +184,45 @@ window.addEventListener('hashchange', () => {
         setTimeout(() => omega_BootStreamV49(false), 30);
     }
 });
+
+
+/* ===============================
+   V534 STREAM LAYOUT HARD GUARD
+   F5 sonrası 1 ekran flash'ını gizler ve seçili layout'u korur.
+================================ */
+(function(){
+    function savedLayout(){
+        const n = parseInt(localStorage.getItem('v49_stream_layout') || '1', 10);
+        return [1,2,4,6].includes(n) ? n : 1;
+    }
+
+    document.addEventListener('click', function(e){
+        const btn = e.target.closest('.btn-stream-layout');
+        if (!btn || !btn.id) return;
+        const m = btn.id.match(/lay-btn-(\d+)/);
+        if (m) {
+            const n = parseInt(m[1], 10);
+            if ([1,2,4,6].includes(n)) {
+                try { localStorage.setItem('v49_stream_layout', String(n)); } catch {}
+            }
+        }
+    }, true);
+
+    document.addEventListener('DOMContentLoaded', function(){
+        const key = String(location.hash || '').replace(/^#\/?/, '').split('/')[0];
+        if (key === 'stream') {
+            setTimeout(function(){
+                if (typeof window.omega_BootStreamV49 === 'function') window.omega_BootStreamV49(false);
+                document.documentElement.classList.remove('v534-stream-preboot');
+            }, 0);
+            setTimeout(function(){
+                const grid = document.getElementById('omega-matrix-grid');
+                const n = savedLayout();
+                if (grid && !grid.classList.contains('m-lay-' + n) && typeof window.omega_BuildStreamMatrix === 'function') {
+                    window.omega_BuildStreamMatrix(n);
+                }
+                document.documentElement.classList.remove('v534-stream-preboot');
+            }, 90);
+        }
+    });
+})();
