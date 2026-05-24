@@ -2217,3 +2217,139 @@
     background: rgba(251,191,36,.055) !important;
 }
 
+/* ===============================
+   V539 MARKET DROPDOWN GRAY + OUTSIDE CLOSE + HISTORY TEXT
+================================ */
+
+/* Dropdown içindeki mavi yazı/arka plan kalıntılarını tamamen koyu griye çeker. */
+.omega-tab-odds .v536-market-dropdown,
+.omega-tab-odds .v537-market-dropdown,
+.omega-tab-odds .v535-market-dropdown {
+    border-color: rgba(255,255,255,.16) !important;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.020)),
+        #171b22 !important;
+}
+
+.omega-tab-odds .v537-market-cat,
+.omega-tab-odds .v537-market-cat.open,
+.omega-tab-odds .v537-market-cat.closed {
+    background: #191d24 !important;
+    border-color: rgba(255,255,255,.11) !important;
+}
+
+.omega-tab-odds .v537-market-cat.pinned {
+    border-color: rgba(251,191,36,.42) !important;
+}
+
+.omega-tab-odds .v537-cat-toggle,
+.omega-tab-odds .v537-cat-toggle:hover,
+.omega-tab-odds .v537-market-cat.open .v537-cat-toggle {
+    background: transparent !important;
+    color: #e5e7eb !important;
+}
+
+.omega-tab-odds .v537-cat-toggle b,
+.omega-tab-odds .v537-market-item b,
+.omega-tab-odds .v535-market-dropdown .v533-market-results b {
+    color: #f4f4f5 !important;
+}
+
+.omega-tab-odds .v537-cat-toggle small,
+.omega-tab-odds .v537-market-item small,
+.omega-tab-odds .v535-market-dropdown .v533-market-results small {
+    color: #a1a1aa !important;
+}
+
+/* Screenshot'teki mavi açıklama/link görünümü burada kapanır. */
+.omega-tab-odds .v537-cat-toggle span,
+.omega-tab-odds .v537-cat-toggle span *,
+.omega-tab-odds .v537-market-list,
+.omega-tab-odds .v537-market-list *,
+.omega-tab-odds .v536-market-dropdown a,
+.omega-tab-odds .v537-market-dropdown a,
+.omega-tab-odds .v535-market-dropdown a {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.omega-tab-odds .v537-market-item,
+.omega-tab-odds .v535-market-dropdown .v533-market-results button,
+.omega-tab-odds .v535-market-dropdown .v533-market-results button.cat {
+    background: #11151c !important;
+    border-color: rgba(255,255,255,.10) !important;
+}
+
+.omega-tab-odds .v537-market-item:hover,
+.omega-tab-odds .v535-market-dropdown .v533-market-results button:hover {
+    background: #20242c !important;
+    border-color: rgba(255,255,255,.18) !important;
+}
+
+/* Aç/kapa oku sarı değil nötr gri olsun. İğne sarı kalır çünkü sabitleme göstergesi. */
+.omega-tab-odds .v537-cat-toggle > i {
+    color: #d4d4d8 !important;
+}
+
+.omega-tab-odds .v537-cat-pin {
+    background: #20242c !important;
+    border-color: rgba(255,255,255,.12) !important;
+    color: #a1a1aa !important;
+}
+
+.omega-tab-odds .v537-cat-pin.active,
+.omega-tab-odds .v537-cat-pin:hover {
+    background: rgba(251,191,36,.12) !important;
+    border-color: rgba(251,191,36,.42) !important;
+    color: #fbbf24 !important;
+}
+
+/* Üstteki 'Tüm bahis türleri ve marketler' şeridi de mavi/mor değil gri. */
+.omega-tab-odds .v533-selected-market {
+    background: #20242c !important;
+    color: #e5e7eb !important;
+    border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+.omega-tab-odds .v533-selected-market span {
+    color: #e5e7eb !important;
+}
+
+/* Arama inputu da gri. */
+.omega-tab-odds #odds-v533-market-search {
+    background: #101318 !important;
+    border-color: rgba(255,255,255,.15) !important;
+    color: #f4f4f5 !important;
+}
+
+.omega-tab-odds #odds-v533-market-search:focus {
+    border-color: rgba(212,212,216,.70) !important;
+    box-shadow: 0 0 0 3px rgba(212,212,216,.10) !important;
+}
+
+/* 'Diğer değişimler' metni tek satır ve sade dursun. */
+.omega-tab-odds .v533-history-compact small {
+    color: #d4d4d8 !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .15px !important;
+}
+
+/* Popup kronolojik liste daha okunaklı. */
+.omega-tab-odds .v533-history-pop {
+    background: #101318 !important;
+    border-color: rgba(255,255,255,.16) !important;
+}
+
+.omega-tab-odds .v533-history-pop span {
+    background: #1b1f27 !important;
+}
+
+.omega-tab-odds .v533-history-pop em {
+    color: #a1a1aa !important;
+}
+
+.omega-tab-odds .v533-history-pop b {
+    color: #fbbf24 !important;
+}
+
