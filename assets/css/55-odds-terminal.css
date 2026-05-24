@@ -1581,3 +1581,223 @@
     }
 }
 
+/* ===============================
+   V536 ORAN TERMİNALİ KÖK DÜZELTME
+================================ */
+/* Eski gömülü drawer ve grafikler kesin kapalı. */
+.v534-market-drawer,
+.v533-market-picker,
+.v533-intel,
+.v533-pressure-chart,
+.v533-chart-axis,
+.v533-intel-chart {
+    display: none !important;
+}
+
+/* Üst filtre sadece: spor butonları + mavi market butonu. Maç/site araması yok. */
+.v536-filters {
+    grid-template-columns: minmax(300px, 390px) minmax(260px, 420px) !important;
+    align-items: center !important;
+    justify-content: start !important;
+    gap: 12px !important;
+    overflow: visible !important;
+}
+
+.v536-filters > input#odds-v528-search {
+    display: none !important;
+}
+
+.v536-filters .v531-sport-switch {
+    min-height: 50px !important;
+    height: 50px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 6px !important;
+    overflow: hidden !important;
+}
+
+.v536-filters .v531-sport-switch button {
+    min-width: 0 !important;
+    height: 38px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v536-market-menu {
+    position: relative !important;
+    z-index: 80 !important;
+    min-width: 260px !important;
+    max-width: 420px !important;
+}
+
+.v536-market-toggle {
+    width: 100% !important;
+    min-height: 50px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0,1fr) auto !important;
+    gap: 2px 10px !important;
+    align-items: center !important;
+    border: 1px solid rgba(59,130,246,.52) !important;
+    border-radius: 16px !important;
+    background: linear-gradient(180deg, rgba(59,130,246,.20), rgba(59,130,246,.08)), #111827 !important;
+    color: #dbeafe !important;
+    padding: 7px 12px !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    box-shadow: 0 0 0 1px rgba(59,130,246,.10) !important;
+}
+
+.v536-market-toggle span {
+    grid-column: 1 / -1 !important;
+    color: #93c5fd !important;
+    font-size: .64rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .45px !important;
+}
+
+.v536-market-toggle b {
+    color: #eff6ff !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+}
+
+.v536-market-toggle i { color: #60a5fa !important; }
+
+.v536-market-menu.open .v536-market-toggle {
+    border-color: rgba(96,165,250,.80) !important;
+    background: linear-gradient(180deg, rgba(59,130,246,.28), rgba(59,130,246,.12)), #111827 !important;
+}
+
+/* Ok ile açılan eski düzen: alt alta liste. */
+.v536-market-dropdown {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    width: min(520px, calc(100vw - 36px)) !important;
+    max-height: 420px !important;
+    overflow: hidden !important;
+    display: grid !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    border: 1px solid rgba(59,130,246,.42) !important;
+    border-radius: 16px !important;
+    background: linear-gradient(180deg, rgba(59,130,246,.10), rgba(255,255,255,.025)), #111827 !important;
+    box-shadow: 0 22px 55px rgba(0,0,0,.50) !important;
+}
+
+.v536-market-dropdown #odds-v533-market-search {
+    min-height: 42px !important;
+    width: 100% !important;
+    border: 1px solid rgba(96,165,250,.35) !important;
+    border-radius: 12px !important;
+    background: #0b1220 !important;
+    color: #f8fafc !important;
+    padding: 0 12px !important;
+    font-weight: 850 !important;
+    outline: none !important;
+}
+
+.v536-market-dropdown #odds-v533-market-search:focus {
+    border-color: rgba(96,165,250,.80) !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,.16) !important;
+}
+
+.v536-market-dropdown .v533-selected-market {
+    background: rgba(59,130,246,.14) !important;
+    color: #dbeafe !important;
+}
+
+.v536-market-dropdown .v533-market-results {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+    max-height: 265px !important;
+    overflow-y: auto !important;
+    padding-right: 3px !important;
+}
+
+.v536-market-dropdown .v533-market-results button {
+    min-height: 42px !important;
+    align-content: center !important;
+    border-radius: 11px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    background: #0f172a !important;
+    padding: 8px 10px !important;
+    text-align: left !important;
+}
+
+.v536-market-dropdown .v533-market-results button.cat {
+    background: rgba(59,130,246,.13) !important;
+    border-color: rgba(59,130,246,.25) !important;
+}
+
+.v536-market-dropdown .v533-market-results button:hover {
+    background: rgba(59,130,246,.22) !important;
+    border-color: rgba(96,165,250,.55) !important;
+}
+
+.v536-market-dropdown .v533-market-results b {
+    color: #f8fafc !important;
+    font-size: .74rem !important;
+}
+
+.v536-market-dropdown .v533-market-results small {
+    color: #93c5fd !important;
+    font-size: .64rem !important;
+}
+
+/* Ayrı İstihbarat sekmesi: grafik yok. */
+.v536-intel-page {
+    display: grid !important;
+    gap: 14px !important;
+    border: 1px solid rgba(34,197,94,.24) !important;
+    border-radius: 22px !important;
+    background: linear-gradient(180deg, rgba(34,197,94,.08), rgba(255,255,255,.025)), #1b1f25 !important;
+    padding: 16px !important;
+}
+
+.v536-intel-title {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    align-items: flex-start !important;
+}
+
+.v536-intel-title span { color: #22c55e !important; font-size: .72rem !important; font-weight: 950 !important; letter-spacing: .7px !important; }
+.v536-intel-title h3 { margin: 6px 0 !important; color: #fff !important; font-size: 1.45rem !important; font-weight: 950 !important; }
+.v536-intel-title p { margin: 0 !important; color: #a3a3a3 !important; line-height: 1.45 !important; }
+.v536-intel-title button { min-height: 42px !important; border-radius: 14px !important; border: 1px solid rgba(34,197,94,.35) !important; background: rgba(34,197,94,.12) !important; color: #bbf7d0 !important; font-weight: 950 !important; }
+.v536-intel-controls label { display: grid !important; gap: 8px !important; color: #d4d4d8 !important; font-size: .76rem !important; font-weight: 950 !important; }
+.v536-intel-controls input { width: 100% !important; accent-color: #22c55e !important; }
+.v536-intel-grid { display: grid !important; grid-template-columns: repeat(3, minmax(0,1fr)) !important; gap: 10px !important; }
+.v536-intel-grid article { display: grid !important; gap: 6px !important; border: 1px solid rgba(255,255,255,.10) !important; border-radius: 16px !important; background: #141820 !important; padding: 12px !important; }
+.v536-intel-grid strong { color: #22c55e !important; font-size: .68rem !important; font-weight: 950 !important; }
+.v536-intel-grid b { color: #fff !important; font-weight: 950 !important; }
+.v536-intel-grid span { color: #d4d4d8 !important; font-size: .74rem !important; }
+.v536-intel-grid em { color: #fbbf24 !important; font-style: normal !important; font-size: .74rem !important; font-weight: 900 !important; }
+.v536-intel-grid small { color: #a3a3a3 !important; font-size: .68rem !important; }
+
+/* Gri/koyu denge: her şey gri değil; paneller gri, iç kartlar koyu. */
+.omega-tab-odds .odds-v528-hero,
+.omega-tab-odds .odds-v528-toolbar,
+.omega-tab-odds .odds-v528-panel,
+.omega-tab-odds .odds-v528-table-wrap,
+.omega-tab-odds .v530-compare-card,
+.omega-tab-odds .v530-market-cat {
+    background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)), #202329 !important;
+}
+.omega-tab-odds .odds-v528-card,
+.omega-tab-odds .v530-site-odd { background: #141820 !important; }
+
+@media (max-width: 900px) {
+    .v536-filters { grid-template-columns: 1fr !important; }
+    .v536-market-menu { max-width: 100% !important; width: 100% !important; }
+    .v536-market-dropdown { width: 100% !important; }
+    .v536-intel-grid { grid-template-columns: 1fr !important; }
+}
+
