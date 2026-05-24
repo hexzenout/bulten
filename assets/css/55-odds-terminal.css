@@ -1326,3 +1326,258 @@
     }
 }
 
+/* ===============================
+   V534 ORAN TERMİNALİ GERİ TOPARLAMA
+================================ */
+
+/* V533 grafiği kaldırıldı; varsa görünmesin. */
+.v533-intel,
+.v533-pressure-chart,
+.v533-chart-axis,
+.v533-intel-chart {
+    display: none !important;
+}
+
+/* Üst filtre artık taşmaz: TÜMÜ/FUTBOL/BASKETBOL aynı satırda kalır. */
+.v534-filters {
+    grid-template-columns: minmax(290px, 390px) minmax(250px, 360px) minmax(260px, 1fr) !important;
+    align-items: center !important;
+}
+
+.v531-sport-switch {
+    align-self: stretch !important;
+    min-height: 52px !important;
+    overflow: hidden !important;
+}
+
+.v531-sport-switch button {
+    min-width: 0 !important;
+    white-space: nowrap !important;
+}
+
+/* Market arama artık dev panel gibi sabit durmaz; sadece açılır seçim olarak çalışır. */
+.v534-market-toggle {
+    min-height: 52px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 4px 10px !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: 16px !important;
+    background: #191d23 !important;
+    color: #e5e7eb !important;
+    padding: 8px 12px !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    min-width: 0 !important;
+}
+
+.v534-market-toggle span {
+    grid-column: 1 / -1 !important;
+    color: #a3a3a3 !important;
+    font-size: .64rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .45px !important;
+}
+
+.v534-market-toggle b {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    color: #f3e8ff !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+}
+
+.v534-market-toggle i {
+    color: #c084fc !important;
+}
+
+.v534-market-drawer {
+    margin-top: 12px !important;
+    display: grid !important;
+    gap: 10px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(168,85,247,.24) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg, rgba(168,85,247,.09), rgba(255,255,255,.025)), #181c22 !important;
+    box-shadow: 0 18px 46px rgba(0,0,0,.30) !important;
+}
+
+.v534-market-drawer-head {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+}
+
+.v534-market-drawer-head b {
+    display: block !important;
+    color: #fff !important;
+    font-weight: 950 !important;
+}
+
+.v534-market-drawer-head span {
+    color: #a3a3a3 !important;
+    font-size: .76rem !important;
+}
+
+.v534-market-drawer-head button {
+    width: 34px !important;
+    height: 34px !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: 10px !important;
+    background: #252a31 !important;
+    color: #fff !important;
+    cursor: pointer !important;
+}
+
+#odds-v533-market-search {
+    min-height: 44px !important;
+    border-radius: 14px !important;
+    background: #101318 !important;
+}
+
+.v533-market-results {
+    max-height: 260px !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    display: grid !important;
+    gap: 8px !important;
+}
+
+.v533-market-results button {
+    min-height: 58px !important;
+    align-content: center !important;
+}
+
+/* Ayrı İstihbarat sekmesi: grafik yok, kartlar var. */
+.v534-intel-page {
+    display: grid !important;
+    gap: 14px !important;
+    border: 1px solid rgba(34,197,94,.24) !important;
+    border-radius: 22px !important;
+    background: linear-gradient(180deg, rgba(34,197,94,.08), rgba(255,255,255,.025)), #1b1f25 !important;
+    padding: 16px !important;
+}
+
+.v534-intel-title {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    align-items: flex-start !important;
+}
+
+.v534-intel-title span {
+    color: #22c55e !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .7px !important;
+}
+
+.v534-intel-title h3 {
+    margin: 6px 0 !important;
+    color: #fff !important;
+    font-size: 1.45rem !important;
+    font-weight: 950 !important;
+}
+
+.v534-intel-title p {
+    margin: 0 !important;
+    color: #a3a3a3 !important;
+    line-height: 1.45 !important;
+}
+
+.v534-intel-title button,
+.v534-intel-controls button {
+    min-height: 42px !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(34,197,94,.35) !important;
+    background: rgba(34,197,94,.12) !important;
+    color: #bbf7d0 !important;
+    font-weight: 950 !important;
+}
+
+.v534-intel-controls {
+    display: grid !important;
+    gap: 8px !important;
+}
+
+.v534-intel-controls label {
+    color: #d4d4d8 !important;
+    font-size: .76rem !important;
+    font-weight: 950 !important;
+}
+
+.v534-intel-controls input {
+    width: 100% !important;
+    accent-color: #22c55e !important;
+}
+
+.v534-intel-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.v534-intel-grid article {
+    display: grid !important;
+    gap: 6px !important;
+    border: 1px solid rgba(255,255,255,.10) !important;
+    border-radius: 16px !important;
+    background: #141820 !important;
+    padding: 12px !important;
+}
+
+.v534-intel-grid strong {
+    color: #22c55e !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+}
+
+.v534-intel-grid b {
+    color: #fff !important;
+    font-weight: 950 !important;
+}
+
+.v534-intel-grid span {
+    color: #d4d4d8 !important;
+    font-size: .74rem !important;
+}
+
+.v534-intel-grid em {
+    color: #fbbf24 !important;
+    font-style: normal !important;
+    font-size: .74rem !important;
+    font-weight: 900 !important;
+}
+
+.v534-intel-grid small {
+    color: #a3a3a3 !important;
+    font-size: .68rem !important;
+}
+
+/* Gri dengesi: komple gri değil, paneller gri / iç alanlar koyu kontrast. */
+.omega-tab-odds .odds-v528-hero,
+.omega-tab-odds .odds-v528-toolbar,
+.omega-tab-odds .odds-v528-panel,
+.omega-tab-odds .odds-v528-table-wrap,
+.omega-tab-odds .v530-compare-card,
+.omega-tab-odds .v530-market-cat {
+    background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)), #202329 !important;
+}
+
+.omega-tab-odds .odds-v528-card,
+.omega-tab-odds .v530-site-odd {
+    background: #141820 !important;
+}
+
+@media (max-width: 1200px) {
+    .v534-filters,
+    .v533-market-results,
+    .v534-intel-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
