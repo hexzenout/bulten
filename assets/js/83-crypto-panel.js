@@ -404,6 +404,7 @@
     const isCustom = soundType === "custom";
     if (!force && ["v512","v514","v515"].includes(mount.dataset.ready) && mount.querySelector(".v512-sound-card")) return;
     mount.dataset.ready = "v515";
+    document.documentElement.classList.remove("v534-sound-preboot");
     mount.innerHTML = `
       <div class="v512-sound-card v514-sound-card">
         <div class="v512-sound-head"><b>Alarm Ses Merkezi</b></div>
