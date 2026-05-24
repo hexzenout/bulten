@@ -22,6 +22,8 @@
     alarmEnabled: true,
     alarmSensitivity: 0.4,
     marketPickerOpen: false,
+    pinnedMarketCats: [],
+    openMarketCats: null,
     sources: null,
     snapshot: null,
     lastLoadedAt: null
@@ -83,7 +85,9 @@
         minValuePct: state.minValuePct,
         minLineGap: state.minLineGap,
         alarmEnabled: state.alarmEnabled,
-        alarmSensitivity: state.alarmSensitivity
+        alarmSensitivity: state.alarmSensitivity,
+        pinnedMarketCats: Array.isArray(state.pinnedMarketCats) ? state.pinnedMarketCats : [],
+        openMarketCats: Array.isArray(state.openMarketCats) ? state.openMarketCats : null
       }));
     } catch {}
   }
@@ -399,7 +403,7 @@
         <div class="odds-v528-toolbar">
           <div class="odds-v528-tabs">
             ${tabButton("opportunities", "Canlı Fırsatlar")}
-            ${tabButton("intelligence", "İstihbarat")}
+            ${tabButton("intelligence", "İSTİHBARAT")}
             ${tabButton("all-sites", "Tüm Sitelerde Karşılaştır")}
             ${tabButton("compare", "En İyi Oranlar")}
             ${tabButton("markets", "Bahis Türleri")}
@@ -443,32 +447,91 @@
     return `<button type="button" class="${state.tab === key ? "active" : ""}" data-odds-tab="${key}">${label}</button>`;
   }
 
+
+  const MAIN_MARKET_CATEGORY_IDS = ["mac_sonucu", "gol_alt_ust", "ilk_yari_ikinci_yari", "kornerler"];
+
+  function defaultOpenCategoryIds() {
+    const existing = new Set(marketCategories().map(c => c.id));
+    return MAIN_MARKET_CATEGORY_IDS.filter(id => existing.has(id));
+  }
+
+  function openCategoryIds() {
+    if (Array.isArray(state.openMarketCats)) return [...state.openMarketCats];
+    return defaultOpenCategoryIds();
+  }
+
+  function isCategoryOpen(id) {
+    const query = normalizeText(state.marketSearch || "");
+    if (query) return true;
+    return openCategoryIds().includes(id);
+  }
+
+  function isCategoryPinned(id) {
+    return Array.isArray(state.pinnedMarketCats) && state.pinnedMarketCats.includes(id);
+  }
+
+  function sortCategoriesForMarketPicker(cats) {
+    const pinned = new Set(Array.isArray(state.pinnedMarketCats) ? state.pinnedMarketCats : []);
+    const main = new Set(MAIN_MARKET_CATEGORY_IDS);
+    return [...cats].sort((a, b) => {
+      const ap = pinned.has(a.id) ? 0 : 1;
+      const bp = pinned.has(b.id) ? 0 : 1;
+      if (ap !== bp) return ap - bp;
+      const am = main.has(a.id) ? 0 : 1;
+      const bm = main.has(b.id) ? 0 : 1;
+      if (am !== bm) return am - bm;
+      return marketCategories().findIndex(c => c.id === a.id) - marketCategories().findIndex(c => c.id === b.id);
+    });
+  }
+
   function marketSearchItems() {
     const query = normalizeText(state.marketSearch || "");
     const tokens = query ? query.split(/\s+/).filter(Boolean) : [];
-    const items = [];
-    marketCategories().forEach(cat => {
-      items.push({ type: "cat", id: cat.id, label: cat.name, desc: cat.desc || "", search: normalizeText([cat.name, cat.desc, cat.id].join(" ")) });
-      (cat.markets || []).forEach(m => {
-        items.push({ type: "market", id: m.id, categoryId: cat.id, categoryName: cat.name, label: m.name, desc: cat.name, search: normalizeText([m.name, m.id, cat.name, cat.desc].join(" ")) });
+
+    const cats = marketCategories().map(cat => {
+      const catSearch = normalizeText([cat.name, cat.desc, cat.id].join(" "));
+      const catMatches = !tokens.length || tokens.every(t => catSearch.includes(t));
+      const markets = (cat.markets || []).filter(m => {
+        const hay = normalizeText([m.name, m.id, cat.name, cat.desc].join(" "));
+        return !tokens.length || catMatches || tokens.every(t => hay.includes(t));
       });
-    });
-    if (!tokens.length) return items.slice(0, 18);
-    return items
-      .map(item => ({ ...item, score: tokens.reduce((sum, t) => sum + (item.search.includes(t) ? 1 : 0), 0) }))
-      .filter(item => item.score === tokens.length)
-      .slice(0, 24);
+      return { ...cat, _catMatches: catMatches, _markets: markets };
+    }).filter(cat => !tokens.length || cat._catMatches || cat._markets.length);
+
+    return sortCategoriesForMarketPicker(cats);
   }
 
   function marketResultsHtml() {
-    const items = marketSearchItems();
-    if (!items.length) return `<div class="v533-market-empty">Aradığın market bulunamadı.</div>`;
-    return items.map(item => {
-      if (item.type === "cat") {
-        return `<button type="button" class="cat" data-category-pick="${escapeAttr(item.id)}"><b>${escapeHtml(item.label)}</b><small>${escapeHtml(item.desc)}</small></button>`;
-      }
-      return `<button type="button" class="market" data-market-pick="${escapeAttr(item.id)}" data-category-pick="${escapeAttr(item.categoryId)}"><b>${escapeHtml(item.label)}</b><small>${escapeHtml(item.categoryName)}</small></button>`;
-    }).join("");
+    const cats = marketSearchItems();
+    const query = normalizeText(state.marketSearch || "");
+    if (!cats.length) return `<div class="v537-market-empty">Aradığın bahis türü / market bulunamadı.</div>`;
+
+    return `<div class="v537-market-accordion">${cats.map(cat => {
+      const pinned = isCategoryPinned(cat.id);
+      const open = isCategoryOpen(cat.id);
+      const arrow = open ? "fa-chevron-up" : "fa-chevron-down";
+      const markets = cat._markets || cat.markets || [];
+      return `<section class="v537-market-cat ${open ? "open" : "closed"} ${pinned ? "pinned" : ""}">
+        <div class="v537-market-cat-head">
+          <button type="button" class="v537-cat-toggle" data-cat-toggle="${escapeAttr(cat.id)}">
+            <i class="fa-solid ${arrow}"></i>
+            <span>
+              <b>${escapeHtml(cat.name)}</b>
+              <small>${escapeHtml(cat.desc || "")}</small>
+            </span>
+          </button>
+          <button type="button" class="v537-cat-pin ${pinned ? "active" : ""}" data-cat-pin="${escapeAttr(cat.id)}" title="${pinned ? "Baştan kaldır" : "Başa sabitle"}">
+            <i class="fa-solid fa-thumbtack"></i>
+          </button>
+        </div>
+        ${open ? `<div class="v537-market-list">
+          ${markets.length ? markets.map(m => `<button type="button" class="v537-market-item" data-market-pick="${escapeAttr(m.id)}" data-category-pick="${escapeAttr(cat.id)}">
+            <b>${escapeHtml(m.name)}</b>
+            <small>${escapeHtml(cat.name)}</small>
+          </button>`).join("") : `<div class="v537-market-empty">Bu başlıkta aramaya uygun market yok.</div>`}
+        </div>` : ""}
+      </section>`;
+    }).join("")}</div>`;
   }
 
   function content() {
@@ -663,6 +726,46 @@
     });
 
     function bindMarketButtons(root = document) {
+      qsa("[data-cat-toggle]", root).forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.catToggle;
+          if (!id) return;
+          const open = new Set(openCategoryIds());
+          if (open.has(id)) open.delete(id);
+          else open.add(id);
+          state.openMarketCats = [...open];
+          saveLocalState();
+          const box = qs(".v533-market-results");
+          if (box) {
+            box.innerHTML = marketResultsHtml();
+            bindMarketButtons(box);
+          } else {
+            render();
+          }
+        });
+      });
+
+      qsa("[data-cat-pin]", root).forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const id = btn.dataset.catPin;
+          if (!id) return;
+          const pinned = new Set(Array.isArray(state.pinnedMarketCats) ? state.pinnedMarketCats : []);
+          if (pinned.has(id)) pinned.delete(id);
+          else pinned.add(id);
+          state.pinnedMarketCats = [...pinned];
+          saveLocalState();
+          const box = qs(".v533-market-results");
+          if (box) {
+            box.innerHTML = marketResultsHtml();
+            bindMarketButtons(box);
+          } else {
+            render();
+          }
+        });
+      });
+
       qsa("[data-market-pick]", root).forEach(btn => {
         btn.addEventListener("click", () => {
           state.marketCategory = btn.dataset.categoryPick || "all";
@@ -670,18 +773,6 @@
           state.marketSearch = "";
           state.marketPickerOpen = false;
           state.tab = "all-sites";
-          saveLocalState();
-          render();
-        });
-      });
-
-      qsa("[data-category-pick]", root).forEach(btn => {
-        if (btn.dataset.marketPick) return;
-        btn.addEventListener("click", () => {
-          state.marketCategory = btn.dataset.categoryPick || "all";
-          state.marketId = "all";
-          state.marketSearch = "";
-          state.marketPickerOpen = false;
           saveLocalState();
           render();
         });
@@ -787,7 +878,7 @@
     const mount = qs("#omega-odds-render");
     if (!mount) return;
     if (!state.sources || !state.snapshot) {
-      mount.innerHTML = `<div class="odds-v528-loading"><i class="fa-solid fa-spinner fa-spin"></i> Oran Terminali yükleniyor...</div>`;
+      mount.innerHTML = `<div class="odds-v537-loading-silent" aria-hidden="true"></div>`;
       await load();
     }
     render();
