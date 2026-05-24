@@ -1801,3 +1801,286 @@
     .v536-intel-grid { grid-template-columns: 1fr !important; }
 }
 
+/* ===============================
+   V537 ORAN TERMİNALİ HERO + MARKET ACCORDION
+================================ */
+
+/* F5 sonrası "Oran Terminali yükleniyor" yazısı tamamen görünmez. */
+.odds-v537-loading-silent,
+.odds-v528-loading {
+    display: none !important;
+}
+
+/* Sadece üst hero bölümünü ilk kurulumdaki daha şık terminal tasarımına yakınlaştır. */
+.omega-tab-odds .odds-v528-hero {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 24px !important;
+    border: 1px solid rgba(251,191,36,.28) !important;
+    background:
+        radial-gradient(circle at 6% 0%, rgba(251,191,36,.18), transparent 30%),
+        radial-gradient(circle at 92% 20%, rgba(59,130,246,.14), transparent 32%),
+        linear-gradient(135deg, #15171d 0%, #20242c 50%, #111318 100%) !important;
+    box-shadow: 0 24px 70px rgba(0,0,0,.34) !important;
+}
+
+.omega-tab-odds .odds-v528-hero::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    background:
+        linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 100%),
+        linear-gradient(180deg, rgba(255,255,255,.05) 0 1px, transparent 1px 100%) !important;
+    background-size: 44px 44px !important;
+    opacity: .18 !important;
+}
+
+.omega-tab-odds .odds-v528-hero > * {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.omega-tab-odds .odds-v528-kicker {
+    color: #fbbf24 !important;
+}
+
+.omega-tab-odds .odds-v528-hero h2 {
+    color: #ffffff !important;
+    letter-spacing: -.035em !important;
+}
+
+.omega-tab-odds .odds-v528-hero p {
+    color: #cbd5e1 !important;
+}
+
+.omega-tab-odds .odds-v528-refresh {
+    border-color: rgba(251,191,36,.42) !important;
+    background: rgba(251,191,36,.14) !important;
+    color: #fde68a !important;
+}
+
+/* Market alanı artık mavi/mor değil, koyu gri. */
+.v536-market-toggle,
+.v537-market-toggle,
+.v536-market-menu.open .v536-market-toggle {
+    border-color: rgba(255,255,255,.16) !important;
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)), #1c2027 !important;
+    color: #e5e7eb !important;
+    box-shadow: none !important;
+}
+
+.v536-market-toggle span,
+.v537-market-toggle span {
+    color: #a3a3a3 !important;
+}
+
+.v536-market-toggle b,
+.v537-market-toggle b {
+    color: #f4f4f5 !important;
+}
+
+.v536-market-toggle i,
+.v537-market-toggle i {
+    color: #d4d4d8 !important;
+}
+
+/* Dropdown dar ve butonun altında kalır; sayfaya gömülmüş panel gibi davranmaz. */
+.v536-market-dropdown,
+.v537-market-dropdown {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    width: min(540px, calc(100vw - 36px)) !important;
+    max-height: 510px !important;
+    overflow: hidden !important;
+    display: grid !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+    border-radius: 16px !important;
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)), #161a20 !important;
+    box-shadow: 0 22px 55px rgba(0,0,0,.50) !important;
+}
+
+.v536-market-dropdown #odds-v533-market-search,
+.v537-market-dropdown #odds-v533-market-search {
+    min-height: 42px !important;
+    width: 100% !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    border-radius: 12px !important;
+    background: #101318 !important;
+    color: #f8fafc !important;
+    padding: 0 12px !important;
+    font-weight: 850 !important;
+    outline: none !important;
+}
+
+.v536-market-dropdown #odds-v533-market-search:focus,
+.v537-market-dropdown #odds-v533-market-search:focus {
+    border-color: rgba(251,191,36,.68) !important;
+    box-shadow: 0 0 0 3px rgba(251,191,36,.12) !important;
+}
+
+.v536-market-dropdown .v533-selected-market,
+.v537-market-dropdown .v533-selected-market {
+    background: rgba(255,255,255,.065) !important;
+    color: #e5e7eb !important;
+}
+
+/* Yeni kapalı/açık kategori yapısı */
+.v537-market-accordion {
+    display: grid !important;
+    gap: 7px !important;
+    max-height: 350px !important;
+    overflow-y: auto !important;
+    padding-right: 3px !important;
+}
+
+.v537-market-cat {
+    border: 1px solid rgba(255,255,255,.10) !important;
+    border-radius: 13px !important;
+    background: #101318 !important;
+    overflow: hidden !important;
+}
+
+.v537-market-cat.pinned {
+    border-color: rgba(251,191,36,.42) !important;
+}
+
+.v537-market-cat-head {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 38px !important;
+    gap: 6px !important;
+    align-items: stretch !important;
+    padding: 6px !important;
+}
+
+.v537-cat-toggle {
+    display: grid !important;
+    grid-template-columns: 20px minmax(0, 1fr) !important;
+    gap: 8px !important;
+    align-items: center !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    color: #f8fafc !important;
+    padding: 7px 8px !important;
+    text-align: left !important;
+    cursor: pointer !important;
+}
+
+.v537-cat-toggle:hover {
+    background: rgba(255,255,255,.055) !important;
+}
+
+.v537-cat-toggle > i {
+    color: #fbbf24 !important;
+    font-size: .72rem !important;
+}
+
+.v537-cat-toggle b {
+    display: block !important;
+    color: #f8fafc !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v537-cat-toggle small {
+    display: block !important;
+    color: #a3a3a3 !important;
+    font-size: .65rem !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.v537-cat-pin {
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: 10px !important;
+    background: #1f232b !important;
+    color: #9ca3af !important;
+    cursor: pointer !important;
+}
+
+.v537-cat-pin.active,
+.v537-cat-pin:hover {
+    border-color: rgba(251,191,36,.44) !important;
+    background: rgba(251,191,36,.12) !important;
+    color: #fbbf24 !important;
+}
+
+.v537-market-list {
+    display: grid !important;
+    gap: 5px !important;
+    padding: 0 8px 8px 34px !important;
+}
+
+.v537-market-item {
+    min-height: 34px !important;
+    display: grid !important;
+    gap: 2px !important;
+    align-content: center !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    background: #181c23 !important;
+    padding: 7px 10px !important;
+    text-align: left !important;
+    cursor: pointer !important;
+}
+
+.v537-market-item:hover {
+    border-color: rgba(251,191,36,.42) !important;
+    background: rgba(251,191,36,.10) !important;
+}
+
+.v537-market-item b {
+    color: #f5f5f5 !important;
+    font-size: .74rem !important;
+    font-weight: 950 !important;
+}
+
+.v537-market-item small {
+    color: #a3a3a3 !important;
+    font-size: .62rem !important;
+}
+
+.v537-market-empty {
+    color: #a3a3a3 !important;
+    font-size: .72rem !important;
+    font-weight: 850 !important;
+    padding: 10px !important;
+}
+
+/* Eski flat button stilleri yeni accordion'u ezmesin. */
+.v536-market-dropdown .v533-market-results {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.v536-market-dropdown .v533-market-results > button {
+    display: none !important;
+}
+
+/* İstihbarat ana sayfada görünmesin; sadece sekmede. */
+.odds-v528-content > .v533-intel,
+.odds-v528-content > .v534-intel-page:not(:has(.v534-intel-title)) {
+    display: none !important;
+}
+
+@media (max-width: 900px) {
+    .v536-market-dropdown,
+    .v537-market-dropdown {
+        width: min(100%, calc(100vw - 28px)) !important;
+    }
+
+    .v537-market-list {
+        padding-left: 16px !important;
+    }
+}
+
