@@ -1,5 +1,5 @@
 {
-  "version": "v530",
+  "version": "v534",
   "updatedAt": "2026-05-24T00:00:00+03:00",
   "note": "V530: Türkçeleştirilmiş Oran Terminali, futbol bahis türleri kataloğu ve tüm sitelerde karşılaştırma altyapısı.",
   "groups": [
@@ -553,6 +553,123 @@
         {
           "id": "player_assist",
           "name": "Oyuncu Asist Yapar"
+        }
+      ]
+    },
+    {
+      "id": "var_ofsayt",
+      "name": "VAR / Ofsayt / Hakem",
+      "desc": "VAR incelemesi, ofsayt, penaltı, hakem kararları ve maç içi özel olay marketleri.",
+      "markets": [
+        {
+          "id": "var_review",
+          "name": "Hakem VAR'a Gider"
+        },
+        {
+          "id": "var_overturn",
+          "name": "VAR Kararı Değiştirir"
+        },
+        {
+          "id": "penalty_awarded",
+          "name": "Penaltı Olur"
+        },
+        {
+          "id": "offsides_total",
+          "name": "Ofsayt Alt / Üst"
+        },
+        {
+          "id": "team1_offsides",
+          "name": "Takım 1 Ofsayt Alt / Üst"
+        },
+        {
+          "id": "team2_offsides",
+          "name": "Takım 2 Ofsayt Alt / Üst"
+        }
+      ]
+    },
+    {
+      "id": "paslar",
+      "name": "Pas Sayısı / Pas Yüzdesi",
+      "desc": "Toplam pas, takım pas sayısı ve pas isabet yüzdesi marketleri.",
+      "markets": [
+        {
+          "id": "total_passes",
+          "name": "Toplam Pas Sayısı Alt / Üst"
+        },
+        {
+          "id": "team1_passes",
+          "name": "Takım 1 Pas Sayısı Alt / Üst"
+        },
+        {
+          "id": "team2_passes",
+          "name": "Takım 2 Pas Sayısı Alt / Üst"
+        },
+        {
+          "id": "team1_pass_accuracy",
+          "name": "Takım 1 Pas İsabet Yüzdesi"
+        },
+        {
+          "id": "team2_pass_accuracy",
+          "name": "Takım 2 Pas İsabet Yüzdesi"
+        }
+      ]
+    },
+    {
+      "id": "basketbol_marketleri",
+      "name": "Basketbol Marketleri",
+      "desc": "Basketbol toplam sayı, handikap, çeyrek, takım ve oyuncu istatistikleri.",
+      "markets": [
+        {
+          "id": "basket_total_points",
+          "name": "Toplam Sayı Alt / Üst"
+        },
+        {
+          "id": "basket_team1_total",
+          "name": "Takım 1 Sayı Alt / Üst"
+        },
+        {
+          "id": "basket_team2_total",
+          "name": "Takım 2 Sayı Alt / Üst"
+        },
+        {
+          "id": "basket_handicap",
+          "name": "Basketbol Handikap"
+        },
+        {
+          "id": "basket_first_half_total",
+          "name": "İlk Yarı Toplam Sayı"
+        },
+        {
+          "id": "basket_quarter_total",
+          "name": "Çeyrek Toplam Sayı"
+        },
+        {
+          "id": "player_points",
+          "name": "Oyuncu Sayı Alt / Üst"
+        },
+        {
+          "id": "player_rebounds",
+          "name": "Oyuncu Ribaund Alt / Üst"
+        },
+        {
+          "id": "player_assists",
+          "name": "Oyuncu Asist Alt / Üst"
+        },
+        {
+          "id": "player_threes",
+          "name": "Oyuncu Üçlük Alt / Üst"
+        },
+        {
+          "id": "player_steals",
+          "name": "Oyuncu Top Çalma Alt / Üst"
+        },
+        {
+          "id": "player_blocks",
+          "name": "Oyuncu Blok Alt / Üst"
+        },
+        {
+          "id": "player_turnovers",
+          "name": "Oyuncu Top Kaybı Alt / Üst"
         }
       ]
     }
