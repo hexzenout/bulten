@@ -1,108 +1,68 @@
 {
-  "up": "18:48",
+  "up": "22:56",
   "matches": [
     {
-      "name": "Brighton - Manchester United",
-      "league": "Premier League",
-      "score": "0 - 2",
+      "name": "Torino - Juventus",
+      "league": "Serie A",
+      "score": "0 - 0",
       "home_goals": 0,
-      "away_goals": 2,
-      "minute": 45,
+      "away_goals": 0,
+      "minute": 5,
       "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
+      "updated": "2026-05-24 22:56:24"
     },
     {
-      "name": "Burnley - Wolves",
-      "league": "Premier League",
+      "name": "Cremonese - Como",
+      "league": "Serie A",
       "score": "0 - 1",
       "home_goals": 0,
       "away_goals": 1,
       "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
+      "status": "Halftime",
+      "updated": "2026-05-24 22:56:24"
     },
     {
-      "name": "Crystal Palace - Arsenal",
-      "league": "Premier League",
-      "score": "0 - 1",
-      "home_goals": 0,
+      "name": "Lecce - Genoa",
+      "league": "Serie A",
+      "score": "1 - 0",
+      "home_goals": 1,
+      "away_goals": 0,
+      "minute": 45,
+      "status": "Halftime",
+      "updated": "2026-05-24 22:56:24"
+    },
+    {
+      "name": "AC Milan - Cagliari",
+      "league": "Serie A",
+      "score": "1 - 1",
+      "home_goals": 1,
       "away_goals": 1,
       "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
+      "status": "Halftime",
+      "updated": "2026-05-24 22:56:24"
     },
     {
-      "name": "Fulham - Newcastle",
-      "league": "Premier League",
-      "score": "1 - 0",
-      "home_goals": 1,
-      "away_goals": 0,
-      "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
-    },
-    {
-      "name": "Liverpool - Brentford",
-      "league": "Premier League",
+      "name": "Hellas Verona - AS Roma",
+      "league": "Serie A",
       "score": "0 - 0",
       "home_goals": 0,
       "away_goals": 0,
       "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
+      "status": "Halftime",
+      "updated": "2026-05-24 22:56:24"
     },
     {
-      "name": "Manchester City - Aston Villa",
-      "league": "Premier League",
-      "score": "1 - 0",
-      "home_goals": 1,
-      "away_goals": 0,
+      "name": "Villarreal - Atletico Madrid",
+      "league": "La Liga",
+      "score": "4 - 1",
+      "home_goals": 4,
+      "away_goals": 1,
       "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
-    },
-    {
-      "name": "Nottingham Forest - Bournemouth",
-      "league": "Premier League",
-      "score": "1 - 0",
-      "home_goals": 1,
-      "away_goals": 0,
-      "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
-    },
-    {
-      "name": "Sunderland - Chelsea",
-      "league": "Premier League",
-      "score": "1 - 0",
-      "home_goals": 1,
-      "away_goals": 0,
-      "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
-    },
-    {
-      "name": "Tottenham - Everton",
-      "league": "Premier League",
-      "score": "1 - 0",
-      "home_goals": 1,
-      "away_goals": 0,
-      "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
-    },
-    {
-      "name": "West Ham - Leeds",
-      "league": "Premier League",
-      "score": "0 - 0",
-      "home_goals": 0,
-      "away_goals": 0,
-      "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-24 18:48:50"
+      "status": "Halftime",
+      "updated": "2026-05-24 22:56:24"
     }
   ],
   "logs": [
-    "key#1 OK live=10"
+    "key#1 OK live=6"
   ]
 }
