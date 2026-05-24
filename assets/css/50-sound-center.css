@@ -1387,3 +1387,11 @@ html.v534-sound-preboot #v28-sound-mount {
     visibility: hidden !important;
 }
 
+/* ===============================
+   V536 SOUND F5 FLICKER GUARD
+================================ */
+html.v536-sound-preboot #v28-sound-mount {
+    min-height: 360px !important;
+    visibility: hidden !important;
+}
+
