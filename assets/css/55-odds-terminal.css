@@ -834,3 +834,495 @@
     background: linear-gradient(180deg, rgba(34,197,94,.11), rgba(255,255,255,.025)), #1f1f1f !important;
 }
 
+/* ===============================
+   V533 ORAN TERMİNALİ İSTİHBARAT + UI DENGE
+================================ */
+
+/* V532 her yeri fazla gri yapmıştı; ana yüzey gri, iç kartlar kontrastlı koyu kalsın. */
+.omega-tab-odds .odds-v528-hero,
+.omega-tab-odds .odds-v528-toolbar,
+.omega-tab-odds .odds-v528-panel,
+.omega-tab-odds .odds-v528-table-wrap,
+.omega-tab-odds .v530-compare-card,
+.omega-tab-odds .v530-market-cat {
+    background: linear-gradient(180deg, rgba(255,255,255,.050), rgba(255,255,255,.020)), #202327 !important;
+    border-color: rgba(255,255,255,.12) !important;
+}
+
+.omega-tab-odds .odds-v528-card,
+.omega-tab-odds .v530-site-odd {
+    background: #15171c !important;
+    border-color: rgba(255,255,255,.10) !important;
+}
+
+.omega-tab-odds .odds-v528-kpis div {
+    background: #1b1e23 !important;
+}
+
+.omega-tab-odds .odds-v528-table th,
+.omega-tab-odds .odds-v528-panel-head,
+.omega-tab-odds .v530-compare-head {
+    background: #252a31 !important;
+}
+
+/* Sekme fontları daha temiz. */
+.odds-v528-tabs button {
+    font-size: .76rem !important;
+    letter-spacing: .25px !important;
+    font-weight: 950 !important;
+}
+
+.odds-v528-tabs button.active {
+    box-shadow: 0 0 0 1px rgba(168,85,247,.22), 0 12px 26px rgba(0,0,0,.22) !important;
+}
+
+/* TÜMÜ en solda ve daha dengeli. */
+.v533-filters {
+    grid-template-columns: minmax(280px, 380px) minmax(330px, 520px) minmax(0, 1fr) !important;
+    align-items: stretch !important;
+}
+
+.v531-sport-switch button.all {
+    order: 0 !important;
+}
+
+.v531-sport-switch button.football {
+    order: 1 !important;
+}
+
+.v531-sport-switch button.basketball {
+    order: 2 !important;
+}
+
+/* Akıllı market arama alanı */
+.v533-market-picker {
+    position: relative !important;
+    display: grid !important;
+    gap: 7px !important;
+    padding: 8px !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: 16px !important;
+    background: #1a1d22 !important;
+    min-width: 0 !important;
+}
+
+.v533-market-picker label {
+    color: #a3a3a3 !important;
+    font-size: .66rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .45px !important;
+    text-transform: uppercase !important;
+}
+
+#odds-v533-market-search {
+    width: 100% !important;
+    min-height: 38px !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: 12px !important;
+    background: #101216 !important;
+    color: #f5f5f5 !important;
+    padding: 0 10px !important;
+    font-weight: 850 !important;
+    outline: none !important;
+}
+
+.v533-selected-market {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    min-height: 28px !important;
+    border-radius: 10px !important;
+    background: rgba(168,85,247,.12) !important;
+    color: #e9d5ff !important;
+    padding: 0 8px !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+}
+
+.v533-selected-market button {
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.10) !important;
+    color: #fff !important;
+    font-size: .64rem !important;
+    font-weight: 950 !important;
+    padding: 4px 8px !important;
+    cursor: pointer !important;
+}
+
+.v533-market-results {
+    display: grid !important;
+    gap: 6px !important;
+    max-height: 196px !important;
+    overflow: auto !important;
+    padding-right: 2px !important;
+}
+
+.v533-market-results button {
+    display: grid !important;
+    gap: 3px !important;
+    text-align: left !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 12px !important;
+    background: #12151a !important;
+    color: #e5e7eb !important;
+    padding: 8px 10px !important;
+    cursor: pointer !important;
+}
+
+.v533-market-results button.cat {
+    border-color: rgba(168,85,247,.25) !important;
+    background: rgba(168,85,247,.08) !important;
+}
+
+.v533-market-results button:hover {
+    border-color: rgba(168,85,247,.55) !important;
+    background: rgba(168,85,247,.18) !important;
+}
+
+.v533-market-results b {
+    font-size: .76rem !important;
+    font-weight: 950 !important;
+}
+
+.v533-market-results small,
+.v533-market-empty {
+    color: #a3a3a3 !important;
+    font-size: .68rem !important;
+    font-weight: 800 !important;
+}
+
+/* İstihbarat terminali */
+.v533-intel {
+    display: grid !important;
+    gap: 14px !important;
+    margin-bottom: 14px !important;
+    padding: 18px !important;
+    border: 1px solid rgba(134,239,172,.20) !important;
+    border-radius: 24px !important;
+    background:
+      radial-gradient(circle at top right, rgba(34,197,94,.16), transparent 34%),
+      linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.020)),
+      #191d22 !important;
+    box-shadow: 0 22px 60px rgba(0,0,0,.32) !important;
+}
+
+.v533-intel.hot {
+    border-color: rgba(34,197,94,.44) !important;
+}
+
+.v533-intel-head {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
+}
+
+.v533-intel-head span {
+    color: #f5f5f5 !important;
+    font-weight: 950 !important;
+    letter-spacing: .55px !important;
+    font-size: .78rem !important;
+}
+
+.v533-intel-head h3 {
+    margin: 8px 0 6px !important;
+    color: #fff !important;
+    font-size: 1.35rem !important;
+    font-weight: 950 !important;
+}
+
+.v533-intel-head p {
+    margin: 0 !important;
+    color: #a3a3a3 !important;
+    max-width: 840px !important;
+    line-height: 1.45 !important;
+    font-size: .86rem !important;
+}
+
+.v533-intel-score {
+    min-width: 96px !important;
+    min-height: 76px !important;
+    display: grid !important;
+    place-items: center !important;
+    border: 1px solid rgba(34,197,94,.34) !important;
+    border-radius: 18px !important;
+    background: rgba(34,197,94,.10) !important;
+}
+
+.v533-intel-score small {
+    color: #bbf7d0 !important;
+    font-size: .62rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+}
+
+.v533-intel-score b {
+    color: #22c55e !important;
+    font-size: 1.9rem !important;
+    font-weight: 950 !important;
+}
+
+.v533-intel-body {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, .8fr) !important;
+    gap: 14px !important;
+}
+
+.v533-intel-chart,
+.v533-intel-list {
+    border: 1px solid rgba(255,255,255,.09) !important;
+    border-radius: 18px !important;
+    background: #12151a !important;
+    padding: 12px !important;
+}
+
+.v533-intel-chart > b {
+    display: block !important;
+    color: #fff !important;
+    margin-bottom: 8px !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+}
+
+.v533-pressure-chart {
+    width: 100% !important;
+    min-height: 150px !important;
+    display: block !important;
+    background: #0e1116 !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+}
+
+.v533-pressure-chart .area {
+    fill: rgba(134,239,172,.12) !important;
+}
+
+.v533-pressure-chart .line {
+    fill: none !important;
+    stroke: #86efac !important;
+    stroke-width: 3 !important;
+    filter: drop-shadow(0 0 8px rgba(134,239,172,.25)) !important;
+}
+
+.v533-pressure-chart circle {
+    fill: #bbf7d0 !important;
+    opacity: .8 !important;
+}
+
+.v533-chart-axis {
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 8px 4px 0 !important;
+    color: #e5e7eb !important;
+    font-size: .68rem !important;
+    font-weight: 850 !important;
+}
+
+.v533-intel-list {
+    display: grid !important;
+    gap: 8px !important;
+}
+
+.v533-intel-list article {
+    display: grid !important;
+    gap: 4px !important;
+    padding: 10px !important;
+    border-radius: 14px !important;
+    background: rgba(255,255,255,.045) !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+}
+
+.v533-intel-list strong {
+    color: #22c55e !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+}
+
+.v533-intel-list b {
+    color: #fff !important;
+    font-weight: 950 !important;
+}
+
+.v533-intel-list span {
+    color: #d4d4d8 !important;
+    font-size: .72rem !important;
+}
+
+.v533-intel-list em {
+    color: #fbbf24 !important;
+    font-size: .72rem !important;
+    font-style: normal !important;
+    font-weight: 900 !important;
+}
+
+.v533-intel-empty {
+    color: #a3a3a3 !important;
+    text-align: center !important;
+    padding: 20px !important;
+}
+
+.v533-intel-controls {
+    display: grid !important;
+    grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) 190px !important;
+    gap: 10px !important;
+    align-items: end !important;
+}
+
+.v533-intel-controls label {
+    display: grid !important;
+    gap: 6px !important;
+    color: #d4d4d8 !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+}
+
+.v533-intel-controls input[type="text"] {
+    min-height: 40px !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: 12px !important;
+    background: #101216 !important;
+    color: #f5f5f5 !important;
+    padding: 0 10px !important;
+}
+
+.v533-intel-controls input[type="range"] {
+    accent-color: #86efac !important;
+}
+
+.v533-intel-controls button {
+    min-height: 42px !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: 14px !important;
+    background: #2a2a2a !important;
+    color: #d4d4d8 !important;
+    font-weight: 950 !important;
+}
+
+.v533-intel-controls button.active {
+    border-color: rgba(34,197,94,.45) !important;
+    background: rgba(34,197,94,.15) !important;
+    color: #bbf7d0 !important;
+}
+
+/* Kompakt oran akışı: tek halde görünür, hover/clickte tüm değişimler açılır. */
+.v533-history-compact {
+    position: relative !important;
+    display: inline-grid !important;
+    gap: 3px !important;
+    min-width: 120px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 12px !important;
+    background: #20242b !important;
+    color: #e5e7eb !important;
+    padding: 7px 9px !important;
+    cursor: pointer !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.v533-history-main {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    white-space: nowrap !important;
+}
+
+.v533-history-main em {
+    color: #a3a3a3 !important;
+    font-style: normal !important;
+    font-weight: 900 !important;
+}
+
+.v533-history-main b {
+    color: #fbbf24 !important;
+    font-weight: 950 !important;
+}
+
+.v533-history-compact small {
+    color: #9ca3af !important;
+    font-size: .64rem !important;
+    font-weight: 850 !important;
+}
+
+.v533-history-compact.up i,
+.v533-odd-arrow.up {
+    color: #22c55e !important;
+}
+
+.v533-history-compact.down i,
+.v533-odd-arrow.down {
+    color: #ef4444 !important;
+}
+
+.v533-history-compact.same i,
+.v533-odd-arrow.same {
+    color: #a3a3a3 !important;
+}
+
+.v533-history-pop {
+    position: absolute !important;
+    left: 0 !important;
+    top: calc(100% + 8px) !important;
+    z-index: 50 !important;
+    min-width: 220px !important;
+    display: none !important;
+    gap: 5px !important;
+    padding: 10px !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    border-radius: 14px !important;
+    background: #0f1116 !important;
+    box-shadow: 0 18px 44px rgba(0,0,0,.45) !important;
+}
+
+.v533-history-compact:hover .v533-history-pop,
+.v533-history-compact:focus .v533-history-pop {
+    display: grid !important;
+}
+
+.v533-history-pop span {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    min-height: 24px !important;
+    align-items: center !important;
+    border-radius: 8px !important;
+    background: rgba(255,255,255,.045) !important;
+    padding: 0 8px !important;
+}
+
+.v533-history-pop em {
+    color: #a3a3a3 !important;
+    font-size: .68rem !important;
+    font-style: normal !important;
+    font-weight: 850 !important;
+}
+
+.v533-history-pop b {
+    color: #fbbf24 !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+}
+
+.v533-odd-arrow {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.08) !important;
+    margin-left: 4px !important;
+    font-size: .68rem !important;
+}
+
+@media (max-width: 1200px) {
+    .v533-filters,
+    .v533-intel-body,
+    .v533-intel-controls {
+        grid-template-columns: 1fr !important;
+    }
+}
+
