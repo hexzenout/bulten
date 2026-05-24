@@ -576,3 +576,261 @@
     }
 }
 
+/* ===============================
+   V531 ORAN TERMİNALİ UI POLISH
+================================ */
+
+/* Üst başlıkta / ORAN TERMİNALİ ana sayfa gibi gri görünsün. */
+.v531-module-title,
+.omega-tab-odds #active-module-name span {
+    color: #a3a3a3 !important;
+    font-weight: 950 !important;
+}
+
+/* Siyah/sert görünen yazıları gri skala ile yumuşat. */
+.omega-tab-odds .odds-v528-shell,
+.omega-tab-odds .odds-v528-table td,
+.omega-tab-odds .odds-v528-card small,
+.omega-tab-odds .v530-site-odd small {
+    color: #d4d4d8 !important;
+}
+
+.omega-tab-odds .odds-v528-hero p,
+.omega-tab-odds .odds-v528-table small,
+.omega-tab-odds .v530-market-cat p,
+.omega-tab-odds .odds-v528-empty,
+.omega-tab-odds .odds-v528-loading {
+    color: #a3a3a3 !important;
+}
+
+/* Spor seçimi artık select değil; sol menü ikonlu butonlar. */
+.v531-filters {
+    grid-template-columns: minmax(260px, 360px) minmax(260px, 420px) minmax(0, 1fr) !important;
+    align-items: center !important;
+}
+
+.v531-sport-switch {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    min-height: 42px !important;
+    padding: 4px !important;
+    border: 1px solid rgba(255,255,255,.10) !important;
+    border-radius: 16px !important;
+    background: #050505 !important;
+}
+
+.v531-sport-switch button {
+    flex: 1 1 0 !important;
+    min-height: 34px !important;
+    border: 1px solid transparent !important;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,.04) !important;
+    color: #d4d4d8 !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+}
+
+.v531-sport-switch button i {
+    margin-right: 6px !important;
+}
+
+.v531-sport-switch button.football i {
+    color: #22c55e !important;
+}
+
+.v531-sport-switch button.basketball i {
+    color: #f97316 !important;
+}
+
+.v531-sport-switch button.active.football {
+    background: rgba(34,197,94,.16) !important;
+    border-color: rgba(34,197,94,.50) !important;
+    color: #bbf7d0 !important;
+}
+
+.v531-sport-switch button.active.basketball {
+    background: rgba(249,115,22,.16) !important;
+    border-color: rgba(249,115,22,.50) !important;
+    color: #fed7aa !important;
+}
+
+.v531-sport-switch button.active.all {
+    background: rgba(168,85,247,.16) !important;
+    border-color: rgba(168,85,247,.50) !important;
+    color: #e9d5ff !important;
+}
+
+/* Oran değişimleri alt alta ve daha okunur. */
+.v531-flow-list {
+    display: grid !important;
+    gap: 4px !important;
+    min-width: 170px !important;
+    max-width: 280px !important;
+}
+
+.v531-flow-list span {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    align-items: center !important;
+    min-height: 22px !important;
+    padding: 0 8px !important;
+    border-radius: 8px !important;
+    background: rgba(255,255,255,.035) !important;
+}
+
+.v531-flow-list em {
+    color: #a3a3a3 !important;
+    font-style: normal !important;
+    font-size: .68rem !important;
+    font-weight: 850 !important;
+}
+
+.v531-flow-list b {
+    color: #fbbf24 !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+}
+
+.odds-v528-table .flow {
+    font-family: inherit !important;
+}
+
+.v530-site-odd small .v531-flow-list,
+.odds-v528-mini .v531-flow-list {
+    max-width: 100% !important;
+}
+
+/* Daha açıklayıcı uzun KPI başlıkları taşmasın. */
+.odds-v528-kpis span {
+    line-height: 1.2 !important;
+}
+
+@media (max-width: 1200px) {
+    .v531-filters {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .v531-sport-switch {
+        flex-wrap: wrap !important;
+    }
+
+    .v531-sport-switch button {
+        flex-basis: calc(50% - 6px) !important;
+    }
+}
+
+/* ===============================
+   V532 ORAN TERMİNALİ GRİ ARKA PLAN DÜZELTMESİ
+   Futbol sekmesindeki gri panel hissine yakınlaştırır.
+   Siyah kutu/alan yoğunluğunu azaltır.
+================================ */
+
+.omega-tab-odds .odds-v528-shell {
+    color: #e5e7eb !important;
+}
+
+/* Ana terminal kutuları: siyah yerine koyu gri */
+.omega-tab-odds .odds-v528-hero,
+.omega-tab-odds .odds-v528-toolbar,
+.omega-tab-odds .odds-v528-panel,
+.omega-tab-odds .odds-v528-table-wrap,
+.omega-tab-odds .v530-compare-card,
+.omega-tab-odds .v530-market-cat {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025)),
+        #171717 !important;
+    border-color: rgba(255,255,255,.11) !important;
+}
+
+/* İç kartlar: tamamen siyah görünmesin */
+.omega-tab-odds .odds-v528-card,
+.omega-tab-odds .v530-site-odd,
+.omega-tab-odds .odds-v528-kpis div {
+    background: #1f1f1f !important;
+    border-color: rgba(255,255,255,.12) !important;
+}
+
+/* Tablo ve başlık satırları */
+.omega-tab-odds .odds-v528-table th,
+.omega-tab-odds .odds-v528-panel-head,
+.omega-tab-odds .v530-compare-head {
+    background: #242424 !important;
+    border-color: rgba(255,255,255,.12) !important;
+}
+
+/* Form alanları / seçimler */
+.omega-tab-odds .odds-v528-filters select,
+.omega-tab-odds .odds-v528-filters input,
+.omega-tab-odds .v531-sport-switch {
+    background: #202020 !important;
+    border-color: rgba(255,255,255,.14) !important;
+    color: #f5f5f5 !important;
+}
+
+.omega-tab-odds .v531-sport-switch button,
+.omega-tab-odds .odds-v528-tabs button,
+.omega-tab-odds .v530-market-tags button {
+    background: #2a2a2a !important;
+    border-color: rgba(255,255,255,.12) !important;
+    color: #d4d4d8 !important;
+}
+
+.omega-tab-odds .odds-v528-tabs button.active,
+.omega-tab-odds .odds-v528-tabs button:hover,
+.omega-tab-odds .v530-market-tags button:hover {
+    background: rgba(168,85,247,.22) !important;
+    border-color: rgba(168,85,247,.55) !important;
+    color: #f3e8ff !important;
+}
+
+/* Oran akışı satırları da siyah değil gri olsun */
+.omega-tab-odds .v531-flow-list span,
+.omega-tab-odds .odds-v528-mini span {
+    background: #2a2a2a !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+}
+
+/* Tablo hücreleri ve kenar çizgileri */
+.omega-tab-odds .odds-v528-table th,
+.omega-tab-odds .odds-v528-table td {
+    border-bottom-color: rgba(255,255,255,.10) !important;
+}
+
+.omega-tab-odds .odds-v528-table td {
+    background: rgba(255,255,255,.015) !important;
+}
+
+/* Boş/yükleniyor alanları */
+.omega-tab-odds .odds-v528-empty,
+.omega-tab-odds .odds-v528-loading {
+    background: #1f1f1f !important;
+    border: 1px solid rgba(255,255,255,.10) !important;
+    border-radius: 16px !important;
+}
+
+/* En iyi oran / fırsat kartları gri kalsın ama renkli sınırları korunsun */
+.omega-tab-odds .odds-v528-card.value {
+    background: linear-gradient(180deg, rgba(168,85,247,.08), rgba(255,255,255,.025)), #1f1f1f !important;
+}
+
+.omega-tab-odds .odds-v528-card.arb {
+    background: linear-gradient(180deg, rgba(34,197,94,.08), rgba(255,255,255,.025)), #1f1f1f !important;
+}
+
+.omega-tab-odds .odds-v528-card.linegap {
+    background: linear-gradient(180deg, rgba(96,165,250,.08), rgba(255,255,255,.025)), #1f1f1f !important;
+}
+
+.omega-tab-odds .odds-v528-card.drop {
+    background: linear-gradient(180deg, rgba(239,68,68,.08), rgba(255,255,255,.025)), #1f1f1f !important;
+}
+
+.omega-tab-odds .v530-site-odd.best {
+    background: linear-gradient(180deg, rgba(34,197,94,.11), rgba(255,255,255,.025)), #1f1f1f !important;
+}
+
