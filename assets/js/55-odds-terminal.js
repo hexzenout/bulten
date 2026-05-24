@@ -21,6 +21,7 @@
     minLineGap: 1.5,
     alarmEnabled: true,
     alarmSensitivity: 0.4,
+    marketPickerOpen: false,
     sources: null,
     snapshot: null,
     lastLoadedAt: null
@@ -340,44 +341,34 @@
     </svg>`;
   }
 
-  function renderIntelligenceTerminal() {
+  function renderIntelligenceHub() {
     const items = criticalInsights();
-    const top = items[0]?.row || records(true)[0] || {};
-    const score = Math.round(items[0]?.score || 0);
-    const isHot = score >= 88;
-    return `<section class="v533-intel ${isHot ? "hot" : ""}">
-      <div class="v533-intel-head">
+    return `<section class="v534-intel-page">
+      <div class="v534-intel-title">
         <div>
-          <span>İSTİHBARAT TERMİNALİ v1.0</span>
-          <h3>Ciddi Avantajlı Bahis Takibi</h3>
-          <p>Bu alan yalnızca değer farkı, barem farkı veya sert oran hareketi güçlü olduğunda öne çıkar. Çok ciddi sinyalde alarm sistemi buraya bağlanacak.</p>
+          <span>İSTİHBARAT</span>
+          <h3>Ciddi Avantajlı Bahisler</h3>
+          <p>Burada sadece güçlü değer farkı, barem farkı veya sert oran hareketi olan sinyaller listelenir. Grafik kaldırıldı; bu alan ayrı sekme olarak çalışır.</p>
         </div>
-        <div class="v533-intel-score">
-          <small>Güven Skoru</small>
-          <b>${score || "-"}</b>
-        </div>
-      </div>
-      <div class="v533-intel-body">
-        <div class="v533-intel-chart">
-          <b>Takım Baskı Grafiği / Piyasa Hareketi</b>
-          ${pressureSvg(top)}
-          <div class="v533-chart-axis"><span>0'</span><span>15'</span><span>30'</span><span>45'</span><span>60'</span><span>75'</span><span>90'</span></div>
-        </div>
-        <div class="v533-intel-list">
-          ${items.length ? items.map(x => `<article>
-            <strong>${escapeHtml(x.type)}</strong>
-            <b>${escapeHtml(x.row?.match || x.lineGap?.match || "-")}</b>
-            <span>${escapeHtml(x.row?.marketLabel || x.lineGap?.marketLabel || "")} · ${escapeHtml(x.row?.outcome || "")}</span>
-            <em>${escapeHtml(x.reason)}</em>
-          </article>`).join("") : `<div class="v533-intel-empty">Şu an ciddi avantaj seviyesinde sinyal yok.</div>`}
-        </div>
-      </div>
-      <div class="v533-intel-controls">
-        <label>Market Filtresi <input type="text" value="${escapeAttr(selectedMarketLabel())}" readonly></label>
-        <label>Alarm Hassasiyeti <input id="v533-alarm-sensitivity" type="range" min="0" max="1" step="0.05" value="${Number(state.alarmSensitivity || 0.4)}"></label>
         <button type="button" data-odds-action="toggle-alarm" class="${state.alarmEnabled ? "active" : ""}">${state.alarmEnabled ? "Avantaj Alarmı Açık" : "Avantaj Alarmı Kapalı"}</button>
       </div>
+      <div class="v534-intel-controls">
+        <label>Alarm Hassasiyeti <input id="v533-alarm-sensitivity" type="range" min="0" max="1" step="0.05" value="${Number(state.alarmSensitivity || 0.4)}"></label>
+      </div>
+      <div class="v534-intel-grid">
+        ${items.length ? items.map(x => `<article>
+          <strong>${escapeHtml(x.type)}</strong>
+          <b>${escapeHtml(x.row?.match || x.lineGap?.match || "-")}</b>
+          <span>${escapeHtml(x.row?.marketLabel || x.lineGap?.marketLabel || "")} · ${escapeHtml(x.row?.outcome || "")}</span>
+          <em>${escapeHtml(x.reason)}</em>
+          <small>Güven skoru: ${Math.round(x.score || 0)}</small>
+        </article>`).join("") : `<div class="odds-v528-empty">Şu an ciddi avantaj seviyesinde sinyal yok.</div>`}
+      </div>
     </section>`;
+  }
+
+  function renderIntelligenceTerminal() {
+    return renderIntelligenceHub();
   }
 
   function shell() {
@@ -408,6 +399,7 @@
         <div class="odds-v528-toolbar">
           <div class="odds-v528-tabs">
             ${tabButton("opportunities", "Canlı Fırsatlar")}
+            ${tabButton("intelligence", "İstihbarat")}
             ${tabButton("all-sites", "Tüm Sitelerde Karşılaştır")}
             ${tabButton("compare", "En İyi Oranlar")}
             ${tabButton("markets", "Bahis Türleri")}
@@ -417,23 +409,31 @@
             ${tabButton("drops", "Oran Düşüş Uyarısı")}
             ${tabButton("sources", "Kaynak Siteler")}
           </div>
-          <div class="odds-v528-filters v530-filters v531-filters v533-filters">
+          <div class="odds-v528-filters v530-filters v531-filters v533-filters v534-filters">
             <div class="v531-sport-switch" role="group" aria-label="Spor seçimi">
               <button type="button" class="${state.sport === "all" ? "active all" : "all"}" data-odds-sport-btn="all">TÜMÜ</button>
               <button type="button" class="${state.sport === "football" ? "active football" : "football"}" data-odds-sport-btn="football"><i class="fa-solid fa-futbol"></i> FUTBOL</button>
               <button type="button" class="${state.sport === "basketball" ? "active basketball" : "basketball"}" data-odds-sport-btn="basketball"><i class="fa-solid fa-basketball"></i> BASKETBOL</button>
             </div>
-            <div class="v533-market-picker">
-              <label>Bahis türü / market ara</label>
-              <input id="odds-v533-market-search" type="search" placeholder="Örn: 2.5, korner, şut, kart, 60 dakika..." value="${escapeAttr(state.marketSearch || "")}">
-              <div class="v533-selected-market">
-                <span>${escapeHtml(selectedMarketLabel())}</span>
-                ${(state.marketCategory !== "all" || state.marketId !== "all") ? `<button type="button" data-market-reset="1">Sıfırla</button>` : ""}
-              </div>
-              <div class="v533-market-results">${marketResultsHtml()}</div>
-            </div>
+            <button type="button" class="v534-market-toggle" data-market-drawer-toggle="1">
+              <span>Bahis Türü / Market</span>
+              <b>${escapeHtml(selectedMarketLabel())}</b>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
             <input id="odds-v528-search" type="search" placeholder="Maç, site, market ara..." value="${escapeHtml(state.search || "")}">
           </div>
+          ${state.marketPickerOpen ? `<div class="v534-market-drawer">
+            <div class="v534-market-drawer-head">
+              <div><b>Bahis türü / market ara</b><span>Korner, 2.5, şut, kart, ofsayt, pas, 60 dakika gibi yaz.</span></div>
+              <button type="button" data-market-drawer-close="1"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <input id="odds-v533-market-search" type="search" placeholder="Örn: 2.5, korner, şut, kart, 60 dakika, ofsayt, pas..." value="${escapeAttr(state.marketSearch || "")}">
+            <div class="v533-selected-market">
+              <span>${escapeHtml(selectedMarketLabel())}</span>
+              ${(state.marketCategory !== "all" || state.marketId !== "all") ? `<button type="button" data-market-reset="1">Sıfırla</button>` : ""}
+            </div>
+            <div class="v533-market-results">${marketResultsHtml()}</div>
+          </div>` : ""}
         </div>
 
         <div class="odds-v528-content">${content()}</div>
@@ -473,6 +473,7 @@
   }
 
   function content() {
+    if (state.tab === "intelligence") return renderIntelligenceHub();
     if (state.tab === "all-sites") return renderAllSitesCompare();
     if (state.tab === "compare") return renderCompare();
     if (state.tab === "markets") return renderMarkets();
@@ -491,7 +492,6 @@
     const drops = getDropAlerts().slice(0, 5);
 
     return `
-      ${renderIntelligenceTerminal()}
       <div class="odds-v528-grid">
         ${panel("Değerli Oran Sinyalleri", renderValueList(values), "purple")}
         ${panel("Garantili Kazanç Adayı", renderArbList(arbs), "green")}
@@ -661,35 +661,42 @@
       });
     });
 
-    qsa("[data-market-pick]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        state.marketCategory = btn.dataset.categoryPick || "all";
-        state.marketId = btn.dataset.marketPick || "all";
-        state.marketSearch = "";
-        state.tab = "all-sites";
-        saveLocalState();
-        render();
+    function bindMarketButtons(root = document) {
+      qsa("[data-market-pick]", root).forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.marketCategory = btn.dataset.categoryPick || "all";
+          state.marketId = btn.dataset.marketPick || "all";
+          state.marketSearch = "";
+          state.marketPickerOpen = false;
+          state.tab = "all-sites";
+          saveLocalState();
+          render();
+        });
       });
-    });
 
-    qsa("[data-category-pick]").forEach(btn => {
-      if (btn.dataset.marketPick) return;
-      btn.addEventListener("click", () => {
-        state.marketCategory = btn.dataset.categoryPick || "all";
+      qsa("[data-category-pick]", root).forEach(btn => {
+        if (btn.dataset.marketPick) return;
+        btn.addEventListener("click", () => {
+          state.marketCategory = btn.dataset.categoryPick || "all";
+          state.marketId = "all";
+          state.marketSearch = "";
+          state.marketPickerOpen = false;
+          saveLocalState();
+          render();
+        });
+      });
+
+      qs("[data-market-reset]", root)?.addEventListener("click", () => {
+        state.marketCategory = "all";
         state.marketId = "all";
         state.marketSearch = "";
+        state.marketPickerOpen = false;
         saveLocalState();
         render();
       });
-    });
+    }
 
-    qs("[data-market-reset]")?.addEventListener("click", () => {
-      state.marketCategory = "all";
-      state.marketId = "all";
-      state.marketSearch = "";
-      saveLocalState();
-      render();
-    });
+    bindMarketButtons(document);
 
     qsa("[data-odds-sport-btn]").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -699,12 +706,31 @@
       });
     });
 
+    const openMarketDrawer = qs("[data-market-drawer-toggle]");
+    if (openMarketDrawer) {
+      openMarketDrawer.addEventListener("click", () => {
+        state.marketPickerOpen = !state.marketPickerOpen;
+        saveLocalState();
+        render();
+      });
+    }
+
+    qs("[data-market-drawer-close]")?.addEventListener("click", () => {
+      state.marketPickerOpen = false;
+      saveLocalState();
+      render();
+    });
+
     const marketSearch = qs("#odds-v533-market-search");
     if (marketSearch) {
       marketSearch.addEventListener("input", () => {
         state.marketSearch = marketSearch.value || "";
         saveLocalState();
-        render();
+        const box = qs(".v533-market-results");
+        if (box) {
+          box.innerHTML = marketResultsHtml();
+          bindMarketButtons(box);
+        }
       });
     }
 
@@ -713,7 +739,8 @@
       search.addEventListener("input", () => {
         state.search = search.value || "";
         saveLocalState();
-        render();
+        clearTimeout(window.__v534OddsSearchTimer);
+        window.__v534OddsSearchTimer = setTimeout(() => render(), 260);
       });
     }
 
