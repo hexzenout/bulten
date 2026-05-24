@@ -103,14 +103,48 @@
     }
   }
 
-  function marketCategories() {
+  function allMarketCategories() {
     return state.sources?.marketCategories || [];
+  }
+
+  function categorySport(cat) {
+    if (cat?.sport) return cat.sport;
+    const id = String(cat?.id || "").toLowerCase();
+    if (id.includes("basket")) return "basketball";
+    return "football";
+  }
+
+  function marketCategories() {
+    const all = allMarketCategories();
+    if (state.sport === "football") return all.filter(cat => categorySport(cat) === "football");
+    if (state.sport === "basketball") return all.filter(cat => categorySport(cat) === "basketball");
+    return all;
   }
 
   function marketMap() {
     const map = {};
-    marketCategories().forEach(cat => (cat.markets || []).forEach(m => map[m.id] = { ...m, categoryId: cat.id, categoryName: cat.name }));
+    allMarketCategories().forEach(cat => (cat.markets || []).forEach(m => map[m.id] = { ...m, categoryId: cat.id, categoryName: cat.name, sport: categorySport(cat) }));
     return map;
+  }
+
+  function selectedMarketFitsSport() {
+    if (state.marketCategory === "all" && state.marketId === "all") return true;
+    const allowed = new Set(marketCategories().map(c => c.id));
+    if (state.marketCategory !== "all") return allowed.has(state.marketCategory);
+    if (state.marketId !== "all") {
+      const meta = marketMap()[state.marketId];
+      return !meta || state.sport === "all" || meta.sport === state.sport;
+    }
+    return true;
+  }
+
+  function ensureMarketFitsSport() {
+    if (!selectedMarketFitsSport()) {
+      state.marketCategory = "all";
+      state.marketId = "all";
+      state.marketSearch = "";
+      state.openMarketCats = null;
+    }
   }
 
   function selectedMarketLabel() {
@@ -119,7 +153,7 @@
       return meta ? meta.name : "Seçili market";
     }
     if (state.marketCategory !== "all") {
-      const cat = marketCategories().find(c => c.id === state.marketCategory);
+      const cat = allMarketCategories().find(c => c.id === state.marketCategory);
       return cat ? cat.name : "Seçili bahis türü";
     }
     return "Tüm bahis türleri ve marketler";
@@ -428,7 +462,7 @@
               </button>
 
               ${state.marketPickerOpen ? `<div class="v536-market-dropdown">
-                <input id="odds-v533-market-search" type="search" placeholder="Korner, 2.5, şut, kart, ofsayt, pas, 60 dakika..." value="${escapeAttr(state.marketSearch || "")}">
+                <input id="odds-v533-market-search" type="search" placeholder="2.5, 1 gol üst, korner, şut, kart, ofsayt, pas, ribaund..." value="${escapeAttr(state.marketSearch || "")}">
                 <div class="v533-selected-market">
                   <span>${escapeHtml(selectedMarketLabel())}</span>
                   ${(state.marketCategory !== "all" || state.marketId !== "all") ? `<button type="button" data-market-reset="1">Sıfırla</button>` : ""}
@@ -795,6 +829,7 @@
         state.sport = btn.dataset.oddsSportBtn || "all";
         state.marketPickerOpen = false;
         state.marketSearch = "";
+        ensureMarketFitsSport();
         saveLocalState();
         render();
       });
