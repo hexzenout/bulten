@@ -1,18 +1,7 @@
 {
-  "up": "02:40",
-  "matches": [
-    {
-      "name": "Inter Miami - Philadelphia Union",
-      "league": "Major League Soccer",
-      "score": "1 - 3",
-      "home_goals": 1,
-      "away_goals": 3,
-      "minute": 29,
-      "status": "First Half",
-      "updated": "2026-05-25 02:40:38"
-    }
-  ],
+  "up": "15:47",
+  "matches": [],
   "logs": [
-    "key#1 OK live=1"
+    "key#1 OK live=0"
   ]
 }
