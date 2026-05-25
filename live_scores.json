@@ -1,18 +1,7 @@
 {
-  "up": "23:43",
-  "matches": [
-    {
-      "name": "SC Paderborn 07 - VfL Wolfsburg",
-      "league": "Bundesliga",
-      "score": "2 - 1",
-      "home_goals": 2,
-      "away_goals": 1,
-      "minute": 106,
-      "status": "Extra Time",
-      "updated": "2026-05-25 23:43:00"
-    }
-  ],
+  "up": "00:51",
+  "matches": [],
   "logs": [
-    "key#1 OK live=1"
+    "key#1 OK live=0"
   ]
 }
