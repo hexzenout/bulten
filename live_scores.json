@@ -1,18 +1,7 @@
 {
-  "up": "22:43",
-  "matches": [
-    {
-      "name": "Saint Etienne - Nice",
-      "league": "Ligue 1",
-      "score": "0 - 0",
-      "home_goals": 0,
-      "away_goals": 0,
-      "minute": 45,
-      "status": "Halftime",
-      "updated": "2026-05-26 22:43:49"
-    }
-  ],
+  "up": "00:20",
+  "matches": [],
   "logs": [
-    "key#1 OK live=1"
+    "key#1 OK live=0"
   ]
 }
