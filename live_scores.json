@@ -1,28 +1,7 @@
 {
-  "up": "01:46",
-  "matches": [
-    {
-      "name": "Lanus - Mirassol",
-      "league": "CONMEBOL Libertadores",
-      "score": "1 - 0",
-      "home_goals": 1,
-      "away_goals": 0,
-      "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-27 01:46:14"
-    },
-    {
-      "name": "LDU de Quito - Always Ready",
-      "league": "CONMEBOL Libertadores",
-      "score": "1 - 2",
-      "home_goals": 1,
-      "away_goals": 2,
-      "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-27 01:46:14"
-    }
-  ],
+  "up": "02:58",
+  "matches": [],
   "logs": [
-    "key#1 OK live=2"
+    "key#1 OK live=0"
   ]
 }
