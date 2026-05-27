@@ -1,7 +1,18 @@
 {
-  "up": "21:07",
-  "matches": [],
+  "up": "23:28",
+  "matches": [
+    {
+      "name": "Crystal Palace - Rayo Vallecano",
+      "league": "UEFA Europa Conference League",
+      "score": "1 - 0",
+      "home_goals": 1,
+      "away_goals": 0,
+      "minute": 67,
+      "status": "Second Half",
+      "updated": "2026-05-27 23:28:59"
+    }
+  ],
   "logs": [
-    "key#1 OK live=0"
+    "key#1 OK live=1"
   ]
 }
