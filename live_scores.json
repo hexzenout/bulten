@@ -1,48 +1,7 @@
 {
-  "up": "04:25",
-  "matches": [
-    {
-      "name": "Bolívar - Independ. Rivadavia",
-      "league": "CONMEBOL Libertadores",
-      "score": "0 - 1",
-      "home_goals": 0,
-      "away_goals": 1,
-      "minute": 45,
-      "status": "First Half",
-      "updated": "2026-05-28 04:25:08"
-    },
-    {
-      "name": "Corinthians - Platense",
-      "league": "CONMEBOL Libertadores",
-      "score": "0 - 1",
-      "home_goals": 0,
-      "away_goals": 1,
-      "minute": 45,
-      "status": "Halftime",
-      "updated": "2026-05-28 04:25:08"
-    },
-    {
-      "name": "Fluminense - Deportivo La Guaira",
-      "league": "CONMEBOL Libertadores",
-      "score": "2 - 1",
-      "home_goals": 2,
-      "away_goals": 1,
-      "minute": 45,
-      "status": "Halftime",
-      "updated": "2026-05-28 04:25:08"
-    },
-    {
-      "name": "Penarol - Santa Fe",
-      "league": "CONMEBOL Libertadores",
-      "score": "0 - 1",
-      "home_goals": 0,
-      "away_goals": 1,
-      "minute": 45,
-      "status": "Halftime",
-      "updated": "2026-05-28 04:25:08"
-    }
-  ],
+  "up": "08:43",
+  "matches": [],
   "logs": [
-    "key#1 OK live=4"
+    "key#1 OK live=0"
   ]
 }
