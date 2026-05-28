@@ -1,28 +1,48 @@
 {
-  "up": "02:42",
+  "up": "04:25",
   "matches": [
     {
-      "name": "Independiente del Valle - Rosario Central",
-      "league": "CONMEBOL Libertadores",
-      "score": "1 - 0",
-      "home_goals": 1,
-      "away_goals": 0,
-      "minute": 82,
-      "status": "Second Half",
-      "updated": "2026-05-28 02:42:38"
-    },
-    {
-      "name": "Libertad Asuncion - UCV",
+      "name": "Bolívar - Independ. Rivadavia",
       "league": "CONMEBOL Libertadores",
       "score": "0 - 1",
       "home_goals": 0,
       "away_goals": 1,
-      "minute": 83,
-      "status": "Second Half",
-      "updated": "2026-05-28 02:42:38"
+      "minute": 45,
+      "status": "First Half",
+      "updated": "2026-05-28 04:25:08"
+    },
+    {
+      "name": "Corinthians - Platense",
+      "league": "CONMEBOL Libertadores",
+      "score": "0 - 1",
+      "home_goals": 0,
+      "away_goals": 1,
+      "minute": 45,
+      "status": "Halftime",
+      "updated": "2026-05-28 04:25:08"
+    },
+    {
+      "name": "Fluminense - Deportivo La Guaira",
+      "league": "CONMEBOL Libertadores",
+      "score": "2 - 1",
+      "home_goals": 2,
+      "away_goals": 1,
+      "minute": 45,
+      "status": "Halftime",
+      "updated": "2026-05-28 04:25:08"
+    },
+    {
+      "name": "Penarol - Santa Fe",
+      "league": "CONMEBOL Libertadores",
+      "score": "0 - 1",
+      "home_goals": 0,
+      "away_goals": 1,
+      "minute": 45,
+      "status": "Halftime",
+      "updated": "2026-05-28 04:25:08"
     }
   ],
   "logs": [
-    "key#1 OK live=2"
+    "key#1 OK live=4"
   ]
 }
