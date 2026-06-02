@@ -454,7 +454,7 @@
               <button type="button" class="${state.sport === "basketball" ? "active basketball" : "basketball"}" data-odds-sport-btn="basketball"><i class="fa-solid fa-basketball"></i> BASKETBOL</button>
             </div>
 
-            <div class="v536-market-menu ${state.marketPickerOpen ? "open" : ""}">
+            <div class="v536-market-menu v540-market-menu ${state.marketPickerOpen ? "open" : ""}">
               <button type="button" class="v536-market-toggle" data-market-drawer-toggle="1" aria-expanded="${state.marketPickerOpen ? "true" : "false"}">
                 <span>Bahis Türü / Market</span>
                 <b>${escapeHtml(selectedMarketLabel())}</b>
@@ -748,7 +748,24 @@
     return `<span class="odds-v528-book${ref}">${escapeHtml(s?.name || id)}</span>`;
   }
 
+
+  // V540_GLOBAL_MARKET_OUTSIDE_CLOSE
+  function installMarketOutsideCloseGuard() {
+    if (window.__v540OddsMarketOutsideClose) return;
+    window.__v540OddsMarketOutsideClose = true;
+    document.addEventListener("pointerdown", (ev) => {
+      if (!document.body.classList.contains("omega-tab-odds")) return;
+      if (!state.marketPickerOpen) return;
+      if (ev.target.closest(".v536-market-menu, .v537-market-menu, .v535-market-menu, .v540-market-menu")) return;
+      state.marketPickerOpen = false;
+      state.marketSearch = "";
+      saveLocalState();
+      setTimeout(() => render(), 0);
+    }, true);
+  }
+
   function bind() {
+    installMarketOutsideCloseGuard();
     qsa("[data-odds-tab]").forEach(btn => {
       btn.addEventListener("click", () => {
         state.tab = btn.dataset.oddsTab || "opportunities";
