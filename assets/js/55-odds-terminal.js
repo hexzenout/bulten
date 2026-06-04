@@ -159,8 +159,15 @@
     return "Tüm bahis türleri ve marketler";
   }
 
+  function isPolymarketRecord(r) {
+    const site = sitesMap()[r?.bookmaker];
+    const bookmaker = String(r?.bookmaker || "").toLowerCase();
+    const type = String(r?.type || r?.sourceType || site?.type || "").toLowerCase();
+    return bookmaker === "polymarket" || type === "prediction_market";
+  }
+
   function records(raw = false) {
-    const list = state.snapshot?.records || [];
+    const list = (state.snapshot?.records || []).filter(r => !isPolymarketRecord(r));
     if (raw) return list;
     const search = normalizeText(state.search || "");
     return list.filter(r => {
@@ -171,6 +178,18 @@
       const haystack = normalizeText([r.match, r.league, r.bookmaker, r.marketLabel, r.outcome, r.info, r.line].join(" "));
       const searchOk = !search || search.split(/\s+/).every(token => haystack.includes(token));
       return sportOk && categoryOk && marketOk && searchOk;
+    });
+  }
+
+  function polymarketRecords(raw = false) {
+    const list = (state.snapshot?.records || []).filter(isPolymarketRecord);
+    if (raw) return list;
+    const search = normalizeText(state.search || "");
+    return list.filter(r => {
+      const sportOk = state.sport === "all" || r.sport === state.sport || r.sport === "prediction";
+      const haystack = normalizeText([r.question, r.match, r.league, r.marketLabel, r.outcome, r.info, r.eventType, r.timeframe].join(" "));
+      const searchOk = !search || search.split(/\s+/).every(token => haystack.includes(token));
+      return sportOk && searchOk;
     });
   }
 
@@ -302,6 +321,50 @@
     return out.sort((a, b) => b.profitPct - a.profitPct);
   }
 
+  function hoursUntil(value) {
+    const ts = Date.parse(value || "");
+    if (!Number.isFinite(ts)) return null;
+    return (ts - Date.now()) / 36e5;
+  }
+
+  function formatDeadline(value) {
+    const hours = hoursUntil(value);
+    if (hours == null) return "Kapanış yok";
+    if (hours <= 0) return "Kapanmış";
+    if (hours < 1) return `${Math.max(1, Math.round(hours * 60))} dk kaldı`;
+    if (hours < 48) return `${hours.toFixed(1)} saat kaldı`;
+    return `${Math.ceil(hours / 24)} gün kaldı`;
+  }
+
+  function polymarketEdge(row) {
+    if (Number.isFinite(Number(row?.edgePct))) return Number(row.edgePct);
+    const p = Number(row?.referenceProb || 0);
+    const odd = Number(row?.current || 0);
+    return p && odd ? (p * odd - 1) * 100 : 0;
+  }
+
+  function polymarketScore(row) {
+    const edge = Math.max(0, polymarketEdge(row));
+    const confidence = Number(row?.confidence || 0);
+    const liquidity = Math.min(10, Math.log10(Math.max(10, Number(row?.liquidity || 0))));
+    const shortBoost = Math.max(0, 12 - Math.max(0, Number(hoursUntil(row?.expiresAt) || 99)) / 4);
+    return Math.round(Math.max(confidence, 58 + edge * 1.6 + liquidity * 2 + shortBoost));
+  }
+
+  function getPolymarketSignals(list = polymarketRecords()) {
+    return list
+      .map(r => ({ ...r, edgePct: polymarketEdge(r), score: polymarketScore(r), hoursLeft: hoursUntil(r.expiresAt) }))
+      .sort((a, b) => b.score - a.score || b.edgePct - a.edgePct);
+  }
+
+  function polymarketSummary(list = polymarketRecords()) {
+    const signals = getPolymarketSignals(list);
+    const shortTerm = signals.filter(x => Number.isFinite(x.hoursLeft) && x.hoursLeft > 0 && x.hoursLeft <= 48).length;
+    const value = signals.filter(x => x.edgePct >= Number(state.minValuePct || 5)).length;
+    const avgScore = signals.length ? Math.round(signals.reduce((sum, x) => sum + Number(x.score || 0), 0) / signals.length) : 0;
+    return { records: list.length, shortTerm, value, avgScore };
+  }
+
   function bestByMarket(list = records()) {
     const map = {};
     list.forEach(r => {
@@ -344,6 +407,7 @@
     const list = records();
     const sourceCount = state.sources?.sites?.length || 0;
     const matchCount = new Set(list.map(r => r.matchId)).size;
+    const poly = polymarketSummary();
     return {
       records: list.length,
       sources: sourceCount,
@@ -353,7 +417,9 @@
       lineGaps: getLineGaps(list).length,
       arbs: getArbs(list).length,
       markets: marketCategories().reduce((sum, c) => sum + (c.markets?.length || 0), 0),
-      critical: criticalInsights().length
+      critical: criticalInsights().length,
+      polymarket: poly.records,
+      polymarketValue: poly.value
     };
   }
 
@@ -417,8 +483,8 @@
         <div class="odds-v528-hero">
           <div>
             <div class="odds-v528-kicker"><i class="fa-solid fa-chart-line"></i> ORAN TERMİNALİ</div>
-            <h2>Değerli Oran · Oran Düşüş Uyarısı · Barem Farkı · Garantili Kazanç Adayı</h2>
-            <p>${mode}. Futbol ve basketbol için tüm sitelerde oran kıyaslama, barem farkı, değerli oran ve garantili kazanç adayları tek ekranda toplanır.</p>
+            <h2>Değerli Oran · Oran Düşüş Uyarısı · Barem Farkı · POLYMARKET</h2>
+            <p>${mode}. Futbol ve basketbol için oran kıyaslama ayrı çalışır; POLYMARKET kısa vadeli tahmin marketleri Oran Terminali altında kendi panelinde izlenir.</p>
           </div>
           <button type="button" class="odds-v528-refresh" data-odds-action="refresh"><i class="fa-solid fa-rotate"></i> VERİYİ YENİLE</button>
         </div>
@@ -432,12 +498,14 @@
           <div class="${s.values ? "hot" : ""}"><span>Değerli Oran</span><b>${s.values}</b></div>
           <div class="${s.lineGaps ? "hot" : ""}"><span>Barem Farkı</span><b>${s.lineGaps}</b></div>
           <div class="${s.critical ? "hot critical" : ""}"><span>Ciddi Sinyal</span><b>${s.critical}</b></div>
+          <div class="${s.polymarketValue ? "hot polymarket" : "polymarket"}"><span>POLYMARKET</span><b>${s.polymarket}</b></div>
         </div>
 
         <div class="odds-v528-toolbar">
           <div class="odds-v528-tabs">
             ${tabButton("opportunities", "Canlı Fırsatlar")}
             ${tabButton("intelligence", "İSTİHBARAT")}
+            ${tabButton("polymarket", "POLYMARKET")}
             ${tabButton("all-sites", "Tüm Sitelerde Karşılaştır")}
             ${tabButton("compare", "En İyi Oranlar")}
             ${tabButton("markets", "Bahis Türleri")}
@@ -570,6 +638,7 @@
 
   function content() {
     if (state.tab === "intelligence") return renderIntelligenceHub();
+    if (state.tab === "polymarket") return renderPolymarket();
     if (state.tab === "all-sites") return renderAllSitesCompare();
     if (state.tab === "compare") return renderCompare();
     if (state.tab === "markets") return renderMarkets();
@@ -579,6 +648,62 @@
     if (state.tab === "drops") return renderDrops();
     if (state.tab === "sources") return renderSources();
     return renderOpportunities();
+  }
+
+  function renderPolymarket() {
+    const polyBase = polymarketRecords(true);
+    const list = getPolymarketSignals(polyBase);
+    const s = polymarketSummary(polyBase);
+    return `<section class="v541-polymarket-panel">
+      <div class="v541-poly-hero">
+        <div>
+          <span>ORAN TERMİNALİ ALT PANELİ</span>
+          <h3>POLYMARKET Kısa Vadeli Market Radar</h3>
+          <p>Bu alan normal bahis oranlarından ayrıdır. Polymarket kayıtları burada; futbol/basket oran kıyaslama tabloları içinde karışmaz.</p>
+        </div>
+        <div class="v541-poly-badge"><i class="fa-solid fa-shield-halved"></i> Route izole: #odds içinde</div>
+      </div>
+
+      <div class="v541-poly-kpis">
+        <div><span>Market</span><b>${s.records}</b></div>
+        <div><span>Kısa Vade</span><b>${s.shortTerm}</b></div>
+        <div><span>Avantaj Adayı</span><b>${s.value}</b></div>
+        <div><span>Ortalama Güven</span><b>${s.avgScore}</b></div>
+      </div>
+
+      ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty("Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
+    </section>`;
+  }
+
+  function renderPolymarketCard(r) {
+    const score = Number(r.score || polymarketScore(r));
+    const edge = polymarketEdge(r);
+    const yes = r.yesPrice != null ? Number(r.yesPrice) : null;
+    const no = r.noPrice != null ? Number(r.noPrice) : null;
+    const title = r.question || r.match || "Polymarket marketi";
+    const tone = edge >= Number(state.minValuePct || 5) ? "hot" : score >= 75 ? "watch" : "calm";
+    return `<article class="v541-poly-card ${tone}">
+      <div class="v541-poly-card-head">
+        <div>
+          <b>${escapeHtml(title)}</b>
+          <small>${escapeHtml(r.league || r.eventType || "Prediction Market")} · ${escapeHtml(r.marketLabel || "Market")}</small>
+        </div>
+        <span>${Math.min(99, Math.max(0, Math.round(score)))} güven</span>
+      </div>
+      <div class="v541-poly-main">
+        <div><span>Seçim</span><b>${escapeHtml(r.outcome || "YES")}</b></div>
+        <div><span>Oran</span><b>${money(r.current)} ${oddDirectionHtml(r)}</b></div>
+        <div><span>Edge</span><b>${signedPct(edge)}</b></div>
+        <div><span>Kapanış</span><b>${escapeHtml(formatDeadline(r.expiresAt || r.kickoff))}</b></div>
+      </div>
+      <div class="v541-poly-meta">
+        ${yes != null ? `<span>YES ${(yes * 100).toFixed(1)}¢</span>` : ""}
+        ${no != null ? `<span>NO ${(no * 100).toFixed(1)}¢</span>` : ""}
+        ${r.liquidity ? `<span>Likidite $${Number(r.liquidity).toLocaleString("en-US")}</span>` : ""}
+        ${r.volume24h ? `<span>24s Hacim $${Number(r.volume24h).toLocaleString("en-US")}</span>` : ""}
+      </div>
+      ${r.info ? `<p>${escapeHtml(r.info)}</p>` : ""}
+    </article>`;
   }
 
   function renderOpportunities() {
