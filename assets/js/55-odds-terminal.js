@@ -150,7 +150,7 @@
         { id: "match_winner", name: "Maç Sonucu" },
         { id: "double_chance", name: "Çifte Şans" },
         { id: "draw_no_bet", name: "Beraberlikte İade" },
-        { id: "both_teams_score", name: "KG Var / Yok" }
+        { id: "both_teams_to_score", name: "KG Var / Yok" }
       ]
     },
     {
@@ -159,18 +159,18 @@
       desc: "Yaygın alt/üst ve takım gol marketleri",
       sport: "football",
       markets: [
-        { id: "goals_0_5", name: "0.5 Gol Alt / Üst" },
-        { id: "goals_1_5", name: "1.5 Gol Alt / Üst" },
-        { id: "goals_2_5", name: "2.5 Gol Alt / Üst" },
-        { id: "goals_3_5", name: "3.5 Gol Alt / Üst" },
+        { id: "total_goals_0_5", name: "0.5 Gol Alt / Üst" },
+        { id: "total_goals_1_5", name: "1.5 Gol Alt / Üst" },
+        { id: "total_goals_2_5", name: "2.5 Gol Alt / Üst" },
+        { id: "total_goals_3_5", name: "3.5 Gol Alt / Üst" },
         { id: "goals_4_5", name: "4.5 Gol Alt / Üst" },
-        { id: "general_goal_over_1", name: "Genel 1 Gol Üst" },
-        { id: "general_goal_over_2", name: "Genel 2 Gol Üst" },
-        { id: "general_goal_over_3", name: "Genel 3 Gol Üst" },
-        { id: "home_team_goals", name: "Ev Sahibi Gol Alt / Üst" },
-        { id: "away_team_goals", name: "Deplasman Gol Alt / Üst" },
-        { id: "team1_goals_over", name: "Takım 1 Gol Üst" },
-        { id: "team2_goals_over", name: "Takım 2 Gol Üst" }
+        { id: "total_goals_over_1_0", name: "Genel 1 Gol Üst" },
+        { id: "total_goals_over_2_0", name: "Genel 2 Gol Üst" },
+        { id: "total_goals_over_3_0", name: "Genel 3 Gol Üst" },
+        { id: "team1_total_goals", name: "Ev Sahibi Gol Alt / Üst" },
+        { id: "team2_total_goals", name: "Deplasman Gol Alt / Üst" },
+        { id: "team1_goals_over_1_0", name: "Takım 1 Gol Üst" },
+        { id: "team2_goals_over_1_0", name: "Takım 2 Gol Üst" }
       ]
     },
     {
@@ -181,10 +181,10 @@
       markets: [
         { id: "first_half_result", name: "İlk Yarı Sonucu" },
         { id: "first_half_goals_0_5", name: "İlk Yarı 0.5 Gol Alt / Üst" },
-        { id: "first_half_goals_1_5", name: "İlk Yarı 1.5 Gol Alt / Üst" },
+        { id: "first_half_over_1_5", name: "İlk Yarı 1.5 Gol Alt / Üst" },
         { id: "second_half_result", name: "İkinci Yarı Sonucu" },
         { id: "second_half_goals_0_5", name: "İkinci Yarı 0.5 Gol Alt / Üst" },
-        { id: "second_half_goals_1_5", name: "İkinci Yarı 1.5 Gol Alt / Üst" },
+        { id: "second_half_total_goals_over_1_0", name: "İkinci Yarı 1.5 Gol Alt / Üst" },
         { id: "half_time_full_time", name: "İlk Yarı / Maç Sonucu" }
       ]
     },
@@ -199,10 +199,10 @@
         { id: "corners_9_5", name: "9.5 Korner Alt / Üst" },
         { id: "corners_10_5", name: "10.5 Korner Alt / Üst" },
         { id: "first_half_corners", name: "İlk Yarı Korner" },
-        { id: "team_corners", name: "Takım Korner Alt / Üst" },
+        { id: "team1_corners", name: "Takım Korner Alt / Üst" },
         { id: "total_cards", name: "Toplam Kart Alt / Üst" },
         { id: "team_cards", name: "Takım Kart Alt / Üst" },
-        { id: "red_card_yes_no", name: "Kırmızı Kart Olur / Olmaz" }
+        { id: "red_card", name: "Kırmızı Kart Olur / Olmaz" }
       ]
     },
     {
@@ -211,10 +211,10 @@
       desc: "Basit ve yaygın handikap seçenekleri",
       sport: "football",
       markets: [
-        { id: "match_handicap", name: "Maç Handikapı" },
+        { id: "asian_handicap", name: "Maç Handikapı" },
         { id: "european_handicap", name: "Avrupa Handikap" },
-        { id: "team1_handicap", name: "Takım 1 Handikap" },
-        { id: "team2_handicap", name: "Takım 2 Handikap" }
+        { id: "team1_minus_handicap", name: "Takım 1 Handikap" },
+        { id: "team2_plus_handicap", name: "Takım 2 Handikap" }
       ]
     }
   ];
@@ -227,14 +227,14 @@
       sport: "basketball",
       markets: [
         { id: "basket_match_winner", name: "Maç Sonucu" },
-        { id: "basket_match_handicap", name: "Maç Handikapı" },
+        { id: "basket_handicap", name: "Maç Handikapı" },
         { id: "basket_total_points", name: "Toplam Sayı Alt / Üst" },
         { id: "basket_first_half_winner", name: "İlk Yarı Sonucu" },
         { id: "basket_first_half_handicap", name: "İlk Yarı Handikap" },
         { id: "basket_first_half_total", name: "İlk Yarı Toplam Sayı" },
         { id: "basket_q1_winner", name: "İlk Çeyrek Sonucu" },
         { id: "basket_q1_handicap", name: "İlk Çeyrek Handikap" },
-        { id: "basket_q1_total", name: "İlk Çeyrek Toplam Sayı" },
+        { id: "basket_quarter_total", name: "İlk Çeyrek Toplam Sayı" },
         { id: "basket_q2_winner", name: "İkinci Çeyrek Sonucu" },
         { id: "basket_q2_handicap", name: "İkinci Çeyrek Handikap" },
         { id: "basket_q2_total", name: "İkinci Çeyrek Toplam Sayı" },
@@ -859,7 +859,7 @@
   }
 
   function renderPolymarket() {
-    const polyBase = polymarketRecords(true);
+    const polyBase = polymarketRecords();
     const list = getPolymarketSignals(polyBase);
     const s = polymarketSummary(polyBase);
     return `<section class="v541-polymarket-panel">
