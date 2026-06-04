@@ -1,16 +1,17 @@
 // ===============================
-// V533 ORAN TERMİNALİ
-// İstihbarat Terminali + kompakt oran geçmişi + akıllı market arama
+// V544 ORAN TERMİNALİ
+// Ana kategori + market UX temizliği + POLYMARKET izolasyonu
 // ===============================
 
 (function () {
   const DATA_SOURCES = "assets/data/odds-sources.json";
   const DATA_SNAPSHOT = "assets/data/odds-snapshot.json";
-  const STORE_KEY = "v533_odds_terminal_state";
+  const STORE_KEY = "v544_odds_terminal_state";
 
   const state = {
     tab: "opportunities",
     sport: "all",
+    polyFilter: "all",
     search: "",
     marketCategory: "all",
     marketId: "all",
@@ -64,10 +65,34 @@
       .trim();
   }
 
+  function normalizeSavedState(saved) {
+    if (!saved || typeof saved !== "object") return {};
+    const safe = { ...saved };
+    if (!["all", "football", "basketball", "polymarket"].includes(safe.sport)) safe.sport = "all";
+    if (!["all", "sports", "crypto", "economy", "news", "short", "liquid", "value"].includes(safe.polyFilter)) safe.polyFilter = "all";
+    const tabMap = {
+      intelligence: "opportunities",
+      compare: "opportunities",
+      arbitrage: "opportunities",
+      value: "opportunities",
+      lines: "all-sites"
+    };
+    safe.tab = tabMap[safe.tab] || safe.tab || "opportunities";
+    if (!["opportunities", "markets", "all-sites", "drops", "sources"].includes(safe.tab)) safe.tab = "opportunities";
+    if (safe.sport === "polymarket") {
+      safe.marketCategory = "all";
+      safe.marketId = "all";
+      safe.marketSearch = "";
+      safe.marketPickerOpen = false;
+    }
+    return safe;
+  }
+
   function readLocalState() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
-      Object.assign(state, saved || {});
+      Object.assign(state, normalizeSavedState(saved));
+      ensureMarketFitsSport();
     } catch {}
   }
 
@@ -76,6 +101,7 @@
       localStorage.setItem(STORE_KEY, JSON.stringify({
         tab: state.tab,
         sport: state.sport,
+        polyFilter: state.polyFilter,
         search: state.search,
         marketCategory: state.marketCategory,
         marketId: state.marketId,
@@ -114,8 +140,159 @@
     return "football";
   }
 
+  const V544_FOOTBALL_CATEGORIES = [
+    {
+      id: "v544_football_result",
+      name: "Ana Sonuç",
+      desc: "Maç sonucu, çifte şans ve KG seçenekleri",
+      sport: "football",
+      markets: [
+        { id: "match_winner", name: "Maç Sonucu" },
+        { id: "double_chance", name: "Çifte Şans" },
+        { id: "draw_no_bet", name: "Beraberlikte İade" },
+        { id: "both_teams_score", name: "KG Var / Yok" }
+      ]
+    },
+    {
+      id: "v544_football_goals",
+      name: "Gol Marketleri",
+      desc: "Yaygın alt/üst ve takım gol marketleri",
+      sport: "football",
+      markets: [
+        { id: "goals_0_5", name: "0.5 Gol Alt / Üst" },
+        { id: "goals_1_5", name: "1.5 Gol Alt / Üst" },
+        { id: "goals_2_5", name: "2.5 Gol Alt / Üst" },
+        { id: "goals_3_5", name: "3.5 Gol Alt / Üst" },
+        { id: "goals_4_5", name: "4.5 Gol Alt / Üst" },
+        { id: "general_goal_over_1", name: "Genel 1 Gol Üst" },
+        { id: "general_goal_over_2", name: "Genel 2 Gol Üst" },
+        { id: "general_goal_over_3", name: "Genel 3 Gol Üst" },
+        { id: "home_team_goals", name: "Ev Sahibi Gol Alt / Üst" },
+        { id: "away_team_goals", name: "Deplasman Gol Alt / Üst" },
+        { id: "team1_goals_over", name: "Takım 1 Gol Üst" },
+        { id: "team2_goals_over", name: "Takım 2 Gol Üst" }
+      ]
+    },
+    {
+      id: "v544_football_halves",
+      name: "Yarı Marketleri",
+      desc: "İlk yarı, ikinci yarı ve yarı/maç sonucu",
+      sport: "football",
+      markets: [
+        { id: "first_half_result", name: "İlk Yarı Sonucu" },
+        { id: "first_half_goals_0_5", name: "İlk Yarı 0.5 Gol Alt / Üst" },
+        { id: "first_half_goals_1_5", name: "İlk Yarı 1.5 Gol Alt / Üst" },
+        { id: "second_half_result", name: "İkinci Yarı Sonucu" },
+        { id: "second_half_goals_0_5", name: "İkinci Yarı 0.5 Gol Alt / Üst" },
+        { id: "second_half_goals_1_5", name: "İkinci Yarı 1.5 Gol Alt / Üst" },
+        { id: "half_time_full_time", name: "İlk Yarı / Maç Sonucu" }
+      ]
+    },
+    {
+      id: "v544_football_corners_cards",
+      name: "Korner / Kart",
+      desc: "Korner, kart ve kırmızı kart marketleri",
+      sport: "football",
+      markets: [
+        { id: "total_corners", name: "Toplam Korner Alt / Üst" },
+        { id: "corners_8_5", name: "8.5 Korner Alt / Üst" },
+        { id: "corners_9_5", name: "9.5 Korner Alt / Üst" },
+        { id: "corners_10_5", name: "10.5 Korner Alt / Üst" },
+        { id: "first_half_corners", name: "İlk Yarı Korner" },
+        { id: "team_corners", name: "Takım Korner Alt / Üst" },
+        { id: "total_cards", name: "Toplam Kart Alt / Üst" },
+        { id: "team_cards", name: "Takım Kart Alt / Üst" },
+        { id: "red_card_yes_no", name: "Kırmızı Kart Olur / Olmaz" }
+      ]
+    },
+    {
+      id: "v544_football_handicap",
+      name: "Handikap",
+      desc: "Basit ve yaygın handikap seçenekleri",
+      sport: "football",
+      markets: [
+        { id: "match_handicap", name: "Maç Handikapı" },
+        { id: "european_handicap", name: "Avrupa Handikap" },
+        { id: "team1_handicap", name: "Takım 1 Handikap" },
+        { id: "team2_handicap", name: "Takım 2 Handikap" }
+      ]
+    }
+  ];
+
+  const V544_BASKETBALL_CATEGORIES = [
+    {
+      id: "v544_basket_main",
+      name: "Basketbol Ana Marketler",
+      desc: "Maç, yarı ve çeyrek bazlı ana marketler",
+      sport: "basketball",
+      markets: [
+        { id: "basket_match_winner", name: "Maç Sonucu" },
+        { id: "basket_match_handicap", name: "Maç Handikapı" },
+        { id: "basket_total_points", name: "Toplam Sayı Alt / Üst" },
+        { id: "basket_first_half_winner", name: "İlk Yarı Sonucu" },
+        { id: "basket_first_half_handicap", name: "İlk Yarı Handikap" },
+        { id: "basket_first_half_total", name: "İlk Yarı Toplam Sayı" },
+        { id: "basket_q1_winner", name: "İlk Çeyrek Sonucu" },
+        { id: "basket_q1_handicap", name: "İlk Çeyrek Handikap" },
+        { id: "basket_q1_total", name: "İlk Çeyrek Toplam Sayı" },
+        { id: "basket_q2_winner", name: "İkinci Çeyrek Sonucu" },
+        { id: "basket_q2_handicap", name: "İkinci Çeyrek Handikap" },
+        { id: "basket_q2_total", name: "İkinci Çeyrek Toplam Sayı" },
+        { id: "basket_q3_winner", name: "Üçüncü Çeyrek Sonucu" },
+        { id: "basket_q4_winner", name: "Dördüncü Çeyrek Sonucu" }
+      ]
+    },
+    {
+      id: "v544_basket_team",
+      name: "Takım Marketleri",
+      desc: "Takım toplam sayı, handikap ve eşik marketleri",
+      sport: "basketball",
+      markets: [
+        { id: "basket_team1_total", name: "Takım 1 Toplam Sayı Alt / Üst" },
+        { id: "basket_team2_total", name: "Takım 2 Toplam Sayı Alt / Üst" },
+        { id: "basket_team1_handicap", name: "Takım 1 Handikap" },
+        { id: "basket_team2_handicap", name: "Takım 2 Handikap" },
+        { id: "basket_team1_first_half_total", name: "Takım 1 İlk Yarı Sayı Alt / Üst" },
+        { id: "basket_team2_first_half_total", name: "Takım 2 İlk Yarı Sayı Alt / Üst" },
+        { id: "basket_both_teams_60_5", name: "Her İki Takım da 60.5 Üst Sayı Atar" },
+        { id: "basket_both_teams_65_5", name: "Her İki Takım da 65.5 Üst Sayı Atar" },
+        { id: "basket_both_teams_68_5", name: "Her İki Takım da 68.5 Üst Sayı Atar" },
+        { id: "basket_both_teams_70_5", name: "Her İki Takım da 70.5 Üst Sayı Atar" },
+        { id: "basket_both_teams_75_5", name: "Her İki Takım da 75.5 Üst Sayı Atar" }
+      ]
+    },
+    {
+      id: "v544_basket_player",
+      name: "Oyuncu Marketleri",
+      desc: "Oyuncu sayı, ribaund, asist ve savunma istatistikleri",
+      sport: "basketball",
+      markets: [
+        { id: "player_points", name: "Oyuncu Sayı Alt / Üst" },
+        { id: "player_rebounds", name: "Oyuncu Ribaund Alt / Üst" },
+        { id: "player_assists", name: "Oyuncu Asist Alt / Üst" },
+        { id: "player_threes", name: "Oyuncu Üçlük Alt / Üst" },
+        { id: "player_steals", name: "Oyuncu Top Çalma Alt / Üst" },
+        { id: "player_blocks", name: "Oyuncu Blok Alt / Üst" },
+        { id: "player_fouls", name: "Oyuncu Faul Alt / Üst" },
+        { id: "player_pra", name: "Oyuncu Sayı + Ribaund + Asist" }
+      ]
+    }
+  ];
+
+  const V544_POLY_FILTERS = [
+    ["all", "Hepsi"], ["sports", "Spor"], ["crypto", "Kripto"], ["economy", "Ekonomi"],
+    ["news", "Haber"], ["short", "Kısa Vade"], ["liquid", "Yüksek Likidite"], ["value", "Fırsat Adayı"]
+  ];
+
+  function isPolymarketMode() { return state.sport === "polymarket"; }
+
+  function curatedMarketCategories() {
+    return [...V544_FOOTBALL_CATEGORIES, ...V544_BASKETBALL_CATEGORIES];
+  }
+
   function marketCategories() {
-    const all = allMarketCategories();
+    const all = curatedMarketCategories();
+    if (state.sport === "polymarket") return [];
     if (state.sport === "football") return all.filter(cat => categorySport(cat) === "football");
     if (state.sport === "basketball") return all.filter(cat => categorySport(cat) === "basketball");
     return all;
@@ -123,11 +300,15 @@
 
   function marketMap() {
     const map = {};
-    allMarketCategories().forEach(cat => (cat.markets || []).forEach(m => map[m.id] = { ...m, categoryId: cat.id, categoryName: cat.name, sport: categorySport(cat) }));
+    curatedMarketCategories().forEach(cat => (cat.markets || []).forEach(m => map[m.id] = { ...m, categoryId: cat.id, categoryName: cat.name, sport: categorySport(cat) }));
+    allMarketCategories().forEach(cat => (cat.markets || []).forEach(m => {
+      if (!map[m.id]) map[m.id] = { ...m, categoryId: cat.id, categoryName: cat.name, sport: categorySport(cat) };
+    }));
     return map;
   }
 
   function selectedMarketFitsSport() {
+    if (state.sport === "polymarket") return true;
     if (state.marketCategory === "all" && state.marketId === "all") return true;
     const allowed = new Set(marketCategories().map(c => c.id));
     if (state.marketCategory !== "all") return allowed.has(state.marketCategory);
@@ -153,7 +334,7 @@
       return meta ? meta.name : "Seçili market";
     }
     if (state.marketCategory !== "all") {
-      const cat = allMarketCategories().find(c => c.id === state.marketCategory);
+      const cat = curatedMarketCategories().find(c => c.id === state.marketCategory) || allMarketCategories().find(c => c.id === state.marketCategory);
       return cat ? cat.name : "Seçili bahis türü";
     }
     return "Tüm bahis türleri ve marketler";
@@ -167,6 +348,7 @@
   }
 
   function records(raw = false) {
+    if (state.sport === "polymarket") return [];
     const list = (state.snapshot?.records || []).filter(r => !isPolymarketRecord(r));
     if (raw) return list;
     const search = normalizeText(state.search || "");
@@ -186,10 +368,20 @@
     if (raw) return list;
     const search = normalizeText(state.search || "");
     return list.filter(r => {
-      const sportOk = state.sport === "all" || r.sport === state.sport || r.sport === "prediction";
+      const eventType = normalizeText(r.eventType || r.league || "");
+      const hours = hoursUntil(r.expiresAt || r.kickoff);
+      const filterOk = state.polyFilter === "all"
+        || (state.polyFilter === "sports" && (r.sport === "football" || r.sport === "basketball" || eventType.includes("spor")))
+        || (state.polyFilter === "crypto" && eventType.includes("kripto"))
+        || (state.polyFilter === "economy" && (eventType.includes("ekonomi") || eventType.includes("makro")))
+        || (state.polyFilter === "news" && eventType.includes("haber"))
+        || (state.polyFilter === "short" && Number.isFinite(hours) && hours > 0 && hours <= 48)
+        || (state.polyFilter === "liquid" && Number(r.liquidity || 0) >= 100000)
+        || (state.polyFilter === "value" && polymarketEdge(r) >= Number(state.minValuePct || 5));
+      const sportOk = state.sport === "polymarket" || state.sport === "all" || r.sport === state.sport || r.sport === "prediction";
       const haystack = normalizeText([r.question, r.match, r.league, r.marketLabel, r.outcome, r.info, r.eventType, r.timeframe].join(" "));
       const searchOk = !search || search.split(/\s+/).every(token => haystack.includes(token));
-      return sportOk && searchOk;
+      return filterOk && sportOk && searchOk;
     });
   }
 
@@ -475,6 +667,53 @@
     return renderIntelligenceHub();
   }
 
+  function polyMarkSvg() {
+    return `<svg class="v544-poly-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 4h8.2c3.6 0 5.8 2 5.8 5.1s-2.2 5.2-5.8 5.2H9.4V20H5V4Zm4.4 3.7v2.9h3.5c1 0 1.7-.5 1.7-1.5s-.7-1.4-1.7-1.4H9.4Z" fill="currentColor"/><path d="M15.2 15.8 19.4 20h-5.1l-3.5-4.2h4.4Z" fill="currentColor" opacity=".9"/></svg>`;
+  }
+
+  function categoryButton(key, label, icon = "") {
+    const active = state.sport === key ? "active" : "";
+    return `<button type="button" class="${active} ${escapeAttr(key)}" data-odds-sport-btn="${escapeAttr(key)}">${icon}<span>${escapeHtml(label)}</span></button>`;
+  }
+
+  function renderCategoryRow() {
+    return `<div class="v544-category-row" data-odds-category-row="1" role="group" aria-label="Oran Terminali ana kategori seçimi">
+      <div class="v544-category-left">
+        ${categoryButton("all", "TÜMÜ")}
+        ${categoryButton("football", "FUTBOL", '<i class="fa-solid fa-futbol"></i>')}
+        ${categoryButton("basketball", "BASKETBOL", '<i class="fa-solid fa-basketball"></i>')}
+      </div>
+      <div class="v544-category-right">
+        ${categoryButton("polymarket", "POLYMARKET", polyMarkSvg())}
+      </div>
+    </div>`;
+  }
+
+  function renderMarketControl() {
+    if (isPolymarketMode()) {
+      return `<div class="omega-market-picker v544-poly-info">
+        <span>Bahis Türü / Market</span>
+        <b>POLYMARKET panelinde izole</b>
+        <small>Futbol/basket marketleri bu modda gizlenir.</small>
+      </div>`;
+    }
+    return `<div class="v536-market-menu v540-market-menu omega-market-picker ${state.marketPickerOpen ? "open" : ""}">
+      <button type="button" class="v536-market-toggle omega-market-toggle" data-market-drawer-toggle="1" aria-expanded="${state.marketPickerOpen ? "true" : "false"}">
+        <span>Bahis Türü / Market</span>
+        <b>${escapeHtml(selectedMarketLabel())}</b>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      ${state.marketPickerOpen ? `<div class="v536-market-dropdown omega-market-dropdown">
+        <input id="odds-v533-market-search" type="search" placeholder="2.5 gol, KG, korner, handikap, 68.5 üst, oyuncu faul..." value="${escapeAttr(state.marketSearch || "")}">
+        <div class="v533-selected-market">
+          <span>${escapeHtml(selectedMarketLabel())}</span>
+          ${(state.marketCategory !== "all" || state.marketId !== "all") ? `<button type="button" data-market-reset="1">Sıfırla</button>` : ""}
+        </div>
+        <div class="v533-market-results">${marketResultsHtml()}</div>
+      </div>` : ""}
+    </div>`;
+  }
+
   function shell() {
     const s = summary();
     const mode = state.snapshot?.mode === "demo" ? "Demo veri" : "Veri";
@@ -494,50 +733,24 @@
           <div><span>Maç</span><b>${s.matches}</b></div>
           <div><span>Karşılaştırılan Oran</span><b>${s.records}</b></div>
           <div><span>Market Türü</span><b>${s.markets}</b></div>
-          <div class="${s.arbs ? "hot" : ""}"><span>Garantili Kazanç Adayı</span><b>${s.arbs}</b></div>
+          <div class="${s.arbs ? "hot" : ""}"><span>Arbitraj Adayı</span><b>${s.arbs}</b></div>
           <div class="${s.values ? "hot" : ""}"><span>Değerli Oran</span><b>${s.values}</b></div>
           <div class="${s.lineGaps ? "hot" : ""}"><span>Barem Farkı</span><b>${s.lineGaps}</b></div>
           <div class="${s.critical ? "hot critical" : ""}"><span>Ciddi Sinyal</span><b>${s.critical}</b></div>
           <div class="${s.polymarketValue ? "hot polymarket" : "polymarket"}"><span>POLYMARKET</span><b>${s.polymarket}</b></div>
         </div>
 
-        <div class="odds-v528-toolbar">
-          <div class="odds-v528-tabs">
-            ${tabButton("opportunities", "Canlı Fırsatlar")}
-            ${tabButton("intelligence", "İSTİHBARAT")}
-            ${tabButton("polymarket", "POLYMARKET")}
-            ${tabButton("all-sites", "Tüm Sitelerde Karşılaştır")}
-            ${tabButton("compare", "En İyi Oranlar")}
-            ${tabButton("markets", "Bahis Türleri")}
-            ${tabButton("arbitrage", "Garantili Kazanç")}
-            ${tabButton("value", "Değerli Oran")}
-            ${tabButton("lines", "Barem Farkı")}
-            ${tabButton("drops", "Oran Düşüş Uyarısı")}
-            ${tabButton("sources", "Kaynak Siteler")}
+        <div class="odds-v528-toolbar v544-odds-toolbar">
+          ${renderCategoryRow()}
+          <div class="odds-v528-tabs v544-tabs">
+            ${tabButton("opportunities", "Fırsat Radarı")}
+            ${tabButton("markets", "Marketler")}
+            ${tabButton("all-sites", "Oran Karşılaştırma")}
+            ${tabButton("drops", "Oran Hareketleri")}
+            ${tabButton("sources", "Kaynaklar")}
           </div>
-          <div class="odds-v528-filters v530-filters v531-filters v533-filters v534-filters v536-filters">
-            <div class="v531-sport-switch" role="group" aria-label="Spor seçimi">
-              <button type="button" class="${state.sport === "all" ? "active all" : "all"}" data-odds-sport-btn="all">TÜMÜ</button>
-              <button type="button" class="${state.sport === "football" ? "active football" : "football"}" data-odds-sport-btn="football"><i class="fa-solid fa-futbol"></i> FUTBOL</button>
-              <button type="button" class="${state.sport === "basketball" ? "active basketball" : "basketball"}" data-odds-sport-btn="basketball"><i class="fa-solid fa-basketball"></i> BASKETBOL</button>
-            </div>
-
-            <div class="v536-market-menu v540-market-menu ${state.marketPickerOpen ? "open" : ""}">
-              <button type="button" class="v536-market-toggle" data-market-drawer-toggle="1" aria-expanded="${state.marketPickerOpen ? "true" : "false"}">
-                <span>Bahis Türü / Market</span>
-                <b>${escapeHtml(selectedMarketLabel())}</b>
-                <i class="fa-solid fa-chevron-down"></i>
-              </button>
-
-              ${state.marketPickerOpen ? `<div class="v536-market-dropdown">
-                <input id="odds-v533-market-search" type="search" placeholder="2.5, 1 gol üst, korner, şut, kart, ofsayt, pas, ribaund..." value="${escapeAttr(state.marketSearch || "")}">
-                <div class="v533-selected-market">
-                  <span>${escapeHtml(selectedMarketLabel())}</span>
-                  ${(state.marketCategory !== "all" || state.marketId !== "all") ? `<button type="button" data-market-reset="1">Sıfırla</button>` : ""}
-                </div>
-                <div class="v533-market-results">${marketResultsHtml()}</div>
-              </div>` : ""}
-            </div>
+          <div class="odds-v528-filters v530-filters v531-filters v533-filters v534-filters v536-filters v544-filters">
+            ${renderMarketControl()}
           </div>
         </div>
 
@@ -550,7 +763,7 @@
   }
 
 
-  const MAIN_MARKET_CATEGORY_IDS = ["mac_sonucu", "gol_alt_ust", "ilk_yari_ikinci_yari", "kornerler"];
+  const MAIN_MARKET_CATEGORY_IDS = ["v544_football_result", "v544_football_goals", "v544_basket_main", "v544_basket_team"];
 
   function defaultOpenCategoryIds() {
     const existing = new Set(marketCategories().map(c => c.id));
@@ -613,13 +826,13 @@
       const open = isCategoryOpen(cat.id);
       const arrow = open ? "fa-chevron-up" : "fa-chevron-down";
       const markets = cat._markets || cat.markets || [];
-      return `<section class="v537-market-cat ${open ? "open" : "closed"} ${pinned ? "pinned" : ""}">
+      return `<section class="v537-market-cat omega-market-card ${open ? "open" : "closed"} ${pinned ? "pinned" : ""}">
         <div class="v537-market-cat-head">
           <button type="button" class="v537-cat-toggle" data-cat-toggle="${escapeAttr(cat.id)}">
             <i class="fa-solid ${arrow}"></i>
             <span>
-              <b>${escapeHtml(cat.name)}</b>
-              <small>${escapeHtml(cat.desc || "")}</small>
+              <b class="omega-market-card-title">${escapeHtml(cat.name)}</b>
+              <small class="omega-market-card-desc">${escapeHtml(cat.desc || "")}</small>
             </span>
           </button>
           <button type="button" class="v537-cat-pin ${pinned ? "active" : ""}" data-cat-pin="${escapeAttr(cat.id)}" title="${pinned ? "Baştan kaldır" : "Başa sabitle"}">
@@ -627,9 +840,9 @@
           </button>
         </div>
         ${open ? `<div class="v537-market-list">
-          ${markets.length ? markets.map(m => `<button type="button" class="v537-market-item" data-market-pick="${escapeAttr(m.id)}" data-category-pick="${escapeAttr(cat.id)}">
-            <b>${escapeHtml(m.name)}</b>
-            <small>${escapeHtml(cat.name)}</small>
+          ${markets.length ? markets.map(m => `<button type="button" class="v537-market-item omega-market-card" data-market-pick="${escapeAttr(m.id)}" data-category-pick="${escapeAttr(cat.id)}">
+            <b class="omega-market-card-title">${escapeHtml(m.name)}</b>
+            <small class="omega-market-card-desc">${escapeHtml(cat.name)}</small>
           </button>`).join("") : `<div class="v537-market-empty">Bu başlıkta aramaya uygun market yok.</div>`}
         </div>` : ""}
       </section>`;
@@ -637,14 +850,9 @@
   }
 
   function content() {
-    if (state.tab === "intelligence") return renderIntelligenceHub();
-    if (state.tab === "polymarket") return renderPolymarket();
+    if (isPolymarketMode()) return renderPolymarket();
     if (state.tab === "all-sites") return renderAllSitesCompare();
-    if (state.tab === "compare") return renderCompare();
     if (state.tab === "markets") return renderMarkets();
-    if (state.tab === "arbitrage") return renderArbs();
-    if (state.tab === "value") return renderValue();
-    if (state.tab === "lines") return renderLines();
     if (state.tab === "drops") return renderDrops();
     if (state.tab === "sources") return renderSources();
     return renderOpportunities();
@@ -662,6 +870,10 @@
           <p>Bu alan normal bahis oranlarından ayrıdır. Polymarket kayıtları burada; futbol/basket oran kıyaslama tabloları içinde karışmaz.</p>
         </div>
         <div class="v541-poly-badge"><i class="fa-solid fa-shield-halved"></i> Route izole: #odds içinde</div>
+      </div>
+
+      <div class="v544-poly-filters" role="group" aria-label="Polymarket filtreleri">
+        ${V544_POLY_FILTERS.map(([key, label]) => `<button type="button" class="${state.polyFilter === key ? "active" : ""}" data-poly-filter="${escapeAttr(key)}">${escapeHtml(label)}</button>`).join("")}
       </div>
 
       <div class="v541-poly-kpis">
@@ -715,7 +927,7 @@
     return `
       <div class="odds-v528-grid">
         ${panel("Değerli Oran Sinyalleri", renderValueList(values), "purple")}
-        ${panel("Garantili Kazanç Adayı", renderArbList(arbs), "green")}
+        ${panel("Arbitraj Adayları", renderArbList(arbs), "green")}
         ${panel("Barem Farkı Dedektörü", renderLineList(lines), "blue")}
         ${panel("Oran Düşüş Uyarısı", renderDropList(drops), "red")}
       </div>`;
@@ -787,7 +999,7 @@
   function renderArbs() { return renderArbList(getArbs(), true); }
 
   function renderArbList(list) {
-    if (!list.length) return empty("Garantili kazanç adayı yakalanmadı.");
+    if (!list.length) return empty("Arbitraj adayı yakalanmadı.");
     return `<div class="odds-v528-cards">${list.map(a => `
       <article class="odds-v528-card arb">
         <div><b>${escapeHtml(a.match)}</b><small>${escapeHtml(a.league || "")}</small></div>
@@ -881,7 +1093,7 @@
     document.addEventListener("pointerdown", (ev) => {
       if (!document.body.classList.contains("omega-tab-odds")) return;
       if (!state.marketPickerOpen) return;
-      if (ev.target.closest(".v536-market-menu, .v537-market-menu, .v535-market-menu, .v540-market-menu")) return;
+      if (ev.target.closest("[data-odds-category-row], [data-odds-sport-btn], .v536-market-menu, .v537-market-menu, .v535-market-menu, .v540-market-menu, .omega-market-picker, .omega-market-dropdown")) return;
       state.marketPickerOpen = false;
       state.marketSearch = "";
       saveLocalState();
@@ -967,13 +1179,23 @@
     bindMarketButtons(document);
 
     qsa("[data-odds-sport-btn]").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const scrollY = window.scrollY;
         state.sport = btn.dataset.oddsSportBtn || "all";
         state.marketPickerOpen = false;
         state.marketSearch = "";
+        if (isPolymarketMode()) {
+          state.marketCategory = "all";
+          state.marketId = "all";
+          state.openMarketCats = null;
+          state.tab = "opportunities";
+        }
         ensureMarketFitsSport();
         saveLocalState();
         render();
+        requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
       });
     });
 
@@ -982,9 +1204,11 @@
       openMarketDrawer.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+        const scrollY = window.scrollY;
         state.marketPickerOpen = !state.marketPickerOpen;
         saveLocalState();
         render();
+        requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
       });
     }
 
@@ -998,7 +1222,7 @@
       window.__v539OddsOutsideCloseBound = true;
       setTimeout(() => {
         const outsideClose = (ev) => {
-          const menu = ev.target.closest(".v536-market-menu, .v537-market-menu, .v535-market-menu");
+          const menu = ev.target.closest("[data-odds-category-row], [data-odds-sport-btn], .v536-market-menu, .v537-market-menu, .v535-market-menu, .v540-market-menu, .omega-market-picker, .omega-market-dropdown");
           const oddsVisible = document.body.classList.contains("omega-tab-odds");
           if (!oddsVisible || !state.marketPickerOpen) {
             document.removeEventListener("pointerdown", outsideClose, true);
@@ -1035,6 +1259,16 @@
         }
       });
     }
+
+    qsa("[data-poly-filter]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        state.polyFilter = btn.dataset.polyFilter || "all";
+        saveLocalState();
+        render();
+      });
+    });
 
     qs('[data-odds-action="refresh"]')?.addEventListener("click", async () => {
       await load();

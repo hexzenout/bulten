@@ -75,5 +75,6 @@
 - Route sızıntısı oluşturulmayacak.
 
 ## Son Güncelleme
+- V544: Oran Terminali ana kategori/dropdown UX düzeltildi; POLYMARKET marka butonu ve temiz market listeleri eklendi.
 - V541: Oran Terminali altında POLYMARKET paneli eklendi.
 - Bu güncellemede sw.js ve index.html değiştirilmedi.

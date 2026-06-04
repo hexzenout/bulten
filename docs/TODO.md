@@ -5,9 +5,12 @@
 2. Mevcut Oran Terminali düzeni bozulmadan #odds içinde ayrı panel yaklaşımı uygulandı.
 3. Polymarket kayıtlarının normal oran kıyaslama listelerine karışması engellendi.
 4. sw.js değiştirilmedi.
+5. V544 ile Oran Terminali kategori/dropdown UX düzeltildi.
+6. V544 ile futbol ve basketbol market listeleri gerçekçi başlıklarla temizlendi.
+7. V544 ile POLYMARKET en sağda koyu mavi marka butonu olarak konumlandırıldı.
 
 ## Sıradaki İşler
-1. Polymarket gerçek veri çekme motorunu/API entegrasyonunu tasarla.
+1. Gerçek oran veri modelini ve Polymarket API motorunu tasarla.
 2. Kısa vadeli Polymarket marketleri için filtreleme ve sıralamayı canlı veriye bağla.
 3. Futbol/basket bahis türlerini canlı veriyle genişlet.
 4. Polymarket avantaj skoru için referans olasılık kaynağını netleştir.
