@@ -31,4 +31,5 @@
 - V541: Oran Terminali altına POLYMARKET ayrı panel olarak eklendi.
 - V541: Polymarket kayıtlarının normal oran kıyaslama listelerine karışma riski azaltıldı.
 - V541: sw.js değiştirilmeden POLYMARKET paneli eklendi.
+- V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V544: Oran Terminali kategori/dropdown UX düzeltildi; ütopik futbol marketleri gizlendi; basket market adları temizlendi; Garantili Kazanç dili Arbitraj Adayları olarak değiştirildi.

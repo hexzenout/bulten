@@ -2788,6 +2788,123 @@
 }
 
 /* ===============================
+   V542 POLYMARKET DOCK - ORAN TERMİNALİ ALT ÖZET ALANI
+================================ */
+.omega-tab-odds .v542-poly-dock {
+    display: grid !important;
+    gap: 14px !important;
+    margin-top: 18px !important;
+    padding: 18px !important;
+    border-radius: 22px !important;
+    border: 1px solid rgba(168, 85, 247, .28) !important;
+    background:
+        radial-gradient(circle at top right, rgba(168, 85, 247, .18), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+        #0f131b !important;
+    box-shadow: 0 14px 34px rgba(0,0,0,.22) !important;
+}
+
+.omega-tab-odds .v542-poly-dock-head {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+}
+
+.omega-tab-odds .v542-poly-dock-head span {
+    display: inline-flex !important;
+    margin-bottom: 7px !important;
+    color: #c4b5fd !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    letter-spacing: .13em !important;
+}
+
+.omega-tab-odds .v542-poly-dock-head h3 {
+    margin: 0 0 6px !important;
+    color: #f8fafc !important;
+    font-size: clamp(20px, 2.3vw, 28px) !important;
+}
+
+.omega-tab-odds .v542-poly-dock-head p {
+    margin: 0 !important;
+    color: #a1a1aa !important;
+    line-height: 1.55 !important;
+}
+
+.omega-tab-odds .v542-poly-dock-head button {
+    flex: 0 0 auto !important;
+    border: 1px solid rgba(168, 85, 247, .40) !important;
+    border-radius: 999px !important;
+    background: rgba(168, 85, 247, .14) !important;
+    color: #ede9fe !important;
+    padding: 11px 14px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+}
+
+.omega-tab-odds .v542-poly-dock-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(120px, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.omega-tab-odds .v542-poly-dock-stats > div,
+.omega-tab-odds .v542-poly-dock-list article {
+    border: 1px solid rgba(255,255,255,.09) !important;
+    border-radius: 16px !important;
+    background: rgba(255,255,255,.045) !important;
+    padding: 13px !important;
+}
+
+.omega-tab-odds .v542-poly-dock-stats span,
+.omega-tab-odds .v542-poly-dock-list span {
+    display: block !important;
+    color: #a1a1aa !important;
+    font-size: 12px !important;
+}
+
+.omega-tab-odds .v542-poly-dock-stats b {
+    display: block !important;
+    margin-top: 5px !important;
+    color: #f8fafc !important;
+    font-size: 24px !important;
+}
+
+.omega-tab-odds .v542-poly-dock-list {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.omega-tab-odds .v542-poly-dock-list b {
+    display: block !important;
+    margin-bottom: 7px !important;
+    color: #f8fafc !important;
+    line-height: 1.35 !important;
+}
+
+@media (max-width: 900px) {
+    .omega-tab-odds .v542-poly-dock-head {
+        flex-direction: column !important;
+    }
+
+    .omega-tab-odds .v542-poly-dock-head button {
+        width: 100% !important;
+    }
+
+    .omega-tab-odds .v542-poly-dock-list {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 560px) {
+    .omega-tab-odds .v542-poly-dock-stats {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ===============================
    V544 ORAN TERMİNALİ UX TEMİZLİĞİ
    Tek güncel override katmanı: ana kategori, marka POLYMARKET, dropdown overlay, market kartları.
 ================================ */

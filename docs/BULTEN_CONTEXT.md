@@ -82,6 +82,8 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - POLYMARKET en sağda koyu mavi marka butonu olarak görünür; yazısı kesilmez ve beyaz inline SVG marka işareti kullanır.
 - POLYMARKET ayrı route değildir; mevcut #odds içinde çalışır.
 - Polymarket kayıtları normal futbol/basket oran tablolarına karışmaz.
+- Kısa vadeli ve avantajlı marketler için güven skoru, edge, kapanış, likidite ve hacim kartları gösterilir.
+- Oran Terminali ana fırsatlar ekranının altında POLYMARKET için ayrı kısa özet/dock alanı korunur.
 - POLYMARKET seçiliyken klasik Bahis Türü / Market dropdown alanı pasif bilgi alanına dönüşür.
 - Polymarket panelinde spor, kripto, ekonomi, haber, kısa vade, yüksek likidite ve fırsat adayı filtreleri gösterilir.
 - Sıradaki aşama gerçek Polymarket veri çekme motorudur.
@@ -139,6 +141,7 @@ Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu
 
 ## Son Bilinen Paket Notu
 - V544: Oran Terminali ana kategori/dropdown UX hataları düzeltildi; futbol/basket market listeleri temizlendi; POLYMARKET #odds içinde marka butonu oldu.
+- V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V541: Oran Terminali altında POLYMARKET sekmesi/paneli eklendi.
 - Polymarket kayıtları normal oran terminali tablolarından ayrıldı.
 - Demo odds snapshot içine 5 Polymarket örnek marketi eklendi.

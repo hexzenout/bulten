@@ -68,6 +68,42 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 #### Sıradaki Hedef
 - Gerçek oran veri modeli ve Polymarket API motoru tasarlanacak.
 
+### V542 - 2026-06-04
+#### Değişenler
+- Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
+- POLYMARKET paneline ayrı alan erişilebilirlik etiketi eklendi.
+- Kısa özet alanından POLYMARKET sekmesine geçiş butonu eklendi.
+
+#### Düzeltilenler
+- POLYMARKET kayıtlarının normal futbol/basket oran kartlarından ayrı algılanması görsel olarak güçlendirildi.
+- Route sızıntısı oluşturmadan sadece #odds içindeki Oran Terminali render akışı kullanıldı.
+
+#### Değişen Dosyalar
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- index.html
+- assets/data/odds-snapshot.json
+- assets/data/odds-sources.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- odds-snapshot.json ve odds-sources.json JSON parse testleri geçti.
+- sw.js değiştirilmedi.
+
+#### Sıradaki Hedef
+- POLYMARKET gerçek veri çekme motoru/API entegrasyonu tasarlanacak.
+
 ### V541 - 2026-06-04
 #### Değişenler
 - Oran Terminali altında ayrı POLYMARKET sekmesi/paneli eklendi.

@@ -1,6 +1,7 @@
 // ===============================
 // V544 ORAN TERMİNALİ
 // Ana kategori + market UX temizliği + POLYMARKET izolasyonu
+// V542 POLYMARKET dock davranışı korunarak main ile hizalandı
 // ===============================
 
 (function () {
@@ -862,7 +863,7 @@
     const polyBase = polymarketRecords();
     const list = getPolymarketSignals(polyBase);
     const s = polymarketSummary(polyBase);
-    return `<section class="v541-polymarket-panel">
+    return `<section class="v541-polymarket-panel" aria-label="POLYMARKET ayrı alan">
       <div class="v541-poly-hero">
         <div>
           <span>ORAN TERMİNALİ ALT PANELİ</span>
@@ -884,6 +885,32 @@
       </div>
 
       ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty("Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
+    </section>`;
+  }
+
+  function renderPolymarketDock() {
+    const signals = getPolymarketSignals(polymarketRecords(true));
+    const s = polymarketSummary(signals);
+    const top = signals.slice(0, 3);
+    return `<section class="v542-poly-dock" aria-label="Oran Terminali altı POLYMARKET kısa özet">
+      <div class="v542-poly-dock-head">
+        <div>
+          <span>AYRI POLYMARKET ALANI</span>
+          <h3>Oran Terminali altında izole tahmin marketleri</h3>
+          <p>Normal futbol/basket oran tablolarına karışmadan yalnızca Polymarket kayıtlarını gösterir.</p>
+        </div>
+        <button type="button" data-odds-tab="polymarket"><i class="fa-solid fa-arrow-up-right-from-square"></i> POLYMARKET panelini aç</button>
+      </div>
+      <div class="v542-poly-dock-stats">
+        <div><span>Market</span><b>${s.records}</b></div>
+        <div><span>Kısa Vade</span><b>${s.shortTerm}</b></div>
+        <div><span>Avantaj</span><b>${s.value}</b></div>
+      </div>
+      ${top.length ? `<div class="v542-poly-dock-list">${top.map(r => `
+        <article>
+          <b>${escapeHtml(r.question || r.match || "Polymarket marketi")}</b>
+          <span>${escapeHtml(r.eventType || r.league || "Prediction")} · ${signedPct(r.edgePct)} edge · ${escapeHtml(formatDeadline(r.expiresAt || r.kickoff))}</span>
+        </article>`).join("")}</div>` : empty("Polymarket kaydı yok. Ayrı alan veri bekliyor.")}
     </section>`;
   }
 
@@ -930,7 +957,8 @@
         ${panel("Arbitraj Adayları", renderArbList(arbs), "green")}
         ${panel("Barem Farkı Dedektörü", renderLineList(lines), "blue")}
         ${panel("Oran Düşüş Uyarısı", renderDropList(drops), "red")}
-      </div>`;
+      </div>
+      ${renderPolymarketDock()}`;
   }
 
   function panel(title, html, tone = "") {
