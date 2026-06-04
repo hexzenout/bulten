@@ -82,6 +82,7 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - Polymarket kayıtları normal futbol/basket oran kıyaslama tablolarına karışmaz.
 - Kısa vadeli ve avantajlı marketler için güven skoru, edge, kapanış, likidite ve hacim kartları gösterilir.
 - Polymarket tarafında spor, kripto, makro ve haber gibi farklı market tipleri desteklenecek şekilde demo veri yapısı hazırlandı.
+- Oran Terminali ana fırsatlar ekranının altında POLYMARKET için ayrı kısa özet/dock alanı gösterilir.
 - Sıradaki aşama gerçek Polymarket veri çekme motorudur.
 
 ## Kripto Terminal
@@ -136,6 +137,7 @@ Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu
 - sw.js gereksiz yere değişmemeli.
 
 ## Son Bilinen Paket Notu
+- V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V541: Oran Terminali altında POLYMARKET sekmesi/paneli eklendi.
 - Polymarket kayıtları normal oran terminali tablolarından ayrıldı.
 - Demo odds snapshot içine 5 Polymarket örnek marketi eklendi.
