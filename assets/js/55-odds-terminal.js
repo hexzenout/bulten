@@ -1,6 +1,7 @@
 // ===============================
 // V545 ORAN TERMİNALİ
 // Market listesi geri yükleme + kategori görünümü + POLYMARKET logo/tıklama düzeltmesi
+// V542 POLYMARKET dock davranışı main üzerinden korunur
 // ===============================
 
 (function () {
