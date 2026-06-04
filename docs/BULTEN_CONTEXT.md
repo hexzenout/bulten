@@ -83,6 +83,8 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - POLYMARKET ayrı route değildir; mevcut #odds içinde çalışır.
 - Polymarket kayıtları normal futbol/basket oran tablolarına karışmaz.
 - Kısa vadeli ve avantajlı marketler için güven skoru, edge, kapanış, likidite ve hacim kartları gösterilir.
+- Polymarket tarafında spor, kripto, makro ve haber gibi farklı market tipleri desteklenecek şekilde demo veri yapısı hazırlandı.
+- Oran Terminali ana fırsatlar ekranının altında POLYMARKET için ayrı kısa özet/dock alanı gösterilir.
 - Oran Terminali ana fırsatlar ekranının altında POLYMARKET için ayrı kısa özet/dock alanı korunur.
 - POLYMARKET seçiliyken klasik Bahis Türü / Market dropdown alanı pasif bilgi alanına dönüşür.
 - Polymarket panelinde spor, kripto, ekonomi, haber, kısa vade, yüksek likidite ve fırsat adayı filtreleri gösterilir.
