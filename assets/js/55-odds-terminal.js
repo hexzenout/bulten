@@ -1180,3 +1180,97 @@
     if (key === "odds") setTimeout(() => showOddsTerminal(false), 0);
   });
 })();
+
+// ===============================
+// V543 LIGHT POLYMARKET MAIN CATEGORY BRIDGE
+// Append-only layer: keeps POLYMARKET inside #odds without changing routes.
+// ===============================
+(function () {
+  const POLY_CLASS = "odds-v543-poly-mode";
+
+  function qs(sel, root = document) { return root.querySelector(sel); }
+  function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
+
+  function isOddsRoute() {
+    return document.body.classList.contains("omega-tab-odds") || String(location.hash || "").replace(/^#\/?/, "").split("/")[0] === "odds";
+  }
+
+  function isPolymarketPanelVisible(root = document) {
+    return !!qs(".v541-polymarket-panel", root) || !!qs('[data-odds-tab="polymarket"].active', root);
+  }
+
+  function setPolyMode(active) {
+    document.body.classList.toggle(POLY_CLASS, !!active);
+  }
+
+  function clickOddsTab(key) {
+    const btn = qs(`[data-odds-tab="${key}"]`);
+    if (btn) btn.click();
+  }
+
+  function ensurePolymarketMainCategory(root = document) {
+    const sportSwitch = qs(".omega-tab-odds .v531-sport-switch", root) || qs(".v531-sport-switch", root);
+    if (!sportSwitch || qs('[data-odds-sport-btn="polymarket"]', sportSwitch)) return;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "polymarket";
+    btn.dataset.oddsSportBtn = "polymarket";
+    btn.innerHTML = '<i class="fa-solid fa-chart-simple"></i> POLYMARKET';
+    sportSwitch.appendChild(btn);
+  }
+
+  function syncPolymarketCategoryState(root = document) {
+    const polyActive = isPolymarketPanelVisible(root);
+    setPolyMode(polyActive);
+    qsa('[data-odds-sport-btn="polymarket"]', root).forEach(btn => btn.classList.toggle("active", polyActive));
+    if (polyActive) {
+      qsa('[data-odds-sport-btn="all"], [data-odds-sport-btn="football"], [data-odds-sport-btn="basketball"]', root)
+        .forEach(btn => btn.classList.remove("active"));
+    }
+  }
+
+  function enhanceOddsTerminal() {
+    if (!isOddsRoute()) return;
+    const root = qs("#omega-odds-render") || document;
+    ensurePolymarketMainCategory(root);
+    syncPolymarketCategoryState(root);
+  }
+
+  document.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-odds-sport-btn]");
+    if (!btn || !isOddsRoute()) return;
+    const key = btn.dataset.oddsSportBtn || "all";
+    const scrollY = window.scrollY;
+
+    if (key === "polymarket") {
+      event.preventDefault();
+      event.stopPropagation();
+      clickOddsTab("polymarket");
+      requestAnimationFrame(() => {
+        enhanceOddsTerminal();
+        window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
+      });
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      if (isPolymarketPanelVisible()) clickOddsTab("opportunities");
+      enhanceOddsTerminal();
+      window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
+    });
+  }, true);
+
+  const originalRender = window.omega_RenderOddsTerminal;
+  if (typeof originalRender === "function" && !originalRender.__v543PolyBridge) {
+    window.omega_RenderOddsTerminal = async function (...args) {
+      const result = await originalRender.apply(this, args);
+      enhanceOddsTerminal();
+      return result;
+    };
+    window.omega_RenderOddsTerminal.__v543PolyBridge = true;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => setTimeout(enhanceOddsTerminal, 0));
+  window.addEventListener("hashchange", () => setTimeout(enhanceOddsTerminal, 0));
+})();
