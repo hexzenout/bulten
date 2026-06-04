@@ -24,6 +24,132 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 #### Sıradaki Hedef
 - ...
 
+### V545 - 2026-06-04
+#### Değişenler
+- Oran Terminali STORE_KEY v545_odds_terminal_state olarak güncellendi; eski V544 state kaynaklı kategori/market takılmaları güvenli şekilde sıfırlandı.
+- Ana kategori satırı TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET sırasıyla yan yana hizalandı; POLYMARKET artık ekranın en sağına itilmez.
+- Futbol ve basketbol kategori butonlarında renkli ikon/aktif durum hissi geri getirildi.
+- POLYMARKET butonunda harici dosya eklemeden beyaz inline SVG marka işareti kullanıldı; buton koyu mavi marka tonlarında kaldı.
+- Bahis Türü / Market picker yalnızca Marketler sekmesinde gösterilecek şekilde ayrıldı; ana kategori satırına gömülü görünüm kaldırıldı.
+- Futbol ve basketbol market listeleri genişletildi; ilk/son gol, korner handikap, ilk kart, çeyrek handikap/toplam, takım ilk çeyrek ve oyuncu faul gibi marketler geri eklendi.
+- Market kartları daha kompakt padding/font/radius ve daha yumuşak koyu gri hover tonu ile güncellendi.
+
+#### Düzeltilenler
+- POLYMARKET tek tıklamada aktif paneli açacak şekilde kategori satırında BASKETBOL'un hemen sağına alındı.
+- Dropdown açıkken kategori tıklamalarının yutulmaması davranışı korundu.
+- Ütopik VAR marketleri UI market listesinden gizli tutuldu; kötü basketbol isimleri temiz adlarla gösterildi.
+
+#### Değişen Dosyalar
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- index.html
+- live_scores.json
+- v19_rapor.json
+- canli_oranlar.json
+- assets/data/odds-snapshot.json
+- assets/data/odds-sources.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+- .github/workflows/update-radar.yml
+- .github/workflows/update-live-scores.yml
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- odds-snapshot.json ve odds-sources.json JSON parse testleri geçti.
+- sw.js, index.html, live_scores.json ve v19_rapor.json değiştirilmedi.
+
+#### Sıradaki Hedef
+- Gerçek oran veri modeli ve Polymarket API motoru tasarlanacak.
+
+### V544 - 2026-06-04
+#### Değişenler
+- Oran Terminali ana kategori satırı TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET düzenine alındı.
+- POLYMARKET en sağda koyu mavi marka butonu olarak konumlandırıldı; yazının kesilmemesi için ellipsis yerine yatay taşma/scroll yaklaşımı uygulandı.
+- Bahis Türü / Market dropdown'u kategori tıklamalarını yutmayacak ve sayfayı aşağı itmeyecek floating overlay davranışına alındı.
+- Üst analiz sekmeleri Fırsat Radarı, Marketler, Oran Karşılaştırma, Oran Hareketleri, Kaynaklar olarak sadeleştirildi.
+- Futbol market listesi gerçekçi ana sonuç, gol, yarı, korner/kart ve handikap marketleriyle temizlendi; VAR gibi ütopik marketler UI listesinden gizlendi.
+- Basketbol market listesi takım, periyot ve oyuncu marketleriyle genişletildi; kötü isimlendirmeler Maç Handikapı / Toplam Sayı Alt Üst gibi net adlarla değiştirildi.
+- Yanıltıcı Garantili Kazanç dili Arbitraj Adayları olarak değiştirildi.
+- STORE_KEY v544_odds_terminal_state olarak güncellendi.
+
+#### Düzeltilenler
+- Dropdown açıkken FUTBOL / BASKETBOL / POLYMARKET tıklamasının ilk tıklamada çalışmaması düzeltildi.
+- Dropdown açıkken POLYMARKET yazısının kaybolması/kesilmesi engellendi.
+- POLYMARKET normal futbol/basket tablolarına karışmadan #odds içinde izole kalır.
+
+#### Değişen Dosyalar
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- index.html
+- assets/data/odds-snapshot.json
+- assets/data/odds-sources.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+- .github/workflows/update-radar.yml
+- .github/workflows/update-live-scores.yml
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- odds-snapshot.json ve odds-sources.json JSON parse testleri geçti.
+- sw.js ve index.html değiştirilmedi.
+
+#### Sıradaki Hedef
+- Gerçek oran veri modeli ve Polymarket API motoru tasarlanacak.
+
+### V542 - 2026-06-04
+#### Değişenler
+- Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
+- POLYMARKET paneline ayrı alan erişilebilirlik etiketi eklendi.
+- Kısa özet alanından POLYMARKET sekmesine geçiş butonu eklendi.
+
+#### Düzeltilenler
+- POLYMARKET kayıtlarının normal futbol/basket oran kartlarından ayrı algılanması görsel olarak güçlendirildi.
+- Route sızıntısı oluşturmadan sadece #odds içindeki Oran Terminali render akışı kullanıldı.
+
+#### Değişen Dosyalar
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- index.html
+- assets/data/odds-snapshot.json
+- assets/data/odds-sources.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- odds-snapshot.json ve odds-sources.json JSON parse testleri geçti.
+- sw.js değiştirilmedi.
+
+#### Sıradaki Hedef
+- POLYMARKET gerçek veri çekme motoru/API entegrasyonu tasarlanacak.
+
 ### V541 - 2026-06-04
 #### Değişenler
 - Oran Terminali altında ayrı POLYMARKET sekmesi/paneli eklendi.

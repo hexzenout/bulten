@@ -5,16 +5,22 @@
 2. Mevcut Oran Terminali düzeni bozulmadan #odds içinde ayrı panel yaklaşımı uygulandı.
 3. Polymarket kayıtlarının normal oran kıyaslama listelerine karışması engellendi.
 4. sw.js değiştirilmedi.
+5. Oran Terminali ana fırsatlar ekranının altına POLYMARKET kısa özet/dock alanı eklendi.
+6. V544 ile Oran Terminali kategori/dropdown UX düzeltildi.
+7. V544 ile futbol ve basketbol market listeleri gerçekçi başlıklarla temizlendi.
+8. V544 ile POLYMARKET en sağda koyu mavi marka butonu olarak konumlandırıldı.
+9. V545 ile Oran Terminali geri yükleme yapıldı; POLYMARKET BASKETBOL yanında konumlandı, Marketler picker konumu düzeldi ve geniş market listeleri geri geldi.
 
 ## Sıradaki İşler
-1. Polymarket gerçek veri çekme motorunu/API entegrasyonunu tasarla.
-2. Kısa vadeli Polymarket marketleri için filtreleme ve sıralamayı canlı veriye bağla.
-3. Futbol/basket bahis türlerini canlı veriyle genişlet.
-4. Polymarket avantaj skoru için referans olasılık kaynağını netleştir.
-5. Modül sızıntılarını her güncellemede test et.
-6. Değişecek dosyaları net listele.
-7. Gerekirse tam ZIP/paket üret.
-8. İş sonunda bağlam güncellemesi çıkar.
+1. Gerçek oran veri modelini ve Polymarket API motorunu tasarla.
+2. POLYMARKET kısa özet/dock alanını gerçek API verisi geldiğinde canlı sinyallerle besle.
+3. Kısa vadeli Polymarket marketleri için filtreleme ve sıralamayı canlı veriye bağla.
+4. Futbol/basket bahis türlerini canlı veriyle genişlet.
+5. Polymarket avantaj skoru için referans olasılık kaynağını netleştir.
+6. Modül sızıntılarını her güncellemede test et.
+7. Değişecek dosyaları net listele.
+8. Gerekirse tam ZIP/paket üret.
+9. İş sonunda bağlam güncellemesi çıkar.
 
 ## Dikkat Edilecekler
 - sw.js dokunulmayacak; gerekirse ayrıca açıklanacak.
