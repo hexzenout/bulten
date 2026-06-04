@@ -1183,16 +1183,36 @@
 
 // ===============================
 // V543 LIGHT POLYMARKET MAIN CATEGORY BRIDGE
-// Append-only layer: keeps POLYMARKET inside #odds without changing routes.
+// Conflict-safe layer: JS-only bridge, no CSS file changes, no route changes.
 // ===============================
 (function () {
   const POLY_CLASS = "odds-v543-poly-mode";
+  const STYLE_ID = "odds-v543-poly-bridge-style";
 
   function qs(sel, root = document) { return root.querySelector(sel); }
   function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
   function isOddsRoute() {
     return document.body.classList.contains("omega-tab-odds") || String(location.hash || "").replace(/^#\/?/, "").split("/")[0] === "odds";
+  }
+
+  function installStyles() {
+    if (document.getElementById(STYLE_ID)) return;
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
+    style.textContent = `
+      .omega-tab-odds .odds-v528-tabs [data-odds-tab="polymarket"]{display:none!important;}
+      .omega-tab-odds .v531-sport-switch{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;overflow:visible!important;}
+      .omega-tab-odds .v531-sport-switch button.polymarket{color:#ddd6fe!important;}
+      .omega-tab-odds .v531-sport-switch button.polymarket.active{border-color:rgba(168,85,247,.58)!important;background:linear-gradient(180deg,rgba(168,85,247,.30),rgba(168,85,247,.12)),#171329!important;color:#f5f3ff!important;}
+      .omega-tab-odds.odds-v543-poly-mode .v536-market-menu,.omega-tab-odds.odds-v543-poly-mode .v537-market-menu,.omega-tab-odds.odds-v543-poly-mode .v535-market-menu,.omega-tab-odds.odds-v543-poly-mode .v540-market-menu{display:none!important;}
+      .omega-tab-odds .odds-v528-toolbar,.omega-tab-odds .v536-filters,.omega-tab-odds .v537-filters,.omega-tab-odds .v535-filters,.omega-tab-odds .v534-filters{overflow:visible!important;}
+      .omega-tab-odds .v536-market-menu,.omega-tab-odds .v537-market-menu,.omega-tab-odds .v535-market-menu,.omega-tab-odds .v540-market-menu{position:relative!important;z-index:110!important;}
+      .omega-tab-odds .v536-market-dropdown,.omega-tab-odds .v537-market-dropdown,.omega-tab-odds .v535-market-dropdown{position:absolute!important;top:calc(100% + 10px)!important;left:0!important;width:min(640px,calc(100vw - 36px))!important;max-width:640px!important;margin-top:0!important;max-height:min(430px,calc(100vh - 180px))!important;overflow:hidden!important;z-index:120!important;box-shadow:0 22px 55px rgba(0,0,0,.50)!important;}
+      .omega-tab-odds .v536-market-dropdown .v533-market-results,.omega-tab-odds .v537-market-dropdown .v533-market-results,.omega-tab-odds .v535-market-dropdown .v533-market-results{max-height:min(300px,calc(100vh - 310px))!important;overflow-y:auto!important;}
+      @media(max-width:680px){.omega-tab-odds .v531-sport-switch{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+    `;
+    document.head.appendChild(style);
   }
 
   function isPolymarketPanelVisible(root = document) {
@@ -1231,6 +1251,7 @@
   }
 
   function enhanceOddsTerminal() {
+    installStyles();
     if (!isOddsRoute()) return;
     const root = qs("#omega-odds-render") || document;
     ensurePolymarketMainCategory(root);
