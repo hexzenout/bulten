@@ -77,11 +77,15 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - Avantajlı oran yakalama
 
 ## POLYMARKET
-- POLYMARKET, Oran Terminali altında ayrı sekme/panel olarak eklendi.
-- Mevcut Oran Terminali düzeni bozulmadan #odds içinde çalışır.
+- POLYMARKET, Oran Terminali içinde FUTBOL/BASKETBOL ile aynı seviyede ana kategoriye alındı.
+- Ana kategori sırası: TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET.
+- POLYMARKET ayrı route değildir; mevcut Oran Terminali #odds içinde çalışır.
 - Polymarket kayıtları normal futbol/basket oran kıyaslama tablolarına karışmaz.
 - Kısa vadeli ve avantajlı marketler için güven skoru, edge, kapanış, likidite ve hacim kartları gösterilir.
 - Polymarket tarafında spor, kripto, makro ve haber gibi farklı market tipleri desteklenecek şekilde demo veri yapısı hazırlandı.
+- POLYMARKET seçiliyken normal Bahis Türü / Market dropdown alanı pasif bilgi alanına dönüşür.
+- Bahis Türü / Market dropdown alanı sayfayı aşağı itmeyen floating overlay olarak çalışır.
+- Futbol market görünürlüğü korunur; 0.5/1.5/2.5/3.5 gol, genel gol üstleri, KG, korner, kart ve handikap başlıkları görünür kalır.
 - Sıradaki aşama gerçek Polymarket veri çekme motorudur.
 
 ## Kripto Terminal
@@ -136,6 +140,8 @@ Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu
 - sw.js gereksiz yere değişmemeli.
 
 ## Son Bilinen Paket Notu
+- V543: POLYMARKET, Oran Terminali içinde FUTBOL/BASKETBOL ile aynı seviyede ana kategoriye alındı; dropdown sayfayı aşağı itmeyecek şekilde düzeltildi.
+- V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V541: Oran Terminali altında POLYMARKET sekmesi/paneli eklendi.
 - Polymarket kayıtları normal oran terminali tablolarından ayrıldı.
 - Demo odds snapshot içine 5 Polymarket örnek marketi eklendi.

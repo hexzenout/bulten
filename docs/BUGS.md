@@ -13,6 +13,7 @@
 - sw.js dosyasının gereksiz değiştirilme riski var.
 - CSS/JS dosyalarının şişme riski var.
 - POLYMARKET gerçek veri motoru henüz bağlı değil; panel şimdilik demo snapshot kayıtlarıyla çalışıyor.
+- V543 sonrası kontrol: ana kategori sırası TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET olarak kalmalı.
 
 ## Her Güncellemede Test Edilecekler
 - Oran Terminali eski hali çalışıyor mu?
@@ -30,3 +31,5 @@
 - V541: Oran Terminali altına POLYMARKET ayrı panel olarak eklendi.
 - V541: Polymarket kayıtlarının normal oran kıyaslama listelerine karışma riski azaltıldı.
 - V541: sw.js değiştirilmeden POLYMARKET paneli eklendi.
+- V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
+- V543: POLYMARKET ana kategoriye alındı; Bahis Türü / Market dropdown sayfayı aşağı itmeyecek şekilde düzeltildi; futbol market görünürlüğü güçlendirildi.

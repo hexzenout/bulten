@@ -69,11 +69,16 @@
 - docs/FILE_MAP.md
 - docs/PROJECT_SETUP_NOTES.md
 
+## Patch Notları
+- PATCH_NOTES.md
+
 ## Dokunulmaması Gerekenler
 - sw.js sadece gerçekten gerekirse değiştirilecek.
 - Gereksiz service worker/cache değişikliği yapılmayacak.
 - Route sızıntısı oluşturulmayacak.
 
 ## Son Güncelleme
+- V543: POLYMARKET ana kategoriye alındı; sıra TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET; dropdown overlay düzeltmesi yapıldı.
+- V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V541: Oran Terminali altında POLYMARKET paneli eklendi.
 - Bu güncellemede sw.js ve index.html değiştirilmedi.
