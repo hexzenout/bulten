@@ -62,6 +62,26 @@ Aşağıdaki modüller birbirine sızmayacak:
 Her görev sonunda kısa rapor ver:
 
 - Değişen dosyalar
+- ## Codex Çalışma Akışı
+
+- Önce analiz yap, hemen kod değiştirme.
+- Büyük değişikliklerde önce hangi dosyalara dokunacağını raporla.
+- Mümkünse işi küçük ve kontrollü adımlara böl.
+- Direkt main branch üzerinde riskli değişiklik yapma; değişiklikleri PR/patch mantığıyla hazırla.
+- sw.js dosyasına sadece gerçekten gerekiyorsa dokun.
+- İş sonunda şu formatta rapor ver:
+
+DEĞİŞECEKLER
+- ...
+
+DEĞİŞMEYENLER
+- ...
+
+TEST NOTLARI
+- ...
+
+DOCS GÜNCELLEME NOTLARI
+- ...
 - Değişmeyen kritik dosyalar
 - Test notları
 - Açık kalan riskler
