@@ -75,5 +75,6 @@
 - Route sızıntısı oluşturulmayacak.
 
 ## Son Güncelleme
+- V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V541: Oran Terminali altında POLYMARKET paneli eklendi.
 - Bu güncellemede sw.js ve index.html değiştirilmedi.
