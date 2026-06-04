@@ -1,0 +1,47 @@
+name: PR Validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate odds terminal patch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository indir
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Oran Terminali JS syntax kontrolü
+        run: node --check assets/js/55-odds-terminal.js
+
+      - name: Odds JSON parse kontrolü
+        run: |
+          python -m json.tool assets/data/odds-snapshot.json >/dev/null
+          python -m json.tool assets/data/odds-sources.json >/dev/null
+
+      - name: Yasaklı artefakt ve kritik dosya kontrolü
+        shell: bash
+        run: |
+          test ! -f bulten-patch-v543-odds-polymarket.zip
+          test ! -f APPLY_PATCH_WINDOWS.bat
+          if [ -n "${{ github.base_ref }}" ]; then
+            git fetch origin "${{ github.base_ref }}" --depth=1
+            git diff --name-only "origin/${{ github.base_ref }}...HEAD" | tee /tmp/changed-files.txt
+            ! grep -Eq '^(sw\.js|index\.html)$' /tmp/changed-files.txt
+          fi

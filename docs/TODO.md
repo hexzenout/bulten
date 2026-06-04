@@ -9,6 +9,7 @@
 6. V543 ile POLYMARKET, TÜMÜ/FUTBOL/BASKETBOL ile aynı seviyede ana kategoriye alındı.
 7. V543 ile Bahis Türü / Market dropdown sayfayı aşağı itmeyen overlay davranışına alındı.
 8. V543 ile futbol marketlerinin görünürlüğü geri güçlendirildi.
+9. V544 ile PR üzerinde çalışan validation workflow eklendi.
 
 ## Sıradaki İşler
 1. Polymarket gerçek veri çekme motorunu/API entegrasyonunu tasarla.
@@ -20,6 +21,7 @@
 7. Değişecek dosyaları net listele.
 8. Gerekirse tam ZIP/paket üret.
 9. İş sonunda bağlam güncellemesi çıkar.
+10. PR Validation check geçmezse GitHub Actions logu incelenecek.
 
 ## Dikkat Edilecekler
 - sw.js dokunulmayacak; gerekirse ayrıca açıklanacak.

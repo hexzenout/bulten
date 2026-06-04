@@ -14,6 +14,7 @@
 - CSS/JS dosyalarının şişme riski var.
 - POLYMARKET gerçek veri motoru henüz bağlı değil; panel şimdilik demo snapshot kayıtlarıyla çalışıyor.
 - V543 sonrası kontrol: ana kategori sırası TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET olarak kalmalı.
+- GitHub PR yeşil butonu branch protection/required check beklerse PR Validation workflow sonucu kontrol edilmeli.
 
 ## Her Güncellemede Test Edilecekler
 - Oran Terminali eski hali çalışıyor mu?
@@ -33,3 +34,4 @@
 - V541: sw.js değiştirilmeden POLYMARKET paneli eklendi.
 - V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V543: POLYMARKET ana kategoriye alındı; Bahis Türü / Market dropdown sayfayı aşağı itmeyecek şekilde düzeltildi; futbol market görünürlüğü güçlendirildi.
+- V544: PR üzerinde çalışan validation workflow eklendi; required check oluşmama riski azaltıldı.

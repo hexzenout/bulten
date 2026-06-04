@@ -24,6 +24,37 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 #### Sıradaki Hedef
 - ...
 
+### V544 - 2026-06-04
+#### Değişenler
+- GitHub PR yeşil merge/update butonunun branch protection gereksinimlerine takılmaması için PR üzerinde çalışan hafif validation workflow eklendi.
+- Workflow, Oran Terminali JS syntax kontrolünü, odds JSON parse kontrollerini ve ZIP/BAT artefakt kontrolünü çalıştırır.
+
+#### Düzeltilenler
+- Mevcut workflow'ların sadece schedule/manual çalışması nedeniyle PR tarafında required check oluşmama riski azaltıldı.
+
+#### Değişen Dosyalar
+- .github/workflows/pr-validation.yml
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+- docs/BUGS.md
+- docs/TODO.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- index.html
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- assets/data/odds-snapshot.json
+- assets/data/odds-sources.json
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- odds-snapshot.json ve odds-sources.json JSON parse testleri geçti.
+- GitHub Actions workflow YAML parse kontrolü Python ile geçti.
+
+#### Sıradaki Hedef
+- GitHub PR ekranında PR Validation / Validate odds terminal patch check sonucunu bekleyip yeşil merge/update butonunu tekrar dene.
+
 ### V543 - 2026-06-04
 #### Değişenler
 - POLYMARKET, Oran Terminali içinde FUTBOL/BASKETBOL ile aynı seviyede ana kategoriye alındı.

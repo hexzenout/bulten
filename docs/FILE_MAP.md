@@ -60,6 +60,7 @@
 ## Workflow Dosyaları
 - .github/workflows/update-radar.yml
 - .github/workflows/update-live-scores.yml
+- .github/workflows/pr-validation.yml
 
 ## Docs Dosyaları
 - docs/BULTEN_CONTEXT.md
@@ -78,6 +79,7 @@
 - Route sızıntısı oluşturulmayacak.
 
 ## Son Güncelleme
+- V544: PR Validation workflow eklendi; GitHub merge requirements için PR check üretilir.
 - V543: POLYMARKET ana kategoriye alındı; sıra TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET; dropdown overlay düzeltmesi yapıldı.
 - V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V541: Oran Terminali altında POLYMARKET paneli eklendi.
