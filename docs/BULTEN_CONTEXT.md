@@ -77,10 +77,12 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - Avantajlı oran yakalama
 
 ## POLYMARKET
-- POLYMARKET, Oran Terminali altında ayrı alan olacak.
-- Mevcut Oran Terminali düzeni bozulmadan eklenecek.
-- Kısa vadeli ve avantajlı marketler taranacak.
-- Polymarket tarafında farklı market tipleri desteklenecek.
+- POLYMARKET, Oran Terminali altında ayrı sekme/panel olarak eklendi.
+- Mevcut Oran Terminali düzeni bozulmadan #odds içinde çalışır.
+- Polymarket kayıtları normal futbol/basket oran kıyaslama tablolarına karışmaz.
+- Kısa vadeli ve avantajlı marketler için güven skoru, edge, kapanış, likidite ve hacim kartları gösterilir.
+- Polymarket tarafında spor, kripto, makro ve haber gibi farklı market tipleri desteklenecek şekilde demo veri yapısı hazırlandı.
+- Sıradaki aşama gerçek Polymarket veri çekme motorudur.
 
 ## Kripto Terminal
 - Binance / OKX seçimi
@@ -123,8 +125,8 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - API kota tüketimi dikkatli yönetilecek.
 
 ## Son Aktif Hedef
-Oran Terminali altına POLYMARKET alanı eklemek.
-Mevcut Oran Terminali düzenini bozmadan bahis verilerini daha geniş destekleyecek yapıya geçirmek.
+POLYMARKET alanı Oran Terminali altında ayrı sekme/panel olarak eklendi.
+Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu tasarlamak ve futbol/basket bahis türlerini canlı veriyle genişletmektir.
 
 ## Açık Riskler
 - Uzun ChatGPT sohbetinde lag oluşuyor.
@@ -134,5 +136,8 @@ Mevcut Oran Terminali düzenini bozmadan bahis verilerini daha geniş destekleye
 - sw.js gereksiz yere değişmemeli.
 
 ## Son Bilinen Paket Notu
-- V49 dev polish: stream / rolling / sound alanları konuşuldu.
-- sw.js mümkün olduğunca sabit tutulacak.
+- V541: Oran Terminali altında POLYMARKET sekmesi/paneli eklendi.
+- Polymarket kayıtları normal oran terminali tablolarından ayrıldı.
+- Demo odds snapshot içine 5 Polymarket örnek marketi eklendi.
+- sw.js değiştirilmedi.
+- index.html değiştirilmedi.

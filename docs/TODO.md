@@ -1,11 +1,17 @@
 # TODO
 
+## Tamamlananlar
+1. Oran Terminali altında ayrı POLYMARKET alanı açıldı.
+2. Mevcut Oran Terminali düzeni bozulmadan #odds içinde ayrı panel yaklaşımı uygulandı.
+3. Polymarket kayıtlarının normal oran kıyaslama listelerine karışması engellendi.
+4. sw.js değiştirilmedi.
+
 ## Sıradaki İşler
-1. Oran Terminali altında POLYMARKET alanı aç.
-2. Mevcut Oran Terminali düzenini bozma.
-3. Futbol/basket bahis türlerini genişlet.
-4. Polymarket kısa vadeli avantaj marketlerini tasarla.
-5. Modül sızıntılarını engelle.
+1. Polymarket gerçek veri çekme motorunu/API entegrasyonunu tasarla.
+2. Kısa vadeli Polymarket marketleri için filtreleme ve sıralamayı canlı veriye bağla.
+3. Futbol/basket bahis türlerini canlı veriyle genişlet.
+4. Polymarket avantaj skoru için referans olasılık kaynağını netleştir.
+5. Modül sızıntılarını her güncellemede test et.
 6. Değişecek dosyaları net listele.
 7. Gerekirse tam ZIP/paket üret.
 8. İş sonunda bağlam güncellemesi çıkar.
@@ -14,5 +20,6 @@
 - sw.js dokunulmayacak; gerekirse ayrıca açıklanacak.
 - CSS/JS temiz kalacak.
 - Eski çalışan sistemler bozulmayacak.
+- #rolling, #crypto, #stream ve #odds birbirine karışmayacak.
 - Büyük kodu tek mesajda şişirme.
 - Her görev ayrı kısa sohbet olarak yürütülecek.
