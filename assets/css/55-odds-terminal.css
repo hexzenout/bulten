@@ -4285,8 +4285,8 @@
 }
 
 /* ================================
-   V550 ORAN TERMİNALİ
-   Ana kategori sekmeleri: stabil ölçü, altın hover ve net aktif durum.
+   V551 ORAN TERMİNALİ
+   Ana kategori sekmeleri: stabil ölçü, alt çizgisiz aktif durum ve POLYMARKET marka rengi.
 ================================ */
 .omega-tab-odds .v544-category-row {
     align-items: center !important;
@@ -4333,6 +4333,10 @@
     min-width: 154px !important;
     margin-left: 0 !important;
     padding-inline: 16px !important;
+    border-color: rgba(255,255,255,.38) !important;
+    background: linear-gradient(180deg, #063cff 0%, #071bb9 45%, #0a075f 100%) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 0 22px rgba(6,60,255,.24) !important;
 }
 
 .omega-tab-odds .v544-category-row button span {
@@ -4399,28 +4403,37 @@
     transform: none !important;
 }
 
+.omega-tab-odds .v544-category-row button.polymarket:hover,
+.omega-tab-odds .v544-category-row button.polymarket.active {
+    border-color: rgba(255,255,255,.62) !important;
+    background: linear-gradient(180deg, #104bff 0%, #0722cb 45%, #0a075f 100%) !important;
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(255,255,255,.18) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.24), 0 0 26px rgba(6,60,255,.32) !important;
+    transform: none !important;
+}
+
+
 .omega-tab-odds .v544-category-row button::after,
 .omega-tab-odds .v544-category-row button.football.active::after,
 .omega-tab-odds .v544-category-row button.basketball.active::after {
-    content: "" !important;
-    position: absolute !important;
-    left: 18px !important;
-    right: 18px !important;
-    bottom: 6px !important;
-    width: auto !important;
-    height: 2px !important;
-    margin: 0 !important;
-    border-radius: 999px !important;
+    content: none !important;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
     background: transparent !important;
-    opacity: 0 !important;
+    border: 0 !important;
     box-shadow: none !important;
+    opacity: 0 !important;
     pointer-events: none !important;
 }
 
 .omega-tab-odds .v544-category-row button:is(.all,.football,.basketball,.polymarket).active::after {
-    background: #ffd166 !important;
-    opacity: .95 !important;
-    box-shadow: 0 0 10px rgba(255,209,102,.42) !important;
+    content: none !important;
+    display: none !important;
+    background: transparent !important;
+    opacity: 0 !important;
+    box-shadow: none !important;
 }
 
 .omega-tab-odds .v544-category-row button:hover .v548-sport-mark,
@@ -4429,6 +4442,14 @@
 .omega-tab-odds .v544-category-row button.active .v544-poly-mark {
     color: currentColor !important;
     filter: none !important;
+    text-shadow: none !important;
+}
+
+.omega-tab-odds .v544-category-row button.polymarket .v544-poly-mark,
+.omega-tab-odds .v544-category-row button.polymarket:hover .v544-poly-mark,
+.omega-tab-odds .v544-category-row button.polymarket.active .v544-poly-mark {
+    color: #ffffff !important;
+    filter: drop-shadow(0 0 7px rgba(255,255,255,.26)) !important;
     text-shadow: none !important;
 }
 
