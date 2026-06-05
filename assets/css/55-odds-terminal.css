@@ -4621,3 +4621,110 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
     font-size: .7rem !important;
 }
+
+/* V555 fixture matching preview: market kataloglarını replace etmeden izole demo kartı */
+.v555-fixture-preview {
+    display: grid !important;
+    gap: 12px !important;
+    margin-top: 14px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(96,165,250,.16) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(135deg, rgba(37,99,235,.10), rgba(15,23,42,.74)) !important;
+}
+
+.v555-fixture-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.v555-fixture-card {
+    display: grid !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    border: 1px solid rgba(255,255,255,.09) !important;
+    border-radius: 16px !important;
+    background: rgba(0,0,0,.22) !important;
+}
+
+.v555-fixture-card.strong {
+    border-color: rgba(34,197,94,.28) !important;
+}
+
+.v555-fixture-card.review {
+    border-color: rgba(250,204,21,.28) !important;
+}
+
+.v555-fixture-card.none {
+    border-color: rgba(239,68,68,.26) !important;
+}
+
+.v555-fixture-card small {
+    display: block !important;
+    margin-bottom: 4px !important;
+    color: #93c5fd !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .4px !important;
+    text-transform: uppercase !important;
+}
+
+.v555-fixture-card b {
+    display: block !important;
+    color: #f8fafc !important;
+    font-size: .84rem !important;
+    font-weight: 950 !important;
+}
+
+.v555-fixture-card code {
+    display: block !important;
+    margin-top: 4px !important;
+    overflow-wrap: anywhere !important;
+    color: #bfdbfe !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+    font-size: .66rem !important;
+}
+
+.v555-fixture-card footer {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding-top: 8px !important;
+    border-top: 1px solid rgba(255,255,255,.07) !important;
+}
+
+.v555-score,
+.v555-status {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 24px !important;
+    padding: 0 9px !important;
+    border-radius: 999px !important;
+    font-size: .7rem !important;
+    font-weight: 950 !important;
+}
+
+.v555-score {
+    background: rgba(59,130,246,.16) !important;
+    color: #dbeafe !important;
+}
+
+.v555-status {
+    background: rgba(255,255,255,.07) !important;
+    color: #e5e7eb !important;
+}
+
+.v555-fixture-card footer em {
+    flex: 1 1 190px !important;
+    color: #cbd5e1 !important;
+    font-size: .72rem !important;
+    font-style: normal !important;
+}
+
+@media (max-width: 900px) {
+    .v555-fixture-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

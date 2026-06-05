@@ -113,6 +113,17 @@
     }
   ];
 
+  const MOCK_FIXTURE_SOURCE_A = [
+    { id: "source_a_arsenal_chelsea", source: "Kaynak A", sport: "football", league: "Premier League", homeTeam: "Arsenal", awayTeam: "Chelsea", startsAt: "2026-06-05T19:00:00Z" },
+    { id: "source_a_fenerbahce_efes", source: "Kaynak A", sport: "basketball", league: "BSL", homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", startsAt: "2026-06-05T18:00:00Z" }
+  ];
+
+  const MOCK_FIXTURE_SOURCE_B = [
+    { id: "source_b_arsenal_chelsea", source: "Kaynak B", sport: "football", league: "Premier League", homeTeam: "Arsenal FC", awayTeam: "Chelsea FC", startsAt: "2026-06-05T19:06:00Z" },
+    { id: "source_b_fenerbahce_efes", source: "Kaynak B", sport: "basketball", league: "Basketbol Süper Ligi", homeTeam: "Fenerbahce Beko", awayTeam: "Anadolu Efes SK", startsAt: "2026-06-05T18:09:00Z" },
+    { id: "source_b_wrong_time", source: "Kaynak B", sport: "basketball", league: "BSL", homeTeam: "Fenerbahce", awayTeam: "Anadolu Efes", startsAt: "2026-06-05T18:45:00Z" }
+  ];
+
   function qs(sel, root = document) { return root.querySelector(sel); }
   function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
@@ -131,6 +142,26 @@
     return Number.isFinite(x) ? x.toFixed(1) + "%" : "-";
   }
 
+  const TEAM_NAME_ALIASES = {
+    "man utd": "manchester united",
+    "manchester utd": "manchester united",
+    "man united": "manchester united",
+    "fenerbahce": "fenerbahce",
+    "efes": "anadolu efes",
+    "anadolu efes sk": "anadolu efes",
+    "arsenal fc": "arsenal",
+    "chelsea fc": "chelsea"
+  };
+
+  const LEAGUE_NAME_ALIASES = {
+    "ing basketbol super ligi": "bsl",
+    "basketbol super ligi": "bsl",
+    "turkiye basketbol super ligi": "bsl",
+    "super lig": "super-lig",
+    "premier league": "premier-league",
+    "la liga": "la-liga"
+  };
+
   function normalizeText(value) {
     return String(value || "")
       .toLowerCase()
@@ -141,25 +172,188 @@
       .replaceAll("ö", "o").replaceAll("Ö", "o")
       .replaceAll("ç", "c").replaceAll("Ç", "c")
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[’'`´]/g, "")
+      .replace(/[()\[\]{}]/g, " ")
+      .replace(/[\\/_–—-]+/g, " ")
       .replace(/[^a-z0-9.]+/g, " ")
       .replace(/\s+/g, " ")
       .trim();
   }
 
   function normalizeTeamName(value) {
-    return normalizeText(value);
+    const base = normalizeText(value).replace(/[.]+/g, " ").replace(/\s+/g, " ").trim();
+    if (!base) return "";
+    const directAlias = TEAM_NAME_ALIASES[base];
+    if (directAlias) return directAlias;
+    const suffixes = new Set(["fc", "sk", "bc", "bk", "club"]);
+    const words = base.split(/\s+/).filter(Boolean);
+    const compact = words.filter((word, index) => {
+      if (!suffixes.has(word)) return true;
+      return !(index === 0 || index === words.length - 1 || words.length > 2);
+    }).join(" ");
+    return TEAM_NAME_ALIASES[compact] || compact || base;
   }
 
-  function buildFixtureKey({ sport, homeTeam, awayTeam, startsAt } = {}) {
-    const day = String(startsAt || "").slice(0, 10) || "date_unknown";
+  function normalizeLeagueName(value) {
+    const base = normalizeText(value).replace(/[.]+/g, " ").replace(/\s+/g, " ").trim();
+    if (!base) return "league";
+    return LEAGUE_NAME_ALIASES[base] || base.replace(/\s+/g, "-");
+  }
+
+  function normalizeFixtureSide(value) {
+    return normalizeTeamName(value || "");
+  }
+
+  function normalizeSportName(value) {
+    const sport = normalizeText(value || "sport").replace(/[.]+/g, " ").trim();
+    if (sport === "basket" || sport === "basketbol") return "basketball";
+    if (sport === "futbol") return "football";
+    return sport.replace(/\s+/g, "-") || "sport";
+  }
+
+  function fixtureTimeMs(startsAt) {
+    if (!startsAt) return NaN;
+    const parsed = Date.parse(startsAt);
+    return Number.isFinite(parsed) ? parsed : NaN;
+  }
+
+  function fixtureTimeBucket(startsAt) {
+    const parsed = fixtureTimeMs(startsAt);
+    if (!Number.isFinite(parsed)) return "time-unknown";
+    const date = new Date(parsed);
+    const pad = n => String(n).padStart(2, "0");
+    return [date.getUTCFullYear(), pad(date.getUTCMonth() + 1), pad(date.getUTCDate()), pad(date.getUTCHours()), pad(date.getUTCMinutes())].join("-");
+  }
+
+  function fixtureKeyPart(value) {
+    return String(value || "unknown").replace(/\s+/g, "-").replace(/_+/g, "-").replace(/\|+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  function buildFixtureKey({ sport, homeTeam, awayTeam, league, startsAt } = {}) {
     return [
-      normalizeText(sport || "sport"),
-      normalizeTeamName(homeTeam || "home"),
-      normalizeTeamName(awayTeam || "away"),
-      day
-    ].filter(Boolean).join("_").replace(/\s+/g, "_");
+      normalizeSportName(sport || "sport"),
+      normalizeLeagueName(league || "league"),
+      normalizeFixtureSide(homeTeam || "home"),
+      normalizeFixtureSide(awayTeam || "away"),
+      fixtureTimeBucket(startsAt)
+    ].map(fixtureKeyPart).filter(Boolean).join("|");
   }
 
+  function levenshteinRatio(a, b) {
+    const left = String(a || "");
+    const right = String(b || "");
+    if (!left && !right) return 1;
+    if (!left || !right) return 0;
+    if (left === right) return 1;
+    const prev = Array.from({ length: right.length + 1 }, (_, i) => i);
+    const curr = Array(right.length + 1).fill(0);
+    for (let i = 1; i <= left.length; i += 1) {
+      curr[0] = i;
+      for (let j = 1; j <= right.length; j += 1) {
+        const cost = left[i - 1] === right[j - 1] ? 0 : 1;
+        curr[j] = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
+      }
+      for (let j = 0; j <= right.length; j += 1) prev[j] = curr[j];
+    }
+    return Math.max(0, 1 - (prev[right.length] / Math.max(left.length, right.length)));
+  }
+
+  function tokenSimilarity(a, b) {
+    const left = normalizeText(a).replace(/[.]+/g, " ").split(/\s+/).filter(Boolean);
+    const right = normalizeText(b).replace(/[.]+/g, " ").split(/\s+/).filter(Boolean);
+    if (!left.length && !right.length) return 1;
+    if (!left.length || !right.length) return 0;
+    const leftSet = new Set(left);
+    const rightSet = new Set(right);
+    const intersection = left.filter(token => rightSet.has(token)).length;
+    const union = new Set([...left, ...right]).size || 1;
+    const containment = Math.max(intersection / leftSet.size, intersection / rightSet.size);
+    return Math.max(intersection / union, containment * 0.92);
+  }
+
+  function teamSimilarity(a, b) {
+    const left = normalizeTeamName(a);
+    const right = normalizeTeamName(b);
+    if (!left && !right) return 1;
+    if (!left || !right) return 0;
+    if (left === right) return 1;
+    return Math.max(tokenSimilarity(left, right), levenshteinRatio(left, right));
+  }
+
+  function leagueSimilarity(a, b) {
+    const left = normalizeLeagueName(a);
+    const right = normalizeLeagueName(b);
+    if (!left || !right || left === "league" || right === "league") return 0.72;
+    if (left === right) return 1;
+    return Math.max(tokenSimilarity(left, right), levenshteinRatio(left, right));
+  }
+
+  function fixtureTimeScore(a, b) {
+    const left = fixtureTimeMs(a?.startsAt || a?.kickoff);
+    const right = fixtureTimeMs(b?.startsAt || b?.kickoff);
+    if (!Number.isFinite(left) || !Number.isFinite(right)) return 0.55;
+    const diffMinutes = Math.abs(left - right) / 60000;
+    if (diffMinutes <= 10) return 1;
+    if (diffMinutes <= 30) return 0.7;
+    if (diffMinutes <= 60) return 0.2;
+    return 0.08;
+  }
+
+  function scoreFixtureMatch(a = {}, b = {}) {
+    const sportA = normalizeSportName(a.sport || "");
+    const sportB = normalizeSportName(b.sport || "");
+    if (sportA && sportB && sportA !== sportB) return 0;
+    const homeHome = teamSimilarity(a.homeTeam, b.homeTeam);
+    const awayAway = teamSimilarity(a.awayTeam, b.awayTeam);
+    const directTeamScore = (homeHome + awayAway) / 2;
+    const homeAway = teamSimilarity(a.homeTeam, b.awayTeam);
+    const awayHome = teamSimilarity(a.awayTeam, b.homeTeam);
+    const reversedTeamScore = (homeAway + awayHome) / 2;
+    const reversed = reversedTeamScore > directTeamScore && reversedTeamScore >= 0.72;
+    const teamScore = reversed ? reversedTeamScore * 0.65 : directTeamScore;
+    const leagueScore = leagueSimilarity(a.league, b.league);
+    const timeScore = fixtureTimeScore(a, b);
+    const score = (teamScore * 0.62) + (timeScore * 0.24) + (leagueScore * 0.14);
+    return Math.max(0, Math.min(1, Number(score.toFixed(3))));
+  }
+
+  function fixtureMatchReason(a, b, score) {
+    const directTeamScore = (teamSimilarity(a?.homeTeam, b?.homeTeam) + teamSimilarity(a?.awayTeam, b?.awayTeam)) / 2;
+    const reversedTeamScore = (teamSimilarity(a?.homeTeam, b?.awayTeam) + teamSimilarity(a?.awayTeam, b?.homeTeam)) / 2;
+    const timeScore = fixtureTimeScore(a, b);
+    if (reversedTeamScore > directTeamScore && reversedTeamScore >= 0.72) return "Ev/deplasman ters görünüyor";
+    if (score >= 0.82 && timeScore >= 0.7) return "Takım adları ve saat güçlü eşleşti";
+    if (directTeamScore >= 0.75 && timeScore < 0.7) return "Takım adları benzer ama saat farkı yüksek";
+    if (score >= 0.65) return "Takım adları kısmen benzer, manuel kontrol önerilir";
+    return "Eşleşme için takım, lig veya saat benzerliği zayıf";
+  }
+
+  function matchFixtureAcrossSources(baseFixture, candidateFixtures = []) {
+    const candidates = Array.isArray(candidateFixtures) ? candidateFixtures : [];
+    let best = { bestMatch: null, score: 0, reason: "Aday maç bulunamadı", isLikelyMatch: false, status: "none" };
+    candidates.forEach(candidate => {
+      const score = scoreFixtureMatch(baseFixture, candidate);
+      if (!best.bestMatch || score > best.score) {
+        best = {
+          bestMatch: candidate,
+          score,
+          reason: fixtureMatchReason(baseFixture, candidate, score),
+          isLikelyMatch: score >= 0.82,
+          status: score >= 0.82 ? "strong" : score >= 0.65 ? "review" : "none"
+        };
+      }
+    });
+    return best;
+  }
+
+  function buildPolymarketEventKey({ category, title, closesAt } = {}) {
+    return [
+      "polymarket",
+      normalizeText(category || "event").replace(/\s+/g, "-"),
+      normalizeText(title || "title").replace(/[.]+/g, "").replace(/\s+/g, "-").slice(0, 80),
+      fixtureTimeBucket(closesAt)
+    ].filter(Boolean).join("|");
+  }
 
   function textMatchesTokens(haystack, tokens) {
     if (!tokens.length) return true;
@@ -811,15 +1005,18 @@
     const odds = Number(rawRecord.odds ?? rawRecord.current ?? 0);
     const homeTeam = rawRecord.homeTeam || "Ev Sahibi";
     const awayTeam = rawRecord.awayTeam || "Deplasman";
+    const league = rawRecord.league || "Demo Lig";
     const startsAt = rawRecord.startsAt || rawRecord.kickoff || "";
+    const fixtureKey = buildFixtureKey({ sport, homeTeam, awayTeam, league, startsAt });
     return {
-      id: String(rawRecord.id || buildFixtureKey({ sport, homeTeam, awayTeam, startsAt }) + "_" + (catalog?.id || "market")),
+      id: String(rawRecord.id || fixtureKey + "_" + (catalog?.id || "market")),
       source: String(rawRecord.source || rawRecord.bookmaker || "mock_source"),
       sport: ["football", "basketball"].includes(sport) ? sport : "football",
-      fixtureId: String(rawRecord.fixtureId || buildFixtureKey({ sport, homeTeam, awayTeam, startsAt })),
+      fixtureId: String(rawRecord.fixtureId || fixtureKey),
+      fixtureKey,
       homeTeam,
       awayTeam,
-      league: rawRecord.league || "Demo Lig",
+      league,
       startsAt: startsAt || null,
       marketId: String(rawRecord.marketId || catalog?.id || ""),
       marketLabel: rawRecord.marketLabel || catalog?.label || catalog?.name || rawRecord.sourceMarketName || "Market",
@@ -1678,7 +1875,7 @@
         </div>
       </section>`;
     }).join("")}</div>`;
-    return `${compareHtml}${renderMockAdapterPreview()}`;
+    return `${compareHtml}${renderMockAdapterPreview()}${renderFixtureMatchPreview()}`;
   }
 
   function renderMockAdapterBadges() {
@@ -1725,6 +1922,67 @@
             <td>${Math.round(Number(row.confidence || 0) * 100)}%</td>
           </tr>`).join("")}</tbody>
         </table>
+      </div>
+    </section>`;
+  }
+
+  function fixtureLabel(fixture) {
+    if (!fixture) return "-";
+    return `${fixture.homeTeam || "Ev Sahibi"} - ${fixture.awayTeam || "Deplasman"}`;
+  }
+
+  function matchStatusLabel(status) {
+    if (status === "strong") return "güçlü";
+    if (status === "review") return "şüpheli";
+    return "eşleşmedi";
+  }
+
+  function mockFixtureMatchRows() {
+    return MOCK_FIXTURE_SOURCE_A.map(base => {
+      const result = matchFixtureAcrossSources(base, MOCK_FIXTURE_SOURCE_B);
+      return {
+        base,
+        bestMatch: result.bestMatch,
+        score: result.score,
+        reason: result.reason,
+        status: result.status,
+        isLikelyMatch: result.isLikelyMatch,
+        fixtureKey: buildFixtureKey(base),
+        candidateKey: result.bestMatch ? buildFixtureKey(result.bestMatch) : ""
+      };
+    });
+  }
+
+  function renderFixtureMatchPreview() {
+    const rows = mockFixtureMatchRows();
+    if (!rows.length) return "";
+    return `<section class="v555-fixture-preview" aria-label="Demo maç eşleştirme önizlemesi">
+      <div class="v554-mock-preview-head">
+        <div>
+          <span>FIXTURE MATCH</span>
+          <h3>Demo maç eşleştirme önizlemesi</h3>
+          <p>Farklı kaynaklardan gelen aynı maçlar, kataloglar silinmeden arka planda normalize edilir.</p>
+        </div>
+        <em>Gerçek API yok</em>
+      </div>
+      <div class="v555-fixture-grid">
+        ${rows.map(row => `<article class="v555-fixture-card ${escapeAttr(row.status)}">
+          <div>
+            <small>Kaynak A</small>
+            <b>${escapeHtml(fixtureLabel(row.base))}</b>
+            <code>${escapeHtml(row.fixtureKey)}</code>
+          </div>
+          <div>
+            <small>Kaynak B aday</small>
+            <b>${escapeHtml(fixtureLabel(row.bestMatch))}</b>
+            <code>${escapeHtml(row.candidateKey || "-")}</code>
+          </div>
+          <footer>
+            <span class="v555-score">${Math.round(row.score * 100)}%</span>
+            <span class="v555-status">${escapeHtml(matchStatusLabel(row.status))}</span>
+            <em>${escapeHtml(row.reason)}</em>
+          </footer>
+        </article>`).join("")}
       </div>
     </section>`;
   }
@@ -2131,7 +2389,13 @@
   window.__oddsTerminalV554 = {
     normalizeText,
     normalizeTeamName,
+    normalizeLeagueName,
+    normalizeFixtureSide,
     buildFixtureKey,
+    scoreFixtureMatch,
+    matchFixtureAcrossSources,
+    buildPolymarketEventKey,
+    mockFixtureMatchRows,
     normalizeOddsRecord,
     findCatalogMarketById,
     findCatalogMarketByAlias,
@@ -2143,6 +2407,8 @@
     sourceHealth,
     polymarketMockAdapterRecords
   };
+
+  window.__oddsTerminalV555 = window.__oddsTerminalV554;
 
   window.omega_RenderOddsTerminal = async function () {
     readLocalState();
