@@ -2088,7 +2088,7 @@
    V538 ORAN TERMİNALİ SPOR BAZLI MARKET + KOYU GRİ DROPDOWN
 ================================ */
 
-/* Bahis Türü / Market içindeki mavi düzenin tamamı koyu griye çekildi. */
+/* Eski market dropdown renk katmanı V546 katalog sonrası pasif kaldı. */
 .v536-market-toggle,
 .v537-market-toggle,
 .v536-market-menu.open .v536-market-toggle,
@@ -3171,5 +3171,334 @@
     .omega-tab-odds .omega-market-dropdown,
     .omega-tab-odds .v536-market-dropdown.omega-market-dropdown {
         width: calc(100vw - 28px) !important;
+    }
+}
+
+/* ================================
+   V545 ORAN TERMİNALİ TEMİZ DÜZELTME
+   Ana kategori sırası, market kart ölçüleri ve POLYMARKET marka butonu.
+================================ */
+.omega-tab-odds .v544-category-row {
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    padding: 2px 0 8px !important;
+}
+
+.omega-tab-odds .v544-category-row button {
+    height: 44px !important;
+    min-width: max-content !important;
+    padding: 0 15px !important;
+    border-radius: 999px !important;
+    background: #303238 !important;
+    border-color: rgba(255,255,255,.14) !important;
+    color: #f4f4f5 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    box-shadow: none !important;
+}
+
+.omega-tab-odds .v544-category-row button.all.active {
+    background: linear-gradient(180deg, rgba(168,85,247,.24), rgba(88,28,135,.20)), #34363A !important;
+    border-color: rgba(192,132,252,.50) !important;
+    color: #f5f3ff !important;
+}
+
+.omega-tab-odds .v544-category-row button.football {
+    background: linear-gradient(180deg, rgba(34,197,94,.18), rgba(20,83,45,.12)), #34363A !important;
+    border-color: rgba(34,197,94,.30) !important;
+    color: #dcfce7 !important;
+}
+
+.omega-tab-odds .v544-category-row button.football.active,
+.omega-tab-odds .v544-category-row button.football:hover {
+    background: linear-gradient(180deg, rgba(34,197,94,.30), rgba(22,101,52,.20)), #36383D !important;
+    border-color: rgba(74,222,128,.58) !important;
+    color: #ffffff !important;
+}
+
+.omega-tab-odds .v544-category-row button.basketball {
+    background: linear-gradient(180deg, rgba(249,115,22,.20), rgba(154,52,18,.12)), #34363A !important;
+    border-color: rgba(251,146,60,.34) !important;
+    color: #ffedd5 !important;
+}
+
+.omega-tab-odds .v544-category-row button.basketball.active,
+.omega-tab-odds .v544-category-row button.basketball:hover {
+    background: linear-gradient(180deg, rgba(249,115,22,.32), rgba(194,65,12,.20)), #36383D !important;
+    border-color: rgba(253,186,116,.58) !important;
+    color: #ffffff !important;
+}
+
+.omega-tab-odds .v544-category-row button.polymarket {
+    min-width: auto !important;
+    margin-left: 0 !important;
+    padding-inline: 16px !important;
+    background: linear-gradient(180deg, #0433F5 0%, #0B0665 100%) !important;
+    border-color: rgba(255,255,255,.30) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 22px rgba(4,51,245,.24) !important;
+}
+
+.omega-tab-odds .v544-category-row button.polymarket.active,
+.omega-tab-odds .v544-category-row button.polymarket:hover {
+    background: linear-gradient(180deg, #1748ff 0%, #09055A 100%) !important;
+    border-color: rgba(255,255,255,.52) !important;
+    color: #fff !important;
+}
+
+.omega-tab-odds .v544-category-row button i,
+.omega-tab-odds .v544-poly-mark {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 16px !important;
+}
+
+.omega-tab-odds .v544-filters:empty {
+    display: none !important;
+    min-height: 0 !important;
+}
+
+.omega-tab-odds .omega-market-card,
+.omega-tab-odds .v537-market-cat,
+.omega-tab-odds .v537-market-item,
+.omega-tab-odds .v535-market-dropdown .v533-market-results button,
+.omega-tab-odds .v536-market-dropdown .v533-market-results button,
+.omega-tab-odds .v537-market-dropdown .v533-market-results button {
+    min-height: 48px !important;
+    padding: 11px 13px !important;
+    border-radius: 18px !important;
+    background: #34363A !important;
+    border-color: rgba(255,255,255,.12) !important;
+    color: #f5f5f5 !important;
+}
+
+.omega-tab-odds .omega-market-card:hover,
+.omega-tab-odds .v537-market-cat:hover,
+.omega-tab-odds .v537-market-item:hover,
+.omega-tab-odds .v535-market-dropdown .v533-market-results button:hover,
+.omega-tab-odds .v536-market-dropdown .v533-market-results button:hover,
+.omega-tab-odds .v537-market-dropdown .v533-market-results button:hover {
+    background: #40434A !important;
+    border-color: rgba(255,255,255,.20) !important;
+    color: #ffffff !important;
+}
+
+.omega-tab-odds .omega-market-card-title,
+.omega-tab-odds .v537-market-cat b,
+.omega-tab-odds .v537-market-item b,
+.omega-tab-odds .v535-market-dropdown .v533-market-results b,
+.omega-tab-odds .v536-market-dropdown .v533-market-results b,
+.omega-tab-odds .v537-market-dropdown .v533-market-results b {
+    font-size: 14px !important;
+    line-height: 1.28 !important;
+}
+
+.omega-tab-odds .omega-market-card-desc,
+.omega-tab-odds .v537-market-cat small,
+.omega-tab-odds .v537-market-item small,
+.omega-tab-odds .v535-market-dropdown .v533-market-results small,
+.omega-tab-odds .v536-market-dropdown .v533-market-results small,
+.omega-tab-odds .v537-market-dropdown .v533-market-results small {
+    margin-top: 4px !important;
+    font-size: 11.5px !important;
+    line-height: 1.32 !important;
+    color: #d1d5db !important;
+}
+
+@media (max-width: 760px) {
+    .omega-tab-odds .v544-category-row {
+        justify-content: flex-start !important;
+    }
+    .omega-tab-odds .v544-category-row button.polymarket {
+        min-width: auto !important;
+    }
+}
+
+/* ================================
+   V546 ORAN TERMİNALİ MARKET KATALOĞU
+   Dropdown kaldırıldı; Marketler sekmesi aramalı katalog oldu.
+================================ */
+.omega-tab-odds .v536-market-menu,
+.omega-tab-odds .v537-market-menu,
+.omega-tab-odds .v535-market-menu,
+.omega-tab-odds .v540-market-menu,
+.omega-tab-odds .omega-market-picker,
+.omega-tab-odds .omega-market-dropdown {
+    display: none !important;
+}
+
+.omega-tab-odds .v546-poly-mark {
+    width: 20px !important;
+    height: 20px !important;
+    flex: 0 0 auto !important;
+    color: #fff !important;
+    filter: drop-shadow(0 1px 0 rgba(0,0,0,.18)) !important;
+}
+
+.omega-tab-odds .v544-category-row button.polymarket .v546-poly-mark {
+    margin-left: -1px !important;
+}
+
+.omega-tab-odds .v546-market-hub {
+    display: grid !important;
+    gap: 14px !important;
+}
+
+.omega-tab-odds .v546-market-search-panel {
+    display: grid !important;
+    grid-template-columns: minmax(220px, .42fr) minmax(280px, 1fr) !important;
+    gap: 12px !important;
+    align-items: center !important;
+    padding: 14px !important;
+    border: 1px solid rgba(255,255,255,.10) !important;
+    border-radius: 20px !important;
+    background: #24262b !important;
+}
+
+.omega-tab-odds .v546-market-search-panel b {
+    display: block !important;
+    color: #fff !important;
+    font-size: 15px !important;
+    font-weight: 950 !important;
+}
+
+.omega-tab-odds .v546-market-search-panel span {
+    display: block !important;
+    margin-top: 3px !important;
+    color: #aeb4c0 !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+.omega-tab-odds .v546-market-search {
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 0 13px !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    border-radius: 16px !important;
+    background: #111318 !important;
+    color: #e5e7eb !important;
+}
+
+.omega-tab-odds .v546-market-search i {
+    color: #9ca3af !important;
+    font-size: 14px !important;
+}
+
+.omega-tab-odds .v546-market-search input {
+    width: 100% !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    outline: 0 !important;
+    background: transparent !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+}
+
+.omega-tab-odds .v546-market-search input::placeholder {
+    color: #7f8794 !important;
+}
+
+.omega-tab-odds .v546-market-groups {
+    display: grid !important;
+    gap: 12px !important;
+}
+
+.omega-tab-odds .v546-market-group {
+    padding: 13px !important;
+    border: 1px solid rgba(255,255,255,.09) !important;
+    border-radius: 20px !important;
+    background: #25272c !important;
+}
+
+.omega-tab-odds .v546-market-group-head {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    margin-bottom: 10px !important;
+}
+
+.omega-tab-odds .v546-market-group-head h3 {
+    margin: 0 !important;
+    color: #fff !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    font-weight: 950 !important;
+}
+
+.omega-tab-odds .v546-market-group-head p {
+    margin: 4px 0 0 !important;
+    color: #aeb4c0 !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+}
+
+.omega-tab-odds .v546-market-group-head > span {
+    flex: 0 0 auto !important;
+    padding: 6px 9px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.06) !important;
+    color: #d1d5db !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+}
+
+.omega-tab-odds .v546-market-card-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)) !important;
+    gap: 8px !important;
+}
+
+.omega-tab-odds .v546-market-card {
+    min-height: 54px !important;
+    padding: 11px 12px !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: 18px !important;
+    background: #34363A !important;
+    color: #f5f5f5 !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    transition: background .16s ease, border-color .16s ease, transform .16s ease !important;
+}
+
+.omega-tab-odds .v546-market-card:hover {
+    background: #40434A !important;
+    border-color: rgba(255,255,255,.20) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+.omega-tab-odds .v546-market-card b {
+    display: block !important;
+    color: inherit !important;
+    font-size: 13.5px !important;
+    line-height: 1.25 !important;
+    font-weight: 900 !important;
+}
+
+.omega-tab-odds .v546-market-card small {
+    display: block !important;
+    margin-top: 4px !important;
+    color: #d1d5db !important;
+    font-size: 11.5px !important;
+    line-height: 1.3 !important;
+    font-weight: 700 !important;
+}
+
+@media (max-width: 780px) {
+    .omega-tab-odds .v546-market-search-panel {
+        grid-template-columns: 1fr !important;
+        padding: 12px !important;
+    }
+    .omega-tab-odds .v546-market-card-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+    }
+    .omega-tab-odds .v546-market-card {
+        min-height: 52px !important;
+        padding: 10px 11px !important;
     }
 }

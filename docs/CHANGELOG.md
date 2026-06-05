@@ -24,6 +24,97 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 #### Sıradaki Hedef
 - ...
 
+### V546 - 2026-06-05
+#### Değişenler
+- Oran Terminali'nde Bahis Türü / Market dropdown yapısı tamamen kaldırıldı.
+- Marketler sekmesi arama kutulu geniş futbol + basketbol market kataloğu haline getirildi.
+- Futbol marketleri 16 kategoriye ayrıldı; maç sonucu kombinasyonları, dakika/gol generator marketleri, korner, kart, handikap, oyuncu, istatistik, seri gol, skor, galibiyet farkı, geri dönüş ve penaltı başlıkları eklendi.
+- Basketbol marketleri 16 kategoriye ayrıldı; ana marketler, çeyrek, takım sayı, handikap, sembolik baraj, ilk X sayı, oyuncu, takım istatistikleri ve seri sayı başlıkları eklendi.
+- POLYMARKET logosu binary dosya eklenmeden, gönderilen görsele benzeyen beyaz inline SVG işaretine çevrildi.
+- STORE_KEY v546_odds_terminal_state olarak yenilendi.
+
+#### Düzeltilenler
+- POLYMARKET ana kategori olarak TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET sırasında ve BASKETBOL'un hemen sağında kalır.
+- POLYMARKET tek tıklamada kendi panelini açar; klasik futbol/basket market kataloğu POLYMARKET içinde görünmez.
+- Tümü seçiliyken futbol + basketbol marketleri, Futbol seçiliyken sadece futbol, Basketbol seçiliyken sadece basketbol marketleri listelenir.
+- Market araması 2.5, korner, ilk 5 dakika korner, 68.5, oyuncu faul, isabetli şut, art arda gol ve ilk X sayıya ulaşan gibi sorguları yakalayacak şekilde genişletildi.
+
+#### Değişen Dosyalar
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- index.html
+- live_scores.json
+- v19_rapor.json
+- canli_oranlar.json
+- assets/data/odds-sources.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+- .github/workflows/update-radar.yml
+- .github/workflows/update-live-scores.yml
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- Market katalog fixture ve kötü isim taraması geçti.
+- JSON dosyası değiştirilmedi; parse testi gerekmedi.
+- sw.js, index.html, canlı skor/rapor JSON'ları ve workflow dosyaları değiştirilmedi.
+
+#### Sıradaki Hedef
+- Gerçek verilere yavaş geçişte ilk adım market taxonomy ile canlı oran datasını eşleştirmek olacak.
+- İleride takım trend hafızası; ilk yarı gol atma/yeme, 30. dakikaya kadar gol bulma, korner/kart/ilk gol trendleri gibi sinyaller tutulacak.
+- Basketbolda gerçek veri gelince sembolik line marketleri, Her İki Takım da ____ Üst Sayı Atar ve İlk X Sayıya Ulaşan Takım gibi marketler maç bazlı dinamik üretilecek.
+
+### V545 - 2026-06-05
+#### Değişenler
+- Oran Terminali ana kategori satırı temiz sırayla TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET oldu.
+- POLYMARKET butonu BASKETBOL'un hemen sağına alındı; koyu mavi marka hissi ve beyaz inline SVG işareti korundu.
+- Bahis Türü / Market alanı sadece Marketler sekmesi aktifken görünecek şekilde izole edildi.
+- STORE_KEY v545_odds_terminal_state olarak yenilendi; eski V544 localStorage state'i bu düzeltmeyi bozmayacak.
+- Futbol ve basketbol market listelerine eksik yaygın marketler eklendi; kötü basketbol isimleri temiz adlarla korundu.
+
+#### Düzeltilenler
+- POLYMARKET tek tıklamada ana kategori olarak aktifleşip kendi panelindeki kartları gösterir.
+- Dropdown açıkken kategori tıklaması ilk tıklamada kategori değiştirir; dropdown sonradan kapanır.
+- Market kartları koyu gri normal ton, yumuşak hover, daha küçük başlık/açıklama ve kontrollü padding/radius ile sıkılaştırıldı.
+- Eski conflictli POLYMARKET bridge katmanı kaldırıldı; #rolling, #crypto ve #stream modüllerine dokunulmadı.
+
+#### Değişen Dosyalar
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- index.html
+- live_scores.json
+- v19_rapor.json
+- canli_oranlar.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+- .github/workflows/update-radar.yml
+- .github/workflows/update-live-scores.yml
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- JSON dosyası değiştirilmedi; parse testi gerekmedi.
+- sw.js, index.html, live_scores.json, v19_rapor.json ve canli_oranlar.json değiştirilmedi.
+
+#### Sıradaki Hedef
+- Gerçek oran veri modeli ve Polymarket API motoru tasarlanacak.
+
 ### V544 - 2026-06-04
 #### Değişenler
 - Oran Terminali ana kategori satırı TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET düzenine alındı.

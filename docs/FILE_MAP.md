@@ -75,6 +75,8 @@
 - Route sızıntısı oluşturulmayacak.
 
 ## Son Güncelleme
+- V546: Oran Terminali dropdown market seçici kaldırıldı; Marketler sekmesi aramalı futbol/basket katalog oldu; POLYMARKET inline SVG logo ve tek tıklama davranışı düzeltildi.
+- V545: Oran Terminali kategori sırası, Marketler sekmesine özel market dropdown, geniş futbol/basket market listeleri ve POLYMARKET tek tıklama davranışı düzeltildi.
 - V544: Oran Terminali ana kategori/dropdown UX düzeltildi; POLYMARKET marka butonu ve temiz market listeleri eklendi.
 - V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V541: Oran Terminali altında POLYMARKET paneli eklendi.

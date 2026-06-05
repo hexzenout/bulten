@@ -79,16 +79,16 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 ## POLYMARKET
 - POLYMARKET, Oran Terminali içinde TÜMÜ / FUTBOL / BASKETBOL ile aynı seviyede ana kategori olarak konumlandırıldı.
 - Ana kategori sırası: TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET.
-- POLYMARKET en sağda koyu mavi marka butonu olarak görünür; yazısı kesilmez ve beyaz inline SVG marka işareti kullanır.
+- POLYMARKET BASKETBOL butonunun hemen sağında koyu mavi marka butonu olarak görünür; yazısı kesilmez ve gönderilen görsele benzeyen beyaz inline SVG marka işareti kullanır.
 - POLYMARKET ayrı route değildir; mevcut #odds içinde çalışır.
 - Polymarket kayıtları normal futbol/basket oran tablolarına karışmaz.
 - Kısa vadeli ve avantajlı marketler için güven skoru, edge, kapanış, likidite ve hacim kartları gösterilir.
 - Polymarket tarafında spor, kripto, makro ve haber gibi farklı market tipleri desteklenecek şekilde demo veri yapısı hazırlandı.
 - Oran Terminali ana fırsatlar ekranının altında POLYMARKET için ayrı kısa özet/dock alanı gösterilir.
 - Oran Terminali ana fırsatlar ekranının altında POLYMARKET için ayrı kısa özet/dock alanı korunur.
-- POLYMARKET seçiliyken klasik Bahis Türü / Market dropdown alanı pasif bilgi alanına dönüşür.
+- Bahis Türü / Market dropdown alanı V546 ile tamamen kaldırıldı; Marketler sekmesi arama kutulu futbol/basket market kataloğu olarak çalışır.
 - Polymarket panelinde spor, kripto, ekonomi, haber, kısa vade, yüksek likidite ve fırsat adayı filtreleri gösterilir.
-- Sıradaki aşama gerçek Polymarket veri çekme motorudur.
+- V546 sonrası sıradaki hedef gerçek verilere yavaş yavaş geçmek; ilk adım market taxonomy ile canlı oran datasını eşleştirmek olacak.
 
 ## Kripto Terminal
 - Binance / OKX seçimi
@@ -142,6 +142,8 @@ Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu
 - sw.js gereksiz yere değişmemeli.
 
 ## Son Bilinen Paket Notu
+- V546: Oran Terminali dropdown market seçici kaldırıldı; Marketler sekmesi aramalı geniş futbol/basket katalog oldu; POLYMARKET inline SVG logosu ve tek tıklama davranışı düzeltildi.
+- V545: Oran Terminali V544 sonrası market listesi/kategori/POLYMARKET davranışı düzeltildi; STORE_KEY v545_odds_terminal_state oldu; sw.js ve index.html değiştirilmedi.
 - V544: Oran Terminali ana kategori/dropdown UX hataları düzeltildi; futbol/basket market listeleri temizlendi; POLYMARKET #odds içinde marka butonu oldu.
 - V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V541: Oran Terminali altında POLYMARKET sekmesi/paneli eklendi.
@@ -149,3 +151,8 @@ Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu
 - Demo odds snapshot içine 5 Polymarket örnek marketi eklendi.
 - sw.js değiştirilmedi.
 - index.html değiştirilmedi.
+## V546 Sonrası Gerçek Veri Hedefi
+- İlk gerçek veri adımı market taxonomy ile canlı oran datasını eşleştirmek olacak.
+- Terminal gerçek veriyle çalışınca takım trend hafızası tutulacak: ilk yarıda gol attı mı, ilk yarıda gol yedi mi, 30. dakikaya kadar gol bulma oranı, korner/kart/ilk gol trendleri gibi sinyaller izlenecek.
+- Basketbolda gerçek veri gelince sembolik line marketleri maça göre çoğaltılacak.
+- Her İki Takım da ____ Üst Sayı Atar ve İlk X Sayıya Ulaşan Takım gibi marketler gerçek oran datasına göre dinamik üretilecek.
