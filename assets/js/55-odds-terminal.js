@@ -9,6 +9,7 @@
   const DATA_SNAPSHOT = "assets/data/odds-snapshot.json";
   const STORE_KEY = "v546_odds_terminal_state";
   const DEFAULT_TAB = "opportunities";
+  const CATEGORY_CLICK_TAB = "markets";
   const SEARCH_RENDER_DELAY = 160;
 
 
@@ -981,8 +982,8 @@
         <div class="odds-v528-toolbar v544-odds-toolbar">
           ${renderCategoryRow()}
           <div class="odds-v528-tabs v544-tabs">
-            ${tabButton("opportunities", "Fırsat Radarı")}
             ${tabButton("markets", "Marketler")}
+            ${tabButton("opportunities", "Fırsat Radarı")}
             ${tabButton("all-sites", "Oran Karşılaştırma")}
             ${tabButton("drops", "Oran Hareketleri")}
             ${tabButton("sources", "Kaynaklar")}
@@ -1481,7 +1482,7 @@
         if (state.sport === nextSport) return;
         const scrollY = window.scrollY;
         state.sport = nextSport;
-        state.tab = DEFAULT_TAB;
+        state.tab = CATEGORY_CLICK_TAB;
         state.marketPickerOpen = false;
         state.marketSearch = "";
         state.openMarketCats = null;
