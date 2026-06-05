@@ -2088,7 +2088,7 @@
    V538 ORAN TERMİNALİ SPOR BAZLI MARKET + KOYU GRİ DROPDOWN
 ================================ */
 
-/* Bahis Türü / Market içindeki mavi düzenin tamamı koyu griye çekildi. */
+/* Eski market seçim alanındaki mavi düzenin tamamı koyu griye çekildi. */
 .v536-market-toggle,
 .v537-market-toggle,
 .v536-market-menu.open .v536-market-toggle,
@@ -3312,4 +3312,130 @@
     .omega-tab-odds .v544-category-row button.polymarket {
         min-width: auto !important;
     }
+}
+
+/* ================================
+   V546 ORAN TERMİNALİ
+   Aramalı Marketler kataloğu ve dropdown kaldırma.
+================================ */
+.omega-tab-odds .v546-market-search-panel {
+    display: grid !important;
+    gap: 9px !important;
+    margin-bottom: 14px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(255,255,255,.10) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015)), #080808 !important;
+}
+
+.omega-tab-odds .v546-market-search-panel label {
+    color: #ffffff !important;
+    font-size: .78rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .7px !important;
+    text-transform: uppercase !important;
+}
+
+.omega-tab-odds #odds-v546-market-search {
+    width: 100% !important;
+    min-height: 46px !important;
+    padding: 0 14px !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    border-radius: 16px !important;
+    background: #050505 !important;
+    color: #fff !important;
+    font-weight: 850 !important;
+    outline: none !important;
+}
+
+.omega-tab-odds #odds-v546-market-search:focus {
+    border-color: rgba(168,85,247,.58) !important;
+    box-shadow: 0 0 0 3px rgba(168,85,247,.13) !important;
+}
+
+.omega-tab-odds .v546-market-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+.omega-tab-odds .v546-market-meta span {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 26px !important;
+    padding: 0 9px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.06) !important;
+    color: #d4d4d8 !important;
+    font-size: .72rem !important;
+    font-weight: 900 !important;
+}
+
+.omega-tab-odds .v546-market-catalog {
+    gap: 12px !important;
+}
+
+.omega-tab-odds .v546-market-cat {
+    border-radius: 20px !important;
+    background: #111216 !important;
+}
+
+.omega-tab-odds .v546-market-cat.football {
+    border-color: rgba(34,197,94,.20) !important;
+}
+
+.omega-tab-odds .v546-market-cat.basketball {
+    border-color: rgba(249,115,22,.22) !important;
+}
+
+.omega-tab-odds .v546-market-tags {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+.omega-tab-odds .v546-market-tags button {
+    display: inline-grid !important;
+    gap: 3px !important;
+    min-height: 36px !important;
+    padding: 8px 10px !important;
+    border-radius: 13px !important;
+    background: #34363A !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    color: #f5f5f5 !important;
+    text-align: left !important;
+    cursor: pointer !important;
+}
+
+.omega-tab-odds .v546-market-tags button:hover {
+    background: #40434A !important;
+    border-color: rgba(255,255,255,.22) !important;
+    color: #ffffff !important;
+}
+
+.omega-tab-odds .v546-market-tags button b {
+    font-size: 12.5px !important;
+    line-height: 1.22 !important;
+}
+
+.omega-tab-odds .v546-market-tags button small {
+    color: #c4c4c7 !important;
+    font-size: 10.5px !important;
+    line-height: 1.25 !important;
+}
+
+.omega-tab-odds .v544-category-row {
+    width: auto !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+}
+
+.omega-tab-odds .v544-category-row button.polymarket {
+    flex: 0 0 auto !important;
+    margin-left: 0 !important;
+    justify-self: flex-start !important;
+}
+
+.omega-tab-odds .v544-poly-mark {
+    display: inline-block !important;
 }
