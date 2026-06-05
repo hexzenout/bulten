@@ -4461,3 +4461,36 @@
     stroke-linejoin: round !important;
     stroke-linecap: round !important;
 }
+
+/* ================================
+   V552 ORAN TERMİNALİ
+   Marketler iç grup filtreleri.
+================================ */
+.omega-tab-odds .v552-market-group-filters {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-top: 2px !important;
+}
+
+.omega-tab-odds .v552-market-group-filters button {
+    min-height: 30px !important;
+    padding: 0 10px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 999px !important;
+    background: rgba(15,23,42,.64) !important;
+    color: #cbd5e1 !important;
+    font-size: 12px !important;
+    font-weight: 850 !important;
+    letter-spacing: .01em !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+.omega-tab-odds .v552-market-group-filters button:hover,
+.omega-tab-odds .v552-market-group-filters button.active {
+    border-color: rgba(168,85,247,.42) !important;
+    background: linear-gradient(180deg, rgba(126,58,242,.22), rgba(12,18,32,.62)), rgba(30,41,59,.84) !important;
+    color: #f5f3ff !important;
+    box-shadow: 0 0 16px rgba(126,58,242,.12), inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
