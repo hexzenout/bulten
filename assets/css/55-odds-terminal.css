@@ -3190,42 +3190,72 @@
     padding: 0 15px !important;
     border-radius: 999px !important;
     background: #303238 !important;
-    border-color: rgba(255,255,255,.14) !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
     color: #f4f4f5 !important;
     font-size: 13px !important;
+    font-weight: 900 !important;
+    letter-spacing: .03em !important;
     line-height: 1 !important;
+    text-shadow: none !important;
     box-shadow: none !important;
+    transform: translateY(0) scale(1) !important;
+    transition: background .16s ease, border-color .16s ease, transform .16s ease, box-shadow .16s ease, color .16s ease !important;
+}
+
+.omega-tab-odds .v544-category-row button:hover {
+    background: #383b42 !important;
+    border-color: rgba(255,255,255,.24) !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    transform: translateY(-1px) scale(1) !important;
+}
+
+.omega-tab-odds .v544-category-row button.active {
+    border-color: rgba(255,255,255,.48) !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,.20), inset 0 0 0 1px rgba(255,255,255,.08) !important;
+    transform: translateY(-1px) scale(1.015) !important;
 }
 
 .omega-tab-odds .v544-category-row button.all.active {
-    background: linear-gradient(180deg, rgba(168,85,247,.24), rgba(88,28,135,.20)), #34363A !important;
-    border-color: rgba(192,132,252,.50) !important;
-    color: #f5f3ff !important;
+    background: linear-gradient(180deg, rgba(168,85,247,.32), rgba(88,28,135,.26)), #34363A !important;
+    border-color: rgba(216,180,254,.62) !important;
+    color: #ffffff !important;
 }
 
 .omega-tab-odds .v544-category-row button.football {
-    background: linear-gradient(180deg, rgba(34,197,94,.18), rgba(20,83,45,.12)), #34363A !important;
-    border-color: rgba(34,197,94,.30) !important;
-    color: #dcfce7 !important;
+    background: linear-gradient(135deg, rgba(10,80,50,.95), rgba(8,45,38,.95)) !important;
+    border-color: rgba(34,197,94,.38) !important;
+    color: #f8fafc !important;
 }
 
-.omega-tab-odds .v544-category-row button.football.active,
 .omega-tab-odds .v544-category-row button.football:hover {
-    background: linear-gradient(180deg, rgba(34,197,94,.30), rgba(22,101,52,.20)), #36383D !important;
-    border-color: rgba(74,222,128,.58) !important;
+    background: linear-gradient(135deg, rgba(13,96,60,.96), rgba(10,58,47,.96)) !important;
+    border-color: rgba(74,222,128,.50) !important;
+    color: #ffffff !important;
+}
+
+.omega-tab-odds .v544-category-row button.football.active {
+    background: linear-gradient(135deg, rgba(12,112,66,.98), rgba(7,62,48,.98)) !important;
+    border-color: rgba(74,222,128,.72) !important;
     color: #ffffff !important;
 }
 
 .omega-tab-odds .v544-category-row button.basketball {
-    background: linear-gradient(180deg, rgba(249,115,22,.20), rgba(154,52,18,.12)), #34363A !important;
-    border-color: rgba(251,146,60,.34) !important;
-    color: #ffedd5 !important;
+    background: linear-gradient(135deg, rgba(160,92,24,.95), rgba(92,48,14,.95)) !important;
+    border-color: rgba(245,158,11,.42) !important;
+    color: #f8fafc !important;
 }
 
-.omega-tab-odds .v544-category-row button.basketball.active,
 .omega-tab-odds .v544-category-row button.basketball:hover {
-    background: linear-gradient(180deg, rgba(249,115,22,.32), rgba(194,65,12,.20)), #36383D !important;
-    border-color: rgba(253,186,116,.58) !important;
+    background: linear-gradient(135deg, rgba(180,103,27,.96), rgba(112,58,16,.96)) !important;
+    border-color: rgba(251,191,36,.54) !important;
+    color: #ffffff !important;
+}
+
+.omega-tab-odds .v544-category-row button.basketball.active {
+    background: linear-gradient(135deg, rgba(198,115,30,.98), rgba(128,65,18,.98)) !important;
+    border-color: rgba(251,191,36,.76) !important;
     color: #ffffff !important;
 }
 
@@ -3239,10 +3269,15 @@
     box-shadow: 0 10px 22px rgba(4,51,245,.24) !important;
 }
 
-.omega-tab-odds .v544-category-row button.polymarket.active,
 .omega-tab-odds .v544-category-row button.polymarket:hover {
     background: linear-gradient(180deg, #1748ff 0%, #09055A 100%) !important;
-    border-color: rgba(255,255,255,.52) !important;
+    border-color: rgba(255,255,255,.48) !important;
+    color: #fff !important;
+}
+
+.omega-tab-odds .v544-category-row button.polymarket.active {
+    background: linear-gradient(180deg, #1748ff 0%, #09055A 100%) !important;
+    border-color: rgba(255,255,255,.64) !important;
     color: #fff !important;
 }
 

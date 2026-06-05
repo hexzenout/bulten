@@ -167,7 +167,7 @@
   }
 
   function resultTotalCombos() {
-    const outcomes = ["1", "X", "2", "1-X", "1-2", "X-2"];
+    const outcomes = ["1", "2", "1-X", "1-2", "X-2"];
     const lines = ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5"];
     const sidesForLine = line => {
       if (line === "0.5") return ["Üst"];
@@ -286,7 +286,7 @@
         "Deplasman İlk Yarı Korner 0.5 Alt / Üst", "Deplasman İlk Yarı Korner 1 Alt / Üst", "Deplasman İlk Yarı Korner 1.5 Alt / Üst", "Deplasman İlk Yarı Korner 2 Alt / Üst", "Deplasman İlk Yarı Korner 2.5 Alt / Üst",
         "Ev Sahibi İkinci Yarı Korner 0.5 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 1 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 1.5 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 2 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 2.5 Alt / Üst",
         "Deplasman İkinci Yarı Korner 0.5 Alt / Üst", "Deplasman İkinci Yarı Korner 1 Alt / Üst", "Deplasman İkinci Yarı Korner 1.5 Alt / Üst", "Deplasman İkinci Yarı Korner 2 Alt / Üst", "Deplasman İkinci Yarı Korner 2.5 Alt / Üst",
-        "Korner Handikap", "İlk Korneri Kim Kullanır", "Son Korneri Kim Kullanır", "En Çok Korner Kullanan Takım", "İlk Yarı En Çok Korner", "İkinci Yarı En Çok Korner",
+        "Korner Handikap", "En Çok Korner Kullanan Takım", "İlk Yarı En Çok Korner", "İkinci Yarı En Çok Korner",
         "İlk 5 Dakika Korner Olur / Olmaz", "İlk 10 Dakika Korner Olur / Olmaz", "İlk 15 Dakika Korner Olur / Olmaz",
         "Takım 1 Art Arda 2 Korner Kullanır", "Takım 2 Art Arda 2 Korner Kullanır", "Herhangi Bir Takım Art Arda 2 Korner Kullanır",
         "İlk 3 Kornere Ulaşan Takım", "İlk 5 Kornere Ulaşan Takım", "İlk 7 Kornere Ulaşan Takım"
@@ -336,9 +336,19 @@
       sport: "football",
       markets: marketItems([
         "Toplam Şut Alt / Üst", "Toplam İsabetli Şut Alt / Üst", "Ev Sahibi Şut Alt / Üst", "Deplasman Şut Alt / Üst", "Ev Sahibi İsabetli Şut Alt / Üst", "Deplasman İsabetli Şut Alt / Üst",
-        "Takım 1 İsabetli Şut Alt / Üst", "Takım 2 İsabetli Şut Alt / Üst", "Toplam Faul Alt / Üst", "Ev Sahibi Faul Alt / Üst", "Deplasman Faul Alt / Üst",
-        "Toplam Ofsayt Alt / Üst", "Ev Sahibi Ofsayt Alt / Üst", "Deplasman Ofsayt Alt / Üst", "Takım 1 Ofsayt Alt / Üst", "Takım 2 Ofsayt Alt / Üst",
-        "Toplam Taç Alt / Üst", "Ev Sahibi Taç Alt / Üst", "Deplasman Taç Alt / Üst", "Takım 1 Taç Alt / Üst", "Takım 2 Taç Alt / Üst"
+        "Takım 1 Şut Alt / Üst", "Takım 2 Şut Alt / Üst", "Takım 1 İsabetli Şut Alt / Üst", "Takım 2 İsabetli Şut Alt / Üst", "Toplam Faul Alt / Üst", "Ev Sahibi Faul Alt / Üst", "Deplasman Faul Alt / Üst",
+        "Takım 1 Faul Alt / Üst", "Takım 2 Faul Alt / Üst", "Toplam Ofsayt Alt / Üst", "Ev Sahibi Ofsayt Alt / Üst", "Deplasman Ofsayt Alt / Üst", "Takım 1 Ofsayt Alt / Üst", "Takım 2 Ofsayt Alt / Üst",
+        "Toplam Taç Alt / Üst", "Ev Sahibi Taç Alt / Üst", "Deplasman Taç Alt / Üst", "Takım 1 Taç Alt / Üst", "Takım 2 Taç Alt / Üst",
+        "İlk Yarı Toplam Faul Alt / Üst", "İlk Yarı Takım 1 Faul Alt / Üst", "İlk Yarı Takım 2 Faul Alt / Üst",
+        "İkinci Yarı Toplam Faul Alt / Üst", "İkinci Yarı Takım 1 Faul Alt / Üst", "İkinci Yarı Takım 2 Faul Alt / Üst",
+        "İlk Yarı Toplam Şut Alt / Üst", "İlk Yarı Takım 1 Şut Alt / Üst", "İlk Yarı Takım 2 Şut Alt / Üst",
+        "İkinci Yarı Toplam Şut Alt / Üst", "İkinci Yarı Takım 1 Şut Alt / Üst", "İkinci Yarı Takım 2 Şut Alt / Üst",
+        "İlk Yarı Toplam İsabetli Şut Alt / Üst", "İlk Yarı Takım 1 İsabetli Şut Alt / Üst", "İlk Yarı Takım 2 İsabetli Şut Alt / Üst",
+        "İkinci Yarı Toplam İsabetli Şut Alt / Üst", "İkinci Yarı Takım 1 İsabetli Şut Alt / Üst", "İkinci Yarı Takım 2 İsabetli Şut Alt / Üst",
+        "İlk Yarı Toplam Ofsayt Alt / Üst", "İlk Yarı Takım 1 Ofsayt Alt / Üst", "İlk Yarı Takım 2 Ofsayt Alt / Üst",
+        "İkinci Yarı Toplam Ofsayt Alt / Üst", "İkinci Yarı Takım 1 Ofsayt Alt / Üst", "İkinci Yarı Takım 2 Ofsayt Alt / Üst",
+        "İlk Yarı Toplam Taç Alt / Üst", "İlk Yarı Takım 1 Taç Alt / Üst", "İlk Yarı Takım 2 Taç Alt / Üst",
+        "İkinci Yarı Toplam Taç Alt / Üst", "İkinci Yarı Takım 1 Taç Alt / Üst", "İkinci Yarı Takım 2 Taç Alt / Üst"
       ], ["istatistik", "isabetli şut", "faul"])
     },
     {
@@ -352,13 +362,6 @@
       ], ["art arda gol", "seri gol"])
     },
     {
-      id: "v546_football_scores",
-      name: "Doğru Skor / Skor Marketleri",
-      desc: "Doğru skor, skor grubu ve tam gol sayısı marketleri",
-      sport: "football",
-      markets: marketItems(["Doğru Skor", "İlk Yarı Doğru Skor", "İkinci Yarı Doğru Skor", "Maç Sonu Skor Grubu", "İlk Yarı Skor Grubu", "Takım 1 Tam Gol Sayısı", "Takım 2 Tam Gol Sayısı", "Toplam Tam Gol Sayısı"], ["skor"])
-    },
-    {
       id: "v546_football_win_margin",
       name: "Galibiyet Farkı",
       desc: "Takım ve herhangi bir takım için galibiyet farkı seçenekleri",
@@ -366,18 +369,11 @@
       markets: marketItems(["Takım 1 Tam 1 Farkla Kazanır", "Takım 1 Tam 2 Farkla Kazanır", "Takım 1 3+ Farkla Kazanır", "Takım 2 Tam 1 Farkla Kazanır", "Takım 2 Tam 2 Farkla Kazanır", "Takım 2 3+ Farkla Kazanır", "Herhangi Bir Takım 1 Farkla Kazanır", "Herhangi Bir Takım 2 Farkla Kazanır", "Herhangi Bir Takım 3+ Farkla Kazanır"], ["galibiyet farkı"])
     },
     {
-      id: "v546_football_comeback",
-      name: "Geri Dönüş / Öne Geçme",
-      desc: "Geriye düşüp kazanma/yenilmeme ve öne geçip maç sonucu marketleri",
-      sport: "football",
-      markets: marketItems(["Takım 1 Geriye Düşüp Kazanır", "Takım 2 Geriye Düşüp Kazanır", "Takım 1 Geriye Düşüp Yenilmez", "Takım 2 Geriye Düşüp Yenilmez", "Takım 1 Öne Geçer ve Kazanır", "Takım 2 Öne Geçer ve Kazanır", "Takım 1 Öne Geçer Ama Kazanamaz", "Takım 2 Öne Geçer Ama Kazanamaz"], ["geri dönüş", "öne geçme"])
-    },
-    {
       id: "v546_football_penalties",
-      name: "Penaltı Marketleri",
-      desc: "Penaltı olur/olmaz, takım penaltısı ve yarı penaltı marketleri",
+      name: "Özel Bahisler",
+      desc: "Penaltı olur/olmaz özel futbol marketi",
       sport: "football",
-      markets: marketItems(["Penaltı Olur / Olmaz", "Takım 1 Penaltı Kullanır", "Takım 2 Penaltı Kullanır", "Penaltı Gol Olur", "Penaltı Kaçar", "İlk Yarı Penaltı Olur", "İkinci Yarı Penaltı Olur"], ["penaltı"])
+      markets: marketItems(["Penaltı Olur / Olmaz"], ["penaltı", "özel bahis"])
     }
   ];
 
@@ -385,13 +381,12 @@
     {
       id: "v546_basket_main",
       name: "Ana Marketler",
-      desc: "Maç, toplam sayı, yarı, uzatma ve tek/çift ana basketbol marketleri",
+      desc: "Maç, toplam sayı, yarı ve uzatma ana basketbol marketleri",
       sport: "basketball",
       markets: marketItems([
         "Maç Sonucu", "Maç Handikapı", "Toplam Sayı Alt / Üst", "Takım 1 Toplam Sayı Alt / Üst", "Takım 2 Toplam Sayı Alt / Üst", "Kazanan ve Toplam Sayı",
         "İlk Yarı Sonucu", "İlk Yarı Handikap", "İlk Yarı Toplam Sayı", "İkinci Yarı Sonucu", "İkinci Yarı Handikap", "İkinci Yarı Toplam Sayı",
-        "Uzatma Olur / Olmaz", "Normal Süre Sonucu", "Uzatmalar Dahil Maç Sonucu", "En Çok Sayı Olan Yarı", "Toplam Sayı Tek / Çift", "İlk Yarı Toplam Sayı Tek / Çift",
-        "Takım 1 Toplam Sayı Tek / Çift", "Takım 2 Toplam Sayı Tek / Çift"
+        "Uzatma Olur / Olmaz", "Normal Süre Sonucu", "Uzatmalar Dahil Maç Sonucu", "En Çok Sayı Olan Yarı"
       ], ["basketbol ana market"])
     },
     {
@@ -399,7 +394,7 @@
       name: "Çeyrek Marketleri",
       desc: "Çeyrek sonuç, handikap, toplam sayı ve en çok/en az sayı çeyreği",
       sport: "basketball",
-      markets: marketItems(["İlk Çeyrek Sonucu", "İlk Çeyrek Handikap", "İlk Çeyrek Toplam Sayı", "İlk Çeyrek Toplam Sayı Tek / Çift", "İkinci Çeyrek Sonucu", "İkinci Çeyrek Handikap", "İkinci Çeyrek Toplam Sayı", "Üçüncü Çeyrek Sonucu", "Üçüncü Çeyrek Handikap", "Üçüncü Çeyrek Toplam Sayı", "Dördüncü Çeyrek Sonucu", "Dördüncü Çeyrek Handikap", "Dördüncü Çeyrek Toplam Sayı", "En Çok Sayı Atılan Çeyrek", "En Az Sayı Atılan Çeyrek"], ["çeyrek"])
+      markets: marketItems(["İlk Çeyrek Sonucu", "İlk Çeyrek Handikap", "İlk Çeyrek Toplam Sayı", "İkinci Çeyrek Sonucu", "İkinci Çeyrek Handikap", "İkinci Çeyrek Toplam Sayı", "Üçüncü Çeyrek Sonucu", "Üçüncü Çeyrek Handikap", "Üçüncü Çeyrek Toplam Sayı", "Dördüncü Çeyrek Sonucu", "Dördüncü Çeyrek Handikap", "Dördüncü Çeyrek Toplam Sayı", "En Çok Sayı Atılan Çeyrek", "En Az Sayı Atılan Çeyrek"], ["çeyrek"])
     },
     {
       id: "v546_basket_team_points",
@@ -471,13 +466,6 @@
       markets: marketItems(["Son Çeyrekte En Çok Sayı Atan Takım", "İlk Yarıyı Kazanan Maçı Kazanır", "İlk Çeyreği Kazanan Maçı Kazanır", "Her İki Takım da İlk Yarı 40.5 Alt / Üst", "Her İki Takım da İlk Yarı 45.5 Alt / Üst", "Her İki Takım da İlk Çeyrek 20.5 Alt / Üst", "Her İki Takım da İlk Çeyrek 25.5 Alt / Üst", "Takım 1 Her Çeyrek 20+ Sayı Atar", "Takım 2 Her Çeyrek 20+ Sayı Atar", "Takım 1 Her Çeyrek 25+ Sayı Atar", "Takım 2 Her Çeyrek 25+ Sayı Atar"], ["özel basketbol"])
     },
     {
-      id: "v546_basket_win_margin",
-      name: "Galibiyet Farkı",
-      desc: "Takım 1 ve Takım 2 için aralıklı farkla kazanma marketleri",
-      sport: "basketball",
-      markets: marketItems(["Takım 1 1-5 Farkla Kazanır", "Takım 1 6-10 Farkla Kazanır", "Takım 1 11-15 Farkla Kazanır", "Takım 1 16-20 Farkla Kazanır", "Takım 1 21+ Farkla Kazanır", "Takım 2 1-5 Farkla Kazanır", "Takım 2 6-10 Farkla Kazanır", "Takım 2 11-15 Farkla Kazanır", "Takım 2 16-20 Farkla Kazanır", "Takım 2 21+ Farkla Kazanır"], ["galibiyet farkı"])
-    },
-    {
       id: "v546_basket_comeback",
       name: "Geri Dönüş / Öne Geçme",
       desc: "İlk yarı/çeyrek geriden gelip kazanma ve önde olup kazanma marketleri",
@@ -490,13 +478,6 @@
       desc: "Evet / Hayır sonucuyla çeyrek kazanma kombinasyonları",
       sport: "basketball",
       markets: marketItems(["Takım 1 En Az 1 Çeyrek Kazanır", "Takım 1 En Az 2 Çeyrek Kazanır", "Takım 1 En Az 3 Çeyrek Kazanır", "Takım 1 Tüm Çeyrekleri Kazanır", "Takım 2 En Az 1 Çeyrek Kazanır", "Takım 2 En Az 2 Çeyrek Kazanır", "Takım 2 En Az 3 Çeyrek Kazanır", "Takım 2 Tüm Çeyrekleri Kazanır"], ["çeyrek kazanma", "evet hayır"])
-    },
-    {
-      id: "v546_basket_streak_points",
-      name: "Art Arda Sayı / Seri Sayı",
-      desc: "Takım ve herhangi bir takım için seri sayı marketleri",
-      sport: "basketball",
-      markets: marketItems(["Takım 1 Art Arda 4 Sayı Atar", "Takım 1 Art Arda 6 Sayı Atar", "Takım 1 Art Arda 8 Sayı Atar", "Takım 1 Art Arda 10 Sayı Atar", "Takım 2 Art Arda 4 Sayı Atar", "Takım 2 Art Arda 6 Sayı Atar", "Takım 2 Art Arda 8 Sayı Atar", "Takım 2 Art Arda 10 Sayı Atar", "Herhangi Bir Takım Art Arda 6 Sayı Atar", "Herhangi Bir Takım Art Arda 8 Sayı Atar", "Herhangi Bir Takım Art Arda 10 Sayı Atar"], ["art arda sayı", "seri sayı"])
     },
     {
       id: "v546_basket_player_alt_lines",
