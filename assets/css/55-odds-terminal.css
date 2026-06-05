@@ -3874,3 +3874,219 @@
     line-height: 1.45 !important;
     font-weight: 500 !important;
 }
+
+/* ================================
+   V549 ORAN TERMİNALİ
+   Futbol/Basket Marketler premium görsel uyum ve net aktif durum.
+================================ */
+.omega-tab-odds .v544-category-row button.football,
+.omega-tab-odds .v544-category-row button.basketball {
+    background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)), #151b27 !important;
+    border-color: rgba(226,232,240,.16) !important;
+    color: #e5e7eb !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+
+.omega-tab-odds .v544-category-row button.football:hover,
+.omega-tab-odds .v544-category-row button.basketball:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025)), #182234 !important;
+    border-color: rgba(203,213,225,.30) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 14px rgba(148,163,184,.10), inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+
+.omega-tab-odds .v544-category-row button.football.active,
+.omega-tab-odds .v544-category-row button.basketball.active {
+    background:
+        linear-gradient(180deg, rgba(248,250,252,.13), rgba(148,163,184,.045)),
+        #192334 !important;
+    border-color: rgba(248,250,252,.42) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 10px 22px rgba(2,6,23,.20) !important;
+}
+
+.omega-tab-odds .v544-category-row button.football.active::after,
+.omega-tab-odds .v544-category-row button.basketball.active::after {
+    content: "" !important;
+    width: 6px !important;
+    height: 6px !important;
+    margin-left: 2px !important;
+    border-radius: 999px !important;
+    background: currentColor !important;
+    opacity: .86 !important;
+    box-shadow: 0 0 10px currentColor !important;
+}
+
+.omega-tab-odds .v544-category-row button.football .v548-football-mark,
+.omega-tab-odds .v544-category-row button.football i.v548-football-mark {
+    color: #10d19a !important;
+}
+
+.omega-tab-odds .v544-category-row button.basketball .v548-basketball-mark,
+.omega-tab-odds .v544-category-row button.basketball i.v548-basketball-mark {
+    color: #f97316 !important;
+}
+
+.omega-tab-odds .v544-category-row button .v548-sport-mark,
+.omega-tab-odds .v544-category-row button i.v548-sport-mark {
+    display: inline-grid !important;
+    place-items: center !important;
+    width: 22px !important;
+    height: 22px !important;
+    flex: 0 0 22px !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    font-size: 17px !important;
+    line-height: 1 !important;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,.08)) !important;
+    text-shadow: none !important;
+}
+
+.omega-tab-odds .v544-category-row button:hover .v548-sport-mark,
+.omega-tab-odds .v544-category-row button.active .v548-sport-mark {
+    filter: drop-shadow(0 0 10px currentColor) !important;
+}
+
+.omega-tab-odds .v549-sport-market-panel {
+    gap: 12px !important;
+    padding: 16px !important;
+    border: 1px solid rgba(148,163,184,.16) !important;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(124,58,237,.22), transparent 34%),
+        radial-gradient(circle at 92% 16%, rgba(20,184,166,.14), transparent 32%),
+        linear-gradient(135deg, rgba(30,41,59,.82), rgba(15,23,42,.92) 52%, rgba(8,47,73,.62)),
+        #0f172a !important;
+    box-shadow: 0 18px 42px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.omega-tab-odds .v549-sport-market-panel label {
+    color: #f5f6ff !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    letter-spacing: .06em !important;
+    text-shadow: 0 0 12px rgba(255,255,255,.14) !important;
+}
+
+.omega-tab-odds .v549-sport-market-panel #odds-v546-market-search {
+    border-color: rgba(148,163,184,.17) !important;
+    background: rgba(15,23,42,.82) !important;
+    color: #eef2ff !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 10px 24px rgba(2,6,23,.12) !important;
+}
+
+.omega-tab-odds .v549-sport-market-panel #odds-v546-market-search::placeholder {
+    color: #a8b0c2 !important;
+}
+
+.omega-tab-odds .v549-sport-market-panel .v546-market-meta span {
+    border-color: rgba(199,210,254,.12) !important;
+    background: rgba(99,102,241,.10) !important;
+    color: #d8ddf0 !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog {
+    gap: 14px !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat {
+    overflow: hidden !important;
+    border: 1px solid rgba(148,163,184,.14) !important;
+    background:
+        radial-gradient(circle at 8% 0%, rgba(126,58,242,.16), transparent 38%),
+        radial-gradient(circle at 92% 12%, rgba(20,184,166,.09), transparent 34%),
+        linear-gradient(180deg, rgba(51,65,85,.74), rgba(17,24,39,.94)),
+        #111827 !important;
+    box-shadow: 0 15px 34px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat.football,
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat.basketball {
+    border-color: rgba(148,163,184,.15) !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat:hover {
+    border-color: rgba(168,85,247,.35) !important;
+    box-shadow: 0 0 20px rgba(126,58,242,.12), 0 16px 36px rgba(0,0,0,.28) !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat-toggle {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.040), rgba(255,255,255,.012)),
+        rgba(15,23,42,.50) !important;
+    color: #cbd5e1 !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat.open .v546-market-cat-toggle {
+    background:
+        linear-gradient(180deg, rgba(124,58,237,.13), rgba(15,23,42,.50)),
+        rgba(17,24,39,.84) !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat-toggle:hover,
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat.open .v546-market-cat-toggle:hover {
+    background: linear-gradient(180deg, rgba(88,42,146,.22), rgba(28,30,58,.38)), #151827 !important;
+    color: #f6f0ff !important;
+    box-shadow: 0 0 18px rgba(126,58,242,.12) !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat-toggle b {
+    color: #f5f6ff !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    letter-spacing: .02em !important;
+    text-shadow: 0 0 12px rgba(255,255,255,.14) !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat-toggle small {
+    color: #a8b0c2 !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    line-height: 1.45 !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat-toggle em {
+    border-color: rgba(199,210,254,.10) !important;
+    background: rgba(15,23,42,.64) !important;
+    color: #cbd5e1 !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat-toggle i {
+    color: #98a2b3 !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat-toggle:hover em,
+.omega-tab-odds .v549-sport-market-catalog .v546-market-cat-toggle:hover i {
+    color: #f4e8ff !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-tags button {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.010)),
+        #2f2f33 !important;
+    border-color: rgba(255,255,255,.06) !important;
+    color: #c3c8d3 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-tags button:hover {
+    background: linear-gradient(180deg, rgba(88,42,146,.22), rgba(28,30,58,.38)), #1c1e3a !important;
+    border-color: rgba(168,85,247,.35) !important;
+    color: #f4e8ff !important;
+    box-shadow: 0 0 18px rgba(126,58,242,.12), inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-tags button b {
+    color: #cbd1dc !important;
+    font-weight: 800 !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-tags button:hover b {
+    color: #f5f3ff !important;
+}
+
+.omega-tab-odds .v549-sport-market-catalog .v546-market-tags button small {
+    color: #9ca3b7 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    line-height: 1.45 !important;
+}
