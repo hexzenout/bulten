@@ -1,6 +1,6 @@
 // ===============================
-// V546 ORAN TERMİNALİ
-// Aramalı Marketler kataloğu ve POLYMARKET kategori izolasyonu
+// V553 ORAN TERMİNALİ
+// Market taxonomy metadata, alias search and POLYMARKET demo search
 // V542 POLYMARKET dock davranışı korunarak main ile hizalandı
 // ===============================
 
@@ -75,6 +75,16 @@
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9.]+/g, " ")
       .trim();
+  }
+
+
+  function textMatchesTokens(haystack, tokens) {
+    if (!tokens.length) return true;
+    const words = haystack.split(/\s+/).filter(Boolean);
+    return tokens.every(token => {
+      if (/^\d+(?:\.\d+)?$/.test(token)) return words.includes(token);
+      return haystack.includes(token);
+    });
   }
 
   function normalizeSavedState(saved) {
@@ -155,15 +165,33 @@
   }
 
   const marketItem = (name, extra = {}) => ({
-    id: extra.id || marketId(name),
+    id: extra.id || null,
     name,
+    label: extra.label || name,
     desc: extra.desc || "",
     tags: extra.tags || [],
-    aliases: extra.aliases || []
+    aliases: extra.aliases || [],
+    period: extra.period || null,
+    marketType: extra.marketType || null,
+    line: extra.line ?? null,
+    side: extra.side || null,
+    dataMode: extra.dataMode || "catalog_static"
   });
 
   function marketId(name) {
-    return "v546_" + normalizeText(name).replace(/\s+/g, "_").replace(/\./g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
+    return normalizeText(name).replace(/\s+/g, "_").replace(/\./g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
+  }
+
+  function stableIdPart(value) {
+    return marketId(value || "market") || "market";
+  }
+
+  function categoryIdPart(cat) {
+    return stableIdPart(String(cat?.id || cat?.name || "market").replace(/^v\d+_(football|basket)_?/, ""));
+  }
+
+  function sourceSportName(sport) {
+    return sport === "basketball" ? "basket" : sport || "market";
   }
 
   function marketItems(names, tags = []) {
@@ -171,9 +199,16 @@
   }
 
   function teamGoalLineMarkets(side, alias) {
+    const sideKey = side === "Ev Sahibi" ? "home" : "away";
+    const sideEn = sideKey === "home" ? "Home Team" : "Away Team";
     return ["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5"].map(line => marketItem(`${side} ${line} Gol Alt / Üst`, {
-      tags: ["takım gol", side, line, alias],
-      aliases: [`${alias} ${line} Gol Alt / Üst`, `${alias} ${line}`]
+      id: `football.${sideKey}_goals_${line.replace(".", "_")}_ou`,
+      tags: ["gol", "takım gol", side, line, alias, "alt üst"],
+      aliases: [`${alias} ${line} Gol Alt / Üst`, `${alias} ${line}`, `${sideEn} Goals Over Under ${line}`, `${sideEn} Goals ${line}`],
+      period: "full_time",
+      marketType: "over_under",
+      line: Number(line),
+      side: sideKey
     }));
   }
 
@@ -194,8 +229,8 @@
     const minutes = [15, 30, 45, 60, 75];
     const lines = ["0.5", "1", "1.5", "2", "2.5"];
     const families = [
-      minute => `Takım 1 ${minute}. Dakikaya Kadar`,
-      minute => `Takım 2 ${minute}. Dakikaya Kadar`,
+      minute => `Ev Sahibi ${minute}. Dakikaya Kadar`,
+      minute => `Deplasman ${minute}. Dakikaya Kadar`,
       minute => `Maçta ${minute}. Dakikaya Kadar`
     ];
     return families.flatMap(makePrefix => minutes.flatMap(minute => lines.map(line => marketItem(`${makePrefix(minute)} ${line} Gol Alt / Üst`, {
@@ -203,6 +238,8 @@
     }))));
   }
 
+  // Market catalog remains visible for manual review.
+  // Future live odds adapters should map source markets to stable market ids.
   const V546_FOOTBALL_CATEGORIES = [
     {
       id: "v546_football_result",
@@ -246,9 +283,9 @@
         ...teamGoalLineMarkets("Ev Sahibi", "Takım 1"),
         ...teamGoalLineMarkets("Deplasman", "Takım 2"),
         ...marketItems([
-          "Takım 1 İlk Yarı Gol Atar", "Takım 2 İlk Yarı Gol Atar", "Takım 1 İkinci Yarı Gol Atar", "Takım 2 İkinci Yarı Gol Atar",
-          "Takım 1 Her İki Yarıda Gol Atar", "Takım 2 Her İki Yarıda Gol Atar", "Ev Sahibi Kazanır ve Gol Yemez", "Deplasman Kazanır ve Gol Yemez",
-          "Takım 1 Gol Yemez", "Takım 2 Gol Yemez", "Ev Sahibi Gol Yemez", "Deplasman Gol Yemez"
+          "Ev Sahibi İlk Yarı Gol Atar", "Deplasman İlk Yarı Gol Atar", "Ev Sahibi İkinci Yarı Gol Atar", "Deplasman İkinci Yarı Gol Atar",
+          "Ev Sahibi Her İki Yarıda Gol Atar", "Deplasman Her İki Yarıda Gol Atar", "Ev Sahibi Kazanır ve Gol Yemez", "Deplasman Kazanır ve Gol Yemez",
+          "Ev Sahibi Gol Yemez", "Deplasman Gol Yemez"
         ], ["takım gol"])
       ]
     },
@@ -292,14 +329,14 @@
         "İlk Yarı 2.5 Korner Alt / Üst", "İlk Yarı 3.5 Korner Alt / Üst", "İlk Yarı 4.5 Korner Alt / Üst", "İlk Yarı 5.5 Korner Alt / Üst",
         "İkinci Yarı Korner Alt / Üst", "İkinci Yarı Korner 2 Üst", "İkinci Yarı Korner 3 Üst", "İkinci Yarı Korner 4 Üst", "İkinci Yarı Korner 5 Üst",
         "İkinci Yarı 2.5 Korner Alt / Üst", "İkinci Yarı 3.5 Korner Alt / Üst", "İkinci Yarı 4.5 Korner Alt / Üst", "İkinci Yarı 5.5 Korner Alt / Üst",
-        "Ev Sahibi Korner Alt / Üst", "Deplasman Korner Alt / Üst", "Takım 1 Korner Alt / Üst", "Takım 2 Korner Alt / Üst",
+        "Ev Sahibi Korner Alt / Üst", "Deplasman Korner Alt / Üst",
         "Ev Sahibi İlk Yarı Korner 0.5 Alt / Üst", "Ev Sahibi İlk Yarı Korner 1 Alt / Üst", "Ev Sahibi İlk Yarı Korner 1.5 Alt / Üst", "Ev Sahibi İlk Yarı Korner 2 Alt / Üst", "Ev Sahibi İlk Yarı Korner 2.5 Alt / Üst",
         "Deplasman İlk Yarı Korner 0.5 Alt / Üst", "Deplasman İlk Yarı Korner 1 Alt / Üst", "Deplasman İlk Yarı Korner 1.5 Alt / Üst", "Deplasman İlk Yarı Korner 2 Alt / Üst", "Deplasman İlk Yarı Korner 2.5 Alt / Üst",
         "Ev Sahibi İkinci Yarı Korner 0.5 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 1 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 1.5 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 2 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 2.5 Alt / Üst",
         "Deplasman İkinci Yarı Korner 0.5 Alt / Üst", "Deplasman İkinci Yarı Korner 1 Alt / Üst", "Deplasman İkinci Yarı Korner 1.5 Alt / Üst", "Deplasman İkinci Yarı Korner 2 Alt / Üst", "Deplasman İkinci Yarı Korner 2.5 Alt / Üst",
         "Korner Handikap", "En Çok Korner Kullanan Takım", "İlk Yarı En Çok Korner", "İkinci Yarı En Çok Korner",
         "İlk 5 Dakika Korner Olur / Olmaz", "İlk 10 Dakika Korner Olur / Olmaz", "İlk 15 Dakika Korner Olur / Olmaz",
-        "Takım 1 Art Arda 2 Korner Kullanır", "Takım 2 Art Arda 2 Korner Kullanır", "Herhangi Bir Takım Art Arda 2 Korner Kullanır",
+        "Ev Sahibi Art Arda 2 Korner Kullanır", "Deplasman Art Arda 2 Korner Kullanır", "Herhangi Bir Takım Art Arda 2 Korner Kullanır",
         "İlk 3 Kornere Ulaşan Takım", "İlk 5 Kornere Ulaşan Takım", "İlk 7 Kornere Ulaşan Takım"
       ], ["korner", "ilk 5 dakika korner"])
     },
@@ -310,10 +347,10 @@
       sport: "football",
       markets: marketItems([
         "Toplam Kart Alt / Üst", "2.5 Kart Alt / Üst", "3.5 Kart Alt / Üst", "4.5 Kart Alt / Üst", "5.5 Kart Alt / Üst",
-        "Ev Sahibi Kart Alt / Üst", "Deplasman Kart Alt / Üst", "Takım 1 Kart Alt / Üst", "Takım 2 Kart Alt / Üst", "İlk Yarı Kart Alt / Üst", "İkinci Yarı Kart Alt / Üst",
+        "Ev Sahibi Kart Alt / Üst", "Deplasman Kart Alt / Üst", "İlk Yarı Kart Alt / Üst", "İkinci Yarı Kart Alt / Üst",
         "Kırmızı Kart Olur / Olmaz", "Ev Sahibi Kırmızı Kart Görür", "Deplasman Kırmızı Kart Görür", "İlk Kartı Ev Sahibi Görür", "İlk Kartı Deplasman Görür", "En Çok Kart Gören Takım",
         "Kart Handikap", "Oyuncu Kart Görür", "Oyuncu Sarı Kart Görür", "Oyuncu Kırmızı Kart Görür", "İlk 15 Dakika Kart Olur", "İlk Yarı Kart Olur", "İkinci Yarı Kart Olur",
-        "Her İki Takım da Kart Görür", "Takım 1 Daha Fazla Kart Görür", "Takım 2 Daha Fazla Kart Görür"
+        "Her İki Takım da Kart Görür", "Ev Sahibi Daha Fazla Kart Görür", "Deplasman Daha Fazla Kart Görür"
       ], ["kart"])
     },
     {
@@ -322,7 +359,7 @@
       desc: "Maç, takım, ev sahibi/deplasman ve yarı handikap seçenekleri",
       sport: "football",
       markets: marketItems([
-        "Maç Handikapı", "Takım 1 Handikap", "Takım 2 Handikap",
+        "Maç Handikapı", "Ev Sahibi Handikap", "Deplasman Handikap",
         "Ev Sahibi -0.5 Handikap", "Ev Sahibi -1 Handikap", "Ev Sahibi -1.5 Handikap", "Ev Sahibi -2 Handikap", "Ev Sahibi -2.5 Handikap", "Ev Sahibi -3 Handikap", "Ev Sahibi -3.5 Handikap",
         "Ev Sahibi +0.5 Handikap", "Ev Sahibi +1 Handikap", "Ev Sahibi +1.5 Handikap", "Ev Sahibi +2 Handikap", "Ev Sahibi +2.5 Handikap",
         "Deplasman -0.5 Handikap", "Deplasman -1 Handikap", "Deplasman -1.5 Handikap", "Deplasman -2 Handikap", "Deplasman -2.5 Handikap", "Deplasman -3 Handikap", "Deplasman -3.5 Handikap",
@@ -347,19 +384,19 @@
       sport: "football",
       markets: marketItems([
         "Toplam Şut Alt / Üst", "Toplam İsabetli Şut Alt / Üst", "Ev Sahibi Şut Alt / Üst", "Deplasman Şut Alt / Üst", "Ev Sahibi İsabetli Şut Alt / Üst", "Deplasman İsabetli Şut Alt / Üst",
-        "Takım 1 Şut Alt / Üst", "Takım 2 Şut Alt / Üst", "Takım 1 İsabetli Şut Alt / Üst", "Takım 2 İsabetli Şut Alt / Üst", "Toplam Faul Alt / Üst", "Ev Sahibi Faul Alt / Üst", "Deplasman Faul Alt / Üst",
-        "Takım 1 Faul Alt / Üst", "Takım 2 Faul Alt / Üst", "Toplam Ofsayt Alt / Üst", "Ev Sahibi Ofsayt Alt / Üst", "Deplasman Ofsayt Alt / Üst", "Takım 1 Ofsayt Alt / Üst", "Takım 2 Ofsayt Alt / Üst",
-        "Toplam Taç Alt / Üst", "Ev Sahibi Taç Alt / Üst", "Deplasman Taç Alt / Üst", "Takım 1 Taç Alt / Üst", "Takım 2 Taç Alt / Üst",
-        "İlk Yarı Toplam Faul Alt / Üst", "İlk Yarı Takım 1 Faul Alt / Üst", "İlk Yarı Takım 2 Faul Alt / Üst",
-        "İkinci Yarı Toplam Faul Alt / Üst", "İkinci Yarı Takım 1 Faul Alt / Üst", "İkinci Yarı Takım 2 Faul Alt / Üst",
-        "İlk Yarı Toplam Şut Alt / Üst", "İlk Yarı Takım 1 Şut Alt / Üst", "İlk Yarı Takım 2 Şut Alt / Üst",
-        "İkinci Yarı Toplam Şut Alt / Üst", "İkinci Yarı Takım 1 Şut Alt / Üst", "İkinci Yarı Takım 2 Şut Alt / Üst",
-        "İlk Yarı Toplam İsabetli Şut Alt / Üst", "İlk Yarı Takım 1 İsabetli Şut Alt / Üst", "İlk Yarı Takım 2 İsabetli Şut Alt / Üst",
-        "İkinci Yarı Toplam İsabetli Şut Alt / Üst", "İkinci Yarı Takım 1 İsabetli Şut Alt / Üst", "İkinci Yarı Takım 2 İsabetli Şut Alt / Üst",
-        "İlk Yarı Toplam Ofsayt Alt / Üst", "İlk Yarı Takım 1 Ofsayt Alt / Üst", "İlk Yarı Takım 2 Ofsayt Alt / Üst",
-        "İkinci Yarı Toplam Ofsayt Alt / Üst", "İkinci Yarı Takım 1 Ofsayt Alt / Üst", "İkinci Yarı Takım 2 Ofsayt Alt / Üst",
-        "İlk Yarı Toplam Taç Alt / Üst", "İlk Yarı Takım 1 Taç Alt / Üst", "İlk Yarı Takım 2 Taç Alt / Üst",
-        "İkinci Yarı Toplam Taç Alt / Üst", "İkinci Yarı Takım 1 Taç Alt / Üst", "İkinci Yarı Takım 2 Taç Alt / Üst"
+        "Ev Sahibi Şut Alt / Üst", "Deplasman Şut Alt / Üst", "Ev Sahibi İsabetli Şut Alt / Üst", "Deplasman İsabetli Şut Alt / Üst", "Toplam Faul Alt / Üst", "Ev Sahibi Faul Alt / Üst", "Deplasman Faul Alt / Üst",
+        "Ev Sahibi Faul Alt / Üst", "Deplasman Faul Alt / Üst", "Toplam Ofsayt Alt / Üst", "Ev Sahibi Ofsayt Alt / Üst", "Deplasman Ofsayt Alt / Üst", "Ev Sahibi Ofsayt Alt / Üst", "Deplasman Ofsayt Alt / Üst",
+        "Toplam Taç Alt / Üst", "Ev Sahibi Taç Alt / Üst", "Deplasman Taç Alt / Üst", "Ev Sahibi Taç Alt / Üst", "Deplasman Taç Alt / Üst",
+        "İlk Yarı Toplam Faul Alt / Üst", "İlk Yarı Ev Sahibi Faul Alt / Üst", "İlk Yarı Deplasman Faul Alt / Üst",
+        "İkinci Yarı Toplam Faul Alt / Üst", "İkinci Yarı Ev Sahibi Faul Alt / Üst", "İkinci Yarı Deplasman Faul Alt / Üst",
+        "İlk Yarı Toplam Şut Alt / Üst", "İlk Yarı Ev Sahibi Şut Alt / Üst", "İlk Yarı Deplasman Şut Alt / Üst",
+        "İkinci Yarı Toplam Şut Alt / Üst", "İkinci Yarı Ev Sahibi Şut Alt / Üst", "İkinci Yarı Deplasman Şut Alt / Üst",
+        "İlk Yarı Toplam İsabetli Şut Alt / Üst", "İlk Yarı Ev Sahibi İsabetli Şut Alt / Üst", "İlk Yarı Deplasman İsabetli Şut Alt / Üst",
+        "İkinci Yarı Toplam İsabetli Şut Alt / Üst", "İkinci Yarı Ev Sahibi İsabetli Şut Alt / Üst", "İkinci Yarı Deplasman İsabetli Şut Alt / Üst",
+        "İlk Yarı Toplam Ofsayt Alt / Üst", "İlk Yarı Ev Sahibi Ofsayt Alt / Üst", "İlk Yarı Deplasman Ofsayt Alt / Üst",
+        "İkinci Yarı Toplam Ofsayt Alt / Üst", "İkinci Yarı Ev Sahibi Ofsayt Alt / Üst", "İkinci Yarı Deplasman Ofsayt Alt / Üst",
+        "İlk Yarı Toplam Taç Alt / Üst", "İlk Yarı Ev Sahibi Taç Alt / Üst", "İlk Yarı Deplasman Taç Alt / Üst",
+        "İkinci Yarı Toplam Taç Alt / Üst", "İkinci Yarı Ev Sahibi Taç Alt / Üst", "İkinci Yarı Deplasman Taç Alt / Üst"
       ], ["istatistik", "isabetli şut", "faul"])
     },
     {
@@ -368,7 +405,7 @@
       desc: "Evet / Hayır sonucuyla art arda gol serisi marketleri",
       sport: "football",
       markets: marketItems([
-        "Takım 1 Art Arda 2 Gol Atar", "Takım 1 Art Arda 3 Gol Atar", "Takım 1 Art Arda 4 Gol Atar", "Takım 2 Art Arda 2 Gol Atar", "Takım 2 Art Arda 3 Gol Atar", "Takım 2 Art Arda 4 Gol Atar",
+        "Ev Sahibi Art Arda 2 Gol Atar", "Ev Sahibi Art Arda 3 Gol Atar", "Ev Sahibi Art Arda 4 Gol Atar", "Deplasman Art Arda 2 Gol Atar", "Deplasman Art Arda 3 Gol Atar", "Deplasman Art Arda 4 Gol Atar",
         "Herhangi Bir Takım Art Arda 2 Gol Atar", "Herhangi Bir Takım Art Arda 3 Gol Atar", "Herhangi Bir Takım Art Arda 4 Gol Atar"
       ], ["art arda gol", "seri gol"])
     },
@@ -377,7 +414,7 @@
       name: "Galibiyet Farkı",
       desc: "Takım ve herhangi bir takım için galibiyet farkı seçenekleri",
       sport: "football",
-      markets: marketItems(["Takım 1 Tam 1 Farkla Kazanır", "Takım 1 Tam 2 Farkla Kazanır", "Takım 1 3+ Farkla Kazanır", "Takım 2 Tam 1 Farkla Kazanır", "Takım 2 Tam 2 Farkla Kazanır", "Takım 2 3+ Farkla Kazanır", "Herhangi Bir Takım 1 Farkla Kazanır", "Herhangi Bir Takım 2 Farkla Kazanır", "Herhangi Bir Takım 3+ Farkla Kazanır"], ["galibiyet farkı"])
+      markets: marketItems(["Ev Sahibi Tam 1 Farkla Kazanır", "Ev Sahibi Tam 2 Farkla Kazanır", "Ev Sahibi 3+ Farkla Kazanır", "Deplasman Tam 1 Farkla Kazanır", "Deplasman Tam 2 Farkla Kazanır", "Deplasman 3+ Farkla Kazanır", "Herhangi Bir Takım 1 Farkla Kazanır", "Herhangi Bir Takım 2 Farkla Kazanır", "Herhangi Bir Takım 3+ Farkla Kazanır"], ["galibiyet farkı"])
     },
     {
       id: "v546_football_penalties",
@@ -401,8 +438,15 @@
           "Uzatma Olur / Olmaz", "Normal Süre Sonucu", "Uzatmalar Dahil Maç Sonucu", "En Çok Sayı Olan Yarı"
         ], ["basketbol ana market"]),
         marketItem("Her İki Takım da ____ Alt / Üst Sayı Atar (Uz. dahil)", {
+          id: "basket.both_teams_points_line_ou_ot",
           desc: "Gerçek oran verisi gelince 64.5, 66.5, 68.5 gibi çizgiler maç bazlı otomatik listelenecek.",
-          tags: ["basketbol ana market", "64.5", "66.5", "68.5", "her iki takım", "alt üst sayı", "uzatma dahil"]
+          aliases: ["Her iki takım 64.5 üst sayı atar", "Her iki takım 66.5 üst sayı atar", "Her iki takım 68.5 üst sayı atar", "Both teams team total over", "Both teams points over"],
+          tags: ["basketbol", "basketbol ana market", "takım sayı", "64.5", "66.5", "68.5", "her iki takım", "alt üst sayı", "uzatma dahil"],
+          period: "full_time_ot_included",
+          marketType: "dynamic_line_over_under",
+          line: null,
+          side: "both_teams",
+          dataMode: "catalog_dynamic_placeholder"
         })
       ]
     },
@@ -496,15 +540,122 @@
 
   function isPolymarketMode() { return state.sport === "polymarket"; }
 
+  function marketSideMeta(label) {
+    const norm = normalizeText(label);
+    if (norm.includes("ev sahibi")) return { side: "home", aliases: [label.replace(/Ev Sahibi/g, "Takım 1"), label.replace(/Ev Sahibi/g, "Home Team")] };
+    if (norm.includes("deplasman")) return { side: "away", aliases: [label.replace(/Deplasman/g, "Takım 2"), label.replace(/Deplasman/g, "Away Team")] };
+    if (norm.includes("takim 1")) return { side: "home", aliases: [label.replace(/Takım 1/g, "Ev Sahibi"), label.replace(/Takım 1/g, "Home Team")] };
+    if (norm.includes("takim 2")) return { side: "away", aliases: [label.replace(/Takım 2/g, "Deplasman"), label.replace(/Takım 2/g, "Away Team")] };
+    if (norm.includes("her iki takim")) return { side: "both_teams", aliases: [label.replace(/Her İki Takım/g, "Both Teams")] };
+    return { side: null, aliases: [] };
+  }
+
+  function inferPeriod(label) {
+    const norm = normalizeText(label);
+    if (norm.includes("uzatma") || norm.includes("uz ")) return "full_time_ot_included";
+    if (norm.includes("ilk yari")) return "first_half";
+    if (norm.includes("ikinci yari")) return "second_half";
+    if (norm.includes("ilk ceyrek") || norm.includes("1 ceyrek")) return "q1";
+    if (norm.includes("ikinci ceyrek") || norm.includes("2 ceyrek")) return "q2";
+    if (norm.includes("ucuncu ceyrek") || norm.includes("3 ceyrek")) return "q3";
+    if (norm.includes("dorduncu ceyrek") || norm.includes("4 ceyrek") || norm.includes("son ceyrek")) return "q4";
+    return "full_time";
+  }
+
+  function inferMarketType(label) {
+    const norm = normalizeText(label);
+    if (norm.includes("alt ust")) return norm.includes("____") || norm.includes(" x ") ? "dynamic_line_over_under" : "over_under";
+    if (norm.includes("handikap")) return "handicap";
+    if (norm.includes("mac sonucu") || norm.includes("sonucu") || norm.includes("kazanir")) return "result";
+    if (norm.includes("cifte sans")) return "double_chance";
+    if (norm.includes("var yok") || norm.includes("olur olmaz") || norm.includes("atar mi")) return "yes_no";
+    if (norm.includes("baraj") || norm.includes("+")) return "threshold";
+    return "catalog_market";
+  }
+
+  function inferLine(label) {
+    const match = String(label || "").match(/\b\d+(?:\.\d+)?\b/);
+    return match ? Number(match[0]) : null;
+  }
+
+  function stableMarketId(cat, market, index) {
+    if (market.id) return market.id;
+    const sport = sourceSportName(categorySport(cat));
+    const label = market.label || market.name || `market_${index}`;
+    const norm = normalizeText(label);
+    const line = inferLine(label);
+    const side = marketSideMeta(label).side;
+    if (sport === "football" && norm.includes("mac sonucu")) return "football.result.full_time_1x2";
+    if (sport === "football" && norm.includes("gol") && norm.includes("alt ust") && line != null && !side) return `football.goals.total_${String(line).replace(".", "_")}_ou`;
+    if (sport === "football" && norm.includes("korner") && norm.includes("alt ust") && line != null) return `football.corner.total_${String(line).replace(".", "_")}_ou`;
+    if (sport === "basket" && norm === "mac sonucu") return "basket.match_winner";
+    if (sport === "basket" && norm.includes("toplam sayi") && norm.includes("alt ust") && !side) return "basket.total_points_ou";
+    if (sport === "basket" && norm.includes("oyuncu sayi") && norm.includes("alt ust")) return "basket.player_points_ou";
+    return `${sport}.${categoryIdPart(cat)}.${stableIdPart(label)}`;
+  }
+
+  function searchTextForMarket(cat, market) {
+    return normalizeText([
+      market.name,
+      market.label,
+      market.desc,
+      cat.name,
+      cat.desc,
+      categorySport(cat),
+      market.period,
+      market.marketType,
+      market.side,
+      market.line,
+      ...(Array.isArray(market.tags) ? market.tags : []),
+      ...(Array.isArray(market.aliases) ? market.aliases : [])
+    ].join(" "));
+  }
+
+  function enrichMarket(cat, market, index) {
+    const label = market.label || market.name || "Market";
+    const sideMeta = marketSideMeta(label);
+    const tags = [...new Set([categorySport(cat), cat.name, ...(Array.isArray(market.tags) ? market.tags : [])].filter(Boolean))];
+    const aliases = [...new Set([...(Array.isArray(market.aliases) ? market.aliases : []), ...sideMeta.aliases].filter(Boolean))];
+    const enriched = {
+      ...market,
+      id: stableMarketId(cat, market, index),
+      sport: categorySport(cat),
+      group: cat.name,
+      label,
+      name: label,
+      aliases,
+      tags,
+      period: market.period || inferPeriod(label),
+      marketType: market.marketType || inferMarketType(label),
+      line: market.line ?? inferLine(label),
+      side: market.side || sideMeta.side,
+      dataMode: market.dataMode || "catalog_static"
+    };
+    enriched._searchText = searchTextForMarket(cat, enriched);
+    return enriched;
+  }
+
+  function assertUniqueMarketIds(categories) {
+    const seen = new Set();
+    categories.forEach(cat => (cat.markets || []).forEach(m => {
+      let id = m.id;
+      let suffix = 2;
+      while (seen.has(id)) {
+        id = `${m.id}_${suffix}`;
+        suffix += 1;
+      }
+      m.id = id;
+      seen.add(id);
+    }));
+  }
+
   function curatedMarketCategories() {
     if (!curatedMarketCategoryCache) {
       curatedMarketCategoryCache = [...V546_FOOTBALL_CATEGORIES, ...V546_BASKETBALL_CATEGORIES].map(cat => ({
         ...cat,
-        markets: (cat.markets || []).map(m => ({
-          ...m,
-          id: `${cat.id}_${marketId(m.name)}`
-        }))
+        markets: (cat.markets || []).map((m, index) => enrichMarket(cat, m, index))
       }));
+      assertUniqueMarketIds(curatedMarketCategoryCache);
     }
     return curatedMarketCategoryCache;
   }
@@ -584,7 +735,7 @@
       const categoryOk = state.marketCategory === "all" || category === state.marketCategory;
       const marketOk = state.marketId === "all" || r.market === state.marketId;
       const haystack = normalizeText([r.match, r.league, r.bookmaker, r.marketLabel, r.outcome, r.info, r.line].join(" "));
-      const searchOk = !search || search.split(/\s+/).every(token => haystack.includes(token));
+      const searchOk = !search || textMatchesTokens(haystack, search.split(/\s+/).filter(Boolean));
       return sportOk && categoryOk && marketOk && searchOk;
     });
   }
@@ -592,7 +743,8 @@
   function polymarketRecords(raw = false) {
     const list = (state.snapshot?.records || []).filter(isPolymarketRecord);
     if (raw) return list;
-    const search = normalizeText(state.search || "");
+    const search = normalizeText(isPolymarketMode() ? state.marketSearch : state.search || "");
+    const tokens = search ? search.split(/\s+/).filter(Boolean) : [];
     return list.filter(r => {
       const eventType = normalizeText(r.eventType || r.league || "");
       const hours = hoursUntil(r.expiresAt || r.kickoff);
@@ -605,8 +757,8 @@
         || (state.polyFilter === "liquid" && Number(r.liquidity || 0) >= 100000)
         || (state.polyFilter === "value" && polymarketEdge(r) >= Number(state.minValuePct || 5));
       const sportOk = state.sport === "polymarket" || state.sport === "all" || r.sport === state.sport || r.sport === "prediction";
-      const haystack = normalizeText([r.question, r.match, r.league, r.marketLabel, r.outcome, r.info, r.eventType, r.timeframe].join(" "));
-      const searchOk = !search || search.split(/\s+/).every(token => haystack.includes(token));
+      const haystack = normalizeText([r.question, r.title, r.match, r.category, r.league, r.marketLabel, r.description, r.outcome, r.info, r.eventType, r.timeframe, r.tags, r.yesPrice != null ? "yes" : "", r.noPrice != null ? "no" : "", r.liquidity ? "likidite" : "", r.volume24h ? "24 saat" : ""].join(" "));
+      const searchOk = textMatchesTokens(haystack, tokens);
       return filterOk && sportOk && searchOk;
     });
   }
@@ -1094,11 +1246,11 @@
     const tokens = query ? query.split(/\s+/).filter(Boolean) : [];
 
     const cats = marketCategories().filter(categoryMatchesMarketGroup).map(cat => {
-      const catSearch = normalizeText([cat.name, cat.desc, cat.id].join(" "));
-      const catMatches = !tokens.length || tokens.every(t => catSearch.includes(t));
+      const catSearch = normalizeText([cat.name, cat.desc, cat.id, categorySport(cat)].join(" "));
+      const catMatches = textMatchesTokens(catSearch, tokens);
       const markets = (cat.markets || []).filter(m => {
-        const hay = normalizeText([m.name, m.desc, ...(Array.isArray(m.tags) ? m.tags : []), ...(Array.isArray(m.aliases) ? m.aliases : []), m.id, cat.name, cat.desc].join(" "));
-        return !tokens.length || catMatches || tokens.every(t => hay.includes(t));
+        const hay = m._searchText || searchTextForMarket(cat, m);
+        return !tokens.length || catMatches || textMatchesTokens(hay, tokens);
       });
       return { ...cat, _catMatches: catMatches, _markets: markets };
     }).filter(cat => !tokens.length || cat._catMatches || cat._markets.length);
@@ -1181,7 +1333,7 @@
         <div><span>Ortalama Güven</span><b>${s.avgScore}</b></div>
       </div>
 
-      ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty("Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
+      ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
     </section>`;
   }
 
