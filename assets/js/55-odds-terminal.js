@@ -911,18 +911,11 @@
   }
 
   function footballIconSvg() {
-    return `<svg class="v548-sport-mark v548-football-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-      <circle cx="16" cy="16" r="12"/>
-      <path d="M16 9.2 21.2 13l-2 6.1h-6.4l-2-6.1Z"/>
-      <path d="M16 4v5.2M4.6 12l6.2 1M27.4 12l-6.2 1M8.6 25.1l4.2-6M23.4 25.1l-4.2-6"/>
-    </svg>`;
+    return `<i class="fa-solid fa-futbol v548-sport-mark v548-football-mark" aria-hidden="true"></i>`;
   }
 
   function basketballIconSvg() {
-    return `<svg class="v548-sport-mark v548-basketball-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-      <circle cx="16" cy="16" r="12"/>
-      <path d="M16 4v24M4 16h24M7.4 8.6c5.6 2.8 11.6 2.8 17.2 0M7.4 23.4c5.6-2.8 11.6-2.8 17.2 0"/>
-    </svg>`;
+    return `<i class="fa-solid fa-basketball v548-sport-mark v548-basketball-mark" aria-hidden="true"></i>`;
   }
 
   function polyMarkSvg() {
@@ -1248,18 +1241,18 @@
     const sportLabel = state.sport === "football" ? "Futbol" : state.sport === "basketball" ? "Basketbol" : "Futbol + Basketbol";
     const placeholder = marketSearchPlaceholder();
     if (!cats.length) {
-      return `<div class="v546-market-search-panel">
+      return `<div class="v546-market-search-panel v549-sport-market-panel">
         <label for="odds-v546-market-search">Marketler</label>
         <input id="odds-v546-market-search" type="search" placeholder="${escapeAttr(placeholder)}" value="${escapeAttr(state.marketSearch || "")}">
         <div class="v546-market-meta"><span>${escapeHtml(sportLabel)}</span><span>0 sonuç</span></div>
       </div>${empty("Aradığın market katalogda bulunamadı.")}`;
     }
-    return `<div class="v546-market-search-panel">
+    return `<div class="v546-market-search-panel v549-sport-market-panel">
       <label for="odds-v546-market-search">Marketler</label>
       <input id="odds-v546-market-search" type="search" placeholder="${escapeAttr(placeholder)}" value="${escapeAttr(state.marketSearch || "")}">
       <div class="v546-market-meta"><span>${escapeHtml(sportLabel)}</span><span>${total} sonuç · ${cats.length} grup</span></div>
     </div>
-    <div class="v530-market-catalog v546-market-catalog">
+    <div class="v530-market-catalog v546-market-catalog v549-sport-market-catalog">
       ${cats.map(cat => {
         const markets = cat._markets || cat.markets || [];
         const open = isCategoryOpen(cat.id);
