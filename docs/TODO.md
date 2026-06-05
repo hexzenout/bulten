@@ -9,6 +9,7 @@
 6. V544 ile Oran Terminali kategori/dropdown UX düzeltildi.
 7. V544 ile futbol ve basketbol market listeleri gerçekçi başlıklarla temizlendi.
 8. V544 ile POLYMARKET en sağda koyu mavi marka butonu olarak konumlandırıldı.
+9. V545 ile POLYMARKET BASKETBOL hemen sağına alındı, tek tıklama aktifleşmesi ve Marketler sekmesine özel Bahis Türü / Market görünümü düzeltildi.
 
 ## Sıradaki İşler
 1. Gerçek oran veri modelini ve Polymarket API motorunu tasarla.

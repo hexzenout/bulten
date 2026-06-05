@@ -1,13 +1,13 @@
 // ===============================
-// V544 ORAN TERMİNALİ
-// Ana kategori + market UX temizliği + POLYMARKET izolasyonu
+// V545 ORAN TERMİNALİ
+// Oran Terminali kategori, market ve POLYMARKET davranışı düzeltmesi
 // V542 POLYMARKET dock davranışı korunarak main ile hizalandı
 // ===============================
 
 (function () {
   const DATA_SOURCES = "assets/data/odds-sources.json";
   const DATA_SNAPSHOT = "assets/data/odds-snapshot.json";
-  const STORE_KEY = "v544_odds_terminal_state";
+  const STORE_KEY = "v545_odds_terminal_state";
 
   const state = {
     tab: "opportunities",
@@ -201,6 +201,7 @@
         { id: "corners_10_5", name: "10.5 Korner Alt / Üst" },
         { id: "first_half_corners", name: "İlk Yarı Korner" },
         { id: "team1_corners", name: "Takım Korner Alt / Üst" },
+        { id: "corner_handicap", name: "Korner Handikap" },
         { id: "total_cards", name: "Toplam Kart Alt / Üst" },
         { id: "team_cards", name: "Takım Kart Alt / Üst" },
         { id: "red_card", name: "Kırmızı Kart Olur / Olmaz" }
@@ -212,7 +213,7 @@
       desc: "Basit ve yaygın handikap seçenekleri",
       sport: "football",
       markets: [
-        { id: "asian_handicap", name: "Maç Handikapı" },
+        { id: "match_handicap", name: "Maç Handikapı" },
         { id: "european_handicap", name: "Avrupa Handikap" },
         { id: "team1_minus_handicap", name: "Takım 1 Handikap" },
         { id: "team2_plus_handicap", name: "Takım 2 Handikap" }
@@ -240,7 +241,11 @@
         { id: "basket_q2_handicap", name: "İkinci Çeyrek Handikap" },
         { id: "basket_q2_total", name: "İkinci Çeyrek Toplam Sayı" },
         { id: "basket_q3_winner", name: "Üçüncü Çeyrek Sonucu" },
-        { id: "basket_q4_winner", name: "Dördüncü Çeyrek Sonucu" }
+        { id: "basket_q3_handicap", name: "Üçüncü Çeyrek Handikap" },
+        { id: "basket_q3_total", name: "Üçüncü Çeyrek Toplam Sayı" },
+        { id: "basket_q4_winner", name: "Dördüncü Çeyrek Sonucu" },
+        { id: "basket_q4_handicap", name: "Dördüncü Çeyrek Handikap" },
+        { id: "basket_q4_total", name: "Dördüncü Çeyrek Toplam Sayı" }
       ]
     },
     {
@@ -679,25 +684,15 @@
 
   function renderCategoryRow() {
     return `<div class="v544-category-row" data-odds-category-row="1" role="group" aria-label="Oran Terminali ana kategori seçimi">
-      <div class="v544-category-left">
-        ${categoryButton("all", "TÜMÜ")}
-        ${categoryButton("football", "FUTBOL", '<i class="fa-solid fa-futbol"></i>')}
-        ${categoryButton("basketball", "BASKETBOL", '<i class="fa-solid fa-basketball"></i>')}
-      </div>
-      <div class="v544-category-right">
-        ${categoryButton("polymarket", "POLYMARKET", polyMarkSvg())}
-      </div>
+      ${categoryButton("all", "TÜMÜ")}
+      ${categoryButton("football", "FUTBOL", '<i class="fa-solid fa-futbol"></i>')}
+      ${categoryButton("basketball", "BASKETBOL", '<i class="fa-solid fa-basketball"></i>')}
+      ${categoryButton("polymarket", "POLYMARKET", polyMarkSvg())}
     </div>`;
   }
 
   function renderMarketControl() {
-    if (isPolymarketMode()) {
-      return `<div class="omega-market-picker v544-poly-info">
-        <span>Bahis Türü / Market</span>
-        <b>POLYMARKET panelinde izole</b>
-        <small>Futbol/basket marketleri bu modda gizlenir.</small>
-      </div>`;
-    }
+    if (isPolymarketMode() || state.tab !== "markets") return "";
     return `<div class="v536-market-menu v540-market-menu omega-market-picker ${state.marketPickerOpen ? "open" : ""}">
       <button type="button" class="v536-market-toggle omega-market-toggle" data-market-drawer-toggle="1" aria-expanded="${state.marketPickerOpen ? "true" : "false"}">
         <span>Bahis Türü / Market</span>
@@ -750,9 +745,9 @@
             ${tabButton("drops", "Oran Hareketleri")}
             ${tabButton("sources", "Kaynaklar")}
           </div>
-          <div class="odds-v528-filters v530-filters v531-filters v533-filters v534-filters v536-filters v544-filters">
+          ${state.tab === "markets" && !isPolymarketMode() ? `<div class="odds-v528-filters v530-filters v531-filters v533-filters v534-filters v536-filters v544-filters">
             ${renderMarketControl()}
-          </div>
+          </div>` : ""}
         </div>
 
         <div class="odds-v528-content">${content()}</div>
@@ -1441,119 +1436,4 @@
     const key = String(location.hash || "").replace(/^#\/?/, "").split("/")[0];
     if (key === "odds") setTimeout(() => showOddsTerminal(false), 0);
   });
-})();
-
-// ===============================
-// V543 LIGHT POLYMARKET MAIN CATEGORY BRIDGE
-// Conflict-safe layer: JS-only bridge, no CSS file changes, no route changes.
-// ===============================
-(function () {
-  const POLY_CLASS = "odds-v543-poly-mode";
-  const STYLE_ID = "odds-v543-poly-bridge-style";
-
-  function qs(sel, root = document) { return root.querySelector(sel); }
-  function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
-
-  function isOddsRoute() {
-    return document.body.classList.contains("omega-tab-odds") || String(location.hash || "").replace(/^#\/?/, "").split("/")[0] === "odds";
-  }
-
-  function installStyles() {
-    if (document.getElementById(STYLE_ID)) return;
-    const style = document.createElement("style");
-    style.id = STYLE_ID;
-    style.textContent = `
-      .omega-tab-odds .odds-v528-tabs [data-odds-tab="polymarket"]{display:none!important;}
-      .omega-tab-odds .v531-sport-switch{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;overflow:visible!important;}
-      .omega-tab-odds .v531-sport-switch button.polymarket{color:#ddd6fe!important;}
-      .omega-tab-odds .v531-sport-switch button.polymarket.active{border-color:rgba(168,85,247,.58)!important;background:linear-gradient(180deg,rgba(168,85,247,.30),rgba(168,85,247,.12)),#171329!important;color:#f5f3ff!important;}
-      .omega-tab-odds.odds-v543-poly-mode .v536-market-menu,.omega-tab-odds.odds-v543-poly-mode .v537-market-menu,.omega-tab-odds.odds-v543-poly-mode .v535-market-menu,.omega-tab-odds.odds-v543-poly-mode .v540-market-menu{display:none!important;}
-      .omega-tab-odds .odds-v528-toolbar,.omega-tab-odds .v536-filters,.omega-tab-odds .v537-filters,.omega-tab-odds .v535-filters,.omega-tab-odds .v534-filters{overflow:visible!important;}
-      .omega-tab-odds .v536-market-menu,.omega-tab-odds .v537-market-menu,.omega-tab-odds .v535-market-menu,.omega-tab-odds .v540-market-menu{position:relative!important;z-index:110!important;}
-      .omega-tab-odds .v536-market-dropdown,.omega-tab-odds .v537-market-dropdown,.omega-tab-odds .v535-market-dropdown{position:absolute!important;top:calc(100% + 10px)!important;left:0!important;width:min(640px,calc(100vw - 36px))!important;max-width:640px!important;margin-top:0!important;max-height:min(430px,calc(100vh - 180px))!important;overflow:hidden!important;z-index:120!important;box-shadow:0 22px 55px rgba(0,0,0,.50)!important;}
-      .omega-tab-odds .v536-market-dropdown .v533-market-results,.omega-tab-odds .v537-market-dropdown .v533-market-results,.omega-tab-odds .v535-market-dropdown .v533-market-results{max-height:min(300px,calc(100vh - 310px))!important;overflow-y:auto!important;}
-      @media(max-width:680px){.omega-tab-odds .v531-sport-switch{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
-    `;
-    document.head.appendChild(style);
-  }
-
-  function isPolymarketPanelVisible(root = document) {
-    return !!qs(".v541-polymarket-panel", root) || !!qs('[data-odds-tab="polymarket"].active', root);
-  }
-
-  function setPolyMode(active) {
-    document.body.classList.toggle(POLY_CLASS, !!active);
-  }
-
-  function clickOddsTab(key) {
-    const btn = qs(`[data-odds-tab="${key}"]`);
-    if (btn) btn.click();
-  }
-
-  function ensurePolymarketMainCategory(root = document) {
-    const sportSwitch = qs(".omega-tab-odds .v531-sport-switch", root) || qs(".v531-sport-switch", root);
-    if (!sportSwitch || qs('[data-odds-sport-btn="polymarket"]', sportSwitch)) return;
-
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "polymarket";
-    btn.dataset.oddsSportBtn = "polymarket";
-    btn.innerHTML = '<i class="fa-solid fa-chart-simple"></i> POLYMARKET';
-    sportSwitch.appendChild(btn);
-  }
-
-  function syncPolymarketCategoryState(root = document) {
-    const polyActive = isPolymarketPanelVisible(root);
-    setPolyMode(polyActive);
-    qsa('[data-odds-sport-btn="polymarket"]', root).forEach(btn => btn.classList.toggle("active", polyActive));
-    if (polyActive) {
-      qsa('[data-odds-sport-btn="all"], [data-odds-sport-btn="football"], [data-odds-sport-btn="basketball"]', root)
-        .forEach(btn => btn.classList.remove("active"));
-    }
-  }
-
-  function enhanceOddsTerminal() {
-    installStyles();
-    if (!isOddsRoute()) return;
-    const root = qs("#omega-odds-render") || document;
-    ensurePolymarketMainCategory(root);
-    syncPolymarketCategoryState(root);
-  }
-
-  document.addEventListener("click", (event) => {
-    const btn = event.target.closest("[data-odds-sport-btn]");
-    if (!btn || !isOddsRoute()) return;
-    const key = btn.dataset.oddsSportBtn || "all";
-    const scrollY = window.scrollY;
-
-    if (key === "polymarket") {
-      event.preventDefault();
-      event.stopPropagation();
-      clickOddsTab("polymarket");
-      requestAnimationFrame(() => {
-        enhanceOddsTerminal();
-        window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
-      });
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      if (isPolymarketPanelVisible()) clickOddsTab("opportunities");
-      enhanceOddsTerminal();
-      window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
-    });
-  }, true);
-
-  const originalRender = window.omega_RenderOddsTerminal;
-  if (typeof originalRender === "function" && !originalRender.__v543PolyBridge) {
-    window.omega_RenderOddsTerminal = async function (...args) {
-      const result = await originalRender.apply(this, args);
-      enhanceOddsTerminal();
-      return result;
-    };
-    window.omega_RenderOddsTerminal.__v543PolyBridge = true;
-  }
-
-  document.addEventListener("DOMContentLoaded", () => setTimeout(enhanceOddsTerminal, 0));
-  window.addEventListener("hashchange", () => setTimeout(enhanceOddsTerminal, 0));
 })();
