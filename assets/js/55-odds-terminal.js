@@ -21,6 +21,7 @@
     marketCategory: "all",
     marketId: "all",
     marketSearch: "",
+    marketGroupFilter: "all",
     selectedCompareKey: "",
     minDropPct: 8,
     minValuePct: 5,
@@ -94,6 +95,7 @@
       safe.marketCategory = "all";
       safe.marketId = "all";
       safe.marketSearch = "";
+      safe.marketGroupFilter = "all";
       safe.marketPickerOpen = false;
     }
     return safe;
@@ -117,6 +119,7 @@
         marketCategory: state.marketCategory,
         marketId: state.marketId,
         marketSearch: state.marketSearch,
+        marketGroupFilter: state.marketGroupFilter,
         selectedCompareKey: state.selectedCompareKey,
         minDropPct: state.minDropPct,
         minValuePct: state.minValuePct,
@@ -155,7 +158,8 @@
     id: extra.id || marketId(name),
     name,
     desc: extra.desc || "",
-    tags: extra.tags || []
+    tags: extra.tags || [],
+    aliases: extra.aliases || []
   });
 
   function marketId(name) {
@@ -164,6 +168,13 @@
 
   function marketItems(names, tags = []) {
     return names.map(name => marketItem(name, { tags }));
+  }
+
+  function teamGoalLineMarkets(side, alias) {
+    return ["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5"].map(line => marketItem(`${side} ${line} Gol Alt / Üst`, {
+      tags: ["takım gol", side, line, alias],
+      aliases: [`${alias} ${line} Gol Alt / Üst`, `${alias} ${line}`]
+    }));
   }
 
   function resultTotalCombos() {
@@ -230,32 +241,16 @@
       name: "Takım Gol Marketleri",
       desc: "KG, takım golü, takım alt/üst ve gol yememe marketleri",
       sport: "football",
-      markets: marketItems([
-        "KG Var / Yok", "Karşılıklı Gol Var", "Ev Sahibi Gol Atar", "Deplasman Gol Atar", "Her İki Takım da 1.5 Üst Gol Atar",
-        "Ev Sahibi 0.5 Gol Alt / Üst", "Ev Sahibi 1.5 Gol Alt / Üst", "Ev Sahibi 2.5 Gol Alt / Üst", "Ev Sahibi 3.5 Gol Alt / Üst", "Ev Sahibi 4.5 Gol Alt / Üst",
-        "Deplasman 0.5 Gol Alt / Üst", "Deplasman 1.5 Gol Alt / Üst", "Deplasman 2.5 Gol Alt / Üst", "Deplasman 3.5 Gol Alt / Üst", "Deplasman 4.5 Gol Alt / Üst",
-        "Takım 1 0.5 Gol Alt / Üst",
-        "Takım 1 1 Gol Alt / Üst",
-        "Takım 1 1.5 Gol Alt / Üst",
-        "Takım 1 2 Gol Alt / Üst",
-        "Takım 1 2.5 Gol Alt / Üst",
-        "Takım 1 3 Gol Alt / Üst",
-        "Takım 1 3.5 Gol Alt / Üst",
-        "Takım 1 4 Gol Alt / Üst",
-        "Takım 1 4.5 Gol Alt / Üst",
-        "Takım 2 0.5 Gol Alt / Üst",
-        "Takım 2 1 Gol Alt / Üst",
-        "Takım 2 1.5 Gol Alt / Üst",
-        "Takım 2 2 Gol Alt / Üst",
-        "Takım 2 2.5 Gol Alt / Üst",
-        "Takım 2 3 Gol Alt / Üst",
-        "Takım 2 3.5 Gol Alt / Üst",
-        "Takım 2 4 Gol Alt / Üst",
-        "Takım 2 4.5 Gol Alt / Üst",
-        "Takım 1 İlk Yarı Gol Atar", "Takım 2 İlk Yarı Gol Atar", "Takım 1 İkinci Yarı Gol Atar", "Takım 2 İkinci Yarı Gol Atar",
-        "Takım 1 Her İki Yarıda Gol Atar", "Takım 2 Her İki Yarıda Gol Atar", "Ev Sahibi Kazanır ve Gol Yemez", "Deplasman Kazanır ve Gol Yemez",
-        "Takım 1 Gol Yemez", "Takım 2 Gol Yemez", "Ev Sahibi Gol Yemez", "Deplasman Gol Yemez"
-      ], ["takım gol"])
+      markets: [
+        ...marketItems(["KG Var / Yok", "Karşılıklı Gol Var", "Ev Sahibi Gol Atar", "Deplasman Gol Atar", "Her İki Takım da 1.5 Üst Gol Atar"], ["takım gol"]),
+        ...teamGoalLineMarkets("Ev Sahibi", "Takım 1"),
+        ...teamGoalLineMarkets("Deplasman", "Takım 2"),
+        ...marketItems([
+          "Takım 1 İlk Yarı Gol Atar", "Takım 2 İlk Yarı Gol Atar", "Takım 1 İkinci Yarı Gol Atar", "Takım 2 İkinci Yarı Gol Atar",
+          "Takım 1 Her İki Yarıda Gol Atar", "Takım 2 Her İki Yarıda Gol Atar", "Ev Sahibi Kazanır ve Gol Yemez", "Deplasman Kazanır ve Gol Yemez",
+          "Takım 1 Gol Yemez", "Takım 2 Gol Yemez", "Ev Sahibi Gol Yemez", "Deplasman Gol Yemez"
+        ], ["takım gol"])
+      ]
     },
     {
       id: "v546_football_goal_time",
@@ -399,11 +394,17 @@
       name: "Ana Marketler",
       desc: "Maç, toplam sayı, yarı ve uzatma ana basketbol marketleri",
       sport: "basketball",
-      markets: marketItems([
-        "Maç Sonucu", "Maç Handikapı", "Toplam Sayı Alt / Üst", "Takım 1 Toplam Sayı Alt / Üst", "Takım 2 Toplam Sayı Alt / Üst", "Kazanan ve Toplam Sayı",
-        "İlk Yarı Sonucu", "İlk Yarı Handikap", "İlk Yarı Toplam Sayı", "İkinci Yarı Sonucu", "İkinci Yarı Handikap", "İkinci Yarı Toplam Sayı",
-        "Uzatma Olur / Olmaz", "Normal Süre Sonucu", "Uzatmalar Dahil Maç Sonucu", "En Çok Sayı Olan Yarı"
-      ], ["basketbol ana market"])
+      markets: [
+        ...marketItems([
+          "Maç Sonucu", "Maç Handikapı", "Toplam Sayı Alt / Üst", "Takım 1 Toplam Sayı Alt / Üst", "Takım 2 Toplam Sayı Alt / Üst", "Kazanan ve Toplam Sayı",
+          "İlk Yarı Sonucu", "İlk Yarı Handikap", "İlk Yarı Toplam Sayı", "İkinci Yarı Sonucu", "İkinci Yarı Handikap", "İkinci Yarı Toplam Sayı",
+          "Uzatma Olur / Olmaz", "Normal Süre Sonucu", "Uzatmalar Dahil Maç Sonucu", "En Çok Sayı Olan Yarı"
+        ], ["basketbol ana market"]),
+        marketItem("Her İki Takım da ____ Alt / Üst Sayı Atar (Uz. dahil)", {
+          desc: "Gerçek oran verisi gelince 64.5, 66.5, 68.5 gibi çizgiler maç bazlı otomatik listelenecek.",
+          tags: ["basketbol ana market", "64.5", "66.5", "68.5", "her iki takım", "alt üst sayı", "uzatma dahil"]
+        })
+      ]
     },
     {
       id: "v546_basket_quarters",
@@ -425,15 +426,6 @@
       desc: "Takım, yarı ve çeyrek bazlı handikap marketleri",
       sport: "basketball",
       markets: marketItems(["Takım 1 Handikap", "Takım 2 Handikap", "İlk Yarı Takım 1 Handikap", "İlk Yarı Takım 2 Handikap", "İkinci Yarı Takım 1 Handikap", "İkinci Yarı Takım 2 Handikap", "İlk Çeyrek Takım 1 Handikap", "İlk Çeyrek Takım 2 Handikap", "İkinci Çeyrek Takım 1 Handikap", "İkinci Çeyrek Takım 2 Handikap", "Üçüncü Çeyrek Takım 1 Handikap", "Üçüncü Çeyrek Takım 2 Handikap", "Dördüncü Çeyrek Takım 1 Handikap", "Dördüncü Çeyrek Takım 2 Handikap"], ["takım handikap"])
-    },
-    {
-      id: "v546_basket_symbolic_lines",
-      name: "Sembolik Baraj Marketleri",
-      desc: "Şimdilik tek satır sembolik barajlar; gerçek veri gelince çizgilere göre çoğalır",
-      sport: "basketball",
-      markets: [
-        marketItem("Her İki Takım da ____ Alt / Üst Sayı Atar (Uz. dahil)", { desc: "Gerçek oran verisi gelince çizgiler maç bazlı otomatik listelenecek.", tags: ["68.5", "105.5", "her iki takım", "alt üst sayı", "uzatma dahil"] })
-      ]
     },
     {
       id: "v546_basket_race",
@@ -989,7 +981,78 @@
   }
 
 
-  const MAIN_MARKET_CATEGORY_IDS = ["v546_football_result", "v546_football_goals", "v546_football_corners", "v546_basket_main", "v546_basket_symbolic_lines", "v546_basket_race"];
+  const MAIN_MARKET_CATEGORY_IDS = ["v546_football_result", "v546_football_goals", "v546_football_corners", "v546_basket_main", "v546_basket_race"];
+
+  const MARKET_GROUP_FILTERS = {
+    football: [
+      ["all", "Tümünü Göster"], ["result", "Maç Sonucu"], ["goals", "Gol"], ["first_half", "İlk Yarı"],
+      ["second_half", "İkinci Yarı"], ["corners", "Korner"], ["cards", "Kart"], ["handicap", "Handikap"],
+      ["stats", "İstatistik"], ["players", "Oyuncu"], ["specials", "Özel Bahisler"]
+    ],
+    basketball: [
+      ["all", "Tümünü Göster"], ["match", "Maç"], ["first_half", "İlk Yarı"], ["second_half", "İkinci Yarı"],
+      ["q1", "1. Çeyrek"], ["q2", "2. Çeyrek"], ["q3", "3. Çeyrek"], ["q4", "4. Çeyrek"],
+      ["team", "Takım"], ["players", "Oyuncu"], ["stats", "İstatistik"], ["specials", "Özel"]
+    ]
+  };
+
+  const FOOTBALL_CATEGORY_FILTERS = {
+    v546_football_result: ["result", "first_half", "second_half"],
+    v546_football_result_total_combos: ["result", "goals"],
+    v546_football_goals: ["goals", "first_half", "second_half"],
+    v546_football_team_goals: ["goals", "first_half", "second_half"],
+    v546_football_goal_time: ["goals", "specials"],
+    v546_football_halves: ["first_half", "second_half", "handicap", "goals"],
+    v546_football_corners: ["corners", "first_half", "second_half"],
+    v546_football_cards: ["cards", "first_half", "second_half", "players"],
+    v546_football_handicap: ["handicap"],
+    v546_football_players: ["players"],
+    v546_football_stats: ["stats", "first_half", "second_half"],
+    v546_football_streak_goals: ["goals", "specials"],
+    v546_football_win_margin: ["result", "specials"],
+    v546_football_penalties: ["specials"]
+  };
+
+  const BASKETBALL_CATEGORY_FILTERS = {
+    v546_basket_main: ["match", "first_half", "second_half"],
+    v546_basket_quarters: ["q1", "q2", "q3", "q4"],
+    v546_basket_team_points: ["team", "first_half", "second_half", "q1", "q2", "q3", "q4"],
+    v546_basket_team_handicap: ["team", "first_half", "second_half", "q1", "q2", "q3", "q4"],
+    v546_basket_race: ["specials", "q1", "q2", "q3", "q4"],
+    v546_basket_player_points: ["players", "q1", "first_half"],
+    v546_basket_player_reb_ast: ["players"],
+    v546_basket_player_defense_foul: ["players"],
+    v546_basket_team_stats: ["stats", "team"],
+    v546_basket_specials: ["specials", "first_half", "q1", "q4"],
+    v546_basket_quarter_wins: ["specials", "q1", "q2", "q3", "q4"],
+    v546_basket_player_alt_lines: ["players", "specials"]
+  };
+
+  function marketGroupFiltersForSport() {
+    return MARKET_GROUP_FILTERS[state.sport] || [];
+  }
+
+  function currentMarketGroupFilter() {
+    const filters = marketGroupFiltersForSport();
+    const selected = state.marketGroupFilter || "all";
+    return filters.some(([key]) => key === selected) ? selected : "all";
+  }
+
+  function categoryMatchesMarketGroup(cat) {
+    const selected = currentMarketGroupFilter();
+    if (selected === "all" || state.sport === "all") return true;
+    const source = state.sport === "football" ? FOOTBALL_CATEGORY_FILTERS : BASKETBALL_CATEGORY_FILTERS;
+    return (source[cat.id] || []).includes(selected);
+  }
+
+  function renderMarketGroupFilters() {
+    const filters = marketGroupFiltersForSport();
+    if (!filters.length) return "";
+    const selected = currentMarketGroupFilter();
+    return `<div class="v552-market-group-filters" role="group" aria-label="Market iç filtreleri">
+      ${filters.map(([key, label]) => `<button type="button" class="${selected === key ? "active" : ""}" data-market-group-filter="${escapeAttr(key)}">${escapeHtml(label)}</button>`).join("")}
+    </div>`;
+  }
 
   function defaultOpenCategoryIds() {
     const existing = new Set(marketCategories().map(c => c.id));
@@ -1030,11 +1093,11 @@
     const query = normalizeText(state.marketSearch || "");
     const tokens = query ? query.split(/\s+/).filter(Boolean) : [];
 
-    const cats = marketCategories().map(cat => {
+    const cats = marketCategories().filter(categoryMatchesMarketGroup).map(cat => {
       const catSearch = normalizeText([cat.name, cat.desc, cat.id].join(" "));
       const catMatches = !tokens.length || tokens.every(t => catSearch.includes(t));
       const markets = (cat.markets || []).filter(m => {
-        const hay = normalizeText([m.name, m.desc, ...(Array.isArray(m.tags) ? m.tags : []), m.id, cat.name, cat.desc].join(" "));
+        const hay = normalizeText([m.name, m.desc, ...(Array.isArray(m.tags) ? m.tags : []), ...(Array.isArray(m.aliases) ? m.aliases : []), m.id, cat.name, cat.desc].join(" "));
         return !tokens.length || catMatches || tokens.every(t => hay.includes(t));
       });
       return { ...cat, _catMatches: catMatches, _markets: markets };
@@ -1235,12 +1298,14 @@
       return `<div class="v546-market-search-panel v549-sport-market-panel">
         <label for="odds-v546-market-search">Marketler</label>
         <input id="odds-v546-market-search" type="search" placeholder="${escapeAttr(placeholder)}" value="${escapeAttr(state.marketSearch || "")}">
+        ${renderMarketGroupFilters()}
         <div class="v546-market-meta"><span>${escapeHtml(sportLabel)}</span><span>0 sonuç</span></div>
       </div>${empty("Aradığın market katalogda bulunamadı.")}`;
     }
     return `<div class="v546-market-search-panel v549-sport-market-panel">
       <label for="odds-v546-market-search">Marketler</label>
       <input id="odds-v546-market-search" type="search" placeholder="${escapeAttr(placeholder)}" value="${escapeAttr(state.marketSearch || "")}">
+      ${renderMarketGroupFilters()}
       <div class="v546-market-meta"><span>${escapeHtml(sportLabel)}</span><span>${total} sonuç · ${cats.length} grup</span></div>
     </div>
     <div class="v530-market-catalog v546-market-catalog v549-sport-market-catalog">
@@ -1456,6 +1521,7 @@
         state.marketCategory = "all";
         state.marketId = "all";
         state.marketSearch = "";
+        state.marketGroupFilter = "all";
         state.marketPickerOpen = false;
         saveLocalState();
         render();
@@ -1475,6 +1541,7 @@
         state.tab = CATEGORY_CLICK_TAB;
         state.marketPickerOpen = false;
         state.marketSearch = "";
+        state.marketGroupFilter = "all";
         state.openMarketCats = null;
         if (isPolymarketMode()) {
           state.marketCategory = "all";
@@ -1548,6 +1615,21 @@
         }, SEARCH_RENDER_DELAY);
       });
     }
+
+    qsa("[data-market-group-filter]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const nextFilter = btn.dataset.marketGroupFilter || "all";
+        if (currentMarketGroupFilter() === nextFilter) return;
+        const scrollY = window.scrollY;
+        state.marketGroupFilter = nextFilter;
+        state.openMarketCats = null;
+        saveLocalState();
+        render();
+        requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
+      });
+    });
 
     qsa("[data-poly-filter]").forEach(btn => {
       btn.addEventListener("click", (e) => {
