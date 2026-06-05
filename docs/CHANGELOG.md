@@ -24,6 +24,49 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 #### Sıradaki Hedef
 - ...
 
+### V545 - 2026-06-05
+#### Değişenler
+- Oran Terminali ana kategori satırı temiz sırayla TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET oldu.
+- POLYMARKET butonu BASKETBOL'un hemen sağına alındı; koyu mavi marka hissi ve beyaz inline SVG işareti korundu.
+- Bahis Türü / Market alanı sadece Marketler sekmesi aktifken görünecek şekilde izole edildi.
+- STORE_KEY v545_odds_terminal_state olarak yenilendi; eski V544 localStorage state'i bu düzeltmeyi bozmayacak.
+- Futbol ve basketbol market listelerine eksik yaygın marketler eklendi; kötü basketbol isimleri temiz adlarla korundu.
+
+#### Düzeltilenler
+- POLYMARKET tek tıklamada ana kategori olarak aktifleşip kendi panelindeki kartları gösterir.
+- Dropdown açıkken kategori tıklaması ilk tıklamada kategori değiştirir; dropdown sonradan kapanır.
+- Market kartları koyu gri normal ton, yumuşak hover, daha küçük başlık/açıklama ve kontrollü padding/radius ile sıkılaştırıldı.
+- Eski conflictli POLYMARKET bridge katmanı kaldırıldı; #rolling, #crypto ve #stream modüllerine dokunulmadı.
+
+#### Değişen Dosyalar
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- index.html
+- live_scores.json
+- v19_rapor.json
+- canli_oranlar.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+- .github/workflows/update-radar.yml
+- .github/workflows/update-live-scores.yml
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- JSON dosyası değiştirilmedi; parse testi gerekmedi.
+- sw.js, index.html, live_scores.json, v19_rapor.json ve canli_oranlar.json değiştirilmedi.
+
+#### Sıradaki Hedef
+- Gerçek oran veri modeli ve Polymarket API motoru tasarlanacak.
+
 ### V544 - 2026-06-04
 #### Değişenler
 - Oran Terminali ana kategori satırı TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET düzenine alındı.
