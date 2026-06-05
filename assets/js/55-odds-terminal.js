@@ -910,11 +910,27 @@
     return renderIntelligenceHub();
   }
 
+  function footballIconSvg() {
+    return `<svg class="v548-sport-mark v548-football-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <circle cx="16" cy="16" r="12"/>
+      <path d="M16 9.2 21.2 13l-2 6.1h-6.4l-2-6.1Z"/>
+      <path d="M16 4v5.2M4.6 12l6.2 1M27.4 12l-6.2 1M8.6 25.1l4.2-6M23.4 25.1l-4.2-6"/>
+    </svg>`;
+  }
+
+  function basketballIconSvg() {
+    return `<svg class="v548-sport-mark v548-basketball-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <circle cx="16" cy="16" r="12"/>
+      <path d="M16 4v24M4 16h24M7.4 8.6c5.6 2.8 11.6 2.8 17.2 0M7.4 23.4c5.6-2.8 11.6-2.8 17.2 0"/>
+    </svg>`;
+  }
+
   function polyMarkSvg() {
     return `<svg class="v544-poly-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-      <path class="v544-poly-outline" d="M12 14 52 4c4-1 7 2 7 6v44c0 4-3 7-7 6L12 50c-3-.8-5-3-5-6V20c0-3 2-5.2 5-6Z"/>
-      <path class="v544-poly-line" d="M14 20 50 31 14 43"/>
-      <path class="v544-poly-line" d="M14 20v24"/>
+      <path class="v544-poly-outline" d="M13 11 53 4c4-.7 7 2.2 7 6.2v43.6c0 4-3 6.9-7 6.2l-40-7c-3.5-.6-6-3.5-6-7V18c0-3.5 2.5-6.4 6-7Z"/>
+      <path class="v544-poly-line" d="M16 18 48 30.5 16 44"/>
+      <path class="v544-poly-line" d="M16 18v26"/>
+      <path class="v544-poly-line" d="M30 23.5v14"/>
     </svg>`;
   }
 
@@ -933,8 +949,8 @@
   function renderCategoryRow() {
     return `<div class="v544-category-row" data-odds-category-row="1" role="group" aria-label="Oran Terminali ana kategori seçimi">
       ${categoryButton("all", "TÜMÜ")}
-      ${categoryButton("football", "FUTBOL", '<i class="fa-solid fa-futbol"></i>')}
-      ${categoryButton("basketball", "BASKETBOL", '<i class="fa-solid fa-basketball"></i>')}
+      ${categoryButton("football", "FUTBOL", footballIconSvg())}
+      ${categoryButton("basketball", "BASKETBOL", basketballIconSvg())}
       ${categoryButton("polymarket", "POLYMARKET", polyMarkSvg())}
     </div>`;
   }
