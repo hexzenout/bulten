@@ -4494,3 +4494,130 @@
     color: #f5f3ff !important;
     box-shadow: 0 0 16px rgba(126,58,242,.12), inset 0 1px 0 rgba(255,255,255,.05) !important;
 }
+
+/* V554 mock odds adapter preview: real data öncesi izole hazırlık UI */
+.v554-mock-adapter-badges {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-top: 10px !important;
+}
+
+.v554-mock-adapter-badges span,
+.v554-mock-market-hint {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 24px !important;
+    padding: 0 9px !important;
+    border: 1px solid rgba(250,204,21,.28) !important;
+    border-radius: 999px !important;
+    background: rgba(250,204,21,.08) !important;
+    color: #fde68a !important;
+    font-size: .7rem !important;
+    font-weight: 900 !important;
+}
+
+.v554-mock-adapter-badges b {
+    color: #fff7ed !important;
+}
+
+.v554-mock-market-hint {
+    justify-self: start !important;
+    margin-top: 6px !important;
+    min-height: 22px !important;
+    border-color: rgba(96,165,250,.28) !important;
+    background: rgba(96,165,250,.08) !important;
+    color: #bfdbfe !important;
+}
+
+.v554-mock-preview {
+    display: grid !important;
+    gap: 12px !important;
+    margin-top: 14px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(250,204,21,.16) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(135deg, rgba(250,204,21,.075), rgba(15,23,42,.72)) !important;
+}
+
+.v554-mock-preview-head {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    align-items: flex-start !important;
+}
+
+.v554-mock-preview-head span {
+    display: inline-flex !important;
+    color: #facc15 !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .7px !important;
+}
+
+.v554-mock-preview-head h3 {
+    margin: 4px 0 !important;
+    color: #fff !important;
+    font-size: .98rem !important;
+    font-weight: 950 !important;
+}
+
+.v554-mock-preview-head p {
+    margin: 0 !important;
+    color: #a3a3a3 !important;
+    font-size: .78rem !important;
+}
+
+.v554-mock-preview-head em {
+    flex: 0 0 auto !important;
+    padding: 7px 10px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.06) !important;
+    color: #d4d4d8 !important;
+    font-size: .7rem !important;
+    font-style: normal !important;
+    font-weight: 900 !important;
+}
+
+.v554-mock-preview-table {
+    overflow: auto !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 16px !important;
+    background: rgba(0,0,0,.24) !important;
+}
+
+.v554-mock-preview-table table {
+    width: 100% !important;
+    min-width: 980px !important;
+    border-collapse: collapse !important;
+}
+
+.v554-mock-preview-table th,
+.v554-mock-preview-table td {
+    padding: 10px !important;
+    border-bottom: 1px solid rgba(255,255,255,.07) !important;
+    text-align: left !important;
+    vertical-align: top !important;
+    color: #e5e7eb !important;
+    font-size: .75rem !important;
+}
+
+.v554-mock-preview-table th {
+    color: #fef3c7 !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .4px !important;
+    text-transform: uppercase !important;
+}
+
+.v554-mock-preview-table small {
+    display: block !important;
+    margin-top: 3px !important;
+    color: #9ca3af !important;
+}
+
+.v554-mock-preview-table code {
+    color: #bfdbfe !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+    font-size: .7rem !important;
+}
