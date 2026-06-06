@@ -1,6 +1,6 @@
 // ===============================
-// V562 ORAN TERMİNALİ
-// Live data geçiş kapısı, adapter runner ve kaynak hazırlık paneli
+// V565 ORAN TERMİNALİ
+// Gerçek veri öncesi kaynak yapılandırması, adapter slotları ve dry-run paneli
 // V542 POLYMARKET dock davranışı korunarak main ile hizalandı
 // ===============================
 
@@ -62,6 +62,8 @@
   const DATA_MODES = ["mock", "planned", "live_ready", "disabled", "empty", "error", "fallback"];
   const SOURCE_HEALTH_MAX_AGE_MINUTES = 2880;
   const LIVE_API_CONNECTION_ENABLED = false;
+  const FETCH_SCRAPING_ENABLED = false;
+  const AUTO_BETTING_ENABLED = false;
 
 
 
@@ -189,79 +191,81 @@
   ];
 
 
-  const MOCK_BOOKMAKER_SOURCE_REGISTRY = MOCK_SOURCE_IDS.map((sourceId, index) => {
-    const rows = MOCK_SOURCE_RAW_RECORDS.filter(row => row.source === sourceId);
-    const sports = [...new Set(rows.map(row => normalizeSportName(row.sport || "")).filter(Boolean))];
-    const first = rows[0] || {};
-    return {
-      sourceId,
-      sourceName: first.sourceName || sourceId,
-      type: "bookmaker",
-      mode: "mock",
-      sports: sports.length ? sports : ["football", "basketball"],
-      supportedMarketFamilies: sports.flatMap(sport => sport === "basketball" ? ["basket.match", "basket.totals", "basket.team_points"] : ["football.goals", "football.corners", "football.team_goals"]),
-      priority: index + 1,
-      enabled: true,
-      requiresKey: false,
-      rateLimitNote: "Demo kaynağı; gerçek fetch/API/scraping yok.",
-      lastStatus: "mock",
-      adapterStatus: "mock_ready",
-      notes: "Adapter çalıştırıcı demo karşılaştırma verisini buradan üretir."
-    };
-  });
+  const MOCK_SOURCE_SLOT_MAP = {
+    mock_book_a: "source_book_02",
+    mock_book_b: "source_book_03",
+    mock_book_c: "source_book_04"
+  };
+
+  const SOURCE_TYPE_SEQUENCE = [
+    "bookmaker", "bookmaker", "bookmaker", "bookmaker", "bookmaker",
+    "bookmaker", "bookmaker", "bookmaker", "bookmaker", "bookmaker",
+    "bookmaker", "bookmaker", "exchange", "api", "bookmaker"
+  ];
 
   const BOOKMAKER_SOURCE_REGISTRY = Array.from({ length: 15 }, (_, index) => {
     const slot = String(index + 1).padStart(2, "0");
+    const displaySlot = String(index + 1);
+    const sourceId = `source_book_${slot}`;
     const isFootballFirst = index % 2 === 0;
     const sports = index % 3 === 0 ? ["football", "basketball"] : isFootballFirst ? ["football"] : ["basketball"];
     const marketFamilies = sports.flatMap(sport => sport === "football"
-      ? ["football.result", "football.goals", "football.handicap", "football.corners"]
-      : ["basket.match", "basket.totals", "basket.handicap", "basket.team_points"]);
+      ? ["football.result", "football.goals", "football.handicap", "football.corners", "football.team_goals"]
+      : ["basket.match", "basket.totals", "basket.handicap", "basket.team_points", "basket.player_props"]);
+    const rawSourceId = Object.entries(MOCK_SOURCE_SLOT_MAP).find(([, mappedSourceId]) => mappedSourceId === sourceId)?.[0] || "";
+    const isMockSlot = Boolean(rawSourceId);
+    const isFirstLiveSlot = index === 0;
+    const mode = isMockSlot ? "mock" : isFirstLiveSlot ? "live_ready" : "planned";
+    const adapterStatus = isMockSlot ? "mock" : isFirstLiveSlot ? "planned" : "missing";
     return {
-      sourceId: `source_book_${slot}`,
-      sourceName: `Planlanan Kaynak ${slot}`,
-      type: "bookmaker",
-      mode: "planned",
+      sourceId,
+      displayName: `Planlanan Kaynak ${displaySlot}`,
+      sourceName: `Planlanan Kaynak ${displaySlot}`,
+      technicalName: sourceId,
+      rawSourceId,
+      type: SOURCE_TYPE_SEQUENCE[index] || "bookmaker",
+      mode,
+      enabled: index < 12,
       sports,
       supportedMarketFamilies: [...new Set(marketFamilies)],
+      requiresKey: !isMockSlot,
+      authType: isMockSlot ? "none" : index % 5 === 0 ? "session" : index % 4 === 0 ? "manual" : "api_key",
+      adapterStatus,
+      rateLimitNote: isMockSlot
+        ? "Demo adapter kuru çalıştırılır; gerçek fetch/API/scraping yok."
+        : "Gerçek bağlantı öncesi limit bilgisi bekleniyor; fetch/scraping yok.",
+      legalNote: "Kaynak bağlantısı açılmadan önce kullanım şartları, lisans ve bölgesel uygunluk manuel kontrol edilecek.",
+      lastStatus: isMockSlot ? "mock" : isFirstLiveSlot ? "live_ready" : "planned",
       priority: index + 1,
-      enabled: index < 10,
-      requiresKey: true,
-      rateLimitNote: "Gerçek bağlantı öncesi limit bilgisi bekleniyor; fetch/scraping yok.",
-      lastStatus: "planned",
-      adapterStatus: "beklemede",
-      notes: "Güvenli planlanan kaynak; gerçek kaynak adı ve API modeli daha sonra eklenecek."
+      notes: isMockSlot
+        ? "Dry-run ve karşılaştırma önizlemesi için mock adapter slotu; canlı bağlantı kapalı."
+        : isFirstLiveSlot
+          ? "İlk canlı kaynak slotu için hazırlık alanı; API anahtarı, fetch ve scraping kapalı."
+          : "Güvenli planlanan kaynak; gerçek kaynak adı ve API modeli daha sonra eklenecek."
     };
   });
 
   const POLYMARKET_SOURCE_REGISTRY = {
     sourceId: "polymarket_mock",
-    sourceName: "Polymarket Demo",
+    displayName: "POLYMARKET Demo",
+    sourceName: "POLYMARKET Demo",
+    technicalName: "polymarket_mock",
     type: "prediction_market",
     mode: "mock",
+    enabled: true,
     sports: ["polymarket", "football", "basketball", "crypto", "macro", "news"],
     supportedMarketFamilies: ["polymarket.yes_no", "polymarket.liquidity", "polymarket.volume", "polymarket.close_time"],
-    priority: 90,
-    enabled: true,
     requiresKey: false,
+    authType: "none",
+    adapterStatus: "mock",
     rateLimitNote: "Demo adapter; gerçek Polymarket bağlantısı yok.",
+    legalNote: "Prediction market verisi bookmaker odds modelinden ayrı değerlendirilir; gerçek bağlantı kapalı.",
     lastStatus: "mock",
-    adapterStatus: "mock_ready",
+    priority: 90,
     notes: "YES/NO, likidite, hacim ve kapanış zamanı bookmaker odds modelinden ayrı tutulur."
   };
 
-  BOOKMAKER_SOURCE_REGISTRY[0] = {
-    ...BOOKMAKER_SOURCE_REGISTRY[0],
-    sourceId: "live_ready_placeholder",
-    sourceName: "Canlıya Hazır Kaynak",
-    mode: "live_ready",
-    enabled: true,
-    requiresKey: true,
-    adapterStatus: "bağlantı bekliyor",
-    notes: "Canlıya geçiş kapısı hazır; gerçek bağlantı ve fetch kapalı."
-  };
-
-  const SOURCE_REGISTRY = [...MOCK_BOOKMAKER_SOURCE_REGISTRY, ...BOOKMAKER_SOURCE_REGISTRY, POLYMARKET_SOURCE_REGISTRY];
+  const SOURCE_REGISTRY = [...BOOKMAKER_SOURCE_REGISTRY, POLYMARKET_SOURCE_REGISTRY];
   const SOURCE_CONFIG_FILTERS = [
     { id: "all", label: "Tümü" },
     { id: "active", label: "Aktif" },
@@ -1454,7 +1458,9 @@
 
   const UI_SOURCE_TYPE_LABELS = {
     bookmaker: "Bahis Kaynağı",
-    prediction_market: "Tahmin Marketi"
+    exchange: "Borsa",
+    prediction_market: "Tahmin Marketi",
+    api: "API"
   };
 
   const UI_STATUS_LABELS = {
@@ -1469,6 +1475,9 @@
     live_ready: "Canlıya Hazır",
     fallback: "Yedek",
     mock_ready: "Demo Hazır",
+    missing: "Adapter Yok",
+    ready: "Canlı Adapter Hazır",
+    live_not_ready: "Canlı Adapter Hazır Değil",
     beklemede: "Beklemede",
     "bağlantı bekliyor": "Bağlantı Bekliyor",
     planlandı: "Planlandı",
@@ -1499,7 +1508,7 @@
   function displayMappingLabel(value) { return labelFromDictionary(value, UI_MAPPING_LABELS); }
 
   function displaySourceName(source = {}) {
-    const name = String(source.sourceName || source.source || source.sourceId || "");
+    const name = String(source.displayName || source.sourceName || source.source || source.sourceId || "");
     if (/^Placeholder Bookmaker\s+(\d+)/i.test(name)) return name.replace(/^Placeholder Bookmaker/i, "Planlanan Kaynak");
     if (/^Mock Book\s+(.+)/i.test(name)) return name.replace(/^Mock Book/i, "Demo Kaynak");
     if (/^Live Ready Placeholder$/i.test(name)) return "Canlıya Hazır Kaynak";
@@ -1507,25 +1516,91 @@
     return name || "Kaynak";
   }
 
+  function getAdapterSlot(sourceId) {
+    const source = findEffectiveSource(sourceId) || SOURCE_REGISTRY.find(row => String(row.sourceId || "") === String(sourceId || ""));
+    if (!source) return { sourceId, status: "missing", label: getAdapterStatusLabel("missing"), canRun: false, message: "Kaynak kaydı bulunamadı." };
+    const mode = normalizeDataMode(source.mode || "planned");
+    const rawStatus = String(source.adapterStatus || "missing").toLowerCase();
+    let status = rawStatus;
+    if (!isSourceActiveForUi(source)) status = "disabled";
+    else if (mode === "mock" || rawStatus === "mock_ready") status = "mock";
+    else if (mode === "live_ready" && rawStatus === "ready" && LIVE_API_CONNECTION_ENABLED) status = "live_ready";
+    else if (mode === "live_ready") status = "live_not_ready";
+    else if (rawStatus === "planned" || mode === "planned") status = "planned";
+    else if (!["missing", "ready", "mock", "disabled"].includes(status)) status = "missing";
+    return {
+      sourceId: source.sourceId,
+      technicalName: source.technicalName || source.sourceId,
+      status,
+      label: getAdapterStatusLabel(status),
+      canRun: canSourceRunInCurrentMode(source),
+      message: status === "mock"
+        ? "Mock adapter hazır; dry-run verisiyle çalışır."
+        : status === "live_ready"
+          ? "Canlı adapter hazır; gerçek bağlantı yine kapalı tutulur."
+          : status === "live_not_ready"
+            ? "Canlı adapter hazır değil; bağlantı bekliyor."
+            : status === "planned"
+              ? "Adapter planlandı; gerçek fetch/scraping yok."
+              : status === "disabled" ? "Kaynak pasif; karşılaştırmaya dahil edilmez." : "Adapter yok."
+    };
+  }
+
+  function getAdapterStatusLabel(status) {
+    const labels = {
+      missing: "Adapter yok",
+      planned: "Adapter planlandı",
+      mock: "Mock adapter hazır",
+      mock_ready: "Mock adapter hazır",
+      live_not_ready: "Canlı adapter hazır değil",
+      live_ready: "Canlı adapter hazır",
+      ready: "Canlı adapter hazır",
+      disabled: "Adapter pasif"
+    };
+    return labels[String(status || "").toLowerCase()] || displayStatusLabel(status);
+  }
+
+  function getLiveReadySources() {
+    return effectiveSourceRegistry().filter(source => source.mode === "live_ready" && isSourceActiveForUi(source));
+  }
+
+  function getMockSources() {
+    return effectiveSourceRegistry().filter(source => source.mode === "mock" && isSourceActiveForUi(source));
+  }
+
+  function getDisabledSources() {
+    return effectiveSourceRegistry().filter(source => !isSourceActiveForUi(source));
+  }
+
+  function canSourceRunInCurrentMode(source = {}) {
+    if (!isSourceActiveForUi(source)) return false;
+    const mode = normalizeDataMode(source.mode || "planned");
+    if (source.type === "prediction_market") return mode === "mock";
+    if (mode === "mock") return true;
+    if (mode === "live_ready") return false;
+    return false;
+  }
+
   function adapterStatusForSource(source = {}) {
     if (!isSourceActiveForUi(source)) return "disabled";
-    const mode = normalizeDataMode(source.mode || "planned");
-    if (mode === "mock") return source.adapterStatus || "mock_ready";
-    if (mode === "live_ready") return LIVE_API_CONNECTION_ENABLED ? "live_ready" : "bağlantı bekliyor";
-    if (mode === "planned") return "planlandı";
-    return source.adapterStatus || mode;
+    return getAdapterSlot(source.sourceId).status;
   }
 
   function createAdapterRun(source = {}, rawRecords = [], status = "empty", message = "") {
-    const rawRows = Array.isArray(rawRecords) ? rawRecords.filter(Boolean) : [];
+    const rawRows = (Array.isArray(rawRecords) ? rawRecords.filter(Boolean) : []).map(row => ({
+      ...row,
+      source: source.sourceId,
+      sourceName: displaySourceName(source),
+      originalSource: row.source
+    }));
     const run = {
       sourceId: source.sourceId,
-      sourceName: source.sourceName || source.sourceId,
+      sourceName: displaySourceName(source),
       type: source.type || "bookmaker",
       mode: normalizeDataMode(source.mode || "planned"),
       enabled: isSourceActiveForUi(source),
       sports: [...(source.sports || [])],
-      adapterStatus: adapterStatusForSource(source),
+      adapterStatus: getAdapterSlot(source.sourceId).status,
       status,
       message,
       rawRecords: rawRows,
@@ -1549,7 +1624,7 @@
       .filter(source => source.type === "bookmaker" && normalizeDataMode(source.mode) === "mock" && isSourceActiveForUi(source))
       .map(source => createAdapterRun(
         source,
-        MOCK_SOURCE_RAW_RECORDS.filter(row => String(row.source || row.sourceId || row.bookmaker || "") === String(source.sourceId || "")),
+        MOCK_SOURCE_RAW_RECORDS.filter(row => String(row.source || row.sourceId || row.bookmaker || "") === String(source.rawSourceId || source.sourceId || "")),
         "mock",
         "Demo adapter çalıştı; karşılaştırma için hazır."
       ));
@@ -2042,8 +2117,12 @@
     return Boolean(source.enabled) && String(source.mode || "").toLowerCase() !== "disabled";
   }
 
+  function canonicalSourceId(sourceId) {
+    return MOCK_SOURCE_SLOT_MAP[String(sourceId || "")] || String(sourceId || "");
+  }
+
   function isSourceEnabledForComparison(sourceId) {
-    const source = findEffectiveSource(sourceId);
+    const source = findEffectiveSource(canonicalSourceId(sourceId));
     if (!source) return true;
     if (source.type === "prediction_market") return false;
     return isSourceActiveForUi(source);
@@ -2062,6 +2141,102 @@
       const sourceId = record.source || record.bookmaker || record.sourceId || "";
       return isSourceEnabledForComparison(sourceId);
     });
+  }
+
+
+  const DRY_RUN_SAMPLE_PAYLOAD = {
+    sourceId: "source_book_02",
+    mode: "dry-run",
+    records: [
+      {
+        id: "dry_001", sport: "football", homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League",
+        startsAt: "2026-06-05T19:00:00Z", sourceMarketName: "Total Goals Over/Under 2.5", selection: "over", line: 2.5, odds: 1.87
+      },
+      {
+        id: "dry_002", sport: "basketball", homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL",
+        startsAt: "2026-06-05T18:00:00Z", marketId: "basket.total_points_ou", selection: "under", line: 164.5, odds: 1.91
+      },
+      {
+        id: "dry_003", sport: "football", homeTeam: "Unknown FC", awayTeam: "No Match United", league: "Test Lig",
+        startsAt: "2026-06-05T23:45:00Z", sourceMarketName: "Unmapped Experimental Market", selection: "over", line: 7.5, odds: 1.62
+      }
+    ]
+  };
+
+  function validateIncomingOddsPayload(payload) {
+    const errors = [];
+    const sourceId = payload?.sourceId || payload?.source || "";
+    const source = findEffectiveSource(sourceId);
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) errors.push("Payload nesne olmalı.");
+    if (!sourceId) errors.push("sourceId zorunlu.");
+    if (sourceId && !source) errors.push("sourceId kaynak kayıtlarında yok.");
+    if (source && !canSourceRunInCurrentMode(source)) errors.push("Kaynak mevcut modda sadece dry-run dışı çalışamaz veya pasif.");
+    const records = Array.isArray(payload?.records) ? payload.records : [];
+    if (!Array.isArray(payload?.records)) errors.push("records dizisi zorunlu.");
+    records.forEach((record, index) => {
+      if (!record || typeof record !== "object" || Array.isArray(record)) errors.push(`records[${index}] nesne olmalı.`);
+      if (!record?.marketId && !record?.sourceMarketName && !record?.marketName) errors.push(`records[${index}] marketId veya sourceMarketName içermeli.`);
+      if (!record?.homeTeam || !record?.awayTeam) errors.push(`records[${index}] fixture takımları eksik.`);
+      if (!Number.isFinite(Number(record?.odds)) || Number(record?.odds) <= 1) errors.push(`records[${index}] oran değeri geçersiz.`);
+    });
+    return { valid: errors.length === 0, errors, sourceId, recordCount: records.length };
+  }
+
+  function normalizeIncomingOddsPayload(payload) {
+    const validation = validateIncomingOddsPayload(payload);
+    const sourceId = payload?.sourceId || payload?.source || "dry_run_source";
+    const source = findEffectiveSource(sourceId) || {};
+    const records = Array.isArray(payload?.records) ? payload.records : [];
+    return {
+      sourceId,
+      mode: "dry-run",
+      valid: validation.valid,
+      errors: validation.errors,
+      records: records.map(record => mapOddsRecordToCatalog(adaptSourceOddsRecord({
+        ...record,
+        source: sourceId,
+        sourceName: displaySourceName(source) || sourceId,
+        dataMode: "dry_run"
+      })))
+    };
+  }
+
+  function previewIncomingOddsPayload(payload) {
+    const normalized = normalizeIncomingOddsPayload(payload);
+    const fixtureCandidates = mockOddsRecords();
+    const preview = normalized.records.reduce((acc, record) => {
+      const hasMarket = Boolean(record.matchedMarketId || findCatalogMarketById(record.marketId));
+      if (hasMarket) acc.marketIdMatched += 1;
+      else acc.marketIdUnmatched += 1;
+      const bestFixture = fixtureCandidates.reduce((best, candidate) => {
+        const score = scoreFixtureMatch(record, candidate);
+        return score > best.score ? { score, candidate } : best;
+      }, { score: 0, candidate: null });
+      if (bestFixture.score >= 0.82) acc.fixtureMatched += 1;
+      else if (bestFixture.score >= 0.65) acc.fixtureSuspicious += 1;
+      else acc.fixtureSuspicious += 1;
+      return acc;
+    }, {
+      sourceId: normalized.sourceId,
+      recordCount: normalized.records.length,
+      marketIdMatched: 0,
+      marketIdUnmatched: 0,
+      fixtureMatched: 0,
+      fixtureSuspicious: 0,
+      errorCount: normalized.errors.length,
+      errors: normalized.errors
+    });
+    return preview;
+  }
+
+  function rejectInvalidOddsPayload(payload) {
+    const validation = validateIncomingOddsPayload(payload);
+    return validation.valid ? null : {
+      rejected: true,
+      reason: "Dry-run payload doğrulaması başarısız.",
+      errors: validation.errors,
+      recordCount: validation.recordCount
+    };
   }
 
   function getEnabledSources() {
@@ -2083,14 +2258,21 @@
     if (!source) return null;
     return {
       sourceId: source.sourceId,
-      sourceName: source.sourceName,
+      displayName: displaySourceName(source),
+      sourceName: displaySourceName(source),
+      technicalName: source.technicalName || source.sourceId,
       type: source.type,
       mode: source.mode,
+      enabled: isSourceActiveForUi(source),
       sports: [...(source.sports || [])],
       supportedMarketFamilies: [...(source.supportedMarketFamilies || [])],
       requiresKey: Boolean(source.requiresKey),
+      authType: source.authType || "none",
       rateLimitNote: source.rateLimitNote || "",
-      adapterStatus: source.adapterStatus || "beklemede"
+      legalNote: source.legalNote || "",
+      adapterStatus: source.adapterStatus || "missing",
+      adapterSlot: getAdapterSlot(source.sourceId),
+      lastStatus: source.lastStatus || source.mode || "planned"
     };
   }
 
@@ -3566,17 +3748,19 @@
       const active = isSourceActiveForUi(source);
       return `<article class="${escapeAttr([source.type === "prediction_market" ? "prediction-market" : "bookmaker-source", active ? "is-active" : "is-passive"].join(" "))}">
         <div class="v561-source-card-head">
-          <div><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.sourceId)}</small></div>
+          <div><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.technicalName || source.sourceId)}</small></div>
           <button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button>
         </div>
         <dl>
           <div><dt>Tip</dt><dd>${escapeHtml(displaySourceTypeLabel(source.type))}</dd></div>
           <div><dt>Mod</dt><dd>${escapeHtml(displayModeLabel(source.mode))}</dd></div>
-          <div><dt>Adapter durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(displayStatusLabel(source.adapterStatus || statusLabel))}</span></dd></div>
+          <div><dt>Adapter Durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(getAdapterStatusLabel(getAdapterSlot(source.sourceId).status))}</span></dd></div>
+          <div><dt>API anahtarı</dt><dd>${source.requiresKey ? "Gerekiyor" : "Gerekmiyor"} · ${escapeHtml(source.authType || "none")}</dd></div>
           <div><dt>Öncelik</dt><dd>${Number(source.priority || 0)}</dd></div>
         </dl>
         <p><b>Desteklenen sporlar:</b> ${escapeHtml((source.sports || []).join(", "))}</p>
         <p><b>Not:</b> ${escapeHtml(health?.message || source.notes || "Planlandı")}</p>
+        <p><b>Yasal not:</b> ${escapeHtml(source.legalNote || "Canlı bağlantı öncesi manuel kontrol edilecek.")}</p>
         <small>${escapeHtml((source.supportedMarketFamilies || []).join(" · "))}</small>
       </article>`;
     }).join("");
@@ -3590,11 +3774,11 @@
       const note = health?.message || source.notes || "Planlandı";
       const active = isSourceActiveForUi(source);
       return `<tr class="${escapeAttr(source.type === "prediction_market" ? "prediction-market" : "bookmaker-source")}">
-        <td><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.sourceId)}</small></td>
+        <td><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.technicalName || source.sourceId)}</small></td>
         <td>${escapeHtml(displaySourceTypeLabel(source.type))}</td>
         <td>${escapeHtml(displayModeLabel(source.mode))}</td>
         <td>${escapeHtml((source.sports || []).join(", "))}</td>
-        <td><span class="${escapeAttr(statusClass)}">${escapeHtml(displayStatusLabel(health ? statusLabel : source.adapterStatus || statusLabel))}</span><small>${escapeHtml(displayStatusLabel(statusLabel))}</small></td>
+        <td><span class="${escapeAttr(statusClass)}">${escapeHtml(getAdapterStatusLabel(getAdapterSlot(source.sourceId).status))}</span><small>${escapeHtml(displayStatusLabel(statusLabel))}</small></td>
         <td><button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button></td>
         <td><b>${Number(source.priority || 0)}</b>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
       </tr>`;
@@ -3667,32 +3851,88 @@
 
 
 
+  function renderInitialLiveSourceSlot() {
+    const firstLive = null;
+    const rows = [
+      ["İlk kaynak", firstLive ? displaySourceName(firstLive) : "seçilmedi"],
+      ["Bağlantı tipi", "seçilmedi"],
+      ["API anahtarı", "kapalı"],
+      ["Fetch/Scraping", FETCH_SCRAPING_ENABLED ? "açık" : "kapalı"],
+      ["Adapter", "bekliyor"],
+      ["Test modu", "dry-run"],
+      ["Otomatik oynama", AUTO_BETTING_ENABLED ? "açık" : "kapalı"]
+    ];
+    return `<section class="v565-live-slot" aria-label="İlk Canlı Kaynak Slotu">
+      <div class="v554-mock-preview-head compact">
+        <div><span>İlk Canlı Kaynak Slotu</span><h3>İlk Canlı Kaynak Slotu</h3></div>
+        <em>Gerçek bağlantı kapalı</em>
+      </div>
+      <div class="v565-slot-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(value)}</span></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderDryRunPayloadPanel() {
+    const preview = previewIncomingOddsPayload(DRY_RUN_SAMPLE_PAYLOAD);
+    const rejected = rejectInvalidOddsPayload(DRY_RUN_SAMPLE_PAYLOAD);
+    const rows = [
+      ["kayıt sayısı", preview.recordCount],
+      ["marketId eşleşen", preview.marketIdMatched],
+      ["marketId eşleşmeyen", preview.marketIdUnmatched],
+      ["fixture eşleşen", preview.fixtureMatched],
+      ["fixture şüpheli", preview.fixtureSuspicious],
+      ["hata sayısı", preview.errorCount]
+    ];
+    return `<section class="v565-dry-run" aria-label="Dry-run Veri Kontrolü">
+      <div class="v554-mock-preview-head compact">
+        <div>
+          <span>Dry-run Veri Kontrolü</span>
+          <h3>Dry-run Veri Kontrolü</h3>
+          <p>Adapter çıktısı gerçek API/fetch/scraping yapmadan dummy payload ile kontrol edilir.</p>
+        </div>
+        <em>${rejected ? "Payload reddedildi" : "Payload kabul modeli hazır"}</em>
+      </div>
+      <div class="v565-dry-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+    </section>`;
+  }
+
   function renderLiveReadinessPanel() {
     const adapter = collectAdapterResults();
     const readiness = [
-      ["gerçek bağlantı", "kapalı", !LIVE_API_CONNECTION_ENABLED],
-      ["API/fetch", "kapalı", !LIVE_API_CONNECTION_ENABLED],
-      ["adapter çalıştırıcı", "hazır", true],
-      ["market eşleştirme", "hazır", true],
-      ["maç eşleştirme", "hazır", true],
-      ["kaynak durumu", "hazır", true]
+      ["adapter runner hazır", "hazır", true],
+      ["market mapping hazır", "hazır", true],
+      ["fixture matching hazır", "hazır", true],
+      ["source health hazır", "hazır", true],
+      ["dry-run payload kontrolü hazır", "hazır", true],
+      ["gerçek API bağlantısı kapalı", "kapalı", !LIVE_API_CONNECTION_ENABLED]
     ];
-    return `<section class="v562-live-readiness" aria-label="Canlı Veri Hazırlığı">
+    return `<section class="v562-live-readiness" aria-label="Canlı Geçiş Hazırlığı">
       <div class="v554-mock-preview-head">
         <div>
-          <span>Canlı Veri Hazırlığı</span>
-          <h3>Canlı Veri Hazırlığı</h3>
+          <span>Canlı Geçiş Hazırlığı</span>
+          <h3>Canlı Geçiş Hazırlığı</h3>
           <p>Demo modundan canlıya geçiş için adapter kapısı hazırlandı; gerçek bağlantı, fetch, scraping ve otomatik bahis kapalıdır.</p>
         </div>
         <em>Adapter çalışma: ${adapter.adapterRuns.length} kaynak · Mod: ${escapeHtml(displayModeLabel(adapter.dataMode))}</em>
       </div>
       <div class="v562-live-grid">${readiness.map(([label, value, ok]) => `<article class="${ok ? "ready" : "blocked"}"><b>${escapeHtml(label)}</b><span>${escapeHtml(value)}</span></article>`).join("")}</div>
+      ${renderInitialLiveSourceSlot()}
+      ${renderDryRunPayloadPanel()}
       ${renderReadinessChecklist()}
     </section>`;
   }
 
   function renderSources() {
-    return `${renderSourceRegistryPanel()}${renderSourceHealthCards()}${renderSourceSettingsPanel()}${renderLiveReadinessPanel()}`;
+    return `<section class="v565-source-configuration" aria-label="Kaynak Yapılandırması">
+      <div class="v554-mock-preview-head v565-source-config-head">
+        <div>
+          <span>Kaynak Yapılandırması</span>
+          <h3>Kaynak Yapılandırması</h3>
+          <p>15 planlanan kaynak ve POLYMARKET Demo tek yerde yönetilir. Futbol/Basketbol market katalogları korunur; oran verisi sadece marketId katmanı olarak bağlanır.</p>
+        </div>
+        <em>Gerçek API yok · Fetch yok · Scraping yok · Otomatik oynama yok</em>
+      </div>
+      ${renderSourceRegistryPanel()}${renderSourceSettingsPanel()}${renderSourceHealthCards()}${renderLiveReadinessPanel()}
+    </section>`;
   }
 
   function empty(text) { return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`; }
@@ -4078,6 +4318,16 @@
     getSourcesBySport,
     getSourcesByType,
     getSourceCapabilities,
+    getAdapterSlot,
+    getAdapterStatusLabel,
+    getLiveReadySources,
+    getMockSources,
+    getDisabledSources,
+    canSourceRunInCurrentMode,
+    validateIncomingOddsPayload,
+    normalizeIncomingOddsPayload,
+    previewIncomingOddsPayload,
+    rejectInvalidOddsPayload,
     isSourceReadyForLive,
     summarizeSourceRegistry,
     getSafeOddsRecords,
@@ -4093,6 +4343,7 @@
   window.__oddsTerminalV557 = window.__oddsTerminalV554;
   window.__oddsTerminalV558 = window.__oddsTerminalV554;
   window.__oddsTerminalV559 = window.__oddsTerminalV554;
+  window.__oddsTerminalV565 = window.__oddsTerminalV554;
 
   window.omega_RenderOddsTerminal = async function () {
     readLocalState();
