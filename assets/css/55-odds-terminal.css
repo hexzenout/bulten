@@ -3829,6 +3829,7 @@
     align-items: center !important;
     justify-content: center !important;
     flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
     box-sizing: border-box !important;
     min-width: 118px !important;
     min-height: 46px !important;
@@ -3854,8 +3855,16 @@
 }
 
 .omega-tab-odds .v544-category-row button.football,
+.omega-tab-odds .v544-category-row button.basketball,
+.omega-tab-odds .v544-category-row button.polymarket {
+    justify-content: flex-start !important;
+    align-items: center !important;
+}
+
+.omega-tab-odds .v544-category-row button.football,
 .omega-tab-odds .v544-category-row button.basketball {
     width: 132px !important;
+    min-width: 132px !important;
     max-width: 132px !important;
 }
 
@@ -3864,7 +3873,9 @@
 }
 
 .omega-tab-odds .v544-category-row button.polymarket {
-    min-width: 154px !important;
+    width: 168px !important;
+    min-width: 168px !important;
+    max-width: 168px !important;
     margin-left: 0 !important;
     padding-inline: 16px !important;
     border-color: rgba(255,255,255,.38) !important;
@@ -3874,7 +3885,8 @@
 }
 
 .omega-tab-odds .v544-category-row button span {
-    display: inline-block !important;
+    display: inline-flex !important;
+    align-items: center !important;
     flex: 0 0 auto !important;
     min-width: 0 !important;
     font-size: inherit !important;
@@ -3888,8 +3900,9 @@
 
 .omega-tab-odds .v544-category-row button i,
 .omega-tab-odds .v544-category-row button .v544-poly-mark {
-    display: inline-grid !important;
-    place-items: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     flex: 0 0 22px !important;
     width: 22px !important;
     min-width: 22px !important;
