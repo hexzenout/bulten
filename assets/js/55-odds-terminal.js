@@ -1,10 +1,12 @@
 // ===============================
-// V565 ORAN TERMİNALİ
-// Gerçek veri öncesi kaynak yapılandırması, adapter slotları ve dry-run paneli
-// V542 POLYMARKET dock davranışı korunarak main ile hizalandı
+// ORAN TERMİNALİ — güvenli JS toparlama
+// Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
 (function () {
+  // -------------------------------
+  // Constants / State
+  // -------------------------------
   const DATA_SOURCES = "assets/data/odds-sources.json";
   const DATA_SNAPSHOT = "assets/data/odds-snapshot.json";
   const STORE_KEY = "v546_odds_terminal_state";
@@ -70,6 +72,9 @@
 
 
 
+  // -------------------------------
+  // Mock Odds / Adapter Helpers
+  // -------------------------------
   const MOCK_SOURCE_RAW_RECORDS = [
     {
       id: "raw_fb_a_001", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
@@ -291,6 +296,9 @@
     { id: "source_b_wrong_time", source: "Kaynak B", sport: "basketball", league: "BSL", homeTeam: "Fenerbahce", awayTeam: "Anadolu Efes", startsAt: "2026-06-05T18:45:00Z" }
   ];
 
+  // -------------------------------
+  // Render Utilities / Shared Helpers
+  // -------------------------------
   function qs(sel, root = document) { return root.querySelector(sel); }
   function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
 
@@ -329,6 +337,9 @@
     "la liga": "la-liga"
   };
 
+  // -------------------------------
+  // Search / Alias Helpers
+  // -------------------------------
   function normalizeText(value) {
     return String(value || "")
       .toLowerCase()
@@ -347,6 +358,9 @@
       .trim();
   }
 
+  // -------------------------------
+  // Fixture Matching
+  // -------------------------------
   function normalizeTeamName(value) {
     const base = normalizeText(value).replace(/[.]+/g, " ").replace(/\s+/g, " ").trim();
     if (!base) return "";
@@ -612,6 +626,9 @@
     }
   }
 
+  // -------------------------------
+  // Market Catalog / Taxonomy
+  // -------------------------------
   function allMarketCategories() {
     return state.sources?.marketCategories || [];
   }
@@ -1445,6 +1462,9 @@
 
 
 
+  // -------------------------------
+  // Source Registry / Source Health
+  // -------------------------------
   function normalizeDataMode(mode) {
     const key = String(mode || "").toLowerCase().replace(/\s+/g, "_");
     return DATA_MODES.includes(key) ? key : "planned";
@@ -1601,10 +1621,6 @@
     return false;
   }
 
-  function adapterStatusForSource(source = {}) {
-    if (!isSourceActiveForUi(source)) return "disabled";
-    return getAdapterSlot(source.sourceId).status;
-  }
 
   function createAdapterRun(source = {}, rawRecords = [], status = "empty", message = "") {
     const rawRows = (Array.isArray(rawRecords) ? rawRecords.filter(Boolean) : []).map(row => ({
@@ -1768,6 +1784,9 @@
     return adapterResultsCache;
   }
 
+  // -------------------------------
+  // Comparison Engine
+  // -------------------------------
   function oddsFixtureKey(record = {}) {
     return String(record.fixtureId || record.fixtureKey || buildFixtureKey(record) || "fixture-unknown");
   }
@@ -2255,6 +2274,9 @@
     return errors;
   }
 
+  // -------------------------------
+  // Dry-run Helpers
+  // -------------------------------
   function validateIncomingOddsPayload(payload) {
     const parsed = parseDryRunJsonInput(payload);
     if (!parsed.ok) return { valid: false, errors: parsed.errors, sourceId: "", recordCount: 0, records: [], polymarketCount: 0, bookmakerCount: 0 };
@@ -2636,17 +2658,6 @@
     }
   }
 
-  function selectedMarketLabel() {
-    if (state.marketId !== "all") {
-      const meta = marketMap()[state.marketId];
-      return meta ? meta.name : "Seçili market";
-    }
-    if (state.marketCategory !== "all") {
-      const cat = curatedMarketCategories().find(c => c.id === state.marketCategory) || allMarketCategories().find(c => c.id === state.marketCategory);
-      return cat ? cat.name : "Seçili bahis türü";
-    }
-    return "Tüm bahis türleri ve marketler";
-  }
 
   function isPolymarketRecord(r) {
     const site = sitesMap()[r?.bookmaker];
@@ -2700,11 +2711,6 @@
     return map;
   }
 
-  function groupName(id) {
-    const site = sitesMap()[id];
-    const group = (state.sources?.groups || []).find(g => g.id === site?.group);
-    return group?.name || site?.group || "-";
-  }
 
   function historyParts(r) {
     const history = Array.isArray(r.history) ? r.history.slice(-4) : [];
@@ -2714,9 +2720,6 @@
     return parts;
   }
 
-  function historyText(r) {
-    return historyParts(r).map(p => `${p.label} ${p.value}`).join(" → ");
-  }
 
   function historyCompactHtml(r) {
     const parts = historyParts(r);
@@ -2822,6 +2825,9 @@
     return out.sort((a, b) => b.profitPct - a.profitPct);
   }
 
+  // -------------------------------
+  // Polymarket Helpers
+  // -------------------------------
   function hoursUntil(value) {
     const ts = Date.parse(value || "");
     if (!Number.isFinite(ts)) return null;
@@ -2880,14 +2886,6 @@
     return { records: list.length, shortTerm, value, avgScore };
   }
 
-  function bestByMarket(list = records()) {
-    const map = {};
-    list.forEach(r => {
-      const key = [r.match, r.marketLabel, r.line ?? "", r.outcome].join("|");
-      if (!map[key] || Number(r.current) > Number(map[key].current)) map[key] = r;
-    });
-    return Object.values(map).sort((a, b) => a.match.localeCompare(b.match));
-  }
 
   function compareGroups() {
     const buckets = {};
@@ -2938,58 +2936,11 @@
     };
   }
 
-  function pressureSvg(row) {
-    const data = Array.isArray(row?.pressure) && row.pressure.length > 1
-      ? row.pressure
-      : [10, 14, 12, 17, 22, 19, 24, 28, 26, 31, 34, 33, 38, 42, 39, 45];
 
-    const w = 520, h = 112, pad = 16;
-    const max = Math.max(...data, 1);
-    const min = Math.min(...data, 0);
-    const pts = data.map((v, i) => {
-      const x = pad + (i / (data.length - 1)) * (w - pad * 2);
-      const y = h - pad - ((v - min) / Math.max(1, max - min)) * (h - pad * 2);
-      return [x, y];
-    });
-    const d = pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" ");
-    const area = `${d} L${w-pad} ${h-pad} L${pad} ${h-pad} Z`;
-    return `<svg viewBox="0 0 ${w} ${h}" class="v533-pressure-chart" role="img" aria-label="Takım baskı grafiği">
-      <path d="${area}" class="area"></path>
-      <path d="${d}" class="line"></path>
-      ${pts.map((p, i) => i % 4 === 0 ? `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2"></circle>` : "").join("")}
-    </svg>`;
-  }
 
-  function renderIntelligenceHub() {
-    const items = criticalInsights();
-    return `<section class="v536-intel-page">
-      <div class="v536-intel-title">
-        <div>
-          <span>İSTİHBARAT</span>
-          <h3>Ciddi Avantajlı Bahisler</h3>
-          <p>Bu alan ayrı sekmedir. Sadece güçlü değer farkı, barem farkı veya sert oran hareketi olan sinyalleri kart olarak gösterir; grafik yok.</p>
-        </div>
-        <button type="button" data-odds-action="toggle-alarm" class="${state.alarmEnabled ? "active" : ""}">${state.alarmEnabled ? "Avantaj Alarmı Açık" : "Avantaj Alarmı Kapalı"}</button>
-      </div>
-      <div class="v536-intel-controls">
-        <label>Alarm Hassasiyeti <input id="v533-alarm-sensitivity" type="range" min="0" max="1" step="0.05" value="${Number(state.alarmSensitivity || 0.4)}"></label>
-      </div>
-      <div class="v536-intel-grid">
-        ${items.length ? items.map(x => `<article>
-          <strong>${escapeHtml(x.type)}</strong>
-          <b>${escapeHtml(x.row?.match || x.lineGap?.match || "-")}</b>
-          <span>${escapeHtml(x.row?.marketLabel || x.lineGap?.marketLabel || "")} · ${escapeHtml(x.row?.outcome || "")}</span>
-          <em>${escapeHtml(x.reason)}</em>
-          <small>Güven skoru: ${Math.round(x.score || 0)}</small>
-        </article>`).join("") : `<div class="odds-v528-empty">Şu an ciddi avantaj seviyesinde sinyal yok.</div>`}
-      </div>
-    </section>`;
-  }
-
-  function renderIntelligenceTerminal() {
-    return renderIntelligenceHub();
-  }
-
+  // -------------------------------
+  // Render Helpers
+  // -------------------------------
   function footballMenuIconHtml() {
     return `<i class="fa-solid fa-futbol"></i>`;
   }
@@ -3029,9 +2980,6 @@
     </div>`;
   }
 
-  function renderMarketControl() {
-    return "";
-  }
 
   function shell() {
     const s = summary();
@@ -3706,24 +3654,6 @@
     </div>`;
   }
 
-  function renderCompare() {
-    const rows = bestByMarket();
-    if (!rows.length) return empty("Veri bulunamadı.");
-    return `<div class="odds-v528-table-wrap"><table class="odds-v528-table">
-      <thead><tr><th>Maç</th><th>Market</th><th>Barem</th><th>Seçim</th><th>En İyi Site</th><th>Güncel Oran</th><th>Oran Akışı</th></tr></thead>
-      <tbody>${rows.map(r => `<tr>
-        <td><b>${escapeHtml(r.match)}</b><small>${escapeHtml(r.league || "")}</small></td>
-        <td>${escapeHtml(r.marketLabel)}</td>
-        <td>${r.line ?? "-"}</td>
-        <td>${escapeHtml(r.outcome)}</td>
-        <td>${bookTag(r.bookmaker)}</td>
-        <td class="odd">${money(r.current)} ${oddDirectionHtml(r)}</td>
-        <td class="flow">${historyCompactHtml(r)}${r.info ? `<small>${escapeHtml(r.info)}</small>` : ""}</td>
-      </tr>`).join("")}</tbody>
-    </table></div>`;
-  }
-
-  function renderArbs() { return renderArbList(getArbs(), true); }
 
   function renderArbList(list) {
     if (!list.length) return empty("Arbitraj adayı yakalanmadı.");
@@ -3739,7 +3669,6 @@
       </article>`).join("")}</div>`;
   }
 
-  function renderValue() { return renderValueList(getValueAlerts(), true); }
 
   function renderValueList(list) {
     if (!list.length) return empty("Değerli oran eşiğini geçen fırsat yok.");
@@ -3756,7 +3685,6 @@
       </article>`).join("")}</div>`;
   }
 
-  function renderLines() { return renderLineList(getLineGaps(), true); }
 
   function renderLineList(list) {
     if (!list.length) return empty("Barem farkı yok.");
@@ -4116,7 +4044,9 @@
   }
 
 
-  // V540_GLOBAL_MARKET_OUTSIDE_CLOSE
+  // -------------------------------
+  // Event Binding
+  // -------------------------------
   function installMarketOutsideCloseGuard() {
     if (window.__v540OddsMarketOutsideClose) return;
     window.__v540OddsMarketOutsideClose = true;
@@ -4186,12 +4116,6 @@
     updateSourceFilterButtons();
   }
 
-  function closeMarketDrawerWithRender() {
-    state.marketPickerOpen = false;
-    state.marketSearch = "";
-    saveLocalState();
-    render();
-  }
 
   function handleOddsClick(e) {
     const tabButtonEl = e.target.closest("[data-odds-tab]");
@@ -4253,8 +4177,12 @@
     const marketPick = e.target.closest("[data-market-pick]");
     if (marketPick) {
       e.preventDefault();
-      state.marketCategory = marketPick.dataset.categoryPick || "all";
-      state.marketId = marketPick.dataset.marketPick || "all";
+      const nextCategory = marketPick.dataset.categoryPick || "all";
+      const nextMarket = marketPick.dataset.marketPick || "all";
+      const alreadySelected = state.marketCategory === nextCategory && state.marketId === nextMarket && state.tab === "all-sites" && !state.marketPickerOpen && !state.marketSearch;
+      if (alreadySelected) return;
+      state.marketCategory = nextCategory;
+      state.marketId = nextMarket;
       state.marketSearch = "";
       state.marketPickerOpen = false;
       state.tab = "all-sites";
@@ -4265,6 +4193,8 @@
 
     if (e.target.closest("[data-market-reset]")) {
       e.preventDefault();
+      const alreadyReset = state.marketCategory === "all" && state.marketId === "all" && !state.marketSearch && currentMarketGroupFilter() === "all" && !state.marketPickerOpen;
+      if (alreadyReset) return;
       state.marketCategory = "all";
       state.marketId = "all";
       state.marketSearch = "";
@@ -4312,6 +4242,7 @@
 
     if (e.target.closest("[data-market-drawer-close]")) {
       e.preventDefault();
+      if (!state.marketPickerOpen) return;
       state.marketPickerOpen = false;
       saveLocalState();
       render();
@@ -4464,6 +4395,9 @@
     mount.addEventListener("input", handleOddsInput);
   }
 
+  // -------------------------------
+  // Init / Public API
+  // -------------------------------
   async function load() {
     state.sources = await loadJson(DATA_SOURCES, FALLBACK_SOURCES);
     state.snapshot = await loadJson(DATA_SNAPSHOT, FALLBACK_SNAPSHOT);
