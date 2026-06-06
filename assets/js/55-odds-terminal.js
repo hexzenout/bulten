@@ -57,14 +57,15 @@
   let sourceConfigSaveTimer = null;
   let polymarketAdapterRecordsCache = null;
   let defaultComparisonEngineCache = null;
+  let staticRepoDataCache = null;
   const loadJsonWarningKeys = new Set();
 
 
 
   const FALLBACK_SOURCES = { sites: [], groups: [], marketCategories: [] };
   const FALLBACK_SNAPSHOT = { mode: "empty", records: [] };
-  const SOURCE_HEALTH_STATUSES = ["ok", "loading", "empty", "stale", "error", "disabled", "mock", "planned", "live_ready", "fallback"];
-  const DATA_MODES = ["mock", "planned", "live_ready", "disabled", "empty", "error", "fallback"];
+  const SOURCE_HEALTH_STATUSES = ["ok", "loading", "empty", "stale", "error", "disabled", "mock", "static_snapshot", "dry_run", "planned", "live_ready", "fallback"];
+  const DATA_MODES = ["mock", "static_snapshot", "dry_run", "planned", "live_ready", "disabled", "empty", "error", "fallback"];
   const SOURCE_HEALTH_MAX_AGE_MINUTES = 2880;
   const LIVE_API_CONNECTION_ENABLED = false;
   const FETCH_SCRAPING_ENABLED = false;
@@ -612,7 +613,12 @@
     } catch {}
   }
 
+  function isRepoStaticDataPath(url) {
+    return [DATA_SNAPSHOT, DATA_SOURCES].includes(String(url || ""));
+  }
+
   async function loadJson(url, fallback) {
+    if (!isRepoStaticDataPath(url)) return fallback;
     try {
       const res = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
@@ -624,6 +630,41 @@
       }
       return fallback;
     }
+  }
+
+  async function loadStaticOddsSnapshot(force = false) {
+    if (!force && staticRepoDataCache?.snapshot) return staticRepoDataCache.snapshot;
+    const payload = await loadJson(DATA_SNAPSHOT, null);
+    const ok = Boolean(payload && typeof payload === "object" && Array.isArray(payload.records));
+    return {
+      ok,
+      status: ok ? "loaded" : "missing",
+      file: DATA_SNAPSHOT,
+      data: ok ? payload : FALLBACK_SNAPSHOT,
+      message: ok ? "Snapshot yüklendi." : "Snapshot bulunamadı; demo/yedek veri korunuyor.",
+      loadedAt: new Date().toISOString()
+    };
+  }
+
+  async function loadStaticOddsSources(force = false) {
+    if (!force && staticRepoDataCache?.sources) return staticRepoDataCache.sources;
+    const payload = await loadJson(DATA_SOURCES, null);
+    const ok = Boolean(payload && typeof payload === "object" && (Array.isArray(payload.sites) || Array.isArray(payload.groups)));
+    return {
+      ok,
+      status: ok ? "loaded" : "missing",
+      file: DATA_SOURCES,
+      data: ok ? payload : FALLBACK_SOURCES,
+      message: ok ? "Kaynak listesi yüklendi." : "Kaynak listesi bulunamadı; dahili kaynak kayıtları korunuyor.",
+      loadedAt: new Date().toISOString()
+    };
+  }
+
+  async function loadRepoStaticOddsData({ force = false } = {}) {
+    if (!force && staticRepoDataCache) return staticRepoDataCache;
+    const [sources, snapshot] = await Promise.all([loadStaticOddsSources(force), loadStaticOddsSnapshot(force)]);
+    staticRepoDataCache = { sources, snapshot, loadedAt: new Date().toISOString() };
+    return staticRepoDataCache;
   }
 
   // -------------------------------
@@ -1453,6 +1494,123 @@
     };
   }
 
+  function splitSnapshotMatchName(value = "") {
+    const raw = String(value || "").trim();
+    const parts = raw.split(/\s+(?:-|–|—|vs\.?|v\.?|@)\s+/i).map(part => part.trim()).filter(Boolean);
+    return { homeTeam: parts[0] || raw || "Ev Sahibi", awayTeam: parts[1] || "Deplasman" };
+  }
+
+  function staticSourceMeta(sourceId) {
+    const sourceKey = String(sourceId || "").trim();
+    const site = (state.sources?.sites || []).find(row => String(row.id || "") === sourceKey) || null;
+    return {
+      sourceId: sourceKey || "static_snapshot_source",
+      sourceName: site?.name || sourceKey || "Statik Snapshot Kaynağı",
+      type: site?.type || "bookmaker",
+      group: site?.group || "static_snapshot",
+      reference: Boolean(site?.reference)
+    };
+  }
+
+  function snapshotMarketAlias(record = {}) {
+    const market = String(record.market || record.marketId || "").toLowerCase();
+    const label = record.marketLabel || record.sourceMarketName || record.marketName || "";
+    const line = record.line === "" || record.line == null ? null : Number(record.line);
+    if (market === "match_winner") return "Maç Sonucu";
+    if (market.startsWith("total_goals") || /gol/i.test(label)) return line ? `${line} Gol Alt / Üst` : label || "Gol Alt / Üst";
+    if (market.startsWith("corners") || /korner|corner/i.test(label)) return line ? `${line} Korner Alt / Üst` : label || "Korner Alt / Üst";
+    if (/yellow_cards|kart/i.test(market + " " + label)) return "Sarı Kart Alt / Üst";
+    if (/shots_on_target|isabetli/i.test(market + " " + label)) return "İsabetli Şut Alt / Üst";
+    return label || market || "Snapshot marketi";
+  }
+
+  function normalizeStaticSnapshotRawRecord(record = {}, index = 0) {
+    const sourceId = String(record.source || record.bookmaker || record.sourceId || "static_snapshot_source").trim();
+    const source = staticSourceMeta(sourceId);
+    const teams = splitSnapshotMatchName(record.match || record.fixture || record.eventName || "");
+    const current = Number(record.odds ?? record.current ?? record.price ?? 0);
+    const opening = Number(record.opening ?? record.open ?? current);
+    const marketName = snapshotMarketAlias(record);
+    const sport = normalizeSportName(record.sport || "football");
+    return {
+      ...record,
+      id: String(record.id || record.recordId || `${source.sourceId}_${record.matchId || index}_${record.market || "market"}_${record.outcome || record.selection || "selection"}`),
+      source: source.sourceId,
+      sourceName: source.sourceName,
+      bookmaker: source.sourceId,
+      sourceType: source.type,
+      sport: ["football", "basketball"].includes(sport) ? sport : "football",
+      homeTeam: record.homeTeam || record.home || teams.homeTeam,
+      awayTeam: record.awayTeam || record.away || teams.awayTeam,
+      league: record.league || "Statik Snapshot Ligi",
+      startsAt: record.startsAt || record.kickoff || record.startTime || null,
+      fixtureId: record.fixtureId || record.matchId || "",
+      sourceMarketName: marketName,
+      marketName,
+      marketLabel: record.marketLabel || marketName,
+      selection: record.selection || record.outcome || "unknown",
+      line: record.line === "" || record.line == null ? null : Number(record.line),
+      odds: Number.isFinite(current) ? current : 0,
+      current: Number.isFinite(current) ? current : 0,
+      opening: Number.isFinite(opening) ? opening : Number.isFinite(current) ? current : 0,
+      updatedAt: record.updatedAt || record.lastUpdatedAt || state.snapshot?.generatedAt || new Date().toISOString(),
+      dataMode: "static_snapshot"
+    };
+  }
+
+  function standardRecordToSnapshotDisplay(record = {}, raw = {}) {
+    const marketIdValue = record.matchedMarketId || record.marketId || raw.market || "unmatched";
+    return {
+      ...raw,
+      ...record,
+      id: raw.id || record.id,
+      matchId: raw.matchId || record.fixtureId || record.fixtureKey,
+      match: raw.match || comparisonFixtureLabel(record),
+      bookmaker: record.source || raw.bookmaker || raw.source,
+      market: marketIdValue,
+      rawMarket: raw.market || raw.marketId || "",
+      marketLabel: record.matchedMarketLabel || record.marketLabel || raw.marketLabel || "Eşleşmeyen",
+      outcome: raw.outcome || record.selection || "-",
+      current: Number(record.odds || raw.current || 0),
+      opening: Number(raw.opening ?? raw.open ?? record.odds ?? 0),
+      referenceProb: Number(raw.referenceProb || 0),
+      dataMode: "static_snapshot",
+      matchedMarketId: record.matchedMarketId || "",
+      matched: Boolean(record.matchedMarketId),
+      adapterRecord: record
+    };
+  }
+
+  function buildStaticSnapshotAdapterOutput() {
+    const snapshot = state.snapshot && typeof state.snapshot === "object" ? state.snapshot : FALLBACK_SNAPSHOT;
+    const rawSnapshotRows = Array.isArray(snapshot.records) ? snapshot.records : [];
+    const bookmakerRows = rawSnapshotRows.filter(row => !isPolymarketRecord(row));
+    const rawRecords = bookmakerRows.map(normalizeStaticSnapshotRawRecord);
+    const records = rawRecords.map(row => mapOddsRecordToCatalog(adaptSourceOddsRecord(row))).filter(Boolean);
+    const sourceHealthRows = buildSourceHealthSummary(records, SOURCE_MARKET_MAPPINGS, rawRecords).map(row => ({
+      ...row,
+      sourceName: staticSourceMeta(row.source).sourceName || row.sourceName,
+      type: staticSourceMeta(row.source).type || row.type || "bookmaker",
+      status: row.adaptedRecordCount ? "static_snapshot" : "empty",
+      mode: row.adaptedRecordCount ? "static_snapshot" : "empty",
+      message: row.adaptedRecordCount ? "Statik snapshot kaynağı yüklendi; dış API kapalı." : "Snapshot içinde bu kaynak için kayıt yok."
+    }));
+    validateSourceHealthList(sourceHealthRows);
+    return {
+      rawRecords,
+      records,
+      displayRecords: records.map((record, index) => standardRecordToSnapshotDisplay(record, rawRecords[index] || {})),
+      sourceHealth: sourceHealthRows,
+      summary: summarizeSourceHealth(sourceHealthRows),
+      snapshotStatus: state.snapshotMeta?.status || (rawRecords.length ? "loaded" : "missing"),
+      message: state.snapshotMeta?.message || "Statik snapshot durumu bilinmiyor."
+    };
+  }
+
+  function hasActiveDryRunPayload() {
+    return Boolean(state.dryRunResult && !state.dryRunResult.errorCount && !state.dryRunResult.isPolymarket && Array.isArray(state.dryRunResult.records) && state.dryRunResult.records.length);
+  }
+
   function mockOddsRecords() {
     if (!normalizedMockOddsCache) {
       normalizedMockOddsCache = MOCK_SOURCE_RAW_RECORDS.map(raw => mapOddsRecordToCatalog(adaptSourceOddsRecord(raw)));
@@ -1473,6 +1631,8 @@
   const UI_MODE_LABELS = {
     mock: "Demo",
     mock_source: "Demo Kaynak",
+    static_snapshot: "Statik Snapshot",
+    dry_run: "Dry-run",
     planned: "Planlandı",
     live_ready: "Canlıya Hazır",
     disabled: "Pasif",
@@ -1497,6 +1657,8 @@
     error: "Hata",
     disabled: "Pasif",
     mock: "Demo",
+    static_snapshot: "Statik Snapshot",
+    dry_run: "Dry-run",
     planned: "Planlandı",
     live_ready: "Canlıya Hazır",
     fallback: "Yedek",
@@ -1768,6 +1930,43 @@
   function collectAdapterResults() {
     ensureSourceCacheKey();
     if (adapterResultsCache) return adapterResultsCache;
+
+    if (hasActiveDryRunPayload()) {
+      const records = filterComparisonRecordsBySource(state.dryRunResult.records);
+      const sourceHealthRows = getSafeSourceHealth(records).map(row => ({
+        ...row,
+        status: row.adaptedRecordCount ? "dry_run" : "empty",
+        mode: row.adaptedRecordCount ? "dry_run" : "empty",
+        message: row.adaptedRecordCount ? "Dry-run payload adapter hattında test edildi; gerçek bağlantı kapalı." : "Dry-run kaynağında kayıt yok."
+      }));
+      const healthSummary = summarizeSourceHealth(sourceHealthRows);
+      adapterResultsCache = {
+        adapterRuns: [],
+        rawRecords: records,
+        records,
+        sourceHealth: sourceHealthRows,
+        healthSummary,
+        dataMode: "dry_run",
+        dataModePriority: "aktif dry-run payload → statik snapshot → mock/fallback → empty"
+      };
+      return adapterResultsCache;
+    }
+
+    const staticOutput = buildStaticSnapshotAdapterOutput();
+    if (staticOutput.records.length) {
+      adapterResultsCache = {
+        adapterRuns: [],
+        rawRecords: staticOutput.rawRecords,
+        records: staticOutput.records,
+        displayRecords: staticOutput.displayRecords,
+        sourceHealth: staticOutput.sourceHealth,
+        healthSummary: staticOutput.summary,
+        dataMode: "static_snapshot",
+        dataModePriority: "aktif dry-run payload → statik snapshot → mock/fallback → empty"
+      };
+      return adapterResultsCache;
+    }
+
     const adapterRuns = runEnabledSourceAdapters();
     const rawRecords = adapterRuns.flatMap(run => run.rawRecords || []);
     const records = adapterRuns.flatMap(run => run.records || []);
@@ -1779,7 +1978,8 @@
       records,
       sourceHealth: sourceHealthRows,
       healthSummary,
-      dataMode: healthSummary.dataMode
+      dataMode: records.length ? healthSummary.dataMode : "fallback",
+      dataModePriority: "aktif dry-run payload → statik snapshot → mock/fallback → empty"
     };
     return adapterResultsCache;
   }
@@ -1968,6 +2168,8 @@
     if (explicit === "fallback" || mode === "fallback") return "fallback";
     if (explicit === "stale" || sourceHealth.stale || isSourceStale(sourceHealth.lastUpdatedAt, sourceHealth.maxAgeMinutes)) return "stale";
     if (mode === "mock" || explicit === "mock") return Number(sourceHealth.adaptedRecordCount || sourceHealth.rawRecordCount || 0) > 0 ? "mock" : "empty";
+    if (mode === "static_snapshot" || explicit === "static_snapshot") return Number(sourceHealth.adaptedRecordCount || sourceHealth.rawRecordCount || 0) > 0 ? "static_snapshot" : "empty";
+    if (mode === "dry_run" || explicit === "dry_run") return Number(sourceHealth.adaptedRecordCount || sourceHealth.rawRecordCount || 0) > 0 ? "dry_run" : "empty";
     if (mode === "live_ready" || explicit === "live_ready") return "live_ready";
     if (mode === "planned" || explicit === "planned") return "planned";
     if (explicit === "empty" || Number(sourceHealth.rawRecordCount || 0) <= 0 && Number(sourceHealth.adaptedRecordCount || 0) <= 0) return "empty";
@@ -1977,7 +2179,7 @@
   function getSourceHealthBadge(sourceHealth = {}) {
     const status = getSourceStatus(sourceHealth);
     const labels = {
-      ok: "Hazır", loading: "Yükleniyor", empty: "Veri Yok", stale: "Eski Veri", error: "Hata", disabled: "Pasif", mock: "Demo", planned: "Planlandı", live_ready: "Canlıya Hazır", fallback: "Yedek"
+      ok: "Hazır", loading: "Yükleniyor", empty: "Veri Yok", stale: "Eski Veri", error: "Hata", disabled: "Pasif", mock: "Demo", static_snapshot: "Statik Snapshot", dry_run: "Dry-run", planned: "Planlandı", live_ready: "Canlıya Hazır", fallback: "Yedek"
     };
     return { status, label: labels[status] || status, className: `source-${String(status).replace(/_/g, "-")}` };
   }
@@ -2054,6 +2256,8 @@
     if (!list.length) return "empty";
     if (list.some(row => getSourceStatus(row) === "error")) return "error";
     if (list.some(row => normalizeDataMode(row.mode) === "fallback")) return "fallback";
+    if (list.some(row => normalizeDataMode(row.mode) === "dry_run" && Number(row.adaptedRecordCount || 0) > 0)) return "dry_run";
+    if (list.some(row => normalizeDataMode(row.mode) === "static_snapshot" && Number(row.adaptedRecordCount || 0) > 0)) return "static_snapshot";
     if (list.some(row => normalizeDataMode(row.mode) === "mock" && Number(row.adaptedRecordCount || 0) > 0)) return "mock";
     if (list.some(row => normalizeDataMode(row.mode) === "live_ready")) return "live_ready";
     if (list.some(row => normalizeDataMode(row.mode) === "planned")) return "planned";
@@ -2668,15 +2872,17 @@
 
   function records(raw = false) {
     if (state.sport === "polymarket") return [];
-    const list = (state.snapshot?.records || []).filter(r => !isPolymarketRecord(r));
+    const adapter = collectAdapterResults();
+    const list = (adapter.displayRecords || (state.snapshot?.records || [])).filter(r => !isPolymarketRecord(r));
     if (raw) return list;
     const search = normalizeText(state.search || "");
     return list.filter(r => {
       const sportOk = state.sport === "all" || r.sport === state.sport;
-      const category = marketMap()[r.market]?.categoryId || "";
+      const marketKey = r.market || r.marketId || r.matchedMarketId;
+      const category = marketMap()[marketKey]?.categoryId || "";
       const categoryOk = state.marketCategory === "all" || category === state.marketCategory;
-      const marketOk = state.marketId === "all" || r.market === state.marketId;
-      const haystack = normalizeText([r.match, r.league, r.bookmaker, r.marketLabel, r.outcome, r.info, r.line].join(" "));
+      const marketOk = state.marketId === "all" || marketKey === state.marketId || r.market === state.marketId;
+      const haystack = normalizeText([r.match, r.league, r.bookmaker, r.source, r.marketLabel, r.outcome, r.info, r.line, r.matchedBy].join(" "));
       const searchOk = !search || textMatchesTokens(haystack, search.split(/\s+/).filter(Boolean));
       return sportOk && categoryOk && marketOk && searchOk;
     });
@@ -2796,8 +3002,9 @@
   function getArbs(list = records()) {
     const buckets = {};
     list.forEach(r => {
-      if (r.market !== "match_winner") return;
-      const key = [r.matchId, r.market].join("|");
+      const isMatchWinner = r.rawMarket === "match_winner" || r.market === "match_winner" || baseMarketFamily(r.market || r.marketId || "") === "football.result.full_time_1x2";
+      if (!isMatchWinner) return;
+      const key = [r.matchId, r.rawMarket || r.market].join("|");
       if (!buckets[key]) buckets[key] = [];
       buckets[key].push(r);
     });
@@ -2936,6 +3143,82 @@
     };
   }
 
+  function snapshotStatusLabel(status) {
+    const labels = { loaded: "Yüklendi", missing: "Bulunamadı", error: "Hata" };
+    return labels[String(status || "").toLowerCase()] || "Bulunamadı";
+  }
+
+  function staticSnapshotSummary() {
+    const adapter = collectAdapterResults();
+    const display = adapter.displayRecords || [];
+    const matched = display.filter(row => row.matchedMarketId).length;
+    return {
+      file: DATA_SNAPSHOT,
+      status: state.snapshotMeta?.status || (display.length ? "loaded" : "missing"),
+      records: display.length,
+      matched,
+      unmatched: Math.max(0, display.length - matched),
+      sources: new Set(display.map(row => row.bookmaker || row.source).filter(Boolean)).size,
+      dataMode: adapter.dataMode || "fallback",
+      lastReadAt: state.snapshotMeta?.loadedAt || state.lastLoadedAt || adapter.healthSummary?.lastUpdatedAt || null,
+      message: state.snapshotMeta?.message || "Snapshot durumu bilinmiyor."
+    };
+  }
+
+  function renderDataModeNotice() {
+    const adapter = collectAdapterResults();
+    const snap = staticSnapshotSummary();
+    return `<section class="v568-data-mode" aria-label="Veri modu güvenlik bilgisi">
+      <div><span>Veri modu</span><b>${escapeHtml(displayModeLabel(adapter.dataMode || snap.dataMode))}</b></div>
+      <div><span>Dış API bağlantısı</span><b>Kapalı</b></div>
+      <div><span>Otomatik oynama</span><b>Kapalı</b></div>
+      <div><span>Öncelik</span><b>Dry-run → Statik Snapshot → Mock/Fallback</b></div>
+      <p>Bu ekran statik snapshot/demo karşılaştırmasıdır. Canlı veri değildir; harici API, scraping ve otomatik bahis kapalıdır.</p>
+    </section>`;
+  }
+
+  function renderStaticSnapshotStatusPanel() {
+    const snap = staticSnapshotSummary();
+    return `<section class="v568-static-snapshot" aria-label="Statik Snapshot Durumu">
+      <div class="v554-mock-preview-head compact">
+        <div><span>Statik Snapshot Durumu</span><h3>Statik Snapshot Durumu</h3><p>Repo içindeki statik JSON, adapter pipeline üstünden demo karşılaştırmaya bağlanır. Canlı veri değildir.</p></div>
+        <em>Dış API: Kapalı</em>
+      </div>
+      <div class="v568-snapshot-grid">
+        <article><b>Dosya</b><span>${escapeHtml(snap.file)}</span></article>
+        <article><b>Durum</b><span>${escapeHtml(snapshotStatusLabel(snap.status))}</span></article>
+        <article><b>Kayıt sayısı</b><span>${snap.records}</span></article>
+        <article><b>Eşleşen market</b><span>${snap.matched}</span></article>
+        <article><b>Eşleşmeyen market</b><span>${snap.unmatched}</span></article>
+        <article><b>Son okuma</b><span>${escapeHtml(formatSourceUpdatedAt(snap.lastReadAt))}</span></article>
+        <article><b>Dış API</b><span>Kapalı</span></article>
+      </div>
+      <p>${escapeHtml(snap.message)} Mock/fallback akışı ve Futbol/Basketbol market katalogları korunur.</p>
+    </section>`;
+  }
+
+  function renderStaticSourcesPanel() {
+    const sources = Array.isArray(state.sources?.sites) ? state.sources.sites : [];
+    const groups = Array.isArray(state.sources?.groups) ? state.sources.groups : [];
+    const categories = Array.isArray(state.sources?.marketCategories) ? state.sources.marketCategories : [];
+    const groupNames = groups.map(group => group.name || group.id).filter(Boolean).slice(0, 8);
+    const sourceNames = sources.map(site => site.name || site.id).filter(Boolean).slice(0, 12);
+    return `<section class="v568-static-sources" aria-label="Statik Kaynak Listesi">
+      <div class="v554-mock-preview-head compact">
+        <div><span>Statik Kaynak Listesi</span><h3>odds-sources.json Özeti</h3><p>Bu panel yalnızca repo içi statik kaynak bilgisini gösterir; internal source_book_01 sistemiyle çakışmaz.</p></div>
+        <em>${escapeHtml(snapshotStatusLabel(state.sourcesMeta?.status))}</em>
+      </div>
+      <div class="v568-snapshot-grid">
+        <article><b>Kaynak sayısı</b><span>${sources.length}</span></article>
+        <article><b>Kaynak grubu</b><span>${groups.length}</span></article>
+        <article><b>Market kategori sayısı</b><span>${categories.length}</span></article>
+        <article><b>Son okuma</b><span>${escapeHtml(formatSourceUpdatedAt(state.sourcesMeta?.loadedAt || state.lastLoadedAt))}</span></article>
+      </div>
+      <div class="v568-static-list"><b>Gruplar</b><span>${escapeHtml(groupNames.join(", ") || "Yok")}</span></div>
+      <div class="v568-static-list"><b>Kaynaklar</b><span>${escapeHtml(sourceNames.join(", ") || "Yok")}</span></div>
+    </section>`;
+  }
+
 
 
   // -------------------------------
@@ -2994,6 +3277,8 @@
           </div>
           <button type="button" class="odds-v528-refresh" data-odds-action="refresh"><i class="fa-solid fa-rotate"></i> VERİYİ YENİLE</button>
         </div>
+
+        ${renderDataModeNotice()}
 
         <div class="odds-v528-kpis">
           <div><span>Kaynak Site</span><b>${s.sources}</b></div>
@@ -3302,6 +3587,7 @@
         ${panel("Oran Düşüş Uyarısı", renderDropList(drops), "red")}
       </div>
       ${renderOpportunityComparisonDemoCard()}
+      <p class="v568-live-disclaimer">Fırsat Radarı yalnızca statik snapshot adayı / demo karşılaştırma adayı üretir. Canlı veri değildir.</p>
       ${renderPolymarketDock()}`;
   }
 
@@ -3416,12 +3702,14 @@
     return `<section class="v557-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
         <div>
-          <span>Demo Karşılaştırma</span>
+          <span>Statik snapshot karşılaştırması</span>
           <h3>Kaynaklar Arası Karşılaştırma Motoru</h3>
-          <p>Demo kayıtlarla en iyi oran, barem farkı ve kaynak eşleşmesi test edilir. Gerçek canlı veri gibi sunulmaz; veri gelmezse panel güvenli veri yok/yedek durumuna düşer.</p>
+          <p>Statik snapshot/dry-run kayıtlarıyla en iyi oran, barem farkı ve kaynak eşleşmesi test edilir. Canlı veri değildir; gerçek canlı veri gibi sunulmaz.</p>
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
+      ${renderDataModeNotice()}
+      ${renderStaticSnapshotStatusPanel()}
       ${renderComparisonSummaryBoxes(data)}
       ${renderReadinessChecklist()}
       ${renderComparisonHealth(data)}
@@ -3440,12 +3728,12 @@
     const best = candidate.bestOddsResult.bestRecord;
     return `<section class="v557-opportunity-demo-card" aria-label="Demo karşılaştırma adayı">
       <div>
-        <span>Demo karşılaştırma adayı</span>
+        <span>Statik snapshot adayı · Demo karşılaştırma adayı</span>
         <b>${escapeHtml(comparisonFixtureLabel(best))}</b>
         <small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")} · ${escapeHtml(best.selection || "-")} · barem ${best.line ?? "-"}</small>
       </div>
       <div><b>${money(best.odds)}</b><small>${escapeHtml(best.source || "-")} · ${escapeHtml(candidate.score.tag)} · skor ${candidate.score.score}/100</small></div>
-      <p>Bu kart gerçek sinyal değildir; yalnızca demo karşılaştırma adayıdır ve otomatik bahis sonucu ifade etmez.</p>
+      <p>Bu kart canlı veri değildir; yalnızca statik snapshot adayı / demo karşılaştırma adayıdır ve otomatik bahis sonucu ifade etmez.</p>
     </section>`;
   }
 
@@ -4031,7 +4319,7 @@
         </div>
         <em>Gerçek API yok · Fetch yok · Scraping yok · Otomatik oynama yok</em>
       </div>
-      ${renderSourceRegistryPanel()}${renderSourceSettingsPanel()}${renderDryRunPayloadPanel()}${renderSourceHealthCards()}${renderLiveReadinessPanel()}
+      ${renderStaticSnapshotStatusPanel()}${renderStaticSourcesPanel()}${renderSourceRegistryPanel()}${renderSourceSettingsPanel()}${renderDryRunPayloadPanel()}${renderSourceHealthCards()}${renderLiveReadinessPanel()}
     </section>`;
   }
 
@@ -4307,6 +4595,7 @@
       const input = qs("[data-dry-run-input]");
       state.dryRunInput = input ? input.value : getDryRunInputValue();
       state.dryRunResult = previewIncomingOddsPayload(state.dryRunInput);
+      clearSourceDerivedCaches();
       renderDryRunPanelOnly();
       return;
     }
@@ -4315,6 +4604,7 @@
       e.preventDefault();
       state.dryRunInput = "";
       state.dryRunResult = null;
+      clearSourceDerivedCaches();
       renderDryRunPanelOnly();
       return;
     }
@@ -4322,7 +4612,7 @@
     const refresh = e.target.closest('[data-odds-action="refresh"]');
     if (refresh) {
       e.preventDefault();
-      load().then(render);
+      load({ force: true }).then(render);
       return;
     }
 
@@ -4398,16 +4688,19 @@
   // -------------------------------
   // Init / Public API
   // -------------------------------
-  async function load() {
-    state.sources = await loadJson(DATA_SOURCES, FALLBACK_SOURCES);
-    state.snapshot = await loadJson(DATA_SNAPSHOT, FALLBACK_SNAPSHOT);
+  async function load({ force = false } = {}) {
+    const repoData = await loadRepoStaticOddsData({ force });
+    state.sources = repoData.sources.ok ? repoData.sources.data : FALLBACK_SOURCES;
+    state.snapshot = repoData.snapshot.ok ? repoData.snapshot.data : FALLBACK_SNAPSHOT;
+    state.sourcesMeta = repoData.sources;
+    state.snapshotMeta = repoData.snapshot;
     marketMapCache = null;
     normalizedMockOddsCache = null;
     mockComparisonCache = null;
     polymarketAdapterRecordsCache = null;
     clearSourceDerivedCaches();
     validateMockOddsRecords();
-    state.lastLoadedAt = new Date().toISOString();
+    state.lastLoadedAt = repoData.loadedAt || new Date().toISOString();
   }
 
   function render() {
@@ -4435,6 +4728,11 @@
     buildPolymarketEventKey,
     mockFixtureMatchRows,
     normalizeOddsRecord,
+    loadStaticOddsSnapshot,
+    loadStaticOddsSources,
+    loadRepoStaticOddsData,
+    buildStaticSnapshotAdapterOutput,
+    staticSnapshotSummary,
     normalizeSourceMarketName,
     findSourceMarketMapping,
     inferMarketIdFromCatalogAliases,

@@ -5519,3 +5519,106 @@
     font-weight: 950 !important;
     text-transform: uppercase !important;
 }
+
+/* V568 — Statik snapshot veri modu ve kaynak durumu */
+.v568-data-mode,
+.v568-static-snapshot,
+.v568-static-sources {
+  border: 1px solid rgba(250, 204, 21, .22);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, .92), rgba(30, 41, 59, .78));
+  box-shadow: 0 18px 48px rgba(2, 6, 23, .25);
+  padding: 16px;
+  margin: 14px 0;
+}
+
+.v568-data-mode {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 10px;
+  align-items: stretch;
+}
+
+.v568-data-mode > div,
+.v568-snapshot-grid article {
+  border: 1px solid rgba(148, 163, 184, .18);
+  border-radius: 14px;
+  background: rgba(15, 23, 42, .58);
+  padding: 11px 12px;
+}
+
+.v568-data-mode span,
+.v568-snapshot-grid b {
+  display: block;
+  color: #94a3b8;
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.v568-data-mode b,
+.v568-snapshot-grid span {
+  display: block;
+  color: #f8fafc;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.v568-data-mode p,
+.v568-static-snapshot p,
+.v568-live-disclaimer {
+  grid-column: 1 / -1;
+  margin: 4px 0 0;
+  color: #fde68a;
+  font-size: 12px;
+}
+
+.v568-snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.v568-static-list {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border-top: 1px solid rgba(148, 163, 184, .14);
+  padding-top: 10px;
+  margin-top: 10px;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.v568-static-list b {
+  min-width: 84px;
+  color: #facc15;
+}
+
+@media (max-width: 900px) {
+  .v568-data-mode,
+  .v568-snapshot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .v568-data-mode,
+  .v568-snapshot-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.v557-comparison-health .source-static-snapshot,
+.v558-source-cards article.source-static-snapshot,
+.v561-source-config-grid .source-static-snapshot {
+  border-color: rgba(250, 204, 21, .38);
+  background: linear-gradient(135deg, rgba(120, 53, 15, .18), rgba(15, 23, 42, .86));
+}
+
+.v557-comparison-health .source-dry-run,
+.v558-source-cards article.source-dry-run {
+  border-color: rgba(56, 189, 248, .38);
+  background: linear-gradient(135deg, rgba(12, 74, 110, .22), rgba(15, 23, 42, .86));
+}
