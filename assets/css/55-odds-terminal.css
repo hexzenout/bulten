@@ -3853,6 +3853,12 @@
     transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, color .16s ease, text-shadow .16s ease !important;
 }
 
+.omega-tab-odds .v544-category-row button.football,
+.omega-tab-odds .v544-category-row button.basketball {
+    width: 132px !important;
+    max-width: 132px !important;
+}
+
 .omega-tab-odds .v544-category-row button.all {
     min-width: 92px !important;
 }
@@ -3881,8 +3887,6 @@
 }
 
 .omega-tab-odds .v544-category-row button i,
-.omega-tab-odds .v544-category-row button .v548-sport-mark,
-.omega-tab-odds .v544-category-row button i.v548-sport-mark,
 .omega-tab-odds .v544-category-row button .v544-poly-mark {
     display: inline-grid !important;
     place-items: center !important;
@@ -3902,6 +3906,18 @@
     filter: none !important;
     text-shadow: none !important;
     box-shadow: none !important;
+}
+
+.omega-tab-odds .v544-category-row button.football > i.fa-futbol,
+.omega-tab-odds .v544-category-row button.football:hover > i.fa-futbol,
+.omega-tab-odds .v544-category-row button.football.active > i.fa-futbol {
+    color: var(--v508-green, var(--green, #10d19a)) !important;
+}
+
+.omega-tab-odds .v544-category-row button.basketball > i.fa-basketball,
+.omega-tab-odds .v544-category-row button.basketball:hover > i.fa-basketball,
+.omega-tab-odds .v544-category-row button.basketball.active > i.fa-basketball {
+    color: var(--v508-orange, var(--orange, #f97316)) !important;
 }
 
 .omega-tab-odds .v544-category-row button:hover,
@@ -3963,43 +3979,6 @@
     box-shadow: none !important;
 }
 
-.omega-tab-odds .v544-category-row button .v548-sport-mark {
-    overflow: visible !important;
-    opacity: 1 !important;
-    color: inherit !important;
-    filter: none !important;
-    text-shadow: none !important;
-}
-
-.omega-tab-odds .v544-category-row button .v548-sport-mark circle,
-.omega-tab-odds .v544-category-row button .v548-sport-mark path {
-    fill: none !important;
-    stroke: currentColor !important;
-    stroke-width: 2.1 !important;
-    stroke-linecap: round !important;
-    stroke-linejoin: round !important;
-    vector-effect: non-scaling-stroke !important;
-}
-
-.omega-tab-odds .v544-category-row button.football .v548-football-mark,
-.omega-tab-odds .v544-category-row button.football:hover .v548-football-mark,
-.omega-tab-odds .v544-category-row button.football.active .v548-football-mark {
-    color: #10d19a !important;
-    filter: drop-shadow(0 0 7px rgba(16,209,154,.24)) !important;
-}
-
-.omega-tab-odds .v544-category-row button.basketball .v548-basketball-mark,
-.omega-tab-odds .v544-category-row button.basketball:hover .v548-basketball-mark,
-.omega-tab-odds .v544-category-row button.basketball.active .v548-basketball-mark {
-    color: #f97316 !important;
-    filter: drop-shadow(0 0 7px rgba(249,115,22,.24)) !important;
-}
-
-.omega-tab-odds .v544-category-row button:hover .v548-sport-mark,
-.omega-tab-odds .v544-category-row button.active .v548-sport-mark {
-    opacity: 1 !important;
-    text-shadow: none !important;
-}
 
 .omega-tab-odds .v544-category-row button:hover .v544-poly-mark,
 .omega-tab-odds .v544-category-row button.active .v544-poly-mark {
