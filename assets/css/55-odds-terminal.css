@@ -1,5 +1,5 @@
 /* ===============================
-   55 Odds Terminal — Base
+   Base / Variables
 ================================ */
 .omega-tab-odds {
     --odds-gold: #ffd166;
@@ -123,6 +123,7 @@
     background: #080808 !important;
 }
 
+/* Sub Tabs */
 .odds-v528-tabs {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -206,9 +207,11 @@
     background: #060606 !important;
 }
 
+/* Opportunity Radar */
 .odds-v528-card.value { border-color: rgba(168,85,247,.28) !important; }
 .odds-v528-card.arb { border-color: rgba(34,197,94,.28) !important; }
 .odds-v528-card.linegap { border-color: rgba(96,165,250,.28) !important; }
+/* Odds Movements */
 .odds-v528-card.drop { border-color: rgba(239,68,68,.30) !important; }
 
 .odds-v528-card b {
@@ -362,6 +365,7 @@
     color: #a855f7 !important;
 }
 
+/* Responsive */
 @media (max-width: 1100px) {
     .odds-v528-kpis {
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -511,6 +515,7 @@
     font-weight: 950 !important;
 }
 
+/* Comparison Preview */
 .v530-site-odds-grid {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -2633,6 +2638,7 @@
     background: linear-gradient(180deg, rgba(168, 85, 247, .13), rgba(17, 24, 39, .82)) !important;
 }
 
+/* Polymarket Panel */
 .omega-tab-odds .v541-polymarket-panel {
     display: grid !important;
     gap: 18px !important;
@@ -3256,6 +3262,7 @@
     font-weight: 900 !important;
 }
 
+/* Market Catalog */
 .omega-tab-odds .v546-market-catalog {
     gap: 12px !important;
 }
@@ -3273,6 +3280,7 @@
     border-color: rgba(249,115,22,.22) !important;
 }
 
+/* Market Chips */
 .omega-tab-odds .v546-market-tags {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -3863,6 +3871,7 @@
 /* ================================
    Main Category Tabs
 ================================ */
+/* Main Category Tabs */
 .omega-tab-odds .v544-category-row {
     display: flex !important;
     width: 100% !important;
@@ -4112,6 +4121,7 @@
 /* ================================
    Market Chips
 ================================ */
+/* Market Filters */
 .omega-tab-odds .v552-market-group-filters {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -4141,7 +4151,10 @@
     box-shadow: 0 0 16px rgba(126,58,242,.12), inset 0 1px 0 rgba(255,255,255,.05) !important;
 }
 
-/* Comparison Preview / Mock Odds Adapter */
+/* ===============================
+   Comparison Preview
+   Mock Odds / Adapter Badges
+================================ */
 .v554-mock-adapter-badges {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -4275,7 +4288,9 @@
     font-size: .7rem !important;
 }
 
-/* Comparison Preview / Fixture Matching */
+/* ===============================
+   Fixture Matching Preview
+================================ */
 .v555-fixture-preview {
     display: grid !important;
     gap: 12px !important;
@@ -4669,7 +4684,8 @@
 }
 
 /* ===============================
-   V558 Source Health / Safe States
+   Sources / Registry
+   Source Health
 ================================ */
 .v558-state-note {
     display: flex !important;
@@ -4804,7 +4820,7 @@
 }
 
 /* ===============================
-   V559 Source Registry Prep
+   Sources / Registry
 ================================ */
 .v559-source-registry {
     display: grid !important;
@@ -4912,7 +4928,7 @@
 }
 
 /* ===============================
-   V561 Manual Source Config
+   Source Settings / Registry Filters
 ================================ */
 .v561-source-settings {
     display: grid !important;
@@ -5128,7 +5144,7 @@
 }
 
 /* ===============================
-   V562 Adapter Runner / Live Readiness
+   Dry-run Panel / Live Readiness
 ================================ */
 .v562-readiness-checklist {
     display: flex !important;
@@ -5228,7 +5244,9 @@
     }
 }
 
-/* V564 — Oran Terminali geçiş performansı: layout oynamadan hafif durum değişimi */
+/* ===============================
+   Render Stability / Tab Filters
+================================ */
 .omega-tab-odds .odds-v528-content,
 .omega-tab-odds .v559-source-registry,
 .omega-tab-odds .v561-source-settings,
@@ -5263,7 +5281,8 @@
 }
 
 /* ===============================
-   V565 Source Configuration / Dry-run Slots
+   Sources / Registry
+   Dry-run Panel
 ================================ */
 .v565-source-configuration {
     display: grid !important;
@@ -5377,7 +5396,9 @@
     }
 }
 
-/* V566 — Manuel kaynak adı/not/priority ve dry-run JSON içe aktarma */
+/* ===============================
+   Source Settings / Dry-run Input
+================================ */
 .v566-source-field {
     display: grid !important;
     gap: 6px !important;
