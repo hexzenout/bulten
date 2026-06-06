@@ -35,7 +35,9 @@
     snapshot: null,
     lastLoadedAt: null,
     sourceConfigFilter: "all",
-    sourceConfig: {}
+    sourceConfig: {},
+    dryRunInput: "",
+    dryRunResult: null
   };
 
   let curatedMarketCategoryCache = null;
@@ -50,6 +52,7 @@
   let effectiveSourceRegistryCache = null;
   let adapterResultsCache = null;
   let sourceRegistryHealthCache = null;
+  let sourceConfigSaveTimer = null;
   let polymarketAdapterRecordsCache = null;
   let defaultComparisonEngineCache = null;
   const loadJsonWarningKeys = new Set();
@@ -535,8 +538,11 @@
     if (!safe.sourceConfig || typeof safe.sourceConfig !== "object" || Array.isArray(safe.sourceConfig)) safe.sourceConfig = {};
     safe.sourceConfig = Object.fromEntries(Object.entries(safe.sourceConfig).map(([sourceId, config]) => {
       const base = SOURCE_REGISTRY.find(source => source.sourceId === sourceId);
-      const enabled = config && typeof config === "object" ? config.enabled !== false : true;
-      return [sourceId, { enabled, mode: normalizeDataMode(config?.mode || base?.mode || "planned") }];
+      const enabled = config && typeof config === "object" && config.enabled !== undefined ? config.enabled !== false : base?.enabled !== false;
+      const displayName = sanitizeSourceDisplayName(config?.displayName || base?.displayName || base?.sourceName || "");
+      const notes = sanitizeSourceNote(config?.notes || "");
+      const priority = sanitizeSourcePriority(config?.priority ?? base?.priority ?? 15);
+      return [sourceId, { enabled, mode: normalizeDataMode(config?.mode || base?.mode || "planned"), displayName, notes, priority }];
     }));
     if (!["all", "football", "basketball", "polymarket"].includes(safe.sport)) safe.sport = "all";
     if (!["all", "sports", "crypto", "economy", "news", "short", "liquid", "value"].includes(safe.polyFilter)) safe.polyFilter = "all";
@@ -1507,6 +1513,20 @@
   function displayStatusLabel(status) { return labelFromDictionary(status, UI_STATUS_LABELS); }
   function displayMappingLabel(value) { return labelFromDictionary(value, UI_MAPPING_LABELS); }
 
+  function sanitizeSourceDisplayName(value) {
+    return String(value || "").replace(/\s+/g, " ").trim().slice(0, 48);
+  }
+
+  function sanitizeSourceNote(value) {
+    return String(value || "").replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
+  }
+
+  function sanitizeSourcePriority(value) {
+    const number = Math.round(Number(value));
+    if (!Number.isFinite(number)) return 15;
+    return Math.min(15, Math.max(1, number));
+  }
+
   function displaySourceName(source = {}) {
     const name = String(source.displayName || source.sourceName || source.source || source.sourceId || "");
     if (/^Placeholder Bookmaker\s+(\d+)/i.test(name)) return name.replace(/^Placeholder Bookmaker/i, "Planlanan Kaynak");
@@ -1687,6 +1707,26 @@
 
   function currentSourceConfigCacheKey() {
     return `${state.lastLoadedAt || "not-loaded"}|${JSON.stringify(state.sourceConfig || {})}`;
+  }
+
+  function updateSourceConfig(sourceId, patch = {}) {
+    const base = SOURCE_REGISTRY.find(source => String(source.sourceId || "") === String(sourceId || ""));
+    if (!base) return null;
+    state.sourceConfig = state.sourceConfig && typeof state.sourceConfig === "object" ? state.sourceConfig : {};
+    const current = state.sourceConfig[sourceId] && typeof state.sourceConfig[sourceId] === "object" ? state.sourceConfig[sourceId] : {};
+    const enabled = patch.enabled !== undefined ? patch.enabled !== false : current.enabled !== undefined ? current.enabled !== false : base.enabled !== false;
+    const mode = normalizeDataMode(patch.mode || current.mode || base.mode || "planned");
+    const displayName = sanitizeSourceDisplayName(patch.displayName !== undefined ? patch.displayName : current.displayName || base.displayName || base.sourceName || "");
+    const notes = sanitizeSourceNote(patch.notes !== undefined ? patch.notes : current.notes || "");
+    const priority = sanitizeSourcePriority(patch.priority !== undefined ? patch.priority : current.priority ?? base.priority ?? 15);
+    state.sourceConfig[sourceId] = { enabled, mode, displayName, notes, priority };
+    clearSourceDerivedCaches();
+    return state.sourceConfig[sourceId];
+  }
+
+  function saveSourceConfigSoon() {
+    clearTimeout(sourceConfigSaveTimer);
+    sourceConfigSaveTimer = setTimeout(saveLocalState, 180);
   }
 
   function clearSourceDerivedCaches() {
@@ -2098,6 +2138,10 @@
     return {
       ...source,
       enabled,
+      displayName: sanitizeSourceDisplayName(override.displayName || source.displayName || source.sourceName || ""),
+      sourceName: sanitizeSourceDisplayName(override.displayName || source.sourceName || source.displayName || ""),
+      notes: sanitizeSourceNote(override.notes || source.notes || ""),
+      priority: sanitizeSourcePriority(override.priority ?? source.priority ?? 15),
       mode: enabled ? normalizeDataMode(override.mode || source.mode || "planned") : "disabled",
       configMode: normalizeDataMode(override.mode || source.mode || "planned")
     };
@@ -2144,87 +2188,175 @@
   }
 
 
-  const DRY_RUN_SAMPLE_PAYLOAD = {
-    sourceId: "source_book_02",
-    mode: "dry-run",
-    records: [
-      {
-        id: "dry_001", sport: "football", homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League",
-        startsAt: "2026-06-05T19:00:00Z", sourceMarketName: "Total Goals Over/Under 2.5", selection: "over", line: 2.5, odds: 1.87
-      },
-      {
-        id: "dry_002", sport: "basketball", homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL",
-        startsAt: "2026-06-05T18:00:00Z", marketId: "basket.total_points_ou", selection: "under", line: 164.5, odds: 1.91
-      },
-      {
-        id: "dry_003", sport: "football", homeTeam: "Unknown FC", awayTeam: "No Match United", league: "Test Lig",
-        startsAt: "2026-06-05T23:45:00Z", sourceMarketName: "Unmapped Experimental Market", selection: "over", line: 7.5, odds: 1.62
-      }
-    ]
-  };
+  const DRY_RUN_SAMPLE_PAYLOAD = [
+    {
+      source: "source_book_01", sport: "football", homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League",
+      startsAt: "2026-06-05T19:00:00Z", sourceMarketName: "Total Goals Over/Under 2.5", selection: "over", line: 2.5, odds: 1.87
+    },
+    {
+      source: "source_book_03", sport: "football", homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League",
+      startsAt: "2026-06-05T19:00:00Z", sourceMarketName: "Match Goals 2.5 O/U", selection: "over", line: 2.5, odds: 1.94
+    }
+  ];
+
+  const POLYMARKET_DRY_RUN_FIELDS = ["category", "title", "yesPrice", "noPrice", "liquidity", "volume24h", "closesInHours", "tags"];
+
+  function parseDryRunJsonInput(input) {
+    if (typeof input !== "string") return { ok: true, payload: input };
+    const raw = input.trim();
+    if (!raw) return { ok: false, errors: ["JSON alanı boş. Örnek kayıt dizisi yapıştırın."] };
+    try {
+      return { ok: true, payload: JSON.parse(raw) };
+    } catch (error) {
+      return { ok: false, errors: [`JSON geçerli değil: ${error?.message || "parse hatası"}`] };
+    }
+  }
+
+  function extractIncomingRecords(payload) {
+    if (Array.isArray(payload)) return payload;
+    if (payload && typeof payload === "object" && Array.isArray(payload.records)) {
+      return payload.records.map(record => ({ source: payload.source || payload.sourceId || record?.source, ...record }));
+    }
+    return [];
+  }
+
+  function isPolymarketDryRunRecord(record = {}) {
+    const sourceId = canonicalSourceId(record.source || record.sourceId || "");
+    return sourceId === "polymarket_mock" || POLYMARKET_DRY_RUN_FIELDS.some(field => record[field] !== undefined);
+  }
+
+  function validatePolymarketDryRunRecord(record = {}, index = 0) {
+    const errors = [];
+    const sourceId = canonicalSourceId(record.source || record.sourceId || "");
+    if (sourceId !== "polymarket_mock") errors.push(`Kayıt ${index + 1}: Polymarket dry-run için source polymarket_mock olmalı.`);
+    if (!record.title) errors.push(`Kayıt ${index + 1}: Polymarket title eksik.`);
+    ["yesPrice", "noPrice"].forEach(field => {
+      const value = Number(record[field]);
+      if (!Number.isFinite(value) || value < 0 || value > 1) errors.push(`Kayıt ${index + 1}: ${field} 0-1 arası sayı olmalı.`);
+    });
+    return errors;
+  }
+
+  function validateBookmakerDryRunRecord(record = {}, index = 0) {
+    const errors = [];
+    const sourceId = canonicalSourceId(record.source || record.sourceId || "");
+    const source = findEffectiveSource(sourceId);
+    const sport = String(record.sport || "").toLowerCase();
+    const odds = Number(record.odds);
+    if (!sourceId) errors.push(`Kayıt ${index + 1}: source zorunlu.`);
+    if (sourceId && !source) errors.push(`Kayıt ${index + 1}: source bilinen kaynak değil.`);
+    if (source?.type === "prediction_market") errors.push(`Kayıt ${index + 1}: Polymarket kaydı bookmaker odds alanına karışamaz.`);
+    if (source && !isSourceActiveForUi(source)) errors.push(`Kayıt ${index + 1}: kaynak pasif olduğu için karşılaştırmaya dahil edilmez.`);
+    if (!["football", "basketball"].includes(sport)) errors.push(`Kayıt ${index + 1}: sport football veya basketball olmalı.`);
+    if (source && sport && Array.isArray(source.sports) && !source.sports.includes(sport)) errors.push(`Kayıt ${index + 1}: kaynak bu sporu desteklemiyor.`);
+    if (!record.homeTeam || !record.awayTeam || !record.startsAt) errors.push(`Kayıt ${index + 1}: fixture key için homeTeam, awayTeam ve startsAt zorunlu.`);
+    if (!record.marketId && !record.sourceMarketName && !record.marketName) errors.push(`Kayıt ${index + 1}: market eşleşmesi için sourceMarketName veya marketId zorunlu.`);
+    if (!Number.isFinite(odds) || odds <= 1) errors.push(`Kayıt ${index + 1}: odds number olmalı ve 1'den büyük olmalı.`);
+    return errors;
+  }
 
   function validateIncomingOddsPayload(payload) {
+    const parsed = parseDryRunJsonInput(payload);
+    if (!parsed.ok) return { valid: false, errors: parsed.errors, sourceId: "", recordCount: 0, records: [], polymarketCount: 0, bookmakerCount: 0 };
+    const records = extractIncomingRecords(parsed.payload);
     const errors = [];
-    const sourceId = payload?.sourceId || payload?.source || "";
-    const source = findEffectiveSource(sourceId);
-    if (!payload || typeof payload !== "object" || Array.isArray(payload)) errors.push("Payload nesne olmalı.");
-    if (!sourceId) errors.push("sourceId zorunlu.");
-    if (sourceId && !source) errors.push("sourceId kaynak kayıtlarında yok.");
-    if (source && !canSourceRunInCurrentMode(source)) errors.push("Kaynak mevcut modda sadece dry-run dışı çalışamaz veya pasif.");
-    const records = Array.isArray(payload?.records) ? payload.records : [];
-    if (!Array.isArray(payload?.records)) errors.push("records dizisi zorunlu.");
+    if (!Array.isArray(parsed.payload) && !(parsed.payload && typeof parsed.payload === "object" && Array.isArray(parsed.payload.records))) errors.push("Payload Array veya records dizisi içeren nesne olmalı.");
+    if (!records.length) errors.push("Kayıt dizisi boş olamaz.");
+    let polymarketCount = 0;
+    let bookmakerCount = 0;
     records.forEach((record, index) => {
-      if (!record || typeof record !== "object" || Array.isArray(record)) errors.push(`records[${index}] nesne olmalı.`);
-      if (!record?.marketId && !record?.sourceMarketName && !record?.marketName) errors.push(`records[${index}] marketId veya sourceMarketName içermeli.`);
-      if (!record?.homeTeam || !record?.awayTeam) errors.push(`records[${index}] fixture takımları eksik.`);
-      if (!Number.isFinite(Number(record?.odds)) || Number(record?.odds) <= 1) errors.push(`records[${index}] oran değeri geçersiz.`);
+      if (!record || typeof record !== "object" || Array.isArray(record)) {
+        errors.push(`Kayıt ${index + 1}: nesne olmalı.`);
+        return;
+      }
+      if (isPolymarketDryRunRecord(record)) {
+        polymarketCount += 1;
+        errors.push(...validatePolymarketDryRunRecord(record, index));
+      } else {
+        bookmakerCount += 1;
+        errors.push(...validateBookmakerDryRunRecord(record, index));
+      }
     });
-    return { valid: errors.length === 0, errors, sourceId, recordCount: records.length };
+    if (polymarketCount && bookmakerCount) errors.push("Polymarket dry-run kayıtları normal bookmaker payload ile karışamaz.");
+    return {
+      valid: errors.length === 0,
+      errors,
+      sourceId: records[0]?.source || records[0]?.sourceId || parsed.payload?.source || parsed.payload?.sourceId || "",
+      recordCount: records.length,
+      records,
+      polymarketCount,
+      bookmakerCount
+    };
   }
 
   function normalizeIncomingOddsPayload(payload) {
     const validation = validateIncomingOddsPayload(payload);
-    const sourceId = payload?.sourceId || payload?.source || "dry_run_source";
-    const source = findEffectiveSource(sourceId) || {};
-    const records = Array.isArray(payload?.records) ? payload.records : [];
+    const records = validation.records || [];
+    const normalizedRecords = validation.polymarketCount ? [] : records.map(record => {
+      const sourceId = canonicalSourceId(record.source || record.sourceId || "");
+      const source = findEffectiveSource(sourceId) || {};
+      try {
+        return mapOddsRecordToCatalog(adaptSourceOddsRecord({
+          ...record,
+          source: sourceId,
+          sourceName: displaySourceName(source) || sourceId,
+          dataMode: "dry_run"
+        }));
+      } catch (error) {
+        return null;
+      }
+    }).filter(Boolean);
     return {
-      sourceId,
+      sourceId: validation.sourceId,
       mode: "dry-run",
       valid: validation.valid,
       errors: validation.errors,
-      records: records.map(record => mapOddsRecordToCatalog(adaptSourceOddsRecord({
-        ...record,
-        source: sourceId,
-        sourceName: displaySourceName(source) || sourceId,
-        dataMode: "dry_run"
-      })))
+      records: normalizedRecords,
+      rawRecords: records,
+      isPolymarket: Boolean(validation.polymarketCount),
+      recordCount: validation.recordCount
     };
   }
 
   function previewIncomingOddsPayload(payload) {
     const normalized = normalizeIncomingOddsPayload(payload);
-    const fixtureCandidates = mockOddsRecords();
-    const preview = normalized.records.reduce((acc, record) => {
-      const hasMarket = Boolean(record.matchedMarketId || findCatalogMarketById(record.marketId));
-      if (hasMarket) acc.marketIdMatched += 1;
-      else acc.marketIdUnmatched += 1;
-      const bestFixture = fixtureCandidates.reduce((best, candidate) => {
-        const score = scoreFixtureMatch(record, candidate);
-        return score > best.score ? { score, candidate } : best;
-      }, { score: 0, candidate: null });
-      if (bestFixture.score >= 0.82) acc.fixtureMatched += 1;
-      else if (bestFixture.score >= 0.65) acc.fixtureSuspicious += 1;
-      else acc.fixtureSuspicious += 1;
-      return acc;
-    }, {
+    const sourceNames = [...new Set((normalized.rawRecords || []).map(record => {
+      const source = findEffectiveSource(canonicalSourceId(record.source || record.sourceId || ""));
+      return source ? displaySourceName(source) : (record.source || record.sourceId || "Bilinmeyen kaynak");
+    }))];
+    const preview = {
       sourceId: normalized.sourceId,
-      recordCount: normalized.records.length,
+      sourceName: sourceNames.join(", ") || "-",
+      recordCount: normalized.recordCount,
+      validRecordCount: normalized.valid ? normalized.recordCount : Math.max(0, normalized.recordCount - normalized.errors.length),
+      invalidRecordCount: normalized.valid ? 0 : normalized.errors.length,
       marketIdMatched: 0,
       marketIdUnmatched: 0,
       fixtureMatched: 0,
       fixtureSuspicious: 0,
       errorCount: normalized.errors.length,
-      errors: normalized.errors
+      errors: normalized.errors,
+      records: normalized.records,
+      isPolymarket: normalized.isPolymarket,
+      dataMode: "Dry-run"
+    };
+    if (normalized.isPolymarket) return preview;
+    const fixtureCandidates = mockOddsRecords();
+    normalized.records.forEach(record => {
+      const hasMarket = Boolean(record.matchedMarketId || findCatalogMarketById(record.marketId));
+      if (hasMarket) preview.marketIdMatched += 1;
+      else preview.marketIdUnmatched += 1;
+      const fixtureKey = buildFixtureKey(record);
+      if (!fixtureKey || fixtureKey.includes("unknown")) {
+        preview.fixtureSuspicious += 1;
+        return;
+      }
+      const bestFixture = fixtureCandidates.reduce((best, candidate) => {
+        const score = scoreFixtureMatch(record, candidate);
+        return score > best.score ? { score, candidate } : best;
+      }, { score: 0, candidate: null });
+      if (bestFixture.score >= 0.82) preview.fixtureMatched += 1;
+      else preview.fixtureSuspicious += 1;
     });
     return preview;
   }
@@ -3347,6 +3479,7 @@
       ${renderComparisonHealth(data)}
       ${renderComparisonRows(data)}
       ${renderLineDifferencePreview(data)}
+      ${renderDryRunComparisonPreview()}
     </section>`;
   }
 
@@ -3740,26 +3873,34 @@
       .sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
   }
 
+  function sourcePriorityOptions(priority) {
+    const current = sanitizeSourcePriority(priority);
+    return Array.from({ length: 15 }, (_, index) => index + 1)
+      .map(value => `<option value="${value}" ${value === current ? "selected" : ""}>${value}</option>`).join("");
+  }
+
   function renderSourceSettingsCards(rows = filteredEffectiveSourceRows(), healthRows = sourceRegistryHealthRows()) {
     return rows.map(source => {
       const health = findSourceRegistryHealth(source.sourceId, healthRows);
       const statusClass = sourceRegistryStatusClass(source, health);
-      const statusLabel = sourceRegistryStatusLabel(source, health);
       const active = isSourceActiveForUi(source);
-      return `<article class="${escapeAttr([source.type === "prediction_market" ? "prediction-market" : "bookmaker-source", active ? "is-active" : "is-passive"].join(" "))}">
+      const note = getSourceConfigOverride(source.sourceId)?.notes || source.notes || "";
+      return `<article class="${escapeAttr([source.type === "prediction_market" ? "prediction-market" : "bookmaker-source", active ? "is-active" : "is-passive"].join(" "))}" data-source-config-card="${escapeAttr(source.sourceId)}">
         <div class="v561-source-card-head">
-          <div><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.technicalName || source.sourceId)}</small></div>
+          <div><b data-source-name-label="${escapeAttr(source.sourceId)}">${escapeHtml(displaySourceName(source))}</b><small>Teknik ID: ${escapeHtml(source.technicalName || source.sourceId)}</small></div>
           <button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button>
         </div>
+        <label class="v566-source-field"><span>Kaynak Adı</span><input type="text" data-source-display-name="${escapeAttr(source.sourceId)}" value="${escapeAttr(displaySourceName(source))}" autocomplete="off"></label>
         <dl>
-          <div><dt>Tip</dt><dd>${escapeHtml(displaySourceTypeLabel(source.type))}</dd></div>
+          <div><dt>Teknik ID</dt><dd>${escapeHtml(source.sourceId)}</dd></div>
+          <div><dt>Kaynak Tipi</dt><dd>${escapeHtml(displaySourceTypeLabel(source.type))}</dd></div>
+          <div><dt>Aktif/Pasif</dt><dd data-source-active-label="${escapeAttr(source.sourceId)}">${active ? "Aktif" : "Pasif"}</dd></div>
+          <div><dt>Desteklenen Sporlar</dt><dd>${escapeHtml((source.sports || []).join(", "))}</dd></div>
           <div><dt>Mod</dt><dd>${escapeHtml(displayModeLabel(source.mode))}</dd></div>
           <div><dt>Adapter Durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(getAdapterStatusLabel(getAdapterSlot(source.sourceId).status))}</span></dd></div>
-          <div><dt>API anahtarı</dt><dd>${source.requiresKey ? "Gerekiyor" : "Gerekmiyor"} · ${escapeHtml(source.authType || "none")}</dd></div>
-          <div><dt>Öncelik</dt><dd>${Number(source.priority || 0)}</dd></div>
+          <div><dt>Öncelik</dt><dd><select data-source-priority="${escapeAttr(source.sourceId)}" aria-label="Öncelik">${sourcePriorityOptions(source.priority)}</select></dd></div>
         </dl>
-        <p><b>Desteklenen sporlar:</b> ${escapeHtml((source.sports || []).join(", "))}</p>
-        <p><b>Not:</b> ${escapeHtml(health?.message || source.notes || "Planlandı")}</p>
+        <label class="v566-source-field"><span>Not</span><textarea data-source-note="${escapeAttr(source.sourceId)}" rows="3" placeholder="Futbol oranları için kullanılacak">${escapeHtml(note)}</textarea></label>
         <p><b>Yasal not:</b> ${escapeHtml(source.legalNote || "Canlı bağlantı öncesi manuel kontrol edilecek.")}</p>
         <small>${escapeHtml((source.supportedMarketFamilies || []).join(" · "))}</small>
       </article>`;
@@ -3780,7 +3921,7 @@
         <td>${escapeHtml((source.sports || []).join(", "))}</td>
         <td><span class="${escapeAttr(statusClass)}">${escapeHtml(getAdapterStatusLabel(getAdapterSlot(source.sourceId).status))}</span><small>${escapeHtml(displayStatusLabel(statusLabel))}</small></td>
         <td><button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button></td>
-        <td><b>${Number(source.priority || 0)}</b>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
+        <td><b>Öncelik ${Number(source.priority || 0)}</b><small>${escapeHtml(note)}</small><small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
       </tr>`;
     }).join("");
   }
@@ -3871,27 +4012,58 @@
     </section>`;
   }
 
+  function getDryRunInputValue() {
+    return state.dryRunInput || JSON.stringify(DRY_RUN_SAMPLE_PAYLOAD, null, 2);
+  }
+
   function renderDryRunPayloadPanel() {
-    const preview = previewIncomingOddsPayload(DRY_RUN_SAMPLE_PAYLOAD);
-    const rejected = rejectInvalidOddsPayload(DRY_RUN_SAMPLE_PAYLOAD);
+    const preview = state.dryRunResult || previewIncomingOddsPayload(DRY_RUN_SAMPLE_PAYLOAD);
+    const rejected = preview.errorCount > 0;
     const rows = [
-      ["kayıt sayısı", preview.recordCount],
-      ["marketId eşleşen", preview.marketIdMatched],
-      ["marketId eşleşmeyen", preview.marketIdUnmatched],
-      ["fixture eşleşen", preview.fixtureMatched],
-      ["fixture şüpheli", preview.fixtureSuspicious],
-      ["hata sayısı", preview.errorCount]
+      ["Toplam Kayıt", preview.recordCount],
+      ["Geçerli Kayıt", preview.validRecordCount],
+      ["Hatalı Kayıt", preview.invalidRecordCount],
+      ["Eşleşen Market", preview.marketIdMatched],
+      ["Eşleşmeyen Market", preview.marketIdUnmatched],
+      ["Fixture Eşleşen", preview.fixtureMatched],
+      ["Fixture Şüpheli", preview.fixtureSuspicious],
+      ["Kaynak Adı", preview.sourceName || "-"],
+      ["Veri Modu", "Dry-run"]
     ];
-    return `<section class="v565-dry-run" aria-label="Dry-run Veri Kontrolü">
+    return `<section class="v565-dry-run" aria-label="Dry-run Veri İçe Aktarma">
       <div class="v554-mock-preview-head compact">
         <div>
-          <span>Dry-run Veri Kontrolü</span>
+          <span>Dry-run Veri İçe Aktarma</span>
           <h3>Dry-run Veri Kontrolü</h3>
-          <p>Adapter çıktısı gerçek API/fetch/scraping yapmadan dummy payload ile kontrol edilir.</p>
+          <p>Gerçek bağlantı kapalıdır. Bu alan sadece örnek JSON verisinin market ve maç eşleşmesini test eder.</p>
         </div>
-        <em>${rejected ? "Payload reddedildi" : "Payload kabul modeli hazır"}</em>
+        <em>${rejected ? "Türkçe hata mesajı hazır" : "Gerçek bağlantı kapalı"}</em>
+      </div>
+      <textarea class="v566-dry-run-textarea" data-dry-run-input rows="10" spellcheck="false" placeholder="Örnek JSON kayıt dizisi yapıştırın">${escapeHtml(getDryRunInputValue())}</textarea>
+      <div class="v566-dry-run-actions">
+        <button type="button" data-dry-run-test>Dry-run Test Et</button>
+        <button type="button" data-dry-run-clear>Temizle</button>
       </div>
       <div class="v565-dry-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+      ${preview.isPolymarket ? `<p class="v566-dry-run-info">Polymarket dry-run ayrı işlenir; YES/NO fiyatları decimal odds gibi işlenmez.</p>` : ""}
+      ${preview.errors?.length ? `<div class="v566-dry-run-errors"><b>Hata Mesajları</b>${preview.errors.map(error => `<span>${escapeHtml(error)}</span>`).join("")}</div>` : ""}
+    </section>`;
+  }
+
+  function renderDryRunComparisonPreview() {
+    const preview = state.dryRunResult;
+    if (!preview || preview.errorCount || preview.isPolymarket || !Array.isArray(preview.records) || !preview.records.length) return "";
+    const activeRecords = filterComparisonRecordsBySource(preview.records);
+    if (!activeRecords.length) return `<section class="v566-dry-run-preview"><b>Dry-run Önizleme</b><p>Geçerli kayıt var ancak aktif kaynak bulunmadığı için karşılaştırmaya dahil edilmedi.</p></section>`;
+    const data = comparisonEngineResults(activeRecords);
+    return `<section class="v566-dry-run-preview" aria-label="Dry-run Önizleme">
+      <div><span>Dry-run Önizleme</span><h4>Dry-run Önizleme</h4><p>Bu bölüm gerçek fırsat/sinyal değildir; sadece yapıştırılan JSON için market ve fixture kontrolüdür.</p></div>
+      <div class="v565-dry-grid">
+        <article><b>Kayıt</b><span>${data.summary.records}</span></article>
+        <article><b>Eşleşen Market</b><span>${data.summary.matchedMarkets}</span></article>
+        <article><b>Kaynak</b><span>${data.summary.sources}</span></article>
+        <article><b>Veri Modu</b><span>Dry-run</span></article>
+      </div>
     </section>`;
   }
 
@@ -3931,7 +4103,7 @@
         </div>
         <em>Gerçek API yok · Fetch yok · Scraping yok · Otomatik oynama yok</em>
       </div>
-      ${renderSourceRegistryPanel()}${renderSourceSettingsPanel()}${renderSourceHealthCards()}${renderLiveReadinessPanel()}
+      ${renderSourceRegistryPanel()}${renderSourceSettingsPanel()}${renderDryRunPayloadPanel()}${renderSourceHealthCards()}${renderLiveReadinessPanel()}
     </section>`;
   }
 
@@ -3985,6 +4157,15 @@
     qsa("[data-source-filter-label]").forEach(node => {
       node.textContent = currentSourceConfigFilterLabel();
     });
+  }
+
+  function renderDryRunPanelOnly() {
+    const panel = qs(".v565-dry-run");
+    if (!panel) {
+      renderContentOnly();
+      return;
+    }
+    panel.outerHTML = renderDryRunPayloadPanel();
   }
 
   function renderSourceFilterOnly() {
@@ -4182,12 +4363,28 @@
       const current = applySourceConfig(baseSource);
       const nextEnabled = !isSourceActiveForUi(current);
       state.sourceConfig = state.sourceConfig && typeof state.sourceConfig === "object" ? state.sourceConfig : {};
-      state.sourceConfig[sourceId] = { enabled: nextEnabled, mode: baseSource.mode || "planned" };
+      updateSourceConfig(sourceId, { enabled: nextEnabled, mode: baseSource.mode || "planned" });
       mockComparisonCache = null;
-      clearSourceDerivedCaches();
       saveLocalState();
-      if (state.tab === "sources") renderContentOnly();
-      else render();
+      if (state.tab === "sources") renderSourceFilterOnly();
+      else renderContentOnly();
+      return;
+    }
+
+    if (e.target.closest("[data-dry-run-test]")) {
+      e.preventDefault();
+      const input = qs("[data-dry-run-input]");
+      state.dryRunInput = input ? input.value : getDryRunInputValue();
+      state.dryRunResult = previewIncomingOddsPayload(state.dryRunInput);
+      renderDryRunPanelOnly();
+      return;
+    }
+
+    if (e.target.closest("[data-dry-run-clear]")) {
+      e.preventDefault();
+      state.dryRunInput = "";
+      state.dryRunResult = null;
+      renderDryRunPanelOnly();
       return;
     }
 
@@ -4222,6 +4419,36 @@
       }, SEARCH_RENDER_DELAY);
       return;
     }
+    const sourceDisplayInput = e.target?.closest?.("[data-source-display-name]");
+    if (sourceDisplayInput) {
+      const sourceId = sourceDisplayInput.dataset.sourceDisplayName;
+      updateSourceConfig(sourceId, { displayName: sourceDisplayInput.value });
+      const label = qsa("[data-source-name-label]").find(node => node.dataset.sourceNameLabel === sourceId);
+      if (label) label.textContent = sanitizeSourceDisplayName(sourceDisplayInput.value) || displaySourceName(SOURCE_REGISTRY.find(source => source.sourceId === sourceId) || {});
+      saveSourceConfigSoon();
+      return;
+    }
+
+    const sourceNoteInput = e.target?.closest?.("[data-source-note]");
+    if (sourceNoteInput) {
+      updateSourceConfig(sourceNoteInput.dataset.sourceNote, { notes: sourceNoteInput.value });
+      saveSourceConfigSoon();
+      return;
+    }
+
+    const sourcePriorityInput = e.target?.closest?.("[data-source-priority]");
+    if (sourcePriorityInput) {
+      updateSourceConfig(sourcePriorityInput.dataset.sourcePriority, { priority: sourcePriorityInput.value });
+      saveSourceConfigSoon();
+      return;
+    }
+
+    const dryRunInput = e.target?.closest?.("[data-dry-run-input]");
+    if (dryRunInput) {
+      state.dryRunInput = dryRunInput.value;
+      return;
+    }
+
     if (e.target && e.target.id === "v533-alarm-sensitivity") {
       state.alarmSensitivity = Number(e.target.value || 0.4);
       saveLocalState();
