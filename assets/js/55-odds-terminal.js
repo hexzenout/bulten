@@ -41,6 +41,7 @@
   let marketMapCache = null;
   let marketSearchRenderTimer = null;
   let normalizedMockOddsCache = null;
+  let mockComparisonCache = null;
   let mockOddsValidationDone = false;
 
 
@@ -74,8 +75,8 @@
     },
     {
       id: "raw_fb_b_001", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
-      homeTeam: "Arsenal FC", awayTeam: "Chelsea FC", league: "Premier League", startsAt: "2026-06-05T19:06:00Z",
-      sourceMarketName: "Match Goals 2.5 O/U", selection: "under", line: 2.5, odds: 1.93,
+      homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League", startsAt: "2026-06-05T19:00:00Z",
+      sourceMarketName: "Match Goals 2.5 O/U", selection: "over", line: 3.5, odds: 2.22,
       period: "full_time", updatedAt: "2026-06-05T18:34:00Z", dataMode: "mock_source"
     },
     {
@@ -122,7 +123,7 @@
     },
     {
       id: "raw_bk_c_001", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
-      homeTeam: "Fenerbahce Beko", awayTeam: "Anadolu Efes SK", league: "Basketbol Süper Ligi", startsAt: "2026-06-05T18:09:00Z",
+      homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
       sourceMarketName: "Game Total Points Under 164.5", selection: "under", line: 164.5, odds: 1.88,
       period: "full_time", updatedAt: "2026-06-05T17:48:00Z", dataMode: "mock_source"
     },
@@ -135,7 +136,7 @@
     {
       id: "raw_bk_c_003", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
       homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-      sourceMarketName: "Both Clubs Reach 70 Points", selection: "yes", line: 70, odds: 2.05,
+      sourceMarketName: "Both Clubs Over 66.5 Points Including OT", selection: "over", line: 66.5, odds: 1.93,
       period: "full_time_ot_included", updatedAt: "2026-06-05T17:57:00Z", dataMode: "mock_source"
     },
     {
@@ -155,7 +156,8 @@
     { source: "mock_book_a", sport: "basketball", sourceMarketName: "Both Teams To Score Over 68.5 Points Including OT", marketId: "basket.both_teams_points_line_ou_ot", confidence: 0.88 },
     { source: "mock_book_a", sport: "basketball", sourceMarketName: "Total Points O/U", marketId: "basket.total_points_ou", confidence: 0.91 },
     { source: "mock_book_c", sport: "basketball", sourceMarketName: "Game Total Points Under 164.5", marketId: "basket.total_points_ou", confidence: 0.87 },
-    { source: "mock_book_a", sport: "basketball", sourceMarketName: "Team 1 Points O/U", marketId: "basket.team1_points_ou", confidence: 0.86 }
+    { source: "mock_book_a", sport: "basketball", sourceMarketName: "Team 1 Points O/U", marketId: "basket.team1_points_ou", confidence: 0.86 },
+    { source: "mock_book_c", sport: "basketball", sourceMarketName: "Both Clubs Over 66.5 Points Including OT", marketId: "basket.both_teams_points_line_ou_ot", confidence: 0.84 }
   ];
 
   const MOCK_SOURCE_IDS = [...new Set(MOCK_SOURCE_RAW_RECORDS.map(row => row.source))];
@@ -1317,19 +1319,180 @@
     return normalizedMockOddsCache;
   }
 
-  function groupOddsByFixtureAndMarket(list = mockOddsRecords()) {
+  function oddsFixtureKey(record = {}) {
+    return String(record.fixtureId || record.fixtureKey || buildFixtureKey(record) || "fixture-unknown");
+  }
+
+  function oddsComparisonKeyPart(value) {
+    return fixtureKeyPart(value == null || value === "" ? "none" : value);
+  }
+
+  function oddsGroupKey(record = {}, parts = []) {
+    return parts.map(part => oddsComparisonKeyPart(typeof part === "function" ? part(record) : record[part])).join("|");
+  }
+
+  function groupOddsByFixture(list = mockOddsRecords()) {
     return list.reduce((acc, record) => {
-      const key = [record.fixtureId, record.marketId, record.line ?? "", record.selection].join("|");
+      if (isPolymarketRecord(record)) return acc;
+      const key = oddsGroupKey(record, ["sport", oddsFixtureKey]);
       if (!acc[key]) acc[key] = [];
       acc[key].push(record);
       return acc;
     }, {});
   }
 
+  function groupOddsByFixtureAndMarket(list = mockOddsRecords()) {
+    return list.reduce((acc, record) => {
+      if (isPolymarketRecord(record)) return acc;
+      const key = oddsGroupKey(record, ["sport", oddsFixtureKey, "marketId", "line", "selection", "period"]);
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(record);
+      return acc;
+    }, {});
+  }
+
+  function groupOddsByFixtureMarketLine(list = mockOddsRecords()) {
+    return list.reduce((acc, record) => {
+      if (isPolymarketRecord(record)) return acc;
+      const key = oddsGroupKey(record, ["sport", oddsFixtureKey, "marketId", "line", "period"]);
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(record);
+      return acc;
+    }, {});
+  }
+
+  function groupOddsBySource(list = mockOddsRecords()) {
+    return list.reduce((acc, record) => {
+      const key = String(record.source || record.bookmaker || "unknown_source");
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(record);
+      return acc;
+    }, {});
+  }
+
+  function findBestOddsForGroup(groupRecords = []) {
+    const valid = groupRecords
+      .filter(record => Number.isFinite(Number(record.odds)) && Number(record.odds) > 1)
+      .sort((a, b) => Number(b.odds) - Number(a.odds));
+    const bestRecord = valid[0] || null;
+    const secondBestRecord = valid[1] || null;
+    const sourceNames = [...new Set(valid.map(record => record.source || record.bookmaker || "unknown_source"))];
+    const averageOdds = valid.length ? valid.reduce((sum, record) => sum + Number(record.odds), 0) / valid.length : 0;
+    const bestDiffPercent = bestRecord && secondBestRecord
+      ? ((Number(bestRecord.odds) - Number(secondBestRecord.odds)) / Number(secondBestRecord.odds)) * 100
+      : 0;
+    const avgConfidence = valid.length ? valid.reduce((sum, record) => sum + Number(record.confidence || 0), 0) / valid.length : 0;
+    return {
+      bestRecord,
+      secondBestRecord,
+      averageOdds: Number(averageOdds.toFixed(3)),
+      bestDiffPercent: Number(bestDiffPercent.toFixed(2)),
+      sourceCount: sourceNames.length,
+      comparedSources: sourceNames,
+      confidence: sourceNames.length < 2 ? "insufficient" : avgConfidence >= 0.82 ? "high" : avgConfidence >= 0.68 ? "medium" : "low",
+      confidenceScore: Number(avgConfidence.toFixed(3)),
+      status: sourceNames.length < 2 ? "karşılaştırma yetersiz" : "demo karşılaştırma"
+    };
+  }
+
+  function baseMarketFamily(marketId = "", record = {}) {
+    const id = String(marketId || record.marketId || record.matchedMarketId || "unmapped");
+    const explicitFamilies = {
+      "football.goals.total_2_5_ou": "football.goals.total_ou",
+      "football.home_goals_1_5_ou": "football.home_goals_ou",
+      "football.away_goals_1_5_ou": "football.away_goals_ou",
+      "football.corner.total_9_5_ou": "football.corner.total_ou",
+      "basket.total_points_ou": "basket.total_points_ou",
+      "basket.team1_points_ou": "basket.team1_points_ou",
+      "basket.both_teams_points_line_ou_ot": "basket.both_teams_points_line_ou_ot"
+    };
+    if (explicitFamilies[id]) return explicitFamilies[id];
+    return id
+      .replace(/_(\d+)_5(_ou)$/i, "$2")
+      .replace(/_(\d+)_0(_ou)$/i, "$2")
+      .replace(/_(\d+)_(\d+)(_ou)$/i, "$3")
+      .replace(/\.total_\d+_\d+_ou$/i, ".total_ou")
+      .replace(/_line_ou_ot$/i, "_line_ou_ot") || "unmapped";
+  }
+
+  function lineDifferenceSeverity(spread, sport) {
+    const value = Number(spread || 0);
+    if (sport === "basketball") {
+      if (value >= 4) return "high";
+      if (value >= 2) return "medium";
+      return "low";
+    }
+    if (value >= 1.5) return "high";
+    if (value >= 1) return "medium";
+    return "low";
+  }
+
+  function detectLineDifferences(list = mockOddsRecords()) {
+    const buckets = {};
+    list.forEach(record => {
+      if (isPolymarketRecord(record) || record.line == null || !record.marketId) return;
+      const line = Number(record.line);
+      if (!Number.isFinite(line)) return;
+      const family = baseMarketFamily(record.marketId, record);
+      const key = oddsGroupKey(record, ["sport", oddsFixtureKey, () => family, "period"]);
+      if (!buckets[key]) buckets[key] = { sport: record.sport, fixtureKey: oddsFixtureKey(record), baseMarketFamily: family, records: [] };
+      buckets[key].records.push(record);
+    });
+    return Object.values(buckets).map(bucket => {
+      const lines = [...new Set(bucket.records.map(record => Number(record.line)).filter(Number.isFinite))].sort((a, b) => a - b);
+      const sources = [...new Set(bucket.records.map(record => record.source || record.bookmaker || "unknown_source"))];
+      const lineSpread = lines.length > 1 ? Math.max(...lines) - Math.min(...lines) : 0;
+      return {
+        fixtureKey: bucket.fixtureKey,
+        sport: bucket.sport,
+        baseMarketFamily: bucket.baseMarketFamily,
+        lines,
+        sourceCount: sources.length,
+        lineSpread: Number(lineSpread.toFixed(2)),
+        records: bucket.records,
+        severity: lineDifferenceSeverity(lineSpread, bucket.sport)
+      };
+    }).filter(row => row.lines.length > 1 && row.lineSpread > 0)
+      .sort((a, b) => b.lineSpread - a.lineSpread || b.sourceCount - a.sourceCount);
+  }
+
+  function latestUpdatedAt(recordsList = []) {
+    const times = recordsList.map(record => Date.parse(record.updatedAt || record.lastUpdatedAt || "")).filter(Number.isFinite);
+    return times.length ? Math.max(...times) : 0;
+  }
+
+  function scoreComparisonCandidate({ bestOddsResult = null, lineDifferenceResult = null, sourceHealth = [] } = {}) {
+    const sourceCount = Math.max(Number(bestOddsResult?.sourceCount || 0), Number(lineDifferenceResult?.sourceCount || 0));
+    const diff = Math.max(0, Number(bestOddsResult?.bestDiffPercent || 0));
+    const spread = Math.max(0, Number(lineDifferenceResult?.lineSpread || 0));
+    const confidenceScore = bestOddsResult?.confidence === "high" ? 18 : bestOddsResult?.confidence === "medium" ? 12 : bestOddsResult?.confidence === "low" ? 6 : 0;
+    const healthRows = Array.isArray(sourceHealth) ? sourceHealth : [];
+    const mapped = healthRows.reduce((sum, row) => sum + Number(row.mappedRecordCount || 0), 0);
+    const adapted = healthRows.reduce((sum, row) => sum + Number(row.adaptedRecordCount || 0), 0);
+    const healthScore = adapted ? Math.round((mapped / adapted) * 14) : 0;
+    const freshnessSource = [
+      ...(bestOddsResult?.bestRecord ? [bestOddsResult.bestRecord] : []),
+      ...(bestOddsResult?.secondBestRecord ? [bestOddsResult.secondBestRecord] : []),
+      ...(lineDifferenceResult?.records || [])
+    ];
+    const latest = latestUpdatedAt(freshnessSource);
+    const ageHours = latest ? Math.max(0, (Date.now() - latest) / 36e5) : 999;
+    const freshnessScore = ageHours <= 12 ? 10 : ageHours <= 48 ? 6 : 2;
+    let score = Math.round(Math.min(100, Math.max(0,
+      Math.min(30, diff * 5) + Math.min(18, Math.max(0, sourceCount - 1) * 9) + confidenceScore +
+      Math.min(20, spread * (lineDifferenceResult?.sport === "basketball" ? 4 : 12)) + healthScore + freshnessScore
+    )));
+    let tag = "Karşılaştırma Adayı";
+    if (sourceCount < 2) tag = "Tek Kaynak — yetersiz";
+    else if (lineDifferenceResult?.lineSpread > 0) tag = "Barem Farkı";
+    else if (diff >= 1.5) tag = "Kaynak Farkı";
+    if (bestOddsResult?.confidence === "low" || (bestOddsResult?.bestRecord && !bestOddsResult.bestRecord.matchedMarketId)) tag = "Şüpheli Eşleşme";
+    if (tag === "Tek Kaynak — yetersiz") score = Math.min(score, 45);
+    return { score, tag, sourceCount, freshnessHours: Number.isFinite(ageHours) ? Number(ageHours.toFixed(1)) : null };
+  }
+
   function calculateBestOdds(list = mockOddsRecords()) {
-    return Object.values(groupOddsByFixtureAndMarket(list)).map(group => (
-      group.slice().sort((a, b) => Number(b.odds) - Number(a.odds))[0]
-    )).filter(Boolean);
+    return Object.values(groupOddsByFixtureAndMarket(list)).map(group => findBestOddsForGroup(group).bestRecord).filter(Boolean);
   }
 
   function sourceHealth(recordsList = mockOddsRecords(), rawList = MOCK_SOURCE_RAW_RECORDS) {
@@ -1367,6 +1530,69 @@
     const matched = list.filter(r => r.matchedMarketId).length;
     const fixtures = new Set(list.map(r => r.fixtureId)).size;
     return { records: list.length, matched, fixtures, sources: sourceHealth(list).length, mode: "mock hazırlık" };
+  }
+
+  function comparisonFixtureLabel(record = {}) {
+    return `${record.homeTeam || "Ev Sahibi"} - ${record.awayTeam || "Deplasman"}`;
+  }
+
+  function comparisonFamilyLabel(family = "") {
+    const labels = {
+      "football.goals.total_ou": "Toplam Gol",
+      "football.home_goals_ou": "Ev Sahibi Gol",
+      "football.away_goals_ou": "Deplasman Gol",
+      "football.corner.total_ou": "Toplam Korner",
+      "basket.total_points_ou": "Toplam Sayı",
+      "basket.team1_points_ou": "Takım 1 Sayı",
+      "basket.both_teams_points_line_ou_ot": "Her İki Takım Sayı"
+    };
+    return labels[family] || family || "Market ailesi";
+  }
+
+  function comparisonEngineResults(list = mockOddsRecords()) {
+    const useMockCache = list === mockOddsRecords();
+    if (useMockCache && mockComparisonCache) return mockComparisonCache;
+    const health = sourceHealth(list);
+    const bestRows = Object.values(groupOddsByFixtureAndMarket(list)).map(group => {
+      const result = findBestOddsForGroup(group);
+      const lineDifference = null;
+      const score = scoreComparisonCandidate({ bestOddsResult: result, lineDifferenceResult: lineDifference, sourceHealth: health });
+      return { group, bestOddsResult: result, lineDifferenceResult: lineDifference, score };
+    }).filter(row => row.bestOddsResult.bestRecord)
+      .sort((a, b) => b.score.score - a.score.score || Number(b.bestOddsResult.bestDiffPercent || 0) - Number(a.bestOddsResult.bestDiffPercent || 0));
+    const lineDifferences = detectLineDifferences(list).map(lineDifference => {
+      const matchingBest = bestRows.find(row => row.bestOddsResult.bestRecord && oddsFixtureKey(row.bestOddsResult.bestRecord) === lineDifference.fixtureKey && baseMarketFamily(row.bestOddsResult.bestRecord.marketId) === lineDifference.baseMarketFamily);
+      const score = scoreComparisonCandidate({ bestOddsResult: matchingBest?.bestOddsResult || null, lineDifferenceResult: lineDifference, sourceHealth: health });
+      return { ...lineDifference, score };
+    }).sort((a, b) => b.score.score - a.score.score || b.lineSpread - a.lineSpread);
+    const candidateRows = bestRows.map(row => {
+      const best = row.bestOddsResult.bestRecord;
+      const relatedLine = lineDifferences.find(diff => diff.fixtureKey === oddsFixtureKey(best) && diff.baseMarketFamily === baseMarketFamily(best.marketId));
+      const score = scoreComparisonCandidate({ bestOddsResult: row.bestOddsResult, lineDifferenceResult: relatedLine || null, sourceHealth: health });
+      return { ...row, lineDifferenceResult: relatedLine || null, score };
+    }).sort((a, b) => b.score.score - a.score.score || Number(b.bestOddsResult.bestDiffPercent || 0) - Number(a.bestOddsResult.bestDiffPercent || 0));
+    const unmatched = list.filter(record => !(record.matched || record.matchedMarketId)).length;
+    const result = {
+      records: list,
+      groupsByFixture: groupOddsByFixture(list),
+      groupsByFixtureAndMarket: groupOddsByFixtureAndMarket(list),
+      groupsByFixtureMarketLine: groupOddsByFixtureMarketLine(list),
+      groupsBySource: groupOddsBySource(list),
+      bestRows,
+      lineDifferences,
+      candidateRows,
+      sourceHealth: health,
+      summary: {
+        records: list.length,
+        matchedMarkets: list.filter(record => record.matchedMarketId).length,
+        sources: Object.keys(groupOddsBySource(list)).length,
+        bestOddsCandidates: candidateRows.filter(row => row.bestOddsResult.sourceCount >= 2).length,
+        lineDifferenceCandidates: lineDifferences.length,
+        unmatched
+      }
+    };
+    if (useMockCache) mockComparisonCache = result;
+    return result;
   }
 
   const POLYMARKET_EVENT_ADAPTER = {
@@ -1662,6 +1888,20 @@
     const liquidity = Math.min(10, Math.log10(Math.max(10, Number(row?.liquidity || 0))));
     const shortBoost = Math.max(0, 12 - Math.max(0, Number(hoursUntil(row?.expiresAt) || 99)) / 4);
     return Math.round(Math.max(confidence, 58 + edge * 1.6 + liquidity * 2 + shortBoost));
+  }
+
+  function rankPolymarketMockEvents(events = []) {
+    return events.map(event => {
+      const yes = Number(event.yesPrice || 0);
+      const no = Number(event.noPrice || 0);
+      const priceSpread = yes && no ? Math.abs(yes - no) : 0;
+      const liquidityScore = Math.min(28, Math.log10(Math.max(10, Number(event.liquidity || 0))) * 4);
+      const volumeScore = Math.min(24, Math.log10(Math.max(10, Number(event.volume24h || 0))) * 3.8);
+      const closeScore = Math.max(0, 22 - Math.max(0, Number(event.closesInHours || 72)) / 3);
+      const spreadScore = Math.max(0, 16 - priceSpread * 40);
+      const categoryScore = event.category === "sports" || event.category === "crypto" ? 8 : 4;
+      return { ...event, priceSpread, score: Math.round(Math.min(100, liquidityScore + volumeScore + closeScore + spreadScore + categoryScore)) };
+    }).sort((a, b) => b.score - a.score || Number(b.volume24h || 0) - Number(a.volume24h || 0));
   }
 
   function getPolymarketSignals(list = polymarketRecords()) {
@@ -2150,6 +2390,7 @@
         ${panel("Barem Farkı Dedektörü", renderLineList(lines), "blue")}
         ${panel("Oran Düşüş Uyarısı", renderDropList(drops), "red")}
       </div>
+      ${renderOpportunityComparisonDemoCard()}
       ${renderPolymarketDock()}`;
   }
 
@@ -2157,6 +2398,104 @@
     return `<section class="odds-v528-panel ${tone}">
       <div class="odds-v528-panel-head"><h3>${title}</h3></div>
       ${html || empty("Şimdilik fırsat yok.")}
+    </section>`;
+  }
+
+  function renderComparisonSummaryBoxes(data) {
+    const summary = data.summary;
+    return `<div class="v557-comparison-kpis" aria-label="Demo karşılaştırma özeti">
+      <div><span>Mock kayıt</span><b>${summary.records}</b></div>
+      <div><span>Eşleşen market</span><b>${summary.matchedMarkets}</b></div>
+      <div><span>Kaynak sayısı</span><b>${summary.sources}</b></div>
+      <div><span>En iyi oran adayı</span><b>${summary.bestOddsCandidates}</b></div>
+      <div><span>Barem farkı adayı</span><b>${summary.lineDifferenceCandidates}</b></div>
+      <div><span>Eşleşmeyen kayıt</span><b>${summary.unmatched}</b></div>
+    </div>`;
+  }
+
+  function renderComparisonHealth(data) {
+    if (!data.sourceHealth.length) return "";
+    return `<div class="v557-comparison-health" aria-label="Kaynak sağlığı özeti">
+      ${data.sourceHealth.map(row => `<span><b>${escapeHtml(row.source)}</b> ${row.mappedRecordCount}/${row.rawRecordCount} eşleşti <em>unmapped: ${row.unmappedRecordCount}</em></span>`).join("")}
+    </div>`;
+  }
+
+  function renderComparisonRows(data) {
+    const rows = data.candidateRows.slice(0, 8);
+    if (!rows.length) return empty("Demo karşılaştırma adayı yok.");
+    return `<div class="v557-comparison-table" role="region" aria-label="En iyi oran demo karşılaştırma tablosu">
+      <table>
+        <thead><tr><th>Fixture</th><th>Market</th><th>Selection</th><th>Line</th><th>Best source</th><th>Best odds</th><th>Second best</th><th>Fark %</th><th>Source count</th><th>Candidate tag</th></tr></thead>
+        <tbody>${rows.map(row => {
+          const best = row.bestOddsResult.bestRecord;
+          const second = row.bestOddsResult.secondBestRecord;
+          return `<tr>
+            <td><b>${escapeHtml(comparisonFixtureLabel(best))}</b><small>${escapeHtml(best.league || best.sport || "")}</small></td>
+            <td>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "-")}</td>
+            <td>${escapeHtml(best.selection || "-")}</td>
+            <td>${best.line ?? "-"}</td>
+            <td>${escapeHtml(best.source || "-")}</td>
+            <td class="odd">${money(best.odds)}</td>
+            <td>${second ? `${escapeHtml(second.source || "-")} · ${money(second.odds)}` : "-"}</td>
+            <td>${second ? plainPct(row.bestOddsResult.bestDiffPercent) : "-"}</td>
+            <td>${row.bestOddsResult.sourceCount}</td>
+            <td><span class="v557-candidate-tag">${escapeHtml(row.score.tag)}</span><small>Skor ${row.score.score}/100 · demo</small></td>
+          </tr>`;
+        }).join("")}</tbody>
+      </table>
+    </div>`;
+  }
+
+  function renderLineDifferencePreview(data) {
+    const rows = data.lineDifferences.slice(0, 6);
+    if (!rows.length) return "";
+    return `<section class="v557-line-preview" aria-label="Barem farkı önizlemesi">
+      <div class="v557-section-title"><span>BAREM FARKI ÖNİZLEMESİ</span><b>Analitik fark göstergesi — garanti kazanç değildir.</b></div>
+      <div class="v557-line-grid">${rows.map(row => {
+        const sample = row.records[0] || {};
+        const sources = [...new Set(row.records.map(record => record.source || record.bookmaker || "unknown_source"))];
+        const minLine = Math.min(...row.lines);
+        const maxLine = Math.max(...row.lines);
+        return `<article class="${escapeAttr(row.severity)}">
+          <b>${escapeHtml(comparisonFixtureLabel(sample))}</b>
+          <span>${escapeHtml(comparisonFamilyLabel(row.baseMarketFamily))} / ${minLine} ↔ ${maxLine} / spread ${row.lineSpread}</span>
+          <small>${escapeHtml(sources.join(", "))} · ${escapeHtml(row.severity)} · skor ${row.score.score}/100</small>
+        </article>`;
+      }).join("")}</div>
+    </section>`;
+  }
+
+  function renderComparisonEnginePanel() {
+    const data = comparisonEngineResults();
+    return `<section class="v557-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
+      <div class="v554-mock-preview-head v557-comparison-head">
+        <div>
+          <span>V557 DEMO COMPARISON</span>
+          <h3>Kaynaklar Arası Karşılaştırma Motoru</h3>
+          <p>Demo/mock kayıtlarla en iyi oran, barem farkı ve kaynak eşleşmesi test edilir. Gerçek kaynak bağlanınca aynı motor canlı veriye uygulanır.</p>
+        </div>
+        <em>Gerçek API yok · otomatik bahis yok</em>
+      </div>
+      ${renderComparisonSummaryBoxes(data)}
+      ${renderComparisonHealth(data)}
+      ${renderComparisonRows(data)}
+      ${renderLineDifferencePreview(data)}
+    </section>`;
+  }
+
+  function renderOpportunityComparisonDemoCard() {
+    const data = comparisonEngineResults();
+    const candidate = data.candidateRows.find(row => row.bestOddsResult.sourceCount >= 2) || data.candidateRows[0];
+    if (!candidate?.bestOddsResult?.bestRecord) return "";
+    const best = candidate.bestOddsResult.bestRecord;
+    return `<section class="v557-opportunity-demo-card" aria-label="Demo karşılaştırma adayı">
+      <div>
+        <span>Demo karşılaştırma adayı</span>
+        <b>${escapeHtml(comparisonFixtureLabel(best))}</b>
+        <small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")} · ${escapeHtml(best.selection || "-")} · line ${best.line ?? "-"}</small>
+      </div>
+      <div><b>${money(best.odds)}</b><small>${escapeHtml(best.source || "-")} · ${escapeHtml(candidate.score.tag)} · skor ${candidate.score.score}/100</small></div>
+      <p>Bu kart gerçek sinyal değildir; V557 motorunun ileride Fırsat Radarı’na veri sağlayacağını gösteren mock önizlemedir.</p>
     </section>`;
   }
 
@@ -2180,7 +2519,7 @@
         </div>
       </section>`;
     }).join("")}</div>`;
-    return `${compareHtml}${renderMockAdapterPreview()}${renderFixtureMatchPreview()}`;
+    return `${renderComparisonEnginePanel()}${compareHtml}${renderMockAdapterPreview()}${renderFixtureMatchPreview()}`;
   }
 
   function renderMockAdapterBadges() {
@@ -2704,6 +3043,7 @@
     state.snapshot = await loadJson(DATA_SNAPSHOT, FALLBACK_SNAPSHOT);
     marketMapCache = null;
     normalizedMockOddsCache = null;
+    mockComparisonCache = null;
     validateMockOddsRecords();
     state.lastLoadedAt = new Date().toISOString();
   }
@@ -2748,7 +3088,15 @@
     mockOddsRecords,
     validateMockOddsRecords,
     calculateBestOdds,
+    groupOddsByFixture,
     groupOddsByFixtureAndMarket,
+    groupOddsByFixtureMarketLine,
+    groupOddsBySource,
+    findBestOddsForGroup,
+    detectLineDifferences,
+    scoreComparisonCandidate,
+    comparisonEngineResults,
+    rankPolymarketMockEvents,
     sourceHealth,
     polymarketMockAdapterRecords
   };

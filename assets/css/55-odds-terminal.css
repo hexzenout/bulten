@@ -4817,3 +4817,200 @@
 .v556-source-adapter-preview tr.unmatched td {
     background: rgba(239,68,68,.035) !important;
 }
+
+/* ===============================
+   V557 odds comparison engine preview
+================================ */
+.v557-comparison-engine,
+.v557-line-preview,
+.v557-opportunity-demo-card {
+    display: grid !important;
+    gap: 12px !important;
+    margin-bottom: 14px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(96,165,250,.24) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg, rgba(15,23,42,.72), rgba(3,7,18,.84)) !important;
+}
+
+.v557-comparison-head em {
+    color: #bfdbfe !important;
+    border-color: rgba(96,165,250,.35) !important;
+    background: rgba(96,165,250,.10) !important;
+}
+
+.v557-comparison-kpis {
+    display: grid !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+}
+
+.v557-comparison-kpis div {
+    min-height: 68px !important;
+    display: grid !important;
+    align-content: center !important;
+    gap: 5px !important;
+    padding: 10px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 14px !important;
+    background: rgba(255,255,255,.035) !important;
+}
+
+.v557-comparison-kpis span,
+.v557-section-title span,
+.v557-opportunity-demo-card span {
+    color: #93c5fd !important;
+    font-size: .66rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .55px !important;
+    text-transform: uppercase !important;
+}
+
+.v557-comparison-kpis b {
+    color: #fff !important;
+    font-size: 1.25rem !important;
+    font-weight: 950 !important;
+}
+
+.v557-comparison-health {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+.v557-comparison-health span {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    padding: 7px 9px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.04) !important;
+    color: #dbeafe !important;
+    font-size: .72rem !important;
+    font-weight: 850 !important;
+}
+
+.v557-comparison-health em {
+    color: #94a3b8 !important;
+    font-style: normal !important;
+}
+
+.v557-comparison-table {
+    overflow-x: auto !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 16px !important;
+}
+
+.v557-comparison-table table {
+    width: 100% !important;
+    min-width: 980px !important;
+    border-collapse: collapse !important;
+}
+
+.v557-comparison-table th,
+.v557-comparison-table td {
+    padding: 10px !important;
+    border-bottom: 1px solid rgba(255,255,255,.07) !important;
+    color: #d4d4d8 !important;
+    font-size: .76rem !important;
+    text-align: left !important;
+    vertical-align: top !important;
+}
+
+.v557-comparison-table th {
+    color: #bfdbfe !important;
+    background: rgba(96,165,250,.08) !important;
+    font-size: .67rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .45px !important;
+    text-transform: uppercase !important;
+}
+
+.v557-comparison-table td b,
+.v557-opportunity-demo-card b {
+    color: #fff !important;
+    font-weight: 950 !important;
+}
+
+.v557-comparison-table td small,
+.v557-line-grid small,
+.v557-opportunity-demo-card small,
+.v557-opportunity-demo-card p {
+    display: block !important;
+    margin-top: 4px !important;
+    color: #94a3b8 !important;
+    font-size: .68rem !important;
+}
+
+.v557-candidate-tag {
+    display: inline-flex !important;
+    padding: 4px 8px !important;
+    border-radius: 999px !important;
+    background: rgba(34,197,94,.12) !important;
+    color: #bbf7d0 !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+}
+
+.v557-section-title {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.v557-section-title b {
+    color: #cbd5e1 !important;
+    font-size: .75rem !important;
+    font-weight: 850 !important;
+}
+
+.v557-line-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.v557-line-grid article {
+    display: grid !important;
+    gap: 6px !important;
+    padding: 12px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 15px !important;
+    background: rgba(255,255,255,.035) !important;
+}
+
+.v557-line-grid article.medium { border-color: rgba(250,204,21,.30) !important; }
+.v557-line-grid article.high { border-color: rgba(248,113,113,.34) !important; }
+
+.v557-line-grid b {
+    color: #fff !important;
+    font-weight: 950 !important;
+}
+
+.v557-line-grid span {
+    color: #e0f2fe !important;
+    font-size: .8rem !important;
+    font-weight: 850 !important;
+}
+
+.v557-opportunity-demo-card {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    border-color: rgba(34,197,94,.22) !important;
+    background: linear-gradient(135deg, rgba(34,197,94,.10), rgba(15,23,42,.78)) !important;
+}
+
+.v557-opportunity-demo-card p {
+    grid-column: 1 / -1 !important;
+    margin: 0 !important;
+}
+
+@media (max-width: 900px) {
+    .v557-comparison-kpis,
+    .v557-line-grid,
+    .v557-opportunity-demo-card {
+        grid-template-columns: 1fr !important;
+    }
+}
