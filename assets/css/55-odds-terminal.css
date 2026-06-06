@@ -5126,3 +5126,104 @@
     background: rgba(248,113,113,.10) !important;
     color: #fecaca !important;
 }
+
+/* ===============================
+   V562 Adapter Runner / Live Readiness
+================================ */
+.v562-readiness-checklist {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+.v562-readiness-checklist span {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    min-height: 30px !important;
+    padding: 0 10px !important;
+    border: 1px solid rgba(34,197,94,.28) !important;
+    border-radius: 999px !important;
+    background: rgba(34,197,94,.10) !important;
+    color: #bbf7d0 !important;
+    font-size: .70rem !important;
+    font-weight: 950 !important;
+}
+
+.v562-readiness-checklist span.blocked {
+    border-color: rgba(248,113,113,.28) !important;
+    background: rgba(248,113,113,.10) !important;
+    color: #fecaca !important;
+}
+
+.v562-live-readiness {
+    display: grid !important;
+    gap: 12px !important;
+    margin-bottom: 14px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(96,165,250,.22) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg, rgba(30,64,175,.24), rgba(3,7,18,.84)) !important;
+}
+
+.v562-live-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.v562-live-grid article {
+    display: grid !important;
+    gap: 6px !important;
+    min-height: 72px !important;
+    align-content: center !important;
+    padding: 11px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 15px !important;
+    background: rgba(255,255,255,.035) !important;
+}
+
+.v562-live-grid article.ready {
+    border-color: rgba(34,197,94,.26) !important;
+    background: rgba(34,197,94,.08) !important;
+}
+
+.v562-live-grid article.blocked {
+    border-color: rgba(248,113,113,.24) !important;
+    background: rgba(248,113,113,.08) !important;
+}
+
+.v562-live-grid b {
+    color: #fff !important;
+    font-size: .82rem !important;
+    font-weight: 950 !important;
+}
+
+.v562-live-grid span {
+    color: #bfdbfe !important;
+    font-size: .72rem !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+}
+
+.v557-comparison-health .source-planned,
+.v557-comparison-health .source-live-ready,
+.v557-comparison-health .source-fallback,
+.v558-source-cards article.source-planned,
+.v558-source-cards article.source-live-ready,
+.v558-source-cards article.source-fallback {
+    border-color: rgba(96,165,250,.28) !important;
+    background: rgba(96,165,250,.08) !important;
+}
+
+.v558-source-cards article.source-planned span,
+.v558-source-cards article.source-live-ready span,
+.v558-source-cards article.source-fallback span {
+    color: #bfdbfe !important;
+}
+
+@media (max-width: 900px) {
+    .v562-live-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

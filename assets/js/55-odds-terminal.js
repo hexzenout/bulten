@@ -1,6 +1,6 @@
 // ===============================
-// V554 ORAN TERMİNALİ
-// Standard odds model, mock adapter preview and V553 market taxonomy metadata
+// V562 ORAN TERMİNALİ
+// Live data geçiş kapısı, adapter runner ve kaynak hazırlık paneli
 // V542 POLYMARKET dock davranışı korunarak main ile hizalandı
 // ===============================
 
@@ -52,8 +52,11 @@
 
   const FALLBACK_SOURCES = { sites: [], groups: [], marketCategories: [] };
   const FALLBACK_SNAPSHOT = { mode: "empty", records: [] };
-  const SOURCE_HEALTH_STATUSES = ["ok", "loading", "empty", "stale", "error", "disabled", "mock"];
+  const SOURCE_HEALTH_STATUSES = ["ok", "loading", "empty", "stale", "error", "disabled", "mock", "planned", "live_ready", "fallback"];
+  const DATA_MODES = ["mock", "planned", "live_ready", "disabled", "empty", "error", "fallback"];
   const SOURCE_HEALTH_MAX_AGE_MINUTES = 2880;
+  const LIVE_API_CONNECTION_ENABLED = false;
+
 
 
   const MOCK_SOURCE_RAW_RECORDS = [
@@ -180,6 +183,27 @@
   ];
 
 
+  const MOCK_BOOKMAKER_SOURCE_REGISTRY = MOCK_SOURCE_IDS.map((sourceId, index) => {
+    const rows = MOCK_SOURCE_RAW_RECORDS.filter(row => row.source === sourceId);
+    const sports = [...new Set(rows.map(row => normalizeSportName(row.sport || "")).filter(Boolean))];
+    const first = rows[0] || {};
+    return {
+      sourceId,
+      sourceName: first.sourceName || sourceId,
+      type: "bookmaker",
+      mode: "mock",
+      sports: sports.length ? sports : ["football", "basketball"],
+      supportedMarketFamilies: sports.flatMap(sport => sport === "basketball" ? ["basket.match", "basket.totals", "basket.team_points"] : ["football.goals", "football.corners", "football.team_goals"]),
+      priority: index + 1,
+      enabled: true,
+      requiresKey: false,
+      rateLimitNote: "Mock demo kaynağı; gerçek fetch/API/scraping yok.",
+      lastStatus: "mock",
+      adapterStatus: "mock_ready",
+      notes: "Adapter runner demo karşılaştırma verisini buradan üretir."
+    };
+  });
+
   const BOOKMAKER_SOURCE_REGISTRY = Array.from({ length: 15 }, (_, index) => {
     const slot = String(index + 1).padStart(2, "0");
     const isFootballFirst = index % 2 === 0;
@@ -220,7 +244,18 @@
     notes: "YES/NO, likidite, hacim ve kapanış zamanı bookmaker odds modelinden ayrı tutulur."
   };
 
-  const SOURCE_REGISTRY = [...BOOKMAKER_SOURCE_REGISTRY, POLYMARKET_SOURCE_REGISTRY];
+  BOOKMAKER_SOURCE_REGISTRY[0] = {
+    ...BOOKMAKER_SOURCE_REGISTRY[0],
+    sourceId: "live_ready_placeholder",
+    sourceName: "Live Ready Placeholder",
+    mode: "live_ready",
+    enabled: true,
+    requiresKey: true,
+    adapterStatus: "bağlantı bekliyor",
+    notes: "Canlıya geçiş kapısı hazır; gerçek bağlantı ve fetch kapalı."
+  };
+
+  const SOURCE_REGISTRY = [...MOCK_BOOKMAKER_SOURCE_REGISTRY, ...BOOKMAKER_SOURCE_REGISTRY, POLYMARKET_SOURCE_REGISTRY];
   const SOURCE_CONFIG_FILTERS = [
     { id: "all", label: "Tümü" },
     { id: "active", label: "Aktif" },
@@ -488,6 +523,11 @@
     const safe = { ...saved };
     if (!SOURCE_CONFIG_FILTERS.some(filter => filter.id === safe.sourceConfigFilter)) safe.sourceConfigFilter = "all";
     if (!safe.sourceConfig || typeof safe.sourceConfig !== "object" || Array.isArray(safe.sourceConfig)) safe.sourceConfig = {};
+    safe.sourceConfig = Object.fromEntries(Object.entries(safe.sourceConfig).map(([sourceId, config]) => {
+      const base = SOURCE_REGISTRY.find(source => source.sourceId === sourceId);
+      const enabled = config && typeof config === "object" ? config.enabled !== false : true;
+      return [sourceId, { enabled, mode: normalizeDataMode(config?.mode || base?.mode || "planned") }];
+    }));
     if (!["all", "football", "basketball", "polymarket"].includes(safe.sport)) safe.sport = "all";
     if (!["all", "sports", "crypto", "economy", "news", "short", "liquid", "value"].includes(safe.polyFilter)) safe.polyFilter = "all";
     const tabMap = {
@@ -1387,6 +1427,132 @@
     return normalizedMockOddsCache;
   }
 
+
+
+  function normalizeDataMode(mode) {
+    const key = String(mode || "").toLowerCase().replace(/\s+/g, "_");
+    return DATA_MODES.includes(key) ? key : "planned";
+  }
+
+  function adapterStatusForSource(source = {}) {
+    if (!isSourceActiveForUi(source)) return "disabled";
+    const mode = normalizeDataMode(source.mode || "planned");
+    if (mode === "mock") return source.adapterStatus || "mock_ready";
+    if (mode === "live_ready") return LIVE_API_CONNECTION_ENABLED ? "live_ready" : "bağlantı bekliyor";
+    if (mode === "planned") return "planlandı";
+    return source.adapterStatus || mode;
+  }
+
+  function createAdapterRun(source = {}, rawRecords = [], status = "empty", message = "") {
+    const rawRows = Array.isArray(rawRecords) ? rawRecords.filter(Boolean) : [];
+    const run = {
+      sourceId: source.sourceId,
+      sourceName: source.sourceName || source.sourceId,
+      type: source.type || "bookmaker",
+      mode: normalizeDataMode(source.mode || "planned"),
+      enabled: isSourceActiveForUi(source),
+      sports: [...(source.sports || [])],
+      adapterStatus: adapterStatusForSource(source),
+      status,
+      message,
+      rawRecords: rawRows,
+      records: [],
+      error: null
+    };
+    try {
+      run.records = rawRows.map(row => mapOddsRecordToCatalog(adaptSourceOddsRecord(row))).filter(Boolean);
+      if (run.records.length) run.status = run.mode === "mock" ? "mock" : status;
+    } catch (error) {
+      run.status = "error";
+      run.error = error;
+      run.message = "Adapter hata verdi; UI güvenli fallback modunda.";
+      console.warn("Oran Terminali adapter runner:", source.sourceId, error);
+    }
+    return run;
+  }
+
+  function runMockAdapters(sources = effectiveSourceRegistry()) {
+    return (Array.isArray(sources) ? sources : [])
+      .filter(source => source.type === "bookmaker" && normalizeDataMode(source.mode) === "mock" && isSourceActiveForUi(source))
+      .map(source => createAdapterRun(
+        source,
+        MOCK_SOURCE_RAW_RECORDS.filter(row => String(row.source || row.sourceId || row.bookmaker || "") === String(source.sourceId || "")),
+        "mock",
+        "Mock adapter çalıştı; demo karşılaştırma için hazır."
+      ));
+  }
+
+  function runLiveReadyAdapters(sources = effectiveSourceRegistry()) {
+    return (Array.isArray(sources) ? sources : [])
+      .filter(source => source.type === "bookmaker" && ["live_ready", "planned"].includes(normalizeDataMode(source.mode)) && isSourceActiveForUi(source))
+      .map(source => createAdapterRun(
+        source,
+        [],
+        normalizeDataMode(source.mode),
+        normalizeDataMode(source.mode) === "live_ready"
+          ? "Canlı bağlantı kapalı; adapter kapısı bağlantı bekliyor."
+          : "Kaynak planlandı; gerçek API/fetch/scraping yok."
+      ));
+  }
+
+  function runEnabledSourceAdapters() {
+    const enabledBookmakers = effectiveSourceRegistry().filter(source => source.type === "bookmaker" && isSourceActiveForUi(source));
+    return [...runMockAdapters(enabledBookmakers), ...runLiveReadyAdapters(enabledBookmakers)];
+  }
+
+  function mergeAdapterResultsWithSourceHealth(adapterResults = [], sourceHealthList = null) {
+    const runs = Array.isArray(adapterResults) ? adapterResults : [];
+    const rawRows = runs.flatMap(run => run.rawRecords || []);
+    const recordsList = runs.flatMap(run => run.records || []);
+    const base = Array.isArray(sourceHealthList) ? sourceHealthList.slice() : buildSourceHealthSummary(recordsList, SOURCE_MARKET_MAPPINGS, rawRows);
+    const bySource = new Map(base.map(row => [String(row.source || row.sourceId || ""), { ...row }]));
+    runs.forEach(run => {
+      const key = String(run.sourceId || "");
+      const existing = bySource.get(key) || {};
+      const mapped = (run.records || []).filter(row => row.matched || row.matchedMarketId).length;
+      const status = run.status === "error" ? "error" : run.records?.length ? (run.mode === "mock" ? "mock" : run.mode) : run.status;
+      bySource.set(key, {
+        ...existing,
+        source: key,
+        sourceName: run.sourceName || existing.sourceName || key,
+        type: run.type || existing.type || "bookmaker",
+        sport: run.sports?.length === 1 ? run.sports[0] : existing.sport || "multi",
+        sports: run.sports || existing.sports || [],
+        mode: normalizeDataMode(run.mode || existing.mode || "planned"),
+        status,
+        adapterStatus: run.adapterStatus || existing.adapterStatus || status,
+        rawRecordCount: Number(existing.rawRecordCount || 0) || (run.rawRecords || []).length,
+        adaptedRecordCount: Number(existing.adaptedRecordCount || 0) || (run.records || []).length,
+        mappedRecordCount: Number(existing.mappedRecordCount || 0) || mapped,
+        unmappedRecordCount: Number(existing.unmappedRecordCount || 0) || Math.max(0, (run.records || []).length - mapped),
+        errorCount: run.status === "error" ? 1 : Number(existing.errorCount || 0),
+        warningCount: Number(existing.warningCount || 0),
+        lastUpdatedAt: existing.lastUpdatedAt || safeIso((run.records || []).map(row => row.updatedAt).sort().slice(-1)[0]),
+        stale: existing.stale || false,
+        message: run.message || existing.message || "Adapter runner hazır"
+      });
+    });
+    const rows = [...bySource.values()];
+    validateSourceHealthList(rows);
+    return rows;
+  }
+
+  function collectAdapterResults() {
+    const adapterRuns = runEnabledSourceAdapters();
+    const rawRecords = adapterRuns.flatMap(run => run.rawRecords || []);
+    const records = adapterRuns.flatMap(run => run.records || []);
+    const sourceHealthRows = mergeAdapterResultsWithSourceHealth(adapterRuns);
+    const healthSummary = summarizeSourceHealth(sourceHealthRows);
+    return {
+      adapterRuns,
+      rawRecords,
+      records,
+      sourceHealth: sourceHealthRows,
+      healthSummary,
+      dataMode: healthSummary.dataMode
+    };
+  }
+
   function oddsFixtureKey(record = {}) {
     return String(record.fixtureId || record.fixtureKey || buildFixtureKey(record) || "fixture-unknown");
   }
@@ -1560,23 +1726,26 @@
   }
 
   function getSourceStatus(sourceHealth = {}) {
-    const explicit = String(sourceHealth.status || "").toLowerCase();
+    const explicit = String(sourceHealth.status || "").toLowerCase().replace(/\s+/g, "_");
+    const mode = normalizeDataMode(sourceHealth.mode || "");
     if (explicit === "loading" || sourceHealth.loading) return "loading";
-    if (explicit === "disabled" || sourceHealth.disabled) return "disabled";
+    if (explicit === "disabled" || mode === "disabled" || sourceHealth.disabled) return "disabled";
     if (explicit === "error" || Number(sourceHealth.errorCount || 0) > 0 || sourceHealth.error) return "error";
-    if (explicit === "empty") return "empty";
+    if (explicit === "fallback" || mode === "fallback") return "fallback";
     if (explicit === "stale" || sourceHealth.stale || isSourceStale(sourceHealth.lastUpdatedAt, sourceHealth.maxAgeMinutes)) return "stale";
-    if (Number(sourceHealth.rawRecordCount || 0) <= 0 && Number(sourceHealth.adaptedRecordCount || 0) <= 0) return "empty";
-    if (String(sourceHealth.mode || "").toLowerCase() === "mock" || explicit === "mock") return "mock";
+    if (mode === "mock" || explicit === "mock") return Number(sourceHealth.adaptedRecordCount || sourceHealth.rawRecordCount || 0) > 0 ? "mock" : "empty";
+    if (mode === "live_ready" || explicit === "live_ready") return "live_ready";
+    if (mode === "planned" || explicit === "planned") return "planned";
+    if (explicit === "empty" || Number(sourceHealth.rawRecordCount || 0) <= 0 && Number(sourceHealth.adaptedRecordCount || 0) <= 0) return "empty";
     return SOURCE_HEALTH_STATUSES.includes(explicit) ? explicit : "ok";
   }
 
   function getSourceHealthBadge(sourceHealth = {}) {
     const status = getSourceStatus(sourceHealth);
     const labels = {
-      ok: "hazır", loading: "loading", empty: "empty", stale: "stale", error: "error", disabled: "disabled", mock: "mock"
+      ok: "hazır", loading: "loading", empty: "empty", stale: "stale", error: "error", disabled: "disabled", mock: "mock", planned: "planned", live_ready: "bağlantı bekliyor", fallback: "fallback"
     };
-    return { status, label: labels[status] || status, className: `source-${status}` };
+    return { status, label: labels[status] || status, className: `source-${String(status).replace(/_/g, "-")}` };
   }
 
   function buildSourceHealthSummary(recordsList = [], sourceMappings = SOURCE_MARKET_MAPPINGS, rawList = MOCK_SOURCE_RAW_RECORDS) {
@@ -1649,10 +1818,14 @@
   function getGlobalDataMode(sourceHealthList = []) {
     const list = Array.isArray(sourceHealthList) ? sourceHealthList : [];
     if (!list.length) return "empty";
+    if (list.some(row => getSourceStatus(row) === "error")) return "error";
+    if (list.some(row => normalizeDataMode(row.mode) === "fallback")) return "fallback";
+    if (list.some(row => normalizeDataMode(row.mode) === "mock" && Number(row.adaptedRecordCount || 0) > 0)) return "mock";
+    if (list.some(row => normalizeDataMode(row.mode) === "live_ready")) return "live_ready";
+    if (list.some(row => normalizeDataMode(row.mode) === "planned")) return "planned";
+    if (list.every(row => getSourceStatus(row) === "disabled")) return "disabled";
     if (list.every(row => getSourceStatus(row) === "empty")) return "empty";
-    if (list.some(row => String(row.mode || "").toLowerCase() === "live")) return "live";
-    if (list.some(row => String(row.mode || "").toLowerCase() === "fallback")) return "fallback";
-    return "mock";
+    return "empty";
   }
 
   function validateSourceHealthList(sourceHealthList = []) {
@@ -1683,6 +1856,7 @@
   }
 
   function getSafeSourceHealth(inputList) {
+    if (!Array.isArray(inputList)) return collectAdapterResults().sourceHealth;
     return buildSourceHealthSummary(
       filterComparisonRecordsBySource(getSafeOddsRecords(inputList)),
       SOURCE_MARKET_MAPPINGS,
@@ -1726,7 +1900,8 @@
   }
 
   function sourceRegistryHealthRows() {
-    return [...getSafeSourceHealth(), buildPolymarketSourceHealth(polymarketMockAdapterRecords())];
+    const adapter = collectAdapterResults();
+    return [...adapter.sourceHealth, buildPolymarketSourceHealth(polymarketMockAdapterRecords())];
   }
 
   function findSourceRegistryHealth(sourceId, sourceHealthList = sourceRegistryHealthRows()) {
@@ -1745,8 +1920,8 @@
     return {
       ...source,
       enabled,
-      mode: enabled ? (override.mode || source.mode || "planned") : "disabled",
-      configMode: override.mode || source.mode || "planned"
+      mode: enabled ? normalizeDataMode(override.mode || source.mode || "planned") : "disabled",
+      configMode: normalizeDataMode(override.mode || source.mode || "planned")
     };
   }
 
@@ -1868,7 +2043,8 @@
     return Object.values(groupOddsByFixtureAndMarket(list)).map(group => findBestOddsForGroup(group).bestRecord).filter(Boolean);
   }
 
-  function sourceHealth(recordsList = mockOddsRecords(), rawList = MOCK_SOURCE_RAW_RECORDS) {
+  function sourceHealth(recordsList, rawList = MOCK_SOURCE_RAW_RECORDS) {
+    if (!Array.isArray(recordsList)) return collectAdapterResults().sourceHealth;
     return buildSourceHealthSummary(
       filterComparisonRecordsBySource(recordsList),
       SOURCE_MARKET_MAPPINGS,
@@ -1877,7 +2053,7 @@
   }
 
   function mockOddsSummary() {
-    const list = mockOddsRecords();
+    const list = collectAdapterResults().records;
     const matched = list.filter(r => r.matchedMarketId).length;
     const fixtures = new Set(list.map(r => r.fixtureId)).size;
     const health = sourceHealth(list);
@@ -1901,11 +2077,11 @@
     return labels[family] || family || "Market ailesi";
   }
 
-  function comparisonEngineResults(list = mockOddsRecords()) {
-    const safeList = filterComparisonRecordsBySource(getSafeOddsRecords(list));
-    const useMockCache = list === mockOddsRecords();
-    if (useMockCache && mockComparisonCache) return mockComparisonCache;
-    const health = getSafeSourceHealth(safeList);
+  function comparisonEngineResults(list) {
+    const adapterOutput = Array.isArray(list) ? null : collectAdapterResults();
+    const baseList = Array.isArray(list) ? list : adapterOutput.records;
+    const safeList = filterComparisonRecordsBySource(getSafeOddsRecords(baseList));
+    const health = adapterOutput ? adapterOutput.sourceHealth : getSafeSourceHealth(safeList);
     const healthSummary = summarizeSourceHealth(health);
     const fallbackState = getFallbackComparisonState(safeList);
     const bestRows = Object.values(groupOddsByFixtureAndMarket(safeList)).map(group => {
@@ -1952,7 +2128,6 @@
       healthSummary,
       fallbackState
     };
-    if (useMockCache) mockComparisonCache = result;
     return result;
   }
 
@@ -2828,7 +3003,7 @@
     const rows = data.lineDifferences.slice(0, 6);
     if (!rows.length) return "";
     return `<section class="v557-line-preview" aria-label="Barem farkı önizlemesi">
-      <div class="v557-section-title"><span>BAREM FARKI ÖNİZLEMESİ</span><b>Analitik fark göstergesi — garanti kazanç değildir.</b></div>
+      <div class="v557-section-title"><span>BAREM FARKI ÖNİZLEMESİ</span><b>Analitik fark göstergesi — gerçek sinyal değildir.</b></div>
       <div class="v557-line-grid">${rows.map(row => {
         const sample = row.records[0] || {};
         const sources = [...new Set(row.records.map(record => record.source || record.bookmaker || "unknown_source"))];
@@ -2843,6 +3018,25 @@
     </section>`;
   }
 
+
+
+  function readinessChecklistItems() {
+    return [
+      ["Market ID/alias hazır", true],
+      ["Fixture matching hazır", true],
+      ["Source registry hazır", true],
+      ["Source health hazır", true],
+      ["Adapter runner hazır", true],
+      ["Gerçek API bağlantısı kapalı", !LIVE_API_CONNECTION_ENABLED]
+    ];
+  }
+
+  function renderReadinessChecklist() {
+    return `<div class="v562-readiness-checklist" aria-label="Live geçiş readiness checklist">
+      ${readinessChecklistItems().map(([label, ok]) => `<span class="${ok ? "ready" : "blocked"}"><i class="fa-solid ${ok ? "fa-check" : "fa-xmark"}"></i>${escapeHtml(label)}</span>`).join("")}
+    </div>`;
+  }
+
   function renderComparisonEnginePanel() {
     const data = comparisonEngineResults();
     return `<section class="v557-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
@@ -2855,6 +3049,7 @@
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
       ${renderComparisonSummaryBoxes(data)}
+      ${renderReadinessChecklist()}
       ${renderComparisonHealth(data)}
       ${renderComparisonRows(data)}
       ${renderLineDifferencePreview(data)}
@@ -2875,7 +3070,7 @@
         <small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")} · ${escapeHtml(best.selection || "-")} · line ${best.line ?? "-"}</small>
       </div>
       <div><b>${money(best.odds)}</b><small>${escapeHtml(best.source || "-")} · ${escapeHtml(candidate.score.tag)} · skor ${candidate.score.score}/100</small></div>
-      <p>Bu kart gerçek sinyal değildir; yalnızca demo karşılaştırma adayıdır ve otomatik bahis/garanti sonucu ifade etmez.</p>
+      <p>Bu kart gerçek sinyal değildir; yalnızca demo karşılaştırma adayıdır ve otomatik bahis sonucu ifade etmez.</p>
     </section>`;
   }
 
@@ -3292,13 +3487,13 @@
   function renderSourceRegistryPanel() {
     const healthRows = sourceRegistryHealthRows();
     const registrySummary = summarizeSourceRegistry(healthRows);
-    const rows = effectiveSourceRegistry().slice().sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
+    const rows = effectiveSourceRegistry().filter(sourceConfigFilterMatches).slice().sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
     return `<section class="v559-source-registry" aria-label="Kaynak Registry Hazırlığı">
       <div class="v554-mock-preview-head">
         <div>
           <span>V559 SOURCE REGISTRY</span>
           <h3>Source Registry</h3>
-          <p>Kaynak registry katalog görünümü korunur; manuel ayarların aktif/pasif etkisi burada da görünür.</p>
+          <p>sourceId, sourceName, type, mode, enabled, sports ve adapterStatus tek registry görünümünde tutulur; aktif/pasif localStorage sonrası korunur.</p>
         </div>
         <em>Gerçek API yok · fetch yok · scraping yok</em>
       </div>
@@ -3308,7 +3503,9 @@
         <span>Bookmaker: <b>${registrySummary.byType.bookmaker || 0}</b></span>
         <span>Polymarket: <b>${registrySummary.byType.prediction_market || 0}</b></span>
         <span>Health bağlı: <b>${registrySummary.withHealth}</b></span>
+        <span>Filtre: <b>${escapeHtml(SOURCE_CONFIG_FILTERS.find(filter => filter.id === state.sourceConfigFilter)?.label || "Tümü")}</b></span>
       </div>
+      ${renderSourceConfigFilters()}
       <div class="v559-registry-table-wrap">
         <table class="v559-registry-table">
           <thead><tr><th>Kaynak</th><th>Tip</th><th>Mod</th><th>Sporlar</th><th>Adapter durumu</th><th>Aktif/Pasif</th><th>Öncelik / Not</th></tr></thead>
@@ -3324,7 +3521,7 @@
               <td>${escapeHtml(source.mode)}</td>
               <td>${escapeHtml((source.sports || []).join(", "))}</td>
               <td><span class="${escapeAttr(statusClass)}">${escapeHtml(health ? statusLabel : source.adapterStatus || statusLabel)}</span><small>${escapeHtml(statusLabel)}</small></td>
-              <td><span class="odds-v528-status ${active ? "on" : "off"}">${active ? "Aktif" : "Pasif"}</span></td>
+              <td><button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button></td>
               <td><b>${Number(source.priority || 0)}</b>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
             </tr>`;
           }).join("")}</tbody>
@@ -3333,19 +3530,34 @@
     </section>`;
   }
 
+
+
+  function renderLiveReadinessPanel() {
+    const adapter = collectAdapterResults();
+    const readiness = [
+      ["gerçek bağlantı", "kapalı", !LIVE_API_CONNECTION_ENABLED],
+      ["API/fetch", "kapalı", !LIVE_API_CONNECTION_ENABLED],
+      ["adapter runner", "hazır", true],
+      ["market mapping", "hazır", true],
+      ["fixture matching", "hazır", true],
+      ["source health", "hazır", true]
+    ];
+    return `<section class="v562-live-readiness" aria-label="Live Geçiş Hazırlığı">
+      <div class="v554-mock-preview-head">
+        <div>
+          <span>V562 LIVE GEÇİŞ HAZIRLIĞI</span>
+          <h3>Live Geçiş Hazırlığı</h3>
+          <p>Mock → live-ready adapter kapısı hazırlandı; gerçek bağlantı, fetch, scraping ve otomatik bahis kapalıdır.</p>
+        </div>
+        <em>Adapter run: ${adapter.adapterRuns.length} kaynak · Mod: ${escapeHtml(adapter.dataMode)}</em>
+      </div>
+      <div class="v562-live-grid">${readiness.map(([label, value, ok]) => `<article class="${ok ? "ready" : "blocked"}"><b>${escapeHtml(label)}</b><span>${escapeHtml(value)}</span></article>`).join("")}</div>
+      ${renderReadinessChecklist()}
+    </section>`;
+  }
+
   function renderSources() {
-    const sites = state.sources?.sites || [];
-    const sourceTable = !sites.length ? empty("Kaynak listesi boş. Mock sağlık paneli katalogdan bağımsız görünür kalır.") : `<div class="odds-v528-table-wrap"><table class="odds-v528-table sources">
-      <thead><tr><th>Site</th><th>Tip</th><th>Altyapı</th><th>Durum</th><th>Link</th></tr></thead>
-      <tbody>${sites.map(s => `<tr>
-        <td><b>${escapeHtml(s.name)}</b><small>${escapeHtml(s.id)}</small></td>
-        <td>${s.reference ? "Referans Kaynak" : "Bahis Sitesi"}</td>
-        <td>${escapeHtml(groupName(s.id))}</td>
-        <td><span class="odds-v528-status ${s.enabled ? "on" : "off"}">${s.enabled ? "Aktif" : "Kapalı"}</span></td>
-        <td>${s.url ? `<a class="odds-v528-open" href="${escapeAttr(s.url)}" target="_blank" rel="noopener noreferrer">AÇ</a>` : `<span class="muted">Backend/API bekliyor</span>`}</td>
-      </tr>`).join("")}</tbody>
-    </table></div>`;
-    return `${renderSourceSettingsPanel()}${renderSourceHealthCards()}${renderSourceRegistryPanel()}${sourceTable}`;
+    return `${renderSourceRegistryPanel()}${renderSourceHealthCards()}${renderLiveReadinessPanel()}`;
   }
 
   function empty(text) { return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`; }
