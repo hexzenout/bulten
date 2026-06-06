@@ -46,6 +46,12 @@
   let mockComparisonCache = null;
   let mockOddsValidationDone = false;
   let sourceHealthValidationWarningDone = false;
+  let sourceConfigCacheKey = "";
+  let effectiveSourceRegistryCache = null;
+  let adapterResultsCache = null;
+  let sourceRegistryHealthCache = null;
+  let polymarketAdapterRecordsCache = null;
+  let defaultComparisonEngineCache = null;
   const loadJsonWarningKeys = new Set();
 
 
@@ -1604,13 +1610,39 @@
     return rows;
   }
 
+  function currentSourceConfigCacheKey() {
+    return `${state.lastLoadedAt || "not-loaded"}|${JSON.stringify(state.sourceConfig || {})}`;
+  }
+
+  function clearSourceDerivedCaches() {
+    sourceConfigCacheKey = "";
+    effectiveSourceRegistryCache = null;
+    adapterResultsCache = null;
+    sourceRegistryHealthCache = null;
+    defaultComparisonEngineCache = null;
+  }
+
+  function ensureSourceCacheKey() {
+    const key = currentSourceConfigCacheKey();
+    if (sourceConfigCacheKey !== key) {
+      sourceConfigCacheKey = key;
+      effectiveSourceRegistryCache = null;
+      adapterResultsCache = null;
+      sourceRegistryHealthCache = null;
+      defaultComparisonEngineCache = null;
+    }
+    return key;
+  }
+
   function collectAdapterResults() {
+    ensureSourceCacheKey();
+    if (adapterResultsCache) return adapterResultsCache;
     const adapterRuns = runEnabledSourceAdapters();
     const rawRecords = adapterRuns.flatMap(run => run.rawRecords || []);
     const records = adapterRuns.flatMap(run => run.records || []);
     const sourceHealthRows = mergeAdapterResultsWithSourceHealth(adapterRuns);
     const healthSummary = summarizeSourceHealth(sourceHealthRows);
-    return {
+    adapterResultsCache = {
       adapterRuns,
       rawRecords,
       records,
@@ -1618,6 +1650,7 @@
       healthSummary,
       dataMode: healthSummary.dataMode
     };
+    return adapterResultsCache;
   }
 
   function oddsFixtureKey(record = {}) {
@@ -1967,8 +2000,11 @@
   }
 
   function sourceRegistryHealthRows() {
+    ensureSourceCacheKey();
+    if (sourceRegistryHealthCache) return sourceRegistryHealthCache;
     const adapter = collectAdapterResults();
-    return [...adapter.sourceHealth, buildPolymarketSourceHealth(polymarketMockAdapterRecords())];
+    sourceRegistryHealthCache = [...adapter.sourceHealth, buildPolymarketSourceHealth(polymarketMockAdapterRecords())];
+    return sourceRegistryHealthCache;
   }
 
   function findSourceRegistryHealth(sourceId, sourceHealthList = sourceRegistryHealthRows()) {
@@ -1993,7 +2029,9 @@
   }
 
   function effectiveSourceRegistry() {
-    return SOURCE_REGISTRY.map(applySourceConfig);
+    ensureSourceCacheKey();
+    if (!effectiveSourceRegistryCache) effectiveSourceRegistryCache = SOURCE_REGISTRY.map(applySourceConfig);
+    return effectiveSourceRegistryCache;
   }
 
   function findEffectiveSource(sourceId) {
@@ -2145,6 +2183,10 @@
   }
 
   function comparisonEngineResults(list) {
+    if (!Array.isArray(list)) {
+      ensureSourceCacheKey();
+      if (defaultComparisonEngineCache) return defaultComparisonEngineCache;
+    }
     const adapterOutput = Array.isArray(list) ? null : collectAdapterResults();
     const baseList = Array.isArray(list) ? list : adapterOutput.records;
     const safeList = filterComparisonRecordsBySource(getSafeOddsRecords(baseList));
@@ -2195,6 +2237,7 @@
       healthSummary,
       fallbackState
     };
+    if (!Array.isArray(list)) defaultComparisonEngineCache = result;
     return result;
   }
 
@@ -2220,7 +2263,8 @@
   };
 
   function polymarketMockAdapterRecords() {
-    return POLYMARKET_MOCK_RECORDS.map(row => {
+    if (polymarketAdapterRecordsCache) return polymarketAdapterRecordsCache;
+    polymarketAdapterRecordsCache = POLYMARKET_MOCK_RECORDS.map(row => {
       const event = POLYMARKET_EVENT_ADAPTER.normalizeEvent(row);
       return {
         ...event,
@@ -2239,6 +2283,7 @@
         info: "Polymarket mock modeli ayrı tutulur; futbol/basket odds adapter sözleşmesiyle karışmaz."
       };
     });
+    return polymarketAdapterRecordsCache;
   }
 
   function validateMockOddsRecords() {
@@ -2711,7 +2756,7 @@
           </div>
         </div>
 
-        <div class="odds-v528-content">${content()}</div>
+        <div class="odds-v528-content" data-odds-content>${content()}</div>
       </div>`;
   }
 
@@ -3502,12 +3547,68 @@
     return `<div class="v561-source-config-filters" role="tablist" aria-label="Kaynak ayarı filtreleri">${SOURCE_CONFIG_FILTERS.map(filter => `<button type="button" data-source-config-filter="${escapeAttr(filter.id)}" class="${state.sourceConfigFilter === filter.id ? "active" : ""}">${escapeHtml(filter.label)}</button>`).join("")}</div>`;
   }
 
+  function currentSourceConfigFilterLabel() {
+    return SOURCE_CONFIG_FILTERS.find(filter => filter.id === state.sourceConfigFilter)?.label || "Tümü";
+  }
+
+  function filteredEffectiveSourceRows() {
+    return effectiveSourceRegistry()
+      .filter(sourceConfigFilterMatches)
+      .slice()
+      .sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
+  }
+
+  function renderSourceSettingsCards(rows = filteredEffectiveSourceRows(), healthRows = sourceRegistryHealthRows()) {
+    return rows.map(source => {
+      const health = findSourceRegistryHealth(source.sourceId, healthRows);
+      const statusClass = sourceRegistryStatusClass(source, health);
+      const statusLabel = sourceRegistryStatusLabel(source, health);
+      const active = isSourceActiveForUi(source);
+      return `<article class="${escapeAttr([source.type === "prediction_market" ? "prediction-market" : "bookmaker-source", active ? "is-active" : "is-passive"].join(" "))}">
+        <div class="v561-source-card-head">
+          <div><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.sourceId)}</small></div>
+          <button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button>
+        </div>
+        <dl>
+          <div><dt>Tip</dt><dd>${escapeHtml(displaySourceTypeLabel(source.type))}</dd></div>
+          <div><dt>Mod</dt><dd>${escapeHtml(displayModeLabel(source.mode))}</dd></div>
+          <div><dt>Adapter durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(displayStatusLabel(source.adapterStatus || statusLabel))}</span></dd></div>
+          <div><dt>Öncelik</dt><dd>${Number(source.priority || 0)}</dd></div>
+        </dl>
+        <p><b>Desteklenen sporlar:</b> ${escapeHtml((source.sports || []).join(", "))}</p>
+        <p><b>Not:</b> ${escapeHtml(health?.message || source.notes || "Planlandı")}</p>
+        <small>${escapeHtml((source.supportedMarketFamilies || []).join(" · "))}</small>
+      </article>`;
+    }).join("");
+  }
+
+  function renderSourceRegistryRows(rows = filteredEffectiveSourceRows(), healthRows = sourceRegistryHealthRows()) {
+    return rows.map(source => {
+      const health = findSourceRegistryHealth(source.sourceId, healthRows);
+      const statusClass = sourceRegistryStatusClass(source, health);
+      const statusLabel = sourceRegistryStatusLabel(source, health);
+      const note = health?.message || source.notes || "Planlandı";
+      const active = isSourceActiveForUi(source);
+      return `<tr class="${escapeAttr(source.type === "prediction_market" ? "prediction-market" : "bookmaker-source")}">
+        <td><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.sourceId)}</small></td>
+        <td>${escapeHtml(displaySourceTypeLabel(source.type))}</td>
+        <td>${escapeHtml(displayModeLabel(source.mode))}</td>
+        <td>${escapeHtml((source.sports || []).join(", "))}</td>
+        <td><span class="${escapeAttr(statusClass)}">${escapeHtml(displayStatusLabel(health ? statusLabel : source.adapterStatus || statusLabel))}</span><small>${escapeHtml(displayStatusLabel(statusLabel))}</small></td>
+        <td><button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button></td>
+        <td><b>${Number(source.priority || 0)}</b>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
+      </tr>`;
+    }).join("");
+  }
+
+  function renderSourceEmptyState(rows) {
+    return rows.length ? "" : empty("Bu kaynak filtresi için kayıt yok.");
+  }
+
   function renderSourceSettingsPanel() {
     const healthRows = sourceRegistryHealthRows();
     const registrySummary = summarizeSourceRegistry(healthRows);
-    const rows = effectiveSourceRegistry()
-      .filter(sourceConfigFilterMatches)
-      .sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
+    const rows = filteredEffectiveSourceRows();
     return `<section class="v561-source-settings" aria-label="Kaynak Ayarları">
       <div class="v554-mock-preview-head">
         <div>
@@ -3523,38 +3624,18 @@
         <span>Pasif: <b>${registrySummary.total - registrySummary.enabled}</b></span>
         <span>Bahis Kaynağı: <b>${registrySummary.byType.bookmaker || 0}</b></span>
         <span>Polymarket: <b>${registrySummary.byType.prediction_market || 0}</b></span>
-        <span>Filtre: <b>${escapeHtml(SOURCE_CONFIG_FILTERS.find(filter => filter.id === state.sourceConfigFilter)?.label || "Tümü")}</b></span>
+        <span>Filtre: <b data-source-filter-label>${escapeHtml(currentSourceConfigFilterLabel())}</b></span>
       </div>
       ${renderSourceConfigFilters()}
-      <div class="v561-source-config-grid">${rows.map(source => {
-        const health = findSourceRegistryHealth(source.sourceId, healthRows);
-        const statusClass = sourceRegistryStatusClass(source, health);
-        const statusLabel = sourceRegistryStatusLabel(source, health);
-        const active = isSourceActiveForUi(source);
-        return `<article class="${escapeAttr([source.type === "prediction_market" ? "prediction-market" : "bookmaker-source", active ? "is-active" : "is-passive"].join(" "))}">
-          <div class="v561-source-card-head">
-            <div><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.sourceId)}</small></div>
-            <button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button>
-          </div>
-          <dl>
-            <div><dt>Tip</dt><dd>${escapeHtml(displaySourceTypeLabel(source.type))}</dd></div>
-            <div><dt>Mod</dt><dd>${escapeHtml(displayModeLabel(source.mode))}</dd></div>
-            <div><dt>Adapter durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(displayStatusLabel(source.adapterStatus || statusLabel))}</span></dd></div>
-            <div><dt>Öncelik</dt><dd>${Number(source.priority || 0)}</dd></div>
-          </dl>
-          <p><b>Desteklenen sporlar:</b> ${escapeHtml((source.sports || []).join(", "))}</p>
-          <p><b>Not:</b> ${escapeHtml(health?.message || source.notes || "Planlandı")}</p>
-          <small>${escapeHtml((source.supportedMarketFamilies || []).join(" · "))}</small>
-        </article>`;
-      }).join("")}</div>
-      ${rows.length ? "" : empty("Bu kaynak filtresi için kayıt yok.")}
+      <div class="v561-source-config-grid" data-source-settings-list>${renderSourceSettingsCards(rows, healthRows)}</div>
+      <div data-source-settings-empty>${renderSourceEmptyState(rows)}</div>
     </section>`;
   }
 
   function renderSourceRegistryPanel() {
     const healthRows = sourceRegistryHealthRows();
     const registrySummary = summarizeSourceRegistry(healthRows);
-    const rows = effectiveSourceRegistry().filter(sourceConfigFilterMatches).slice().sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
+    const rows = filteredEffectiveSourceRows();
     return `<section class="v559-source-registry" aria-label="Kaynak Kayıtları">
       <div class="v554-mock-preview-head">
         <div>
@@ -3570,32 +3651,19 @@
         <span>Bahis Kaynağı: <b>${registrySummary.byType.bookmaker || 0}</b></span>
         <span>Polymarket: <b>${registrySummary.byType.prediction_market || 0}</b></span>
         <span>Durum bağlı: <b>${registrySummary.withHealth}</b></span>
-        <span>Filtre: <b>${escapeHtml(SOURCE_CONFIG_FILTERS.find(filter => filter.id === state.sourceConfigFilter)?.label || "Tümü")}</b></span>
+        <span>Filtre: <b data-source-filter-label>${escapeHtml(currentSourceConfigFilterLabel())}</b></span>
       </div>
       ${renderSourceConfigFilters()}
       <div class="v559-registry-table-wrap">
         <table class="v559-registry-table">
           <thead><tr><th>Kaynak</th><th>Tip</th><th>Mod</th><th>Sporlar</th><th>Adapter durumu</th><th>Aktif/Pasif</th><th>Öncelik / Not</th></tr></thead>
-          <tbody>${rows.map(source => {
-            const health = findSourceRegistryHealth(source.sourceId, healthRows);
-            const statusClass = sourceRegistryStatusClass(source, health);
-            const statusLabel = sourceRegistryStatusLabel(source, health);
-            const note = health?.message || source.notes || "Planlandı";
-            const active = isSourceActiveForUi(source);
-            return `<tr class="${escapeAttr(source.type === "prediction_market" ? "prediction-market" : "bookmaker-source")}">
-              <td><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.sourceId)}</small></td>
-              <td>${escapeHtml(displaySourceTypeLabel(source.type))}</td>
-              <td>${escapeHtml(displayModeLabel(source.mode))}</td>
-              <td>${escapeHtml((source.sports || []).join(", "))}</td>
-              <td><span class="${escapeAttr(statusClass)}">${escapeHtml(displayStatusLabel(health ? statusLabel : source.adapterStatus || statusLabel))}</span><small>${escapeHtml(displayStatusLabel(statusLabel))}</small></td>
-              <td><button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button></td>
-              <td><b>${Number(source.priority || 0)}</b>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
-            </tr>`;
-          }).join("")}</tbody>
+          <tbody data-source-registry-rows>${renderSourceRegistryRows(rows, healthRows)}</tbody>
         </table>
+        <div data-source-registry-empty>${renderSourceEmptyState(rows)}</div>
       </div>
     </section>`;
   }
+
 
 
 
@@ -3651,246 +3719,282 @@
     }, true);
   }
 
-  function bind() {
-    installMarketOutsideCloseGuard();
+  function setActiveOddsTabButtons() {
     qsa("[data-odds-tab]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const nextTab = btn.dataset.oddsTab || DEFAULT_TAB;
-        if (state.tab === nextTab) return;
-        state.tab = nextTab;
+      btn.classList.toggle("active", (btn.dataset.oddsTab || DEFAULT_TAB) === state.tab);
+    });
+  }
+
+  function renderContentOnly({ preserveScroll = true } = {}) {
+    const contentBox = qs("[data-odds-content]");
+    if (!contentBox) {
+      render();
+      return;
+    }
+    const scrollY = window.scrollY;
+    clearTimeout(marketSearchRenderTimer);
+    contentBox.innerHTML = content();
+    setActiveOddsTabButtons();
+    if (preserveScroll) requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
+  }
+
+  function updateSourceFilterButtons() {
+    qsa("[data-source-config-filter]").forEach(btn => {
+      btn.classList.toggle("active", (btn.dataset.sourceConfigFilter || "all") === state.sourceConfigFilter);
+    });
+    qsa("[data-source-filter-label]").forEach(node => {
+      node.textContent = currentSourceConfigFilterLabel();
+    });
+  }
+
+  function renderSourceFilterOnly() {
+    const healthRows = sourceRegistryHealthRows();
+    const rows = filteredEffectiveSourceRows();
+    const registryRows = qs("[data-source-registry-rows]");
+    const settingsList = qs("[data-source-settings-list]");
+    const registryEmpty = qs("[data-source-registry-empty]");
+    const settingsEmpty = qs("[data-source-settings-empty]");
+    if (!registryRows || !settingsList) {
+      renderContentOnly();
+      return;
+    }
+    registryRows.innerHTML = renderSourceRegistryRows(rows, healthRows);
+    settingsList.innerHTML = renderSourceSettingsCards(rows, healthRows);
+    if (registryEmpty) registryEmpty.innerHTML = renderSourceEmptyState(rows);
+    if (settingsEmpty) settingsEmpty.innerHTML = renderSourceEmptyState(rows);
+    updateSourceFilterButtons();
+  }
+
+  function closeMarketDrawerWithRender() {
+    state.marketPickerOpen = false;
+    state.marketSearch = "";
+    saveLocalState();
+    render();
+  }
+
+  function handleOddsClick(e) {
+    const tabButtonEl = e.target.closest("[data-odds-tab]");
+    if (tabButtonEl) {
+      e.preventDefault();
+      const nextTab = tabButtonEl.dataset.oddsTab || DEFAULT_TAB;
+      if (nextTab === "polymarket") {
+        if (state.sport === "polymarket") return;
+        state.sport = "polymarket";
+        state.tab = "opportunities";
         state.marketPickerOpen = false;
         state.marketSearch = "";
         saveLocalState();
         render();
-      });
-    });
+        return;
+      }
+      if (state.tab === nextTab) return;
+      state.tab = nextTab;
+      state.marketPickerOpen = false;
+      state.marketSearch = "";
+      saveLocalState();
+      renderContentOnly();
+      return;
+    }
 
-    function bindMarketButtons(root = document) {
-      qsa("[data-cat-toggle]", root).forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.dataset.catToggle;
-          if (!id) return;
-          const scrollY = window.scrollY;
-          const open = new Set(openCategoryIds());
-          if (open.has(id)) open.delete(id);
-          else open.add(id);
-          state.openMarketCats = [...open];
-          saveLocalState();
-          const box = qs(".v533-market-results");
-          if (box) {
-            box.innerHTML = marketResultsHtml();
-            bindMarketButtons(box);
-          } else {
-            render();
-            requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
-          }
-        });
-      });
+    const catToggle = e.target.closest("[data-cat-toggle]");
+    if (catToggle) {
+      e.preventDefault();
+      const id = catToggle.dataset.catToggle;
+      if (!id) return;
+      const open = new Set(openCategoryIds());
+      if (open.has(id)) open.delete(id);
+      else open.add(id);
+      state.openMarketCats = [...open];
+      saveLocalState();
+      const box = qs(".v533-market-results");
+      if (box) box.innerHTML = marketResultsHtml();
+      else renderContentOnly();
+      return;
+    }
 
-      qsa("[data-cat-pin]", root).forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const id = btn.dataset.catPin;
-          if (!id) return;
-          const pinned = new Set(Array.isArray(state.pinnedMarketCats) ? state.pinnedMarketCats : []);
-          if (pinned.has(id)) pinned.delete(id);
-          else pinned.add(id);
-          state.pinnedMarketCats = [...pinned];
-          saveLocalState();
-          const box = qs(".v533-market-results");
-          if (box) {
-            box.innerHTML = marketResultsHtml();
-            bindMarketButtons(box);
-          } else {
-            render();
-          }
-        });
-      });
+    const catPin = e.target.closest("[data-cat-pin]");
+    if (catPin) {
+      e.preventDefault();
+      e.stopPropagation();
+      const id = catPin.dataset.catPin;
+      if (!id) return;
+      const pinned = new Set(Array.isArray(state.pinnedMarketCats) ? state.pinnedMarketCats : []);
+      if (pinned.has(id)) pinned.delete(id);
+      else pinned.add(id);
+      state.pinnedMarketCats = [...pinned];
+      saveLocalState();
+      const box = qs(".v533-market-results");
+      if (box) box.innerHTML = marketResultsHtml();
+      else renderContentOnly();
+      return;
+    }
 
-      qsa("[data-market-pick]", root).forEach(btn => {
-        btn.addEventListener("click", () => {
-          state.marketCategory = btn.dataset.categoryPick || "all";
-          state.marketId = btn.dataset.marketPick || "all";
-          state.marketSearch = "";
-          state.marketPickerOpen = false;
-          state.tab = "all-sites";
-          saveLocalState();
-          render();
-        });
-      });
+    const marketPick = e.target.closest("[data-market-pick]");
+    if (marketPick) {
+      e.preventDefault();
+      state.marketCategory = marketPick.dataset.categoryPick || "all";
+      state.marketId = marketPick.dataset.marketPick || "all";
+      state.marketSearch = "";
+      state.marketPickerOpen = false;
+      state.tab = "all-sites";
+      saveLocalState();
+      renderContentOnly();
+      return;
+    }
 
-      qs("[data-market-reset]", root)?.addEventListener("click", () => {
+    if (e.target.closest("[data-market-reset]")) {
+      e.preventDefault();
+      state.marketCategory = "all";
+      state.marketId = "all";
+      state.marketSearch = "";
+      state.marketGroupFilter = "all";
+      state.marketPickerOpen = false;
+      saveLocalState();
+      renderContentOnly();
+      return;
+    }
+
+    const sportBtn = e.target.closest("[data-odds-sport-btn]");
+    if (sportBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const nextSport = sportBtn.dataset.oddsSportBtn || "all";
+      if (state.sport === nextSport) return;
+      const scrollY = window.scrollY;
+      state.sport = nextSport;
+      state.tab = CATEGORY_CLICK_TAB;
+      state.marketPickerOpen = false;
+      state.marketSearch = "";
+      state.marketGroupFilter = "all";
+      state.openMarketCats = null;
+      if (isPolymarketMode()) {
         state.marketCategory = "all";
         state.marketId = "all";
-        state.marketSearch = "";
-        state.marketGroupFilter = "all";
-        state.marketPickerOpen = false;
-        saveLocalState();
-        render();
-      });
+      }
+      ensureMarketFitsSport();
+      saveLocalState();
+      render();
+      requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
+      return;
     }
 
-    bindMarketButtons(document);
-
-    qsa("[data-odds-sport-btn]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const nextSport = btn.dataset.oddsSportBtn || "all";
-        if (state.sport === nextSport) return;
-        const scrollY = window.scrollY;
-        state.sport = nextSport;
-        state.tab = CATEGORY_CLICK_TAB;
-        state.marketPickerOpen = false;
-        state.marketSearch = "";
-        state.marketGroupFilter = "all";
-        state.openMarketCats = null;
-        if (isPolymarketMode()) {
-          state.marketCategory = "all";
-          state.marketId = "all";
-        }
-        ensureMarketFitsSport();
-        saveLocalState();
-        render();
-        requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
-      });
-    });
-
-    const openMarketDrawer = qs("[data-market-drawer-toggle]");
-    if (openMarketDrawer) {
-      openMarketDrawer.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const scrollY = window.scrollY;
-        state.marketPickerOpen = !state.marketPickerOpen;
-        saveLocalState();
-        render();
-        requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
-      });
+    if (e.target.closest("[data-market-drawer-toggle]")) {
+      e.preventDefault();
+      e.stopPropagation();
+      const scrollY = window.scrollY;
+      state.marketPickerOpen = !state.marketPickerOpen;
+      saveLocalState();
+      render();
+      requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
+      return;
     }
 
-    qs("[data-market-drawer-close]")?.addEventListener("click", () => {
+    if (e.target.closest("[data-market-drawer-close]")) {
+      e.preventDefault();
       state.marketPickerOpen = false;
       saveLocalState();
       render();
-    });
-
-    if (state.marketPickerOpen && !window.__v539OddsOutsideCloseBound) {
-      window.__v539OddsOutsideCloseBound = true;
-      setTimeout(() => {
-        const outsideClose = (ev) => {
-          const menu = ev.target.closest("[data-odds-category-row], [data-odds-sport-btn], .v536-market-menu, .v537-market-menu, .v535-market-menu, .v540-market-menu, .omega-market-picker, .omega-market-dropdown");
-          const oddsVisible = document.body.classList.contains("omega-tab-odds");
-          if (!oddsVisible || !state.marketPickerOpen) {
-            document.removeEventListener("pointerdown", outsideClose, true);
-            window.__v539OddsOutsideCloseBound = false;
-            return;
-          }
-          if (menu) return;
-          state.marketPickerOpen = false;
-          state.marketSearch = "";
-          saveLocalState();
-          document.removeEventListener("pointerdown", outsideClose, true);
-          window.__v539OddsOutsideCloseBound = false;
-          render();
-        };
-        document.addEventListener("pointerdown", outsideClose, true);
-      }, 0);
+      return;
     }
 
-    const marketSearch = qs("#odds-v546-market-search");
-    if (marketSearch) {
-      marketSearch.addEventListener("input", () => {
-        state.marketSearch = marketSearch.value || "";
-        saveLocalState();
-        clearTimeout(marketSearchRenderTimer);
-        marketSearchRenderTimer = setTimeout(() => {
-          const scrollY = window.scrollY;
-          render();
-          const input = qs("#odds-v546-market-search");
-          if (input) {
-            input.focus({ preventScroll: true });
-            const len = input.value.length;
-            try { input.setSelectionRange(len, len); } catch {}
-          }
-          requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
-        }, SEARCH_RENDER_DELAY);
-      });
+    const groupFilter = e.target.closest("[data-market-group-filter]");
+    if (groupFilter) {
+      e.preventDefault();
+      e.stopPropagation();
+      const nextFilter = groupFilter.dataset.marketGroupFilter || "all";
+      if (currentMarketGroupFilter() === nextFilter) return;
+      state.marketGroupFilter = nextFilter;
+      state.openMarketCats = null;
+      saveLocalState();
+      renderContentOnly();
+      return;
     }
 
-    qsa("[data-market-group-filter]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const nextFilter = btn.dataset.marketGroupFilter || "all";
-        if (currentMarketGroupFilter() === nextFilter) return;
-        const scrollY = window.scrollY;
-        state.marketGroupFilter = nextFilter;
-        state.openMarketCats = null;
-        saveLocalState();
-        render();
-        requestAnimationFrame(() => window.scrollTo({ top: scrollY, left: 0, behavior: "auto" }));
-      });
-    });
+    const polyFilter = e.target.closest("[data-poly-filter]");
+    if (polyFilter) {
+      e.preventDefault();
+      e.stopPropagation();
+      const nextFilter = polyFilter.dataset.polyFilter || "all";
+      if (state.polyFilter === nextFilter) return;
+      state.polyFilter = nextFilter;
+      saveLocalState();
+      renderContentOnly({ preserveScroll: false });
+      return;
+    }
 
-    qsa("[data-poly-filter]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const nextFilter = btn.dataset.polyFilter || "all";
-        if (state.polyFilter === nextFilter) return;
-        state.polyFilter = nextFilter;
-        saveLocalState();
-        render();
-      });
-    });
+    const sourceFilter = e.target.closest("[data-source-config-filter]");
+    if (sourceFilter) {
+      e.preventDefault();
+      const nextFilter = sourceFilter.dataset.sourceConfigFilter || "all";
+      if (state.sourceConfigFilter === nextFilter) return;
+      state.sourceConfigFilter = nextFilter;
+      saveLocalState();
+      renderSourceFilterOnly();
+      return;
+    }
 
-    qsa("[data-source-config-filter]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const nextFilter = btn.dataset.sourceConfigFilter || "all";
-        if (state.sourceConfigFilter === nextFilter) return;
-        state.sourceConfigFilter = nextFilter;
-        saveLocalState();
-        render();
-      });
-    });
+    const sourceToggle = e.target.closest("[data-source-config-toggle]");
+    if (sourceToggle) {
+      e.preventDefault();
+      const sourceId = sourceToggle.dataset.sourceConfigToggle;
+      const baseSource = SOURCE_REGISTRY.find(source => source.sourceId === sourceId);
+      if (!baseSource) return;
+      const current = applySourceConfig(baseSource);
+      const nextEnabled = !isSourceActiveForUi(current);
+      state.sourceConfig = state.sourceConfig && typeof state.sourceConfig === "object" ? state.sourceConfig : {};
+      state.sourceConfig[sourceId] = { enabled: nextEnabled, mode: baseSource.mode || "planned" };
+      mockComparisonCache = null;
+      clearSourceDerivedCaches();
+      saveLocalState();
+      if (state.tab === "sources") renderContentOnly();
+      else render();
+      return;
+    }
 
-    qsa("[data-source-config-toggle]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const sourceId = btn.dataset.sourceConfigToggle;
-        const baseSource = SOURCE_REGISTRY.find(source => source.sourceId === sourceId);
-        if (!baseSource) return;
-        const current = applySourceConfig(baseSource);
-        const nextEnabled = !isSourceActiveForUi(current);
-        state.sourceConfig = state.sourceConfig && typeof state.sourceConfig === "object" ? state.sourceConfig : {};
-        state.sourceConfig[sourceId] = { enabled: nextEnabled, mode: baseSource.mode || "planned" };
-        mockComparisonCache = null;
-        saveLocalState();
-        render();
-      });
-    });
+    const refresh = e.target.closest('[data-odds-action="refresh"]');
+    if (refresh) {
+      e.preventDefault();
+      load().then(render);
+      return;
+    }
 
-    qs('[data-odds-action="refresh"]')?.addEventListener("click", async () => {
-      await load();
-      render();
-    });
-
-    qs('[data-odds-action="toggle-alarm"]')?.addEventListener("click", () => {
+    if (e.target.closest('[data-odds-action="toggle-alarm"]')) {
+      e.preventDefault();
       state.alarmEnabled = !state.alarmEnabled;
       saveLocalState();
-      render();
-    });
-
-    const sens = qs("#v533-alarm-sensitivity");
-    if (sens) {
-      sens.addEventListener("input", () => {
-        state.alarmSensitivity = Number(sens.value || 0.4);
-        saveLocalState();
-      });
+      renderContentOnly();
     }
+  }
+
+  function handleOddsInput(e) {
+    if (e.target && e.target.id === "odds-v546-market-search") {
+      state.marketSearch = e.target.value || "";
+      saveLocalState();
+      clearTimeout(marketSearchRenderTimer);
+      marketSearchRenderTimer = setTimeout(() => {
+        renderContentOnly();
+        const input = qs("#odds-v546-market-search");
+        if (input) {
+          input.focus({ preventScroll: true });
+          const len = input.value.length;
+          try { input.setSelectionRange(len, len); } catch {}
+        }
+      }, SEARCH_RENDER_DELAY);
+      return;
+    }
+    if (e.target && e.target.id === "v533-alarm-sensitivity") {
+      state.alarmSensitivity = Number(e.target.value || 0.4);
+      saveLocalState();
+    }
+  }
+
+  function bind() {
+    installMarketOutsideCloseGuard();
+    const mount = qs("#omega-odds-render");
+    if (!mount || mount.dataset.oddsDelegationBound === "true") return;
+    mount.dataset.oddsDelegationBound = "true";
+    mount.addEventListener("click", handleOddsClick);
+    mount.addEventListener("input", handleOddsInput);
   }
 
   async function load() {
@@ -3899,6 +4003,8 @@
     marketMapCache = null;
     normalizedMockOddsCache = null;
     mockComparisonCache = null;
+    polymarketAdapterRecordsCache = null;
+    clearSourceDerivedCaches();
     validateMockOddsRecords();
     state.lastLoadedAt = new Date().toISOString();
   }

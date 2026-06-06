@@ -5227,3 +5227,37 @@
         grid-template-columns: 1fr !important;
     }
 }
+
+/* V564 — Oran Terminali geçiş performansı: layout oynamadan hafif durum değişimi */
+.omega-tab-odds .odds-v528-content,
+.omega-tab-odds .v559-source-registry,
+.omega-tab-odds .v561-source-settings,
+.omega-tab-odds .v561-source-config-grid,
+.omega-tab-odds .v559-registry-table-wrap {
+    contain: layout paint !important;
+}
+
+.omega-tab-odds .odds-v528-tabs button,
+.omega-tab-odds .v561-source-config-filters button,
+.omega-tab-odds .v552-market-group-filters button,
+.omega-tab-odds .v544-poly-filters button {
+    box-sizing: border-box !important;
+    flex: 0 0 auto !important;
+    border-width: 1px !important;
+    transform: none !important;
+    transition: background-color .14s ease, border-color .14s ease, color .14s ease, box-shadow .14s ease !important;
+    will-change: background-color, border-color, color !important;
+}
+
+.omega-tab-odds .v561-source-config-filters button {
+    min-width: 74px !important;
+    justify-content: center !important;
+}
+
+.omega-tab-odds .odds-v528-tabs button:hover,
+.omega-tab-odds .odds-v528-tabs button.active,
+.omega-tab-odds .v561-source-config-filters button:hover,
+.omega-tab-odds .v561-source-config-filters button.active {
+    transform: none !important;
+    text-shadow: none !important;
+}
