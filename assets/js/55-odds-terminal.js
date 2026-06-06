@@ -43,10 +43,16 @@
   let normalizedMockOddsCache = null;
   let mockComparisonCache = null;
   let mockOddsValidationDone = false;
+  let sourceHealthValidationWarningDone = false;
+  const loadJsonWarningKeys = new Set();
+
 
 
   const FALLBACK_SOURCES = { sites: [], groups: [], marketCategories: [] };
   const FALLBACK_SNAPSHOT = { mode: "empty", records: [] };
+  const SOURCE_HEALTH_STATUSES = ["ok", "loading", "empty", "stale", "error", "disabled", "mock"];
+  const SOURCE_HEALTH_MAX_AGE_MINUTES = 2880;
+
 
   const MOCK_SOURCE_RAW_RECORDS = [
     {
@@ -483,7 +489,10 @@
       if (!res.ok) throw new Error("HTTP " + res.status);
       return await res.json();
     } catch (err) {
-      console.warn("Oran Terminali JSON yüklenemedi:", url, err);
+      if (!loadJsonWarningKeys.has(url)) {
+        loadJsonWarningKeys.add(url);
+        console.warn("Oran Terminali yerel JSON yüklenemedi; güvenli fallback kullanılacak:", url, err?.message || err);
+      }
       return fallback;
     }
   }
@@ -1461,6 +1470,198 @@
     return times.length ? Math.max(...times) : 0;
   }
 
+  function safeIso(value) {
+    const ts = Date.parse(value || "");
+    if (!Number.isFinite(ts)) return null;
+    try { return new Date(ts).toISOString(); } catch { return null; }
+  }
+
+  function formatSourceUpdatedAt(value) {
+    const iso = safeIso(value);
+    if (!iso) return "bilinmiyor";
+    try {
+      return new Intl.DateTimeFormat("tr-TR", {
+        day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit"
+      }).format(new Date(iso));
+    } catch {
+      return "bilinmiyor";
+    }
+  }
+
+  function isSourceStale(lastUpdatedAt, maxAgeMinutes = SOURCE_HEALTH_MAX_AGE_MINUTES) {
+    const ts = Date.parse(lastUpdatedAt || "");
+    if (!Number.isFinite(ts)) return false;
+    return Math.max(0, Date.now() - ts) / 6e4 > Number(maxAgeMinutes || SOURCE_HEALTH_MAX_AGE_MINUTES);
+  }
+
+  function sourceStaleMinutes(lastUpdatedAt) {
+    const ts = Date.parse(lastUpdatedAt || "");
+    if (!Number.isFinite(ts)) return 0;
+    return Math.max(0, Math.round((Date.now() - ts) / 6e4));
+  }
+
+  function getSourceStatus(sourceHealth = {}) {
+    const explicit = String(sourceHealth.status || "").toLowerCase();
+    if (explicit === "loading" || sourceHealth.loading) return "loading";
+    if (explicit === "disabled" || sourceHealth.disabled) return "disabled";
+    if (explicit === "error" || Number(sourceHealth.errorCount || 0) > 0 || sourceHealth.error) return "error";
+    if (explicit === "empty") return "empty";
+    if (explicit === "stale" || sourceHealth.stale || isSourceStale(sourceHealth.lastUpdatedAt, sourceHealth.maxAgeMinutes)) return "stale";
+    if (Number(sourceHealth.rawRecordCount || 0) <= 0 && Number(sourceHealth.adaptedRecordCount || 0) <= 0) return "empty";
+    if (String(sourceHealth.mode || "").toLowerCase() === "mock" || explicit === "mock") return "mock";
+    return SOURCE_HEALTH_STATUSES.includes(explicit) ? explicit : "ok";
+  }
+
+  function getSourceHealthBadge(sourceHealth = {}) {
+    const status = getSourceStatus(sourceHealth);
+    const labels = {
+      ok: "hazır", loading: "loading", empty: "empty", stale: "stale", error: "error", disabled: "disabled", mock: "mock"
+    };
+    return { status, label: labels[status] || status, className: `source-${status}` };
+  }
+
+  function buildSourceHealthSummary(recordsList = [], sourceMappings = SOURCE_MARKET_MAPPINGS, rawList = MOCK_SOURCE_RAW_RECORDS) {
+    const adaptedRows = Array.isArray(recordsList) ? recordsList.filter(Boolean) : [];
+    const rawRowsAll = Array.isArray(rawList) ? rawList.filter(Boolean) : [];
+    const sourceNames = {};
+    rawRowsAll.forEach(row => {
+      const source = String(row.source || row.bookmaker || row.sourceId || "mock_source");
+      if (!sourceNames[source]) sourceNames[source] = row.sourceName || SOURCE_ODDS_ADAPTERS[source]?.sourceName || source;
+    });
+    adaptedRows.forEach(row => {
+      const source = String(row.source || row.bookmaker || row.sourceId || "mock_source");
+      if (!sourceNames[source]) sourceNames[source] = row.sourceName || SOURCE_ODDS_ADAPTERS[source]?.sourceName || source;
+    });
+    const sources = [...new Set([...rawRowsAll.map(row => String(row.source || row.bookmaker || row.sourceId || "mock_source")), ...adaptedRows.map(row => String(row.source || row.bookmaker || row.sourceId || "mock_source"))])];
+
+    const health = sources.map(source => {
+      const rawRows = rawRowsAll.filter(row => String(row.source || row.bookmaker || row.sourceId || "mock_source") === source);
+      const rows = adaptedRows.filter(row => String(row.source || row.bookmaker || row.sourceId || "mock_source") === source);
+      const mappedRecordCount = rows.filter(row => row.matched || row.matchedMarketId).length;
+      const sports = [...new Set([...rawRows, ...rows].map(row => normalizeSportName(row.sport || "")).filter(Boolean))];
+      const lastUpdatedAt = safeIso(rows.map(row => row.updatedAt || row.lastUpdatedAt).sort().slice(-1)[0] || rawRows.map(row => row.updatedAt || row.lastUpdatedAt).sort().slice(-1)[0]);
+      const mappingWarnings = rawRows.filter(row => !sourceMappings.some(mapping => mapping.source === source && normalizeSourceMarketName(mapping.sourceMarketName) === normalizeSourceMarketName(row.sourceMarketName || row.marketName || row.marketLabel || row.market))).length;
+      const stale = isSourceStale(lastUpdatedAt, SOURCE_HEALTH_MAX_AGE_MINUTES);
+      const row = {
+        source,
+        sourceName: sourceNames[source] || source,
+        type: "bookmaker",
+        sport: sports.length === 1 ? sports[0] : "multi",
+        status: rows.length ? "mock" : "empty",
+        mode: "mock",
+        lastUpdatedAt,
+        nextRefreshAt: null,
+        rawRecordCount: rawRows.length,
+        adaptedRecordCount: rows.length,
+        mappedRecordCount,
+        unmappedRecordCount: Math.max(0, rows.length - mappedRecordCount),
+        errorCount: 0,
+        warningCount: mappingWarnings,
+        stale,
+        staleMinutes: stale ? sourceStaleMinutes(lastUpdatedAt) : 0,
+        message: rows.length ? (stale ? "Mock veri eski olabilir" : "Mock kaynak hazır") : "Bu filtre için eşleşen kaynak verisi yok"
+      };
+      row.status = getSourceStatus(row);
+      return row;
+    });
+    validateSourceHealthList(health);
+    return health;
+  }
+
+  function summarizeSourceHealth(sourceHealthList = []) {
+    const list = Array.isArray(sourceHealthList) ? sourceHealthList : [];
+    const totals = list.reduce((acc, row) => {
+      acc.sources += 1;
+      acc.raw += Number(row.rawRecordCount || 0);
+      acc.adapted += Number(row.adaptedRecordCount || 0);
+      acc.mapped += Number(row.mappedRecordCount || 0);
+      acc.unmapped += Number(row.unmappedRecordCount || 0);
+      acc.errors += Number(row.errorCount || 0);
+      acc.warnings += Number(row.warningCount || 0);
+      if (getSourceStatus(row) === "stale") acc.stale += 1;
+      return acc;
+    }, { sources: 0, raw: 0, adapted: 0, mapped: 0, unmapped: 0, errors: 0, warnings: 0, stale: 0 });
+    totals.lastUpdatedAt = list.map(row => row.lastUpdatedAt).filter(Boolean).sort().slice(-1)[0] || null;
+    totals.status = list.some(row => getSourceStatus(row) === "error") ? "error" : list.some(row => getSourceStatus(row) === "loading") ? "loading" : list.some(row => getSourceStatus(row) === "stale") ? "stale" : list.length ? "mock" : "empty";
+    totals.dataMode = getGlobalDataMode(list);
+    return totals;
+  }
+
+  function getGlobalDataMode(sourceHealthList = []) {
+    const list = Array.isArray(sourceHealthList) ? sourceHealthList : [];
+    if (!list.length) return "empty";
+    if (list.every(row => getSourceStatus(row) === "empty")) return "empty";
+    if (list.some(row => String(row.mode || "").toLowerCase() === "live")) return "live";
+    if (list.some(row => String(row.mode || "").toLowerCase() === "fallback")) return "fallback";
+    return "mock";
+  }
+
+  function validateSourceHealthList(sourceHealthList = []) {
+    const list = Array.isArray(sourceHealthList) ? sourceHealthList : [];
+    const seen = new Set();
+    const issues = [];
+    list.forEach(row => {
+      if (!row?.source) issues.push("source boş");
+      if (seen.has(row.source)) issues.push(`duplicate source: ${row.source}`);
+      seen.add(row.source);
+      if (!SOURCE_HEALTH_STATUSES.includes(getSourceStatus(row))) issues.push(`${row.source}: geçersiz status`);
+      ["rawRecordCount", "adaptedRecordCount", "mappedRecordCount", "unmappedRecordCount", "errorCount", "warningCount"].forEach(key => {
+        if (!Number.isFinite(Number(row[key] || 0))) issues.push(`${row.source}: ${key} number değil`);
+      });
+      if (Number(row.mappedRecordCount || 0) + Number(row.unmappedRecordCount || 0) > Number(row.adaptedRecordCount || 0)) issues.push(`${row.source}: mapped+unmapped adapted sayısını aşıyor`);
+      if (row.lastUpdatedAt && !safeIso(row.lastUpdatedAt)) issues.push(`${row.source}: lastUpdatedAt geçersiz`);
+    });
+    if (issues.length && !sourceHealthValidationWarningDone) {
+      sourceHealthValidationWarningDone = true;
+      console.warn("Oran Terminali source health validation:", issues.slice(0, 6));
+    }
+    return { valid: !issues.length, issues };
+  }
+
+  function getSafeOddsRecords(inputList) {
+    const base = Array.isArray(inputList) ? inputList : mockOddsRecords();
+    return base.filter(Boolean).filter(row => !isPolymarketRecord(row));
+  }
+
+  function getSafeSourceHealth(inputList) {
+    return buildSourceHealthSummary(getSafeOddsRecords(inputList), SOURCE_MARKET_MAPPINGS, MOCK_SOURCE_RAW_RECORDS);
+  }
+
+  function hasUsableComparisonData(inputList = mockOddsRecords(), sourceHealthList = getSafeSourceHealth(inputList)) {
+    const list = getSafeOddsRecords(inputList);
+    const summary = summarizeSourceHealth(sourceHealthList);
+    return list.length > 0 && summary.sources >= 2 && summary.mapped > 0 && !sourceHealthList.every(row => ["empty", "error", "disabled"].includes(getSourceStatus(row)));
+  }
+
+  function getFallbackComparisonState(inputList = []) {
+    const sourceHealthList = getSafeSourceHealth(inputList);
+    return {
+      dataMode: getGlobalDataMode(sourceHealthList),
+      sourceHealth: sourceHealthList,
+      usable: hasUsableComparisonData(inputList, sourceHealthList),
+      message: hasUsableComparisonData(inputList, sourceHealthList)
+        ? "Demo karşılaştırma altyapısı hazır"
+        : "Karşılaştırma için yeterli kaynak yok"
+    };
+  }
+
+  function buildPolymarketSourceHealth(recordsList = polymarketMockAdapterRecords()) {
+    const rows = Array.isArray(recordsList) ? recordsList.filter(Boolean) : [];
+    const lastUpdatedAt = state.lastLoadedAt || new Date().toISOString();
+    return {
+      source: "polymarket_mock",
+      sourceName: "Polymarket Mock",
+      type: "prediction_market",
+      status: rows.length ? "mock" : "empty",
+      mode: "mock",
+      marketCount: rows.length,
+      lastUpdatedAt,
+      liquidityTotal: rows.reduce((sum, row) => sum + Number(row.liquidity || 0), 0),
+      volume24hTotal: rows.reduce((sum, row) => sum + Number(row.volume24h || 0), 0),
+      message: rows.length ? "YES/NO fiyatları ayrı izlenir; decimal odds motoruna karışmaz" : "Polymarket demo kaydı yok"
+    };
+  }
+
   function scoreComparisonCandidate({ bestOddsResult = null, lineDifferenceResult = null, sourceHealth = [] } = {}) {
     const sourceCount = Math.max(Number(bestOddsResult?.sourceCount || 0), Number(lineDifferenceResult?.sourceCount || 0));
     const diff = Math.max(0, Number(bestOddsResult?.bestDiffPercent || 0));
@@ -1496,40 +1697,15 @@
   }
 
   function sourceHealth(recordsList = mockOddsRecords(), rawList = MOCK_SOURCE_RAW_RECORDS) {
-    const adaptedBySource = recordsList.reduce((acc, record) => {
-      if (!acc[record.source]) acc[record.source] = [];
-      acc[record.source].push(record);
-      return acc;
-    }, {});
-    const rawBySource = rawList.reduce((acc, record) => {
-      const source = record.source || record.bookmaker || "mock_source";
-      if (!acc[source]) acc[source] = [];
-      acc[source].push(record);
-      return acc;
-    }, {});
-    const sources = [...new Set([...Object.keys(rawBySource), ...Object.keys(adaptedBySource)])];
-    return sources.map(source => {
-      const rows = adaptedBySource[source] || [];
-      const rawRows = rawBySource[source] || [];
-      const mappedRecordCount = rows.filter(r => r.matched || r.matchedMarketId).length;
-      return {
-        source,
-        status: SOURCE_ODDS_ADAPTERS[source]?.status || "mock",
-        lastUpdatedAt: rows.map(r => r.updatedAt).sort().slice(-1)[0] || rawRows.map(r => r.updatedAt).sort().slice(-1)[0] || null,
-        rawRecordCount: rawRows.length,
-        adaptedRecordCount: rows.length,
-        mappedRecordCount,
-        unmappedRecordCount: Math.max(0, rows.length - mappedRecordCount),
-        error: null
-      };
-    });
+    return buildSourceHealthSummary(recordsList, SOURCE_MARKET_MAPPINGS, rawList);
   }
 
   function mockOddsSummary() {
     const list = mockOddsRecords();
     const matched = list.filter(r => r.matchedMarketId).length;
     const fixtures = new Set(list.map(r => r.fixtureId)).size;
-    return { records: list.length, matched, fixtures, sources: sourceHealth(list).length, mode: "mock hazırlık" };
+    const health = sourceHealth(list);
+    return { records: list.length, matched, fixtures, sources: health.length, mode: getGlobalDataMode(health), lastUpdatedAt: summarizeSourceHealth(health).lastUpdatedAt };
   }
 
   function comparisonFixtureLabel(record = {}) {
@@ -1550,17 +1726,20 @@
   }
 
   function comparisonEngineResults(list = mockOddsRecords()) {
+    const safeList = getSafeOddsRecords(list);
     const useMockCache = list === mockOddsRecords();
     if (useMockCache && mockComparisonCache) return mockComparisonCache;
-    const health = sourceHealth(list);
-    const bestRows = Object.values(groupOddsByFixtureAndMarket(list)).map(group => {
+    const health = getSafeSourceHealth(safeList);
+    const healthSummary = summarizeSourceHealth(health);
+    const fallbackState = getFallbackComparisonState(safeList);
+    const bestRows = Object.values(groupOddsByFixtureAndMarket(safeList)).map(group => {
       const result = findBestOddsForGroup(group);
       const lineDifference = null;
       const score = scoreComparisonCandidate({ bestOddsResult: result, lineDifferenceResult: lineDifference, sourceHealth: health });
       return { group, bestOddsResult: result, lineDifferenceResult: lineDifference, score };
     }).filter(row => row.bestOddsResult.bestRecord)
       .sort((a, b) => b.score.score - a.score.score || Number(b.bestOddsResult.bestDiffPercent || 0) - Number(a.bestOddsResult.bestDiffPercent || 0));
-    const lineDifferences = detectLineDifferences(list).map(lineDifference => {
+    const lineDifferences = detectLineDifferences(safeList).map(lineDifference => {
       const matchingBest = bestRows.find(row => row.bestOddsResult.bestRecord && oddsFixtureKey(row.bestOddsResult.bestRecord) === lineDifference.fixtureKey && baseMarketFamily(row.bestOddsResult.bestRecord.marketId) === lineDifference.baseMarketFamily);
       const score = scoreComparisonCandidate({ bestOddsResult: matchingBest?.bestOddsResult || null, lineDifferenceResult: lineDifference, sourceHealth: health });
       return { ...lineDifference, score };
@@ -1571,25 +1750,31 @@
       const score = scoreComparisonCandidate({ bestOddsResult: row.bestOddsResult, lineDifferenceResult: relatedLine || null, sourceHealth: health });
       return { ...row, lineDifferenceResult: relatedLine || null, score };
     }).sort((a, b) => b.score.score - a.score.score || Number(b.bestOddsResult.bestDiffPercent || 0) - Number(a.bestOddsResult.bestDiffPercent || 0));
-    const unmatched = list.filter(record => !(record.matched || record.matchedMarketId)).length;
+    const unmatched = safeList.filter(record => !(record.matched || record.matchedMarketId)).length;
     const result = {
-      records: list,
-      groupsByFixture: groupOddsByFixture(list),
-      groupsByFixtureAndMarket: groupOddsByFixtureAndMarket(list),
-      groupsByFixtureMarketLine: groupOddsByFixtureMarketLine(list),
-      groupsBySource: groupOddsBySource(list),
+      records: safeList,
+      groupsByFixture: groupOddsByFixture(safeList),
+      groupsByFixtureAndMarket: groupOddsByFixtureAndMarket(safeList),
+      groupsByFixtureMarketLine: groupOddsByFixtureMarketLine(safeList),
+      groupsBySource: groupOddsBySource(safeList),
       bestRows,
       lineDifferences,
       candidateRows,
       sourceHealth: health,
       summary: {
-        records: list.length,
-        matchedMarkets: list.filter(record => record.matchedMarketId).length,
-        sources: Object.keys(groupOddsBySource(list)).length,
+        records: safeList.length,
+        matchedMarkets: safeList.filter(record => record.matchedMarketId).length,
+        sources: healthSummary.sources,
         bestOddsCandidates: candidateRows.filter(row => row.bestOddsResult.sourceCount >= 2).length,
         lineDifferenceCandidates: lineDifferences.length,
-        unmatched
-      }
+        unmatched,
+        dataMode: healthSummary.dataMode,
+        lastUpdatedAt: healthSummary.lastUpdatedAt,
+        rawRecords: healthSummary.raw,
+        staleSources: healthSummary.stale
+      },
+      healthSummary,
+      fallbackState
     };
     if (useMockCache) mockComparisonCache = result;
     return result;
@@ -2385,8 +2570,8 @@
 
     return `
       <div class="odds-v528-grid">
-        ${panel("Değerli Oran Sinyalleri", renderValueList(values), "purple")}
-        ${panel("Arbitraj Adayları", renderArbList(arbs), "green")}
+        ${panel("Değerli Oran Demo Adayları", renderValueList(values), "purple")}
+        ${panel("Arbitraj Demo Adayları", renderArbList(arbs), "green")}
         ${panel("Barem Farkı Dedektörü", renderLineList(lines), "blue")}
         ${panel("Oran Düşüş Uyarısı", renderDropList(drops), "red")}
       </div>
@@ -2402,27 +2587,43 @@
   }
 
   function renderComparisonSummaryBoxes(data) {
-    const summary = data.summary;
+    const summary = data.summary || {};
     return `<div class="v557-comparison-kpis" aria-label="Demo karşılaştırma özeti">
-      <div><span>Mock kayıt</span><b>${summary.records}</b></div>
-      <div><span>Eşleşen market</span><b>${summary.matchedMarkets}</b></div>
-      <div><span>Kaynak sayısı</span><b>${summary.sources}</b></div>
-      <div><span>En iyi oran adayı</span><b>${summary.bestOddsCandidates}</b></div>
-      <div><span>Barem farkı adayı</span><b>${summary.lineDifferenceCandidates}</b></div>
-      <div><span>Eşleşmeyen kayıt</span><b>${summary.unmatched}</b></div>
+      <div><span>Kaynak</span><b>${summary.sources || 0}</b></div>
+      <div><span>Eşleşen kayıt</span><b>${summary.matchedMarkets || 0}</b></div>
+      <div><span>Eşleşmeyen</span><b>${summary.unmatched || 0}</b></div>
+      <div><span>Veri modu</span><b>${escapeHtml(summary.dataMode || "mock")}</b></div>
+      <div><span>Son güncelleme</span><b>${escapeHtml(formatSourceUpdatedAt(summary.lastUpdatedAt))}</b></div>
+      <div><span>Barem adayı</span><b>${summary.lineDifferenceCandidates || 0}</b></div>
+    </div>`;
+  }
+
+  function renderSourceStateNotice(status, message) {
+    const badge = getSourceHealthBadge({ status, mode: status === "mock" ? "mock" : "empty" });
+    return `<div class="v558-state-note ${escapeAttr(badge.className)}" role="status">
+      <b>${escapeHtml(badge.label)}</b><span>${escapeHtml(message)}</span>
     </div>`;
   }
 
   function renderComparisonHealth(data) {
-    if (!data.sourceHealth.length) return "";
+    const rows = data.sourceHealth || [];
+    const summary = data.healthSummary || summarizeSourceHealth(rows);
+    if (!rows.length) return renderSourceStateNotice("empty", "Bu filtre için eşleşen kaynak verisi yok.");
     return `<div class="v557-comparison-health" aria-label="Kaynak sağlığı özeti">
-      ${data.sourceHealth.map(row => `<span><b>${escapeHtml(row.source)}</b> ${row.mappedRecordCount}/${row.rawRecordCount} eşleşti <em>unmapped: ${row.unmappedRecordCount}</em></span>`).join("")}
+      <span><b>Kaynak: ${summary.sources}</b><em>Mod: ${escapeHtml(summary.dataMode)}</em></span>
+      <span><b>Eşleşme: ${summary.mapped}/${summary.adapted}</b><em>Eşleşmeyen: ${summary.unmapped}</em></span>
+      <span><b>Son güncelleme</b><em>${escapeHtml(formatSourceUpdatedAt(summary.lastUpdatedAt))}</em></span>
+      ${rows.map(row => {
+        const badge = getSourceHealthBadge(row);
+        return `<span class="${escapeAttr(badge.className)}"><b>${escapeHtml(row.sourceName || row.source)}</b> ${row.mappedRecordCount}/${row.rawRecordCount} eşleşti <em>${escapeHtml(badge.label)} · ${escapeHtml(row.message || "")}</em></span>`;
+      }).join("")}
     </div>`;
   }
 
   function renderComparisonRows(data) {
-    const rows = data.candidateRows.slice(0, 8);
-    if (!rows.length) return empty("Demo karşılaştırma adayı yok.");
+    const rows = (data.candidateRows || []).slice(0, 8);
+    if (!data.fallbackState?.usable) return empty("Karşılaştırma için yeterli kaynak yok. Katalog manuel kontrol için Marketler sekmesinde görünür kalır.");
+    if (!rows.length) return empty("Bu filtre için eşleşen kaynak verisi yok.");
     return `<div class="v557-comparison-table" role="region" aria-label="En iyi oran demo karşılaştırma tablosu">
       <table>
         <thead><tr><th>Fixture</th><th>Market</th><th>Selection</th><th>Line</th><th>Best source</th><th>Best odds</th><th>Second best</th><th>Fark %</th><th>Source count</th><th>Candidate tag</th></tr></thead>
@@ -2472,7 +2673,7 @@
         <div>
           <span>V557 DEMO COMPARISON</span>
           <h3>Kaynaklar Arası Karşılaştırma Motoru</h3>
-          <p>Demo/mock kayıtlarla en iyi oran, barem farkı ve kaynak eşleşmesi test edilir. Gerçek kaynak bağlanınca aynı motor canlı veriye uygulanır.</p>
+          <p>Demo/mock kayıtlarla en iyi oran, barem farkı ve kaynak eşleşmesi test edilir. Gerçek canlı veri gibi sunulmaz; veri gelmezse panel güvenli empty/fallback durumuna düşer.</p>
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
@@ -2486,7 +2687,9 @@
   function renderOpportunityComparisonDemoCard() {
     const data = comparisonEngineResults();
     const candidate = data.candidateRows.find(row => row.bestOddsResult.sourceCount >= 2) || data.candidateRows[0];
-    if (!candidate?.bestOddsResult?.bestRecord) return "";
+    if (!data.fallbackState?.usable || !candidate?.bestOddsResult?.bestRecord) {
+      return renderSourceStateNotice("empty", "Şu anda demo karşılaştırma adayı yok. Market kataloğu manuel kontrol için Marketler sekmesinde durur.");
+    }
     const best = candidate.bestOddsResult.bestRecord;
     return `<section class="v557-opportunity-demo-card" aria-label="Demo karşılaştırma adayı">
       <div>
@@ -2495,7 +2698,7 @@
         <small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")} · ${escapeHtml(best.selection || "-")} · line ${best.line ?? "-"}</small>
       </div>
       <div><b>${money(best.odds)}</b><small>${escapeHtml(best.source || "-")} · ${escapeHtml(candidate.score.tag)} · skor ${candidate.score.score}/100</small></div>
-      <p>Bu kart gerçek sinyal değildir; V557 motorunun ileride Fırsat Radarı’na veri sağlayacağını gösteren mock önizlemedir.</p>
+      <p>Bu kart gerçek sinyal değildir; yalnızca demo karşılaştırma adayıdır ve otomatik bahis/garanti sonucu ifade etmez.</p>
     </section>`;
   }
 
@@ -2554,15 +2757,18 @@
   }
 
   function renderSourceHealthPreview() {
-    const rows = sourceHealth();
-    if (!rows.length) return "";
+    const rows = getSafeSourceHealth();
+    if (!rows.length) return renderSourceStateNotice("empty", "Kaynaklar hazırlanıyor veya bu filtre için eşleşen kaynak verisi yok.");
     return `<div class="v556-source-health" aria-label="Kaynak durumları">
       <b>Kaynak durumları</b>
-      <div>${rows.map(row => `<span>
-        <strong>${escapeHtml(row.source)}</strong>
-        <em>${escapeHtml(row.status)}</em>
-        <small>${row.mappedRecordCount}/${row.rawRecordCount} eşleşti · ${row.unmappedRecordCount} açık</small>
-      </span>`).join("")}</div>
+      <div>${rows.map(row => {
+        const badge = getSourceHealthBadge(row);
+        return `<span class="${escapeAttr(badge.className)}">
+          <strong>${escapeHtml(row.sourceName || row.source)}</strong>
+          <em>${escapeHtml(badge.label)} · mod: ${escapeHtml(row.mode)}</em>
+          <small>${row.mappedRecordCount}/${row.rawRecordCount} eşleşti · ${row.unmappedRecordCount} açık · ${escapeHtml(formatSourceUpdatedAt(row.lastUpdatedAt))}</small>
+        </span>`;
+      }).join("")}</div>
     </div>`;
   }
 
@@ -2784,10 +2990,46 @@
       </article>`).join("")}</div>`;
   }
 
+  function renderSourceHealthCards() {
+    const rows = getSafeSourceHealth();
+    const summary = summarizeSourceHealth(rows);
+    const poly = buildPolymarketSourceHealth(polymarketMockAdapterRecords());
+    return `<section class="v558-source-panel" aria-label="Kaynak Durumu">
+      <div class="v554-mock-preview-head">
+        <div>
+          <span>MOCK SOURCE HEALTH</span>
+          <h3>Kaynak Durumu</h3>
+          <p>Gerçek kaynaklar bağlanmadan önce mock adapter ve eşleşme altyapısı izlenir. Bu panel gerçek canlı veri olarak pazarlanmaz.</p>
+        </div>
+        <em>Veri modu: ${escapeHtml(summary.dataMode)}</em>
+      </div>
+      <div class="v558-source-summary">
+        <span>Kaynak: <b>${summary.sources}</b></span>
+        <span>Ham kayıt: <b>${summary.raw}</b></span>
+        <span>Eşleşme: <b>${summary.mapped}/${summary.adapted}</b></span>
+        <span>Son güncelleme: <b>${escapeHtml(formatSourceUpdatedAt(summary.lastUpdatedAt))}</b></span>
+      </div>
+      <div class="v558-source-cards">${rows.map(row => {
+        const badge = getSourceHealthBadge(row);
+        return `<article class="${escapeAttr(badge.className)}">
+          <div><b>${escapeHtml(row.sourceName || row.source)}</b><span>${escapeHtml(badge.label)}</span></div>
+          <small>Mod: ${escapeHtml(row.mode)} · Spor: ${escapeHtml(row.sport)}</small>
+          <p>Ham ${row.rawRecordCount} · Eşleşen ${row.mappedRecordCount} · Eşleşmeyen ${row.unmappedRecordCount}</p>
+          <em>Son güncelleme: ${escapeHtml(formatSourceUpdatedAt(row.lastUpdatedAt))}</em>
+          <strong>${escapeHtml(row.message || "Mock kaynak hazır")}</strong>
+        </article>`;
+      }).join("")}</div>
+      <div class="v558-poly-health">
+        <b>${escapeHtml(poly.sourceName)}</b>
+        <span>Mod: ${escapeHtml(poly.mode)} · Durum: ${escapeHtml(poly.status)} · Market: ${poly.marketCount}</span>
+        <small>Likidite $${Number(poly.liquidityTotal || 0).toLocaleString("en-US")} · 24s hacim $${Number(poly.volume24hTotal || 0).toLocaleString("en-US")} · YES/NO fiyatları bookmaker decimal odds ile karışmaz.</small>
+      </div>
+    </section>`;
+  }
+
   function renderSources() {
     const sites = state.sources?.sites || [];
-    if (!sites.length) return empty("Kaynak listesi boş.");
-    return `<div class="odds-v528-table-wrap"><table class="odds-v528-table sources">
+    const sourceTable = !sites.length ? empty("Kaynak listesi boş. Mock sağlık paneli katalogdan bağımsız görünür kalır.") : `<div class="odds-v528-table-wrap"><table class="odds-v528-table sources">
       <thead><tr><th>Site</th><th>Tip</th><th>Altyapı</th><th>Durum</th><th>Link</th></tr></thead>
       <tbody>${sites.map(s => `<tr>
         <td><b>${escapeHtml(s.name)}</b><small>${escapeHtml(s.id)}</small></td>
@@ -2797,6 +3039,7 @@
         <td>${s.url ? `<a class="odds-v528-open" href="${escapeAttr(s.url)}" target="_blank" rel="noopener noreferrer">AÇ</a>` : `<span class="muted">Backend/API bekliyor</span>`}</td>
       </tr>`).join("")}</tbody>
     </table></div>`;
+    return `${renderSourceHealthCards()}${sourceTable}`;
   }
 
   function empty(text) { return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`; }
@@ -3098,18 +3341,32 @@
     comparisonEngineResults,
     rankPolymarketMockEvents,
     sourceHealth,
+    buildSourceHealthSummary,
+    getSourceStatus,
+    isSourceStale,
+    getSourceHealthBadge,
+    summarizeSourceHealth,
+    getGlobalDataMode,
+    validateSourceHealthList,
+    getSafeOddsRecords,
+    getSafeSourceHealth,
+    getFallbackComparisonState,
+    hasUsableComparisonData,
+    buildPolymarketSourceHealth,
     polymarketMockAdapterRecords
   };
 
   window.__oddsTerminalV555 = window.__oddsTerminalV554;
   window.__oddsTerminalV556 = window.__oddsTerminalV554;
+  window.__oddsTerminalV557 = window.__oddsTerminalV554;
+  window.__oddsTerminalV558 = window.__oddsTerminalV554;
 
   window.omega_RenderOddsTerminal = async function () {
     readLocalState();
     const mount = qs("#omega-odds-render");
     if (!mount) return;
     if (!state.sources || !state.snapshot) {
-      mount.innerHTML = `<div class="odds-v537-loading-silent" aria-hidden="true"></div>`;
+      mount.innerHTML = `<div class="odds-v528-loading">Kaynaklar hazırlanıyor...</div>`;
       await load();
     }
     render();
