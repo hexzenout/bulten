@@ -3835,7 +3835,7 @@
     min-height: 46px !important;
     height: 46px !important;
     padding: 0 16px !important;
-    gap: 8px !important;
+    gap: 9px !important;
     border: 1px solid var(--odds-border-soft, rgba(226,232,240,.16)) !important;
     border-radius: 999px !important;
     background: linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.018)), var(--odds-panel-bg, #121826) !important;
@@ -3878,17 +3878,21 @@
     max-width: 168px !important;
     margin-left: 0 !important;
     padding-inline: 16px !important;
+    gap: 9px !important;
     border-color: rgba(255,255,255,.38) !important;
     background: linear-gradient(180deg, #063cff 0%, #071bb9 45%, #0a075f 100%) !important;
     color: #ffffff !important;
     box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 0 22px rgba(6,60,255,.24) !important;
 }
 
-.omega-tab-odds .v544-category-row button span {
+.omega-tab-odds .v544-category-row button .odds-cat-icon,
+.omega-tab-odds .v544-category-row button .odds-cat-label {
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: center !important;
     flex: 0 0 auto !important;
     min-width: 0 !important;
+    box-sizing: border-box !important;
     font-size: inherit !important;
     font-weight: inherit !important;
     letter-spacing: inherit !important;
@@ -3898,12 +3902,9 @@
     text-shadow: inherit !important;
 }
 
-.omega-tab-odds .v544-category-row button i,
-.omega-tab-odds .v544-category-row button .v544-poly-mark {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+.omega-tab-odds .v544-category-row button .odds-cat-icon {
     flex: 0 0 22px !important;
+    flex-shrink: 0 !important;
     width: 22px !important;
     min-width: 22px !important;
     max-width: 22px !important;
@@ -3911,25 +3912,48 @@
     min-height: 22px !important;
     max-height: 22px !important;
     margin: 0 !important;
+    padding: 0 !important;
     border-radius: 999px !important;
     background: transparent !important;
-    color: currentColor !important;
-    font-size: 16px !important;
-    line-height: 1 !important;
     filter: none !important;
     text-shadow: none !important;
     box-shadow: none !important;
 }
 
-.omega-tab-odds .v544-category-row button.football > i.fa-futbol,
-.omega-tab-odds .v544-category-row button.football:hover > i.fa-futbol,
-.omega-tab-odds .v544-category-row button.football.active > i.fa-futbol {
+.omega-tab-odds .v544-category-row button .odds-cat-icon i,
+.omega-tab-odds .v544-category-row button .odds-cat-icon .v544-poly-mark {
+    display: block !important;
+    flex: 0 0 auto !important;
+    width: 18px !important;
+    min-width: 18px !important;
+    max-width: 18px !important;
+    height: 18px !important;
+    min-height: 18px !important;
+    max-height: 18px !important;
+    margin: 0 !important;
+    background: transparent !important;
+    color: currentColor !important;
+    font-size: 16px !important;
+    line-height: 18px !important;
+    text-align: center !important;
+    filter: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.omega-tab-odds .v544-category-row button .odds-cat-label {
+    flex-shrink: 0 !important;
+}
+
+.omega-tab-odds .v544-category-row button.football .odds-cat-icon,
+.omega-tab-odds .v544-category-row button.football:hover .odds-cat-icon,
+.omega-tab-odds .v544-category-row button.football.active .odds-cat-icon {
     color: var(--v508-green, var(--green, #10d19a)) !important;
 }
 
-.omega-tab-odds .v544-category-row button.basketball > i.fa-basketball,
-.omega-tab-odds .v544-category-row button.basketball:hover > i.fa-basketball,
-.omega-tab-odds .v544-category-row button.basketball.active > i.fa-basketball {
+.omega-tab-odds .v544-category-row button.basketball .odds-cat-icon,
+.omega-tab-odds .v544-category-row button.basketball:hover .odds-cat-icon,
+.omega-tab-odds .v544-category-row button.basketball.active .odds-cat-icon {
     color: var(--v508-orange, var(--orange, #f97316)) !important;
 }
 
@@ -3993,16 +4017,22 @@
 }
 
 
-.omega-tab-odds .v544-category-row button:hover .v544-poly-mark,
-.omega-tab-odds .v544-category-row button.active .v544-poly-mark {
+.omega-tab-odds .v544-category-row button:hover .odds-cat-icon .v544-poly-mark,
+.omega-tab-odds .v544-category-row button.active .odds-cat-icon .v544-poly-mark {
     color: currentColor !important;
     filter: none !important;
     text-shadow: none !important;
 }
 
-.omega-tab-odds .v544-category-row button.polymarket .v544-poly-mark,
-.omega-tab-odds .v544-category-row button.polymarket:hover .v544-poly-mark,
-.omega-tab-odds .v544-category-row button.polymarket.active .v544-poly-mark {
+.omega-tab-odds .v544-category-row button.polymarket .odds-cat-icon,
+.omega-tab-odds .v544-category-row button.polymarket:hover .odds-cat-icon,
+.omega-tab-odds .v544-category-row button.polymarket.active .odds-cat-icon {
+    color: #ffffff !important;
+}
+
+.omega-tab-odds .v544-category-row button.polymarket .odds-cat-icon .v544-poly-mark,
+.omega-tab-odds .v544-category-row button.polymarket:hover .odds-cat-icon .v544-poly-mark,
+.omega-tab-odds .v544-category-row button.polymarket.active .odds-cat-icon .v544-poly-mark {
     color: #ffffff !important;
     filter: drop-shadow(0 0 7px rgba(255,255,255,.26)) !important;
     text-shadow: none !important;

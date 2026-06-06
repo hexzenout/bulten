@@ -2333,7 +2333,8 @@
 
   function categoryButton(key, label, icon = "") {
     const active = state.sport === key ? "active" : "";
-    return `<button type="button" class="${active} ${escapeAttr(key)}" data-odds-sport-btn="${escapeAttr(key)}">${icon}<span>${escapeHtml(label)}</span></button>`;
+    const iconHtml = icon ? `<span class="odds-cat-icon" aria-hidden="true">${icon}</span>` : "";
+    return `<button type="button" class="odds-cat-button ${active} ${escapeAttr(key)}" data-odds-sport-btn="${escapeAttr(key)}">${iconHtml}<span class="odds-cat-label">${escapeHtml(label)}</span></button>`;
   }
 
   function marketSearchPlaceholder() {
