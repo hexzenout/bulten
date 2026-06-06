@@ -2842,7 +2842,7 @@
 
   function renderMockMarketHint(marketIdValue) {
     const count = mockMatchCountForMarket(marketIdValue);
-    return count ? `<small class="v554-mock-market-hint">mock eşleşme: ${count}</small>` : "";
+    return count ? `<span class="v554-mock-market-hint" aria-label="Mock eşleşme sayısı">mock: ${count}</span>` : "";
   }
 
   function mappingStatus(row) {
