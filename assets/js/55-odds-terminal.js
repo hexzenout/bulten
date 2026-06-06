@@ -177,6 +177,49 @@
     }
   ];
 
+
+  const BOOKMAKER_SOURCE_REGISTRY = Array.from({ length: 15 }, (_, index) => {
+    const slot = String(index + 1).padStart(2, "0");
+    const isFootballFirst = index % 2 === 0;
+    const sports = index % 3 === 0 ? ["football", "basketball"] : isFootballFirst ? ["football"] : ["basketball"];
+    const marketFamilies = sports.flatMap(sport => sport === "football"
+      ? ["football.result", "football.goals", "football.handicap", "football.corners"]
+      : ["basket.match", "basket.totals", "basket.handicap", "basket.team_points"]);
+    return {
+      sourceId: `source_book_${slot}`,
+      sourceName: `Placeholder Bookmaker ${slot}`,
+      type: "bookmaker",
+      mode: "planned",
+      sports,
+      supportedMarketFamilies: [...new Set(marketFamilies)],
+      priority: index + 1,
+      enabled: index < 10,
+      requiresKey: true,
+      rateLimitNote: "Gerçek bağlantı öncesi limit bilgisi bekleniyor; fetch/scraping yok.",
+      lastStatus: "planned",
+      adapterStatus: "beklemede",
+      notes: "Güvenli placeholder; gerçek kaynak adı ve API modeli daha sonra eklenecek."
+    };
+  });
+
+  const POLYMARKET_SOURCE_REGISTRY = {
+    sourceId: "polymarket_mock",
+    sourceName: "Polymarket Mock",
+    type: "prediction_market",
+    mode: "mock",
+    sports: ["polymarket", "football", "basketball", "crypto", "macro", "news"],
+    supportedMarketFamilies: ["polymarket.yes_no", "polymarket.liquidity", "polymarket.volume", "polymarket.close_time"],
+    priority: 90,
+    enabled: true,
+    requiresKey: false,
+    rateLimitNote: "Mock adapter; gerçek Polymarket bağlantısı yok.",
+    lastStatus: "mock",
+    adapterStatus: "mock_ready",
+    notes: "YES/NO, likidite, hacim ve kapanış zamanı bookmaker odds modelinden ayrı tutulur."
+  };
+
+  const SOURCE_REGISTRY = [...BOOKMAKER_SOURCE_REGISTRY, POLYMARKET_SOURCE_REGISTRY];
+
   const MOCK_FIXTURE_SOURCE_A = [
     { id: "source_a_arsenal_chelsea", source: "Kaynak A", sport: "football", league: "Premier League", homeTeam: "Arsenal", awayTeam: "Chelsea", startsAt: "2026-06-05T19:00:00Z" },
     { id: "source_a_fenerbahce_efes", source: "Kaynak A", sport: "basketball", league: "BSL", homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", startsAt: "2026-06-05T18:00:00Z" }
@@ -1662,6 +1705,64 @@
     };
   }
 
+  function sourceRegistryHealthRows() {
+    return [...getSafeSourceHealth(), buildPolymarketSourceHealth(polymarketMockAdapterRecords())];
+  }
+
+  function findSourceRegistryHealth(sourceId, sourceHealthList = sourceRegistryHealthRows()) {
+    return (Array.isArray(sourceHealthList) ? sourceHealthList : []).find(row => String(row.source || row.sourceId || "") === String(sourceId || "")) || null;
+  }
+
+  function getEnabledSources() {
+    return SOURCE_REGISTRY.filter(source => source.enabled);
+  }
+
+  function getSourcesBySport(sport) {
+    const key = normalizeSportName(sport || "");
+    return SOURCE_REGISTRY.filter(source => (source.sports || []).map(normalizeSportName).includes(key));
+  }
+
+  function getSourcesByType(type) {
+    const key = String(type || "").toLowerCase();
+    return SOURCE_REGISTRY.filter(source => String(source.type || "").toLowerCase() === key);
+  }
+
+  function getSourceCapabilities(sourceId) {
+    const source = SOURCE_REGISTRY.find(row => row.sourceId === sourceId);
+    if (!source) return null;
+    return {
+      sourceId: source.sourceId,
+      sourceName: source.sourceName,
+      type: source.type,
+      mode: source.mode,
+      sports: [...(source.sports || [])],
+      supportedMarketFamilies: [...(source.supportedMarketFamilies || [])],
+      requiresKey: Boolean(source.requiresKey),
+      rateLimitNote: source.rateLimitNote || "",
+      adapterStatus: source.adapterStatus || "beklemede"
+    };
+  }
+
+  function isSourceReadyForLive(sourceId) {
+    const source = SOURCE_REGISTRY.find(row => row.sourceId === sourceId);
+    if (!source) return false;
+    return Boolean(source.enabled && source.mode === "live_ready" && source.adapterStatus === "live_ready" && !source.requiresKey);
+  }
+
+  function summarizeSourceRegistry(sourceHealthList = sourceRegistryHealthRows()) {
+    return SOURCE_REGISTRY.reduce((acc, source) => {
+      const health = findSourceRegistryHealth(source.sourceId, sourceHealthList);
+      acc.total += 1;
+      acc.enabled += source.enabled ? 1 : 0;
+      acc.requiresKey += source.requiresKey ? 1 : 0;
+      acc.byType[source.type] = (acc.byType[source.type] || 0) + 1;
+      acc.byMode[source.mode] = (acc.byMode[source.mode] || 0) + 1;
+      if (health) acc.withHealth += 1;
+      else acc.planned += 1;
+      return acc;
+    }, { total: 0, enabled: 0, requiresKey: 0, withHealth: 0, planned: 0, byType: {}, byMode: {} });
+  }
+
   function scoreComparisonCandidate({ bestOddsResult = null, lineDifferenceResult = null, sourceHealth = [] } = {}) {
     const sourceCount = Math.max(Number(bestOddsResult?.sourceCount || 0), Number(lineDifferenceResult?.sourceCount || 0));
     const diff = Math.max(0, Number(bestOddsResult?.bestDiffPercent || 0));
@@ -3027,6 +3128,63 @@
     </section>`;
   }
 
+  function sourceRegistryStatusClass(source, health) {
+    if (health) return getSourceHealthBadge(health).className;
+    if (!source.enabled || source.mode === "disabled") return "source-disabled";
+    if (source.mode === "mock") return "source-mock";
+    return "source-planned";
+  }
+
+  function sourceRegistryStatusLabel(source, health) {
+    if (health) return getSourceHealthBadge(health).label;
+    if (!source.enabled || source.mode === "disabled") return "pasif";
+    if (source.mode === "mock") return "mock";
+    return "beklemede";
+  }
+
+  function renderSourceRegistryPanel() {
+    const healthRows = sourceRegistryHealthRows();
+    const registrySummary = summarizeSourceRegistry(healthRows);
+    const rows = SOURCE_REGISTRY.slice().sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
+    return `<section class="v559-source-registry" aria-label="Kaynak Registry Hazırlığı">
+      <div class="v554-mock-preview-head">
+        <div>
+          <span>V559 SOURCE REGISTRY</span>
+          <h3>Kaynak Registry Hazırlığı</h3>
+          <p>Gerçek kaynak bağlantısından önce kaynak tipleri, yetenekleri ve adapter durumları hazırlanır.</p>
+        </div>
+        <em>Gerçek API yok · fetch yok · scraping yok</em>
+      </div>
+      <div class="v559-registry-summary">
+        <span>Toplam: <b>${registrySummary.total}</b></span>
+        <span>Aktif placeholder: <b>${registrySummary.enabled}</b></span>
+        <span>Bookmaker: <b>${registrySummary.byType.bookmaker || 0}</b></span>
+        <span>Polymarket: <b>${registrySummary.byType.prediction_market || 0}</b></span>
+        <span>Health bağlı: <b>${registrySummary.withHealth}</b></span>
+      </div>
+      <div class="v559-registry-table-wrap">
+        <table class="v559-registry-table">
+          <thead><tr><th>Kaynak</th><th>Tip</th><th>Mod</th><th>Sporlar</th><th>Adapter durumu</th><th>Aktif/Pasif</th><th>Not</th></tr></thead>
+          <tbody>${rows.map(source => {
+            const health = findSourceRegistryHealth(source.sourceId, healthRows);
+            const statusClass = sourceRegistryStatusClass(source, health);
+            const statusLabel = sourceRegistryStatusLabel(source, health);
+            const note = health?.message || source.notes || "Planlandı";
+            return `<tr class="${escapeAttr(source.type === "prediction_market" ? "prediction-market" : "bookmaker-source")}">
+              <td><b>${escapeHtml(source.sourceName)}</b><small>${escapeHtml(source.sourceId)}</small></td>
+              <td>${escapeHtml(source.type)}</td>
+              <td>${escapeHtml(source.mode)}</td>
+              <td>${escapeHtml((source.sports || []).join(", "))}</td>
+              <td><span class="${escapeAttr(statusClass)}">${escapeHtml(health ? statusLabel : source.adapterStatus || statusLabel)}</span><small>${escapeHtml(statusLabel)}</small></td>
+              <td><span class="odds-v528-status ${source.enabled ? "on" : "off"}">${source.enabled ? "Aktif" : "Pasif"}</span></td>
+              <td>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
+            </tr>`;
+          }).join("")}</tbody>
+        </table>
+      </div>
+    </section>`;
+  }
+
   function renderSources() {
     const sites = state.sources?.sites || [];
     const sourceTable = !sites.length ? empty("Kaynak listesi boş. Mock sağlık paneli katalogdan bağımsız görünür kalır.") : `<div class="odds-v528-table-wrap"><table class="odds-v528-table sources">
@@ -3039,7 +3197,7 @@
         <td>${s.url ? `<a class="odds-v528-open" href="${escapeAttr(s.url)}" target="_blank" rel="noopener noreferrer">AÇ</a>` : `<span class="muted">Backend/API bekliyor</span>`}</td>
       </tr>`).join("")}</tbody>
     </table></div>`;
-    return `${renderSourceHealthCards()}${sourceTable}`;
+    return `${renderSourceRegistryPanel()}${renderSourceHealthCards()}${sourceTable}`;
   }
 
   function empty(text) { return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`; }
@@ -3327,6 +3485,9 @@
     mapOddsRecordToCatalog,
     SOURCE_MARKET_MAPPINGS,
     SOURCE_ODDS_ADAPTERS,
+    SOURCE_REGISTRY,
+    BOOKMAKER_SOURCE_REGISTRY,
+    POLYMARKET_SOURCE_REGISTRY,
     POLYMARKET_EVENT_ADAPTER,
     mockOddsRecords,
     validateMockOddsRecords,
@@ -3348,6 +3509,14 @@
     summarizeSourceHealth,
     getGlobalDataMode,
     validateSourceHealthList,
+    sourceRegistryHealthRows,
+    findSourceRegistryHealth,
+    getEnabledSources,
+    getSourcesBySport,
+    getSourcesByType,
+    getSourceCapabilities,
+    isSourceReadyForLive,
+    summarizeSourceRegistry,
     getSafeOddsRecords,
     getSafeSourceHealth,
     getFallbackComparisonState,
@@ -3360,6 +3529,7 @@
   window.__oddsTerminalV556 = window.__oddsTerminalV554;
   window.__oddsTerminalV557 = window.__oddsTerminalV554;
   window.__oddsTerminalV558 = window.__oddsTerminalV554;
+  window.__oddsTerminalV559 = window.__oddsTerminalV554;
 
   window.omega_RenderOddsTerminal = async function () {
     readLocalState();
