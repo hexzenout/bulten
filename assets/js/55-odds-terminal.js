@@ -33,7 +33,9 @@
     openMarketCats: null,
     sources: null,
     snapshot: null,
-    lastLoadedAt: null
+    lastLoadedAt: null,
+    sourceConfigFilter: "all",
+    sourceConfig: {}
   };
 
   let curatedMarketCategoryCache = null;
@@ -219,6 +221,16 @@
   };
 
   const SOURCE_REGISTRY = [...BOOKMAKER_SOURCE_REGISTRY, POLYMARKET_SOURCE_REGISTRY];
+  const SOURCE_CONFIG_FILTERS = [
+    { id: "all", label: "Tümü" },
+    { id: "active", label: "Aktif" },
+    { id: "inactive", label: "Pasif" },
+    { id: "football", label: "Futbol" },
+    { id: "basketball", label: "Basketbol" },
+    { id: "polymarket", label: "Polymarket" },
+    { id: "mock", label: "Mock" },
+    { id: "planned", label: "Planned" }
+  ];
 
   const MOCK_FIXTURE_SOURCE_A = [
     { id: "source_a_arsenal_chelsea", source: "Kaynak A", sport: "football", league: "Premier League", homeTeam: "Arsenal", awayTeam: "Chelsea", startsAt: "2026-06-05T19:00:00Z" },
@@ -474,6 +486,8 @@
   function normalizeSavedState(saved) {
     if (!saved || typeof saved !== "object") return {};
     const safe = { ...saved };
+    if (!SOURCE_CONFIG_FILTERS.some(filter => filter.id === safe.sourceConfigFilter)) safe.sourceConfigFilter = "all";
+    if (!safe.sourceConfig || typeof safe.sourceConfig !== "object" || Array.isArray(safe.sourceConfig)) safe.sourceConfig = {};
     if (!["all", "football", "basketball", "polymarket"].includes(safe.sport)) safe.sport = "all";
     if (!["all", "sports", "crypto", "economy", "news", "short", "liquid", "value"].includes(safe.polyFilter)) safe.polyFilter = "all";
     const tabMap = {
@@ -521,7 +535,9 @@
         alarmEnabled: state.alarmEnabled,
         alarmSensitivity: state.alarmSensitivity,
         pinnedMarketCats: Array.isArray(state.pinnedMarketCats) ? state.pinnedMarketCats : [],
-        openMarketCats: Array.isArray(state.openMarketCats) ? state.openMarketCats : null
+        openMarketCats: Array.isArray(state.openMarketCats) ? state.openMarketCats : null,
+        sourceConfigFilter: state.sourceConfigFilter,
+        sourceConfig: state.sourceConfig && typeof state.sourceConfig === "object" ? state.sourceConfig : {}
       }));
     } catch {}
   }
@@ -1667,7 +1683,11 @@
   }
 
   function getSafeSourceHealth(inputList) {
-    return buildSourceHealthSummary(getSafeOddsRecords(inputList), SOURCE_MARKET_MAPPINGS, MOCK_SOURCE_RAW_RECORDS);
+    return buildSourceHealthSummary(
+      filterComparisonRecordsBySource(getSafeOddsRecords(inputList)),
+      SOURCE_MARKET_MAPPINGS,
+      filterRawSourceRecordsByConfig(MOCK_SOURCE_RAW_RECORDS)
+    );
   }
 
   function hasUsableComparisonData(inputList = mockOddsRecords(), sourceHealthList = getSafeSourceHealth(inputList)) {
@@ -1713,22 +1733,73 @@
     return (Array.isArray(sourceHealthList) ? sourceHealthList : []).find(row => String(row.source || row.sourceId || "") === String(sourceId || "")) || null;
   }
 
+  function getSourceConfigOverride(sourceId) {
+    const config = state.sourceConfig && typeof state.sourceConfig === "object" ? state.sourceConfig : {};
+    return config[String(sourceId || "")] || null;
+  }
+
+  function applySourceConfig(source = {}) {
+    const override = getSourceConfigOverride(source.sourceId);
+    if (!override) return { ...source };
+    const enabled = override.enabled !== false;
+    return {
+      ...source,
+      enabled,
+      mode: enabled ? (override.mode || source.mode || "planned") : "disabled",
+      configMode: override.mode || source.mode || "planned"
+    };
+  }
+
+  function effectiveSourceRegistry() {
+    return SOURCE_REGISTRY.map(applySourceConfig);
+  }
+
+  function findEffectiveSource(sourceId) {
+    return effectiveSourceRegistry().find(source => String(source.sourceId || "") === String(sourceId || "")) || null;
+  }
+
+  function isSourceActiveForUi(source = {}) {
+    return Boolean(source.enabled) && String(source.mode || "").toLowerCase() !== "disabled";
+  }
+
+  function isSourceEnabledForComparison(sourceId) {
+    const source = findEffectiveSource(sourceId);
+    if (!source) return true;
+    if (source.type === "prediction_market") return false;
+    return isSourceActiveForUi(source);
+  }
+
+  function filterComparisonRecordsBySource(list = []) {
+    return (Array.isArray(list) ? list : []).filter(record => {
+      if (isPolymarketRecord(record)) return false;
+      const sourceId = record.source || record.bookmaker || record.sourceId || "";
+      return isSourceEnabledForComparison(sourceId);
+    });
+  }
+
+  function filterRawSourceRecordsByConfig(list = []) {
+    return (Array.isArray(list) ? list : []).filter(record => {
+      const sourceId = record.source || record.bookmaker || record.sourceId || "";
+      return isSourceEnabledForComparison(sourceId);
+    });
+  }
+
   function getEnabledSources() {
-    return SOURCE_REGISTRY.filter(source => source.enabled);
+    return effectiveSourceRegistry().filter(isSourceActiveForUi);
   }
 
   function getSourcesBySport(sport) {
     const key = normalizeSportName(sport || "");
-    return SOURCE_REGISTRY.filter(source => (source.sports || []).map(normalizeSportName).includes(key));
+    return effectiveSourceRegistry().filter(source => (source.sports || []).map(normalizeSportName).includes(key));
   }
 
   function getSourcesByType(type) {
     const key = String(type || "").toLowerCase();
-    return SOURCE_REGISTRY.filter(source => String(source.type || "").toLowerCase() === key);
+    return effectiveSourceRegistry().filter(source => String(source.type || "").toLowerCase() === key);
   }
 
   function getSourceCapabilities(sourceId) {
-    const source = SOURCE_REGISTRY.find(row => row.sourceId === sourceId);
+    const source = findEffectiveSource(sourceId);
     if (!source) return null;
     return {
       sourceId: source.sourceId,
@@ -1744,13 +1815,13 @@
   }
 
   function isSourceReadyForLive(sourceId) {
-    const source = SOURCE_REGISTRY.find(row => row.sourceId === sourceId);
+    const source = findEffectiveSource(sourceId);
     if (!source) return false;
     return Boolean(source.enabled && source.mode === "live_ready" && source.adapterStatus === "live_ready" && !source.requiresKey);
   }
 
   function summarizeSourceRegistry(sourceHealthList = sourceRegistryHealthRows()) {
-    return SOURCE_REGISTRY.reduce((acc, source) => {
+    return effectiveSourceRegistry().reduce((acc, source) => {
       const health = findSourceRegistryHealth(source.sourceId, sourceHealthList);
       acc.total += 1;
       acc.enabled += source.enabled ? 1 : 0;
@@ -1798,7 +1869,11 @@
   }
 
   function sourceHealth(recordsList = mockOddsRecords(), rawList = MOCK_SOURCE_RAW_RECORDS) {
-    return buildSourceHealthSummary(recordsList, SOURCE_MARKET_MAPPINGS, rawList);
+    return buildSourceHealthSummary(
+      filterComparisonRecordsBySource(recordsList),
+      SOURCE_MARKET_MAPPINGS,
+      filterRawSourceRecordsByConfig(rawList)
+    );
   }
 
   function mockOddsSummary() {
@@ -1827,7 +1902,7 @@
   }
 
   function comparisonEngineResults(list = mockOddsRecords()) {
-    const safeList = getSafeOddsRecords(list);
+    const safeList = filterComparisonRecordsBySource(getSafeOddsRecords(list));
     const useMockCache = list === mockOddsRecords();
     if (useMockCache && mockComparisonCache) return mockComparisonCache;
     const health = getSafeSourceHealth(safeList);
@@ -3096,6 +3171,9 @@
     const rows = getSafeSourceHealth();
     const summary = summarizeSourceHealth(rows);
     const poly = buildPolymarketSourceHealth(polymarketMockAdapterRecords());
+    const registryRows = effectiveSourceRegistry();
+    const activeRegistry = registryRows.filter(isSourceActiveForUi).length;
+    const passiveRegistry = registryRows.length - activeRegistry;
     return `<section class="v558-source-panel" aria-label="Kaynak Durumu">
       <div class="v554-mock-preview-head">
         <div>
@@ -3110,12 +3188,14 @@
         <span>Ham kayıt: <b>${summary.raw}</b></span>
         <span>Eşleşme: <b>${summary.mapped}/${summary.adapted}</b></span>
         <span>Son güncelleme: <b>${escapeHtml(formatSourceUpdatedAt(summary.lastUpdatedAt))}</b></span>
+        <span>Aktif config: <b>${activeRegistry}</b></span>
+        <span>Pasif config: <b>${passiveRegistry}</b></span>
       </div>
       <div class="v558-source-cards">${rows.map(row => {
         const badge = getSourceHealthBadge(row);
         return `<article class="${escapeAttr(badge.className)}">
           <div><b>${escapeHtml(row.sourceName || row.source)}</b><span>${escapeHtml(badge.label)}</span></div>
-          <small>Mod: ${escapeHtml(row.mode)} · Spor: ${escapeHtml(row.sport)}</small>
+          <small>Mod: ${escapeHtml(row.mode)} · Spor: ${escapeHtml(row.sport)} · UI: ${isSourceEnabledForComparison(row.source) ? "Aktif" : "Pasif"}</small>
           <p>Ham ${row.rawRecordCount} · Eşleşen ${row.mappedRecordCount} · Eşleşmeyen ${row.unmappedRecordCount}</p>
           <em>Son güncelleme: ${escapeHtml(formatSourceUpdatedAt(row.lastUpdatedAt))}</em>
           <strong>${escapeHtml(row.message || "Mock kaynak hazır")}</strong>
@@ -3130,29 +3210,95 @@
   }
 
   function sourceRegistryStatusClass(source, health) {
+    if (!isSourceActiveForUi(source)) return "source-disabled";
     if (health) return getSourceHealthBadge(health).className;
-    if (!source.enabled || source.mode === "disabled") return "source-disabled";
     if (source.mode === "mock") return "source-mock";
+    if (source.mode === "live_ready") return "source-live-ready";
     return "source-planned";
   }
 
   function sourceRegistryStatusLabel(source, health) {
+    if (!isSourceActiveForUi(source)) return "pasif";
     if (health) return getSourceHealthBadge(health).label;
-    if (!source.enabled || source.mode === "disabled") return "pasif";
     if (source.mode === "mock") return "mock";
-    return "beklemede";
+    if (source.mode === "live_ready") return "live ready";
+    return "planned";
+  }
+
+  function sourceConfigFilterMatches(source) {
+    const filter = state.sourceConfigFilter || "all";
+    if (filter === "all") return true;
+    if (filter === "active") return isSourceActiveForUi(source);
+    if (filter === "inactive") return !isSourceActiveForUi(source);
+    if (filter === "football" || filter === "basketball") return (source.sports || []).map(normalizeSportName).includes(filter);
+    if (filter === "polymarket") return source.sourceId === "polymarket_mock" || source.type === "prediction_market";
+    if (filter === "mock" || filter === "planned") return String(source.mode || "").toLowerCase() === filter;
+    return true;
+  }
+
+  function renderSourceConfigFilters() {
+    return `<div class="v561-source-config-filters" role="tablist" aria-label="Kaynak ayarı filtreleri">${SOURCE_CONFIG_FILTERS.map(filter => `<button type="button" data-source-config-filter="${escapeAttr(filter.id)}" class="${state.sourceConfigFilter === filter.id ? "active" : ""}">${escapeHtml(filter.label)}</button>`).join("")}</div>`;
+  }
+
+  function renderSourceSettingsPanel() {
+    const healthRows = sourceRegistryHealthRows();
+    const registrySummary = summarizeSourceRegistry(healthRows);
+    const rows = effectiveSourceRegistry()
+      .filter(sourceConfigFilterMatches)
+      .sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
+    return `<section class="v561-source-settings" aria-label="Kaynak Ayarları">
+      <div class="v554-mock-preview-head">
+        <div>
+          <span>V561 MANUEL SOURCE CONFIG</span>
+          <h3>Kaynak Ayarları</h3>
+          <p>Gerçek kaynaklara geçmeden önce aktif/pasif, mod, spor desteği, adapter ve öncelik ayarları local state üzerinden yönetilir.</p>
+        </div>
+        <em>Gerçek API yok · fetch yok · scraping yok</em>
+      </div>
+      <div class="v559-registry-summary">
+        <span>Toplam: <b>${registrySummary.total}</b></span>
+        <span>Aktif: <b>${registrySummary.enabled}</b></span>
+        <span>Pasif: <b>${registrySummary.total - registrySummary.enabled}</b></span>
+        <span>Bookmaker: <b>${registrySummary.byType.bookmaker || 0}</b></span>
+        <span>Polymarket: <b>${registrySummary.byType.prediction_market || 0}</b></span>
+        <span>Filtre: <b>${escapeHtml(SOURCE_CONFIG_FILTERS.find(filter => filter.id === state.sourceConfigFilter)?.label || "Tümü")}</b></span>
+      </div>
+      ${renderSourceConfigFilters()}
+      <div class="v561-source-config-grid">${rows.map(source => {
+        const health = findSourceRegistryHealth(source.sourceId, healthRows);
+        const statusClass = sourceRegistryStatusClass(source, health);
+        const statusLabel = sourceRegistryStatusLabel(source, health);
+        const active = isSourceActiveForUi(source);
+        return `<article class="${escapeAttr([source.type === "prediction_market" ? "prediction-market" : "bookmaker-source", active ? "is-active" : "is-passive"].join(" "))}">
+          <div class="v561-source-card-head">
+            <div><b>${escapeHtml(source.sourceName)}</b><small>${escapeHtml(source.sourceId)}</small></div>
+            <button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button>
+          </div>
+          <dl>
+            <div><dt>Tip</dt><dd>${escapeHtml(source.type)}</dd></div>
+            <div><dt>Mod</dt><dd>${escapeHtml(source.mode)}</dd></div>
+            <div><dt>Adapter durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(source.adapterStatus || statusLabel)}</span></dd></div>
+            <div><dt>Öncelik</dt><dd>${Number(source.priority || 0)}</dd></div>
+          </dl>
+          <p><b>Desteklenen sporlar:</b> ${escapeHtml((source.sports || []).join(", "))}</p>
+          <p><b>Not:</b> ${escapeHtml(health?.message || source.notes || "Planlandı")}</p>
+          <small>${escapeHtml((source.supportedMarketFamilies || []).join(" · "))}</small>
+        </article>`;
+      }).join("")}</div>
+      ${rows.length ? "" : empty("Bu kaynak filtresi için kayıt yok.")}
+    </section>`;
   }
 
   function renderSourceRegistryPanel() {
     const healthRows = sourceRegistryHealthRows();
     const registrySummary = summarizeSourceRegistry(healthRows);
-    const rows = SOURCE_REGISTRY.slice().sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
+    const rows = effectiveSourceRegistry().slice().sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
     return `<section class="v559-source-registry" aria-label="Kaynak Registry Hazırlığı">
       <div class="v554-mock-preview-head">
         <div>
           <span>V559 SOURCE REGISTRY</span>
-          <h3>Kaynak Registry Hazırlığı</h3>
-          <p>Gerçek kaynak bağlantısından önce kaynak tipleri, yetenekleri ve adapter durumları hazırlanır.</p>
+          <h3>Source Registry</h3>
+          <p>Kaynak registry katalog görünümü korunur; manuel ayarların aktif/pasif etkisi burada da görünür.</p>
         </div>
         <em>Gerçek API yok · fetch yok · scraping yok</em>
       </div>
@@ -3165,20 +3311,21 @@
       </div>
       <div class="v559-registry-table-wrap">
         <table class="v559-registry-table">
-          <thead><tr><th>Kaynak</th><th>Tip</th><th>Mod</th><th>Sporlar</th><th>Adapter durumu</th><th>Aktif/Pasif</th><th>Not</th></tr></thead>
+          <thead><tr><th>Kaynak</th><th>Tip</th><th>Mod</th><th>Sporlar</th><th>Adapter durumu</th><th>Aktif/Pasif</th><th>Öncelik / Not</th></tr></thead>
           <tbody>${rows.map(source => {
             const health = findSourceRegistryHealth(source.sourceId, healthRows);
             const statusClass = sourceRegistryStatusClass(source, health);
             const statusLabel = sourceRegistryStatusLabel(source, health);
             const note = health?.message || source.notes || "Planlandı";
+            const active = isSourceActiveForUi(source);
             return `<tr class="${escapeAttr(source.type === "prediction_market" ? "prediction-market" : "bookmaker-source")}">
               <td><b>${escapeHtml(source.sourceName)}</b><small>${escapeHtml(source.sourceId)}</small></td>
               <td>${escapeHtml(source.type)}</td>
               <td>${escapeHtml(source.mode)}</td>
               <td>${escapeHtml((source.sports || []).join(", "))}</td>
               <td><span class="${escapeAttr(statusClass)}">${escapeHtml(health ? statusLabel : source.adapterStatus || statusLabel)}</span><small>${escapeHtml(statusLabel)}</small></td>
-              <td><span class="odds-v528-status ${source.enabled ? "on" : "off"}">${source.enabled ? "Aktif" : "Pasif"}</span></td>
-              <td>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
+              <td><span class="odds-v528-status ${active ? "on" : "off"}">${active ? "Aktif" : "Pasif"}</span></td>
+              <td><b>${Number(source.priority || 0)}</b>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
             </tr>`;
           }).join("")}</tbody>
         </table>
@@ -3198,7 +3345,7 @@
         <td>${s.url ? `<a class="odds-v528-open" href="${escapeAttr(s.url)}" target="_blank" rel="noopener noreferrer">AÇ</a>` : `<span class="muted">Backend/API bekliyor</span>`}</td>
       </tr>`).join("")}</tbody>
     </table></div>`;
-    return `${renderSourceRegistryPanel()}${renderSourceHealthCards()}${sourceTable}`;
+    return `${renderSourceSettingsPanel()}${renderSourceHealthCards()}${renderSourceRegistryPanel()}${sourceTable}`;
   }
 
   function empty(text) { return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`; }
@@ -3420,6 +3567,33 @@
       });
     });
 
+    qsa("[data-source-config-filter]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const nextFilter = btn.dataset.sourceConfigFilter || "all";
+        if (state.sourceConfigFilter === nextFilter) return;
+        state.sourceConfigFilter = nextFilter;
+        saveLocalState();
+        render();
+      });
+    });
+
+    qsa("[data-source-config-toggle]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const sourceId = btn.dataset.sourceConfigToggle;
+        const baseSource = SOURCE_REGISTRY.find(source => source.sourceId === sourceId);
+        if (!baseSource) return;
+        const current = applySourceConfig(baseSource);
+        const nextEnabled = !isSourceActiveForUi(current);
+        state.sourceConfig = state.sourceConfig && typeof state.sourceConfig === "object" ? state.sourceConfig : {};
+        state.sourceConfig[sourceId] = { enabled: nextEnabled, mode: baseSource.mode || "planned" };
+        mockComparisonCache = null;
+        saveLocalState();
+        render();
+      });
+    });
+
     qs('[data-odds-action="refresh"]')?.addEventListener("click", async () => {
       await load();
       render();
@@ -3487,6 +3661,9 @@
     SOURCE_MARKET_MAPPINGS,
     SOURCE_ODDS_ADAPTERS,
     SOURCE_REGISTRY,
+    effectiveSourceRegistry,
+    filterComparisonRecordsBySource,
+    filterRawSourceRecordsByConfig,
     BOOKMAKER_SOURCE_REGISTRY,
     POLYMARKET_SOURCE_REGISTRY,
     POLYMARKET_EVENT_ADAPTER,
