@@ -47,62 +47,118 @@
   const FALLBACK_SOURCES = { sites: [], groups: [], marketCategories: [] };
   const FALLBACK_SNAPSHOT = { mode: "empty", records: [] };
 
-  const MOCK_ODDS_RAW_RECORDS = [
+  const MOCK_SOURCE_RAW_RECORDS = [
     {
-      id: "mock_football_001", source: "mock_book_a", sport: "football", fixtureId: "arsenal_chelsea_2026_06_05",
+      id: "raw_fb_a_001", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
       homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League", startsAt: "2026-06-05T19:00:00Z",
-      marketId: "football.goals.total_2_5_ou", marketLabel: "2.5 Gol Alt / Üst", selection: "over", line: 2.5, odds: 1.87,
-      period: "full_time", updatedAt: "2026-06-05T18:30:00Z", sourceMarketName: "Total Goals Over/Under 2.5", confidence: 0.92, dataMode: "mock"
+      sourceMarketName: "Total Goals Over/Under 2.5", selection: "over", line: 2.5, odds: 1.87,
+      period: "full_time", updatedAt: "2026-06-05T18:30:00Z", dataMode: "mock_source"
     },
     {
-      id: "mock_football_002", source: "mock_book_b", sport: "football", fixtureId: "arsenal_chelsea_2026_06_05",
+      id: "raw_fb_a_002", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
       homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League", startsAt: "2026-06-05T19:00:00Z",
-      marketId: "football.home_goals_1_5_ou", marketLabel: "Ev Sahibi 1.5 Gol Alt / Üst", selection: "over", line: 1.5, odds: 2.14,
-      period: "full_time", updatedAt: "2026-06-05T18:32:00Z", sourceMarketName: "Home Team Goals Over 1.5", confidence: 0.9, dataMode: "mock"
+      sourceMarketName: "Home Team Goals O/U 1.5", selection: "over", line: 1.5, odds: 2.14,
+      period: "full_time", updatedAt: "2026-06-05T18:32:00Z", dataMode: "mock_source"
     },
     {
-      id: "mock_football_003", source: "mock_book_a", sport: "football", fixtureId: "real_madrid_barcelona_2026_06_05",
+      id: "raw_fb_a_003", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
       homeTeam: "Real Madrid", awayTeam: "Barcelona", league: "La Liga", startsAt: "2026-06-05T20:00:00Z",
-      marketId: "football.away_goals_1_5_ou", marketLabel: "Deplasman 1.5 Gol Alt / Üst", selection: "under", line: 1.5, odds: 1.69,
-      period: "full_time", updatedAt: "2026-06-05T18:35:00Z", sourceMarketName: "Away Team Goals Under 1.5", confidence: 0.86, dataMode: "mock"
+      sourceMarketName: "Corners O/U 9.5", selection: "over", line: 9.5, odds: 1.96,
+      period: "full_time", updatedAt: "2026-06-05T18:37:00Z", dataMode: "mock_source"
     },
     {
-      id: "mock_football_004", source: "mock_book_c", sport: "football", fixtureId: "real_madrid_barcelona_2026_06_05",
-      homeTeam: "Real Madrid", awayTeam: "Barcelona", league: "La Liga", startsAt: "2026-06-05T20:00:00Z",
-      marketId: "football.corner.total_9_5_ou", marketLabel: "9.5 Korner Alt / Üst", selection: "over", line: 9.5, odds: 1.96,
-      period: "full_time", updatedAt: "2026-06-05T18:37:00Z", sourceMarketName: "Total Corners Over/Under 9.5", confidence: 0.84, dataMode: "mock"
-    },
-    {
-      id: "mock_football_005", source: "mock_book_b", sport: "football", fixtureId: "galatasaray_fenerbahce_2026_06_05",
+      id: "raw_fb_a_004", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
       homeTeam: "Galatasaray", awayTeam: "Fenerbahçe", league: "Süper Lig", startsAt: "2026-06-05T18:45:00Z",
-      marketId: "football.stats.first_half_team1_fouls_ou", marketLabel: "İlk Yarı Ev Sahibi Faul Alt / Üst", selection: "over", line: 5.5, odds: 1.81,
-      period: "first_half", updatedAt: "2026-06-05T18:10:00Z", sourceMarketName: "First Half Home Team Fouls Over 5.5", confidence: 0.83, dataMode: "mock"
+      sourceMarketName: "First Half Team 1 Fouls O/U", selection: "over", line: 5.5, odds: 1.81,
+      period: "first_half", updatedAt: "2026-06-05T18:10:00Z", dataMode: "mock_source"
     },
     {
-      id: "mock_basket_001", source: "mock_book_a", sport: "basketball", fixtureId: "fenerbahce_efes_2026_06_05",
+      id: "raw_fb_b_001", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
+      homeTeam: "Arsenal FC", awayTeam: "Chelsea FC", league: "Premier League", startsAt: "2026-06-05T19:06:00Z",
+      sourceMarketName: "Match Goals 2.5 O/U", selection: "under", line: 2.5, odds: 1.93,
+      period: "full_time", updatedAt: "2026-06-05T18:34:00Z", dataMode: "mock_source"
+    },
+    {
+      id: "raw_fb_b_002", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
+      homeTeam: "Real Madrid", awayTeam: "Barcelona", league: "La Liga", startsAt: "2026-06-05T20:00:00Z",
+      sourceMarketName: "Away Team Goals O/U 1.5", selection: "under", line: 1.5, odds: 1.69,
+      period: "full_time", updatedAt: "2026-06-05T18:35:00Z", dataMode: "mock_source"
+    },
+    {
+      id: "raw_fb_b_003", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
+      homeTeam: "Galatasaray", awayTeam: "Fenerbahçe", league: "Süper Lig", startsAt: "2026-06-05T18:45:00Z",
+      sourceMarketName: "First Half Home Team Fouls Over 5.5", selection: "over", line: 5.5, odds: 1.84,
+      period: "first_half", updatedAt: "2026-06-05T18:12:00Z", dataMode: "mock_source"
+    },
+    {
+      id: "raw_fb_b_004", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
+      homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League", startsAt: "2026-06-05T19:00:00Z",
+      sourceMarketName: "Experimental Pressing Index O/U", selection: "over", line: 72.5, odds: 1.77,
+      period: "full_time", updatedAt: "2026-06-05T18:38:00Z", dataMode: "mock_source"
+    },
+    {
+      id: "raw_bk_a_001", source: "mock_book_a", sourceName: "Mock Book A", sport: "basketball",
       homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-      marketId: "basket.both_teams_points_line_ou_ot", marketLabel: "Her İki Takım da ____ Alt / Üst Sayı Atar (Uz. dahil)", selection: "over", line: 68.5, odds: 1.74,
-      period: "full_time_ot_included", updatedAt: "2026-06-05T17:45:00Z", sourceMarketName: "Both Teams To Score Over 68.5 Points Including OT", confidence: 0.88, dataMode: "mock"
+      sourceMarketName: "Both Teams To Score Over 68.5 Points Including OT", selection: "over", line: 68.5, odds: 1.74,
+      period: "full_time_ot_included", updatedAt: "2026-06-05T17:45:00Z", dataMode: "mock_source"
     },
     {
-      id: "mock_basket_002", source: "mock_book_b", sport: "basketball", fixtureId: "fenerbahce_efes_2026_06_05",
+      id: "raw_bk_a_002", source: "mock_book_a", sourceName: "Mock Book A", sport: "basketball",
+      homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
+      sourceMarketName: "Team 1 Points O/U", selection: "over", line: 80.5, odds: 1.82,
+      period: "full_time", updatedAt: "2026-06-05T17:50:00Z", dataMode: "mock_source"
+    },
+    {
+      id: "raw_bk_a_003", source: "mock_book_a", sourceName: "Mock Book A", sport: "basketball",
+      homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
+      sourceMarketName: "Player Points O/U", selection: "over", line: 21.5, odds: 1.79,
+      period: "full_time", updatedAt: "2026-06-05T17:52:00Z", dataMode: "mock_source"
+    },
+    {
+      id: "raw_bk_a_004", source: "mock_book_a", sourceName: "Mock Book A", sport: "basketball",
       homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-      marketId: "basket.total_points_ou", marketLabel: "Toplam Sayı Alt / Üst", selection: "under", line: 164.5, odds: 1.91,
-      period: "full_time", updatedAt: "2026-06-05T17:46:00Z", sourceMarketName: "Game Total Points Under 164.5", confidence: 0.87, dataMode: "mock"
+      sourceMarketName: "Total Points O/U", selection: "under", line: 164.5, odds: 1.91,
+      period: "full_time", updatedAt: "2026-06-05T17:46:00Z", dataMode: "mock_source"
     },
     {
-      id: "mock_basket_003", source: "mock_book_a", sport: "basketball", fixtureId: "besiktas_karsiyaka_2026_06_05",
-      homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
-      marketId: "basket.team1_points_ou", marketLabel: "Takım 1 Toplam Sayı Alt / Üst", selection: "over", line: 80.5, odds: 1.82,
-      period: "full_time", updatedAt: "2026-06-05T17:50:00Z", sourceMarketName: "Team 1 Total Points Over 80.5", confidence: 0.85, dataMode: "mock"
+      id: "raw_bk_c_001", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
+      homeTeam: "Fenerbahce Beko", awayTeam: "Anadolu Efes SK", league: "Basketbol Süper Ligi", startsAt: "2026-06-05T18:09:00Z",
+      sourceMarketName: "Game Total Points Under 164.5", selection: "under", line: 164.5, odds: 1.88,
+      period: "full_time", updatedAt: "2026-06-05T17:48:00Z", dataMode: "mock_source"
     },
     {
-      id: "mock_basket_004", source: "mock_book_c", sport: "basketball", fixtureId: "besiktas_karsiyaka_2026_06_05",
+      id: "raw_bk_c_002", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
       homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
-      marketId: "basket.player_points_ou", marketLabel: "Oyuncu Sayı Alt / Üst", selection: "over", line: 21.5, odds: 1.79,
-      period: "full_time", updatedAt: "2026-06-05T17:52:00Z", sourceMarketName: "Player Points Over 21.5", confidence: 0.82, dataMode: "mock"
+      sourceMarketName: "Player Points Over 21.5", selection: "over", line: 21.5, odds: 1.76,
+      period: "full_time", updatedAt: "2026-06-05T17:55:00Z", dataMode: "mock_source"
+    },
+    {
+      id: "raw_bk_c_003", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
+      homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
+      sourceMarketName: "Both Clubs Reach 70 Points", selection: "yes", line: 70, odds: 2.05,
+      period: "full_time_ot_included", updatedAt: "2026-06-05T17:57:00Z", dataMode: "mock_source"
+    },
+    {
+      id: "raw_bk_c_004", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
+      homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
+      sourceMarketName: "Bench Celebration Count O/U", selection: "over", line: 12.5, odds: 1.66,
+      period: "full_time", updatedAt: "2026-06-05T17:58:00Z", dataMode: "mock_source"
     }
   ];
+
+  const SOURCE_MARKET_MAPPINGS = [
+    { source: "mock_book_a", sport: "football", sourceMarketName: "Total Goals Over/Under 2.5", marketId: "football.goals.total_2_5_ou", confidence: 0.95 },
+    { source: "mock_book_b", sport: "football", sourceMarketName: "Match Goals 2.5 O/U", marketId: "football.goals.total_2_5_ou", confidence: 0.9 },
+    { source: "mock_book_a", sport: "football", sourceMarketName: "Home Team Goals O/U 1.5", marketId: "football.home_goals_1_5_ou", confidence: 0.92 },
+    { source: "mock_book_b", sport: "football", sourceMarketName: "Away Team Goals O/U 1.5", marketId: "football.away_goals_1_5_ou", confidence: 0.91 },
+    { source: "mock_book_a", sport: "football", sourceMarketName: "Corners O/U 9.5", marketId: "football.corner.total_9_5_ou", confidence: 0.89 },
+    { source: "mock_book_a", sport: "basketball", sourceMarketName: "Both Teams To Score Over 68.5 Points Including OT", marketId: "basket.both_teams_points_line_ou_ot", confidence: 0.88 },
+    { source: "mock_book_a", sport: "basketball", sourceMarketName: "Total Points O/U", marketId: "basket.total_points_ou", confidence: 0.91 },
+    { source: "mock_book_c", sport: "basketball", sourceMarketName: "Game Total Points Under 164.5", marketId: "basket.total_points_ou", confidence: 0.87 },
+    { source: "mock_book_a", sport: "basketball", sourceMarketName: "Team 1 Points O/U", marketId: "basket.team1_points_ou", confidence: 0.86 }
+  ];
+
+  const MOCK_SOURCE_IDS = [...new Set(MOCK_SOURCE_RAW_RECORDS.map(row => row.source))];
 
   const POLYMARKET_MOCK_RECORDS = [
     {
@@ -973,7 +1029,7 @@
     const query = normalizeText(sourceMarketName);
     if (!query) return null;
     const queryTokens = query.split(/\s+/).filter(Boolean);
-    const noise = new Set(["to", "score", "including", "included", "ot", "game", "market", "total", "over", "under", "and", "the"]);
+    const noise = new Set(["to", "score", "including", "included", "ot", "game", "market", "total", "over", "under", "and", "the", "ou", "o", "u"]);
     const importantTokens = queryTokens.filter(t => !noise.has(t));
     const catalog = curatedMarketCategories()
       .filter(cat => !sport || categorySport(cat) === sport)
@@ -988,7 +1044,8 @@
       }
       const score = importantTokens.reduce((sum, token) => sum + (haystack.includes(token) ? 1 : 0), 0);
       const lineScore = market.line != null && queryTokens.includes(String(market.line)) ? 2 : 0;
-      const totalScore = score + lineScore;
+      const ratioScore = Math.round(levenshteinRatio(query, haystack.slice(0, Math.max(query.length, 12))) * 3);
+      const totalScore = score + lineScore + ratioScore;
       if (totalScore >= Math.min(3, Math.max(2, importantTokens.length)) && (!best || totalScore > best.score)) {
         best = { market, score: totalScore };
       }
@@ -996,7 +1053,213 @@
     return best?.market || null;
   }
 
+  function normalizeSourceMarketName(value) {
+    return normalizeText(value)
+      .replace(/\bo\s*u\b/g, "over under")
+      .replace(/\bou\b/g, "over under")
+      .replace(/\bover\s*under\b/g, "over under")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function findSourceMarketMapping({ source, sport, sourceMarketName } = {}) {
+    const sourceId = String(source || "").trim();
+    const sportId = normalizeSportName(sport || "");
+    const marketName = normalizeSourceMarketName(sourceMarketName);
+    if (!sourceId || !sportId || !marketName) return null;
+    return SOURCE_MARKET_MAPPINGS.find(mapping => (
+      mapping.source === sourceId
+      && normalizeSportName(mapping.sport) === sportId
+      && normalizeSourceMarketName(mapping.sourceMarketName) === marketName
+    )) || null;
+  }
+
+  function aliasFallbackScore(sourceMarketName, catalogMarket) {
+    if (!catalogMarket) return 0;
+    const query = normalizeSourceMarketName(sourceMarketName);
+    const haystack = normalizeText([
+      catalogMarket.label,
+      catalogMarket.name,
+      catalogMarket.group,
+      catalogMarket.categoryName,
+      catalogMarket.period,
+      catalogMarket.marketType,
+      catalogMarket.side,
+      catalogMarket.line,
+      ...(Array.isArray(catalogMarket.tags) ? catalogMarket.tags : []),
+      ...(Array.isArray(catalogMarket.aliases) ? catalogMarket.aliases : [])
+    ].join(" "));
+    if (!query || !haystack) return 0;
+    const tokens = query.split(/\s+/).filter(Boolean);
+    const noise = new Set(["to", "score", "including", "included", "ot", "game", "market", "total", "over", "under", "and", "the", "points", "goals"]);
+    const important = tokens.filter(token => !noise.has(token));
+    const tokenHits = important.filter(token => haystack.includes(token)).length;
+    const tokenScore = important.length ? tokenHits / important.length : 0;
+    const lineToken = tokens.find(token => /^\d+(?:\.\d+)?$/.test(token));
+    const lineScore = lineToken && catalogMarket.line != null && String(catalogMarket.line) === lineToken ? 0.16 : 0;
+    const exactAlias = (catalogMarket.aliases || []).some(alias => normalizeSourceMarketName(alias) === query) ? 0.18 : 0;
+    return Math.max(0, Math.min(0.86, (tokenScore * 0.68) + lineScore + exactAlias));
+  }
+
+
+  function sourceMarketAliasCandidates(value) {
+    const raw = String(value || "");
+    const norm = normalizeSourceMarketName(raw);
+    const candidates = [raw, norm];
+    const rules = [
+      [/player points(?: over under| o u| ou| over| under)?/i, "Oyuncu Sayı Alt / Üst"],
+      [/team 1 points(?: over under| o u| ou| over| under)?/i, "Takım 1 Toplam Sayı Alt / Üst"],
+      [/team 2 points(?: over under| o u| ou| over| under)?/i, "Takım 2 Toplam Sayı Alt / Üst"],
+      [/(?:game )?total points(?: over under| o u| ou| over| under)?/i, "Toplam Sayı Alt / Üst"],
+      [/first half (?:team 1|home team) fouls(?: over under| o u| ou| over| under)?/i, "İlk Yarı Ev Sahibi Faul Alt / Üst"],
+      [/away team goals(?: over under| o u| ou| over| under)?\s*1\.5/i, "Deplasman 1.5 Gol Alt / Üst"],
+      [/home team goals(?: over under| o u| ou| over| under)?\s*1\.5/i, "Ev Sahibi 1.5 Gol Alt / Üst"],
+      [/(?:corners|total corners)(?: over under| o u| ou| over| under)?\s*9\.5/i, "9.5 Korner Alt / Üst"]
+    ];
+    rules.forEach(([pattern, replacement]) => {
+      if (pattern.test(raw) || pattern.test(norm)) candidates.push(replacement);
+    });
+    return [...new Set(candidates.filter(Boolean))];
+  }
+
+  function inferMarketIdFromCatalogAliases({ sport, sourceMarketName } = {}) {
+    const sportId = normalizeSportName(sport || "");
+    let best = null;
+    sourceMarketAliasCandidates(sourceMarketName).forEach(candidate => {
+      const catalog = findCatalogMarketByAlias(candidate, sportId);
+      if (!catalog) return;
+      const confidence = aliasFallbackScore(candidate, catalog) || aliasFallbackScore(sourceMarketName, catalog) || 0.62;
+      if (!best || confidence > best.confidence) {
+        best = { marketId: catalog.id, confidence, matchedCatalogMarket: catalog, matchedBy: "catalog_alias" };
+      }
+    });
+    if (!best) return { marketId: null, confidence: 0, matchedCatalogMarket: null, matchedBy: "unmatched" };
+    if (best.confidence < 0.45) return { marketId: null, confidence: best.confidence, matchedCatalogMarket: null, matchedBy: "unmatched" };
+    return best;
+  }
+
+  function mapSourceMarketToCatalogId(rawRecord = {}) {
+    const source = rawRecord.source || rawRecord.bookmaker || rawRecord.sourceId;
+    const sport = normalizeSportName(rawRecord.sport || "football");
+    const sourceMarketName = rawRecord.sourceMarketName || rawRecord.marketName || rawRecord.marketLabel || rawRecord.market;
+    const explicit = findSourceMarketMapping({ source, sport, sourceMarketName });
+    if (explicit) {
+      const catalog = findCatalogMarketById(explicit.marketId);
+      return {
+        marketId: catalog?.id || explicit.marketId || null,
+        confidence: Math.max(0, Math.min(1, Number(explicit.confidence || 0.9))),
+        matchedCatalogMarket: catalog || null,
+        matchedBy: catalog ? "source_mapping" : "source_mapping_missing_catalog",
+        sourceMapping: explicit,
+        matched: Boolean(catalog)
+      };
+    }
+    const fallback = inferMarketIdFromCatalogAliases({ sport, sourceMarketName });
+    return {
+      ...fallback,
+      sourceMapping: null,
+      matched: Boolean(fallback.matchedCatalogMarket && fallback.marketId)
+    };
+  }
+
+  function createMappingConfidenceScore(rawRecord = {}, matchedCatalogMarket = null) {
+    const mapped = mapSourceMarketToCatalogId(rawRecord);
+    if (!matchedCatalogMarket && !mapped.matchedCatalogMarket) return 0;
+    const base = Number(mapped.confidence || 0);
+    const hasLine = rawRecord.line != null && rawRecord.line !== "";
+    const lineMatches = hasLine && matchedCatalogMarket?.line != null && Number(rawRecord.line) === Number(matchedCatalogMarket.line);
+    const lineBoost = lineMatches ? 0.04 : hasLine ? 0.01 : 0;
+    return Math.max(0, Math.min(1, base + lineBoost));
+  }
+
+  function normalizeSourceFixture(rawRecord = {}) {
+    const sport = normalizeSportName(rawRecord.sport || "football");
+    const homeTeam = rawRecord.homeTeam || rawRecord.home || "Ev Sahibi";
+    const awayTeam = rawRecord.awayTeam || rawRecord.away || "Deplasman";
+    const league = rawRecord.league || "Demo Lig";
+    const startsAt = rawRecord.startsAt || rawRecord.kickoff || rawRecord.startTime || "";
+    return {
+      sport: ["football", "basketball"].includes(sport) ? sport : "football",
+      homeTeam,
+      awayTeam,
+      league,
+      startsAt: startsAt || null,
+      fixtureKey: buildFixtureKey({ sport, homeTeam, awayTeam, league, startsAt }),
+      normalizedHomeTeam: normalizeTeamName(homeTeam),
+      normalizedAwayTeam: normalizeTeamName(awayTeam),
+      normalizedLeague: normalizeLeagueName(league)
+    };
+  }
+
+  function standardOddsRecordFromSource(rawRecord = {}) {
+    const fixture = normalizeSourceFixture(rawRecord);
+    const mapping = mapSourceMarketToCatalogId({ ...rawRecord, sport: fixture.sport });
+    const catalog = mapping.matchedCatalogMarket || findCatalogMarketById(mapping.marketId);
+    const lineValue = rawRecord.line === "" || rawRecord.line == null ? catalog?.line ?? null : Number(rawRecord.line);
+    const oddsValue = Number(rawRecord.odds ?? rawRecord.current ?? 0);
+    const sourceMarketName = rawRecord.sourceMarketName || rawRecord.marketName || rawRecord.marketLabel || "";
+    const confidence = mapping.matched ? createMappingConfidenceScore(rawRecord, catalog) : Math.max(0, Math.min(1, Number(mapping.confidence || 0)));
+    const idParts = [rawRecord.id || "source", rawRecord.source || rawRecord.bookmaker || "mock", fixture.fixtureKey, mapping.marketId || "unmapped", rawRecord.selection || rawRecord.outcome || "selection", lineValue ?? "line"];
+    return {
+      id: idParts.map(fixtureKeyPart).join("_"),
+      source: String(rawRecord.source || rawRecord.bookmaker || rawRecord.sourceId || "mock_source"),
+      sport: fixture.sport,
+      fixtureId: String(rawRecord.fixtureId || fixture.fixtureKey),
+      fixtureKey: fixture.fixtureKey,
+      homeTeam: fixture.homeTeam,
+      awayTeam: fixture.awayTeam,
+      league: fixture.league,
+      startsAt: fixture.startsAt,
+      marketId: mapping.marketId || null,
+      marketLabel: catalog?.label || catalog?.name || rawRecord.marketLabel || sourceMarketName || "Kaynak marketi",
+      selection: normalizeText(rawRecord.selection || rawRecord.outcome || "unknown") || "unknown",
+      line: Number.isFinite(lineValue) ? lineValue : null,
+      odds: Number.isFinite(oddsValue) ? oddsValue : 0,
+      period: rawRecord.period || catalog?.period || "full_time",
+      updatedAt: rawRecord.updatedAt || new Date().toISOString(),
+      sourceMarketName,
+      confidence,
+      dataMode: rawRecord.dataMode || "mock_source",
+      matched: Boolean(mapping.matched),
+      matchedMarketId: mapping.matched ? mapping.marketId : "",
+      matchedMarketLabel: mapping.matched ? (catalog?.label || catalog?.name || "") : "",
+      matchedCategoryName: mapping.matched ? (catalog?.categoryName || catalog?.group || "") : "",
+      matchedBy: mapping.matchedBy || "unmatched",
+      sourceMapping: mapping.sourceMapping || null,
+      catalog: catalog || null
+    };
+  }
+
+  const SOURCE_ODDS_ADAPTERS = MOCK_SOURCE_IDS.reduce((acc, sourceId) => {
+    const first = MOCK_SOURCE_RAW_RECORDS.find(row => row.source === sourceId) || {};
+    acc[sourceId] = {
+      sourceId,
+      sourceName: first.sourceName || sourceId,
+      sport: first.sport || "multi",
+      status: "mock",
+      normalize(rawRecord) { return normalizeSourceFixture(rawRecord); },
+      mapMarket(rawRecord) { return mapSourceMarketToCatalogId(rawRecord); },
+      toStandardOdds(rawRecord) { return standardOddsRecordFromSource(rawRecord); }
+    };
+    return acc;
+  }, {});
+
+  function adaptSourceOddsRecord(rawRecord = {}) {
+    const sourceId = rawRecord.source || rawRecord.bookmaker || rawRecord.sourceId || "mock_source";
+    const adapter = SOURCE_ODDS_ADAPTERS[sourceId] || {
+      sourceId,
+      sourceName: sourceId,
+      sport: rawRecord.sport || "unknown",
+      status: "mock",
+      normalize(raw) { return normalizeSourceFixture(raw); },
+      mapMarket(raw) { return mapSourceMarketToCatalogId(raw); },
+      toStandardOdds(raw) { return standardOddsRecordFromSource(raw); }
+    };
+    return adapter.toStandardOdds(rawRecord);
+  }
+
   function normalizeOddsRecord(rawRecord = {}) {
+    if (rawRecord.sourceMarketName && !rawRecord.marketId) return adaptSourceOddsRecord(rawRecord);
     const sport = normalizeText(rawRecord.sport) === "basket" ? "basketball" : normalizeText(rawRecord.sport || "football");
     const catalogById = findCatalogMarketById(rawRecord.marketId);
     const catalogByAlias = catalogById ? null : findCatalogMarketByAlias(rawRecord.sourceMarketName || rawRecord.marketLabel, sport);
@@ -1018,7 +1281,7 @@
       awayTeam,
       league,
       startsAt: startsAt || null,
-      marketId: String(rawRecord.marketId || catalog?.id || ""),
+      marketId: String(rawRecord.marketId || catalog?.id || "") || null,
       marketLabel: rawRecord.marketLabel || catalog?.label || catalog?.name || rawRecord.sourceMarketName || "Market",
       selection: normalizeText(rawRecord.selection || rawRecord.outcome || "unknown") || "unknown",
       line: Number.isFinite(line) ? line : null,
@@ -1028,6 +1291,7 @@
       sourceMarketName: rawRecord.sourceMarketName || rawRecord.marketLabel || catalog?.label || "",
       confidence: Math.max(0, Math.min(1, Number(rawRecord.confidence ?? 0.75))),
       dataMode: rawRecord.dataMode || "mock",
+      matched: Boolean(catalog),
       matchedMarketId: catalog?.id || "",
       matchedBy: catalogById ? "marketId" : catalogByAlias ? "alias" : "unmatched"
     };
@@ -1048,7 +1312,7 @@
 
   function mockOddsRecords() {
     if (!normalizedMockOddsCache) {
-      normalizedMockOddsCache = MOCK_ODDS_RAW_RECORDS.map(raw => mapOddsRecordToCatalog(normalizeOddsRecord(raw)));
+      normalizedMockOddsCache = MOCK_SOURCE_RAW_RECORDS.map(raw => mapOddsRecordToCatalog(adaptSourceOddsRecord(raw)));
     }
     return normalizedMockOddsCache;
   }
@@ -1068,41 +1332,84 @@
     )).filter(Boolean);
   }
 
-  function sourceHealth(recordsList = mockOddsRecords()) {
-    const bySource = recordsList.reduce((acc, record) => {
+  function sourceHealth(recordsList = mockOddsRecords(), rawList = MOCK_SOURCE_RAW_RECORDS) {
+    const adaptedBySource = recordsList.reduce((acc, record) => {
       if (!acc[record.source]) acc[record.source] = [];
       acc[record.source].push(record);
       return acc;
     }, {});
-    return Object.entries(bySource).map(([source, rows]) => ({
-      source, status: "mock", lastUpdatedAt: rows.map(r => r.updatedAt).sort().slice(-1)[0] || null, recordCount: rows.length, error: null
-    }));
+    const rawBySource = rawList.reduce((acc, record) => {
+      const source = record.source || record.bookmaker || "mock_source";
+      if (!acc[source]) acc[source] = [];
+      acc[source].push(record);
+      return acc;
+    }, {});
+    const sources = [...new Set([...Object.keys(rawBySource), ...Object.keys(adaptedBySource)])];
+    return sources.map(source => {
+      const rows = adaptedBySource[source] || [];
+      const rawRows = rawBySource[source] || [];
+      const mappedRecordCount = rows.filter(r => r.matched || r.matchedMarketId).length;
+      return {
+        source,
+        status: SOURCE_ODDS_ADAPTERS[source]?.status || "mock",
+        lastUpdatedAt: rows.map(r => r.updatedAt).sort().slice(-1)[0] || rawRows.map(r => r.updatedAt).sort().slice(-1)[0] || null,
+        rawRecordCount: rawRows.length,
+        adaptedRecordCount: rows.length,
+        mappedRecordCount,
+        unmappedRecordCount: Math.max(0, rows.length - mappedRecordCount),
+        error: null
+      };
+    });
   }
 
   function mockOddsSummary() {
     const list = mockOddsRecords();
     const matched = list.filter(r => r.matchedMarketId).length;
     const fixtures = new Set(list.map(r => r.fixtureId)).size;
-    return { records: list.length, matched, fixtures, sources: sourceHealth(list).length, mode: "hazırlık" };
+    return { records: list.length, matched, fixtures, sources: sourceHealth(list).length, mode: "mock hazırlık" };
   }
 
+  const POLYMARKET_EVENT_ADAPTER = {
+    sourceId: "polymarket_mock",
+    sourceName: "Polymarket Mock",
+    eventType: "prediction_market",
+    normalizeEvent(rawEvent = {}) {
+      return {
+        id: rawEvent.id || buildPolymarketEventKey({ category: rawEvent.category, title: rawEvent.title, closesAt: rawEvent.closesAt }),
+        source: rawEvent.source || "polymarket_mock",
+        title: rawEvent.title || rawEvent.question || "Polymarket marketi",
+        category: rawEvent.category || "prediction",
+        yesPrice: Number(rawEvent.yesPrice || 0),
+        noPrice: Number(rawEvent.noPrice || 0),
+        liquidity: Number(rawEvent.liquidity || 0),
+        volume24h: Number(rawEvent.volume24h || 0),
+        closesInHours: Number(rawEvent.closesInHours || 0),
+        tags: Array.isArray(rawEvent.tags) ? rawEvent.tags : [],
+        dataMode: rawEvent.dataMode || "mock"
+      };
+    }
+  };
+
   function polymarketMockAdapterRecords() {
-    return POLYMARKET_MOCK_RECORDS.map(row => ({
-      ...row,
-      bookmaker: row.source,
-      sport: "prediction",
-      eventType: row.category,
-      question: row.title,
-      match: row.title,
-      marketLabel: "YES / NO",
-      outcome: "YES",
-      current: row.yesPrice ? 1 / Number(row.yesPrice) : 0,
-      opening: row.yesPrice ? 1 / Number(row.yesPrice) : 0,
-      referenceProb: row.yesPrice || 0,
-      confidence: 76,
-      expiresAt: new Date(Date.now() + Number(row.closesInHours || 0) * 36e5).toISOString(),
-      info: "Polymarket mock modeli ayrı tutulur; futbol/basket odds modeliyle karışmaz."
-    }));
+    return POLYMARKET_MOCK_RECORDS.map(row => {
+      const event = POLYMARKET_EVENT_ADAPTER.normalizeEvent(row);
+      return {
+        ...event,
+        bookmaker: event.source,
+        sport: "prediction",
+        eventType: event.category,
+        question: event.title,
+        match: event.title,
+        marketLabel: "YES / NO",
+        outcome: "YES",
+        current: event.yesPrice ? 1 / Number(event.yesPrice) : 0,
+        opening: event.yesPrice ? 1 / Number(event.yesPrice) : 0,
+        referenceProb: event.yesPrice || 0,
+        confidence: 76,
+        expiresAt: new Date(Date.now() + Number(event.closesInHours || 0) * 36e5).toISOString(),
+        info: "Polymarket mock modeli ayrı tutulur; futbol/basket odds adapter sözleşmesiyle karışmaz."
+      };
+    });
   }
 
   function validateMockOddsRecords() {
@@ -1114,10 +1421,8 @@
       if (!record.id) errors.push("Boş mock id");
       if (ids.has(record.id)) errors.push(`Duplicate mock id: ${record.id}`);
       ids.add(record.id);
-      if (!record.marketId) errors.push(`${record.id}: marketId yok`);
       if (!Number.isFinite(Number(record.odds)) || Number(record.odds) <= 0) errors.push(`${record.id}: odds number değil`);
       if (!["football", "basketball"].includes(record.sport)) errors.push(`${record.id}: sport hatalı`);
-      if (!findCatalogMarketById(record.marketId)) errors.push(`${record.id}: katalog marketId eşleşmedi (${record.marketId})`);
     });
     if (errors.length) console.warn("Oran Terminali mock odds validation:", errors.slice(0, 8));
   }
@@ -1896,31 +2201,62 @@
     return count ? `<small class="v554-mock-market-hint">mock eşleşme: ${count}</small>` : "";
   }
 
-  function renderMockAdapterPreview() {
-    const rows = calculateBestOdds(mockOddsRecords()).slice(0, 9);
+  function mappingStatus(row) {
+    if (row.matched || row.matchedMarketId) {
+      return Number(row.confidence || 0) >= 0.75 ? "matched" : "review";
+    }
+    return "unmatched";
+  }
+
+  function mappingStatusLabel(status) {
+    if (status === "matched") return "eşleşti";
+    if (status === "review") return "şüpheli";
+    return "eşleşmedi";
+  }
+
+  function renderSourceHealthPreview() {
+    const rows = sourceHealth();
     if (!rows.length) return "";
-    return `<section class="v554-mock-preview" aria-label="Demo veri eşleşme önizlemesi">
+    return `<div class="v556-source-health" aria-label="Kaynak durumları">
+      <b>Kaynak durumları</b>
+      <div>${rows.map(row => `<span>
+        <strong>${escapeHtml(row.source)}</strong>
+        <em>${escapeHtml(row.status)}</em>
+        <small>${row.mappedRecordCount}/${row.rawRecordCount} eşleşti · ${row.unmappedRecordCount} açık</small>
+      </span>`).join("")}</div>
+    </div>`;
+  }
+
+  function renderMockAdapterPreview() {
+    const rows = mockOddsRecords().slice(0, 16);
+    if (!rows.length) return "";
+    return `<section class="v554-mock-preview v556-source-adapter-preview" aria-label="Kaynak adapter eşleşme önizlemesi">
       <div class="v554-mock-preview-head">
         <div>
-          <span>MOCK ADAPTER</span>
-          <h3>Demo veri eşleşme önizlemesi</h3>
-          <p>Gerçek kaynak bağlanmadan önce market ID / alias eşleşme altyapısı test edilir.</p>
+          <span>MOCK SOURCE ADAPTER</span>
+          <h3>Kaynak adapter eşleşme önizlemesi</h3>
+          <p>Gerçek kaynak bağlanmadan önce ham kaynak market adları sabit BULTEN market ID’lerine eşlenir. Bu tablo demo/mock hazırlık verisidir.</p>
         </div>
-        <em>Gerçek oran sinyali değildir</em>
+        <em>Gerçek API yok</em>
       </div>
+      ${renderSourceHealthPreview()}
       <div class="v554-mock-preview-table">
         <table>
-          <thead><tr><th>Source</th><th>Fixture</th><th>Market</th><th>Seçim</th><th>Barem</th><th>Oran</th><th>Matched market id</th><th>Confidence</th></tr></thead>
-          <tbody>${rows.map(row => `<tr>
-            <td>${escapeHtml(row.source)}</td>
-            <td><b>${escapeHtml(row.homeTeam)} - ${escapeHtml(row.awayTeam)}</b><small>${escapeHtml(row.league || "")}</small></td>
-            <td>${escapeHtml(row.marketLabel)}</td>
-            <td>${escapeHtml(row.selection)}</td>
-            <td>${row.line ?? "-"}</td>
-            <td class="odd">${money(row.odds)}</td>
-            <td><code>${escapeHtml(row.matchedMarketId || row.marketId || "-")}</code><small>${escapeHtml(row.matchedBy || "-")}</small></td>
-            <td>${Math.round(Number(row.confidence || 0) * 100)}%</td>
-          </tr>`).join("")}</tbody>
+          <thead><tr><th>Source</th><th>Fixture</th><th>Source market</th><th>Matched market label</th><th>Market ID</th><th>Line</th><th>Odds</th><th>Confidence</th><th>Durum</th></tr></thead>
+          <tbody>${rows.map(row => {
+            const status = mappingStatus(row);
+            return `<tr class="${escapeAttr(status)}">
+              <td>${escapeHtml(row.source)}</td>
+              <td><b>${escapeHtml(row.homeTeam)} - ${escapeHtml(row.awayTeam)}</b><small>${escapeHtml(row.league || "")}</small></td>
+              <td>${escapeHtml(row.sourceMarketName || "-")}</td>
+              <td>${escapeHtml(row.matchedMarketLabel || row.marketLabel || row.sourceMarketName || "-")}</td>
+              <td><code>${escapeHtml(row.matchedMarketId || row.marketId || "-")}</code><small>${escapeHtml(row.matchedBy || "unmatched")}</small></td>
+              <td>${row.line ?? "-"}</td>
+              <td class="odd">${money(row.odds)}</td>
+              <td>${Math.round(Number(row.confidence || 0) * 100)}%</td>
+              <td><span class="v556-map-status ${escapeAttr(status)}">${escapeHtml(mappingStatusLabel(status))}</span></td>
+            </tr>`;
+          }).join("")}</tbody>
         </table>
       </div>
     </section>`;
@@ -2397,9 +2733,18 @@
     buildPolymarketEventKey,
     mockFixtureMatchRows,
     normalizeOddsRecord,
+    normalizeSourceMarketName,
+    findSourceMarketMapping,
+    inferMarketIdFromCatalogAliases,
+    mapSourceMarketToCatalogId,
+    createMappingConfidenceScore,
+    adaptSourceOddsRecord,
     findCatalogMarketById,
     findCatalogMarketByAlias,
     mapOddsRecordToCatalog,
+    SOURCE_MARKET_MAPPINGS,
+    SOURCE_ODDS_ADAPTERS,
+    POLYMARKET_EVENT_ADAPTER,
     mockOddsRecords,
     validateMockOddsRecords,
     calculateBestOdds,
@@ -2409,6 +2754,7 @@
   };
 
   window.__oddsTerminalV555 = window.__oddsTerminalV554;
+  window.__oddsTerminalV556 = window.__oddsTerminalV554;
 
   window.omega_RenderOddsTerminal = async function () {
     readLocalState();
