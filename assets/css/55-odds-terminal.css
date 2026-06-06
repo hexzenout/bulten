@@ -3963,8 +3963,24 @@
     box-shadow: none !important;
 }
 
-.omega-tab-odds .v544-category-row button:hover .v548-sport-mark,
-.omega-tab-odds .v544-category-row button.active .v548-sport-mark,
+.omega-tab-odds .v544-category-row button.football i.fa-solid.fa-futbol,
+.omega-tab-odds .v544-category-row button.football:hover i.fa-solid.fa-futbol,
+.omega-tab-odds .v544-category-row button.football.active i.fa-solid.fa-futbol {
+    color: var(--v508-green, var(--green, #10b981)) !important;
+    opacity: 1 !important;
+    filter: none !important;
+    text-shadow: none !important;
+}
+
+.omega-tab-odds .v544-category-row button.basketball i.fa-solid.fa-basketball,
+.omega-tab-odds .v544-category-row button.basketball:hover i.fa-solid.fa-basketball,
+.omega-tab-odds .v544-category-row button.basketball.active i.fa-solid.fa-basketball {
+    color: var(--v508-orange, var(--orange, #f97316)) !important;
+    opacity: 1 !important;
+    filter: none !important;
+    text-shadow: none !important;
+}
+
 .omega-tab-odds .v544-category-row button:hover .v544-poly-mark,
 .omega-tab-odds .v544-category-row button.active .v544-poly-mark {
     color: currentColor !important;

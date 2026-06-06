@@ -2315,11 +2315,11 @@
   }
 
   function footballIconSvg() {
-    return `<i class="fa-solid fa-futbol v548-sport-mark v548-football-mark" aria-hidden="true"></i>`;
+    return `<i class="fa-solid fa-futbol"></i>`;
   }
 
   function basketballIconSvg() {
-    return `<i class="fa-solid fa-basketball v548-sport-mark v548-basketball-mark" aria-hidden="true"></i>`;
+    return `<i class="fa-solid fa-basketball"></i>`;
   }
 
   function polyMarkSvg() {
