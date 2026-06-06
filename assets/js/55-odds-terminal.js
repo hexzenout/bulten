@@ -197,10 +197,10 @@
       priority: index + 1,
       enabled: true,
       requiresKey: false,
-      rateLimitNote: "Mock demo kaynağı; gerçek fetch/API/scraping yok.",
+      rateLimitNote: "Demo kaynağı; gerçek fetch/API/scraping yok.",
       lastStatus: "mock",
       adapterStatus: "mock_ready",
-      notes: "Adapter runner demo karşılaştırma verisini buradan üretir."
+      notes: "Adapter çalıştırıcı demo karşılaştırma verisini buradan üretir."
     };
   });
 
@@ -213,7 +213,7 @@
       : ["basket.match", "basket.totals", "basket.handicap", "basket.team_points"]);
     return {
       sourceId: `source_book_${slot}`,
-      sourceName: `Placeholder Bookmaker ${slot}`,
+      sourceName: `Planlanan Kaynak ${slot}`,
       type: "bookmaker",
       mode: "planned",
       sports,
@@ -224,13 +224,13 @@
       rateLimitNote: "Gerçek bağlantı öncesi limit bilgisi bekleniyor; fetch/scraping yok.",
       lastStatus: "planned",
       adapterStatus: "beklemede",
-      notes: "Güvenli placeholder; gerçek kaynak adı ve API modeli daha sonra eklenecek."
+      notes: "Güvenli planlanan kaynak; gerçek kaynak adı ve API modeli daha sonra eklenecek."
     };
   });
 
   const POLYMARKET_SOURCE_REGISTRY = {
     sourceId: "polymarket_mock",
-    sourceName: "Polymarket Mock",
+    sourceName: "Polymarket Demo",
     type: "prediction_market",
     mode: "mock",
     sports: ["polymarket", "football", "basketball", "crypto", "macro", "news"],
@@ -238,7 +238,7 @@
     priority: 90,
     enabled: true,
     requiresKey: false,
-    rateLimitNote: "Mock adapter; gerçek Polymarket bağlantısı yok.",
+    rateLimitNote: "Demo adapter; gerçek Polymarket bağlantısı yok.",
     lastStatus: "mock",
     adapterStatus: "mock_ready",
     notes: "YES/NO, likidite, hacim ve kapanış zamanı bookmaker odds modelinden ayrı tutulur."
@@ -247,7 +247,7 @@
   BOOKMAKER_SOURCE_REGISTRY[0] = {
     ...BOOKMAKER_SOURCE_REGISTRY[0],
     sourceId: "live_ready_placeholder",
-    sourceName: "Live Ready Placeholder",
+    sourceName: "Canlıya Hazır Kaynak",
     mode: "live_ready",
     enabled: true,
     requiresKey: true,
@@ -263,8 +263,8 @@
     { id: "football", label: "Futbol" },
     { id: "basketball", label: "Basketbol" },
     { id: "polymarket", label: "Polymarket" },
-    { id: "mock", label: "Mock" },
-    { id: "planned", label: "Planned" }
+    { id: "mock", label: "Demo" },
+    { id: "planned", label: "Planlandı" }
   ];
 
   const MOCK_FIXTURE_SOURCE_A = [
@@ -1434,6 +1434,73 @@
     return DATA_MODES.includes(key) ? key : "planned";
   }
 
+  const UI_MODE_LABELS = {
+    mock: "Demo",
+    mock_source: "Demo Kaynak",
+    planned: "Planlandı",
+    live_ready: "Canlıya Hazır",
+    disabled: "Pasif",
+    empty: "Veri Yok",
+    error: "Hata",
+    fallback: "Yedek",
+    loading: "Yükleniyor"
+  };
+
+  const UI_SOURCE_TYPE_LABELS = {
+    bookmaker: "Bahis Kaynağı",
+    prediction_market: "Tahmin Marketi"
+  };
+
+  const UI_STATUS_LABELS = {
+    ok: "Hazır",
+    loading: "Yükleniyor",
+    empty: "Veri Yok",
+    stale: "Eski Veri",
+    error: "Hata",
+    disabled: "Pasif",
+    mock: "Demo",
+    planned: "Planlandı",
+    live_ready: "Canlıya Hazır",
+    fallback: "Yedek",
+    mock_ready: "Demo Hazır",
+    beklemede: "Beklemede",
+    "bağlantı bekliyor": "Bağlantı Bekliyor",
+    planlandı: "Planlandı",
+    active: "Aktif",
+    inactive: "Pasif",
+    enabled: "Aktif",
+    pasif: "Pasif",
+    hazır: "Hazır"
+  };
+
+  const UI_MAPPING_LABELS = {
+    matched: "Eşleşen",
+    unmatched: "Eşleşmeyen",
+    alias: "Alias",
+    marketid: "Market ID"
+  };
+
+  function labelFromDictionary(value, dictionary, fallback = "-") {
+    const raw = String(value || "").trim();
+    if (!raw) return fallback;
+    const key = raw.toLowerCase().replace(/\s+/g, "_");
+    return dictionary[key] || dictionary[raw.toLowerCase()] || raw;
+  }
+
+  function displayModeLabel(mode) { return labelFromDictionary(mode, UI_MODE_LABELS); }
+  function displaySourceTypeLabel(type) { return labelFromDictionary(type, UI_SOURCE_TYPE_LABELS); }
+  function displayStatusLabel(status) { return labelFromDictionary(status, UI_STATUS_LABELS); }
+  function displayMappingLabel(value) { return labelFromDictionary(value, UI_MAPPING_LABELS); }
+
+  function displaySourceName(source = {}) {
+    const name = String(source.sourceName || source.source || source.sourceId || "");
+    if (/^Placeholder Bookmaker\s+(\d+)/i.test(name)) return name.replace(/^Placeholder Bookmaker/i, "Planlanan Kaynak");
+    if (/^Mock Book\s+(.+)/i.test(name)) return name.replace(/^Mock Book/i, "Demo Kaynak");
+    if (/^Live Ready Placeholder$/i.test(name)) return "Canlıya Hazır Kaynak";
+    if (/^Polymarket Mock$/i.test(name)) return "Polymarket Demo";
+    return name || "Kaynak";
+  }
+
   function adapterStatusForSource(source = {}) {
     if (!isSourceActiveForUi(source)) return "disabled";
     const mode = normalizeDataMode(source.mode || "planned");
@@ -1465,7 +1532,7 @@
     } catch (error) {
       run.status = "error";
       run.error = error;
-      run.message = "Adapter hata verdi; UI güvenli fallback modunda.";
+      run.message = "Adapter hata verdi; UI güvenli yedek modda.";
       console.warn("Oran Terminali adapter runner:", source.sourceId, error);
     }
     return run;
@@ -1478,7 +1545,7 @@
         source,
         MOCK_SOURCE_RAW_RECORDS.filter(row => String(row.source || row.sourceId || row.bookmaker || "") === String(source.sourceId || "")),
         "mock",
-        "Mock adapter çalıştı; demo karşılaştırma için hazır."
+        "Demo adapter çalıştı; karşılaştırma için hazır."
       ));
   }
 
@@ -1529,7 +1596,7 @@
         warningCount: Number(existing.warningCount || 0),
         lastUpdatedAt: existing.lastUpdatedAt || safeIso((run.records || []).map(row => row.updatedAt).sort().slice(-1)[0]),
         stale: existing.stale || false,
-        message: run.message || existing.message || "Adapter runner hazır"
+        message: run.message || existing.message || "Adapter çalıştırıcı hazır"
       });
     });
     const rows = [...bySource.values()];
@@ -1597,7 +1664,7 @@
 
   function groupOddsBySource(list = mockOddsRecords()) {
     return list.reduce((acc, record) => {
-      const key = String(record.source || record.bookmaker || "unknown_source");
+      const key = String(record.source || record.bookmaker || "bilinmeyen_kaynak");
       if (!acc[key]) acc[key] = [];
       acc[key].push(record);
       return acc;
@@ -1610,7 +1677,7 @@
       .sort((a, b) => Number(b.odds) - Number(a.odds));
     const bestRecord = valid[0] || null;
     const secondBestRecord = valid[1] || null;
-    const sourceNames = [...new Set(valid.map(record => record.source || record.bookmaker || "unknown_source"))];
+    const sourceNames = [...new Set(valid.map(record => record.source || record.bookmaker || "bilinmeyen_kaynak"))];
     const averageOdds = valid.length ? valid.reduce((sum, record) => sum + Number(record.odds), 0) / valid.length : 0;
     const bestDiffPercent = bestRecord && secondBestRecord
       ? ((Number(bestRecord.odds) - Number(secondBestRecord.odds)) / Number(secondBestRecord.odds)) * 100
@@ -1674,7 +1741,7 @@
     });
     return Object.values(buckets).map(bucket => {
       const lines = [...new Set(bucket.records.map(record => Number(record.line)).filter(Number.isFinite))].sort((a, b) => a - b);
-      const sources = [...new Set(bucket.records.map(record => record.source || record.bookmaker || "unknown_source"))];
+      const sources = [...new Set(bucket.records.map(record => record.source || record.bookmaker || "bilinmeyen_kaynak"))];
       const lineSpread = lines.length > 1 ? Math.max(...lines) - Math.min(...lines) : 0;
       return {
         fixtureKey: bucket.fixtureKey,
@@ -1743,7 +1810,7 @@
   function getSourceHealthBadge(sourceHealth = {}) {
     const status = getSourceStatus(sourceHealth);
     const labels = {
-      ok: "hazır", loading: "loading", empty: "empty", stale: "stale", error: "error", disabled: "disabled", mock: "mock", planned: "planned", live_ready: "bağlantı bekliyor", fallback: "fallback"
+      ok: "Hazır", loading: "Yükleniyor", empty: "Veri Yok", stale: "Eski Veri", error: "Hata", disabled: "Pasif", mock: "Demo", planned: "Planlandı", live_ready: "Canlıya Hazır", fallback: "Yedek"
     };
     return { status, label: labels[status] || status, className: `source-${String(status).replace(/_/g, "-")}` };
   }
@@ -1787,7 +1854,7 @@
         warningCount: mappingWarnings,
         stale,
         staleMinutes: stale ? sourceStaleMinutes(lastUpdatedAt) : 0,
-        message: rows.length ? (stale ? "Mock veri eski olabilir" : "Mock kaynak hazır") : "Bu filtre için eşleşen kaynak verisi yok"
+        message: rows.length ? (stale ? "Demo veri eski olabilir" : "Demo kaynak hazır") : "Bu filtre için eşleşen kaynak verisi yok"
       };
       row.status = getSourceStatus(row);
       return row;
@@ -1887,7 +1954,7 @@
     const lastUpdatedAt = state.lastLoadedAt || new Date().toISOString();
     return {
       source: "polymarket_mock",
-      sourceName: "Polymarket Mock",
+      sourceName: "Polymarket Demo",
       type: "prediction_market",
       status: rows.length ? "mock" : "empty",
       mode: "mock",
@@ -2133,7 +2200,7 @@
 
   const POLYMARKET_EVENT_ADAPTER = {
     sourceId: "polymarket_mock",
-    sourceName: "Polymarket Mock",
+    sourceName: "Polymarket Demo",
     eventType: "prediction_market",
     normalizeEvent(rawEvent = {}) {
       return {
@@ -2894,7 +2961,7 @@
       <div class="v541-poly-card-head">
         <div>
           <b>${escapeHtml(title)}</b>
-          <small>${escapeHtml(r.league || r.eventType || "Prediction Market")} · ${escapeHtml(r.marketLabel || "Market")}</small>
+          <small>${escapeHtml(r.league || r.eventType || "Tahmin Marketi")} · ${escapeHtml(r.marketLabel || "Market")}</small>
         </div>
         <span>${Math.min(99, Math.max(0, Math.round(score)))} güven</span>
       </div>
@@ -2944,7 +3011,7 @@
       <div><span>Kaynak</span><b>${summary.sources || 0}</b></div>
       <div><span>Eşleşen kayıt</span><b>${summary.matchedMarkets || 0}</b></div>
       <div><span>Eşleşmeyen</span><b>${summary.unmatched || 0}</b></div>
-      <div><span>Veri modu</span><b>${escapeHtml(summary.dataMode || "mock")}</b></div>
+      <div><span>Veri modu</span><b>${escapeHtml(displayModeLabel(summary.dataMode || "mock"))}</b></div>
       <div><span>Son güncelleme</span><b>${escapeHtml(formatSourceUpdatedAt(summary.lastUpdatedAt))}</b></div>
       <div><span>Barem adayı</span><b>${summary.lineDifferenceCandidates || 0}</b></div>
     </div>`;
@@ -2953,7 +3020,7 @@
   function renderSourceStateNotice(status, message) {
     const badge = getSourceHealthBadge({ status, mode: status === "mock" ? "mock" : "empty" });
     return `<div class="v558-state-note ${escapeAttr(badge.className)}" role="status">
-      <b>${escapeHtml(badge.label)}</b><span>${escapeHtml(message)}</span>
+      <b>${escapeHtml(displayStatusLabel(badge.label))}</b><span>${escapeHtml(message)}</span>
     </div>`;
   }
 
@@ -2962,12 +3029,12 @@
     const summary = data.healthSummary || summarizeSourceHealth(rows);
     if (!rows.length) return renderSourceStateNotice("empty", "Bu filtre için eşleşen kaynak verisi yok.");
     return `<div class="v557-comparison-health" aria-label="Kaynak sağlığı özeti">
-      <span><b>Kaynak: ${summary.sources}</b><em>Mod: ${escapeHtml(summary.dataMode)}</em></span>
+      <span><b>Kaynak: ${summary.sources}</b><em>Mod: ${escapeHtml(displayModeLabel(summary.dataMode))}</em></span>
       <span><b>Eşleşme: ${summary.mapped}/${summary.adapted}</b><em>Eşleşmeyen: ${summary.unmapped}</em></span>
       <span><b>Son güncelleme</b><em>${escapeHtml(formatSourceUpdatedAt(summary.lastUpdatedAt))}</em></span>
       ${rows.map(row => {
         const badge = getSourceHealthBadge(row);
-        return `<span class="${escapeAttr(badge.className)}"><b>${escapeHtml(row.sourceName || row.source)}</b> ${row.mappedRecordCount}/${row.rawRecordCount} eşleşti <em>${escapeHtml(badge.label)} · ${escapeHtml(row.message || "")}</em></span>`;
+        return `<span class="${escapeAttr(badge.className)}"><b>${escapeHtml(displaySourceName(row))}</b> ${row.mappedRecordCount}/${row.rawRecordCount} eşleşti <em>${escapeHtml(displayStatusLabel(badge.label))} · ${escapeHtml(row.message || "")}</em></span>`;
       }).join("")}
     </div>`;
   }
@@ -2978,7 +3045,7 @@
     if (!rows.length) return empty("Bu filtre için eşleşen kaynak verisi yok.");
     return `<div class="v557-comparison-table" role="region" aria-label="En iyi oran demo karşılaştırma tablosu">
       <table>
-        <thead><tr><th>Fixture</th><th>Market</th><th>Selection</th><th>Line</th><th>Best source</th><th>Best odds</th><th>Second best</th><th>Fark %</th><th>Source count</th><th>Candidate tag</th></tr></thead>
+        <thead><tr><th>Maç</th><th>Market</th><th>Seçim</th><th>Barem</th><th>En iyi kaynak</th><th>En iyi oran</th><th>İkinci en iyi</th><th>Fark %</th><th>Kaynak sayısı</th><th>Aday etiketi</th></tr></thead>
         <tbody>${rows.map(row => {
           const best = row.bestOddsResult.bestRecord;
           const second = row.bestOddsResult.secondBestRecord;
@@ -3006,12 +3073,12 @@
       <div class="v557-section-title"><span>BAREM FARKI ÖNİZLEMESİ</span><b>Analitik fark göstergesi — gerçek sinyal değildir.</b></div>
       <div class="v557-line-grid">${rows.map(row => {
         const sample = row.records[0] || {};
-        const sources = [...new Set(row.records.map(record => record.source || record.bookmaker || "unknown_source"))];
+        const sources = [...new Set(row.records.map(record => record.source || record.bookmaker || "bilinmeyen_kaynak"))];
         const minLine = Math.min(...row.lines);
         const maxLine = Math.max(...row.lines);
         return `<article class="${escapeAttr(row.severity)}">
           <b>${escapeHtml(comparisonFixtureLabel(sample))}</b>
-          <span>${escapeHtml(comparisonFamilyLabel(row.baseMarketFamily))} / ${minLine} ↔ ${maxLine} / spread ${row.lineSpread}</span>
+          <span>${escapeHtml(comparisonFamilyLabel(row.baseMarketFamily))} / ${minLine} ↔ ${maxLine} / fark ${row.lineSpread}</span>
           <small>${escapeHtml(sources.join(", "))} · ${escapeHtml(row.severity)} · skor ${row.score.score}/100</small>
         </article>`;
       }).join("")}</div>
@@ -3023,16 +3090,16 @@
   function readinessChecklistItems() {
     return [
       ["Market ID/alias hazır", true],
-      ["Fixture matching hazır", true],
-      ["Source registry hazır", true],
-      ["Source health hazır", true],
-      ["Adapter runner hazır", true],
+      ["Maç eşleştirme hazır", true],
+      ["Kaynak kayıtları hazır", true],
+      ["Kaynak durumu hazır", true],
+      ["Adapter çalıştırıcı hazır", true],
       ["Gerçek API bağlantısı kapalı", !LIVE_API_CONNECTION_ENABLED]
     ];
   }
 
   function renderReadinessChecklist() {
-    return `<div class="v562-readiness-checklist" aria-label="Live geçiş readiness checklist">
+    return `<div class="v562-readiness-checklist" aria-label="Canlı geçiş hazırlık listesi">
       ${readinessChecklistItems().map(([label, ok]) => `<span class="${ok ? "ready" : "blocked"}"><i class="fa-solid ${ok ? "fa-check" : "fa-xmark"}"></i>${escapeHtml(label)}</span>`).join("")}
     </div>`;
   }
@@ -3042,9 +3109,9 @@
     return `<section class="v557-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
         <div>
-          <span>V557 DEMO COMPARISON</span>
+          <span>Demo Karşılaştırma</span>
           <h3>Kaynaklar Arası Karşılaştırma Motoru</h3>
-          <p>Demo/mock kayıtlarla en iyi oran, barem farkı ve kaynak eşleşmesi test edilir. Gerçek canlı veri gibi sunulmaz; veri gelmezse panel güvenli empty/fallback durumuna düşer.</p>
+          <p>Demo kayıtlarla en iyi oran, barem farkı ve kaynak eşleşmesi test edilir. Gerçek canlı veri gibi sunulmaz; veri gelmezse panel güvenli veri yok/yedek durumuna düşer.</p>
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
@@ -3067,7 +3134,7 @@
       <div>
         <span>Demo karşılaştırma adayı</span>
         <b>${escapeHtml(comparisonFixtureLabel(best))}</b>
-        <small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")} · ${escapeHtml(best.selection || "-")} · line ${best.line ?? "-"}</small>
+        <small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")} · ${escapeHtml(best.selection || "-")} · barem ${best.line ?? "-"}</small>
       </div>
       <div><b>${money(best.odds)}</b><small>${escapeHtml(best.source || "-")} · ${escapeHtml(candidate.score.tag)} · skor ${candidate.score.score}/100</small></div>
       <p>Bu kart gerçek sinyal değildir; yalnızca demo karşılaştırma adayıdır ve otomatik bahis sonucu ifade etmez.</p>
@@ -3100,9 +3167,9 @@
   function renderMockAdapterBadges() {
     const s = mockOddsSummary();
     return `<div class="v554-mock-adapter-badges" aria-label="Demo odds adapter özeti">
-      <span>Mock eşleşme: <b>${s.matched}</b></span>
+      <span>Demo eşleşme: <b>${s.matched}</b></span>
       <span>Kaynak: <b>demo</b></span>
-      <span>Veri modu: <b>${escapeHtml(s.mode)}</b></span>
+      <span>Veri modu: <b>${escapeHtml(displayModeLabel(s.mode))}</b></span>
     </div>`;
   }
 
@@ -3112,7 +3179,7 @@
 
   function renderMockMarketHint(marketIdValue) {
     const count = mockMatchCountForMarket(marketIdValue);
-    return count ? `<span class="v554-mock-market-hint" aria-label="Mock eşleşme sayısı">mock: ${count}</span>` : "";
+    return count ? `<span class="v554-mock-market-hint" aria-label="Demo eşleşme sayısı">demo: ${count}</span>` : "";
   }
 
   function mappingStatus(row) {
@@ -3136,8 +3203,8 @@
       <div>${rows.map(row => {
         const badge = getSourceHealthBadge(row);
         return `<span class="${escapeAttr(badge.className)}">
-          <strong>${escapeHtml(row.sourceName || row.source)}</strong>
-          <em>${escapeHtml(badge.label)} · mod: ${escapeHtml(row.mode)}</em>
+          <strong>${escapeHtml(displaySourceName(row))}</strong>
+          <em>${escapeHtml(displayStatusLabel(badge.label))} · mod: ${escapeHtml(displayModeLabel(row.mode))}</em>
           <small>${row.mappedRecordCount}/${row.rawRecordCount} eşleşti · ${row.unmappedRecordCount} açık · ${escapeHtml(formatSourceUpdatedAt(row.lastUpdatedAt))}</small>
         </span>`;
       }).join("")}</div>
@@ -3150,16 +3217,16 @@
     return `<section class="v554-mock-preview v556-source-adapter-preview" aria-label="Kaynak adapter eşleşme önizlemesi">
       <div class="v554-mock-preview-head">
         <div>
-          <span>MOCK SOURCE ADAPTER</span>
+          <span>Demo Kaynak Adapteri</span>
           <h3>Kaynak adapter eşleşme önizlemesi</h3>
-          <p>Gerçek kaynak bağlanmadan önce ham kaynak market adları sabit BULTEN market ID’lerine eşlenir. Bu tablo demo/mock hazırlık verisidir.</p>
+          <p>Gerçek kaynak bağlanmadan önce ham kaynak market adları sabit BULTEN market ID’lerine eşlenir. Bu tablo demo hazırlık verisidir.</p>
         </div>
         <em>Gerçek API yok</em>
       </div>
       ${renderSourceHealthPreview()}
       <div class="v554-mock-preview-table">
         <table>
-          <thead><tr><th>Source</th><th>Fixture</th><th>Source market</th><th>Matched market label</th><th>Market ID</th><th>Line</th><th>Odds</th><th>Confidence</th><th>Durum</th></tr></thead>
+          <thead><tr><th>Kaynak</th><th>Maç</th><th>Kaynak marketi</th><th>Eşleşen market adı</th><th>Market ID</th><th>Barem</th><th>Oran</th><th>Güven</th><th>Durum</th></tr></thead>
           <tbody>${rows.map(row => {
             const status = mappingStatus(row);
             return `<tr class="${escapeAttr(status)}">
@@ -3167,7 +3234,7 @@
               <td><b>${escapeHtml(row.homeTeam)} - ${escapeHtml(row.awayTeam)}</b><small>${escapeHtml(row.league || "")}</small></td>
               <td>${escapeHtml(row.sourceMarketName || "-")}</td>
               <td>${escapeHtml(row.matchedMarketLabel || row.marketLabel || row.sourceMarketName || "-")}</td>
-              <td><code>${escapeHtml(row.matchedMarketId || row.marketId || "-")}</code><small>${escapeHtml(row.matchedBy || "unmatched")}</small></td>
+              <td><code>${escapeHtml(row.matchedMarketId || row.marketId || "-")}</code><small>${escapeHtml(displayMappingLabel(row.matchedBy || "unmatched"))}</small></td>
               <td>${row.line ?? "-"}</td>
               <td class="odd">${money(row.odds)}</td>
               <td>${Math.round(Number(row.confidence || 0) * 100)}%</td>
@@ -3372,11 +3439,11 @@
     return `<section class="v558-source-panel" aria-label="Kaynak Durumu">
       <div class="v554-mock-preview-head">
         <div>
-          <span>MOCK SOURCE HEALTH</span>
+          <span>Demo Kaynak Durumu</span>
           <h3>Kaynak Durumu</h3>
-          <p>Gerçek kaynaklar bağlanmadan önce mock adapter ve eşleşme altyapısı izlenir. Bu panel gerçek canlı veri olarak pazarlanmaz.</p>
+          <p>Gerçek kaynak bağlantısından önce kaynak tipleri ve adapter durumları hazırlanır. Demo modunda çalışıyor. Gerçek API bağlantısı henüz kapalı.</p>
         </div>
-        <em>Veri modu: ${escapeHtml(summary.dataMode)}</em>
+        <em>Veri modu: ${escapeHtml(displayModeLabel(summary.dataMode))}</em>
       </div>
       <div class="v558-source-summary">
         <span>Kaynak: <b>${summary.sources}</b></span>
@@ -3389,16 +3456,16 @@
       <div class="v558-source-cards">${rows.map(row => {
         const badge = getSourceHealthBadge(row);
         return `<article class="${escapeAttr(badge.className)}">
-          <div><b>${escapeHtml(row.sourceName || row.source)}</b><span>${escapeHtml(badge.label)}</span></div>
-          <small>Mod: ${escapeHtml(row.mode)} · Spor: ${escapeHtml(row.sport)} · UI: ${isSourceEnabledForComparison(row.source) ? "Aktif" : "Pasif"}</small>
+          <div><b>${escapeHtml(displaySourceName(row))}</b><span>${escapeHtml(displayStatusLabel(badge.label))}</span></div>
+          <small>Mod: ${escapeHtml(displayModeLabel(row.mode))} · Spor: ${escapeHtml(row.sport)} · UI: ${isSourceEnabledForComparison(row.source) ? "Aktif" : "Pasif"}</small>
           <p>Ham ${row.rawRecordCount} · Eşleşen ${row.mappedRecordCount} · Eşleşmeyen ${row.unmappedRecordCount}</p>
           <em>Son güncelleme: ${escapeHtml(formatSourceUpdatedAt(row.lastUpdatedAt))}</em>
-          <strong>${escapeHtml(row.message || "Mock kaynak hazır")}</strong>
+          <strong>${escapeHtml(row.message || "Demo kaynak hazır")}</strong>
         </article>`;
       }).join("")}</div>
       <div class="v558-poly-health">
-        <b>${escapeHtml(poly.sourceName)}</b>
-        <span>Mod: ${escapeHtml(poly.mode)} · Durum: ${escapeHtml(poly.status)} · Market: ${poly.marketCount}</span>
+        <b>${escapeHtml(displaySourceName(poly))}</b>
+        <span>Mod: ${escapeHtml(displayModeLabel(poly.mode))} · Durum: ${escapeHtml(displayStatusLabel(poly.status))} · Market: ${poly.marketCount}</span>
         <small>Likidite $${Number(poly.liquidityTotal || 0).toLocaleString("en-US")} · 24s hacim $${Number(poly.volume24hTotal || 0).toLocaleString("en-US")} · YES/NO fiyatları bookmaker decimal odds ile karışmaz.</small>
       </div>
     </section>`;
@@ -3415,9 +3482,9 @@
   function sourceRegistryStatusLabel(source, health) {
     if (!isSourceActiveForUi(source)) return "pasif";
     if (health) return getSourceHealthBadge(health).label;
-    if (source.mode === "mock") return "mock";
-    if (source.mode === "live_ready") return "live ready";
-    return "planned";
+    if (source.mode === "mock") return "Demo";
+    if (source.mode === "live_ready") return "Canlıya Hazır";
+    return "Planlandı";
   }
 
   function sourceConfigFilterMatches(source) {
@@ -3444,9 +3511,9 @@
     return `<section class="v561-source-settings" aria-label="Kaynak Ayarları">
       <div class="v554-mock-preview-head">
         <div>
-          <span>V561 MANUEL SOURCE CONFIG</span>
+          <span>Kaynak Ayarları</span>
           <h3>Kaynak Ayarları</h3>
-          <p>Gerçek kaynaklara geçmeden önce aktif/pasif, mod, spor desteği, adapter ve öncelik ayarları local state üzerinden yönetilir.</p>
+          <p>Aktif/Pasif kaynak seçimi ileride gerçek veri akışını kontrol edecek. Sürüm V561 hazırlığı yalnızca yardımcı not olarak tutulur.</p>
         </div>
         <em>Gerçek API yok · fetch yok · scraping yok</em>
       </div>
@@ -3454,7 +3521,7 @@
         <span>Toplam: <b>${registrySummary.total}</b></span>
         <span>Aktif: <b>${registrySummary.enabled}</b></span>
         <span>Pasif: <b>${registrySummary.total - registrySummary.enabled}</b></span>
-        <span>Bookmaker: <b>${registrySummary.byType.bookmaker || 0}</b></span>
+        <span>Bahis Kaynağı: <b>${registrySummary.byType.bookmaker || 0}</b></span>
         <span>Polymarket: <b>${registrySummary.byType.prediction_market || 0}</b></span>
         <span>Filtre: <b>${escapeHtml(SOURCE_CONFIG_FILTERS.find(filter => filter.id === state.sourceConfigFilter)?.label || "Tümü")}</b></span>
       </div>
@@ -3466,13 +3533,13 @@
         const active = isSourceActiveForUi(source);
         return `<article class="${escapeAttr([source.type === "prediction_market" ? "prediction-market" : "bookmaker-source", active ? "is-active" : "is-passive"].join(" "))}">
           <div class="v561-source-card-head">
-            <div><b>${escapeHtml(source.sourceName)}</b><small>${escapeHtml(source.sourceId)}</small></div>
+            <div><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.sourceId)}</small></div>
             <button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button>
           </div>
           <dl>
-            <div><dt>Tip</dt><dd>${escapeHtml(source.type)}</dd></div>
-            <div><dt>Mod</dt><dd>${escapeHtml(source.mode)}</dd></div>
-            <div><dt>Adapter durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(source.adapterStatus || statusLabel)}</span></dd></div>
+            <div><dt>Tip</dt><dd>${escapeHtml(displaySourceTypeLabel(source.type))}</dd></div>
+            <div><dt>Mod</dt><dd>${escapeHtml(displayModeLabel(source.mode))}</dd></div>
+            <div><dt>Adapter durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(displayStatusLabel(source.adapterStatus || statusLabel))}</span></dd></div>
             <div><dt>Öncelik</dt><dd>${Number(source.priority || 0)}</dd></div>
           </dl>
           <p><b>Desteklenen sporlar:</b> ${escapeHtml((source.sports || []).join(", "))}</p>
@@ -3488,21 +3555,21 @@
     const healthRows = sourceRegistryHealthRows();
     const registrySummary = summarizeSourceRegistry(healthRows);
     const rows = effectiveSourceRegistry().filter(sourceConfigFilterMatches).slice().sort((a, b) => Number(a.priority || 99) - Number(b.priority || 99));
-    return `<section class="v559-source-registry" aria-label="Kaynak Registry Hazırlığı">
+    return `<section class="v559-source-registry" aria-label="Kaynak Kayıtları">
       <div class="v554-mock-preview-head">
         <div>
-          <span>V559 SOURCE REGISTRY</span>
-          <h3>Source Registry</h3>
-          <p>sourceId, sourceName, type, mode, enabled, sports ve adapterStatus tek registry görünümünde tutulur; aktif/pasif localStorage sonrası korunur.</p>
+          <span>Kaynak Kayıtları</span>
+          <h3>Kaynak Kayıtları</h3>
+          <p>Gerçek kaynak bağlantısından önce kaynak tipleri ve adapter durumları hazırlanır. Teknik sourceId ve adapterStatus bilgileri küçük yardımcı metin olarak korunur.</p>
         </div>
         <em>Gerçek API yok · fetch yok · scraping yok</em>
       </div>
       <div class="v559-registry-summary">
         <span>Toplam: <b>${registrySummary.total}</b></span>
-        <span>Aktif placeholder: <b>${registrySummary.enabled}</b></span>
-        <span>Bookmaker: <b>${registrySummary.byType.bookmaker || 0}</b></span>
+        <span>Aktif kaynak: <b>${registrySummary.enabled}</b></span>
+        <span>Bahis Kaynağı: <b>${registrySummary.byType.bookmaker || 0}</b></span>
         <span>Polymarket: <b>${registrySummary.byType.prediction_market || 0}</b></span>
-        <span>Health bağlı: <b>${registrySummary.withHealth}</b></span>
+        <span>Durum bağlı: <b>${registrySummary.withHealth}</b></span>
         <span>Filtre: <b>${escapeHtml(SOURCE_CONFIG_FILTERS.find(filter => filter.id === state.sourceConfigFilter)?.label || "Tümü")}</b></span>
       </div>
       ${renderSourceConfigFilters()}
@@ -3516,11 +3583,11 @@
             const note = health?.message || source.notes || "Planlandı";
             const active = isSourceActiveForUi(source);
             return `<tr class="${escapeAttr(source.type === "prediction_market" ? "prediction-market" : "bookmaker-source")}">
-              <td><b>${escapeHtml(source.sourceName)}</b><small>${escapeHtml(source.sourceId)}</small></td>
-              <td>${escapeHtml(source.type)}</td>
-              <td>${escapeHtml(source.mode)}</td>
+              <td><b>${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml(source.sourceId)}</small></td>
+              <td>${escapeHtml(displaySourceTypeLabel(source.type))}</td>
+              <td>${escapeHtml(displayModeLabel(source.mode))}</td>
               <td>${escapeHtml((source.sports || []).join(", "))}</td>
-              <td><span class="${escapeAttr(statusClass)}">${escapeHtml(health ? statusLabel : source.adapterStatus || statusLabel)}</span><small>${escapeHtml(statusLabel)}</small></td>
+              <td><span class="${escapeAttr(statusClass)}">${escapeHtml(displayStatusLabel(health ? statusLabel : source.adapterStatus || statusLabel))}</span><small>${escapeHtml(displayStatusLabel(statusLabel))}</small></td>
               <td><button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button></td>
               <td><b>${Number(source.priority || 0)}</b>${escapeHtml(note)}<small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
             </tr>`;
@@ -3537,19 +3604,19 @@
     const readiness = [
       ["gerçek bağlantı", "kapalı", !LIVE_API_CONNECTION_ENABLED],
       ["API/fetch", "kapalı", !LIVE_API_CONNECTION_ENABLED],
-      ["adapter runner", "hazır", true],
-      ["market mapping", "hazır", true],
-      ["fixture matching", "hazır", true],
-      ["source health", "hazır", true]
+      ["adapter çalıştırıcı", "hazır", true],
+      ["market eşleştirme", "hazır", true],
+      ["maç eşleştirme", "hazır", true],
+      ["kaynak durumu", "hazır", true]
     ];
-    return `<section class="v562-live-readiness" aria-label="Live Geçiş Hazırlığı">
+    return `<section class="v562-live-readiness" aria-label="Canlı Veri Hazırlığı">
       <div class="v554-mock-preview-head">
         <div>
-          <span>V562 LIVE GEÇİŞ HAZIRLIĞI</span>
-          <h3>Live Geçiş Hazırlığı</h3>
-          <p>Mock → live-ready adapter kapısı hazırlandı; gerçek bağlantı, fetch, scraping ve otomatik bahis kapalıdır.</p>
+          <span>Canlı Veri Hazırlığı</span>
+          <h3>Canlı Veri Hazırlığı</h3>
+          <p>Demo modundan canlıya geçiş için adapter kapısı hazırlandı; gerçek bağlantı, fetch, scraping ve otomatik bahis kapalıdır.</p>
         </div>
-        <em>Adapter run: ${adapter.adapterRuns.length} kaynak · Mod: ${escapeHtml(adapter.dataMode)}</em>
+        <em>Adapter çalışma: ${adapter.adapterRuns.length} kaynak · Mod: ${escapeHtml(displayModeLabel(adapter.dataMode))}</em>
       </div>
       <div class="v562-live-grid">${readiness.map(([label, value, ok]) => `<article class="${ok ? "ready" : "blocked"}"><b>${escapeHtml(label)}</b><span>${escapeHtml(value)}</span></article>`).join("")}</div>
       ${renderReadinessChecklist()}
@@ -3557,7 +3624,7 @@
   }
 
   function renderSources() {
-    return `${renderSourceRegistryPanel()}${renderSourceHealthCards()}${renderLiveReadinessPanel()}`;
+    return `${renderSourceRegistryPanel()}${renderSourceHealthCards()}${renderSourceSettingsPanel()}${renderLiveReadinessPanel()}`;
   }
 
   function empty(text) { return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`; }
