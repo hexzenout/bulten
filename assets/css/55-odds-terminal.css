@@ -3231,12 +3231,18 @@
 .omega-tab-odds .v546-market-tags {
     display: flex !important;
     flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    align-content: flex-start !important;
     gap: 8px !important;
 }
 
 .omega-tab-odds .v546-market-tags button {
     display: inline-grid !important;
-    gap: 3px !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: start !important;
+    align-self: flex-start !important;
+    gap: 3px 6px !important;
+    height: auto !important;
     min-height: 36px !important;
     padding: 8px 10px !important;
     border-radius: 13px !important;
@@ -3254,11 +3260,14 @@
 }
 
 .omega-tab-odds .v546-market-tags button b {
+    grid-column: 1 / 2 !important;
+    min-width: 0 !important;
     font-size: 12.5px !important;
     line-height: 1.22 !important;
 }
 
 .omega-tab-odds .v546-market-tags button small {
+    grid-column: 1 / -1 !important;
     color: #c4c4c7 !important;
     font-size: 10.5px !important;
     line-height: 1.25 !important;
@@ -3787,6 +3796,8 @@
 }
 
 .omega-tab-odds .v549-sport-market-catalog .v546-market-tags {
+    align-items: flex-start !important;
+    align-content: flex-start !important;
     margin-top: 12px !important;
     padding: 0 13px 14px !important;
 }
@@ -4105,6 +4116,8 @@
     color: #fde68a !important;
     font-size: .7rem !important;
     font-weight: 900 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
 }
 
 .v554-mock-adapter-badges b {
@@ -4112,12 +4125,17 @@
 }
 
 .v554-mock-market-hint {
-    justify-self: start !important;
-    margin-top: 6px !important;
-    min-height: 22px !important;
+    grid-column: 2 / 3 !important;
+    grid-row: 1 !important;
+    justify-self: end !important;
+    align-self: start !important;
+    margin-top: 0 !important;
+    min-height: 18px !important;
+    padding: 1px 6px !important;
     border-color: rgba(96,165,250,.28) !important;
     background: rgba(96,165,250,.08) !important;
     color: #bfdbfe !important;
+    font-size: 10px !important;
 }
 
 .v554-mock-preview {
