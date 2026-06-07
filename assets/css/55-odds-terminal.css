@@ -7408,3 +7408,190 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ===============================
+   V587-V589 — Adapter kapısı ve kaynak öncelik sistemi
+   =============================== */
+.v589-adapter-gate {
+  margin-top: 14px !important;
+  border: 1px solid rgba(59, 130, 246, .22) !important;
+  border-radius: 22px !important;
+  padding: 16px !important;
+  background: linear-gradient(135deg, rgba(15, 23, 42, .92), rgba(2, 6, 23, .78)) !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .18) !important;
+}
+
+.v589-adapter-gate.ready {
+  border-color: rgba(34, 197, 94, .3) !important;
+}
+
+.v589-adapter-gate.review {
+  border-color: rgba(245, 158, 11, .3) !important;
+}
+
+.v589-gate-cards {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin-top: 12px !important;
+}
+
+.v589-gate-cards article {
+  border: 1px solid rgba(148, 163, 184, .18) !important;
+  border-radius: 16px !important;
+  padding: 12px !important;
+  background: rgba(15, 23, 42, .72) !important;
+}
+
+.v589-gate-cards b {
+  display: block !important;
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: .08em !important;
+}
+
+.v589-gate-cards span {
+  display: block !important;
+  margin-top: 5px !important;
+  color: #f8fafc !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
+
+.v589-gate-list {
+  display: grid !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+}
+
+.v589-gate-list article {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border: 1px solid rgba(148, 163, 184, .14) !important;
+  border-radius: 16px !important;
+  padding: 11px 12px !important;
+  background: rgba(2, 6, 23, .44) !important;
+}
+
+.v589-gate-list article.ready {
+  border-color: rgba(34, 197, 94, .24) !important;
+}
+
+.v589-gate-list article.review,
+.v589-gate-list article.stale {
+  border-color: rgba(245, 158, 11, .24) !important;
+}
+
+.v589-gate-list article.blocked,
+.v589-gate-list article.waiting {
+  border-color: rgba(248, 113, 113, .18) !important;
+}
+
+.v589-gate-list b,
+.v589-gate-list strong {
+  color: #f8fafc !important;
+  font-weight: 950 !important;
+}
+
+.v589-gate-list small {
+  display: block !important;
+  margin-top: 3px !important;
+  color: #94a3b8 !important;
+}
+
+.v589-gate-list span {
+  border: 1px solid rgba(148, 163, 184, .2) !important;
+  border-radius: 999px !important;
+  padding: 5px 9px !important;
+  color: #cbd5e1 !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  white-space: nowrap !important;
+}
+
+.v589-gate-dev {
+  margin-bottom: 14px !important;
+}
+
+.v589-gate-table-wrap {
+  overflow-x: auto !important;
+  border: 1px solid rgba(148, 163, 184, .16) !important;
+  border-radius: 16px !important;
+}
+
+.v589-gate-table {
+  width: 100% !important;
+  min-width: 840px !important;
+  border-collapse: collapse !important;
+}
+
+.v589-gate-table th,
+.v589-gate-table td {
+  padding: 10px 12px !important;
+  border-bottom: 1px solid rgba(148, 163, 184, .12) !important;
+  text-align: left !important;
+  vertical-align: top !important;
+}
+
+.v589-gate-table th {
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: .08em !important;
+  background: rgba(15, 23, 42, .72) !important;
+}
+
+.v589-gate-table td {
+  color: #e2e8f0 !important;
+  background: rgba(2, 6, 23, .24) !important;
+}
+
+.v589-gate-table b,
+.v589-gate-table strong {
+  display: block !important;
+  color: #f8fafc !important;
+}
+
+.v589-gate-table small {
+  display: block !important;
+  margin-top: 3px !important;
+  color: #94a3b8 !important;
+}
+
+.v589-duplicate-box {
+  margin-top: 12px !important;
+  border: 1px solid rgba(59, 130, 246, .18) !important;
+  border-radius: 16px !important;
+  padding: 12px !important;
+  background: rgba(15, 23, 42, .55) !important;
+}
+
+.v589-duplicate-box b {
+  color: #f8fafc !important;
+  font-weight: 950 !important;
+}
+
+.v589-duplicate-box p {
+  margin: 6px 0 0 !important;
+  color: #94a3b8 !important;
+}
+
+@media (max-width: 1100px) {
+  .v589-gate-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .v589-gate-cards,
+  .v589-gate-list article {
+    grid-template-columns: 1fr !important;
+  }
+
+  .v589-gate-list span {
+    width: fit-content !important;
+  }
+}

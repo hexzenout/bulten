@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V584-V586 kullanıcı modu ve panel temizliği
+// ORAN TERMİNALİ — güvenli JS toparlama / V587-V589 adapter kapısı ve kaynak öncelik sistemi
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -71,6 +71,9 @@
   const LIVE_API_CONNECTION_ENABLED = false;
   const FETCH_SCRAPING_ENABLED = false;
   const AUTO_BETTING_ENABLED = false;
+  const SOURCE_GATE_STALE_HOURS = 48;
+  const SOURCE_GATE_MIN_SCORE = 62;
+  const SOURCE_GATE_STRONG_SCORE = 78;
 
 
 
@@ -1948,7 +1951,8 @@
 
     if (hasActiveDryRunPayload()) {
       const rawRecords = Array.isArray(state.dryRunResult.rawRecords) ? state.dryRunResult.rawRecords : [];
-      const records = filterComparisonRecordsBySource(state.dryRunResult.records);
+      const deduped = dedupeOddsRecords(filterComparisonRecordsBySource(state.dryRunResult.records));
+      const records = deduped.records;
       const displayRecords = records.map((record, index) => standardRecordToDisplayRecord(record, rawRecords[index] || {}, "dry_run"));
       const sourceHealthRows = getSafeSourceHealth(records).map(row => ({
         ...row,
@@ -1964,6 +1968,7 @@
         displayRecords,
         sourceHealth: sourceHealthRows,
         healthSummary,
+        duplicateSummary: deduped,
         dataMode: "dry_run",
         dataModePriority: "aktif dry-run payload → statik snapshot → mock/fallback → empty"
       };
@@ -1972,13 +1977,15 @@
 
     const staticOutput = buildStaticSnapshotAdapterOutput();
     if (staticOutput.records.length) {
+      const deduped = dedupeOddsRecords(staticOutput.records);
       adapterResultsCache = {
         adapterRuns: [],
         rawRecords: staticOutput.rawRecords,
-        records: staticOutput.records,
-        displayRecords: staticOutput.displayRecords,
+        records: deduped.records,
+        displayRecords: deduped.records.map((record, index) => standardRecordToSnapshotDisplay(record, staticOutput.rawRecords[index] || {})),
         sourceHealth: staticOutput.sourceHealth,
         healthSummary: staticOutput.summary,
+        duplicateSummary: deduped,
         dataMode: "static_snapshot",
         dataModePriority: "aktif dry-run payload → statik snapshot → mock/fallback → empty"
       };
@@ -1987,7 +1994,9 @@
 
     const adapterRuns = runEnabledSourceAdapters();
     const rawRecords = adapterRuns.flatMap(run => run.rawRecords || []);
-    const records = adapterRuns.flatMap(run => run.records || []);
+    const mappedRecords = adapterRuns.flatMap(run => run.records || []);
+    const deduped = dedupeOddsRecords(mappedRecords);
+    const records = deduped.records;
     const sourceHealthRows = mergeAdapterResultsWithSourceHealth(adapterRuns);
     const healthSummary = summarizeSourceHealth(sourceHealthRows);
     adapterResultsCache = {
@@ -1997,6 +2006,7 @@
       displayRecords: records.map((record, index) => standardRecordToDisplayRecord(record, rawRecords[index] || {}, records.length ? (healthSummary.dataMode || "mock") : "fallback")),
       sourceHealth: sourceHealthRows,
       healthSummary,
+      duplicateSummary: deduped,
       dataMode: records.length ? healthSummary.dataMode : "fallback",
       dataModePriority: "aktif dry-run payload → statik snapshot → mock/fallback → empty"
     };
@@ -2427,6 +2437,165 @@
       const sourceId = record.source || record.bookmaker || record.sourceId || "";
       return isSourceEnabledForComparison(sourceId);
     });
+  }
+
+  // -------------------------------
+  // V587-V589 Adapter Gate / Source Priority
+  // -------------------------------
+  function sourcePriorityWeight(source = {}) {
+    const priority = sanitizeSourcePriority(source.priority ?? 15);
+    return Math.round(((16 - priority) / 15) * 100);
+  }
+
+  function sourceMappedRatio(health = {}) {
+    const adapted = Number(health.adaptedRecordCount || 0);
+    if (!adapted) return 0;
+    return Math.max(0, Math.min(1, Number(health.mappedRecordCount || 0) / adapted));
+  }
+
+  function sourceFreshnessScore(health = {}) {
+    const updated = latestUpdatedAt([health]);
+    if (!updated) return 42;
+    const ageHours = Math.max(0, (Date.now() - updated) / 36e5);
+    if (ageHours <= 6) return 100;
+    if (ageHours <= 24) return 82;
+    if (ageHours <= SOURCE_GATE_STALE_HOURS) return 64;
+    if (ageHours <= 96) return 38;
+    return 18;
+  }
+
+  function sourceAdapterReadinessScore(source = {}, health = {}) {
+    if (!isSourceActiveForUi(source)) return 0;
+    const adapterStatus = getAdapterSlot(source.sourceId).status;
+    if (adapterStatus === "mock") return 82;
+    if (adapterStatus === "live_ready") return 86;
+    if (adapterStatus === "live_not_ready") return 58;
+    if (adapterStatus === "planned") return 42;
+    if (adapterStatus === "disabled") return 0;
+    if (Number(health.adaptedRecordCount || 0) > 0) return 70;
+    return 24;
+  }
+
+  function sourceReliabilityScore(source = {}, health = {}) {
+    if (source.type === "prediction_market") return 0;
+    const activeScore = isSourceActiveForUi(source) ? 12 : 0;
+    const priorityScore = Math.round(sourcePriorityWeight(source) * 0.18);
+    const adapterScore = Math.round(sourceAdapterReadinessScore(source, health) * 0.28);
+    const mappedScore = Math.round(sourceMappedRatio(health) * 24);
+    const freshnessScore = Math.round(sourceFreshnessScore(health) * 0.14);
+    const warningPenalty = Math.min(14, Number(health.warningCount || 0) * 3);
+    const errorPenalty = Math.min(24, Number(health.errorCount || 0) * 12);
+    const stalePenalty = getSourceStatus(health) === "stale" || health.stale ? 14 : 0;
+    return Math.max(0, Math.min(100, activeScore + priorityScore + adapterScore + mappedScore + freshnessScore - warningPenalty - errorPenalty - stalePenalty));
+  }
+
+  function sourceGateStatus(score, source = {}, health = {}) {
+    if (!isSourceActiveForUi(source)) return "disabled";
+    if (source.type === "prediction_market") return "separate";
+    if (Number(health.errorCount || 0) > 0) return "blocked";
+    if (getSourceStatus(health) === "stale" || health.stale) return score >= SOURCE_GATE_MIN_SCORE ? "review" : "stale";
+    if (score >= SOURCE_GATE_STRONG_SCORE) return "ready";
+    if (score >= SOURCE_GATE_MIN_SCORE) return "review";
+    return "waiting";
+  }
+
+  function sourceGateLabel(status) {
+    const labels = {
+      ready: "Kapı hazır",
+      review: "Kontrolle hazır",
+      waiting: "Bekliyor",
+      stale: "Bayat veri",
+      blocked: "Bloklu",
+      disabled: "Pasif",
+      separate: "Ayrı akış"
+    };
+    return labels[status] || displayStatusLabel(status);
+  }
+
+  function oddsRecordDuplicateKey(record = {}) {
+    return [
+      canonicalSourceId(record.source || record.sourceId || record.bookmaker || ""),
+      record.fixtureId || oddsFixtureKey(record),
+      record.marketId || record.matchedMarketId || record.sourceMarketName || "",
+      normalizeText(record.selection || record.outcome || ""),
+      record.line ?? "",
+      Number(record.odds || 0).toFixed(4)
+    ].map(value => String(value ?? "").toLowerCase().trim()).join("|");
+  }
+
+  function dedupeOddsRecords(list = []) {
+    const records = Array.isArray(list) ? list.filter(Boolean) : [];
+    const seen = new Map();
+    const duplicates = [];
+    const unique = [];
+    records.forEach((record, index) => {
+      const key = oddsRecordDuplicateKey(record);
+      if (!key.replace(/[|0.]/g, "")) {
+        unique.push(record);
+        return;
+      }
+      if (seen.has(key)) {
+        duplicates.push({ key, index, firstIndex: seen.get(key).index, record, firstRecord: seen.get(key).record });
+        return;
+      }
+      seen.set(key, { index, record });
+      unique.push(record);
+    });
+    return { records: unique, duplicateCount: duplicates.length, duplicates, originalCount: records.length };
+  }
+
+  function buildSourceGateRows(healthRows = sourceRegistryHealthRows()) {
+    const healthMap = new Map((Array.isArray(healthRows) ? healthRows : []).map(row => [String(row.source || row.sourceId || ""), row]));
+    return effectiveSourceRegistry()
+      .filter(source => source.type !== "prediction_market")
+      .map(source => {
+        const health = healthMap.get(source.sourceId) || {};
+        const score = sourceReliabilityScore(source, health);
+        const status = sourceGateStatus(score, source, health);
+        return {
+          sourceId: source.sourceId,
+          sourceName: displaySourceName(source),
+          priority: sanitizeSourcePriority(source.priority),
+          mode: normalizeDataMode(source.mode),
+          enabled: isSourceActiveForUi(source),
+          status,
+          label: sourceGateLabel(status),
+          score,
+          mappedRatio: sourceMappedRatio(health),
+          freshnessScore: sourceFreshnessScore(health),
+          adapterScore: sourceAdapterReadinessScore(source, health),
+          rawRecordCount: Number(health.rawRecordCount || 0),
+          adaptedRecordCount: Number(health.adaptedRecordCount || 0),
+          mappedRecordCount: Number(health.mappedRecordCount || 0),
+          warningCount: Number(health.warningCount || 0),
+          errorCount: Number(health.errorCount || 0),
+          lastUpdatedAt: health.lastUpdatedAt || null
+        };
+      })
+      .sort((a, b) => b.score - a.score || a.priority - b.priority);
+  }
+
+  function buildAdapterGateReport(adapter = collectAdapterResults()) {
+    const healthRows = Array.isArray(adapter.sourceHealth) ? adapter.sourceHealth : [];
+    const gateRows = buildSourceGateRows(healthRows);
+    const duplicateInfo = adapter.duplicateSummary || dedupeOddsRecords(adapter.records || []);
+    const staleRows = healthRows.filter(row => getSourceStatus(row) === "stale" || row.stale);
+    const readyRows = gateRows.filter(row => row.status === "ready");
+    const reviewRows = gateRows.filter(row => row.status === "review" || row.status === "stale");
+    const blockedRows = gateRows.filter(row => row.status === "blocked" || row.status === "waiting");
+    const summary = {
+      sources: gateRows.length,
+      ready: readyRows.length,
+      review: reviewRows.length,
+      waiting: blockedRows.length,
+      duplicates: duplicateInfo.duplicateCount || 0,
+      stale: staleRows.length,
+      averageScore: gateRows.length ? Math.round(gateRows.reduce((sum, row) => sum + Number(row.score || 0), 0) / gateRows.length) : 0,
+      dataMode: adapter.dataMode || "fallback",
+      records: Array.isArray(adapter.records) ? adapter.records.length : 0
+    };
+    const status = summary.ready >= 2 && !summary.duplicates && !summary.stale ? "ready" : summary.ready >= 1 ? "review" : "waiting";
+    return { gateRows, duplicateInfo, staleRows, readyRows, reviewRows, blockedRows, summary, status, label: sourceGateLabel(status) };
   }
 
 
@@ -4945,6 +5114,7 @@
           <div><dt>Durum</dt><dd data-source-active-label="${escapeAttr(source.sourceId)}">${active ? "Aktif" : "Pasif"}</dd></div>
           <div><dt>Sporlar</dt><dd>${escapeHtml((source.sports || []).join(", "))}</dd></div>
           <div><dt>Mod</dt><dd>${escapeHtml(displayModeLabel(source.mode))}</dd></div>
+          <div><dt>Kapı Skoru</dt><dd>${source.type === "prediction_market" ? "Ayrı" : `${sourceReliabilityScore(source, health || {})}/100`}</dd></div>
           <div><dt>Öncelik</dt><dd><select data-source-priority="${escapeAttr(source.sourceId)}" aria-label="Öncelik">${sourcePriorityOptions(source.priority)}</select></dd></div>
         </dl>
         <label class="v566-source-field"><span>Not</span><textarea data-source-note="${escapeAttr(source.sourceId)}" rows="3" placeholder="Futbol oranları için kullanılacak">${escapeHtml(note)}</textarea></label>
@@ -4969,6 +5139,7 @@
         <td>${escapeHtml(displayModeLabel(source.mode))}</td>
         <td>${escapeHtml((source.sports || []).join(", "))}</td>
         <td><span class="${escapeAttr(statusClass)}">${escapeHtml(getAdapterStatusLabel(getAdapterSlot(source.sourceId).status))}</span><small>${escapeHtml(displayStatusLabel(statusLabel))}</small></td>
+        <td><b>${source.type === "prediction_market" ? "Ayrı" : `${sourceReliabilityScore(source, health || {})}/100`}</b><small>${escapeHtml(sourceGateLabel(sourceGateStatus(sourceReliabilityScore(source, health || {}), source, health || {})))}</small></td>
         <td><button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button></td>
         <td><b>Öncelik ${Number(source.priority || 0)}</b><small>${escapeHtml(note)}</small><small>${escapeHtml((source.supportedMarketFamilies || []).slice(0, 4).join(" · "))}</small></td>
       </tr>`;
@@ -5030,7 +5201,7 @@
       ${renderSourceConfigFilters()}
       <div class="v559-registry-table-wrap">
         <table class="v559-registry-table">
-          <thead><tr><th>Kaynak</th><th>Tip</th><th>Mod</th><th>Sporlar</th><th>Adapter durumu</th><th>Aktif/Pasif</th><th>Öncelik / Not</th></tr></thead>
+          <thead><tr><th>Kaynak</th><th>Tip</th><th>Mod</th><th>Sporlar</th><th>Adapter durumu</th><th>Kapı Skoru</th><th>Aktif/Pasif</th><th>Öncelik / Not</th></tr></thead>
           <tbody data-source-registry-rows>${renderSourceRegistryRows(rows, healthRows)}</tbody>
         </table>
         <div data-source-registry-empty>${renderSourceEmptyState(rows)}</div>
@@ -5240,6 +5411,9 @@
       ["dry-run payload kontrolü hazır", "hazır", true],
       ["adapter sözleşmesi görünür", "hazır", true],
       ["eşleşme kalite skoru hazır", "hazır", true],
+      ["adapter kapısı skoru hazır", "hazır", true],
+      ["duplicate temizleme hazır", "hazır", true],
+      ["veri bayatlık kontrolü hazır", "hazır", true],
       ["gerçek API bağlantısı kapalı", "kapalı", !LIVE_API_CONNECTION_ENABLED]
     ];
     return `<section class="v562-live-readiness" aria-label="Canlı Geçiş Hazırlığı">
@@ -5257,6 +5431,71 @@
     </section>`;
   }
 
+  function renderAdapterGateSummaryPanel() {
+    const report = buildAdapterGateReport();
+    const s = report.summary || {};
+    const cards = [
+      ["Kapı Durumu", report.label],
+      ["Ortalama Skor", `${s.averageScore || 0}/100`],
+      ["Hazır Kaynak", s.ready || 0],
+      ["Kontrol", s.review || 0],
+      ["Bekleyen", s.waiting || 0],
+      ["Duplicate", s.duplicates || 0],
+      ["Bayat Kaynak", s.stale || 0],
+      ["Aktif Kayıt", s.records || 0]
+    ];
+    const topRows = (report.gateRows || []).slice(0, 5);
+    return `<section class="v589-adapter-gate ${escapeAttr(report.status)}" aria-label="Adapter Kapısı">
+      <div class="v554-mock-preview-head compact">
+        <div>
+          <span>Adapter Kapısı</span>
+          <h3>Gerçek Veri Öncesi Kapı Kontrolü</h3>
+          <p>Kaynak önceliği, eşleşme oranı, adapter durumu, duplicate ve bayatlık sinyali tek skor altında toplanır. Gerçek API hâlâ kapalıdır.</p>
+        </div>
+        <em>${escapeHtml(displayModeLabel(s.dataMode))} · ${escapeHtml(report.label)}</em>
+      </div>
+      <div class="v589-gate-cards">${cards.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+      <div class="v589-gate-list">
+        ${topRows.map(row => `<article class="${escapeAttr(row.status)}">
+          <div><b>${escapeHtml(row.sourceName)}</b><small>Öncelik ${row.priority} · ${escapeHtml(displayModeLabel(row.mode))}</small></div>
+          <span>${escapeHtml(row.label)}</span>
+          <strong>${row.score}/100</strong>
+        </article>`).join("") || empty("Adapter kapısı için kaynak yok.")}
+      </div>
+    </section>`;
+  }
+
+  function renderAdapterGateDeveloperPanel() {
+    const report = buildAdapterGateReport();
+    const rows = report.gateRows || [];
+    return `<details class="v589-gate-dev v568-developer-details">
+      <summary>
+        <span>Adapter Kapısı Detayları</span>
+        <small>Öncelik, güven, duplicate ve bayatlık raporu</small>
+      </summary>
+      <div class="v568-dev-details-body">
+        <div class="v589-gate-table-wrap">
+          <table class="v589-gate-table">
+            <thead><tr><th>Kaynak</th><th>Skor</th><th>Durum</th><th>Öncelik</th><th>Kayıt</th><th>Eşleşme</th><th>Bayatlık</th></tr></thead>
+            <tbody>${rows.map(row => `<tr class="${escapeAttr(row.status)}">
+              <td><b>${escapeHtml(row.sourceName)}</b><small>${escapeHtml(row.sourceId)}</small></td>
+              <td><strong>${row.score}/100</strong><small>adapter ${row.adapterScore}/100</small></td>
+              <td>${escapeHtml(row.label)}<small>${escapeHtml(displayModeLabel(row.mode))}</small></td>
+              <td>${row.priority}</td>
+              <td>${row.adaptedRecordCount}/${row.rawRecordCount}</td>
+              <td>${Math.round((row.mappedRatio || 0) * 100)}%<small>${row.mappedRecordCount} eşleşen</small></td>
+              <td>${row.freshnessScore}/100<small>${escapeHtml(formatSourceUpdatedAt(row.lastUpdatedAt))}</small></td>
+            </tr>`).join("")}</tbody>
+          </table>
+        </div>
+        <div class="v589-duplicate-box">
+          <b>Duplicate Temizleme</b>
+          <p>${report.duplicateInfo?.duplicateCount || 0} tekrar kayıt ana akıştan düşürüldü. Kural: kaynak + fixture + market + seçim + barem + oran birebir aynıysa ilk kayıt korunur.</p>
+        </div>
+      </div>
+    </details>`;
+  }
+
   function renderSourceOverviewPanel() {
     const healthRows = sourceRegistryHealthRows();
     const registrySummary = summarizeSourceRegistry(healthRows);
@@ -5271,6 +5510,7 @@
       ["Eşleşen / Eşleşmeyen", `${ready.matched} / ${ready.unmatched}`],
       ["Polymarket", registrySummary.byType.prediction_market || 0],
       ["Veri Modu", displayModeLabel(adapter.dataMode || healthSummary.dataMode)],
+      ["Adapter Kapısı", buildAdapterGateReport(adapter).label],
       ["Gerçek Bağlantı", LIVE_API_CONNECTION_ENABLED ? "Açık" : "Kapalı"]
     ];
     return `<section class="v568-source-overview" aria-label="Kaynak Özeti">
@@ -5284,6 +5524,7 @@
       </div>
       <div class="v568-overview-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
       ${renderSourceSignalSummaryPanel()}
+      ${renderAdapterGateSummaryPanel()}
     </section>`;
   }
 
@@ -5312,6 +5553,7 @@
       </summary>
       <div class="v568-dev-details-body">
         ${renderSignalEngineHeader(oddsSignalEngineResults())}
+        ${renderAdapterGateDeveloperPanel()}
         ${renderSnapshotReadinessPanel()}
         ${renderStaticSnapshotStatusPanel()}
         ${renderStaticSourcesPanel()}
