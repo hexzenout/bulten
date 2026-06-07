@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V580 tek veri akışı konsolidasyonu
+// ORAN TERMİNALİ — güvenli JS toparlama / V581-V583 sinyal motoru ve panel sadeleştirme
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -57,6 +57,7 @@
   let sourceConfigSaveTimer = null;
   let polymarketAdapterRecordsCache = null;
   let defaultComparisonEngineCache = null;
+  let oddsSignalEngineCache = null;
   let staticRepoDataCache = null;
   const loadJsonWarningKeys = new Set();
 
@@ -1925,6 +1926,7 @@
     adapterResultsCache = null;
     sourceRegistryHealthCache = null;
     defaultComparisonEngineCache = null;
+    oddsSignalEngineCache = null;
   }
 
   function ensureSourceCacheKey() {
@@ -1935,7 +1937,8 @@
       adapterResultsCache = null;
       sourceRegistryHealthCache = null;
       defaultComparisonEngineCache = null;
-    }
+        oddsSignalEngineCache = null;
+      }
     return key;
   }
 
@@ -3226,6 +3229,291 @@
     return out.sort((a, b) => b.gap - a.gap);
   }
 
+  // -------------------------------
+  // V581-V583 Signal Engine
+  // -------------------------------
+  function signalDataModeText(mode) {
+    const normalized = normalizeDataMode(mode || collectAdapterResults().dataMode || "fallback");
+    const labels = {
+      dry_run: "Dry-run test akışı",
+      static_snapshot: "Statik snapshot akışı",
+      mock: "Mock/fallback akışı",
+      fallback: "Mock/fallback akışı",
+      empty: "Boş akış",
+      error: "Hata akışı",
+      planned: "Planlı akış",
+      live_ready: "Canlıya hazır akış"
+    };
+    return labels[normalized] || displayModeLabel(normalized);
+  }
+
+  function signalTypeLabel(type) {
+    const labels = {
+      source_diff: "Kaynak Farkı",
+      line_diff: "Barem Farkı",
+      movement: "Oran Hareketi",
+      low_confidence: "Kontrol Gerekir"
+    };
+    return labels[type] || "Sinyal";
+  }
+
+  function signalToneClass(type, score = 0) {
+    if (type === "source_diff") return "source";
+    if (type === "line_diff") return "line";
+    if (type === "movement") return "movement";
+    if (type === "low_confidence") return "review";
+    return Number(score || 0) >= 72 ? "source" : "review";
+  }
+
+  function signalStrengthLabel(score = 0) {
+    const value = Number(score || 0);
+    if (value >= 78) return "Güçlü aday";
+    if (value >= 60) return "Orta aday";
+    if (value >= 42) return "Kontrol adayı";
+    return "Zayıf aday";
+  }
+
+  function signalSafeScore(value) {
+    const n = Number(value || 0);
+    if (!Number.isFinite(n)) return 0;
+    return Math.round(Math.max(0, Math.min(100, n)));
+  }
+
+  function recordConfidenceNumber(record = {}) {
+    const raw = Number(record.confidence ?? record.confidenceScore ?? record.mappingConfidence ?? 0);
+    if (!Number.isFinite(raw)) return 0;
+    return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
+  }
+
+  function recordMarketLabel(record = {}) {
+    return record.matchedMarketLabel || record.marketLabel || record.marketName || record.marketId || record.market || "Market";
+  }
+
+  function displayRecordFixture(record = {}) {
+    return record.match || comparisonFixtureLabel(record);
+  }
+
+  function movementRowsForSignals(list = records(true)) {
+    return (Array.isArray(list) ? list : [])
+      .map(record => {
+        const opening = Number(record.opening || 0);
+        const current = Number(record.current || record.odds || 0);
+        const changePct = opening ? ((current - opening) / opening) * 100 : 0;
+        const absChange = Math.abs(changePct);
+        const direction = changePct > 0.05 ? "yükseliş" : changePct < -0.05 ? "düşüş" : "sabit";
+        return { ...record, opening, current, changePct, absChange, direction };
+      })
+      .filter(record => Number.isFinite(record.absChange) && record.absChange >= Math.max(2, Number(state.minDropPct || 8) / 2))
+      .sort((a, b) => b.absChange - a.absChange);
+  }
+
+  function buildSourceDiffSignal(row = {}, index = 0, mode = "fallback") {
+    const best = row.bestOddsResult?.bestRecord || {};
+    const second = row.bestOddsResult?.secondBestRecord || null;
+    const diff = Number(row.bestOddsResult?.bestDiffPercent || 0);
+    const score = signalSafeScore(Math.max(row.score?.score || 0, 42 + Math.min(34, diff * 7) + Math.max(0, Number(row.bestOddsResult?.sourceCount || 0) - 1) * 8));
+    return {
+      id: `source-${index}-${best.id || oddsFixtureKey(best)}`,
+      type: "source_diff",
+      tone: signalToneClass("source_diff", score),
+      title: displayRecordFixture(best),
+      subtitle: recordMarketLabel(best),
+      value: plainPct(diff),
+      score,
+      strength: signalStrengthLabel(score),
+      meta: [
+        `En iyi: ${best.source || best.bookmaker || "-"} ${money(best.odds || best.current)}`,
+        second ? `İkinci: ${second.source || second.bookmaker || "-"} ${money(second.odds || second.current)}` : "İkinci kaynak yok",
+        `${row.bestOddsResult?.sourceCount || 0} kaynak`,
+        signalDataModeText(mode)
+      ],
+      note: "Aynı fixture / market / seçim / barem için kaynaklar arası fark adayıdır; canlı veri değildir.",
+      raw: row
+    };
+  }
+
+  function buildLineDiffSignal(row = {}, index = 0, mode = "fallback") {
+    const sample = row.records?.[0] || {};
+    const minLine = row.lines?.length ? Math.min(...row.lines) : 0;
+    const maxLine = row.lines?.length ? Math.max(...row.lines) : 0;
+    const spread = Number(row.lineSpread || 0);
+    const score = signalSafeScore(Math.max(row.score?.score || 0, 38 + Math.min(38, spread * (row.sport === "basketball" ? 5 : 16)) + Math.min(16, Number(row.sourceCount || 0) * 6)));
+    return {
+      id: `line-${index}-${row.fixtureKey || oddsFixtureKey(sample)}`,
+      type: "line_diff",
+      tone: signalToneClass("line_diff", score),
+      title: displayRecordFixture(sample),
+      subtitle: comparisonFamilyLabel(row.baseMarketFamily),
+      value: `${spread} barem`,
+      score,
+      strength: signalStrengthLabel(score),
+      meta: [
+        `${minLine} ↔ ${maxLine}`,
+        `${row.sourceCount || 0} kaynak`,
+        `${escapeHtml(row.severity || "review")}`,
+        signalDataModeText(mode)
+      ],
+      note: "Barem farkı avantaj gibi gösterilmez; aynı market ailesinde çizgi farkı kontrol adayıdır.",
+      raw: row
+    };
+  }
+
+  function buildMovementSignal(record = {}, index = 0, mode = "fallback") {
+    const score = signalSafeScore(36 + Math.min(42, Number(record.absChange || 0) * 4) + Math.min(14, recordConfidenceNumber(record) / 8));
+    return {
+      id: `movement-${index}-${record.id || record.matchId || index}`,
+      type: "movement",
+      tone: signalToneClass("movement", score),
+      title: displayRecordFixture(record),
+      subtitle: recordMarketLabel(record),
+      value: signedPct(record.changePct),
+      score,
+      strength: signalStrengthLabel(score),
+      meta: [
+        `${record.bookmaker || record.source || "Kaynak"}`,
+        `${money(record.opening)} → ${money(record.current)}`,
+        record.direction === "yükseliş" ? "Yükselen oran" : record.direction === "düşüş" ? "Düşen oran" : "Sabit oran",
+        signalDataModeText(mode)
+      ],
+      note: "Oran hareketi sadece snapshot/mock/dry-run içindeki önceki-güncel oran farkıdır; canlı akış değildir.",
+      raw: record
+    };
+  }
+
+  function buildLowConfidenceSignals(comparison = comparisonEngineResults(), mode = "fallback") {
+    const rows = [];
+    const seen = new Set();
+    (comparison.records || []).forEach((record, index) => {
+      const confidence = recordConfidenceNumber(record);
+      const unmatched = !(record.matchedMarketId || record.marketId);
+      const suspicious = unmatched || confidence < 68 || String(record.matchedBy || "").includes("fallback");
+      if (!suspicious) return;
+      const key = `${oddsFixtureKey(record)}|${record.marketId || record.sourceMarketName || index}|${record.source || record.bookmaker || ""}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      const score = signalSafeScore(unmatched ? 28 : 42 + Math.min(20, confidence / 4));
+      rows.push({
+        id: `review-${index}-${record.id || key}`,
+        type: "low_confidence",
+        tone: signalToneClass("low_confidence", score),
+        title: comparisonFixtureLabel(record),
+        subtitle: recordMarketLabel(record),
+        value: unmatched ? "Eşleşmedi" : `${confidence}% güven`,
+        score,
+        strength: signalStrengthLabel(score),
+        meta: [
+          `${record.source || record.bookmaker || "Kaynak"}`,
+          unmatched ? "Market eşleşmedi" : "Düşük/orta güven",
+          record.matchedBy ? `Yöntem: ${displayMappingLabel(record.matchedBy)}` : "Yöntem yok",
+          signalDataModeText(mode)
+        ],
+        note: "Ana fırsat gibi yükseltilmez; geliştirici detayında kontrol edilmesi gereken kayıt.",
+        raw: record
+      });
+    });
+    return rows.sort((a, b) => a.score - b.score).slice(0, 8);
+  }
+
+  function oddsSignalEngineResults(inputList) {
+    const custom = Array.isArray(inputList);
+    if (!custom) ensureSourceCacheKey();
+    const adapter = custom ? null : collectAdapterResults();
+    const mode = adapter?.dataMode || summarizeSourceHealth(getSafeSourceHealth()).dataMode || "fallback";
+    const comparison = comparisonEngineResults(custom ? inputList : undefined);
+    const displayRows = custom ? inputList : records(true);
+    const sourceDiffSignals = (comparison.candidateRows || [])
+      .filter(row => row.bestOddsResult?.sourceCount >= 2 && Number(row.bestOddsResult?.bestDiffPercent || 0) > 0)
+      .map((row, index) => buildSourceDiffSignal(row, index, mode));
+    const lineDiffSignals = (comparison.lineDifferences || [])
+      .map((row, index) => buildLineDiffSignal(row, index, mode));
+    const movementSignals = movementRowsForSignals(displayRows)
+      .map((row, index) => buildMovementSignal(row, index, mode));
+    const lowConfidenceSignals = buildLowConfidenceSignals(comparison, mode);
+    const allSignals = [...sourceDiffSignals, ...lineDiffSignals, ...movementSignals, ...lowConfidenceSignals]
+      .sort((a, b) => b.score - a.score || String(a.type).localeCompare(String(b.type)))
+      .slice(0, 24);
+    const result = {
+      mode,
+      comparison,
+      sourceDiffSignals,
+      lineDiffSignals,
+      movementSignals,
+      lowConfidenceSignals,
+      allSignals,
+      summary: {
+        total: allSignals.length,
+        sourceDiff: sourceDiffSignals.length,
+        lineDiff: lineDiffSignals.length,
+        movement: movementSignals.length,
+        review: lowConfidenceSignals.length,
+        strong: allSignals.filter(signal => signal.score >= 78).length,
+        medium: allSignals.filter(signal => signal.score >= 60 && signal.score < 78).length,
+        low: allSignals.filter(signal => signal.score < 60).length,
+        dataMode: mode,
+        records: comparison.summary?.records || 0,
+        matched: comparison.summary?.matchedMarkets || 0,
+        unmatched: comparison.summary?.unmatched || 0,
+        lastUpdatedAt: comparison.summary?.lastUpdatedAt || null
+      }
+    };
+    return result;
+  }
+
+  function renderSignalBadge(signal = {}) {
+    return `<span class="v581-signal-badge ${escapeAttr(signal.tone || "review")}">${escapeHtml(signalTypeLabel(signal.type))}</span>`;
+  }
+
+  function renderSignalCards(signals = [], limit = 6) {
+    const rows = (signals || []).slice(0, limit);
+    if (!rows.length) return empty("Bu başlık için sinyal adayı yok.");
+    return `<div class="v581-signal-cards">${rows.map(signal => `<article class="v581-signal-card ${escapeAttr(signal.tone || "review")}">
+      <div class="v581-signal-card-top">
+        ${renderSignalBadge(signal)}
+        <strong>${escapeHtml(String(signal.score || 0))}</strong>
+      </div>
+      <div class="v581-signal-main">
+        <b>${escapeHtml(signal.title || "Aday")}</b>
+        <small>${escapeHtml(signal.subtitle || "Market")}</small>
+      </div>
+      <div class="v581-signal-value">${escapeHtml(signal.value || "-")}</div>
+      <div class="v581-signal-meta">${(signal.meta || []).slice(0, 4).map(item => `<span>${escapeHtml(String(item || "-"))}</span>`).join("")}</div>
+      <p>${escapeHtml(signal.note || "Canlı veri değildir.")}</p>
+    </article>`).join("")}</div>`;
+  }
+
+  function renderSignalEngineHeader(engine = oddsSignalEngineResults()) {
+    const s = engine.summary || {};
+    const cells = [
+      ["Sinyal", s.total || 0],
+      ["Kaynak farkı", s.sourceDiff || 0],
+      ["Barem farkı", s.lineDiff || 0],
+      ["Oran hareketi", s.movement || 0],
+      ["Kontrol", s.review || 0],
+      ["Mod", signalDataModeText(s.dataMode)]
+    ];
+    return `<section class="v581-signal-engine" aria-label="Oran Terminali Sinyal Motoru">
+      <div class="v581-signal-head">
+        <div><span>V581-V583 Sinyal Motoru</span><h3>Tek skor sistemi: kaynak farkı / barem farkı / oran hareketi</h3></div>
+        <em>Canlı veri değildir · otomatik oynama kapalı</em>
+      </div>
+      <div class="v581-signal-kpis">${cells.map(([label, value]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b></article>`).join("")}</div>
+      <p>Bu motor sadece ön kontrol üretir. Barem farkı fırsat gibi gösterilmez; düşük güvenli eşleşmeler ana adaylardan ayrılır.</p>
+    </section>`;
+  }
+
+  function renderCompactSignalStrip(engine = oddsSignalEngineResults()) {
+    const top = (engine.allSignals || []).slice(0, 4);
+    if (!top.length) return "";
+    return `<div class="v581-signal-strip" aria-label="Öne çıkan sinyal adayları">
+      ${top.map(signal => `<article class="${escapeAttr(signal.tone || "review")}">
+        ${renderSignalBadge(signal)}
+        <b>${escapeHtml(signal.value || "-")}</b>
+        <span>${escapeHtml(signal.title || "Aday")}</span>
+        <small>${escapeHtml(signal.strength || "Kontrol")}</small>
+      </article>`).join("")}
+    </div>`;
+  }
+
   function getArbs(list = records()) {
     const buckets = {};
     list.forEach(r => {
@@ -3948,37 +4236,39 @@
   }
 
   function renderOpportunityRadarStatus() {
-    const comparison = comparisonEngineResults();
-    const candidate = comparison.candidateRows.find(row => row.bestOddsResult?.sourceCount >= 2) || comparison.candidateRows[0];
-    const best = candidate?.bestOddsResult?.bestRecord || null;
-    const sourceDiff = comparison.candidateRows.find(row => Number(row.bestOddsResult?.bestDiffPercent || 0) > 0 && row.bestOddsResult?.sourceCount >= 2) || candidate;
-    const lineDiff = comparison.lineDifferences[0] || candidate?.lineDifferenceResult || null;
+    const engine = oddsSignalEngineResults();
+    const s = engine.summary || {};
+    const top = engine.allSignals?.[0] || null;
+    const source = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const movement = engine.movementSignals?.[0] || null;
     const cells = [
-      ["Statik Snapshot Adayı", best ? `${comparisonFixtureLabel(best)} · ${money(best.odds)}` : "Aday yok", best ? (best.matchedMarketLabel || best.marketLabel || best.marketId || "Market") : "Market katalogları görünür kalır"],
-      ["Kaynak Farkı Adayı", sourceDiff?.bestOddsResult?.bestRecord ? `${money(sourceDiff.bestOddsResult.bestRecord.odds)} · ${plainPct(sourceDiff.bestOddsResult.bestDiffPercent || 0)}` : "Aday yok", sourceDiff?.bestOddsResult?.sourceCount ? `${sourceDiff.bestOddsResult.sourceCount} kaynak karşılaştırıldı` : "En az iki kaynak beklenir"],
-      ["Barem Farkı Adayı", lineDiff ? `${lineDiff.lineSpread} barem farkı` : "Aday yok", lineDiff ? comparisonFamilyLabel(lineDiff.baseMarketFamily) : "Barem farkı yok"],
-      ["Canlı Veri Değildir", "Dış API kapalı", "Otomatik oynama kapalı · sadece ön kontrol"]
+      ["En güçlü aday", top ? `${top.value} · ${top.score}/100` : "Aday yok", top ? `${signalTypeLabel(top.type)} · ${top.title}` : "Veri akışı bekleniyor"],
+      ["Kaynak farkı", source ? `${source.value} · ${source.score}/100` : "Aday yok", source ? source.title : "Aynı markette en az iki kaynak beklenir"],
+      ["Barem farkı", line ? `${line.value} · ${line.score}/100` : "Aday yok", line ? line.subtitle : "Barem farkı avantaj gibi gösterilmez"],
+      ["Oran hareketi", movement ? `${movement.value} · ${movement.score}/100` : "Aday yok", movement ? movement.title : "Önceki/güncel oran farkı beklenir"],
+      ["Kontrol gereken", s.review || 0, `${s.matched || 0} eşleşen · ${s.unmatched || 0} eşleşmeyen`],
+      ["Canlı veri değildir", signalDataModeText(s.dataMode), "Dış API ve otomatik oynama kapalı"]
     ];
-    return `<section class="v578-radar-status" aria-label="Fırsat Radarı gerçek veri öncesi durum">
+    return `<section class="v581-radar-status" aria-label="Fırsat Radarı sinyal özeti">
       ${cells.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value || "-"))}</b><small>${escapeHtml(String(note || ""))}</small></article>`).join("")}
     </section>`;
   }
 
   function renderOpportunities() {
-    const values = getValueAlerts().slice(0, 5);
-    const lines = getLineGaps().slice(0, 5);
-    const drops = getDropAlerts().slice(0, 5);
-
+    const engine = oddsSignalEngineResults();
     return `
+      ${renderSignalEngineHeader(engine)}
       ${renderOpportunityRadarStatus()}
-      <div class="odds-v528-grid">
-        ${panel("Statik Snapshot Adayı", renderValueList(values), "purple")}
-        ${panel("Kaynak Farkı Adayı", renderSourceDiffList(), "green")}
-        ${panel("Barem Farkı Adayı", renderLineList(lines), "blue")}
-        ${panel("Oran Hareketi Adayı", renderDropList(drops), "red")}
+      ${renderCompactSignalStrip(engine)}
+      <div class="odds-v528-grid v581-opportunity-grid">
+        ${panel("Kaynak Farkı Sinyalleri", renderSignalCards(engine.sourceDiffSignals, 5), "green")}
+        ${panel("Barem Farkı Kontrolü", renderSignalCards(engine.lineDiffSignals, 5), "blue")}
+        ${panel("Oran Hareketi Sinyalleri", renderSignalCards(engine.movementSignals, 5), "red")}
+        ${panel("Düşük Güven / Kontrol", renderSignalCards(engine.lowConfidenceSignals, 5), "purple")}
       </div>
       ${renderOpportunityComparisonDemoCard()}
-      <p class="v568-live-disclaimer">Fırsat Radarı yalnızca statik snapshot adayı / kaynak farkı adayı / barem farkı adayı üretir. Canlı veri değildir.</p>
+      <p class="v568-live-disclaimer">Fırsat Radarı artık tek sinyal motorundan beslenir. Bu alan canlı veri değildir; snapshot/dry-run/mock ön kontrol çıktısıdır.</p>
       ${renderPolymarketDock()}`;
   }
 
@@ -4089,43 +4379,51 @@
   }
 
   function renderComparisonReadableDigest(data) {
-    const candidate = data.candidateRows.find(row => row.bestOddsResult?.sourceCount >= 2) || data.candidateRows[0];
-    const best = candidate?.bestOddsResult?.bestRecord || null;
-    const second = candidate?.bestOddsResult?.secondBestRecord || null;
-    const lineDiff = candidate?.lineDifferenceResult || data.lineDifferences[0] || null;
+    const engine = oddsSignalEngineResults();
+    const source = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const movement = engine.movementSignals?.[0] || null;
+    const review = engine.lowConfidenceSignals?.[0] || null;
     const matchStatus = `${data.summary.matchedMarkets || 0} eşleşen · ${data.summary.unmatched || 0} eşleşmeyen`;
     const cells = [
-      ["En iyi oran adayı", best ? `${money(best.odds)} · ${best.source || "-"}` : "Aday yok", best ? `${comparisonFixtureLabel(best)} · ${best.matchedMarketLabel || best.marketLabel || best.marketId || "Market"}` : "Market kataloğu manuel kontrol için açık kalır"],
-      ["Kaynak farkı", second ? `${plainPct(candidate.bestOddsResult.bestDiffPercent || 0)} fark` : "Yetersiz kaynak", second ? `${best?.source || "-"} ↔ ${second.source || "-"}` : "En az iki kaynak beklenir"],
-      ["Barem farkı", lineDiff ? `${lineDiff.lineSpread} barem` : "Barem farkı yok", lineDiff ? `${comparisonFamilyLabel(lineDiff.baseMarketFamily)} · ${lineDiff.records?.length || 0} kayıt` : "Aynı market ailesinde farklı barem yok"],
+      ["En iyi kaynak farkı", source ? `${source.value} · skor ${source.score}` : "Aday yok", source ? `${source.title} · ${source.subtitle}` : "En az iki kaynak beklenir"],
+      ["Barem farkı", line ? `${line.value} · skor ${line.score}` : "Barem farkı yok", line ? `${line.title} · ${line.subtitle}` : "Aynı market ailesinde farklı çizgi yok"],
+      ["Oran hareketi", movement ? `${movement.value} · skor ${movement.score}` : "Hareket yok", movement ? `${movement.title} · ${movement.subtitle}` : "Önceki/güncel oran farkı yok"],
       ["Eşleşme durumu", matchStatus, `Mod: ${displayModeLabel(data.summary.dataMode || "mock")}`],
+      ["Kontrol", review ? `${review.value} · skor ${review.score}` : "Temiz", review ? review.title : "Düşük güvenli kayıt yok"],
       ["Canlı veri değildir", "Dış API kapalı", "Gerçek canlı oran / otomatik bahis sonucu değildir"]
     ];
-    return `<section class="v578-comparison-digest" aria-label="Oran Karşılaştırma okunur özet">
+    return `<section class="v578-comparison-digest v581-comparison-digest" aria-label="Oran Karşılaştırma okunur özet">
       ${cells.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value || "-"))}</b><small>${escapeHtml(String(note || ""))}</small></article>`).join("")}
     </section>`;
   }
 
   function renderComparisonEnginePanel() {
     const data = comparisonEngineResults();
+    const engine = oddsSignalEngineResults();
     return `<section class="v557-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
         <div>
-          <span>Statik snapshot karşılaştırması</span>
+          <span>Sinyal destekli karşılaştırma</span>
           <h3>Oran Karşılaştırma</h3>
-          <p>Statik snapshot/dry-run kayıtlarıyla en iyi oran adayı, kaynak farkı, barem farkı ve eşleşme durumu okunur şekilde kontrol edilir. Canlı veri değildir.</p>
+          <p>Kaynak farkı, barem farkı, oran hareketi ve eşleşme güveni tek skor sistemiyle okunur. Canlı veri değildir.</p>
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
+      ${renderSignalEngineHeader(engine)}
       ${renderComparisonReadableDigest(data)}
+      ${renderCompactSignalStrip(engine)}
       ${renderDataModeNotice()}
-      ${renderStaticSnapshotStatusPanel()}
       ${renderComparisonSummaryBoxes(data)}
       ${renderReadinessChecklist()}
       ${renderComparisonHealth(data)}
       ${renderComparisonRows(data)}
       ${renderLineDifferencePreview(data)}
       ${renderDryRunComparisonPreview()}
+      <details class="v583-technical-collapse">
+        <summary>Teknik snapshot / adapter detayları</summary>
+        ${renderStaticSnapshotStatusPanel()}
+      </details>
     </section>`;
   }
 
@@ -4368,23 +4666,9 @@
   }
 
   function renderSourceDiffList() {
-    const rows = comparisonEngineResults().candidateRows
-      .filter(row => row.bestOddsResult?.sourceCount >= 2)
-      .slice(0, 5);
+    const rows = oddsSignalEngineResults().sourceDiffSignals;
     if (!rows.length) return empty("Kaynak farkı adayı için en az iki kaynakta aynı market beklenir.");
-    return `<div class="odds-v528-cards">${rows.map(row => {
-      const best = row.bestOddsResult.bestRecord || {};
-      const second = row.bestOddsResult.secondBestRecord || null;
-      return `<article class="odds-v528-card arb">
-        <div><b>${escapeHtml(comparisonFixtureLabel(best))}</b><small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")}</small></div>
-        <div class="odds-v528-big">${plainPct(row.bestOddsResult.bestDiffPercent || 0)}</div>
-        <div class="odds-v528-mini">
-          <span>En iyi: ${escapeHtml(best.source || "-")} ${money(best.odds)}</span>
-          <span>İkinci: ${second ? `${escapeHtml(second.source || "-")} ${money(second.odds)}` : "-"}</span>
-          <span>${row.bestOddsResult.sourceCount || 0} kaynak · ${escapeHtml(row.score?.tag || "Aday")}</span>
-        </div>
-      </article>`;
-    }).join("")}</div>`;
+    return renderSignalCards(rows, 5);
   }
 
 
@@ -4405,34 +4689,17 @@
 
 
   function renderLineList(list) {
-    if (!list.length) return empty("Barem farkı yok.");
-    return `<div class="odds-v528-cards">${list.map(x => `
-      <article class="odds-v528-card linegap">
-        <div><b>${escapeHtml(x.match)}</b><small>${escapeHtml(x.marketLabel)} · ${escapeHtml(x.low.outcome)}</small></div>
-        <div class="odds-v528-big">${x.gap.toFixed(1)} barem farkı</div>
-        <div class="odds-v528-mini">
-          <span>Düşük Barem: ${bookTag(x.low.bookmaker)} ${x.low.line} · ${money(x.low.current)} ${oddDirectionHtml(x.low)}</span>
-          <span>Yüksek Barem: ${bookTag(x.high.bookmaker)} ${x.high.line} · ${money(x.high.current)} ${oddDirectionHtml(x.high)}</span>
-        </div>
-      </article>`).join("")}</div>`;
+    const rows = oddsSignalEngineResults().lineDiffSignals;
+    if (!rows.length) return empty("Barem farkı yok.");
+    return renderSignalCards(rows, 5);
   }
 
   function renderDrops() { return renderDropList(getDropAlerts(), true); }
 
   function renderDropList(list) {
-    if (!list.length) return empty("Oran düşüş eşiğini geçen uyarı yok.");
-    return `<div class="odds-v528-cards">${list.map(r => `
-      <article class="odds-v528-card drop">
-        <div><b>${escapeHtml(r.match)}</b><small>${escapeHtml(r.marketLabel)} · ${escapeHtml(r.outcome)}</small></div>
-        <div class="odds-v528-big">${signedPct(r.changePct)}</div>
-        <div class="odds-v528-mini">
-          <span>${bookTag(r.bookmaker)}</span>
-          <span>İlk Oran: ${money(r.opening)}</span>
-          <span>Güncel Oran: ${money(r.current)} ${oddDirectionHtml(r)}</span>
-        </div>
-        ${historyCompactHtml(r)}
-        ${r.info ? `<p class="v530-info">${escapeHtml(r.info)}</p>` : ""}
-      </article>`).join("")}</div>`;
+    const rows = oddsSignalEngineResults().movementSignals;
+    if (!rows.length) return empty("Oran hareketi eşiğini geçen aday yok.");
+    return renderSignalCards(rows, 8);
   }
 
   function renderSourceHealthCards() {
@@ -4801,13 +5068,16 @@
         <button type="button" data-dry-run-clear>Temizle</button>
       </div>
       <div class="v565-dry-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
-      ${renderDryRunContractPanel()}
-      ${renderDryRunSchemaGuide()}
-      ${renderDryRunSchemaChecks(preview)}
-      ${renderDryRunQualityPanel(preview)}
-      ${renderDryRunMappingTable(preview)}
-      ${preview.isPolymarket ? `<p class="v566-dry-run-info">Polymarket dry-run ayrı işlenir; YES/NO fiyatları decimal odds gibi işlenmez.</p>` : ""}
       ${preview.errors?.length ? `<div class="v566-dry-run-errors"><b>Hata Mesajları</b>${preview.errors.map(error => `<span>${escapeHtml(error)}</span>`).join("")}</div>` : ""}
+      ${preview.isPolymarket ? `<p class="v566-dry-run-info">Polymarket dry-run ayrı işlenir; YES/NO fiyatları decimal odds gibi işlenmez.</p>` : ""}
+      <details class="v583-technical-collapse v583-dry-details">
+        <summary>Geliştirici dry-run detayları</summary>
+        ${renderDryRunContractPanel()}
+        ${renderDryRunSchemaGuide()}
+        ${renderDryRunSchemaChecks(preview)}
+        ${renderDryRunQualityPanel(preview)}
+        ${renderDryRunMappingTable(preview)}
+      </details>
     </section>`;
   }
 
@@ -4884,7 +5154,25 @@
         <em>Dış API kapalı · Otomatik oynama kapalı</em>
       </div>
       <div class="v568-overview-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+      ${renderSourceSignalSummaryPanel()}
     </section>`;
+  }
+
+  function renderSourceSignalSummaryPanel() {
+    const engine = oddsSignalEngineResults();
+    const s = engine.summary || {};
+    const rows = [
+      ["Toplam Sinyal", s.total || 0],
+      ["Güçlü", s.strong || 0],
+      ["Orta", s.medium || 0],
+      ["Kontrol", s.review || 0],
+      ["Kayıt", s.records || 0],
+      ["Son Okuma", formatSourceUpdatedAt(s.lastUpdatedAt)]
+    ];
+    return `<div class="v583-source-signal-summary" aria-label="Kaynaklar sinyal özeti">
+      <div><b>Sinyal Özeti</b><small>Fırsat Radarı / Karşılaştırma / Hareketler aynı motoru kullanır.</small></div>
+      <div>${rows.map(([label, value]) => `<span><em>${escapeHtml(label)}</em><strong>${escapeHtml(String(value))}</strong></span>`).join("")}</div>
+    </div>`;
   }
 
   function renderDeveloperDetailsPanel() {
@@ -4894,6 +5182,7 @@
         <small>Teknik ID, adapter, snapshot ve ham eşleşme detayları</small>
       </summary>
       <div class="v568-dev-details-body">
+        ${renderSignalEngineHeader(oddsSignalEngineResults())}
         ${renderSnapshotReadinessPanel()}
         ${renderStaticSnapshotStatusPanel()}
         ${renderStaticSourcesPanel()}

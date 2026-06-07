@@ -6744,3 +6744,389 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ===============================
+   V581-V583 — Sinyal Motoru + Panel Sadeleştirme
+================================ */
+.v581-signal-engine,
+.v581-radar-status,
+.v583-source-signal-summary,
+.v583-technical-collapse {
+  border: 1px solid rgba(148, 163, 184, .16) !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, rgba(15, 23, 42, .78), rgba(2, 6, 23, .58)) !important;
+  box-shadow: 0 14px 32px rgba(2, 6, 23, .20) !important;
+}
+
+.v581-signal-engine {
+  display: grid !important;
+  gap: 11px !important;
+  margin: 0 0 14px !important;
+  padding: 13px !important;
+  border-color: rgba(56, 189, 248, .22) !important;
+  background:
+    radial-gradient(circle at 0 0, rgba(56, 189, 248, .10), transparent 34%),
+    linear-gradient(135deg, rgba(15, 23, 42, .84), rgba(2, 6, 23, .68)) !important;
+}
+
+.v581-signal-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.v581-signal-head span {
+  display: block !important;
+  color: #67e8f9 !important;
+  font-size: .68rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .55px !important;
+  text-transform: uppercase !important;
+}
+
+.v581-signal-head h3 {
+  margin: 3px 0 0 !important;
+  color: #f8fafc !important;
+  font-size: .96rem !important;
+  font-weight: 950 !important;
+}
+
+.v581-signal-head em {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 28px !important;
+  padding: 0 11px !important;
+  border: 1px solid rgba(250, 204, 21, .28) !important;
+  border-radius: 999px !important;
+  background: rgba(250, 204, 21, .08) !important;
+  color: #fde68a !important;
+  font-size: .68rem !important;
+  font-style: normal !important;
+  font-weight: 950 !important;
+  white-space: nowrap !important;
+}
+
+.v581-signal-kpis {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.v581-signal-kpis article {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 5px !important;
+  padding: 10px 11px !important;
+  border: 1px solid rgba(148, 163, 184, .14) !important;
+  border-radius: 14px !important;
+  background: rgba(15, 23, 42, .54) !important;
+}
+
+.v581-signal-kpis span,
+.v581-radar-status span,
+.v583-source-signal-summary em {
+  color: #94a3b8 !important;
+  font-size: .64rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .35px !important;
+  text-transform: uppercase !important;
+  font-style: normal !important;
+}
+
+.v581-signal-kpis b,
+.v581-radar-status b,
+.v583-source-signal-summary strong {
+  color: #f8fafc !important;
+  font-size: .84rem !important;
+  font-weight: 950 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.v581-signal-engine p,
+.v581-signal-card p,
+.v583-source-signal-summary small {
+  margin: 0 !important;
+  color: #a5b4fc !important;
+  font-size: .72rem !important;
+  font-weight: 800 !important;
+  line-height: 1.45 !important;
+}
+
+.v581-radar-status {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin: 0 0 14px !important;
+  padding: 12px !important;
+  border-color: rgba(129, 140, 248, .20) !important;
+}
+
+.v581-radar-status article {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 5px !important;
+  padding: 10px !important;
+  border: 1px solid rgba(148, 163, 184, .12) !important;
+  border-radius: 14px !important;
+  background: rgba(15, 23, 42, .48) !important;
+}
+
+.v581-radar-status small {
+  color: #cbd5e1 !important;
+  font-size: .68rem !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+}
+
+.v581-signal-strip {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+  margin: 0 0 14px !important;
+}
+
+.v581-signal-strip article,
+.v581-signal-card {
+  min-width: 0 !important;
+  border: 1px solid rgba(148, 163, 184, .14) !important;
+  border-radius: 16px !important;
+  background: rgba(15, 23, 42, .56) !important;
+  box-shadow: 0 12px 28px rgba(2, 6, 23, .18) !important;
+}
+
+.v581-signal-strip article {
+  display: grid !important;
+  gap: 6px !important;
+  padding: 10px 11px !important;
+}
+
+.v581-signal-strip article.source,
+.v581-signal-card.source { border-color: rgba(34, 197, 94, .25) !important; }
+.v581-signal-strip article.line,
+.v581-signal-card.line { border-color: rgba(96, 165, 250, .26) !important; }
+.v581-signal-strip article.movement,
+.v581-signal-card.movement { border-color: rgba(248, 113, 113, .24) !important; }
+.v581-signal-strip article.review,
+.v581-signal-card.review { border-color: rgba(250, 204, 21, .24) !important; }
+
+.v581-signal-strip b {
+  color: #f8fafc !important;
+  font-size: 1.05rem !important;
+  font-weight: 950 !important;
+}
+
+.v581-signal-strip span {
+  color: #cbd5e1 !important;
+  font-size: .72rem !important;
+  font-weight: 900 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.v581-signal-strip small {
+  color: #94a3b8 !important;
+  font-size: .66rem !important;
+  font-weight: 850 !important;
+}
+
+.v581-signal-cards {
+  display: grid !important;
+  gap: 10px !important;
+}
+
+.v581-signal-card {
+  display: grid !important;
+  gap: 8px !important;
+  padding: 12px !important;
+}
+
+.v581-signal-card-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+.v581-signal-card-top strong {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 38px !important;
+  height: 28px !important;
+  border-radius: 999px !important;
+  background: rgba(15, 23, 42, .82) !important;
+  color: #f8fafc !important;
+  font-size: .78rem !important;
+  font-weight: 950 !important;
+}
+
+.v581-signal-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  max-width: 100% !important;
+  min-height: 24px !important;
+  padding: 0 9px !important;
+  border: 1px solid rgba(148, 163, 184, .16) !important;
+  border-radius: 999px !important;
+  color: #e2e8f0 !important;
+  font-size: .64rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .35px !important;
+  text-transform: uppercase !important;
+}
+
+.v581-signal-badge.source { border-color: rgba(34, 197, 94, .28) !important; background: rgba(34, 197, 94, .10) !important; color: #bbf7d0 !important; }
+.v581-signal-badge.line { border-color: rgba(96, 165, 250, .28) !important; background: rgba(96, 165, 250, .10) !important; color: #bfdbfe !important; }
+.v581-signal-badge.movement { border-color: rgba(248, 113, 113, .28) !important; background: rgba(248, 113, 113, .10) !important; color: #fecaca !important; }
+.v581-signal-badge.review { border-color: rgba(250, 204, 21, .28) !important; background: rgba(250, 204, 21, .10) !important; color: #fde68a !important; }
+
+.v581-signal-main {
+  display: grid !important;
+  gap: 3px !important;
+}
+
+.v581-signal-main b {
+  color: #f8fafc !important;
+  font-size: .9rem !important;
+  font-weight: 950 !important;
+  line-height: 1.25 !important;
+}
+
+.v581-signal-main small {
+  color: #cbd5e1 !important;
+  font-size: .72rem !important;
+  font-weight: 850 !important;
+}
+
+.v581-signal-value {
+  color: #f8fafc !important;
+  font-size: 1.18rem !important;
+  font-weight: 950 !important;
+  letter-spacing: -.02em !important;
+}
+
+.v581-signal-meta {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+.v581-signal-meta span {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 22px !important;
+  padding: 0 8px !important;
+  border-radius: 999px !important;
+  background: rgba(148, 163, 184, .09) !important;
+  color: #cbd5e1 !important;
+  font-size: .65rem !important;
+  font-weight: 850 !important;
+}
+
+.v581-opportunity-grid .odds-v528-panel {
+  min-width: 0 !important;
+}
+
+.v581-comparison-digest {
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+}
+
+.v583-technical-collapse {
+  display: grid !important;
+  gap: 10px !important;
+  margin: 12px 0 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.v583-technical-collapse > summary {
+  cursor: pointer !important;
+  list-style: none !important;
+  padding: 12px 14px !important;
+  color: #e2e8f0 !important;
+  font-size: .82rem !important;
+  font-weight: 950 !important;
+}
+
+.v583-technical-collapse > summary::-webkit-details-marker {
+  display: none !important;
+}
+
+.v583-technical-collapse[open] > summary {
+  border-bottom: 1px solid rgba(148, 163, 184, .14) !important;
+}
+
+.v583-technical-collapse > :not(summary) {
+  margin: 12px !important;
+}
+
+.v583-dry-details {
+  margin-top: 12px !important;
+}
+
+.v583-source-signal-summary {
+  display: grid !important;
+  gap: 10px !important;
+  margin-top: 12px !important;
+  padding: 12px !important;
+  border-color: rgba(56, 189, 248, .18) !important;
+}
+
+.v583-source-signal-summary > div:first-child {
+  display: grid !important;
+  gap: 3px !important;
+}
+
+.v583-source-signal-summary > div:first-child b {
+  color: #f8fafc !important;
+  font-size: .9rem !important;
+  font-weight: 950 !important;
+}
+
+.v583-source-signal-summary > div:last-child {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.v583-source-signal-summary span {
+  display: grid !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+  padding: 9px 10px !important;
+  border: 1px solid rgba(148, 163, 184, .12) !important;
+  border-radius: 13px !important;
+  background: rgba(15, 23, 42, .50) !important;
+}
+
+@media (max-width: 1180px) {
+  .v581-signal-kpis,
+  .v581-radar-status,
+  .v581-comparison-digest,
+  .v583-source-signal-summary > div:last-child {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .v581-signal-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .v581-signal-head {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .v581-signal-kpis,
+  .v581-radar-status,
+  .v581-signal-strip,
+  .v581-comparison-digest,
+  .v583-source-signal-summary > div:last-child {
+    grid-template-columns: 1fr !important;
+  }
+}
