@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V579 adapter sözleşmesi ve dry-run laboratuvarı
+// ORAN TERMİNALİ — güvenli JS toparlama / V580 tek veri akışı konsolidasyonu
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -1558,8 +1558,11 @@
     };
   }
 
-  function standardRecordToSnapshotDisplay(record = {}, raw = {}) {
-    const marketIdValue = record.matchedMarketId || record.marketId || raw.market || "unmatched";
+  function standardRecordToDisplayRecord(record = {}, raw = {}, dataMode = "fallback") {
+    const marketIdValue = record.matchedMarketId || record.marketId || raw.market || raw.marketId || "unmatched";
+    const current = Number(record.odds ?? record.current ?? raw.current ?? raw.odds ?? 0);
+    const opening = Number(raw.opening ?? raw.open ?? record.opening ?? current ?? 0);
+    const referenceProb = Number(raw.referenceProb ?? record.referenceProb ?? 0);
     return {
       ...raw,
       ...record,
@@ -1567,18 +1570,23 @@
       matchId: raw.matchId || record.fixtureId || record.fixtureKey,
       match: raw.match || comparisonFixtureLabel(record),
       bookmaker: record.source || raw.bookmaker || raw.source,
+      source: record.source || raw.source || raw.bookmaker,
       market: marketIdValue,
-      rawMarket: raw.market || raw.marketId || "",
-      marketLabel: record.matchedMarketLabel || record.marketLabel || raw.marketLabel || "Eşleşmeyen",
+      rawMarket: raw.market || raw.marketId || record.sourceMarketName || "",
+      marketLabel: record.matchedMarketLabel || record.marketLabel || raw.marketLabel || raw.marketName || record.sourceMarketName || "Eşleşmeyen",
       outcome: raw.outcome || record.selection || "-",
-      current: Number(record.odds || raw.current || 0),
-      opening: Number(raw.opening ?? raw.open ?? record.odds ?? 0),
-      referenceProb: Number(raw.referenceProb || 0),
-      dataMode: "static_snapshot",
+      current: Number.isFinite(current) ? current : 0,
+      opening: Number.isFinite(opening) ? opening : Number.isFinite(current) ? current : 0,
+      referenceProb: Number.isFinite(referenceProb) ? referenceProb : 0,
+      dataMode,
       matchedMarketId: record.matchedMarketId || "",
-      matched: Boolean(record.matchedMarketId),
+      matched: Boolean(record.matchedMarketId || record.matched),
       adapterRecord: record
     };
+  }
+
+  function standardRecordToSnapshotDisplay(record = {}, raw = {}) {
+    return standardRecordToDisplayRecord(record, raw, "static_snapshot");
   }
 
   function buildStaticSnapshotAdapterOutput() {
@@ -1936,7 +1944,9 @@
     if (adapterResultsCache) return adapterResultsCache;
 
     if (hasActiveDryRunPayload()) {
+      const rawRecords = Array.isArray(state.dryRunResult.rawRecords) ? state.dryRunResult.rawRecords : [];
       const records = filterComparisonRecordsBySource(state.dryRunResult.records);
+      const displayRecords = records.map((record, index) => standardRecordToDisplayRecord(record, rawRecords[index] || {}, "dry_run"));
       const sourceHealthRows = getSafeSourceHealth(records).map(row => ({
         ...row,
         status: row.adaptedRecordCount ? "dry_run" : "empty",
@@ -1946,8 +1956,9 @@
       const healthSummary = summarizeSourceHealth(sourceHealthRows);
       adapterResultsCache = {
         adapterRuns: [],
-        rawRecords: records,
+        rawRecords,
         records,
+        displayRecords,
         sourceHealth: sourceHealthRows,
         healthSummary,
         dataMode: "dry_run",
@@ -1980,6 +1991,7 @@
       adapterRuns,
       rawRecords,
       records,
+      displayRecords: records.map((record, index) => standardRecordToDisplayRecord(record, rawRecords[index] || {}, records.length ? (healthSummary.dataMode || "mock") : "fallback")),
       sourceHealth: sourceHealthRows,
       healthSummary,
       dataMode: records.length ? healthSummary.dataMode : "fallback",
@@ -3085,7 +3097,10 @@
   function records(raw = false) {
     if (state.sport === "polymarket") return [];
     const adapter = collectAdapterResults();
-    const list = (adapter.displayRecords || (state.snapshot?.records || [])).filter(r => !isPolymarketRecord(r));
+    const adapterRecords = Array.isArray(adapter.displayRecords) && adapter.displayRecords.length
+      ? adapter.displayRecords
+      : (Array.isArray(adapter.records) ? adapter.records.map((record, index) => standardRecordToDisplayRecord(record, adapter.rawRecords?.[index] || {}, adapter.dataMode || "fallback")) : []);
+    const list = adapterRecords.filter(r => !isPolymarketRecord(r));
     if (raw) return list;
     const search = normalizeText(state.search || "");
     return list.filter(r => {
@@ -3361,8 +3376,8 @@
   }
 
   function staticSnapshotSummary() {
-    const adapter = collectAdapterResults();
-    const display = adapter.displayRecords || [];
+    const staticOutput = buildStaticSnapshotAdapterOutput();
+    const display = staticOutput.displayRecords || [];
     const matched = display.filter(row => row.matchedMarketId).length;
     return {
       file: DATA_SNAPSHOT,
@@ -3371,8 +3386,8 @@
       matched,
       unmatched: Math.max(0, display.length - matched),
       sources: new Set(display.map(row => row.bookmaker || row.source).filter(Boolean)).size,
-      dataMode: adapter.dataMode || "fallback",
-      lastReadAt: state.snapshotMeta?.loadedAt || state.lastLoadedAt || adapter.healthSummary?.lastUpdatedAt || null,
+      dataMode: display.length ? "static_snapshot" : "empty",
+      lastReadAt: state.snapshotMeta?.loadedAt || state.lastLoadedAt || staticOutput.summary?.lastUpdatedAt || null,
       message: state.snapshotMeta?.message || "Snapshot durumu bilinmiyor."
     };
   }
@@ -3399,7 +3414,35 @@
       dropCandidates,
       lineGapCandidates,
       dataMode: adapter.dataMode || "fallback",
-      lastReadAt: state.snapshotMeta?.loadedAt || state.lastLoadedAt || null
+      lastReadAt: adapter.healthSummary?.lastUpdatedAt || state.snapshotMeta?.loadedAt || state.lastLoadedAt || null
+    };
+  }
+
+  function activeDataFlowSummary() {
+    const adapter = collectAdapterResults();
+    const display = Array.isArray(adapter.displayRecords) ? adapter.displayRecords : [];
+    const rows = display.filter(row => !isPolymarketRecord(row));
+    const mode = adapter.dataMode || "fallback";
+    const dryRunCount = hasActiveDryRunPayload() ? Number(state.dryRunResult?.records?.length || 0) : 0;
+    const snapshotCount = Array.isArray(state.snapshot?.records) ? state.snapshot.records.filter(row => !isPolymarketRecord(row)).length : 0;
+    const mockCount = mockOddsRecords().length;
+    const stages = [
+      { id: "dry_run", label: "Dry-run", count: dryRunCount, status: mode === "dry_run" ? "aktif" : dryRunCount ? "hazır" : "beklemede" },
+      { id: "static_snapshot", label: "Statik snapshot", count: snapshotCount, status: mode === "static_snapshot" ? "aktif" : snapshotCount ? "yedek" : "boş" },
+      { id: "mock", label: "Mock/Fallback", count: mockCount, status: mode === "mock" || mode === "fallback" ? "aktif" : "yedek" }
+    ];
+    const matched = rows.filter(row => row.matchedMarketId || row.marketId).length;
+    const sources = new Set(rows.map(row => row.bookmaker || row.source).filter(Boolean)).size;
+    return {
+      mode,
+      rows,
+      stages,
+      records: rows.length,
+      matched,
+      unmatched: Math.max(0, rows.length - matched),
+      sources,
+      priority: adapter.dataModePriority || "aktif dry-run payload → statik snapshot → mock/fallback → empty",
+      lastReadAt: adapter.healthSummary?.lastUpdatedAt || state.snapshotMeta?.loadedAt || state.lastLoadedAt || null
     };
   }
 
@@ -3443,6 +3486,27 @@
       </div>
       <div class="v577-flow-cells">${cells.map(([label, value]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value || "-"))}</b></article>`).join("")}</div>
       <p>${escapeHtml(flow.priority)} · Futbol/Basket bookmaker akışı ve POLYMARKET YES/NO akışı ayrı tutulur.</p>
+    </section>`;
+  }
+
+
+  function renderUnifiedDataFlowPanel() {
+    const flow = activeDataFlowSummary();
+    const facts = [
+      ["Aktif akış", displayModeLabel(flow.mode)],
+      ["Kayıt", flow.records],
+      ["Kaynak", flow.sources],
+      ["Eşleşen", flow.matched],
+      ["Eşleşmeyen", flow.unmatched]
+    ];
+    return `<section class="v580-flow-chain" aria-label="Veri Öncelik Zinciri">
+      <div class="v580-flow-chain-head">
+        <div><span>Veri Öncelik Zinciri</span><h3>Dry-run → Snapshot → Mock tek akış</h3></div>
+        <em>Canlı veri değildir</em>
+      </div>
+      <div class="v580-flow-steps">${flow.stages.map(stage => `<article class="${escapeAttr(stage.status)}"><b>${escapeHtml(stage.label)}</b><span>${escapeHtml(stage.status)}</span><small>${escapeHtml(String(stage.count))} kayıt</small></article>`).join("")}</div>
+      <div class="v580-flow-facts">${facts.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+      <p>${escapeHtml(flow.priority)} · Ana paneller artık aynı normalize edilmiş kayıtları okur.</p>
     </section>`;
   }
 
@@ -3588,6 +3652,7 @@
         </div>
 
         ${renderDataFlowStatusBand()}
+        ${renderUnifiedDataFlowPanel()}
 
         <div class="odds-v528-kpis">
           <div><span>Kaynak Site</span><b>${s.sources}</b></div>
