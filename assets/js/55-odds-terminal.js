@@ -4162,7 +4162,7 @@
         <div>
           <span>Kaynak Ayarları</span>
           <h3>Kaynak Ayarları</h3>
-          <p>Aktif/Pasif kaynak seçimi ileride gerçek veri akışını kontrol edecek. Sürüm V561 hazırlığı yalnızca yardımcı not olarak tutulur.</p>
+          <p>Aktif/Pasif kaynak seçimi ileride gerçek veri akışını kontrol edecek. Bu ayarlar şimdilik yerel hazırlık modunda saklanır.</p>
         </div>
         <em>Gerçek API yok · fetch yok · scraping yok</em>
       </div>
@@ -4311,7 +4311,6 @@
       </div>
       <div class="v562-live-grid">${readiness.map(([label, value, ok]) => `<article class="${ok ? "ready" : "blocked"}"><b>${escapeHtml(label)}</b><span>${escapeHtml(value)}</span></article>`).join("")}</div>
       ${renderInitialLiveSourceSlot()}
-      ${renderDryRunPayloadPanel()}
       ${renderReadinessChecklist()}
     </section>`;
   }
