@@ -4101,24 +4101,31 @@
       const statusClass = sourceRegistryStatusClass(source, health);
       const active = isSourceActiveForUi(source);
       const note = getSourceConfigOverride(source.sourceId)?.notes || source.notes || "";
+      const techRows = [
+        ["Teknik ID", source.sourceId],
+        ["Teknik Ad", source.technicalName || source.sourceId],
+        ["Kaynak Tipi", displaySourceTypeLabel(source.type)],
+        ["Adapter Durumu", getAdapterStatusLabel(getAdapterSlot(source.sourceId).status)],
+        ["Yasal Not", source.legalNote || "Canlı bağlantı öncesi manuel kontrol edilecek."],
+        ["Market Aileleri", (source.supportedMarketFamilies || []).join(" · ") || "-"]
+      ];
       return `<article class="${escapeAttr([source.type === "prediction_market" ? "prediction-market" : "bookmaker-source", active ? "is-active" : "is-passive"].join(" "))}" data-source-config-card="${escapeAttr(source.sourceId)}">
         <div class="v561-source-card-head">
-          <div><b data-source-name-label="${escapeAttr(source.sourceId)}">${escapeHtml(displaySourceName(source))}</b><small>Teknik ID: ${escapeHtml(source.technicalName || source.sourceId)}</small></div>
+          <div><b data-source-name-label="${escapeAttr(source.sourceId)}">${escapeHtml(displaySourceName(source))}</b><small>${escapeHtml((source.sports || []).join(", ") || "Spor bilgisi yok")} · ${escapeHtml(displayModeLabel(source.mode))}</small></div>
           <button type="button" class="v561-source-toggle ${active ? "on" : "off"}" data-source-config-toggle="${escapeAttr(source.sourceId)}" aria-pressed="${active ? "true" : "false"}"><span></span>${active ? "Aktif" : "Pasif"}</button>
         </div>
         <label class="v566-source-field"><span>Kaynak Adı</span><input type="text" data-source-display-name="${escapeAttr(source.sourceId)}" value="${escapeAttr(displaySourceName(source))}" autocomplete="off"></label>
-        <dl>
-          <div><dt>Teknik ID</dt><dd>${escapeHtml(source.sourceId)}</dd></div>
-          <div><dt>Kaynak Tipi</dt><dd>${escapeHtml(displaySourceTypeLabel(source.type))}</dd></div>
-          <div><dt>Aktif/Pasif</dt><dd data-source-active-label="${escapeAttr(source.sourceId)}">${active ? "Aktif" : "Pasif"}</dd></div>
-          <div><dt>Desteklenen Sporlar</dt><dd>${escapeHtml((source.sports || []).join(", "))}</dd></div>
+        <dl class="v568-source-card-main">
+          <div><dt>Durum</dt><dd data-source-active-label="${escapeAttr(source.sourceId)}">${active ? "Aktif" : "Pasif"}</dd></div>
+          <div><dt>Sporlar</dt><dd>${escapeHtml((source.sports || []).join(", "))}</dd></div>
           <div><dt>Mod</dt><dd>${escapeHtml(displayModeLabel(source.mode))}</dd></div>
-          <div><dt>Adapter Durumu</dt><dd><span class="${escapeAttr(statusClass)}">${escapeHtml(getAdapterStatusLabel(getAdapterSlot(source.sourceId).status))}</span></dd></div>
           <div><dt>Öncelik</dt><dd><select data-source-priority="${escapeAttr(source.sourceId)}" aria-label="Öncelik">${sourcePriorityOptions(source.priority)}</select></dd></div>
         </dl>
         <label class="v566-source-field"><span>Not</span><textarea data-source-note="${escapeAttr(source.sourceId)}" rows="3" placeholder="Futbol oranları için kullanılacak">${escapeHtml(note)}</textarea></label>
-        <p><b>Yasal not:</b> ${escapeHtml(source.legalNote || "Canlı bağlantı öncesi manuel kontrol edilecek.")}</p>
-        <small>${escapeHtml((source.supportedMarketFamilies || []).join(" · "))}</small>
+        <details class="v568-card-dev-details">
+          <summary>Teknik Bilgi</summary>
+          <dl>${techRows.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd><span class="${label === "Adapter Durumu" ? escapeAttr(statusClass) : ""}">${escapeHtml(String(value))}</span></dd></div>`).join("")}</dl>
+        </details>
       </article>`;
     }).join("");
   }
@@ -4309,17 +4316,56 @@
     </section>`;
   }
 
-  function renderSources() {
-    return `<section class="v565-source-configuration" aria-label="Kaynak Yapılandırması">
+  function renderSourceOverviewPanel() {
+    const healthRows = sourceRegistryHealthRows();
+    const registrySummary = summarizeSourceRegistry(healthRows);
+    const healthSummary = summarizeSourceHealth(getSafeSourceHealth());
+    const adapter = collectAdapterResults();
+    const rows = [
+      ["Toplam Kaynak", registrySummary.total],
+      ["Aktif Kaynak", registrySummary.enabled],
+      ["Pasif Kaynak", registrySummary.total - registrySummary.enabled],
+      ["Demo Kaynak", registrySummary.byMode.mock || 0],
+      ["Planlanan Kaynak", registrySummary.byMode.planned || 0],
+      ["Polymarket", registrySummary.byType.prediction_market || 0],
+      ["Veri Modu", displayModeLabel(adapter.dataMode || healthSummary.dataMode)],
+      ["Gerçek Bağlantı", LIVE_API_CONNECTION_ENABLED ? "Açık" : "Kapalı"]
+    ];
+    return `<section class="v568-source-overview" aria-label="Kaynak Özeti">
       <div class="v554-mock-preview-head v565-source-config-head">
         <div>
-          <span>Kaynak Yapılandırması</span>
-          <h3>Kaynak Yapılandırması</h3>
-          <p>15 planlanan kaynak ve POLYMARKET Demo tek yerde yönetilir. Futbol/Basketbol market katalogları korunur; oran verisi sadece marketId katmanı olarak bağlanır.</p>
+          <span>Kaynak Özeti</span>
+          <h3>Kaynaklar</h3>
+          <p>Kaynaklar sade görünümde yönetilir. Teknik ID, adapter ve ham eşleşme detayları Geliştirici Detayları içinde saklanır.</p>
         </div>
-        <em>Gerçek API yok · Fetch yok · Scraping yok · Otomatik oynama yok</em>
+        <em>Dış API kapalı · Otomatik oynama kapalı</em>
       </div>
-      ${renderStaticSnapshotStatusPanel()}${renderStaticSourcesPanel()}${renderSourceRegistryPanel()}${renderSourceSettingsPanel()}${renderDryRunPayloadPanel()}${renderSourceHealthCards()}${renderLiveReadinessPanel()}
+      <div class="v568-overview-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderDeveloperDetailsPanel() {
+    return `<details class="v568-developer-details">
+      <summary>
+        <span>Geliştirici Detayları</span>
+        <small>Teknik ID, adapter, snapshot ve ham eşleşme detayları</small>
+      </summary>
+      <div class="v568-dev-details-body">
+        ${renderStaticSnapshotStatusPanel()}
+        ${renderStaticSourcesPanel()}
+        ${renderSourceRegistryPanel()}
+        ${renderSourceHealthCards()}
+      </div>
+    </details>`;
+  }
+
+  function renderSources() {
+    return `<section class="v565-source-configuration" aria-label="Kaynak Yapılandırması">
+      ${renderSourceOverviewPanel()}
+      ${renderSourceSettingsPanel()}
+      ${renderLiveReadinessPanel()}
+      ${renderDryRunPayloadPanel()}
+      ${renderDeveloperDetailsPanel()}
     </section>`;
   }
 
