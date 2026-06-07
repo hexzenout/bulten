@@ -5827,3 +5827,93 @@
     min-height: 26px !important;
     white-space: nowrap !important;
 }
+
+/* V568D — Oran Hareketleri history popup: comparison popup mantığını bozmadan yukarı açılır. */
+.odds-tab-drops .odds-v528-card.drop,
+.odds-tab-drops .odds-v528-cards {
+    overflow: visible !important;
+}
+
+.odds-tab-drops .odds-v528-card.drop {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.odds-tab-drops .odds-v528-card.drop:hover,
+.odds-tab-drops .odds-v528-card.drop:focus-within {
+    z-index: 1200 !important;
+}
+
+.odds-tab-drops .v533-history-compact {
+    justify-self: start !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    min-width: 214px !important;
+    overflow: visible !important;
+    position: relative !important;
+    z-index: 20 !important;
+    transform: none !important;
+}
+
+.odds-tab-drops .v533-history-compact:hover,
+.odds-tab-drops .v533-history-compact:focus,
+.odds-tab-drops .v533-history-compact:focus-within {
+    z-index: 1500 !important;
+    transform: none !important;
+}
+
+.odds-tab-drops .v533-history-compact .v533-history-main,
+.odds-tab-drops .v533-history-compact:hover .v533-history-main,
+.odds-tab-drops .v533-history-compact:focus .v533-history-main,
+.odds-tab-drops .v533-history-compact:focus-within .v533-history-main {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    line-height: 1.05 !important;
+    transform: none !important;
+}
+
+.odds-tab-drops .v533-history-compact .v533-history-main em,
+.odds-tab-drops .v533-history-compact:hover .v533-history-main em,
+.odds-tab-drops .v533-history-compact:focus .v533-history-main em,
+.odds-tab-drops .v533-history-compact:focus-within .v533-history-main em {
+    flex: 0 0 auto !important;
+    font-size: .94rem !important;
+    line-height: 1.05 !important;
+    transform: none !important;
+}
+
+.odds-tab-drops .v533-history-compact .v533-history-main b,
+.odds-tab-drops .v533-history-compact:hover .v533-history-main b,
+.odds-tab-drops .v533-history-compact:focus .v533-history-main b,
+.odds-tab-drops .v533-history-compact:focus-within .v533-history-main b {
+    flex: 0 0 auto !important;
+    font-size: .98rem !important;
+    line-height: 1.05 !important;
+    transform: none !important;
+}
+
+.odds-tab-drops .v533-history-compact .v533-history-main i,
+.odds-tab-drops .v533-history-compact:hover .v533-history-main i,
+.odds-tab-drops .v533-history-compact:focus .v533-history-main i,
+.odds-tab-drops .v533-history-compact:focus-within .v533-history-main i {
+    flex: 0 0 auto !important;
+    font-size: .82rem !important;
+    line-height: 1 !important;
+    transform: none !important;
+}
+
+.odds-tab-drops .v533-history-pop {
+    left: 0 !important;
+    top: auto !important;
+    bottom: calc(100% + 8px) !important;
+    z-index: 1600 !important;
+    min-width: 230px !important;
+    max-width: min(360px, calc(100vw - 44px)) !important;
+    overflow: visible !important;
+}
+
+.odds-tab-drops .v533-history-pop span {
+    min-height: 28px !important;
+    white-space: nowrap !important;
+}
