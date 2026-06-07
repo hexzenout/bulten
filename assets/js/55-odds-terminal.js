@@ -3191,6 +3191,49 @@
     };
   }
 
+  function dataFlowStatusSummary() {
+    const adapter = collectAdapterResults();
+    const readiness = snapshotReadinessSummary();
+    const healthRows = Array.isArray(adapter.sourceHealth) ? adapter.sourceHealth : [];
+    const activeRows = healthRows.filter(row => Number(row.adaptedRecordCount || row.mappedRecordCount || 0) > 0 || ["mock", "static_snapshot", "dry_run"].includes(String(row.status || row.mode || "").toLowerCase()));
+    const activeSource = activeRows.length
+      ? activeRows.slice(0, 3).map(row => displaySourceName(row)).filter(Boolean).join(", ")
+      : adapter.dataMode === "dry_run" ? "Dry-run payload"
+        : adapter.dataMode === "static_snapshot" ? "Statik snapshot"
+          : adapter.dataMode === "fallback" ? "Mock/Fallback"
+            : "Hazırlık modu";
+    return {
+      dataMode: adapter.dataMode || readiness.dataMode || "fallback",
+      externalApi: LIVE_API_CONNECTION_ENABLED ? "Açık" : "Kapalı",
+      autoBetting: AUTO_BETTING_ENABLED ? "Açık" : "Kapalı",
+      activeSource: activeSource || "Hazırlık modu",
+      matched: readiness.matched,
+      unmatched: readiness.unmatched,
+      lastReadAt: readiness.lastReadAt || adapter.healthSummary?.lastUpdatedAt || state.lastLoadedAt || null,
+      priority: adapter.dataModePriority || "dry-run → statik snapshot → mock/fallback"
+    };
+  }
+
+  function renderDataFlowStatusBand() {
+    const flow = dataFlowStatusSummary();
+    const cells = [
+      ["Veri modu", displayModeLabel(flow.dataMode)],
+      ["Dış API", flow.externalApi],
+      ["Otomatik oynama", flow.autoBetting],
+      ["Aktif kaynak", flow.activeSource],
+      ["Eşleşen / eşleşmeyen", `${flow.matched} / ${flow.unmatched}`],
+      ["Son okuma", formatSourceUpdatedAt(flow.lastReadAt)]
+    ];
+    return `<section class="v577-flow-band" aria-label="Veri Akışı Durumu">
+      <div class="v577-flow-title">
+        <span>Veri Akışı Durumu</span>
+        <b>Canlı veri değildir</b>
+      </div>
+      <div class="v577-flow-cells">${cells.map(([label, value]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value || "-"))}</b></article>`).join("")}</div>
+      <p>${escapeHtml(flow.priority)} · Futbol/Basket bookmaker akışı ve POLYMARKET YES/NO akışı ayrı tutulur.</p>
+    </section>`;
+  }
+
   function renderSnapshotReadinessPanel() {
     const s = snapshotReadinessSummary();
     const rows = [
@@ -3332,7 +3375,7 @@
           <button type="button" class="odds-v528-refresh" data-odds-action="refresh"><i class="fa-solid fa-rotate"></i> VERİYİ YENİLE</button>
         </div>
 
-        ${renderDataModeNotice()}
+        ${renderDataFlowStatusBand()}
 
         <div class="odds-v528-kpis">
           <div><span>Kaynak Site</span><b>${s.sources}</b></div>
@@ -3627,21 +3670,38 @@
     </article>`;
   }
 
+  function renderOpportunityRadarStatus() {
+    const comparison = comparisonEngineResults();
+    const candidate = comparison.candidateRows.find(row => row.bestOddsResult?.sourceCount >= 2) || comparison.candidateRows[0];
+    const best = candidate?.bestOddsResult?.bestRecord || null;
+    const sourceDiff = comparison.candidateRows.find(row => Number(row.bestOddsResult?.bestDiffPercent || 0) > 0 && row.bestOddsResult?.sourceCount >= 2) || candidate;
+    const lineDiff = comparison.lineDifferences[0] || candidate?.lineDifferenceResult || null;
+    const cells = [
+      ["Statik Snapshot Adayı", best ? `${comparisonFixtureLabel(best)} · ${money(best.odds)}` : "Aday yok", best ? (best.matchedMarketLabel || best.marketLabel || best.marketId || "Market") : "Market katalogları görünür kalır"],
+      ["Kaynak Farkı Adayı", sourceDiff?.bestOddsResult?.bestRecord ? `${money(sourceDiff.bestOddsResult.bestRecord.odds)} · ${plainPct(sourceDiff.bestOddsResult.bestDiffPercent || 0)}` : "Aday yok", sourceDiff?.bestOddsResult?.sourceCount ? `${sourceDiff.bestOddsResult.sourceCount} kaynak karşılaştırıldı` : "En az iki kaynak beklenir"],
+      ["Barem Farkı Adayı", lineDiff ? `${lineDiff.lineSpread} barem farkı` : "Aday yok", lineDiff ? comparisonFamilyLabel(lineDiff.baseMarketFamily) : "Barem farkı yok"],
+      ["Canlı Veri Değildir", "Dış API kapalı", "Otomatik oynama kapalı · sadece ön kontrol"]
+    ];
+    return `<section class="v577-radar-status" aria-label="Fırsat Radarı gerçek veri öncesi durum">
+      ${cells.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value || "-"))}</b><small>${escapeHtml(String(note || ""))}</small></article>`).join("")}
+    </section>`;
+  }
+
   function renderOpportunities() {
     const values = getValueAlerts().slice(0, 5);
-    const arbs = getArbs().slice(0, 3);
     const lines = getLineGaps().slice(0, 5);
     const drops = getDropAlerts().slice(0, 5);
 
     return `
+      ${renderOpportunityRadarStatus()}
       <div class="odds-v528-grid">
-        ${panel("Değerli Oran Demo Adayları", renderValueList(values), "purple")}
-        ${panel("Arbitraj Demo Adayları", renderArbList(arbs), "green")}
-        ${panel("Barem Farkı Dedektörü", renderLineList(lines), "blue")}
-        ${panel("Oran Düşüş Uyarısı", renderDropList(drops), "red")}
+        ${panel("Statik Snapshot Adayı", renderValueList(values), "purple")}
+        ${panel("Kaynak Farkı Adayı", renderSourceDiffList(), "green")}
+        ${panel("Barem Farkı Adayı", renderLineList(lines), "blue")}
+        ${panel("Oran Hareketi Adayı", renderDropList(drops), "red")}
       </div>
       ${renderOpportunityComparisonDemoCard()}
-      <p class="v568-live-disclaimer">Fırsat Radarı yalnızca statik snapshot adayı / demo karşılaştırma adayı üretir. Canlı veri değildir.</p>
+      <p class="v568-live-disclaimer">Fırsat Radarı yalnızca statik snapshot adayı / kaynak farkı adayı / barem farkı adayı üretir. Canlı veri değildir.</p>
       ${renderPolymarketDock()}`;
   }
 
@@ -3751,17 +3811,36 @@
     </div>`;
   }
 
+  function renderComparisonReadableDigest(data) {
+    const candidate = data.candidateRows.find(row => row.bestOddsResult?.sourceCount >= 2) || data.candidateRows[0];
+    const best = candidate?.bestOddsResult?.bestRecord || null;
+    const second = candidate?.bestOddsResult?.secondBestRecord || null;
+    const lineDiff = candidate?.lineDifferenceResult || data.lineDifferences[0] || null;
+    const matchStatus = `${data.summary.matchedMarkets || 0} eşleşen · ${data.summary.unmatched || 0} eşleşmeyen`;
+    const cells = [
+      ["En iyi oran adayı", best ? `${money(best.odds)} · ${best.source || "-"}` : "Aday yok", best ? `${comparisonFixtureLabel(best)} · ${best.matchedMarketLabel || best.marketLabel || best.marketId || "Market"}` : "Market kataloğu manuel kontrol için açık kalır"],
+      ["Kaynak farkı", second ? `${plainPct(candidate.bestOddsResult.bestDiffPercent || 0)} fark` : "Yetersiz kaynak", second ? `${best?.source || "-"} ↔ ${second.source || "-"}` : "En az iki kaynak beklenir"],
+      ["Barem farkı", lineDiff ? `${lineDiff.lineSpread} barem` : "Barem farkı yok", lineDiff ? `${comparisonFamilyLabel(lineDiff.baseMarketFamily)} · ${lineDiff.records?.length || 0} kayıt` : "Aynı market ailesinde farklı barem yok"],
+      ["Eşleşme durumu", matchStatus, `Mod: ${displayModeLabel(data.summary.dataMode || "mock")}`],
+      ["Canlı veri değildir", "Dış API kapalı", "Gerçek canlı oran / otomatik bahis sonucu değildir"]
+    ];
+    return `<section class="v577-comparison-digest" aria-label="Oran Karşılaştırma okunur özet">
+      ${cells.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value || "-"))}</b><small>${escapeHtml(String(note || ""))}</small></article>`).join("")}
+    </section>`;
+  }
+
   function renderComparisonEnginePanel() {
     const data = comparisonEngineResults();
     return `<section class="v557-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
         <div>
           <span>Statik snapshot karşılaştırması</span>
-          <h3>Kaynaklar Arası Karşılaştırma Motoru</h3>
-          <p>Statik snapshot/dry-run kayıtlarıyla en iyi oran, barem farkı ve kaynak eşleşmesi test edilir. Canlı veri değildir; gerçek canlı veri gibi sunulmaz.</p>
+          <h3>Oran Karşılaştırma</h3>
+          <p>Statik snapshot/dry-run kayıtlarıyla en iyi oran adayı, kaynak farkı, barem farkı ve eşleşme durumu okunur şekilde kontrol edilir. Canlı veri değildir.</p>
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
+      ${renderComparisonReadableDigest(data)}
       ${renderDataModeNotice()}
       ${renderStaticSnapshotStatusPanel()}
       ${renderComparisonSummaryBoxes(data)}
@@ -4009,6 +4088,26 @@
           <span>2: ${bookTag(a.best["2"].bookmaker)} ${money(a.best["2"].current)} ${oddDirectionHtml(a.best["2"])}</span>
         </div>
       </article>`).join("")}</div>`;
+  }
+
+  function renderSourceDiffList() {
+    const rows = comparisonEngineResults().candidateRows
+      .filter(row => row.bestOddsResult?.sourceCount >= 2)
+      .slice(0, 5);
+    if (!rows.length) return empty("Kaynak farkı adayı için en az iki kaynakta aynı market beklenir.");
+    return `<div class="odds-v528-cards">${rows.map(row => {
+      const best = row.bestOddsResult.bestRecord || {};
+      const second = row.bestOddsResult.secondBestRecord || null;
+      return `<article class="odds-v528-card arb">
+        <div><b>${escapeHtml(comparisonFixtureLabel(best))}</b><small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")}</small></div>
+        <div class="odds-v528-big">${plainPct(row.bestOddsResult.bestDiffPercent || 0)}</div>
+        <div class="odds-v528-mini">
+          <span>En iyi: ${escapeHtml(best.source || "-")} ${money(best.odds)}</span>
+          <span>İkinci: ${second ? `${escapeHtml(second.source || "-")} ${money(second.odds)}` : "-"}</span>
+          <span>${row.bestOddsResult.sourceCount || 0} kaynak · ${escapeHtml(row.score?.tag || "Aday")}</span>
+        </div>
+      </article>`;
+    }).join("")}</div>`;
   }
 
 
@@ -4374,12 +4473,13 @@
     const registrySummary = summarizeSourceRegistry(healthRows);
     const healthSummary = summarizeSourceHealth(getSafeSourceHealth());
     const adapter = collectAdapterResults();
+    const ready = snapshotReadinessSummary();
     const rows = [
       ["Toplam Kaynak", registrySummary.total],
       ["Aktif Kaynak", registrySummary.enabled],
       ["Pasif Kaynak", registrySummary.total - registrySummary.enabled],
-      ["Demo Kaynak", registrySummary.byMode.mock || 0],
-      ["Planlanan Kaynak", registrySummary.byMode.planned || 0],
+      ["Snapshot Kayıt", ready.records],
+      ["Eşleşen / Eşleşmeyen", `${ready.matched} / ${ready.unmatched}`],
       ["Polymarket", registrySummary.byType.prediction_market || 0],
       ["Veri Modu", displayModeLabel(adapter.dataMode || healthSummary.dataMode)],
       ["Gerçek Bağlantı", LIVE_API_CONNECTION_ENABLED ? "Açık" : "Kapalı"]
@@ -4388,8 +4488,8 @@
       <div class="v554-mock-preview-head v565-source-config-head">
         <div>
           <span>Kaynak Özeti</span>
-          <h3>Kaynaklar</h3>
-          <p>Kaynaklar sade görünümde yönetilir. Teknik ID, adapter ve ham eşleşme detayları Geliştirici Detayları içinde saklanır.</p>
+          <h3>Kaynak Özeti</h3>
+          <p>Kaynaklar sade görünümde yönetilir. Snapshot hazırlık özeti ana metriklerde gösterilir; teknik ID, adapter ve ham eşleşme detayları Geliştirici Detayları içinde saklanır.</p>
         </div>
         <em>Dış API kapalı · Otomatik oynama kapalı</em>
       </div>
@@ -4404,6 +4504,7 @@
         <small>Teknik ID, adapter, snapshot ve ham eşleşme detayları</small>
       </summary>
       <div class="v568-dev-details-body">
+        ${renderSnapshotReadinessPanel()}
         ${renderStaticSnapshotStatusPanel()}
         ${renderStaticSourcesPanel()}
         ${renderSourceRegistryPanel()}
@@ -4415,7 +4516,6 @@
   function renderSources() {
     return `<section class="v565-source-configuration" aria-label="Kaynak Yapılandırması">
       ${renderSourceOverviewPanel()}
-      ${renderSnapshotReadinessPanel()}
       ${renderSourceSettingsPanel()}
       ${renderLiveReadinessPanel()}
       ${renderDryRunPayloadPanel()}
@@ -4834,6 +4934,7 @@
     buildStaticSnapshotAdapterOutput,
     staticSnapshotSummary,
     snapshotReadinessSummary,
+    dataFlowStatusSummary,
     normalizeSourceMarketName,
     findSourceMarketMapping,
     inferMarketIdFromCatalogAliases,
@@ -4904,6 +5005,7 @@
   window.__oddsTerminalV558 = window.__oddsTerminalV554;
   window.__oddsTerminalV559 = window.__oddsTerminalV554;
   window.__oddsTerminalV565 = window.__oddsTerminalV554;
+  window.__oddsTerminalV577 = window.__oddsTerminalV554;
 
   window.omega_RenderOddsTerminal = async function () {
     readLocalState();

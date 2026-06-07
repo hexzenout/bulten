@@ -86,6 +86,9 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - Polymarket tarafında spor, kripto, makro ve haber gibi farklı market tipleri desteklenecek şekilde demo veri yapısı hazırlandı.
 - Oran Terminali ana fırsatlar ekranının altında POLYMARKET için ayrı kısa özet/dock alanı gösterilir.
 - Oran Terminali ana fırsatlar ekranının altında POLYMARKET için ayrı kısa özet/dock alanı korunur.
+- V577 ile Oran Terminali üstünde Veri Akışı Durumu bandı gösterilir: veri modu, dış API, otomatik oynama, aktif kaynak, eşleşen/eşleşmeyen kayıt ve son okuma.
+- V577 ile Fırsat Radarı ve Oran Karşılaştırma statik snapshot/dry-run adaylarını canlı veri gibi göstermeden okunur özet kartlarıyla sunar.
+- V577 ile Kaynaklar sekmesi sade ana akışa çekildi; V574 statik snapshot hazırlık özeti Geliştirici Detayları içinde korundu.
 - Bahis Türü / Market dropdown alanı sadece Marketler sekmesi aktifken görünür; POLYMARKET seçiliyken klasik futbol/basket market kontrolü gizlenir.
 - Polymarket panelinde spor, kripto, ekonomi, haber, kısa vade, yüksek likidite ve fırsat adayı filtreleri gösterilir.
 - Sıradaki aşama gerçek Polymarket veri çekme motorudur.
@@ -131,8 +134,8 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - API kota tüketimi dikkatli yönetilecek.
 
 ## Son Aktif Hedef
-POLYMARKET alanı Oran Terminali altında ayrı sekme/panel olarak eklendi.
-Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu tasarlamak ve futbol/basket bahis türlerini canlı veriyle genişletmektir.
+V577 ile Oran Terminali gerçek veri öncesi ana akışı konsolide edildi.
+Sıradaki hedef, dry-run payload şemasını daha kullanışlı hale getirmek ve ardından gerçek oran / Polymarket veri motoru tasarımına geçmektir.
 
 ## Açık Riskler
 - Uzun ChatGPT sohbetinde lag oluşuyor.
@@ -142,6 +145,9 @@ Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu
 - sw.js gereksiz yere değişmemeli.
 
 ## Son Bilinen Paket Notu
+- V577: Oran Terminali üstüne Veri Akışı Durumu bandı eklendi; Fırsat Radarı ve Oran Karşılaştırma okunur özetlerle konsolide edildi; Kaynaklar sadeleştirildi; sw.js değiştirilmedi, index.html sadece cache-bust v577 için değişti.
+- V576: Oran Karşılaştırma / Oran Hareketleri popup stabilitesi ve cache-bust çözümü korundu.
+- V574: Statik snapshot hazırlık özeti korundu; V577 ile Geliştirici Detayları içine taşındı.
 - V545: Oran Terminali V544 sonrası market listesi/kategori/POLYMARKET davranışı düzeltildi; STORE_KEY v545_odds_terminal_state oldu; sw.js ve index.html değiştirilmedi.
 - V544: Oran Terminali ana kategori/dropdown UX hataları düzeltildi; futbol/basket market listeleri temizlendi; POLYMARKET #odds içinde marka butonu oldu.
 - V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
@@ -149,4 +155,4 @@ Sıradaki hedef, bu paneli gerçek Polymarket verisiyle besleyecek veri motorunu
 - Polymarket kayıtları normal oran terminali tablolarından ayrıldı.
 - Demo odds snapshot içine 5 Polymarket örnek marketi eklendi.
 - sw.js değiştirilmedi.
-- index.html değiştirilmedi.
+- V577 paketinde index.html yalnızca Oran Terminali JS/CSS cache-bust değeri için değiştirildi.

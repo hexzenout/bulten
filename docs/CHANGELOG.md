@@ -24,6 +24,51 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 #### Sıradaki Hedef
 - ...
 
+
+### V577 - 2026-06-08
+#### Değişenler
+- Oran Terminali üstüne Veri Akışı Durumu bandı eklendi: veri modu, dış API, otomatik oynama, aktif kaynak, eşleşen/eşleşmeyen kayıt ve son okuma tek satırda gösterilir.
+- Fırsat Radarı statik snapshot adayı, kaynak farkı adayı, barem farkı adayı ve canlı veri değildir ayrımıyla daha net hale getirildi.
+- Oran Karşılaştırma paneline okunur özet eklendi: en iyi oran adayı, kaynak farkı, barem farkı ve eşleşme durumu ayrı kartlarda görünür.
+- Kaynaklar sekmesi sade ana akışa çekildi: Kaynak Özeti, Kaynak Ayarları, Canlı Geçiş Hazırlığı, Dry-run Veri Kontrolü ve Geliştirici Detayları.
+- V574 statik snapshot hazırlık özeti korundu; Geliştirici Detayları içine taşındı.
+- index.html içindeki Oran Terminali JS/CSS cache-bust değeri v577 yapıldı.
+
+#### Düzeltilenler
+- POLYMARKET YES/NO prediction market mantığı bookmaker oran karşılaştırma akışından ayrı tutuldu.
+- Gerçek API, scraping ve otomatik oynama kapalı bilgisi ana akışta daha görünür hale getirildi.
+- Kaynaklar sekmesindeki teknik kalabalık varsayılan görünümden azaltıldı.
+- Dropdown popup / Oran Hareketleri hover stabilitesine dokunulmadı; V576 overlay düzeltmesi korundu.
+
+#### Değişen Dosyalar
+- index.html
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- assets/data/odds-sources.json
+- assets/data/odds-snapshot.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+- .github/workflows/update-radar.yml
+- .github/workflows/update-live-scores.yml
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- assets/data/odds-sources.json JSON parse testi geçti.
+- assets/data/odds-snapshot.json JSON parse testi geçti.
+- sw.js değiştirilmedi.
+
+#### Sıradaki Hedef
+- Gerçek veri öncesi dry-run payload şeması ve örnek kayıt doğrulama alanını daha kullanışlı hale getirmek.
+
 ### V545 - 2026-06-05
 #### Değişenler
 - Oran Terminali ana kategori satırı temiz sırayla TÜMÜ | FUTBOL | BASKETBOL | POLYMARKET oldu.

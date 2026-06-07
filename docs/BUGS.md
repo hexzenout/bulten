@@ -13,7 +13,7 @@
 - sw.js dosyasının gereksiz değiştirilme riski var.
 - CSS/JS dosyalarının şişme riski var.
 - POLYMARKET gerçek veri motoru henüz bağlı değil; panel şimdilik demo snapshot kayıtlarıyla çalışıyor.
-- V545 sonrası kontrol: dropdown açıkken kategori tıklaması ilk tıklamada kategori değiştiriyor; POLYMARKET tek tıklamada paneli açıyor; Bahis Türü / Market sadece Marketler sekmesinde görünüyor.
+- V577 sonrası kontrol: Veri Akışı Durumu bandı görünür; Oran Karşılaştırma okunur özet kartlarını gösterir; Kaynaklar sekmesi sade akışla açılır; POLYMARKET normal bookmaker akışına karışmaz.
 
 ## Her Güncellemede Test Edilecekler
 - Oran Terminali eski hali çalışıyor mu?
@@ -34,3 +34,4 @@
 - V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
 - V544: Oran Terminali kategori/dropdown UX düzeltildi; ütopik futbol marketleri gizlendi; basket market adları temizlendi; Garantili Kazanç dili Arbitraj Adayları olarak değiştirildi.
 - V545: V544 sonrası bozulan market listesi/kategori görünümü/POLYMARKET tek tıklama davranışı temiz branch düzeltmesiyle toparlandı.
+- V577: Oran Terminali gerçek veri öncesi ana akış konsolidasyonu yapıldı; Veri Akışı Durumu bandı, okunur Oran Karşılaştırma özeti ve sade Kaynaklar görünümü eklendi.

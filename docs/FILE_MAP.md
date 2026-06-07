@@ -75,8 +75,8 @@
 - Route sızıntısı oluşturulmayacak.
 
 ## Son Güncelleme
+- V577: Oran Terminali gerçek veri öncesi ana akış konsolide edildi; Veri Akışı Durumu bandı, okunur Oran Karşılaştırma özeti ve sade Kaynaklar akışı eklendi.
+- V576: Oran Karşılaştırma / Oran Hareketleri hover popup stabilitesi ve cache-bust akışı korundu.
+- V574: Statik snapshot hazırlık özeti korundu; V577 ile Geliştirici Detayları içine taşındı.
 - V545: Oran Terminali kategori sırası, Marketler sekmesine özel market dropdown, geniş futbol/basket market listeleri ve POLYMARKET tek tıklama davranışı düzeltildi.
-- V544: Oran Terminali ana kategori/dropdown UX düzeltildi; POLYMARKET marka butonu ve temiz market listeleri eklendi.
-- V542: Oran Terminali ana fırsatlar ekranının altına izole POLYMARKET kısa özet/dock alanı eklendi.
-- V541: Oran Terminali altında POLYMARKET paneli eklendi.
-- Bu güncellemede sw.js ve index.html değiştirilmedi.
+- Bu güncellemede sw.js değiştirilmedi; index.html sadece v577 cache-bust için değişti.
