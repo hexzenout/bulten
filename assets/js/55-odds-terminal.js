@@ -1500,15 +1500,57 @@
     return { homeTeam: parts[0] || raw || "Ev Sahibi", awayTeam: parts[1] || "Deplasman" };
   }
 
+  function staticBookmakerSites() {
+    const sites = Array.isArray(state.sources?.sites) ? state.sources.sites : [];
+    return sites.filter(site => {
+      const id = String(site?.id || "").toLowerCase();
+      const type = String(site?.type || "bookmaker").toLowerCase();
+      return id && id !== "polymarket" && type !== "prediction_market";
+    }).slice(0, 15);
+  }
+
+  function staticSourceSlotIdForSiteId(siteId) {
+    const key = String(siteId || "").trim();
+    if (!key) return "";
+    if (key === "polymarket" || key === "polymarket_mock") return "polymarket_mock";
+    const index = staticBookmakerSites().findIndex(site => String(site.id || "") === key);
+    if (index < 0) return key;
+    return `source_book_${String(index + 1).padStart(2, "0")}`;
+  }
+
+  function staticSourceSiteForSlot(sourceId) {
+    const slot = String(sourceId || "").trim();
+    const match = slot.match(/^source_book_(\d{2})$/);
+    if (!match) return null;
+    const index = Number(match[1]) - 1;
+    return staticBookmakerSites()[index] || null;
+  }
+
+  function staticSourceBridgeRows() {
+    return staticBookmakerSites().map((site, index) => ({
+      slotId: `source_book_${String(index + 1).padStart(2, "0")}`,
+      siteId: String(site.id || ""),
+      name: site.name || site.id || `Kaynak ${index + 1}`,
+      type: site.type || "bookmaker",
+      group: site.group || "independent",
+      enabled: site.enabled !== false
+    }));
+  }
+
   function staticSourceMeta(sourceId) {
     const sourceKey = String(sourceId || "").trim();
-    const site = (state.sources?.sites || []).find(row => String(row.id || "") === sourceKey) || null;
+    const directSite = (state.sources?.sites || []).find(row => String(row.id || "") === sourceKey) || null;
+    const slotSite = staticSourceSiteForSlot(sourceKey);
+    const site = directSite || slotSite;
+    const slotId = directSite ? staticSourceSlotIdForSiteId(sourceKey) : sourceKey;
     return {
-      sourceId: sourceKey || "static_snapshot_source",
+      sourceId: slotId || "static_snapshot_source",
       sourceName: site?.name || sourceKey || "Statik Snapshot Kaynağı",
+      rawSourceId: site?.id || (directSite ? sourceKey : ""),
       type: site?.type || "bookmaker",
       group: site?.group || "static_snapshot",
-      reference: Boolean(site?.reference)
+      reference: Boolean(site?.reference || site?.group === "reference"),
+      url: site?.url || ""
     };
   }
 
@@ -2370,9 +2412,28 @@
     };
   }
 
+  function enrichRegistrySourceWithStaticSite(source = {}) {
+    const site = staticSourceSiteForSlot(source.sourceId);
+    if (!site) return { ...source };
+    return {
+      ...source,
+      displayName: site.name || source.displayName || source.sourceName,
+      sourceName: site.name || source.sourceName || source.displayName,
+      rawSourceId: site.id || source.rawSourceId || "",
+      staticSourceId: site.id || "",
+      sourceGroup: site.group || source.sourceGroup || "",
+      sourceUrl: site.url || source.sourceUrl || "",
+      type: site.type || source.type || "bookmaker",
+      enabled: source.enabled !== false && site.enabled !== false,
+      notes: source.notes && !/^Güvenli planlanan kaynak/i.test(source.notes)
+        ? source.notes
+        : `Statik kaynak listesinde ${site.name || site.id}; canlı bağlantı kapalı.`
+    };
+  }
+
   function effectiveSourceRegistry() {
     ensureSourceCacheKey();
-    if (!effectiveSourceRegistryCache) effectiveSourceRegistryCache = SOURCE_REGISTRY.map(applySourceConfig);
+    if (!effectiveSourceRegistryCache) effectiveSourceRegistryCache = SOURCE_REGISTRY.map(enrichRegistrySourceWithStaticSite).map(applySourceConfig);
     return effectiveSourceRegistryCache;
   }
 
@@ -2385,7 +2446,9 @@
   }
 
   function canonicalSourceId(sourceId) {
-    return MOCK_SOURCE_SLOT_MAP[String(sourceId || "")] || String(sourceId || "");
+    const key = String(sourceId || "").trim();
+    if (!key) return "";
+    return MOCK_SOURCE_SLOT_MAP[key] || staticSourceSlotIdForSiteId(key) || key;
   }
 
   function isSourceEnabledForComparison(sourceId) {
@@ -3216,7 +3279,17 @@
       </div>
       <div class="v568-static-list"><b>Gruplar</b><span>${escapeHtml(groupNames.join(", ") || "Yok")}</span></div>
       <div class="v568-static-list"><b>Kaynaklar</b><span>${escapeHtml(sourceNames.join(", ") || "Yok")}</span></div>
+      ${renderStaticSourceBridgePanel()}
     </section>`;
+  }
+
+  function renderStaticSourceBridgePanel() {
+    const rows = staticSourceBridgeRows();
+    if (!rows.length) return `<div class="v570-source-bridge-empty">Statik kaynak eşleşmesi için odds-sources.json bekleniyor.</div>`;
+    return `<div class="v570-source-bridge" aria-label="Statik Kaynak Eşleşmesi">
+      <div class="v570-source-bridge-head"><b>Statik Kaynak Eşleşmesi</b><span>odds-sources.json kaynakları internal slotlara bağlanır; canlı bağlantı kapalıdır.</span></div>
+      <div class="v570-source-bridge-list">${rows.map(row => `<span><b>${escapeHtml(row.name)}</b><em>${escapeHtml(row.slotId)} · ${escapeHtml(displaySourceTypeLabel(row.type))}</em></span>`).join("")}</div>
+    </div>`;
   }
 
 
@@ -4104,6 +4177,7 @@
       const techRows = [
         ["Teknik ID", source.sourceId],
         ["Teknik Ad", source.technicalName || source.sourceId],
+        ["Statik Kaynak ID", source.rawSourceId || source.staticSourceId || "-"],
         ["Kaynak Tipi", displaySourceTypeLabel(source.type)],
         ["Adapter Durumu", getAdapterStatusLabel(getAdapterSlot(source.sourceId).status)],
         ["Yasal Not", source.legalNote || "Canlı bağlantı öncesi manuel kontrol edilecek."],
@@ -4326,6 +4400,7 @@
       ["Pasif Kaynak", registrySummary.total - registrySummary.enabled],
       ["Demo Kaynak", registrySummary.byMode.mock || 0],
       ["Planlanan Kaynak", registrySummary.byMode.planned || 0],
+      ["Statik Kaynak", staticSourceBridgeRows().length],
       ["Polymarket", registrySummary.byType.prediction_market || 0],
       ["Veri Modu", displayModeLabel(adapter.dataMode || healthSummary.dataMode)],
       ["Gerçek Bağlantı", LIVE_API_CONNECTION_ENABLED ? "Açık" : "Kapalı"]
@@ -4371,9 +4446,10 @@
   function empty(text) { return `<div class="odds-v528-empty">${escapeHtml(text)}</div>`; }
 
   function bookTag(id) {
-    const s = sitesMap()[id];
-    const ref = s?.reference ? " ref" : "";
-    return `<span class="odds-v528-book${ref}">${escapeHtml(s?.name || id)}</span>`;
+    const s = sitesMap()[id] || sitesMap()[staticSourceMeta(id).rawSourceId];
+    const meta = staticSourceMeta(id);
+    const ref = s?.reference || meta.reference ? " ref" : "";
+    return `<span class="odds-v528-book${ref}">${escapeHtml(s?.name || meta.sourceName || id)}</span>`;
   }
 
 
