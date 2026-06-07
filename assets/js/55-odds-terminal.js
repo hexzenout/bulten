@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V590-V592 son temizlik ve kullanıcılaştırma
+// ORAN TERMİNALİ — güvenli JS toparlama / V593-V596 adapter son konsolidasyon
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -74,6 +74,9 @@
   const SOURCE_GATE_STALE_HOURS = 48;
   const SOURCE_GATE_MIN_SCORE = 62;
   const SOURCE_GATE_STRONG_SCORE = 78;
+  const ADAPTER_OUTPUT_READY_SCORE = 76;
+  const MAIN_PANEL_MIN_CONFIDENCE = 62;
+  const ADAPTER_RECORD_STALE_HOURS = 96;
 
 
 
@@ -3591,11 +3594,12 @@
     const comparison = comparisonEngineResults(custom ? inputList : undefined);
     const displayRows = custom ? inputList : records(true);
     const sourceDiffSignals = (comparison.candidateRows || [])
-      .filter(row => row.bestOddsResult?.sourceCount >= 2 && Number(row.bestOddsResult?.bestDiffPercent || 0) > 0)
+      .filter(row => row.bestOddsResult?.sourceCount >= 2 && Number(row.bestOddsResult?.bestDiffPercent || 0) > 0 && isMainPanelSafeOddsRecord(row.bestOddsResult.bestRecord || {}))
       .map((row, index) => buildSourceDiffSignal(row, index, mode));
     const lineDiffSignals = (comparison.lineDifferences || [])
+      .filter(row => (row.records || []).some(isMainPanelSafeOddsRecord))
       .map((row, index) => buildLineDiffSignal(row, index, mode));
-    const movementSignals = movementRowsForSignals(displayRows)
+    const movementSignals = movementRowsForSignals(displayRows.filter(isMainPanelSafeOddsRecord))
       .map((row, index) => buildMovementSignal(row, index, mode));
     const lowConfidenceSignals = buildLowConfidenceSignals(comparison, mode);
     const allSignals = [...sourceDiffSignals, ...lineDiffSignals, ...movementSignals, ...lowConfidenceSignals]
@@ -3871,6 +3875,7 @@
         ${renderV590DecisionCard("Hareket izle", movement, "Oran hareketi yok")}
         ${renderV590DecisionCard("Kontrol gereken", review, "Düşük güvenli kayıt yok")}
       </div>
+      ${renderV593MainPanelFilterPanel()}
     </section>`;
   }
 
@@ -3898,6 +3903,7 @@
         ${renderV590DecisionCard("Yanıltıcı barem", line, "Barem kontrolü temiz")}
         ${renderV590DecisionCard("Kontrol gereken", review, "Düşük güvenli kayıt yok")}
       </div>
+      ${renderV593MainPanelFilterPanel()}
     </section>`;
   }
 
@@ -3939,6 +3945,7 @@
         <em>${escapeHtml(label)}</em>
       </div>
       <div class="v590-guide-grid">${cards.map(([labelText, value, note]) => `<article><span>${escapeHtml(labelText)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+      ${renderV593AdapterContractPanel()}
     </section>`;
   }
 
@@ -3966,6 +3973,209 @@
         <em>Bookmaker oranlarıyla karışmaz</em>
       </div>
       <div class="v590-poly-kpi-row">${rows.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+
+  // -------------------------------
+  // V593-V596 Adapter Output Contract / Final Gate Helpers
+  // -------------------------------
+  function recordTimestamp(record = {}) {
+    return safeIso(record.updatedAt || record.lastUpdatedAt || record.adapterUpdatedAt || record.generatedAt || record.startsAt || record.kickoff || "");
+  }
+
+  function isRecordStaleForAdapter(record = {}, maxAgeHours = ADAPTER_RECORD_STALE_HOURS) {
+    const iso = recordTimestamp(record);
+    if (!iso) return false;
+    return Math.max(0, Date.now() - Date.parse(iso)) / 36e5 > Number(maxAgeHours || ADAPTER_RECORD_STALE_HOURS);
+  }
+
+  function adapterRecordConfidence(record = {}) {
+    const n = recordConfidenceNumber(record);
+    return n || (record.matchedMarketId || record.marketId ? 72 : 0);
+  }
+
+  function adapterRecordHasFixture(record = {}) {
+    const key = oddsFixtureKey(record);
+    return Boolean(key && key !== "fixture-unknown" && !/unknown/i.test(key));
+  }
+
+  function adapterRecordHasOdds(record = {}) {
+    const odd = Number(record.odds ?? record.current ?? record.price ?? 0);
+    return Number.isFinite(odd) && odd > 1;
+  }
+
+  function adapterRecordRequiredIssues(record = {}) {
+    const issues = [];
+    if (!record.source && !record.bookmaker) issues.push("source");
+    if (!record.sport) issues.push("sport");
+    if (!adapterRecordHasFixture(record)) issues.push("fixture");
+    if (!(record.matchedMarketId || record.marketId || record.market)) issues.push("market");
+    if (!(record.selection || record.outcome)) issues.push("selection");
+    if (!adapterRecordHasOdds(record)) issues.push("odds");
+    return issues;
+  }
+
+  function adapterRecordOutputStatus(record = {}) {
+    const issues = adapterRecordRequiredIssues(record);
+    const confidence = adapterRecordConfidence(record);
+    const stale = isRecordStaleForAdapter(record);
+    const lowConfidence = confidence > 0 && confidence < MAIN_PANEL_MIN_CONFIDENCE;
+    const missingMarket = !(record.matchedMarketId || record.marketId || record.market);
+    const score = signalSafeScore(100 - issues.length * 18 - (lowConfidence ? 18 : 0) - (stale ? 16 : 0) - (missingMarket ? 18 : 0));
+    const status = issues.length || missingMarket ? "blocked" : lowConfidence || stale || score < ADAPTER_OUTPUT_READY_SCORE ? "review" : "ready";
+    return {
+      status,
+      score,
+      issues,
+      stale,
+      lowConfidence,
+      missingMarket,
+      confidence,
+      timestamp: recordTimestamp(record)
+    };
+  }
+
+  function isMainPanelSafeOddsRecord(record = {}) {
+    const output = adapterRecordOutputStatus(record);
+    return output.status === "ready" && output.score >= ADAPTER_OUTPUT_READY_SCORE;
+  }
+
+  function buildAdapterOutputContractReport(adapter = collectAdapterResults()) {
+    const recordsList = Array.isArray(adapter.records) ? adapter.records.filter(Boolean) : [];
+    const displayList = Array.isArray(adapter.displayRecords) ? adapter.displayRecords.filter(Boolean) : [];
+    const rows = recordsList.map((record, index) => {
+      const display = displayList[index] || record;
+      const output = adapterRecordOutputStatus(display);
+      return {
+        index,
+        record,
+        display,
+        source: display.source || display.bookmaker || record.source || "-",
+        fixture: displayRecordFixture(display),
+        market: recordMarketLabel(display),
+        marketId: display.matchedMarketId || display.marketId || display.market || "-",
+        selection: display.selection || display.outcome || "-",
+        line: display.line ?? "-",
+        odds: display.odds || display.current || 0,
+        ...output
+      };
+    });
+    const duplicateInfo = adapter.duplicateSummary || dedupeOddsRecords(recordsList);
+    const cleanRows = rows.filter(row => row.status === "ready");
+    const reviewRows = rows.filter(row => row.status === "review");
+    const blockedRows = rows.filter(row => row.status === "blocked");
+    const staleRows = rows.filter(row => row.stale);
+    const lowConfidenceRows = rows.filter(row => row.lowConfidence);
+    const missingMarketRows = rows.filter(row => row.missingMarket);
+    const averageScore = rows.length ? Math.round(rows.reduce((sum, row) => sum + Number(row.score || 0), 0) / rows.length) : 0;
+    const status = rows.length && averageScore >= ADAPTER_OUTPUT_READY_SCORE && !blockedRows.length ? "ready" : rows.length && cleanRows.length ? "review" : "waiting";
+    const summary = {
+      records: rows.length,
+      clean: cleanRows.length,
+      review: reviewRows.length,
+      blocked: blockedRows.length,
+      stale: staleRows.length,
+      lowConfidence: lowConfidenceRows.length,
+      missingMarket: missingMarketRows.length,
+      duplicates: duplicateInfo.duplicateCount || 0,
+      averageScore,
+      dataMode: adapter.dataMode || "fallback"
+    };
+    return {
+      rows,
+      cleanRows,
+      reviewRows,
+      blockedRows,
+      staleRows,
+      lowConfidenceRows,
+      missingMarketRows,
+      duplicateInfo,
+      summary,
+      status,
+      label: adapterOutputGateLabel(status)
+    };
+  }
+
+  function adapterOutputGateLabel(status) {
+    if (status === "ready") return "Hazır";
+    if (status === "review") return "Kontrol et";
+    return "Bekle";
+  }
+
+  function renderV593AdapterContractPanel(report = buildAdapterOutputContractReport()) {
+    const s = report.summary || {};
+    const cards = [
+      ["Kapı", report.label, "Hazır / kontrol / bekle"],
+      ["Skor", `${s.averageScore || 0}/100`, "Output sözleşmesi"],
+      ["Temiz", s.clean || 0, "Ana panelde güvenli"],
+      ["Kontrol", s.review || 0, "Düşük güven veya bayat"],
+      ["Bloklu", s.blocked || 0, "Eksik fixture/market/oran"],
+      ["Duplicate", s.duplicates || 0, "Ana akıştan düşürülen"]
+    ];
+    return `<section class="v596-adapter-contract ${escapeAttr(report.status)}" aria-label="Adapter output sözleşmesi">
+      <div class="v590-user-decision-head compact">
+        <div><span>V593-V596 SON ADAPTER KAPISI</span><h3>Adapter output formatı standart kontrolü</h3><p>Gerçek veri bağlanmadan önce kayıtlar hazır / kontrol / bekle sınıfına ayrılır. Ana paneller temiz kayıtları öne alır.</p></div>
+        <em>${escapeHtml(signalDataModeText(s.dataMode))}</em>
+      </div>
+      <div class="v596-contract-grid">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV593MainPanelFilterPanel(report = buildAdapterOutputContractReport()) {
+    const s = report.summary || {};
+    return `<section class="v596-main-filter" aria-label="Ana panel veri filtresi">
+      <div><span>ANA PANEL FİLTRESİ</span><b>${escapeHtml(String(s.clean || 0))} temiz kayıt önde</b><small>${escapeHtml(String((s.review || 0) + (s.blocked || 0)))} kayıt kontrol/bekle alanına ayrıldı.</small></div>
+      <div><span>Low confidence</span><b>${escapeHtml(String(s.lowConfidence || 0))}</b><small>Fırsat gibi yükseltilmez.</small></div>
+      <div><span>Bayat</span><b>${escapeHtml(String(s.stale || 0))}</b><small>Canlı veri gibi gösterilmez.</small></div>
+      <div><span>Market eksik</span><b>${escapeHtml(String(s.missingMarket || 0))}</b><small>Geliştirici kontrolüne gider.</small></div>
+    </section>`;
+  }
+
+  function renderV593AdapterContractDeveloperPanel(report = buildAdapterOutputContractReport()) {
+    const rows = report.rows.slice(0, 18);
+    return `<details class="v596-contract-dev v568-developer-details">
+      <summary><span>Adapter Output Sözleşmesi</span><small>Hazır / kontrol / bekle kayıt ayrımı</small></summary>
+      <div class="v568-dev-details-body">
+        <div class="v596-contract-table-wrap">
+          <table class="v596-contract-table">
+            <thead><tr><th>Durum</th><th>Kaynak</th><th>Fixture</th><th>Market</th><th>Seçim</th><th>Oran</th><th>Skor</th><th>Not</th></tr></thead>
+            <tbody>${rows.map(row => `<tr class="${escapeAttr(row.status)}">
+              <td><b>${escapeHtml(adapterOutputGateLabel(row.status))}</b><small>${row.confidence}% güven</small></td>
+              <td>${escapeHtml(row.source)}</td>
+              <td>${escapeHtml(row.fixture)}</td>
+              <td><code>${escapeHtml(row.marketId)}</code><small>${escapeHtml(row.market)}</small></td>
+              <td>${escapeHtml(row.selection)}<small>barem ${escapeHtml(String(row.line))}</small></td>
+              <td>${money(row.odds)}</td>
+              <td>${row.score}/100</td>
+              <td>${row.issues.length ? escapeHtml(row.issues.join(", ")) : row.stale ? "bayat" : row.lowConfidence ? "düşük güven" : "temiz"}</td>
+            </tr>`).join("")}</tbody>
+          </table>
+        </div>
+      </div>
+    </details>`;
+  }
+
+  function renderV596PolymarketRankingPanel(polyRecords = polymarketRecords()) {
+    const list = getPolymarketSignals(polyRecords);
+    const withMetrics = list.map(row => {
+      const hours = Number(row.closesInHours ?? row.hoursToClose ?? hoursUntil(row.expiresAt || row.kickoff));
+      const liquidity = Number(row.liquidity || 0);
+      const volume = Number(row.volume24h || row.volume || 0);
+      const closeScore = Number.isFinite(hours) && hours > 0 ? Math.max(0, 100 - Math.min(100, hours * 2)) : 0;
+      const liquidityScore = Math.min(100, Math.round(liquidity / 1500));
+      const score = signalSafeScore(Math.round(closeScore * 0.38 + liquidityScore * 0.34 + Math.min(100, volume / 900) * 0.18 + Number(row.score || 0) * 0.1));
+      return { ...row, hours, liquidity, volume, rankingScore: score };
+    }).sort((a, b) => b.rankingScore - a.rankingScore || b.liquidity - a.liquidity);
+    const topLiquidity = [...withMetrics].sort((a, b) => b.liquidity - a.liquidity).slice(0, 3);
+    const closingSoon = withMetrics.filter(row => Number.isFinite(row.hours) && row.hours > 0).sort((a, b) => a.hours - b.hours).slice(0, 3);
+    const renderRows = (title, rows, note) => `<div class="v596-poly-rank-block"><h4>${escapeHtml(title)}</h4>${rows.length ? rows.map(row => `<article><b>${escapeHtml(row.question || row.title || row.match || "Polymarket")}</b><span>${Math.round(row.rankingScore)} skor · ${Number.isFinite(row.hours) ? `${Math.round(row.hours)}s` : "kapanış yok"} · $${Math.round(row.liquidity || 0).toLocaleString("en-US")}</span></article>`).join("") : empty(note)}</div>`;
+    return `<section class="v596-poly-ranking" aria-label="POLYMARKET likidite ve kapanış sıralaması">
+      <div class="v590-user-decision-head compact"><div><span>POLYMARKET SIRALAMA</span><h3>Kapanış süresi + likidite önceliği</h3></div><em>YES/NO ayrı akış</em></div>
+      <div class="v596-poly-rank-grid">
+        ${renderRows("Kısa vade öncelikli", closingSoon, "Kapanışı yakın market yok.")}
+        ${renderRows("Likidite öncelikli", topLiquidity, "Likidite verisi bekleniyor.")}
+      </div>
     </section>`;
   }
 
@@ -4630,6 +4840,7 @@
       </div>
 
       ${renderV590PolymarketPredictionSummary(polyBase)}
+      ${renderV596PolymarketRankingPanel(polyBase)}
       ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
     </section>`;
   }
@@ -5688,6 +5899,7 @@
       </div>
       <div class="v568-overview-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
       ${renderSourceSignalSummaryPanel()}
+      ${renderV593AdapterContractPanel()}
       ${renderAdapterGateSummaryPanel()}
     </section>`;
   }
@@ -5717,6 +5929,7 @@
       </summary>
       <div class="v568-dev-details-body">
         ${renderSignalEngineHeader(oddsSignalEngineResults())}
+        ${renderV593AdapterContractDeveloperPanel()}
         ${renderAdapterGateDeveloperPanel()}
         ${renderSnapshotReadinessPanel()}
         ${renderStaticSnapshotStatusPanel()}

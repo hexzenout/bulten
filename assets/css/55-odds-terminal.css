@@ -7866,3 +7866,167 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ===============================
+   V593-V596 — Adapter son konsolidasyon / ana panel filtresi / Polymarket sıralama
+   =============================== */
+.v596-adapter-contract,
+.v596-main-filter,
+.v596-poly-ranking {
+  border: 1px solid rgba(148,163,184,.22);
+  background: linear-gradient(135deg, rgba(15,23,42,.92), rgba(30,41,59,.72));
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 14px 32px rgba(0,0,0,.18);
+  margin: 14px 0;
+}
+
+.v596-adapter-contract.ready { border-color: rgba(34,197,94,.35); }
+.v596-adapter-contract.review { border-color: rgba(245,158,11,.34); }
+.v596-adapter-contract.waiting { border-color: rgba(148,163,184,.28); }
+
+.v596-contract-grid,
+.v596-main-filter,
+.v596-poly-rank-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.v596-contract-grid article,
+.v596-main-filter > div,
+.v596-poly-rank-block {
+  border: 1px solid rgba(148,163,184,.18);
+  background: rgba(2,6,23,.34);
+  border-radius: 14px;
+  padding: 12px;
+  min-width: 0;
+}
+
+.v596-contract-grid span,
+.v596-main-filter span,
+.v596-poly-rank-block h4 {
+  display: block;
+  color: rgba(226,232,240,.68);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+
+.v596-contract-grid b,
+.v596-main-filter b {
+  display: block;
+  color: #f8fafc;
+  font-size: 19px;
+  line-height: 1.15;
+}
+
+.v596-contract-grid small,
+.v596-main-filter small {
+  display: block;
+  margin-top: 6px;
+  color: rgba(203,213,225,.72);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.v596-contract-dev {
+  margin-top: 12px;
+}
+
+.v596-contract-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(148,163,184,.16);
+  border-radius: 14px;
+}
+
+.v596-contract-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 920px;
+  background: rgba(2,6,23,.22);
+}
+
+.v596-contract-table th,
+.v596-contract-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(148,163,184,.13);
+  text-align: left;
+  vertical-align: top;
+}
+
+.v596-contract-table th {
+  color: rgba(226,232,240,.62);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.v596-contract-table td {
+  color: rgba(241,245,249,.9);
+  font-size: 12px;
+}
+
+.v596-contract-table td small,
+.v596-contract-table td code {
+  display: block;
+  margin-top: 4px;
+  color: rgba(203,213,225,.62);
+  font-size: 11px;
+}
+
+.v596-contract-table tr.ready td:first-child b { color: #86efac; }
+.v596-contract-table tr.review td:first-child b { color: #facc15; }
+.v596-contract-table tr.blocked td:first-child b { color: #fca5a5; }
+
+.v596-poly-rank-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.v596-poly-rank-block article {
+  border: 1px solid rgba(148,163,184,.14);
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 8px;
+  background: rgba(15,23,42,.52);
+}
+
+.v596-poly-rank-block b,
+.v596-poly-rank-block span {
+  display: block;
+}
+
+.v596-poly-rank-block b {
+  color: #f8fafc;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.v596-poly-rank-block span {
+  color: rgba(203,213,225,.72);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+@media (max-width: 900px) {
+  .v596-contract-grid,
+  .v596-main-filter,
+  .v596-poly-rank-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .v596-adapter-contract,
+  .v596-main-filter,
+  .v596-poly-ranking {
+    padding: 12px;
+    border-radius: 14px;
+  }
+  .v596-contract-grid b,
+  .v596-main-filter b {
+    font-size: 16px;
+  }
+}
