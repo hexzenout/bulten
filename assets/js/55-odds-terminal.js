@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V601-V604 son stabilizasyon + mini kullanıcı temizliği
+// ORAN TERMİNALİ — güvenli JS toparlama / V605-V608 connector kapısı + veri modu temizliği
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -4469,6 +4469,187 @@
     </section>`;
   }
 
+
+  // -------------------------------
+  // V605-V608 Connector Contract / Data Mode Cleanup
+  // -------------------------------
+  function connectorReadinessLabel(status) {
+    if (status === "ready") return "Canlı kapı hazır · bağlantı kapalı";
+    if (status === "review") return "Canlı kapı kontrollü · bağlantı kapalı";
+    return "Canlı kapı beklemede · bağlantı kapalı";
+  }
+
+  function buildV605ConnectorContract(adapter = collectAdapterResults(), contract = buildAdapterOutputContractReport(adapter)) {
+    const summary = contract.summary || {};
+    const flow = activeDataFlowSummary();
+    const gate = buildAdapterGateReport(adapter);
+    const clean = Number(summary.clean || 0);
+    const blocked = Number(summary.blocked || 0);
+    const review = Number(summary.review || 0) + Number(summary.stale || 0) + Number(summary.lowConfidence || 0);
+    const duplicate = Number(summary.duplicates || 0);
+    const averageScore = Number(summary.averageScore || gate.summary?.averageScore || 0);
+    const liveClosed = !LIVE_API_CONNECTION_ENABLED && !FETCH_SCRAPING_ENABLED && !AUTO_BETTING_ENABLED;
+    const status = liveClosed && clean > 0 && !blocked && averageScore >= ADAPTER_OUTPUT_READY_SCORE ? "ready" : clean > 0 ? "review" : "waiting";
+    const blockers = [];
+    if (!liveClosed) blockers.push("Dış bağlantı bayrağı kontrol edilmeli");
+    if (!clean) blockers.push("Ana panel için temiz kayıt bekleniyor");
+    if (blocked) blockers.push(`${blocked} bloklu kayıt geliştirici kontrolünde`);
+    if (duplicate) blockers.push(`${duplicate} duplicate kayıt ana akıştan çıkarıldı`);
+    if (review) blockers.push(`${review} kontrol kaydı ana fırsata yükseltilmez`);
+    const nextStep = status === "ready"
+      ? "Gerçek API eklenmeden önce connector slotu kapalı ve hazır tutuluyor."
+      : status === "review"
+        ? "Kontrol kayıtları temizlenmeden canlı etiket açılmayacak."
+        : "Dry-run veya snapshot verisi gelene kadar kapı beklemede kalır.";
+    return {
+      status,
+      label: connectorReadinessLabel(status),
+      slot: "oddsTerminalLiveConnector",
+      enabled: false,
+      liveClosed,
+      flow,
+      gate,
+      summary,
+      clean,
+      review,
+      blocked,
+      duplicate,
+      averageScore,
+      blockers,
+      nextStep,
+      dataMode: adapter.dataMode || "fallback"
+    };
+  }
+
+  function renderV605ConnectorContractPanel(report = buildV605ConnectorContract()) {
+    const cards = [
+      ["Bağlantı noktası", report.slot, "Kodda ayrıldı, aktif değil"],
+      ["Dış API", report.liveClosed ? "Kapalı" : "Kontrol et", "Fetch / scrape / otomatik oynama yok"],
+      ["Kapı", report.label, `Skor ${report.averageScore}/100`],
+      ["Temiz kayıt", report.clean, "Ana panelde okunabilir"],
+      ["Kontrol / blok", `${report.review}/${report.blocked}`, "Ana fırsata yükselmez"],
+      ["Aktif akış", signalDataModeText(report.flow?.mode), "Dry-run > snapshot > mock"]
+    ];
+    const blockers = report.blockers.length ? report.blockers : ["Bloklayıcı yok; gerçek bağlantı yine kapalı tutuluyor."];
+    return `<section class="v608-connector-contract ${escapeAttr(report.status)}" aria-label="V605-V608 kapalı connector sözleşmesi">
+      <div class="v608-section-head">
+        <div><span>V605-V608 KAPALI CONNECTOR</span><h3>Gerçek veri bağlantı kapısı hazır ama kapalı</h3><p>Canlı veri, scraping ve otomatik oynama eklenmedi. Bu panel sadece ileride bağlanacak adapter çıkışını güvenli slotta toplar.</p></div>
+        <strong>${escapeHtml(report.liveClosed ? "Güvenli kapalı" : "Kontrol gerekli")}</strong>
+      </div>
+      <div class="v608-kpi-grid">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+      <div class="v608-connector-notes">
+        <b>${escapeHtml(report.nextStep)}</b>
+        <div>${blockers.map(item => `<em>${escapeHtml(item)}</em>`).join("")}</div>
+      </div>
+    </section>`;
+  }
+
+  function buildV605DataModeCleanup(adapter = collectAdapterResults()) {
+    const flow = activeDataFlowSummary();
+    const stageRows = (flow.stages || []).map(stage => ({
+      ...stage,
+      active: String(stage.status || "").toLowerCase() === "aktif",
+      label: stage.label || stage.id,
+      text: stage.id === "dry_run"
+        ? "Yapıştırılan test payload varsa önce bu kullanılır."
+        : stage.id === "static_snapshot"
+          ? "Repo içindeki statik snapshot ikinci sırada durur."
+          : "Veri yoksa sadece mock/fallback örnekleri görünür."
+    }));
+    const active = stageRows.find(stage => stage.active) || stageRows[0] || null;
+    const sourceText = active ? `${active.label}: ${active.count || 0} kayıt` : "Akış bekleniyor";
+    const mode = flow.mode || adapter.dataMode || "fallback";
+    const label = mode === "dry_run" ? "Dry-run test verisi aktif" : mode === "static_snapshot" ? "Statik snapshot aktif" : mode === "mock" || mode === "fallback" ? "Mock/fallback örnekleri aktif" : "Veri akışı beklemede";
+    return {
+      flow,
+      mode,
+      label,
+      sourceText,
+      stageRows,
+      records: flow.records || 0,
+      matched: flow.matched || 0,
+      unmatched: flow.unmatched || 0,
+      sources: flow.sources || 0,
+      lastReadAt: flow.lastReadAt
+    };
+  }
+
+  function renderV605DataModeCleanupPanel(report = buildV605DataModeCleanup()) {
+    const cards = [
+      ["Aktif veri", report.label, report.sourceText],
+      ["Kayıt", report.records, `${report.matched} eşleşen · ${report.unmatched} kontrol`],
+      ["Kaynak", report.sources, "Bookmaker akışı"],
+      ["Son okuma", formatSourceUpdatedAt(report.lastReadAt), "Canlı veri değildir"]
+    ];
+    return `<section class="v608-data-mode-cleanup" aria-label="V605-V608 veri modu sade akış">
+      <div class="v608-section-head compact"><div><span>VERİ MODU TEMİZLİĞİ</span><h3>Dry-run / snapshot / mock ayrımı tek satıra indi</h3><p>Hangi verinin ekrana geldiği artık aynı öncelik zincirinden okunur; POLYMARKET bu zincire karışmaz.</p></div><strong>${escapeHtml(signalDataModeText(report.mode))}</strong></div>
+      <div class="v608-kpi-grid compact">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+      <div class="v608-flow-steps">${report.stageRows.map(stage => `<article class="${stage.active ? "active" : ""}"><b>${escapeHtml(stage.label)}</b><span>${escapeHtml(String(stage.status || "-"))}</span><small>${escapeHtml(stage.text)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV605SourcePreflightPanel(report = buildV605ConnectorContract()) {
+    const gate = report.gate || {};
+    const items = [
+      ["Son karar", report.label, report.status],
+      ["Kaynak kapısı", gate.label || "Bekle", gate.status || "waiting"],
+      ["Temiz / kontrol", `${report.clean}/${report.review}`, report.review ? "review" : "ready"],
+      ["Bloklu", report.blocked, report.blocked ? "blocked" : "ready"],
+      ["Duplicate", report.duplicate, report.duplicate ? "review" : "ready"]
+    ];
+    return `<section class="v608-source-preflight ${escapeAttr(report.status)}" aria-label="Gerçek veri öncesi son kaynak hazırlığı">
+      <div class="v608-section-head"><div><span>SON KAYNAK HAZIRLIĞI</span><h3>Hazır / kontrol / bekle kapısı</h3><p>Kaynaklar sekmesinin ilk ekranında sadece karar bilgisi kalır. Adapter, dry-run ve ham tablolar geliştirici bloklarında saklanır.</p></div><strong>${escapeHtml(report.liveClosed ? "Canlı bağlantı kapalı" : "Bağlantı bayrağı kontrol")}</strong></div>
+      <div class="v608-source-preflight-list">${items.map(([label, value, status]) => `<article class="${escapeAttr(status || "waiting")}"><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function polymarketHoursLeft(row = {}) {
+    const direct = Number(row.closesInHours ?? row.hoursToClose ?? row.hoursLeft);
+    if (Number.isFinite(direct)) return direct;
+    return hoursUntil(row.expiresAt || row.kickoff || row.closesAt);
+  }
+
+  function buildV605PolymarketQueues(list = polymarketRecords()) {
+    const signals = getPolymarketSignals(list).map(row => ({ ...row, hoursLeft: polymarketHoursLeft(row) }));
+    const byClose = [...signals].sort((a, b) => {
+      const ah = Number.isFinite(a.hoursLeft) ? a.hoursLeft : 999999;
+      const bh = Number.isFinite(b.hoursLeft) ? b.hoursLeft : 999999;
+      return ah - bh || Number(b.liquidity || 0) - Number(a.liquidity || 0);
+    });
+    const byLiquidity = [...signals].sort((a, b) => Number(b.liquidity || 0) - Number(a.liquidity || 0) || Number(b.score || 0) - Number(a.score || 0));
+    const byDecision = [...signals].sort((a, b) => Number(b.score || 0) - Number(a.score || 0) || Number(b.volume24h || 0) - Number(a.volume24h || 0));
+    const top = byDecision[0] || null;
+    const summary = polymarketSummary(list);
+    return { signals, byClose, byLiquidity, byDecision, top, summary };
+  }
+
+  function renderV605PolyQueueItem(row = {}, label = "Market") {
+    if (!row) return `<article class="empty"><span>${escapeHtml(label)}</span><b>Veri bekle</b><small>POLYMARKET ayrı akış</small></article>`;
+    const yes = row.yesPrice != null ? Math.round(Math.max(0, Math.min(1, Number(row.yesPrice))) * 100) : null;
+    const no = row.noPrice != null ? Math.round(Math.max(0, Math.min(1, Number(row.noPrice))) * 100) : yes != null ? 100 - yes : null;
+    const hours = polymarketHoursLeft(row);
+    const liquidity = Number(row.liquidity || 0);
+    return `<article>
+      <span>${escapeHtml(label)}</span>
+      <b>${escapeHtml(row.question || row.title || row.match || "Polymarket")}</b>
+      <small>${yes != null ? `YES ${yes}¢` : "YES -"} · ${no != null ? `NO ${no}¢` : "NO -"} · ${Number.isFinite(hours) ? `${Math.max(0, Math.round(hours))}s` : "kapanış yok"}</small>
+      <em>Likidite ${liquidity ? `$${Math.round(liquidity).toLocaleString("en-US")}` : "-"} · Skor ${Math.round(Number(row.score || 0))}</em>
+    </article>`;
+  }
+
+  function renderV605PolymarketQueuePanel(polyRecords = polymarketRecords()) {
+    const queue = buildV605PolymarketQueues(polyRecords);
+    const cards = [
+      ["Karar sırası", queue.byDecision[0], "Skor + hacim"],
+      ["Kısa vade", queue.byClose[0], "Kapanış önceliği"],
+      ["Likidite", queue.byLiquidity[0], "Derin market"],
+    ];
+    return `<section class="v608-poly-queue" aria-label="POLYMARKET YES NO sıralı görünüm">
+      <div class="v608-section-head"><div><span>POLYMARKET SIRALI YES/NO</span><h3>Kapanış, likidite ve skor ayrı okunur</h3><p>Prediction market tarafı bookmaker oran, barem ve kaynak farkı motoruna bağlanmaz.</p></div><strong>${escapeHtml(String(queue.summary.records || 0))} market</strong></div>
+      <div class="v608-poly-queue-grid">${cards.map(([label, row, note]) => renderV605PolyQueueItem(row, `${label} · ${note}`)).join("")}</div>
+    </section>`;
+  }
+
   function getArbs(list = records()) {
     const buckets = {};
     list.forEach(r => {
@@ -5129,10 +5310,11 @@
         <div><span>Ortalama Güven</span><b>${s.avgScore}</b></div>
       </div>
 
+      ${renderV605PolymarketQueuePanel(polyBase)}
       ${renderV601PolymarketYesNoBoard(polyBase)}
-      ${renderV596PolymarketRankingPanel(polyBase)}
       ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
       ${renderDeveloperCollapse("POLYMARKET teknik özetleri", `
+        ${renderV596PolymarketRankingPanel(polyBase)}
         ${renderV590PolymarketPredictionSummary(polyBase)}
         ${renderV597PolymarketProfessionalPanel(polyBase)}
       `, "Prediction market teknik skorları ve eski özetler")}
@@ -5221,6 +5403,7 @@
     const report = buildV601StabilizationReport();
     return `
       ${renderUserModeBanner("Fırsat Radarı sadeleştirildi", "Ana ekranda tek karar özeti var. Eski tekrar eden radar/aksiyon/status kartları kapalı teknik alana taşındı.", ["Tek odak", "Daha az tekrar", "Canlı veri değildir", "Otomatik oynama kapalı"])}
+      ${renderV605DataModeCleanupPanel()}
       ${renderV601StabilityRibbon(report)}
       ${renderV601OpportunityFocusPanel(engine, report)}
       ${renderOpportunityComparisonDemoCard()}
@@ -5382,6 +5565,7 @@
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
       ${renderV601StabilityRibbon(report)}
+      ${renderV605DataModeCleanupPanel()}
       ${renderV601ComparisonControlPanel(data, engine, report)}
       ${renderComparisonRows(data)}
       ${renderLineDifferencePreview(data)}
@@ -6243,14 +6427,17 @@
   }
 
   function renderSources() {
-    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration" aria-label="Kaynak Yapılandırması">
+    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration v608-source-configuration" aria-label="Kaynak Yapılandırması">
       ${renderSourcesUserModePanel()}
-      ${renderV601SourcesCompactPanel()}
+      ${renderV605SourcePreflightPanel()}
+      ${renderV605ConnectorContractPanel()}
+      ${renderV605DataModeCleanupPanel()}
       ${renderDeveloperCollapse("Kaynak kontrol merkezi", `
+        ${renderV601SourcesCompactPanel()}
         ${renderV597SourceCommandPanel()}
         ${renderV597LiveConnectorPanel()}
         ${renderV590SourceGateUserPanel()}
-      `, "Kapalı connector, canlı öncesi kapı ve kullanıcı kontrol kartları")}
+      `, "Eski kompakt panel, kapalı connector, canlı öncesi kapı ve kullanıcı kontrol kartları")}
       ${renderDeveloperCollapse("Kaynak Ayarları ve Özet", `
         ${renderSourceOverviewPanel()}
         ${renderSourceSettingsPanel()}
