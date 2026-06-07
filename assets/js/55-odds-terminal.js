@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V581-V583 sinyal motoru ve panel sadeleştirme
+// ORAN TERMİNALİ — güvenli JS toparlama / V584-V586 kullanıcı modu ve panel temizliği
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -3514,6 +3514,131 @@
     </div>`;
   }
 
+
+  // -------------------------------
+  // V584-V586 User Mode / Developer Mode Helpers
+  // -------------------------------
+  function renderUserModeBanner(title, text, meta = []) {
+    const metaItems = (Array.isArray(meta) ? meta : []).filter(Boolean).slice(0, 4);
+    return `<section class="v584-user-mode-banner" aria-label="Kullanıcı modu bilgi bandı">
+      <div>
+        <span>KULLANICI MODU</span>
+        <h3>${escapeHtml(title || "Sade görünüm")}</h3>
+        <p>${escapeHtml(text || "Teknik detaylar geliştirici alanına taşındı; ana paneller sadece okunur özet gösterir.")}</p>
+      </div>
+      ${metaItems.length ? `<div class="v584-user-mode-tags">${metaItems.map(item => `<em>${escapeHtml(String(item))}</em>`).join("")}</div>` : ""}
+    </section>`;
+  }
+
+  function renderDeveloperCollapse(title, html, note = "Teknik hesaplama ve debug detayları") {
+    return `<details class="v584-dev-collapse">
+      <summary><span>${escapeHtml(title || "Geliştirici Detayları")}</span><small>${escapeHtml(note)}</small></summary>
+      <div class="v584-dev-collapse-body">${html || ""}</div>
+    </details>`;
+  }
+
+  function signalExplainText(signal = {}) {
+    if (!signal) return "Veri yok";
+    if (signal.type === "source_diff") return "Aynı markette farklı kaynaklar arasında oran farkı var; canlı veri değil, kontrol adayı.";
+    if (signal.type === "line_diff") return "Barem/çizgi farklılığı var; fırsat gibi değil, kontrol uyarısı olarak okunmalı.";
+    if (signal.type === "movement") return "Önceki oran ile güncel oran arasında hareket var; snapshot/dry-run bilgisidir.";
+    if (signal.type === "low_confidence") return "Market veya fixture eşleşmesi düşük güvenli; ana fırsat gibi öne çıkarılmaz.";
+    return "Ön kontrol sinyali; canlı veri değildir.";
+  }
+
+  function renderCleanSignalItem(label, signal, emptyText) {
+    if (!signal) {
+      return `<article class="v584-clean-signal-card muted"><span>${escapeHtml(label)}</span><b>Aday yok</b><small>${escapeHtml(emptyText || "Veri bekleniyor")}</small></article>`;
+    }
+    return `<article class="v584-clean-signal-card ${escapeAttr(signal.tone || "review")}">
+      <span>${escapeHtml(label)}</span>
+      <b>${escapeHtml(signal.value || "-")} · ${escapeHtml(String(signal.score || 0))}/100</b>
+      <strong>${escapeHtml(signal.title || "Aday")}</strong>
+      <small>${escapeHtml(signal.subtitle || "Market")} · ${escapeHtml(signal.strength || "Kontrol")}</small>
+      <p>${escapeHtml(signalExplainText(signal))}</p>
+    </article>`;
+  }
+
+  function renderOpportunityCleanBoard(engine = oddsSignalEngineResults()) {
+    const source = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const movement = engine.movementSignals?.[0] || null;
+    const review = engine.lowConfidenceSignals?.[0] || null;
+    return `<section class="v584-clean-board" aria-label="Fırsat Radarı sade özet">
+      <div class="v584-clean-board-head">
+        <div><span>Fırsat Radarı</span><h3>Öncelikli kontrol kartları</h3></div>
+        <em>Canlı veri değildir · otomatik oynama kapalı</em>
+      </div>
+      <div class="v584-clean-signal-grid">
+        ${renderCleanSignalItem("Kaynak farkı", source, "Aynı markette en az iki kaynak beklenir")}
+        ${renderCleanSignalItem("Barem kontrolü", line, "Çizgi farkı yok veya eşik altında")}
+        ${renderCleanSignalItem("Oran hareketi", movement, "Önceki/güncel oran farkı yok")}
+        ${renderCleanSignalItem("Düşük güven", review, "Kontrol gereken kayıt yok")}
+      </div>
+    </section>`;
+  }
+
+  function renderComparisonCleanBoard(data = comparisonEngineResults(), engine = oddsSignalEngineResults()) {
+    const best = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const review = engine.lowConfidenceSignals?.[0] || null;
+    const summaryRows = [
+      ["Kayıt", data.summary?.records || 0, "Normalize edilmiş bookmaker kaydı"],
+      ["Eşleşen", data.summary?.matchedMarkets || 0, "Market ID / alias ile bağlanan"],
+      ["Eşleşmeyen", data.summary?.unmatched || 0, "Geliştirici kontrolü gereken"],
+      ["Kaynak", data.summary?.sources || 0, "Aktif kaynak sayısı"],
+      ["Mod", displayModeLabel(data.summary?.dataMode || "mock"), "Dry-run / snapshot / mock zinciri"]
+    ];
+    return `<section class="v584-comparison-board" aria-label="Oran Karşılaştırma sade özet">
+      <div class="v584-clean-board-head">
+        <div><span>Oran Karşılaştırma</span><h3>Kaynak farkı ve eşleşme özeti</h3></div>
+        <em>Normal bookmaker akışı · POLYMARKET ayrı</em>
+      </div>
+      <div class="v584-comparison-kpis">${summaryRows.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(note)}</small></article>`).join("")}</div>
+      <div class="v584-clean-signal-grid compact">
+        ${renderCleanSignalItem("En iyi kaynak farkı", best, "Aynı markette iki kaynak beklenir")}
+        ${renderCleanSignalItem("Barem ayrımı", line, "Yanıltıcı çizgi farkı yok")}
+        ${renderCleanSignalItem("Kontrol", review, "Düşük güvenli kayıt yok")}
+      </div>
+    </section>`;
+  }
+
+  function renderMovementBoard() {
+    const rows = oddsSignalEngineResults().movementSignals || [];
+    const rising = rows.filter(signal => Number(signal.raw?.changePct || 0) > 0).slice(0, 4);
+    const falling = rows.filter(signal => Number(signal.raw?.changePct || 0) < 0).slice(0, 4);
+    const strongest = rows.slice(0, 6);
+    const block = (title, list, emptyText) => `<section class="v584-movement-column">
+      <h3>${escapeHtml(title)}</h3>
+      ${list.length ? renderSignalCards(list, 4) : empty(emptyText)}
+    </section>`;
+    return `<section class="v584-movement-board" aria-label="Oran Hareketleri sade görünüm">
+      ${renderUserModeBanner("Oran Hareketleri", "Yükselen, düşen ve sert hareket adayları ayrıldı. Popup/hover düzeni korunur; bu alan canlı veri değildir.", ["Yükselen / Düşen", "Sert hareket", "Snapshot/Dry-run"])}
+      <div class="v584-movement-grid">
+        ${block("Yükselen Oranlar", rising, "Yükselen oran hareketi yok.")}
+        ${block("Düşen Oranlar", falling, "Düşen oran hareketi yok.")}
+        ${block("Sert Hareketler", strongest, "Hareket eşiğini geçen aday yok.")}
+      </div>
+      ${renderDeveloperCollapse("Teknik hareket sinyalleri", renderSignalEngineHeader(oddsSignalEngineResults()), "Sinyal motoru ve eşik değerleri")}
+    </section>`;
+  }
+
+  function renderSourcesUserModePanel() {
+    const flow = activeDataFlowSummary();
+    const engine = oddsSignalEngineResults();
+    const rows = [
+      ["Aktif akış", signalDataModeText(flow.mode), "Dry-run varsa önce o kullanılır"],
+      ["Kayıt", flow.records, "Bookmaker ana akış kaydı"],
+      ["Eşleşen / Eşleşmeyen", `${flow.matched} / ${flow.unmatched}`, "Market bağlantı durumu"],
+      ["Sinyal", engine.summary?.total || 0, "Fırsat / karşılaştırma / hareket motoru"],
+      ["Son okuma", formatSourceUpdatedAt(flow.lastReadAt), "Repo/dry-run okuma zamanı"]
+    ];
+    return `<section class="v584-sources-user-panel" aria-label="Kaynaklar kullanıcı modu">
+      ${renderUserModeBanner("Kaynaklar sade görünüm", "Kaynak yönetimi, canlı geçiş durumu ve ana metrikler önde. Dry-run, adapter ve ham eşleşme tabloları geliştirici laboratuvarına alındı.", ["Sade görünüm", "Teknik detay kapalı", "Canlı bağlantı kapalı"])}
+      <div class="v584-source-flow-grid">${rows.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(note)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
   function getArbs(list = records()) {
     const buckets = {};
     list.forEach(r => {
@@ -4258,17 +4383,21 @@
   function renderOpportunities() {
     const engine = oddsSignalEngineResults();
     return `
-      ${renderSignalEngineHeader(engine)}
+      ${renderUserModeBanner("Fırsat Radarı sadeleştirildi", "Ana ekranda sadece karar öncesi kontrol kartları görünür. Detaylı sinyal listeleri ve skor motoru geliştirici detayına taşındı.", ["Kaynak farkı", "Barem kontrolü", "Oran hareketi", "Canlı veri değildir"])}
+      ${renderOpportunityCleanBoard(engine)}
       ${renderOpportunityRadarStatus()}
       ${renderCompactSignalStrip(engine)}
-      <div class="odds-v528-grid v581-opportunity-grid">
-        ${panel("Kaynak Farkı Sinyalleri", renderSignalCards(engine.sourceDiffSignals, 5), "green")}
-        ${panel("Barem Farkı Kontrolü", renderSignalCards(engine.lineDiffSignals, 5), "blue")}
-        ${panel("Oran Hareketi Sinyalleri", renderSignalCards(engine.movementSignals, 5), "red")}
-        ${panel("Düşük Güven / Kontrol", renderSignalCards(engine.lowConfidenceSignals, 5), "purple")}
-      </div>
+      ${renderDeveloperCollapse("Detaylı sinyal listeleri", `
+        ${renderSignalEngineHeader(engine)}
+        <div class="odds-v528-grid v581-opportunity-grid">
+          ${panel("Kaynak Farkı Sinyalleri", renderSignalCards(engine.sourceDiffSignals, 5), "green")}
+          ${panel("Barem Farkı Kontrolü", renderSignalCards(engine.lineDiffSignals, 5), "blue")}
+          ${panel("Oran Hareketi Sinyalleri", renderSignalCards(engine.movementSignals, 5), "red")}
+          ${panel("Düşük Güven / Kontrol", renderSignalCards(engine.lowConfidenceSignals, 5), "purple")}
+        </div>
+      `, "Skor motoru, sinyal listeleri ve teknik notlar")}
       ${renderOpportunityComparisonDemoCard()}
-      <p class="v568-live-disclaimer">Fırsat Radarı artık tek sinyal motorundan beslenir. Bu alan canlı veri değildir; snapshot/dry-run/mock ön kontrol çıktısıdır.</p>
+      <p class="v568-live-disclaimer">Fırsat Radarı tek sinyal motorundan beslenir. Bu alan canlı veri değildir; snapshot/dry-run/mock ön kontrol çıktısıdır.</p>
       ${renderPolymarketDock()}`;
   }
 
@@ -4404,26 +4533,26 @@
     return `<section class="v557-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
         <div>
-          <span>Sinyal destekli karşılaştırma</span>
+          <span>Sade karşılaştırma</span>
           <h3>Oran Karşılaştırma</h3>
-          <p>Kaynak farkı, barem farkı, oran hareketi ve eşleşme güveni tek skor sistemiyle okunur. Canlı veri değildir.</p>
+          <p>Ana görünümde sadece okunur özet, kaynak farkı ve eşleşme durumu gösterilir. Teknik snapshot/adapter detayları kapalı alandadır.</p>
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
-      ${renderSignalEngineHeader(engine)}
+      ${renderComparisonCleanBoard(data, engine)}
       ${renderComparisonReadableDigest(data)}
       ${renderCompactSignalStrip(engine)}
       ${renderDataModeNotice()}
       ${renderComparisonSummaryBoxes(data)}
-      ${renderReadinessChecklist()}
       ${renderComparisonHealth(data)}
       ${renderComparisonRows(data)}
       ${renderLineDifferencePreview(data)}
       ${renderDryRunComparisonPreview()}
-      <details class="v583-technical-collapse">
-        <summary>Teknik snapshot / adapter detayları</summary>
+      ${renderDeveloperCollapse("Karşılaştırma teknik detayları", `
+        ${renderSignalEngineHeader(engine)}
+        ${renderReadinessChecklist()}
         ${renderStaticSnapshotStatusPanel()}
-      </details>
+      `, "Sinyal motoru, canlı hazırlık ve snapshot durumu")}
     </section>`;
   }
 
@@ -4694,7 +4823,7 @@
     return renderSignalCards(rows, 5);
   }
 
-  function renderDrops() { return renderDropList(getDropAlerts(), true); }
+  function renderDrops() { return renderMovementBoard(); }
 
   function renderDropList(list) {
     const rows = oddsSignalEngineResults().movementSignals;
@@ -5118,7 +5247,7 @@
         <div>
           <span>Canlı Geçiş Hazırlığı</span>
           <h3>Canlı Geçiş Hazırlığı</h3>
-          <p>Demo modundan canlıya geçiş için adapter kapısı hazırlandı; gerçek bağlantı, fetch, scraping ve otomatik bahis kapalıdır.</p>
+          <p>Canlı geçiş için adapter kapısı hazırlandı; gerçek bağlantı, fetch, scraping ve otomatik bahis kapalıdır. Normal kullanıcı için yalnızca durum özeti gösterilir.</p>
         </div>
         <em>Adapter çalışma: ${adapter.adapterRuns.length} kaynak · Mod: ${escapeHtml(displayModeLabel(adapter.dataMode))}</em>
       </div>
@@ -5149,7 +5278,7 @@
         <div>
           <span>Kaynak Özeti</span>
           <h3>Kaynak Özeti</h3>
-          <p>Kaynaklar sade görünümde yönetilir. Snapshot hazırlık özeti ana metriklerde gösterilir; teknik ID, adapter ve ham eşleşme detayları Geliştirici Detayları içinde saklanır.</p>
+          <p>Kaynaklar sade görünümde yönetilir. Teknik ID, adapter, dry-run ve ham eşleşme detayları kapalı geliştirici laboratuvarında saklanır.</p>
         </div>
         <em>Dış API kapalı · Otomatik oynama kapalı</em>
       </div>
@@ -5193,12 +5322,15 @@
   }
 
   function renderSources() {
-    return `<section class="v565-source-configuration" aria-label="Kaynak Yapılandırması">
+    return `<section class="v565-source-configuration v584-source-configuration" aria-label="Kaynak Yapılandırması">
+      ${renderSourcesUserModePanel()}
       ${renderSourceOverviewPanel()}
       ${renderSourceSettingsPanel()}
       ${renderLiveReadinessPanel()}
-      ${renderDryRunPayloadPanel()}
-      ${renderDeveloperDetailsPanel()}
+      ${renderDeveloperCollapse("Dry-run / Adapter Laboratuvarı", `
+        ${renderDryRunPayloadPanel()}
+        ${renderDeveloperDetailsPanel()}
+      `, "JSON testleri, ham eşleşme tabloları ve teknik kaynak detayları")}
     </section>`;
   }
 
