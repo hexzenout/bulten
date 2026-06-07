@@ -5775,52 +5775,55 @@
 }
 
 /* ===============================
-   Odds Movements Dropdown Stability
+   V568C — History Dropdown Shared Stability
+   Oran Karşılaştırma ve Oran Hareketleri aynı popup mantığını kullanır.
 ================================ */
-.omega-tab-odds .odds-v528-content.odds-tab-drops {
+.omega-tab-odds .odds-v528-content {
     contain: layout !important;
     overflow: visible !important;
 }
 
-.omega-tab-odds .odds-v528-content.odds-tab-drops .odds-v528-cards,
-.omega-tab-odds .odds-v528-content.odds-tab-drops .odds-v528-card.drop {
+.omega-tab-odds .odds-v528-content .odds-v528-cards,
+.omega-tab-odds .odds-v528-content .odds-v528-card,
+.omega-tab-odds .v530-compare-list,
+.omega-tab-odds .v530-compare-card,
+.omega-tab-odds .v530-site-odds-grid,
+.omega-tab-odds .v530-site-odd {
     overflow: visible !important;
-    align-items: start !important;
 }
 
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact {
+.omega-tab-odds .v533-history-compact {
     position: relative !important;
-    display: grid !important;
-    width: 100% !important;
-    max-width: 340px !important;
     overflow: visible !important;
-    z-index: 3 !important;
+    z-index: 5 !important;
 }
 
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:hover,
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:focus,
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:focus-within {
-    z-index: 40 !important;
+.omega-tab-odds .v533-history-compact:hover,
+.omega-tab-odds .v533-history-compact:focus,
+.omega-tab-odds .v533-history-compact:focus-within {
+    z-index: 500 !important;
 }
 
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-pop {
-    position: static !important;
-    inset: auto !important;
-    min-width: 0 !important;
-    width: 100% !important;
-    margin-top: 8px !important;
-    padding: 8px !important;
+.omega-tab-odds .v533-history-pop {
+    position: absolute !important;
+    left: 0 !important;
+    top: calc(100% + 8px) !important;
+    display: none !important;
+    min-width: 220px !important;
+    width: max-content !important;
+    max-width: min(340px, calc(100vw - 44px)) !important;
     box-sizing: border-box !important;
     overflow: visible !important;
+    z-index: 600 !important;
 }
 
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:hover .v533-history-pop,
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:focus .v533-history-pop,
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:focus-within .v533-history-pop {
+.omega-tab-odds .v533-history-compact:hover .v533-history-pop,
+.omega-tab-odds .v533-history-compact:focus .v533-history-pop,
+.omega-tab-odds .v533-history-compact:focus-within .v533-history-pop {
     display: grid !important;
 }
 
-.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-pop span {
-    min-height: 28px !important;
-    overflow: visible !important;
+.omega-tab-odds .v533-history-pop span {
+    min-height: 26px !important;
+    white-space: nowrap !important;
 }
