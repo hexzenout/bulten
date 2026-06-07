@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V593-V596 adapter son konsolidasyon
+// ORAN TERMİNALİ — güvenli JS toparlama / V597-V600 son UI + kapalı connector hazırlığı
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -3787,6 +3787,7 @@
     </section>`;
     return `<section class="v584-movement-board" aria-label="Oran Hareketleri sade görünüm">
       ${renderUserModeBanner("Oran Hareketleri", "Yükselen, düşen ve sert hareket adayları ayrıldı. Popup/hover düzeni korunur; bu alan canlı veri değildir.", ["Yükselen / Düşen", "Sert hareket", "Snapshot/Dry-run"])}
+      ${renderV597MovementVerdict(rows)}
       ${renderV590MovementSummary(rows)}
       <div class="v584-movement-grid">
         ${block("Yükselen Oranlar", rising, "Yükselen oran hareketi yok.")}
@@ -4176,6 +4177,152 @@
         ${renderRows("Kısa vade öncelikli", closingSoon, "Kapanışı yakın market yok.")}
         ${renderRows("Likidite öncelikli", topLiquidity, "Likidite verisi bekleniyor.")}
       </div>
+    </section>`;
+  }
+
+
+  // -------------------------------
+  // V597-V600 Final UI / Closed Connector Helpers
+  // -------------------------------
+  function buildV597LiveConnectorReadiness(adapter = collectAdapterResults(), contract = buildAdapterOutputContractReport(adapter)) {
+    const gate = buildAdapterGateReport(adapter);
+    const summary = contract.summary || {};
+    const readyRatio = summary.records ? Math.round((Number(summary.clean || 0) / Number(summary.records || 1)) * 100) : 0;
+    const blocked = Number(summary.blocked || 0) + Number(summary.missingMarket || 0);
+    const ready = !LIVE_API_CONNECTION_ENABLED && !FETCH_SCRAPING_ENABLED && !AUTO_BETTING_ENABLED && Number(summary.clean || 0) > 0 && blocked === 0;
+    const review = Number(summary.review || 0) + Number(summary.stale || 0) + Number(summary.lowConfidence || 0);
+    const label = ready ? "Kapalı ama hazır" : summary.records ? "Kapalı · kontrol var" : "Kapalı · veri bekliyor";
+    const tone = ready ? "ready" : review || blocked ? "review" : "waiting";
+    const steps = [
+      { label: "Connector slot", value: "Hazır", note: "Kod içinde kapalı bağlantı noktası" },
+      { label: "Dış API", value: LIVE_API_CONNECTION_ENABLED ? "Açık" : "Kapalı", note: "V600'de bilinçli kapalı" },
+      { label: "Fetch/Scrape", value: FETCH_SCRAPING_ENABLED ? "Açık" : "Kapalı", note: "Tarama yok" },
+      { label: "Otomatik oynama", value: AUTO_BETTING_ENABLED ? "Açık" : "Kapalı", note: "Kesinlikle kapalı" },
+      { label: "Temiz oran kaydı", value: summary.clean || 0, note: `${readyRatio}% ana panele uygun` },
+      { label: "Kontrol/blok", value: `${review}/${blocked}`, note: "Geliştirici alanına ayrılır" }
+    ];
+    return { gate, contract, summary, readyRatio, blocked, review, ready, label, tone, steps };
+  }
+
+  function renderV597LiveConnectorPanel(report = buildV597LiveConnectorReadiness()) {
+    const gate = report.gate || {};
+    return `<section class="v597-live-connector ${escapeAttr(report.tone)}" aria-label="Kapalı gerçek veri bağlantı noktası">
+      <div class="v597-live-head">
+        <div>
+          <span>V597-V600 KAPALI CONNECTOR</span>
+          <h3>Gerçek veri bağlantı noktası hazır, dış bağlantı kapalı</h3>
+          <p>API / scraping / otomatik oynama eklenmedi. Bu panel sadece adapter çıkışının canlı bağlantıya hazır olup olmadığını gösterir.</p>
+        </div>
+        <strong>${escapeHtml(report.label)}</strong>
+      </div>
+      <div class="v597-live-grid">
+        ${report.steps.map(item => `<article><span>${escapeHtml(item.label)}</span><b>${escapeHtml(String(item.value))}</b><small>${escapeHtml(item.note)}</small></article>`).join("")}
+      </div>
+      <div class="v597-live-footer">
+        <span>Kaynak kapısı: ${escapeHtml(gate.label || "Bekle")}</span>
+        <span>Ortalama skor: ${escapeHtml(String(gate.averageScore || report.summary.averageScore || 0))}/100</span>
+        <span>Canlı veri değildir</span>
+      </div>
+    </section>`;
+  }
+
+  function renderV597SourceCommandPanel() {
+    const connector = buildV597LiveConnectorReadiness();
+    const flow = activeDataFlowSummary();
+    const engine = oddsSignalEngineResults();
+    const cards = [
+      ["Durum", connector.label, "Gerçek bağlantı kapalı"],
+      ["Aktif akış", signalDataModeText(flow.mode), "Dry-run > snapshot > mock"],
+      ["Temiz kayıt", connector.summary.clean || 0, "Ana panellere çıkan kayıt"],
+      ["Kontrol/bekle", `${connector.summary.review || 0}/${connector.summary.blocked || 0}`, "Teknik alana ayrılır"],
+      ["Sinyal", engine.summary?.total || 0, "Kaynak / barem / hareket"],
+      ["Duplicate", connector.summary.duplicates || 0, "Ana akıştan düşürülen"],
+    ];
+    return `<section class="v597-command-panel" aria-label="Oran Terminali kontrol merkezi">
+      <div class="v597-command-title"><span>SON KONTROL MERKEZİ</span><h3>Kullanıcı görünümü temiz, teknik kontroller kapalı alanda</h3></div>
+      <div class="v597-command-grid">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(note)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV597OpportunityActionStrip(engine = oddsSignalEngineResults()) {
+    const best = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const movement = engine.movementSignals?.[0] || null;
+    const review = engine.lowConfidenceSignals?.[0] || null;
+    const action = best ? "Önce kaynak farkını kontrol et" : movement ? "Oran hareketini izle" : line ? "Barem farkını ele" : review ? "Düşük güveni geliştirici detayında kontrol et" : "Veri bekle";
+    const cards = [
+      ["Öncelik", action, best ? best.title : movement ? movement.title : line ? line.title : "Sinyal yok"],
+      ["Yanıltıcı fark", line ? line.value : "Yok", "Barem farklıysa fırsat değildir"],
+      ["Hareket", movement ? movement.value : "Yok", "Snapshot/dry-run hareketidir"],
+      ["Uyarı", review ? review.value : "Temiz", "Düşük güven fırsat gibi öne çıkmaz"],
+    ];
+    return `<section class="v597-action-strip" aria-label="Fırsat Radarı aksiyon özeti">
+      ${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(note)}</small></article>`).join("")}
+    </section>`;
+  }
+
+  function renderV597ComparisonVerdict(data = comparisonEngineResults(), engine = oddsSignalEngineResults()) {
+    const report = buildAdapterOutputContractReport();
+    const best = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const status = report.status === "ready" ? "Karşılaştırma temiz" : report.status === "review" ? "Karşılaştırma kontrollü" : "Karşılaştırma beklemede";
+    const note = best ? `${best.title} · ${best.value}` : "Aynı market ve aynı baremde güçlü aday bekleniyor.";
+    return `<section class="v597-verdict-panel ${escapeAttr(report.status)}" aria-label="Oran Karşılaştırma karar özeti">
+      <div><span>KARAR ÖZETİ</span><h3>${escapeHtml(status)}</h3><p>${escapeHtml(note)}</p></div>
+      <div class="v597-verdict-grid">
+        <article><span>Eşleşen</span><b>${escapeHtml(String(data.summary?.matchedMarkets || 0))}</b><small>Market ID / alias</small></article>
+        <article><span>Kontrol</span><b>${escapeHtml(String((report.summary.review || 0) + (report.summary.blocked || 0)))}</b><small>Düşük güven / eksik kayıt</small></article>
+        <article><span>Barem riski</span><b>${line ? escapeHtml(line.value) : "Yok"}</b><small>Fırsat gibi okunmaz</small></article>
+      </div>
+    </section>`;
+  }
+
+  function renderV597MovementVerdict(rows = oddsSignalEngineResults().movementSignals || []) {
+    const strongest = rows[0] || null;
+    const rising = rows.filter(signal => Number(signal.raw?.changePct || 0) > 0).length;
+    const falling = rows.filter(signal => Number(signal.raw?.changePct || 0) < 0).length;
+    return `<section class="v597-verdict-panel movement" aria-label="Oran hareketi karar özeti">
+      <div><span>HAREKET ÖZETİ</span><h3>${strongest ? "İzlenecek hareket var" : "Hareket bekleniyor"}</h3><p>${escapeHtml(strongest ? `${strongest.title} · ${strongest.value}` : "Önceki/güncel oran farkı geldiğinde burada sade özet oluşur.")}</p></div>
+      <div class="v597-verdict-grid">
+        <article><span>Yükselen</span><b>${rising}</b><small>Snapshot/dry-run</small></article>
+        <article><span>Düşen</span><b>${falling}</b><small>Snapshot/dry-run</small></article>
+        <article><span>En sert</span><b>${strongest ? String(strongest.score || 0) : "0"}</b><small>Sinyal skoru</small></article>
+      </div>
+    </section>`;
+  }
+
+  function renderV597DryRunCompactPanel() {
+    const preview = state.dryRunResult || null;
+    const report = buildAdapterOutputContractReport();
+    const cards = [
+      ["Durum", preview ? (preview.valid ? "Geçerli" : "Hatalı") : "Bekliyor", "JSON örnekleri teknik alanda"],
+      ["Bookmaker / Poly", preview ? `${preview.bookmakerCount || 0}/${preview.polymarketCount || 0}` : "0/0", "Karışık payload reddedilir"],
+      ["Temiz / Kontrol", `${report.summary.clean || 0}/${report.summary.review || 0}`, "Ana panel filtresi"],
+      ["Bloklu", report.summary.blocked || 0, "Eksik kayıtlar"],
+    ];
+    return `<section class="v597-dryrun-compact" aria-label="Dry-run kompakt durum">
+      <div><span>DRY-RUN KISA DURUM</span><h3>Adapter laboratuvarı kapalı alanda</h3><p>Normal görünümde sadece sonuç özeti tutulur; ham tablo ve şema detayları aşağıdaki teknik blokta kalır.</p></div>
+      <div>${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(note)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV597PolymarketProfessionalPanel(polyRecords = polymarketRecords()) {
+    const signals = getPolymarketSignals(polyRecords);
+    const top = signals[0] || null;
+    const near = signals.filter(row => {
+      const hours = Number(row.hoursLeft ?? hoursUntil(row.expiresAt || row.kickoff));
+      return Number.isFinite(hours) && hours > 0 && hours <= 24;
+    }).length;
+    const liquid = signals.filter(row => Number(row.liquidity || 0) >= 10000).length;
+    const cards = [
+      ["Öncelik", top ? (top.question || top.match || "Market") : "Veri bekle", top ? `${Math.round(top.score || 0)} skor · ${signedPct(top.edgePct || 0)} edge` : "YES/NO akışı ayrı"],
+      ["24s altı", near, "Kapanışı yakın"],
+      ["Yüksek likidite", liquid, "Likidite eşiği"],
+      ["Akış", "Prediction", "Bookmaker motoruna karışmaz"],
+    ];
+    return `<section class="v597-poly-pro" aria-label="POLYMARKET profesyonel özet">
+      <div class="v597-poly-pro-head"><span>POLYMARKET PRO ÖZET</span><h3>YES/NO, kapanış ve likidite ayrı okunur</h3></div>
+      <div class="v597-poly-pro-grid">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
     </section>`;
   }
 
@@ -4840,6 +4987,7 @@
       </div>
 
       ${renderV590PolymarketPredictionSummary(polyBase)}
+      ${renderV597PolymarketProfessionalPanel(polyBase)}
       ${renderV596PolymarketRankingPanel(polyBase)}
       ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
     </section>`;
@@ -4926,6 +5074,7 @@
     const engine = oddsSignalEngineResults();
     return `
       ${renderUserModeBanner("Fırsat Radarı sadeleştirildi", "Ana ekranda sadece karar öncesi kontrol kartları görünür. Detaylı sinyal listeleri ve skor motoru geliştirici detayına taşındı.", ["Kaynak farkı", "Barem kontrolü", "Oran hareketi", "Canlı veri değildir"])}
+      ${renderV597OpportunityActionStrip(engine)}
       ${renderOpportunityCleanBoard(engine)}
       ${renderV590OpportunityDecisionPanel(engine)}
       ${renderOpportunityRadarStatus()}
@@ -5083,6 +5232,7 @@
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
       ${renderComparisonCleanBoard(data, engine)}
+      ${renderV597ComparisonVerdict(data, engine)}
       ${renderV590ComparisonDecisionGuide(data, engine)}
       ${renderComparisonReadableDigest(data)}
       ${renderCompactSignalStrip(engine)}
@@ -5941,13 +6091,18 @@
   }
 
   function renderSources() {
-    return `<section class="v565-source-configuration v584-source-configuration" aria-label="Kaynak Yapılandırması">
+    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration" aria-label="Kaynak Yapılandırması">
       ${renderSourcesUserModePanel()}
-      ${renderV590SourceGateUserPanel()}
-      ${renderSourceOverviewPanel()}
-      ${renderSourceSettingsPanel()}
-      ${renderLiveReadinessPanel()}
+      ${renderV597SourceCommandPanel()}
+      ${renderV597LiveConnectorPanel()}
+      ${renderDeveloperCollapse("Kaynak Ayarları ve Özet", `
+        ${renderV590SourceGateUserPanel()}
+        ${renderSourceOverviewPanel()}
+        ${renderSourceSettingsPanel()}
+        ${renderLiveReadinessPanel()}
+      `, "Kaynak skorları, adapter kapısı ve canlı geçiş kontrolü")}
       ${renderDeveloperCollapse("Dry-run / Adapter Laboratuvarı", `
+        ${renderV597DryRunCompactPanel()}
         ${renderDryRunPayloadPanel()}
         ${renderDeveloperDetailsPanel()}
       `, "JSON testleri, ham eşleşme tabloları ve teknik kaynak detayları")}
