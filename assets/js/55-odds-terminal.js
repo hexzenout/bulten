@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V587-V589 adapter kapısı ve kaynak öncelik sistemi
+// ORAN TERMİNALİ — güvenli JS toparlama / V590-V592 son temizlik ve kullanıcılaştırma
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -3783,6 +3783,7 @@
     </section>`;
     return `<section class="v584-movement-board" aria-label="Oran Hareketleri sade görünüm">
       ${renderUserModeBanner("Oran Hareketleri", "Yükselen, düşen ve sert hareket adayları ayrıldı. Popup/hover düzeni korunur; bu alan canlı veri değildir.", ["Yükselen / Düşen", "Sert hareket", "Snapshot/Dry-run"])}
+      ${renderV590MovementSummary(rows)}
       <div class="v584-movement-grid">
         ${block("Yükselen Oranlar", rising, "Yükselen oran hareketi yok.")}
         ${block("Düşen Oranlar", falling, "Düşen oran hareketi yok.")}
@@ -3805,6 +3806,166 @@
     return `<section class="v584-sources-user-panel" aria-label="Kaynaklar kullanıcı modu">
       ${renderUserModeBanner("Kaynaklar sade görünüm", "Kaynak yönetimi, canlı geçiş durumu ve ana metrikler önde. Dry-run, adapter ve ham eşleşme tabloları geliştirici laboratuvarına alındı.", ["Sade görünüm", "Teknik detay kapalı", "Canlı bağlantı kapalı"])}
       <div class="v584-source-flow-grid">${rows.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(note)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+
+
+  // -------------------------------
+  // V590-V592 Final Cleanup / User Decision Helpers
+  // -------------------------------
+  function v590SignalActionText(signal = null) {
+    if (!signal) return "Veri bekleniyor; bu başlık ana karar alanına yükseltilmedi.";
+    if (signal.type === "source_diff") return "Aday olarak izlenir; aynı market ve aynı barem doğrulanmadan kesin fırsat gibi okunmaz.";
+    if (signal.type === "line_diff") return "Yanıltıcı fark riski var; barem farklıysa fırsat değil kontrol uyarısıdır.";
+    if (signal.type === "movement") return "Hareket takip edilir; canlı veri olmadığı için sadece snapshot/dry-run uyarısıdır.";
+    if (signal.type === "low_confidence") return "Ana listeye alınmaz; önce market/fixture eşleşmesi geliştirici detayında kontrol edilir.";
+    return "Ön kontrol sinyali; canlı veri değildir.";
+  }
+
+  function v590DecisionTone(signal = null, fallback = "muted") {
+    if (!signal) return fallback;
+    if (signal.type === "line_diff") return "warning";
+    if (signal.type === "low_confidence") return "review";
+    if (signal.type === "movement") return "movement";
+    if (signal.type === "source_diff") return Number(signal.score || 0) >= 70 ? "good" : "watch";
+    return signal.tone || fallback;
+  }
+
+  function renderV590DecisionCard(label, signal, emptyText, extraNote = "") {
+    if (!signal) {
+      return `<article class="v590-decision-card muted">
+        <span>${escapeHtml(label)}</span>
+        <b>Aday yok</b>
+        <small>${escapeHtml(emptyText || "Veri bekleniyor")}</small>
+      </article>`;
+    }
+    const meta = Array.isArray(signal.meta) ? signal.meta.slice(0, 3) : [];
+    return `<article class="v590-decision-card ${escapeAttr(v590DecisionTone(signal))}">
+      <span>${escapeHtml(label)}</span>
+      <b>${escapeHtml(signal.value || "-")} · ${escapeHtml(String(signal.score || 0))}/100</b>
+      <strong>${escapeHtml(signal.title || "Aday")}</strong>
+      <small>${escapeHtml(signal.subtitle || signalStrengthLabel(signal.score))}</small>
+      <p>${escapeHtml(extraNote || v590SignalActionText(signal))}</p>
+      ${meta.length ? `<div class="v590-decision-meta">${meta.map(item => `<em>${escapeHtml(String(item))}</em>`).join("")}</div>` : ""}
+    </article>`;
+  }
+
+  function renderV590OpportunityDecisionPanel(engine = oddsSignalEngineResults()) {
+    const best = engine.sourceDiffSignals?.[0] || null;
+    const misleading = engine.lineDiffSignals?.[0] || null;
+    const movement = engine.movementSignals?.[0] || null;
+    const review = engine.lowConfidenceSignals?.[0] || null;
+    return `<section class="v590-user-decision-panel" aria-label="Fırsat Radarı karar özeti">
+      <div class="v590-user-decision-head">
+        <div>
+          <span>V590-V592 SON TEMİZLİK</span>
+          <h3>Karar öncesi sade okuma</h3>
+          <p>Teknik sinyaller kullanıcı diline çevrildi. Adaylar canlı fırsat gibi değil, doğrulama sırasına göre gösterilir.</p>
+        </div>
+        <em>Canlı veri değildir · Otomatik oynama kapalı</em>
+      </div>
+      <div class="v590-decision-grid">
+        ${renderV590DecisionCard("En iyi aday", best, "Aynı markette kaynak farkı beklenir")}
+        ${renderV590DecisionCard("Yanıltıcı farkı ele", misleading, "Barem farkı yok", "Barem farklıysa bu bir fırsat değil; önce çizgi eşitliği kontrol edilir.")}
+        ${renderV590DecisionCard("Hareket izle", movement, "Oran hareketi yok")}
+        ${renderV590DecisionCard("Kontrol gereken", review, "Düşük güvenli kayıt yok")}
+      </div>
+    </section>`;
+  }
+
+  function renderV590ComparisonDecisionGuide(data = comparisonEngineResults(), engine = oddsSignalEngineResults()) {
+    const best = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const review = engine.lowConfidenceSignals?.[0] || null;
+    const matched = Number(data.summary?.matchedMarkets || 0);
+    const recordsCount = Number(data.summary?.records || 0);
+    const matchedPct = recordsCount ? Math.round((matched / recordsCount) * 100) : 0;
+    const rows = [
+      ["Okuma", best ? "Aday var" : "Aday bekliyor", best ? "Kaynak farkı bulundu; yine de canlı veri değildir." : "Aynı market ve baremde iki kaynak beklenir."],
+      ["Eşleşme", `${matchedPct}%`, `${matched}/${recordsCount} kayıt markete bağlandı.`],
+      ["Barem", line ? "Kontrol et" : "Temiz", line ? "Çizgi farkı fırsat gibi gösterilmez." : "Yanıltıcı barem farkı öne çıkmadı."],
+      ["Güven", review ? "Kontrol var" : "Normal", review ? "Düşük güvenli kayıt geliştirici alanına taşındı." : "Ana görünümde kritik düşük güven görünmüyor."]
+    ];
+    return `<section class="v590-comparison-guide" aria-label="Oran Karşılaştırma kullanıcı rehberi">
+      <div class="v590-user-decision-head compact">
+        <div><span>KARŞILAŞTIRMA REHBERİ</span><h3>En iyi aday / kontrol gereken / yanıltıcı fark ayrımı</h3></div>
+        <em>${escapeHtml(displayModeLabel(data.summary?.dataMode || "mock"))}</em>
+      </div>
+      <div class="v590-guide-grid">${rows.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+      <div class="v590-decision-grid compact">
+        ${renderV590DecisionCard("En iyi kaynak farkı", best, "Kaynak farkı adayı yok")}
+        ${renderV590DecisionCard("Yanıltıcı barem", line, "Barem kontrolü temiz")}
+        ${renderV590DecisionCard("Kontrol gereken", review, "Düşük güvenli kayıt yok")}
+      </div>
+    </section>`;
+  }
+
+  function renderV590MovementSummary(rows = oddsSignalEngineResults().movementSignals || []) {
+    const list = Array.isArray(rows) ? rows : [];
+    const rising = list.filter(signal => Number(signal.raw?.changePct || 0) > 0).length;
+    const falling = list.filter(signal => Number(signal.raw?.changePct || 0) < 0).length;
+    const strongest = list[0] || null;
+    const cells = [
+      ["Yükselen", rising, "Pozitif değişim"],
+      ["Düşen", falling, "Negatif değişim"],
+      ["Sert hareket", strongest ? `${strongest.value} · ${strongest.score}/100` : "Yok", strongest ? strongest.title : "Eşik üstü hareket yok"],
+      ["Veri türü", signalDataModeText(oddsSignalEngineResults().mode), "Canlı veri değildir"]
+    ];
+    return `<section class="v590-movement-summary" aria-label="Oran hareketleri sade özet">
+      ${cells.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}
+    </section>`;
+  }
+
+  function renderV590SourceGateUserPanel() {
+    const report = buildAdapterGateReport();
+    const summary = report.summary || {};
+    const label = report.label || "Kapı bekliyor";
+    const status = report.status || "review";
+    const score = summary.averageScore || 0;
+    const cards = [
+      ["Son durum", label, "Gerçek veri açılmadan önce güvenlik kapısı"],
+      ["Ortalama skor", `${score}/100`, "Kaynak önceliği + eşleşme + bayatlık"],
+      ["Temiz aktif kayıt", summary.records || 0, "Duplicate sonrası ana akış"],
+      ["Kontrol gereken", (summary.review || 0) + (summary.stale || 0), "Bayat veya düşük güvenli kaynak"]
+    ];
+    return `<section class="v590-source-gate-user ${escapeAttr(status)}" aria-label="Gerçek veri öncesi kullanıcı kapısı">
+      <div class="v590-user-decision-head">
+        <div>
+          <span>GERÇEK VERİ ÖNCESİ SON KAPI</span>
+          <h3>Kaynaklar canlıya bağlanmadan önce ne durumda?</h3>
+          <p>Teknik adapter detayları saklandı; kullanıcı tarafında sadece kapı sonucu, skor ve kontrol ihtiyacı görünür.</p>
+        </div>
+        <em>${escapeHtml(label)}</em>
+      </div>
+      <div class="v590-guide-grid">${cards.map(([labelText, value, note]) => `<article><span>${escapeHtml(labelText)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV590PolymarketPredictionSummary(polyRecords = polymarketRecords()) {
+    const signals = getPolymarketSignals(polyRecords);
+    const s = polymarketSummary(polyRecords);
+    const liquidity = signals.reduce((sum, row) => sum + Number(row.liquidity || 0), 0);
+    const volume = signals.reduce((sum, row) => sum + Number(row.volume24h || row.volume || 0), 0);
+    const closingSoon = signals.filter(row => {
+      const hours = Number(row.closesInHours ?? row.hoursToClose ?? 999);
+      return Number.isFinite(hours) && hours <= 24;
+    }).length;
+    const priced = signals.filter(row => row.yesPrice != null || row.noPrice != null);
+    const avgYes = priced.length ? Math.round(priced.reduce((sum, row) => sum + Number(row.yesPrice || 0), 0) / priced.length * 100) : 0;
+    const rows = [
+      ["Market", s.records || 0, "Bookmaker motorundan ayrı"],
+      ["24s altı", closingSoon || s.shortTerm || 0, "Kapanış süresi kısa"],
+      ["Likidite", `$${Math.round(liquidity).toLocaleString("en-US")}`, "YES/NO piyasa derinliği"],
+      ["24s hacim", `$${Math.round(volume).toLocaleString("en-US")}`, "Demo/snapshot hacim"],
+      ["Ortalama YES", priced.length ? `${avgYes}¢` : "-", "Decimal oran değildir"]
+    ];
+    return `<section class="v590-poly-prediction-summary" aria-label="POLYMARKET prediction market özeti">
+      <div class="v590-user-decision-head compact">
+        <div><span>PREDICTION MARKET AYRI AKIŞ</span><h3>YES/NO, likidite, hacim ve kapanış süresi</h3></div>
+        <em>Bookmaker oranlarıyla karışmaz</em>
+      </div>
+      <div class="v590-poly-kpi-row">${rows.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
     </section>`;
   }
 
@@ -4468,6 +4629,7 @@
         <div><span>Ortalama Güven</span><b>${s.avgScore}</b></div>
       </div>
 
+      ${renderV590PolymarketPredictionSummary(polyBase)}
       ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
     </section>`;
   }
@@ -4554,6 +4716,7 @@
     return `
       ${renderUserModeBanner("Fırsat Radarı sadeleştirildi", "Ana ekranda sadece karar öncesi kontrol kartları görünür. Detaylı sinyal listeleri ve skor motoru geliştirici detayına taşındı.", ["Kaynak farkı", "Barem kontrolü", "Oran hareketi", "Canlı veri değildir"])}
       ${renderOpportunityCleanBoard(engine)}
+      ${renderV590OpportunityDecisionPanel(engine)}
       ${renderOpportunityRadarStatus()}
       ${renderCompactSignalStrip(engine)}
       ${renderDeveloperCollapse("Detaylı sinyal listeleri", `
@@ -4709,6 +4872,7 @@
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
       ${renderComparisonCleanBoard(data, engine)}
+      ${renderV590ComparisonDecisionGuide(data, engine)}
       ${renderComparisonReadableDigest(data)}
       ${renderCompactSignalStrip(engine)}
       ${renderDataModeNotice()}
@@ -5566,6 +5730,7 @@
   function renderSources() {
     return `<section class="v565-source-configuration v584-source-configuration" aria-label="Kaynak Yapılandırması">
       ${renderSourcesUserModePanel()}
+      ${renderV590SourceGateUserPanel()}
       ${renderSourceOverviewPanel()}
       ${renderSourceSettingsPanel()}
       ${renderLiveReadinessPanel()}
