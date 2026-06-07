@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V574 statik snapshot kontrolü
+// ORAN TERMİNALİ — güvenli JS toparlama / V578 dry-run alias konsolidasyonu
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -1680,7 +1680,11 @@
     matched: "Eşleşen",
     unmatched: "Eşleşmeyen",
     alias: "Alias",
-    marketid: "Market ID"
+    marketid: "Market ID",
+    market_id: "Market ID",
+    source_mapping: "Kaynak Haritası",
+    source_mapping_missing_catalog: "Harita Var / Katalog Eksik",
+    catalog_alias: "Katalog Alias"
   };
 
   function labelFromDictionary(value, dictionary, fallback = "-") {
@@ -2423,6 +2427,9 @@
   ];
 
   const POLYMARKET_DRY_RUN_FIELDS = ["category", "title", "yesPrice", "noPrice", "liquidity", "volume24h", "closesInHours", "tags"];
+  const DRY_RUN_BOOKMAKER_REQUIRED_FIELDS = ["source", "sport", "homeTeam", "awayTeam", "startsAt", "sourceMarketName veya marketId", "selection/outcome", "odds"];
+  const DRY_RUN_BOOKMAKER_OPTIONAL_FIELDS = ["league", "line", "period", "updatedAt", "fixtureId", "marketName", "marketLabel"];
+  const DRY_RUN_PAYLOAD_FORMATS = ["Array", "{ source, records: [] }", "{ source, payload: { records: [] } }"];
 
   function parseDryRunJsonInput(input) {
     if (typeof input !== "string") return { ok: true, payload: input };
@@ -2435,12 +2442,34 @@
     }
   }
 
+  function normalizeDryRunPayloadMeta(payload = {}) {
+    const meta = payload && typeof payload === "object" && !Array.isArray(payload) ? payload : {};
+    return {
+      source: meta.source || meta.sourceId || meta.bookmaker || "",
+      sourceId: meta.sourceId || meta.source || meta.bookmaker || "",
+      sport: meta.sport || (Array.isArray(meta.sports) ? meta.sports[0] : meta.sports) || "",
+      league: meta.league || "",
+      dataMode: "dry_run"
+    };
+  }
+
   function extractIncomingRecords(payload) {
     if (Array.isArray(payload)) return payload;
     if (payload && typeof payload === "object" && Array.isArray(payload.records)) {
-      return payload.records.map(record => ({ source: payload.source || payload.sourceId || record?.source, ...record }));
+      const meta = normalizeDryRunPayloadMeta(payload);
+      return payload.records.map(record => ({ ...meta, ...record, source: record?.source || record?.sourceId || meta.source }));
+    }
+    if (payload && typeof payload === "object" && payload.payload && typeof payload.payload === "object" && Array.isArray(payload.payload.records)) {
+      const meta = { ...normalizeDryRunPayloadMeta(payload), ...normalizeDryRunPayloadMeta(payload.payload) };
+      return payload.payload.records.map(record => ({ ...meta, ...record, source: record?.source || record?.sourceId || meta.source }));
     }
     return [];
+  }
+
+  function isSupportedDryRunPayloadShape(payload) {
+    return Array.isArray(payload)
+      || Boolean(payload && typeof payload === "object" && Array.isArray(payload.records))
+      || Boolean(payload && typeof payload === "object" && payload.payload && typeof payload.payload === "object" && Array.isArray(payload.payload.records));
   }
 
   function isPolymarketDryRunRecord(record = {}) {
@@ -2486,7 +2515,7 @@
     if (!parsed.ok) return { valid: false, errors: parsed.errors, sourceId: "", recordCount: 0, records: [], polymarketCount: 0, bookmakerCount: 0 };
     const records = extractIncomingRecords(parsed.payload);
     const errors = [];
-    if (!Array.isArray(parsed.payload) && !(parsed.payload && typeof parsed.payload === "object" && Array.isArray(parsed.payload.records))) errors.push("Payload Array veya records dizisi içeren nesne olmalı.");
+    if (!isSupportedDryRunPayloadShape(parsed.payload)) errors.push("Payload Array, { records: [] } veya { payload: { records: [] } } formatında olmalı.");
     if (!records.length) errors.push("Kayıt dizisi boş olamaz.");
     let polymarketCount = 0;
     let bookmakerCount = 0;
@@ -2540,8 +2569,68 @@
       records: normalizedRecords,
       rawRecords: records,
       isPolymarket: Boolean(validation.polymarketCount),
-      recordCount: validation.recordCount
+      recordCount: validation.recordCount,
+      polymarketCount: validation.polymarketCount,
+      bookmakerCount: validation.bookmakerCount,
+      schemaChecks: buildDryRunSchemaChecklist(records, validation)
     };
+  }
+
+  function buildDryRunSchemaChecklist(rawRecords = [], validation = {}) {
+    const rows = Array.isArray(rawRecords) ? rawRecords : [];
+    const bookmakerRows = rows.filter(row => !isPolymarketDryRunRecord(row));
+    const validOdds = bookmakerRows.filter(row => Number(row.odds) > 1).length;
+    const validFixture = bookmakerRows.filter(row => row.homeTeam && row.awayTeam && row.startsAt).length;
+    const validMarketKey = bookmakerRows.filter(row => row.marketId || row.sourceMarketName || row.marketName).length;
+    const validSource = bookmakerRows.filter(row => canonicalSourceId(row.source || row.sourceId || "")).length;
+    return [
+      { label: "Format", value: validation.valid || rows.length ? "okundu" : "bekliyor", ok: Boolean(rows.length) },
+      { label: "Kaynak", value: `${validSource}/${bookmakerRows.length || 0}`, ok: !bookmakerRows.length || validSource === bookmakerRows.length },
+      { label: "Fixture", value: `${validFixture}/${bookmakerRows.length || 0}`, ok: !bookmakerRows.length || validFixture === bookmakerRows.length },
+      { label: "Market anahtarı", value: `${validMarketKey}/${bookmakerRows.length || 0}`, ok: !bookmakerRows.length || validMarketKey === bookmakerRows.length },
+      { label: "Oran", value: `${validOdds}/${bookmakerRows.length || 0}`, ok: !bookmakerRows.length || validOdds === bookmakerRows.length },
+      { label: "Polymarket ayrımı", value: validation.polymarketCount && validation.bookmakerCount ? "karışık" : "ayrı", ok: !(validation.polymarketCount && validation.bookmakerCount) }
+    ];
+  }
+
+  function dryRunFixtureScore(record = {}, fixtureCandidates = mockOddsRecords()) {
+    if (!record || isPolymarketRecord(record)) return { score: 0, label: "yok" };
+    const fixtureKey = buildFixtureKey(record);
+    if (!fixtureKey || fixtureKey.includes("unknown")) return { score: 0, label: "şüpheli" };
+    const bestFixture = fixtureCandidates.reduce((best, candidate) => {
+      const score = scoreFixtureMatch(record, candidate);
+      return score > best.score ? { score, candidate } : best;
+    }, { score: 0, candidate: null });
+    return {
+      score: bestFixture.score,
+      label: bestFixture.score >= 0.82 ? "güçlü" : bestFixture.score >= 0.55 ? "kontrol" : "şüpheli",
+      candidate: bestFixture.candidate || null
+    };
+  }
+
+  function buildDryRunMappingRows(normalized = {}, limit = 10) {
+    if (normalized.isPolymarket) return [];
+    const rawRows = normalized.rawRecords || [];
+    const normalizedRows = normalized.records || [];
+    const fixtureCandidates = mockOddsRecords();
+    return rawRows.slice(0, limit).map((raw, index) => {
+      const row = normalizedRows[index] || null;
+      const fixture = row ? dryRunFixtureScore(row, fixtureCandidates) : { score: 0, label: "hatalı" };
+      return {
+        index: index + 1,
+        source: raw.source || raw.sourceId || "-",
+        fixture: row ? comparisonFixtureLabel(row) : `${raw.homeTeam || "?"} - ${raw.awayTeam || "?"}`,
+        sourceMarketName: raw.sourceMarketName || raw.marketName || raw.marketLabel || raw.marketId || "-",
+        selection: raw.selection || raw.outcome || "-",
+        line: raw.line ?? "-",
+        matchedMarketId: row?.matchedMarketId || row?.marketId || "",
+        matchedMarketLabel: row?.matchedMarketLabel || row?.marketLabel || "Eşleşmedi",
+        matchedBy: row?.matchedBy || "unmatched",
+        confidence: row ? Math.round(Number(row.confidence || 0) * 100) : 0,
+        fixtureStatus: fixture.label,
+        fixtureScore: Math.round(Number(fixture.score || 0) * 100)
+      };
+    });
   }
 
   function previewIncomingOddsPayload(payload) {
@@ -2563,7 +2652,12 @@
       errorCount: normalized.errors.length,
       errors: normalized.errors,
       records: normalized.records,
+      rawRecords: normalized.rawRecords,
       isPolymarket: normalized.isPolymarket,
+      polymarketCount: normalized.polymarketCount || 0,
+      bookmakerCount: normalized.bookmakerCount || 0,
+      schemaChecks: normalized.schemaChecks || [],
+      mappingRows: buildDryRunMappingRows(normalized),
       dataMode: "Dry-run"
     };
     if (normalized.isPolymarket) return preview;
@@ -3682,7 +3776,7 @@
       ["Barem Farkı Adayı", lineDiff ? `${lineDiff.lineSpread} barem farkı` : "Aday yok", lineDiff ? comparisonFamilyLabel(lineDiff.baseMarketFamily) : "Barem farkı yok"],
       ["Canlı Veri Değildir", "Dış API kapalı", "Otomatik oynama kapalı · sadece ön kontrol"]
     ];
-    return `<section class="v577-radar-status" aria-label="Fırsat Radarı gerçek veri öncesi durum">
+    return `<section class="v578-radar-status" aria-label="Fırsat Radarı gerçek veri öncesi durum">
       ${cells.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value || "-"))}</b><small>${escapeHtml(String(note || ""))}</small></article>`).join("")}
     </section>`;
   }
@@ -3824,7 +3918,7 @@
       ["Eşleşme durumu", matchStatus, `Mod: ${displayModeLabel(data.summary.dataMode || "mock")}`],
       ["Canlı veri değildir", "Dış API kapalı", "Gerçek canlı oran / otomatik bahis sonucu değildir"]
     ];
-    return `<section class="v577-comparison-digest" aria-label="Oran Karşılaştırma okunur özet">
+    return `<section class="v578-comparison-digest" aria-label="Oran Karşılaştırma okunur özet">
       ${cells.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value || "-"))}</b><small>${escapeHtml(String(note || ""))}</small></article>`).join("")}
     </section>`;
   }
@@ -4392,6 +4486,47 @@
     return state.dryRunInput || JSON.stringify(DRY_RUN_SAMPLE_PAYLOAD, null, 2);
   }
 
+  function renderDryRunSchemaGuide() {
+    const fields = DRY_RUN_BOOKMAKER_REQUIRED_FIELDS.map(field => `<span>${escapeHtml(field)}</span>`).join("");
+    const optional = DRY_RUN_BOOKMAKER_OPTIONAL_FIELDS.map(field => `<span>${escapeHtml(field)}</span>`).join("");
+    const formats = DRY_RUN_PAYLOAD_FORMATS.map(item => `<code>${escapeHtml(item)}</code>`).join("");
+    return `<div class="v578-dry-schema-guide" aria-label="Dry-run Şema Rehberi">
+      <div><b>Kabul edilen format</b><p>${formats}</p></div>
+      <div><b>Zorunlu alanlar</b><p>${fields}</p></div>
+      <div><b>Opsiyonel alanlar</b><p>${optional}</p></div>
+    </div>`;
+  }
+
+  function renderDryRunSchemaChecks(preview = {}) {
+    const checks = Array.isArray(preview.schemaChecks) ? preview.schemaChecks : [];
+    if (!checks.length) return "";
+    return `<div class="v578-schema-checks" aria-label="Dry-run Şema Kontrolleri">
+      ${checks.map(item => `<article class="${item.ok ? "ok" : "warn"}"><b>${escapeHtml(item.label)}</b><span>${escapeHtml(String(item.value))}</span></article>`).join("")}
+    </div>`;
+  }
+
+  function renderDryRunMappingTable(preview = {}) {
+    const rows = Array.isArray(preview.mappingRows) ? preview.mappingRows : [];
+    if (preview.isPolymarket) return `<div class="v578-mapping-table compact"><b>Polymarket ayrı akış</b><p>YES/NO, likidite, hacim ve kapanış süresi bookmaker market ID sistemine bağlanmaz.</p></div>`;
+    if (!rows.length) return `<div class="v578-mapping-table compact"><b>Alias sonucu yok</b><p>Dry-run testinden sonra ham market → katalog market eşleşmeleri burada görünür.</p></div>`;
+    return `<div class="v578-mapping-table" aria-label="Dry-run Alias Eşleşme Tablosu">
+      <div class="v578-mapping-head"><b>Ham market → katalog market</b><span>İlk ${rows.length} kayıt · gerçek veri değildir</span></div>
+      <table>
+        <thead><tr><th>#</th><th>Kaynak</th><th>Maç</th><th>Ham market</th><th>Katalog market</th><th>Market ID</th><th>Fixture</th><th>Güven</th></tr></thead>
+        <tbody>${rows.map(row => `<tr class="${row.matchedMarketId ? "matched" : "unmatched"}">
+          <td>${row.index}</td>
+          <td>${escapeHtml(row.source)}</td>
+          <td>${escapeHtml(row.fixture)}</td>
+          <td>${escapeHtml(row.sourceMarketName)}<small>${escapeHtml(row.selection)} · ${escapeHtml(String(row.line))}</small></td>
+          <td>${escapeHtml(row.matchedMarketLabel)}<small>${escapeHtml(displayMappingLabel(row.matchedBy))}</small></td>
+          <td><code>${escapeHtml(row.matchedMarketId || "-")}</code></td>
+          <td>${escapeHtml(row.fixtureStatus)}<small>${row.fixtureScore}%</small></td>
+          <td>${row.confidence}%</td>
+        </tr>`).join("")}</tbody>
+      </table>
+    </div>`;
+  }
+
   function renderDryRunPayloadPanel() {
     const preview = state.dryRunResult || previewIncomingOddsPayload(DRY_RUN_SAMPLE_PAYLOAD);
     const rejected = preview.errorCount > 0;
@@ -4404,6 +4539,7 @@
       ["Fixture Eşleşen", preview.fixtureMatched],
       ["Fixture Şüpheli", preview.fixtureSuspicious],
       ["Kaynak Adı", preview.sourceName || "-"],
+      ["Bookmaker / Poly", `${preview.bookmakerCount || 0} / ${preview.polymarketCount || 0}`],
       ["Veri Modu", "Dry-run"]
     ];
     return `<section class="v565-dry-run" aria-label="Dry-run Veri İçe Aktarma">
@@ -4421,6 +4557,9 @@
         <button type="button" data-dry-run-clear>Temizle</button>
       </div>
       <div class="v565-dry-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+      ${renderDryRunSchemaGuide()}
+      ${renderDryRunSchemaChecks(preview)}
+      ${renderDryRunMappingTable(preview)}
       ${preview.isPolymarket ? `<p class="v566-dry-run-info">Polymarket dry-run ayrı işlenir; YES/NO fiyatları decimal odds gibi işlenmez.</p>` : ""}
       ${preview.errors?.length ? `<div class="v566-dry-run-errors"><b>Hata Mesajları</b>${preview.errors.map(error => `<span>${escapeHtml(error)}</span>`).join("")}</div>` : ""}
     </section>`;
@@ -4437,9 +4576,11 @@
       <div class="v565-dry-grid">
         <article><b>Kayıt</b><span>${data.summary.records}</span></article>
         <article><b>Eşleşen Market</b><span>${data.summary.matchedMarkets}</span></article>
+        <article><b>Eşleşmeyen</b><span>${data.summary.unmatched}</span></article>
         <article><b>Kaynak</b><span>${data.summary.sources}</span></article>
         <article><b>Veri Modu</b><span>Dry-run</span></article>
       </div>
+      ${renderDryRunMappingTable(preview)}
     </section>`;
   }
 
@@ -4447,8 +4588,9 @@
     const adapter = collectAdapterResults();
     const readiness = [
       ["adapter runner hazır", "hazır", true],
-      ["market mapping hazır", "hazır", true],
+      ["market alias haritası hazır", "hazır", true],
       ["fixture matching hazır", "hazır", true],
+      ["nested payload şeması hazır", "hazır", true],
       ["source health hazır", "hazır", true],
       ["dry-run payload kontrolü hazır", "hazır", true],
       ["gerçek API bağlantısı kapalı", "kapalı", !LIVE_API_CONNECTION_ENABLED]

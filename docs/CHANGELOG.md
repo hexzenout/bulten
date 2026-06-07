@@ -5,6 +5,48 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 
 ## Format
 
+### V578 - 2026-06-08
+#### Değişenler
+- Dry-run payload kontrolüne şema rehberi eklendi.
+- Array, { records: [] } ve { payload: { records: [] } } formatları desteklendi.
+- Ham market → katalog market alias eşleşme tablosu eklendi.
+- Dry-run önizleme içinde Market ID, eşleşme yöntemi, fixture durumu ve güven oranı görünür hale getirildi.
+- Canlı Geçiş Hazırlığı kontrol listesine nested payload şeması ve market alias haritası eklendi.
+
+#### Düzeltilenler
+- Nested payload içindeki records dizisinin okunmama riski giderildi.
+- POLYMARKET dry-run kayıtlarının bookmaker payload ile karışmaması uyarısı güçlendirildi.
+- Katalog market eşleşme etiketleri Türkçeleştirildi: Kaynak Haritası, Katalog Alias, Market ID.
+
+#### Değişen Dosyalar
+- index.html
+- assets/js/55-odds-terminal.js
+- assets/css/55-odds-terminal.css
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- .github/workflows/update-radar.yml
+- .github/workflows/update-live-scores.yml
+- assets/data/odds-sources.json
+- assets/data/odds-snapshot.json
+- assets/js/20-stream-core.js
+- assets/js/60-crypto-core.js
+- assets/js/70-rolling-core.js
+
+#### Test Notları
+- node --check assets/js/55-odds-terminal.js geçti.
+- odds-sources.json ve odds-snapshot.json JSON parse testleri geçti.
+- ZIP bütünlük testi geçti.
+- sw.js değiştirilmedi.
+
+#### Sıradaki Hedef
+- Kaynak adapter sözleşmesini ve örnek JSON üretim formatını netleştirip gerçek veri motoruna hazırlık yapmak.
+
 ### VXX - Tarih
 #### Değişenler
 - ...

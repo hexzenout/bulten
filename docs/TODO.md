@@ -13,9 +13,10 @@
 10. V577 ile Veri Akışı Durumu bandı eklendi.
 11. V577 ile Oran Karşılaştırma ve Fırsat Radarı canlı veri değildir ayrımıyla konsolide edildi.
 12. V577 ile Kaynaklar sekmesi sade ana akışa çekildi; V574 snapshot hazırlık özeti Geliştirici Detayları içinde korundu.
+13. V578 ile dry-run payload şeması, nested records desteği ve market alias eşleşme tablosu eklendi.
 
 ## Sıradaki İşler
-1. Gerçek veri öncesi dry-run payload şemasını daha kullanışlı hale getir.
+1. Kaynak adapter sözleşmesini ve örnek JSON üretim formatını netleştir.
 2. Gerçek oran veri modelini ve Polymarket API motorunu tasarla.
 3. POLYMARKET kısa özet/dock alanını gerçek API verisi geldiğinde canlı sinyallerle besle.
 4. Kısa vadeli Polymarket marketleri için filtreleme ve sıralamayı canlı veriye bağla.

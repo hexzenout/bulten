@@ -75,8 +75,9 @@
 - Route sızıntısı oluşturulmayacak.
 
 ## Son Güncelleme
+- V578: Dry-run payload şeması, nested records desteği ve ham market → katalog market alias eşleşme tablosu eklendi; sw.js ve workflow dosyaları değiştirilmedi.
 - V577: Oran Terminali gerçek veri öncesi ana akış konsolide edildi; Veri Akışı Durumu bandı, okunur Oran Karşılaştırma özeti ve sade Kaynaklar akışı eklendi.
 - V576: Oran Karşılaştırma / Oran Hareketleri hover popup stabilitesi ve cache-bust akışı korundu.
 - V574: Statik snapshot hazırlık özeti korundu; V577 ile Geliştirici Detayları içine taşındı.
 - V545: Oran Terminali kategori sırası, Marketler sekmesine özel market dropdown, geniş futbol/basket market listeleri ve POLYMARKET tek tıklama davranışı düzeltildi.
-- Bu güncellemede sw.js değiştirilmedi; index.html sadece v577 cache-bust için değişti.
+- Bu güncellemede sw.js değiştirilmedi; index.html sadece v578 cache-bust için değişti.

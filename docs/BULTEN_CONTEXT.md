@@ -89,6 +89,9 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - V577 ile Oran Terminali üstünde Veri Akışı Durumu bandı gösterilir: veri modu, dış API, otomatik oynama, aktif kaynak, eşleşen/eşleşmeyen kayıt ve son okuma.
 - V577 ile Fırsat Radarı ve Oran Karşılaştırma statik snapshot/dry-run adaylarını canlı veri gibi göstermeden okunur özet kartlarıyla sunar.
 - V577 ile Kaynaklar sekmesi sade ana akışa çekildi; V574 statik snapshot hazırlık özeti Geliştirici Detayları içinde korundu.
+- V578 ile dry-run payload şeması konsolide edildi: Array, { records: [] } ve { payload: { records: [] } } formatları desteklenir.
+- V578 ile dry-run içinde ham market → katalog market alias eşleşme tablosu eklendi; fixture, Market ID, eşleşme yöntemi ve güven oranı görünür.
+- V578 ile bookmaker dry-run ve POLYMARKET YES/NO dry-run ayrımı daha net hale getirildi; POLYMARKET decimal odds motoruna bağlanmaz.
 - Bahis Türü / Market dropdown alanı sadece Marketler sekmesi aktifken görünür; POLYMARKET seçiliyken klasik futbol/basket market kontrolü gizlenir.
 - Polymarket panelinde spor, kripto, ekonomi, haber, kısa vade, yüksek likidite ve fırsat adayı filtreleri gösterilir.
 - Sıradaki aşama gerçek Polymarket veri çekme motorudur.
@@ -134,8 +137,8 @@ Uzun açıklama yerine uygulanabilir kod, net blok veya tam ZIP/paket tercih edi
 - API kota tüketimi dikkatli yönetilecek.
 
 ## Son Aktif Hedef
-V577 ile Oran Terminali gerçek veri öncesi ana akışı konsolide edildi.
-Sıradaki hedef, dry-run payload şemasını daha kullanışlı hale getirmek ve ardından gerçek oran / Polymarket veri motoru tasarımına geçmektir.
+V578 ile Oran Terminali dry-run payload şeması ve market alias eşleştirme görünümü konsolide edildi.
+Sıradaki hedef, gerçek veri motoruna geçmeden önce kaynak adapter sözleşmesini ve örnek JSON üretim formatını netleştirmektir.
 
 ## Açık Riskler
 - Uzun ChatGPT sohbetinde lag oluşuyor.
@@ -145,6 +148,7 @@ Sıradaki hedef, dry-run payload şemasını daha kullanışlı hale getirmek ve
 - sw.js gereksiz yere değişmemeli.
 
 ## Son Bilinen Paket Notu
+- V578: Dry-run payload şeması, nested records desteği ve ham market → katalog market alias eşleşme tablosu eklendi; sw.js/workflow değiştirilmedi, index.html sadece cache-bust v578 için değişti.
 - V577: Oran Terminali üstüne Veri Akışı Durumu bandı eklendi; Fırsat Radarı ve Oran Karşılaştırma okunur özetlerle konsolide edildi; Kaynaklar sadeleştirildi; sw.js değiştirilmedi, index.html sadece cache-bust v577 için değişti.
 - V576: Oran Karşılaştırma / Oran Hareketleri popup stabilitesi ve cache-bust çözümü korundu.
 - V574: Statik snapshot hazırlık özeti korundu; V577 ile Geliştirici Detayları içine taşındı.
