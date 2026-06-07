@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V597-V600 son UI + kapalı connector hazırlığı
+// ORAN TERMİNALİ — güvenli JS toparlama / V601-V604 son stabilizasyon + mini kullanıcı temizliği
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -4326,6 +4326,149 @@
     </section>`;
   }
 
+
+  // -------------------------------
+  // V601-V604 Final Stabilization / User Mini Cleanup
+  // -------------------------------
+  function buildV601StabilizationReport(adapter = collectAdapterResults(), contract = buildAdapterOutputContractReport(adapter)) {
+    const gate = buildAdapterGateReport(adapter);
+    const engine = oddsSignalEngineResults();
+    const flow = activeDataFlowSummary();
+    const summary = contract.summary || {};
+    const total = Number(summary.records || 0);
+    const clean = Number(summary.clean || 0);
+    const review = Number(summary.review || 0);
+    const blocked = Number(summary.blocked || 0);
+    const duplicate = Number(summary.duplicates || 0);
+    const stale = Number(summary.stale || 0);
+    const lowConfidence = Number(summary.lowConfidence || 0);
+    const controlTotal = review + blocked + stale + lowConfidence;
+    const cleanPct = total ? Math.round((clean / total) * 100) : 0;
+    const duplicatePct = (total + duplicate) ? Math.round((duplicate / (total + duplicate)) * 100) : 0;
+    const gateScore = Number(summary.averageScore || gate.summary?.averageScore || 0);
+    const status = clean && !blocked && gateScore >= ADAPTER_OUTPUT_READY_SCORE ? "ready" : clean ? "review" : "waiting";
+    const label = status === "ready" ? "Stabil · canlı kapalı" : status === "review" ? "Stabil · kontrol var" : "Veri bekliyor";
+    return {
+      adapter,
+      contract,
+      gate,
+      engine,
+      flow,
+      summary,
+      total,
+      clean,
+      review,
+      blocked,
+      duplicate,
+      stale,
+      lowConfidence,
+      controlTotal,
+      cleanPct,
+      duplicatePct,
+      gateScore,
+      status,
+      label,
+      repeatedPanelsReduced: true,
+      liveClosed: !LIVE_API_CONNECTION_ENABLED && !FETCH_SCRAPING_ENABLED && !AUTO_BETTING_ENABLED
+    };
+  }
+
+  function renderV601StabilityRibbon(report = buildV601StabilizationReport()) {
+    const cards = [
+      ["Durum", report.label, "Gerçek bağlantı kapalı"],
+      ["Temiz kayıt", `${report.clean}/${report.total}`, `${report.cleanPct}% ana panel uyumu`],
+      ["Kontrol", report.controlTotal, "Düşük güven / bayat / blok"],
+      ["Duplicate", report.duplicate, `${report.duplicatePct}% tekrar temizliği`],
+      ["Kapı skoru", `${report.gateScore}/100`, "Adapter output standardı"],
+      ["Akış", signalDataModeText(report.flow?.mode), "Dry-run > snapshot > mock"]
+    ];
+    return `<section class="v604-stability-ribbon ${escapeAttr(report.status)}" aria-label="V601-V604 son stabilizasyon bandı">
+      <div class="v604-ribbon-head">
+        <div><span>V601-V604 SON STABİLİZASYON</span><h3>Tek ekran, daha az tekrar, kapalı canlı bağlantı</h3></div>
+        <strong>${escapeHtml(report.liveClosed ? "API / scraping / otomatik oynama kapalı" : "Dış bağlantı kontrol et")}</strong>
+      </div>
+      <div class="v604-ribbon-grid">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV601OpportunityFocusPanel(engine = oddsSignalEngineResults(), report = buildV601StabilizationReport()) {
+    const best = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const movement = engine.movementSignals?.[0] || null;
+    const review = engine.lowConfidenceSignals?.[0] || null;
+    const mainAction = best ? "Kaynak farkını incele" : movement ? "Oran hareketini izle" : line ? "Barem farkını ele" : review ? "Düşük güveni kontrol et" : "Veri bekle";
+    const cards = [
+      ["Ana aksiyon", mainAction, best ? best.title : movement ? movement.title : line ? line.title : "Canlı veri beklenmiyor"],
+      ["En iyi aday", best ? `${best.value} · ${best.score}/100` : "Yok", best ? "Aynı market/barem kontrolü gerekir" : "Kaynak farkı yok"],
+      ["Yanıltıcı fark", line ? line.value : "Temiz", "Barem farklıysa fırsat değildir"],
+      ["Kontrol dışı", report.controlTotal, "Ana karta yükseltilmeyen kayıt"]
+    ];
+    return `<section class="v604-focus-panel" aria-label="Fırsat Radarı tek odak paneli">
+      <div class="v604-panel-title"><span>FIRSAT RADARI ODAK</span><h3>Tek karar özeti</h3><p>Tekrar eden radar kartları kapalı teknik alana taşındı. Bu alan canlı fırsat değil, ön kontrol ekranıdır.</p></div>
+      <div class="v604-focus-grid">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV601ComparisonControlPanel(data = comparisonEngineResults(), engine = oddsSignalEngineResults(), report = buildV601StabilizationReport()) {
+    const best = engine.sourceDiffSignals?.[0] || null;
+    const line = engine.lineDiffSignals?.[0] || null;
+    const matched = Number(data.summary?.matchedMarkets || 0);
+    const total = Number(data.summary?.records || 0);
+    const matchPct = total ? Math.round((matched / total) * 100) : 0;
+    const verdict = report.status === "ready" ? "Okunabilir karşılaştırma" : report.status === "review" ? "Kontrollü karşılaştırma" : "Karşılaştırma beklemede";
+    const cards = [
+      ["Karar", verdict, "Canlı veri değildir"],
+      ["Eşleşme", `${matchPct}%`, `${matched}/${total} kayıt`],
+      ["En iyi fark", best ? best.value : "Yok", best ? best.title : "Aynı baremde çoklu kaynak beklenir"],
+      ["Barem riski", line ? line.value : "Temiz", "Yanıltıcı fark ana fırsata dönmez"],
+      ["Kontrol", report.controlTotal, "Teknik alana ayrılan kayıt"]
+    ];
+    return `<section class="v604-comparison-control" aria-label="Oran karşılaştırma tek karar paneli">
+      <div class="v604-panel-title"><span>KARŞILAŞTIRMA KONTROLÜ</span><h3>${escapeHtml(verdict)}</h3><p>Özet kartları tekleştirildi; detaylı skor ve eski özetler geliştirici bloğuna taşındı.</p></div>
+      <div class="v604-focus-grid comparison">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV601SourcesCompactPanel(report = buildV601StabilizationReport()) {
+    const gate = report.gate || {};
+    const cards = [
+      ["Son durum", report.label, "Kapalı connector korunuyor"],
+      ["Hazır kaynak", gate.summary?.ready || 0, "Kaynak kapısı"],
+      ["Kontrol kaynak", gate.summary?.review || 0, "Güven / bayatlık"],
+      ["Bekleyen", gate.summary?.waiting || 0, "Adapter slotu"],
+      ["Tekrar temizliği", report.duplicate, "Ana akışı şişirmez"],
+      ["Son okuma", formatSourceUpdatedAt(report.flow?.lastReadAt), signalDataModeText(report.flow?.mode)]
+    ];
+    return `<section class="v604-sources-compact ${escapeAttr(report.status)}" aria-label="Kaynaklar kompakt son durum">
+      <div class="v604-panel-title"><span>KAYNAKLAR KOMPAKT</span><h3>Canlı öncesi son stabil durum</h3><p>Kaynak / adapter / dry-run teknik blokları korunur ama ilk ekranda kısa durum gösterilir.</p></div>
+      <div class="v604-focus-grid sources">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV601PolymarketYesNoBoard(polyRecords = polymarketRecords()) {
+    const signals = getPolymarketSignals(polyRecords);
+    const top = signals[0] || null;
+    const s = polymarketSummary(polyRecords);
+    const yes = top?.yesPrice != null ? Math.max(0, Math.min(1, Number(top.yesPrice))) : null;
+    const no = top?.noPrice != null ? Math.max(0, Math.min(1, Number(top.noPrice))) : yes != null ? Math.max(0, 1 - yes) : null;
+    const yesPct = yes != null ? Math.round(yes * 100) : 0;
+    const noPct = no != null ? Math.round(no * 100) : 0;
+    const hours = top ? Number(top.closesInHours ?? top.hoursToClose ?? hoursUntil(top.expiresAt || top.kickoff)) : null;
+    const cards = [
+      ["Öne çıkan", top ? (top.question || top.match || "Polymarket") : "Veri bekle", top ? `${Math.round(top.score || 0)} skor` : "YES/NO akışı ayrı"],
+      ["YES", yes != null ? `${yesPct}¢` : "-", "Tahmin fiyatı"],
+      ["NO", no != null ? `${noPct}¢` : "-", "Karşı taraf"],
+      ["Kapanış", Number.isFinite(hours) ? `${Math.max(0, Math.round(hours))}s` : "-", "Bookmaker saatinden ayrı"],
+      ["Likidite", top?.liquidity ? `$${Math.round(Number(top.liquidity)).toLocaleString("en-US")}` : "-", "Prediction market"],
+      ["Toplam market", s.records || 0, "Normal oranlara karışmaz"]
+    ];
+    return `<section class="v604-poly-yesno" aria-label="POLYMARKET YES NO kullanıcı paneli">
+      <div class="v604-panel-title"><span>POLYMARKET YES/NO</span><h3>Prediction market akışı ayrı</h3><p>YES/NO fiyatı, kapanış ve likidite normal bookmaker oran motorundan bağımsız okunur.</p></div>
+      <div class="v604-focus-grid poly">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
+      ${top ? `<div class="v604-poly-bars"><span style="--w:${yesPct}%"><b>YES</b><em>${yesPct}¢</em></span><span style="--w:${noPct}%"><b>NO</b><em>${noPct}¢</em></span></div>` : ""}
+    </section>`;
+  }
+
   function getArbs(list = records()) {
     const buckets = {};
     list.forEach(r => {
@@ -4986,10 +5129,13 @@
         <div><span>Ortalama Güven</span><b>${s.avgScore}</b></div>
       </div>
 
-      ${renderV590PolymarketPredictionSummary(polyBase)}
-      ${renderV597PolymarketProfessionalPanel(polyBase)}
+      ${renderV601PolymarketYesNoBoard(polyBase)}
       ${renderV596PolymarketRankingPanel(polyBase)}
       ${list.length ? `<div class="v541-poly-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
+      ${renderDeveloperCollapse("POLYMARKET teknik özetleri", `
+        ${renderV590PolymarketPredictionSummary(polyBase)}
+        ${renderV597PolymarketProfessionalPanel(polyBase)}
+      `, "Prediction market teknik skorları ve eski özetler")}
     </section>`;
   }
 
@@ -5072,14 +5218,18 @@
 
   function renderOpportunities() {
     const engine = oddsSignalEngineResults();
+    const report = buildV601StabilizationReport();
     return `
-      ${renderUserModeBanner("Fırsat Radarı sadeleştirildi", "Ana ekranda sadece karar öncesi kontrol kartları görünür. Detaylı sinyal listeleri ve skor motoru geliştirici detayına taşındı.", ["Kaynak farkı", "Barem kontrolü", "Oran hareketi", "Canlı veri değildir"])}
-      ${renderV597OpportunityActionStrip(engine)}
-      ${renderOpportunityCleanBoard(engine)}
-      ${renderV590OpportunityDecisionPanel(engine)}
-      ${renderOpportunityRadarStatus()}
-      ${renderCompactSignalStrip(engine)}
-      ${renderDeveloperCollapse("Detaylı sinyal listeleri", `
+      ${renderUserModeBanner("Fırsat Radarı sadeleştirildi", "Ana ekranda tek karar özeti var. Eski tekrar eden radar/aksiyon/status kartları kapalı teknik alana taşındı.", ["Tek odak", "Daha az tekrar", "Canlı veri değildir", "Otomatik oynama kapalı"])}
+      ${renderV601StabilityRibbon(report)}
+      ${renderV601OpportunityFocusPanel(engine, report)}
+      ${renderOpportunityComparisonDemoCard()}
+      ${renderDeveloperCollapse("Detaylı radar ve sinyal teknik alanı", `
+        ${renderV597OpportunityActionStrip(engine)}
+        ${renderOpportunityCleanBoard(engine)}
+        ${renderV590OpportunityDecisionPanel(engine)}
+        ${renderOpportunityRadarStatus()}
+        ${renderCompactSignalStrip(engine)}
         ${renderSignalEngineHeader(engine)}
         <div class="odds-v528-grid v581-opportunity-grid">
           ${panel("Kaynak Farkı Sinyalleri", renderSignalCards(engine.sourceDiffSignals, 5), "green")}
@@ -5087,8 +5237,7 @@
           ${panel("Oran Hareketi Sinyalleri", renderSignalCards(engine.movementSignals, 5), "red")}
           ${panel("Düşük Güven / Kontrol", renderSignalCards(engine.lowConfidenceSignals, 5), "purple")}
         </div>
-      `, "Skor motoru, sinyal listeleri ve teknik notlar")}
-      ${renderOpportunityComparisonDemoCard()}
+      `, "Eski özet kartları, skor motoru, sinyal listeleri ve teknik notlar")}
       <p class="v568-live-disclaimer">Fırsat Radarı tek sinyal motorundan beslenir. Bu alan canlı veri değildir; snapshot/dry-run/mock ön kontrol çıktısıdır.</p>
       ${renderPolymarketDock()}`;
   }
@@ -5222,31 +5371,34 @@
   function renderComparisonEnginePanel() {
     const data = comparisonEngineResults();
     const engine = oddsSignalEngineResults();
+    const report = buildV601StabilizationReport();
     return `<section class="v557-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
         <div>
           <span>Sade karşılaştırma</span>
           <h3>Oran Karşılaştırma</h3>
-          <p>Ana görünümde sadece okunur özet, kaynak farkı ve eşleşme durumu gösterilir. Teknik snapshot/adapter detayları kapalı alandadır.</p>
+          <p>Ana görünümde tek karar paneli, tablo ve barem önizlemesi kalır. Eski tekrar eden özetler teknik alana taşındı.</p>
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
-      ${renderComparisonCleanBoard(data, engine)}
-      ${renderV597ComparisonVerdict(data, engine)}
-      ${renderV590ComparisonDecisionGuide(data, engine)}
-      ${renderComparisonReadableDigest(data)}
-      ${renderCompactSignalStrip(engine)}
-      ${renderDataModeNotice()}
-      ${renderComparisonSummaryBoxes(data)}
-      ${renderComparisonHealth(data)}
+      ${renderV601StabilityRibbon(report)}
+      ${renderV601ComparisonControlPanel(data, engine, report)}
       ${renderComparisonRows(data)}
       ${renderLineDifferencePreview(data)}
       ${renderDryRunComparisonPreview()}
-      ${renderDeveloperCollapse("Karşılaştırma teknik detayları", `
+      ${renderDeveloperCollapse("Karşılaştırma teknik özetleri", `
+        ${renderComparisonCleanBoard(data, engine)}
+        ${renderV597ComparisonVerdict(data, engine)}
+        ${renderV590ComparisonDecisionGuide(data, engine)}
+        ${renderComparisonReadableDigest(data)}
+        ${renderCompactSignalStrip(engine)}
+        ${renderDataModeNotice()}
+        ${renderComparisonSummaryBoxes(data)}
+        ${renderComparisonHealth(data)}
         ${renderSignalEngineHeader(engine)}
         ${renderReadinessChecklist()}
         ${renderStaticSnapshotStatusPanel()}
-      `, "Sinyal motoru, canlı hazırlık ve snapshot durumu")}
+      `, "Eski özetler, sinyal motoru, canlı hazırlık ve snapshot durumu")}
     </section>`;
   }
 
@@ -6091,12 +6243,15 @@
   }
 
   function renderSources() {
-    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration" aria-label="Kaynak Yapılandırması">
+    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration" aria-label="Kaynak Yapılandırması">
       ${renderSourcesUserModePanel()}
-      ${renderV597SourceCommandPanel()}
-      ${renderV597LiveConnectorPanel()}
-      ${renderDeveloperCollapse("Kaynak Ayarları ve Özet", `
+      ${renderV601SourcesCompactPanel()}
+      ${renderDeveloperCollapse("Kaynak kontrol merkezi", `
+        ${renderV597SourceCommandPanel()}
+        ${renderV597LiveConnectorPanel()}
         ${renderV590SourceGateUserPanel()}
+      `, "Kapalı connector, canlı öncesi kapı ve kullanıcı kontrol kartları")}
+      ${renderDeveloperCollapse("Kaynak Ayarları ve Özet", `
         ${renderSourceOverviewPanel()}
         ${renderSourceSettingsPanel()}
         ${renderLiveReadinessPanel()}
