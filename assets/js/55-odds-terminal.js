@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V578 dry-run alias konsolidasyonu
+// ORAN TERMİNALİ — güvenli JS toparlama / V579 adapter sözleşmesi ve dry-run laboratuvarı
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -2426,6 +2426,81 @@
     }
   ];
 
+  const DRY_RUN_SAMPLE_PAYLOADS = {
+    flat: {
+      label: "Bookmaker düz dizi",
+      note: "En basit format; her kayıt kendi source/sport bilgisini taşır.",
+      payload: DRY_RUN_SAMPLE_PAYLOAD
+    },
+    nested: {
+      label: "Bookmaker nested",
+      note: "Gerçek adapter çıktısına daha yakın nested records formatı.",
+      payload: {
+        source: "mock_book_a",
+        sport: "basketball",
+        payload: {
+          records: [
+            {
+              homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
+              sourceMarketName: "Both Teams To Score Over 68.5 Points Including OT", selection: "over", line: 68.5, odds: 1.74
+            },
+            {
+              homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
+              sourceMarketName: "Total Points O/U", selection: "under", line: 164.5, odds: 1.91
+            }
+          ]
+        }
+      }
+    },
+    marketId: {
+      label: "Market ID direkt",
+      note: "Kaynak market adı yoksa stable marketId ile doğrudan katalog bağlantısı.",
+      payload: [
+        {
+          source: "source_book_01", sport: "football", homeTeam: "Real Madrid", awayTeam: "Barcelona", league: "La Liga",
+          startsAt: "2026-06-05T20:00:00Z", marketId: "football.corner.total_9_5_ou", selection: "over", line: 9.5, odds: 1.96
+        },
+        {
+          source: "source_book_04", sport: "basketball", homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL",
+          startsAt: "2026-06-05T18:00:00Z", marketId: "basket.total_points_ou", selection: "under", line: 164.5, odds: 1.88
+        }
+      ]
+    },
+    polymarket: {
+      label: "POLYMARKET ayrı",
+      note: "YES/NO fiyatı; bookmaker odds karşılaştırmasına dahil olmaz.",
+      payload: [
+        {
+          source: "polymarket_mock", category: "crypto", title: "Bitcoin bu hafta 70.000$ üzerinde kapanır mı?",
+          yesPrice: 0.52, noPrice: 0.48, liquidity: 260000, volume24h: 88000, closesInHours: 5.4, tags: ["kripto", "bitcoin", "kısa vade"]
+        }
+      ]
+    },
+    mixedError: {
+      label: "Hatalı karışık örnek",
+      note: "Bookmaker + Polymarket karışırsa bilerek reddedilir.",
+      payload: [
+        {
+          source: "mock_book_a", sport: "football", homeTeam: "Arsenal", awayTeam: "Chelsea", startsAt: "2026-06-05T19:00:00Z",
+          sourceMarketName: "Total Goals Over/Under 2.5", selection: "over", line: 2.5, odds: 1.87
+        },
+        {
+          source: "polymarket_mock", category: "crypto", title: "ETH bugün 4000$ üstü kapanır mı?", yesPrice: 0.43, noPrice: 0.57
+        }
+      ]
+    }
+  };
+
+  const DRY_RUN_CONTRACT_ROWS = [
+    ["Giriş", "JSON Array veya records içeren object"],
+    ["Kayıt", "Bookmaker kayıtları fixture + market + odds taşır"],
+    ["Fixture", "homeTeam + awayTeam + startsAt ile stable fixtureKey üretilir"],
+    ["Market", "marketId önce, sonra sourceMarketName / alias eşleşmesi kullanılır"],
+    ["Çıkış", "standard odds record + matchedMarketId + confidence"],
+    ["Güvenlik", "fetch/API/scraping ve otomatik oynama kapalıdır"],
+    ["POLYMARKET", "YES/NO akışı ayrı kalır; decimal bookmaker motoruna karışmaz"]
+  ];
+
   const POLYMARKET_DRY_RUN_FIELDS = ["category", "title", "yesPrice", "noPrice", "liquidity", "volume24h", "closesInHours", "tags"];
   const DRY_RUN_BOOKMAKER_REQUIRED_FIELDS = ["source", "sport", "homeTeam", "awayTeam", "startsAt", "sourceMarketName veya marketId", "selection/outcome", "odds"];
   const DRY_RUN_BOOKMAKER_OPTIONAL_FIELDS = ["league", "line", "period", "updatedAt", "fixtureId", "marketName", "marketLabel"];
@@ -2608,7 +2683,7 @@
     };
   }
 
-  function buildDryRunMappingRows(normalized = {}, limit = 10) {
+  function buildDryRunMappingRows(normalized = {}, limit = 20) {
     if (normalized.isPolymarket) return [];
     const rawRows = normalized.rawRecords || [];
     const normalizedRows = normalized.records || [];
@@ -2616,6 +2691,10 @@
     return rawRows.slice(0, limit).map((raw, index) => {
       const row = normalizedRows[index] || null;
       const fixture = row ? dryRunFixtureScore(row, fixtureCandidates) : { score: 0, label: "hatalı" };
+      const confidence = row ? Math.round(Number(row.confidence || 0) * 100) : 0;
+      const fixtureScore = Math.round(Number(fixture.score || 0) * 100);
+      const qualityScore = row ? Math.round((confidence * 0.65) + (fixtureScore * 0.25) + ((row.matchedMarketId || row.marketId) ? 10 : 0)) : 0;
+      const duplicateKey = row ? [row.source, row.fixtureKey, row.marketId, row.selection, row.line].map(value => String(value ?? "")).join("|") : "";
       return {
         index: index + 1,
         source: raw.source || raw.sourceId || "-",
@@ -2623,14 +2702,49 @@
         sourceMarketName: raw.sourceMarketName || raw.marketName || raw.marketLabel || raw.marketId || "-",
         selection: raw.selection || raw.outcome || "-",
         line: raw.line ?? "-",
+        odds: raw.odds ?? row?.odds ?? "-",
         matchedMarketId: row?.matchedMarketId || row?.marketId || "",
         matchedMarketLabel: row?.matchedMarketLabel || row?.marketLabel || "Eşleşmedi",
         matchedBy: row?.matchedBy || "unmatched",
-        confidence: row ? Math.round(Number(row.confidence || 0) * 100) : 0,
+        confidence,
         fixtureStatus: fixture.label,
-        fixtureScore: Math.round(Number(fixture.score || 0) * 100)
+        fixtureScore,
+        qualityScore: Math.max(0, Math.min(100, qualityScore)),
+        qualityLabel: mappingQualityLabel(qualityScore),
+        duplicateKey
       };
     });
+  }
+
+  function buildDryRunQualityRows(mappingRows = []) {
+    const seen = new Map();
+    return (Array.isArray(mappingRows) ? mappingRows : []).map(row => {
+      const key = row.duplicateKey || `${row.source}|${row.fixture}|${row.matchedMarketId}|${row.selection}|${row.line}`;
+      const nextCount = (seen.get(key) || 0) + 1;
+      seen.set(key, nextCount);
+      return {
+        ...row,
+        duplicate: Boolean(key && nextCount > 1),
+        qualityClass: mappingQualityClass(row.qualityScore)
+      };
+    });
+  }
+
+  function summarizeDryRunQuality(qualityRows = []) {
+    const rows = Array.isArray(qualityRows) ? qualityRows : [];
+    const total = rows.length || 0;
+    const summary = { score: 0, high: 0, mid: 0, low: 0, none: 0, duplicates: 0 };
+    if (!total) return summary;
+    const scoreTotal = rows.reduce((sum, row) => sum + Number(row.qualityScore || 0), 0);
+    rows.forEach(row => {
+      if (row.duplicate) summary.duplicates += 1;
+      if (row.qualityScore >= 85) summary.high += 1;
+      else if (row.qualityScore >= 65) summary.mid += 1;
+      else if (row.qualityScore > 0) summary.low += 1;
+      else summary.none += 1;
+    });
+    summary.score = Math.round(scoreTotal / total);
+    return summary;
   }
 
   function previewIncomingOddsPayload(payload) {
@@ -2639,6 +2753,8 @@
       const source = findEffectiveSource(canonicalSourceId(record.source || record.sourceId || ""));
       return source ? displaySourceName(source) : (record.source || record.sourceId || "Bilinmeyen kaynak");
     }))];
+    const mappingRows = buildDryRunMappingRows(normalized);
+    const qualityRows = buildDryRunQualityRows(mappingRows);
     const preview = {
       sourceId: normalized.sourceId,
       sourceName: sourceNames.join(", ") || "-",
@@ -2657,7 +2773,9 @@
       polymarketCount: normalized.polymarketCount || 0,
       bookmakerCount: normalized.bookmakerCount || 0,
       schemaChecks: normalized.schemaChecks || [],
-      mappingRows: buildDryRunMappingRows(normalized),
+      mappingRows: qualityRows,
+      qualityRows,
+      qualitySummary: summarizeDryRunQuality(qualityRows),
       dataMode: "Dry-run"
     };
     if (normalized.isPolymarket) return preview;
@@ -4482,8 +4600,68 @@
     </section>`;
   }
 
+  function dryRunSamplePayloadToJson(sampleKey = "flat") {
+    const sample = DRY_RUN_SAMPLE_PAYLOADS[sampleKey] || DRY_RUN_SAMPLE_PAYLOADS.flat;
+    return JSON.stringify(sample.payload, null, 2);
+  }
+
   function getDryRunInputValue() {
-    return state.dryRunInput || JSON.stringify(DRY_RUN_SAMPLE_PAYLOAD, null, 2);
+    return state.dryRunInput || dryRunSamplePayloadToJson("flat");
+  }
+
+  function renderDryRunSampleButtons() {
+    return `<div class="v579-dry-samples" aria-label="Dry-run Örnek Payload Seçimi">
+      ${Object.entries(DRY_RUN_SAMPLE_PAYLOADS).map(([key, sample]) => `<button type="button" data-dry-run-sample="${escapeHtml(key)}"><b>${escapeHtml(sample.label)}</b><span>${escapeHtml(sample.note)}</span></button>`).join("")}
+    </div>`;
+  }
+
+  function renderDryRunContractPanel() {
+    return `<div class="v579-adapter-contract" aria-label="Adapter Sözleşmesi">
+      <div class="v579-adapter-contract-head">
+        <b>Adapter Sözleşmesi</b>
+        <span>Gerçek veri öncesi kabul/normalize/çıktı kuralları</span>
+      </div>
+      <div class="v579-contract-grid">
+        ${DRY_RUN_CONTRACT_ROWS.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(value)}</span></article>`).join("")}
+      </div>
+    </div>`;
+  }
+
+  function mappingQualityLabel(score = 0) {
+    const value = Number(score || 0);
+    if (value >= 85) return "yüksek";
+    if (value >= 65) return "orta";
+    if (value > 0) return "düşük";
+    return "eşleşmedi";
+  }
+
+  function mappingQualityClass(score = 0) {
+    const value = Number(score || 0);
+    if (value >= 85) return "quality-high";
+    if (value >= 65) return "quality-mid";
+    if (value > 0) return "quality-low";
+    return "quality-none";
+  }
+
+  function renderDryRunQualityPanel(preview = {}) {
+    if (preview.isPolymarket) {
+      return `<div class="v579-quality-panel polymarket"><b>POLYMARKET Kalite Kontrolü</b><p>YES/NO fiyatı ayrı doğrulanır. Market ID / alias kalite puanı bookmaker motoru için hesaplanmaz.</p></div>`;
+    }
+    const rows = preview.qualityRows || [];
+    const summary = preview.qualitySummary || {};
+    if (!rows.length) return `<div class="v579-quality-panel"><b>Kalite Kontrolü</b><p>Dry-run testinden sonra eşleşme kalitesi burada görünecek.</p></div>`;
+    const cards = [
+      ["Kalite Skoru", `${summary.score || 0}%`],
+      ["Yüksek", summary.high || 0],
+      ["Orta", summary.mid || 0],
+      ["Düşük", summary.low || 0],
+      ["Eşleşmedi", summary.none || 0],
+      ["Tekrarlı Kayıt", summary.duplicates || 0]
+    ];
+    return `<div class="v579-quality-panel" aria-label="Dry-run Eşleşme Kalitesi">
+      <div class="v579-quality-head"><b>Eşleşme Kalitesi</b><span>Market + fixture + oran alanlarına göre dry-run kalite özeti</span></div>
+      <div class="v579-quality-cards">${cards.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+    </div>`;
   }
 
   function renderDryRunSchemaGuide() {
@@ -4512,16 +4690,16 @@
     return `<div class="v578-mapping-table" aria-label="Dry-run Alias Eşleşme Tablosu">
       <div class="v578-mapping-head"><b>Ham market → katalog market</b><span>İlk ${rows.length} kayıt · gerçek veri değildir</span></div>
       <table>
-        <thead><tr><th>#</th><th>Kaynak</th><th>Maç</th><th>Ham market</th><th>Katalog market</th><th>Market ID</th><th>Fixture</th><th>Güven</th></tr></thead>
-        <tbody>${rows.map(row => `<tr class="${row.matchedMarketId ? "matched" : "unmatched"}">
+        <thead><tr><th>#</th><th>Kaynak</th><th>Maç</th><th>Ham market</th><th>Katalog market</th><th>Market ID</th><th>Fixture</th><th>Kalite</th></tr></thead>
+        <tbody>${rows.map(row => `<tr class="${row.matchedMarketId ? "matched" : "unmatched"} ${row.duplicate ? "duplicate" : ""}">
           <td>${row.index}</td>
           <td>${escapeHtml(row.source)}</td>
           <td>${escapeHtml(row.fixture)}</td>
-          <td>${escapeHtml(row.sourceMarketName)}<small>${escapeHtml(row.selection)} · ${escapeHtml(String(row.line))}</small></td>
-          <td>${escapeHtml(row.matchedMarketLabel)}<small>${escapeHtml(displayMappingLabel(row.matchedBy))}</small></td>
+          <td>${escapeHtml(row.sourceMarketName)}<small>${escapeHtml(row.selection)} · çizgi ${escapeHtml(String(row.line))} · oran ${escapeHtml(String(row.odds))}</small></td>
+          <td>${escapeHtml(row.matchedMarketLabel)}<small>${escapeHtml(displayMappingLabel(row.matchedBy))}${row.duplicate ? " · tekrarlı" : ""}</small></td>
           <td><code>${escapeHtml(row.matchedMarketId || "-")}</code></td>
           <td>${escapeHtml(row.fixtureStatus)}<small>${row.fixtureScore}%</small></td>
-          <td>${row.confidence}%</td>
+          <td><span class="v579-quality-badge ${escapeHtml(row.qualityClass || mappingQualityClass(row.qualityScore))}">${escapeHtml(row.qualityLabel || mappingQualityLabel(row.qualityScore))} · ${row.qualityScore || 0}%</span><small>alias ${row.confidence}%</small></td>
         </tr>`).join("")}</tbody>
       </table>
     </div>`;
@@ -4551,14 +4729,17 @@
         </div>
         <em>${rejected ? "Türkçe hata mesajı hazır" : "Gerçek bağlantı kapalı"}</em>
       </div>
+      ${renderDryRunSampleButtons()}
       <textarea class="v566-dry-run-textarea" data-dry-run-input rows="10" spellcheck="false" placeholder="Örnek JSON kayıt dizisi yapıştırın">${escapeHtml(getDryRunInputValue())}</textarea>
       <div class="v566-dry-run-actions">
         <button type="button" data-dry-run-test>Dry-run Test Et</button>
         <button type="button" data-dry-run-clear>Temizle</button>
       </div>
       <div class="v565-dry-grid">${rows.map(([label, value]) => `<article><b>${escapeHtml(label)}</b><span>${escapeHtml(String(value))}</span></article>`).join("")}</div>
+      ${renderDryRunContractPanel()}
       ${renderDryRunSchemaGuide()}
       ${renderDryRunSchemaChecks(preview)}
+      ${renderDryRunQualityPanel(preview)}
       ${renderDryRunMappingTable(preview)}
       ${preview.isPolymarket ? `<p class="v566-dry-run-info">Polymarket dry-run ayrı işlenir; YES/NO fiyatları decimal odds gibi işlenmez.</p>` : ""}
       ${preview.errors?.length ? `<div class="v566-dry-run-errors"><b>Hata Mesajları</b>${preview.errors.map(error => `<span>${escapeHtml(error)}</span>`).join("")}</div>` : ""}
@@ -4593,6 +4774,8 @@
       ["nested payload şeması hazır", "hazır", true],
       ["source health hazır", "hazır", true],
       ["dry-run payload kontrolü hazır", "hazır", true],
+      ["adapter sözleşmesi görünür", "hazır", true],
+      ["eşleşme kalite skoru hazır", "hazır", true],
       ["gerçek API bağlantısı kapalı", "kapalı", !LIVE_API_CONNECTION_ENABLED]
     ];
     return `<section class="v562-live-readiness" aria-label="Canlı Geçiş Hazırlığı">
@@ -4929,6 +5112,18 @@
       saveLocalState();
       if (state.tab === "sources") renderSourceFilterOnly();
       else renderContentOnly();
+      return;
+    }
+
+    const dryRunSample = e.target.closest("[data-dry-run-sample]");
+    if (dryRunSample) {
+      e.preventDefault();
+      const sampleKey = dryRunSample.dataset.dryRunSample || "flat";
+      state.dryRunInput = dryRunSamplePayloadToJson(sampleKey);
+      state.dryRunResult = previewIncomingOddsPayload(state.dryRunInput);
+      clearSourceDerivedCaches();
+      saveLocalState();
+      renderDryRunPanelOnly();
       return;
     }
 
