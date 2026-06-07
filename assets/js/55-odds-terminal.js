@@ -3236,6 +3236,7 @@
       <div><span>Dış API bağlantısı</span><b>Kapalı</b></div>
       <div><span>Otomatik oynama</span><b>Kapalı</b></div>
       <div><span>Öncelik</span><b>Dry-run → Statik Snapshot → Mock/Fallback</b></div>
+      <div><span>Canlı veri</span><b>Kapalı</b></div>
       <p>Bu ekran statik snapshot/demo karşılaştırmasıdır. Canlı veri değildir; harici API, scraping ve otomatik bahis kapalıdır.</p>
     </section>`;
   }
@@ -3705,6 +3706,71 @@
     </div>`;
   }
 
+  function recordSourceLabel(record = {}) {
+    const sourceId = record.source || record.bookmaker || record.sourceId || "";
+    const meta = staticSourceMeta(sourceId);
+    return displaySourceName({
+      source: sourceId,
+      sourceId: sourceId,
+      sourceName: meta.sourceName || record.sourceName || sourceId,
+      displayName: meta.sourceName || record.sourceName || sourceId
+    });
+  }
+
+  function renderSnapshotFlowOverview(data) {
+    const summary = data.summary || {};
+    const snap = staticSnapshotSummary();
+    const sportCounts = (data.records || []).reduce((acc, record) => {
+      const sport = record.sport === "basketball" ? "Basketbol" : record.sport === "football" ? "Futbol" : "Diğer";
+      acc[sport] = (acc[sport] || 0) + 1;
+      return acc;
+    }, {});
+    const mode = displayModeLabel(summary.dataMode || snap.dataMode || "fallback");
+    const sportText = Object.entries(sportCounts).map(([key, value]) => `${key}: ${value}`).join(" · ") || "Kayıt yok";
+    const usable = data.fallbackState?.usable ? "Karşılaştırmaya hazır" : "Yeterli veri yok";
+    return `<section class="v572-snapshot-flow" aria-label="Statik snapshot akış özeti">
+      <div class="v572-flow-head">
+        <span>STATİK SNAPSHOT AKIŞI</span>
+        <b>${escapeHtml(usable)}</b>
+        <small>Dış API ve otomatik oynama kapalıdır; bu alan yalnızca repo içi statik veriyi adapter pipeline ile dener.</small>
+      </div>
+      <div class="v572-flow-grid">
+        <article><span>Veri modu</span><b>${escapeHtml(mode)}</b></article>
+        <article><span>Snapshot kayıt</span><b>${snap.records}</b></article>
+        <article><span>Eşleşen market</span><b>${snap.matched}</b></article>
+        <article><span>Eşleşmeyen market</span><b>${snap.unmatched}</b></article>
+        <article><span>Kaynak sayısı</span><b>${summary.sources || snap.sources || 0}</b></article>
+        <article><span>Spor dağılımı</span><b>${escapeHtml(sportText)}</b></article>
+      </div>
+    </section>`;
+  }
+
+  function renderReadableComparisonCards(data) {
+    const rows = (data.candidateRows || []).filter(row => row?.bestOddsResult?.bestRecord).slice(0, 4);
+    if (!rows.length) return "";
+    return `<section class="v572-comparison-cards" aria-label="Okunur statik karşılaştırma kartları">
+      <div class="v557-section-title"><span>STATİK SNAPSHOT ADAYLARI</span><b>Canlı veri değildir; manuel kontrol için okunur özet.</b></div>
+      <div class="v572-card-grid">${rows.map(row => {
+        const best = row.bestOddsResult.bestRecord || {};
+        const second = row.bestOddsResult.secondBestRecord || null;
+        const lineDiff = row.lineDifferenceResult;
+        const sourceLabel = recordSourceLabel(best);
+        return `<article>
+          <div class="v572-card-top"><b>${escapeHtml(comparisonFixtureLabel(best))}</b><span>${escapeHtml(row.score.tag)}</span></div>
+          <small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")} · ${escapeHtml(best.selection || "-")} · Barem ${best.line ?? "-"}</small>
+          <div class="v572-card-odds"><strong>${money(best.odds)}</strong><em>${escapeHtml(sourceLabel)}</em></div>
+          <div class="v572-card-meta">
+            <span>İkinci: ${second ? `${escapeHtml(recordSourceLabel(second))} · ${money(second.odds)}` : "yok"}</span>
+            <span>Fark: ${second ? plainPct(row.bestOddsResult.bestDiffPercent) : "-"}</span>
+            <span>Kaynak: ${row.bestOddsResult.sourceCount}</span>
+            ${lineDiff ? `<span>Barem farkı: ${lineDiff.lineSpread}</span>` : ""}
+          </div>
+          <p>Statik snapshot adayıdır; canlı sinyal, garanti veya otomatik oynama önerisi değildir.</p>
+        </article>`;
+      }).join("")}</div>
+    </section>`;
+  }
+
   function renderComparisonRows(data) {
     const rows = (data.candidateRows || []).slice(0, 8);
     if (!data.fallbackState?.usable) return empty("Karşılaştırma için yeterli kaynak yok. Katalog manuel kontrol için Marketler sekmesinde görünür kalır.");
@@ -3720,9 +3786,9 @@
             <td>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "-")}</td>
             <td>${escapeHtml(best.selection || "-")}</td>
             <td>${best.line ?? "-"}</td>
-            <td>${escapeHtml(best.source || "-")}</td>
+            <td>${escapeHtml(recordSourceLabel(best))}</td>
             <td class="odd">${money(best.odds)}</td>
-            <td>${second ? `${escapeHtml(second.source || "-")} · ${money(second.odds)}` : "-"}</td>
+            <td>${second ? `${escapeHtml(recordSourceLabel(second))} · ${money(second.odds)}` : "-"}</td>
             <td>${second ? plainPct(row.bestOddsResult.bestDiffPercent) : "-"}</td>
             <td>${row.bestOddsResult.sourceCount}</td>
             <td><span class="v557-candidate-tag">${escapeHtml(row.score.tag)}</span><small>Skor ${row.score.score}/100 · demo</small></td>
@@ -3783,7 +3849,9 @@
       </div>
       ${renderDataModeNotice()}
       ${renderStaticSnapshotStatusPanel()}
+      ${renderSnapshotFlowOverview(data)}
       ${renderComparisonSummaryBoxes(data)}
+      ${renderReadableComparisonCards(data)}
       ${renderReadinessChecklist()}
       ${renderComparisonHealth(data)}
       ${renderComparisonRows(data)}
@@ -3805,7 +3873,7 @@
         <b>${escapeHtml(comparisonFixtureLabel(best))}</b>
         <small>${escapeHtml(best.matchedMarketLabel || best.marketLabel || best.marketId || "Market")} · ${escapeHtml(best.selection || "-")} · barem ${best.line ?? "-"}</small>
       </div>
-      <div><b>${money(best.odds)}</b><small>${escapeHtml(best.source || "-")} · ${escapeHtml(candidate.score.tag)} · skor ${candidate.score.score}/100</small></div>
+      <div><b>${money(best.odds)}</b><small>${escapeHtml(recordSourceLabel(best))} · ${escapeHtml(candidate.score.tag)} · skor ${candidate.score.score}/100</small></div>
       <p>Bu kart canlı veri değildir; yalnızca statik snapshot adayı / demo karşılaştırma adayıdır ve otomatik bahis sonucu ifade etmez.</p>
     </section>`;
   }
