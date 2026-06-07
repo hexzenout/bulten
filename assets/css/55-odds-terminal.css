@@ -5773,3 +5773,54 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ===============================
+   Odds Movements Dropdown Stability
+================================ */
+.omega-tab-odds .odds-v528-content.odds-tab-drops {
+    contain: layout !important;
+    overflow: visible !important;
+}
+
+.omega-tab-odds .odds-v528-content.odds-tab-drops .odds-v528-cards,
+.omega-tab-odds .odds-v528-content.odds-tab-drops .odds-v528-card.drop {
+    overflow: visible !important;
+    align-items: start !important;
+}
+
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact {
+    position: relative !important;
+    display: grid !important;
+    width: 100% !important;
+    max-width: 340px !important;
+    overflow: visible !important;
+    z-index: 3 !important;
+}
+
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:hover,
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:focus,
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:focus-within {
+    z-index: 40 !important;
+}
+
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-pop {
+    position: static !important;
+    inset: auto !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+}
+
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:hover .v533-history-pop,
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:focus .v533-history-pop,
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-compact:focus-within .v533-history-pop {
+    display: grid !important;
+}
+
+.omega-tab-odds .odds-v528-content.odds-tab-drops .v533-history-pop span {
+    min-height: 28px !important;
+    overflow: visible !important;
+}

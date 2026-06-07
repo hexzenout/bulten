@@ -3303,7 +3303,7 @@
           </div>
         </div>
 
-        <div class="odds-v528-content" data-odds-content>${content()}</div>
+        <div class="odds-v528-content odds-tab-${escapeAttr(state.tab)}" data-odds-content data-odds-active-tab="${escapeAttr(state.tab)}">${content()}</div>
       </div>`;
   }
 
