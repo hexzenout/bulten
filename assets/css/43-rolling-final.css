@@ -2600,697 +2600,241 @@
 }
 
 /* ===============================
-   V760 Kupon / Aktif işlem profesyonel akış
+   V763 sade aktif bahis/rolling düzeltmeleri
    =============================== */
-.v760-pending-edit-row.bet,
-.v760-pending-edit-row.combo-match {
-  grid-template-columns: 42px 98px 112px minmax(170px,1fr) 112px 112px minmax(138px,.8fr) auto !important;
-}
-.v760-pending-edit-row.crypto {
-  grid-template-columns: 42px minmax(190px,1fr) 110px 120px minmax(138px,.8fr) auto !important;
-}
-.v760-pending-edit-row.combo-match {
-  background: linear-gradient(135deg, rgba(126,34,206,.16), rgba(15,23,42,.52)) !important;
-  border-color: rgba(168,85,247,.22) !important;
-}
-.v760-row-state,
-.v760-table-status {
-  display: grid !important;
-  gap: 5px !important;
-  min-width: 0 !important;
-}
-.v760-info-pill {
-  display: inline-flex !important;
-  width: max-content !important;
-  max-width: 100% !important;
-  border-radius: 999px !important;
-  padding: 3px 7px !important;
-  font-size: .62rem !important;
-  font-weight: 950 !important;
-  letter-spacing: .02em !important;
-  white-space: nowrap !important;
-}
-.v760-info-pill.ready {
-  color: #bbf7d0 !important;
-  background: rgba(34,197,94,.12) !important;
-  border: 1px solid rgba(34,197,94,.22) !important;
-}
-.v760-info-pill.missing {
-  color: #fde68a !important;
-  background: rgba(251,191,36,.12) !important;
-  border: 1px solid rgba(251,191,36,.24) !important;
-}
-.v760-missing-text,
-.v760-muted-dash {
-  color: #fbbf24 !important;
-  font-style: normal !important;
-  font-weight: 950 !important;
-}
-.v760-muted-dash { color: var(--muted) !important; font-size: .72rem !important; }
-.v760-row-missing td {
-  background: rgba(251,191,36,.025) !important;
-}
-.v759-coupon-actions button:disabled,
-.v759-pending-actions button:disabled,
-.rolling-v47-actions button:disabled {
-  opacity: .38 !important;
-  cursor: not-allowed !important;
-  filter: grayscale(.35) !important;
-}
-.v760-section-note {
-  margin: -4px 0 10px !important;
-  border: 1px solid rgba(255,255,255,.08) !important;
-  border-radius: 12px !important;
-  background: rgba(0,0,0,.16) !important;
-  color: var(--muted) !important;
-  padding: 8px 10px !important;
-  font-size: .74rem !important;
-  font-weight: 850 !important;
-  line-height: 1.35 !important;
-}
-.v760-coupon-stake-row {
-  display: grid !important;
-  grid-template-columns: minmax(180px, 260px) minmax(220px, 1fr) auto !important;
+.v763-pending-board {
   gap: 10px !important;
+}
+.v763-pending-board .v763-pending-head {
   align-items: center !important;
-  margin: 0 0 10px !important;
-  border: 1px solid rgba(255,255,255,.09) !important;
-  border-radius: 14px !important;
-  background: rgba(0,0,0,.18) !important;
-  padding: 10px !important;
 }
-.v760-coupon-stake-row label {
+.v763-pending-board .v763-pending-head span {
+  max-width: 680px !important;
+}
+.v763-active-list {
   display: grid !important;
-  gap: 5px !important;
-  margin: 0 !important;
+  gap: 10px !important;
 }
-.v760-coupon-stake-row label span,
-.v760-coupon-stake-row small {
-  color: var(--muted) !important;
-  font-size: .72rem !important;
-  font-weight: 900 !important;
-}
-.v760-coupon-stake-row input {
-  width: 100% !important;
-  min-width: 0 !important;
-  border: 1px solid rgba(251,191,36,.22) !important;
-  border-radius: 11px !important;
-  background: rgba(0,0,0,.30) !important;
-  color: #fff !important;
-  padding: 9px 10px !important;
-  font-weight: 950 !important;
-}
-.v760-coupon-stake-row em {
-  justify-self: end !important;
-  border-radius: 999px !important;
-  padding: 6px 9px !important;
-  font-style: normal !important;
-  font-size: .7rem !important;
-  font-weight: 950 !important;
-  white-space: nowrap !important;
-}
-.v760-coupon-stake-row em.ready {
-  color: #bbf7d0 !important;
-  background: rgba(34,197,94,.12) !important;
-}
-.v760-coupon-stake-row em.missing {
-  color: #fde68a !important;
-  background: rgba(251,191,36,.13) !important;
-}
-.v760-coupon-match-title {
-  margin: 3px 0 8px !important;
-  color: #fff !important;
-  font-size: .78rem !important;
-  font-weight: 950 !important;
-  letter-spacing: .03em !important;
-  text-transform: uppercase !important;
-}
-.v760-combo-stake-locked:disabled {
-  color: #94a3b8 !important;
-  opacity: .76 !important;
-}
-.v760-confirm-modal {
-  width: min(560px, 94vw) !important;
-}
-.v760-confirm-metrics {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-}
-.v760-confirm-metrics div {
+.v763-active-card {
   border: 1px solid rgba(255,255,255,.10) !important;
-  border-radius: 13px !important;
-  background: rgba(15,23,42,.58) !important;
-  padding: 9px 10px !important;
-}
-.v760-confirm-metrics span {
-  display: block !important;
-  margin: 0 0 3px !important;
-  color: var(--muted) !important;
-  font-size: .68rem !important;
-  font-weight: 900 !important;
-  text-transform: uppercase !important;
-}
-.v760-confirm-metrics b {
-  color: #fff !important;
-  font-size: .86rem !important;
-  font-weight: 950 !important;
-}
-.v760-confirm-warning {
-  display: flex !important;
-  gap: 9px !important;
-  align-items: flex-start !important;
-  border: 1px solid rgba(251,191,36,.18) !important;
-  border-radius: 14px !important;
-  background: rgba(251,191,36,.08) !important;
-  padding: 10px 11px !important;
-  color: #fde68a !important;
-  font-size: .78rem !important;
-  font-weight: 850 !important;
-  line-height: 1.35 !important;
-}
-.v760-target-title span {
-  display: block !important;
-  margin-top: 4px !important;
-  color: var(--muted) !important;
-  font-size: .74rem !important;
-  font-weight: 800 !important;
-}
-.v760-target-edit small {
-  display: block !important;
-  margin-top: 6px !important;
-  color: #94a3b8 !important;
-  font-size: .72rem !important;
-  font-weight: 850 !important;
-}
-.v760-target-cards {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-  margin-bottom: 9px !important;
-}
-.v760-target-cards div,
-.v760-target-mini span {
-  border: 1px solid rgba(255,255,255,.09) !important;
-  border-radius: 12px !important;
-  background: rgba(15,23,42,.52) !important;
-  padding: 9px 10px !important;
-}
-.v760-target-cards span {
-  display: block !important;
-  color: var(--muted) !important;
-  font-size: .68rem !important;
-  font-weight: 900 !important;
-  text-transform: uppercase !important;
-}
-.v760-target-cards b {
-  display: block !important;
-  margin-top: 3px !important;
-  color: #fff !important;
-  font-weight: 950 !important;
-}
-.v760-target-cards b.pos { color: var(--green) !important; }
-.v760-target-cards b.neg { color: var(--red) !important; }
-.v760-target-mini {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  margin-bottom: 9px !important;
-}
-.v760-target-mini span {
-  color: var(--muted) !important;
-  font-size: .72rem !important;
-  font-weight: 850 !important;
-}
-.v760-target-mini b { color: #fff !important; }
-@media (max-width: 980px) {
-  .v760-pending-edit-row.bet,
-  .v760-pending-edit-row.crypto,
-  .v760-pending-edit-row.combo-match,
-  .v760-coupon-stake-row,
-  .v760-target-cards,
-  .v760-confirm-metrics { grid-template-columns: 1fr !important; }
-  .v760-coupon-stake-row em { justify-self: start !important; }
-}
-
-/* ===============================
-   V761 - Kupon/Aktif İşlem doğru akış
-   =============================== */
-.v761-active-list {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 12px !important;
-}
-.v761-active-card {
-  border: 1px solid rgba(255,255,255,.10) !important;
-  border-radius: 18px !important;
-  background: rgba(2,6,23,.54) !important;
-  box-shadow: 0 14px 34px rgba(0,0,0,.22) !important;
-  padding: 13px !important;
-}
-.v761-active-card.combo {
-  padding: 0 !important;
-  overflow: hidden !important;
-}
-.v761-active-card.combo[open] {
-  border-color: rgba(251,191,36,.28) !important;
-}
-.v761-active-head {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-  margin-bottom: 12px !important;
-}
-.v761-active-card.combo > .v761-active-head {
-  cursor: pointer !important;
-  list-style: none !important;
-  padding: 14px !important;
-  margin: 0 !important;
-  background: rgba(251,191,36,.07) !important;
-}
-.v761-active-card.combo > .v761-active-head::-webkit-details-marker { display: none !important; }
-.v761-active-head b {
-  display: block !important;
-  color: #fff !important;
-  font-size: .98rem !important;
-  font-weight: 950 !important;
-}
-.v761-active-head span,
-.v761-active-head em {
-  display: block !important;
-  margin-top: 4px !important;
-  color: var(--muted) !important;
-  font-size: .76rem !important;
-  font-weight: 850 !important;
-  font-style: normal !important;
-}
-.v761-add-match,
-.v761-remove-match,
-.v761-roll-match-head button,
-.v761-excel-day-links button,
-.v761-active-table .ghost {
-  border: 1px solid rgba(251,191,36,.25) !important;
-  border-radius: 12px !important;
-  background: rgba(251,191,36,.10) !important;
-  color: #fde68a !important;
-  font-size: .74rem !important;
-  font-weight: 950 !important;
-  padding: 9px 11px !important;
-  cursor: pointer !important;
-}
-.v761-remove-match {
-  border-color: rgba(248,113,113,.28) !important;
-  background: rgba(248,113,113,.10) !important;
-  color: #fecaca !important;
-  padding: 8px 10px !important;
-}
-.v761-bet-edit-grid,
-.v761-combo-stake-line {
-  display: grid !important;
-  grid-template-columns: minmax(180px, 1.3fr) minmax(120px, .7fr) minmax(120px, .7fr) !important;
-  gap: 10px !important;
-  align-items: end !important;
-}
-.v761-bet-edit-grid label,
-.v761-combo-stake-line label {
-  display: grid !important;
-  gap: 5px !important;
-}
-.v761-bet-edit-grid span,
-.v761-combo-stake-line label span {
-  color: var(--muted) !important;
-  font-size: .68rem !important;
-  font-weight: 900 !important;
-  text-transform: uppercase !important;
-}
-.v761-bet-edit-grid input,
-.v761-combo-stake-line input,
-.v761-combo-match-row input,
-.v761-roll-bet-slot input {
-  width: 100% !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
-  border-radius: 12px !important;
-  background: rgba(15,23,42,.86) !important;
-  color: #fff !important;
-  padding: 10px 11px !important;
-  font-weight: 850 !important;
-  outline: none !important;
-}
-.v761-metrics {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-  margin-top: 12px !important;
-}
-.v761-metrics span {
-  border: 1px solid rgba(255,255,255,.08) !important;
-  border-radius: 13px !important;
-  background: rgba(15,23,42,.55) !important;
-  padding: 9px 10px !important;
-  color: var(--muted) !important;
-  font-size: .72rem !important;
-  font-weight: 850 !important;
-}
-.v761-metrics b {
-  display: block !important;
-  margin-top: 4px !important;
-  color: #fff !important;
-  font-size: .88rem !important;
-  font-weight: 950 !important;
-}
-.v761-card-actions {
-  justify-content: flex-end !important;
-  margin-top: 12px !important;
-}
-.v761-combo-stake-line {
-  grid-template-columns: minmax(180px, 1fr) auto auto !important;
-  padding: 13px 14px 0 !important;
-}
-.v761-combo-note {
-  margin: 10px 14px 0 !important;
-  border: 1px solid rgba(251,191,36,.18) !important;
-  border-radius: 13px !important;
-  background: rgba(251,191,36,.08) !important;
-  color: #fde68a !important;
-  padding: 9px 10px !important;
-  font-size: .75rem !important;
-  font-weight: 850 !important;
-}
-.v761-combo-match-list {
-  display: grid !important;
-  gap: 8px !important;
-  padding: 13px 14px 14px !important;
-}
-.v761-combo-match-row {
-  display: grid !important;
-  grid-template-columns: 70px minmax(160px, 1fr) 110px 96px auto 38px !important;
-  gap: 8px !important;
-  align-items: center !important;
-  border: 1px solid rgba(255,255,255,.08) !important;
-  border-radius: 14px !important;
-  background: rgba(15,23,42,.44) !important;
-  padding: 8px !important;
-}
-.v761-combo-match-row.win { border-color: rgba(34,197,94,.28) !important; }
-.v761-combo-match-row.loss { border-color: rgba(239,68,68,.28) !important; }
-.v761-match-no {
-  color: #fbbf24 !important;
-  font-size: .72rem !important;
-  font-weight: 950 !important;
-}
-.v759-pending-actions.compact {
-  gap: 5px !important;
-  flex-wrap: nowrap !important;
-}
-.v759-pending-actions.compact button {
-  padding: 7px 8px !important;
-  font-size: .68rem !important;
-}
-.v761-report-center-modal .v756-report-gallery {
-  margin-top: 12px !important;
-}
-.v761-roll-bet-slot {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 8px !important;
-}
-.v761-roll-match-head {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-.v761-roll-match-head b {
-  color: #fde68a !important;
-  font-size: .72rem !important;
-  font-weight: 950 !important;
-  text-transform: uppercase !important;
-}
-.v761-roll-match-list,
-.v761-roll-extra-matches {
-  display: grid !important;
-  gap: 7px !important;
-}
-.v761-roll-match-row {
-  display: grid !important;
-  grid-template-columns: minmax(130px, 1fr) 92px 30px !important;
-  gap: 6px !important;
-  align-items: center !important;
-}
-.v761-roll-match-row:first-child {
-  grid-template-columns: minmax(130px, 1fr) 92px !important;
-}
-.v761-roll-match-row button {
-  border: 1px solid rgba(248,113,113,.28) !important;
-  border-radius: 10px !important;
-  background: rgba(248,113,113,.10) !important;
-  color: #fecaca !important;
-  font-weight: 950 !important;
-  height: 36px !important;
-  cursor: pointer !important;
-}
-.v761-roll-stake {
-  margin-top: 4px !important;
-}
-.v761-excel-day-links {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 6px !important;
-  margin-top: 8px !important;
-}
-.v761-excel-day-links button {
-  width: 100% !important;
-  padding: 8px 9px !important;
-  font-size: .68rem !important;
-}
-@media (max-width: 980px) {
-  .v761-bet-edit-grid,
-  .v761-combo-stake-line,
-  .v761-metrics,
-  .v761-combo-match-row {
-    grid-template-columns: 1fr !important;
-  }
-  .v761-active-head {
-    align-items: stretch !important;
-    flex-direction: column !important;
-  }
-}
-
-/* ===============================
-   V762 - Sade aktif bahis ve eski rolling kapsül düzeltmesi
-   =============================== */
-.v762-bet-board {
-  background: rgba(2,6,23,.44) !important;
-  border-color: rgba(255,255,255,.08) !important;
-}
-.v762-pending-head {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 10px !important;
-  margin-bottom: 12px !important;
-}
-.v762-pending-head .v757-pending-metrics {
-  display: flex !important;
-  gap: 6px !important;
-  flex-wrap: wrap !important;
-}
-.v762-active-list {
-  display: grid !important;
-  gap: 10px !important;
-}
-.v762-active-card {
   border-radius: 16px !important;
+  background: linear-gradient(145deg, rgba(15,23,42,.74), rgba(2,6,23,.44)) !important;
   padding: 12px !important;
-  background: rgba(15,23,42,.46) !important;
   box-shadow: none !important;
 }
-.v762-active-card.combo {
-  padding: 0 !important;
-}
-.v762-active-card.combo[open] {
-  border-color: rgba(251,191,36,.24) !important;
-}
-.v762-active-card.combo:not([open]) .v761-combo-stake-line,
-.v762-active-card.combo:not([open]) .v761-metrics,
-.v762-active-card.combo:not([open]) .v761-combo-match-list {
-  display: none !important;
-}
-.v762-active-head {
-  margin-bottom: 10px !important;
-}
-.v762-active-card.combo > .v762-active-head {
-  margin-bottom: 0 !important;
-  padding: 12px !important;
-  background: rgba(251,191,36,.06) !important;
-}
-.v762-summary-actions {
+.v763-active-card.bet { border-color: rgba(251,191,36,.18) !important; }
+.v763-active-card.crypto { border-color: rgba(96,165,250,.18) !important; }
+.v763-card-top,
+.v763-active-card summary {
   display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  cursor: pointer !important;
+  list-style: none !important;
+}
+.v763-active-card summary::-webkit-details-marker { display: none !important; }
+.v763-card-top b,
+.v763-active-card summary b {
+  color: #fff !important;
+  font-size: .92rem !important;
+  font-weight: 950 !important;
+  display: block !important;
+}
+.v763-card-top span,
+.v763-active-card summary span {
+  color: #94a3b8 !important;
+  font-size: .74rem !important;
+  font-weight: 850 !important;
+}
+.v763-shot-btn {
+  border: 1px solid rgba(251,191,36,.25) !important;
+  border-radius: 999px !important;
+  background: rgba(251,191,36,.12) !important;
+  color: #fde68a !important;
+  padding: 7px 9px !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+.v763-card-info {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 7px !important;
+  margin-top: 10px !important;
+}
+.v763-card-info span,
+.v763-card-info em {
+  border: 1px solid rgba(255,255,255,.09) !important;
+  border-radius: 999px !important;
+  background: rgba(0,0,0,.18) !important;
+  color: #cbd5e1 !important;
+  padding: 7px 10px !important;
+  font-size: .74rem !important;
+  font-style: normal !important;
+  font-weight: 850 !important;
+}
+.v763-card-info b { color: #fff !important; margin-left: 4px !important; }
+.v763-card-info em {
+  color: #fde68a !important;
+  border-color: rgba(251,191,36,.28) !important;
+  background: rgba(251,191,36,.10) !important;
+}
+.v763-card-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin-top: 10px !important;
+}
+.v763-card-actions button,
+.v763-combo-match-list button {
+  border: 0 !important;
+  border-radius: 10px !important;
+  padding: 8px 11px !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+.v763-card-actions .win,
+.v763-combo-match-list .win { background: rgba(34,197,94,.18) !important; color: #bbf7d0 !important; }
+.v763-card-actions .loss,
+.v763-combo-match-list .loss { background: rgba(239,68,68,.18) !important; color: #fecaca !important; }
+.v763-combo-match-list {
+  display: grid !important;
+  gap: 7px !important;
+  margin: 10px 0 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+.v763-combo-match-list li {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 74px auto !important;
   align-items: center !important;
   gap: 8px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 12px !important;
+  background: rgba(2,6,23,.30) !important;
+  padding: 8px !important;
 }
-.v762-shot-btn,
-.v762-mini-add,
-.v762-remove-match {
-  border: 1px solid rgba(255,255,255,.12) !important;
-  border-radius: 10px !important;
-  background: rgba(15,23,42,.78) !important;
+.v763-combo-match-list li > span {
   color: #e5e7eb !important;
-  padding: 7px 9px !important;
-  font-size: .7rem !important;
-  font-weight: 950 !important;
-  cursor: pointer !important;
-  white-space: nowrap !important;
-}
-.v762-shot-btn {
-  color: #fde68a !important;
-  border-color: rgba(251,191,36,.22) !important;
-  background: rgba(251,191,36,.08) !important;
-}
-.v762-mini-add,
-.v762-remove-match {
-  width: 34px !important;
-  height: 34px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-}
-.v762-remove-match {
-  color: #fecaca !important;
-  border-color: rgba(248,113,113,.24) !important;
-  background: rgba(248,113,113,.08) !important;
-}
-.v762-bet-edit-grid,
-.v762-combo-stake-line {
-  grid-template-columns: minmax(180px, 1.2fr) minmax(110px,.6fr) minmax(110px,.6fr) !important;
-}
-.v762-combo-stake-line {
-  grid-template-columns: minmax(160px, 240px) 34px auto !important;
-  padding: 12px 12px 0 !important;
-}
-.v762-metrics {
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  margin-top: 10px !important;
-}
-.v762-metrics span {
-  padding: 8px 9px !important;
-}
-.v762-card-actions {
-  margin-top: 10px !important;
-}
-.v762-combo-match-row {
-  grid-template-columns: 34px minmax(160px,1fr) 96px 90px auto 34px !important;
-  padding: 7px !important;
-}
-.v762-active-table input[value="1.30"]:not(:focus) {
-  color: transparent !important;
-}
-.v760-target-cards {
-  grid-template-columns: repeat(3, minmax(120px, 1fr)) !important;
-  align-items: stretch !important;
-}
-.v760-target-cards div {
-  min-width: 0 !important;
-  overflow: hidden !important;
-}
-.v760-target-cards b {
-  font-size: clamp(.82rem, 1.1vw, .98rem) !important;
-  line-height: 1.15 !important;
-  white-space: nowrap !important;
+  font-size: .78rem !important;
+  font-weight: 850 !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-}
-.v760-target-mini span {
-  min-width: 0 !important;
-  overflow: hidden !important;
-}
-.v760-target-mini b {
   white-space: nowrap !important;
 }
-#rolling-excel-overlay .v762-roll-bet-slot {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 7px !important;
-}
-#rolling-excel-overlay .v762-roll-base-row,
-#rolling-excel-overlay .v762-roll-extra-row {
-  display: grid !important;
-  grid-template-columns: minmax(90px, 1fr) 78px auto !important;
-  gap: 6px !important;
-  align-items: center !important;
-}
-#rolling-excel-overlay .v762-roll-extra-row {
-  grid-template-columns: minmax(90px, 1fr) 78px !important;
-}
-#rolling-excel-overlay .v762-roll-extra-matches {
-  display: grid !important;
-  gap: 6px !important;
-}
-#rolling-excel-overlay .v762-roll-mini-tools {
+.v763-combo-match-list li > b { color: #fff !important; font-size: .8rem !important; }
+.v763-combo-match-list li.win { border-color: rgba(34,197,94,.28) !important; }
+.v763-combo-match-list li.loss { border-color: rgba(239,68,68,.28) !important; }
+.v763-combo-match-list button.selected { outline: 2px solid rgba(255,255,255,.24) !important; }
+.v763-history-strip { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.v763-report-actions {
   display: flex !important;
-  gap: 4px !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
 }
-#rolling-excel-overlay .v762-roll-mini-tools button {
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px !important;
-  border-radius: 8px !important;
-  border: 1px solid rgba(251,191,36,.25) !important;
-  background: rgba(251,191,36,.10) !important;
-  color: #fde68a !important;
-  font-size: .82rem !important;
+.v763-report-actions button {
+  border: 0 !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, rgba(59,130,246,.25), rgba(15,23,42,.86)) !important;
+  color: #bfdbfe !important;
+  padding: 10px 12px !important;
   font-weight: 950 !important;
   cursor: pointer !important;
-  padding: 0 !important;
-  line-height: 1 !important;
 }
-#rolling-excel-overlay .v762-roll-mini-tools button:last-child {
-  border-color: rgba(248,113,113,.22) !important;
-  color: #fecaca !important;
-  background: rgba(248,113,113,.08) !important;
-}
-#rolling-excel-overlay .v762-roll-stake {
-  margin-top: 0 !important;
-}
-#rolling-excel-overlay .v762-excel-day-actions {
+#rolling-excel-overlay .v763-excel-feature-tools {
   display: grid !important;
-  grid-template-columns: 1fr !important;
   gap: 6px !important;
   margin-top: 8px !important;
 }
-#rolling-excel-overlay .v762-excel-day-actions button {
-  border: 1px solid rgba(255,255,255,.12) !important;
+#rolling-excel-overlay .v763-excel-feature-tools button {
+  width: 100% !important;
+  justify-content: center !important;
   border-radius: 9px !important;
-  background: rgba(15,23,42,.78) !important;
-  color: #e5e7eb !important;
+  min-height: 32px !important;
   padding: 7px 8px !important;
-  font-size: .68rem !important;
+  font-size: .69rem !important;
+}
+#rolling-excel-overlay .kapsul.v32.v763-bet-kapsul {
+  width: 150px !important;
+  min-height: 116px !important;
+  padding: 8px !important;
+  gap: 6px !important;
+  background: #151515 !important;
+  border-color: #333 !important;
+}
+#rolling-excel-overlay .v763-match-line {
+  display: grid !important;
+  grid-template-columns: 22px minmax(0, 1fr) !important;
+  gap: 5px !important;
+  align-items: stretch !important;
+}
+#rolling-excel-overlay .v763-inline-combo-controls {
+  display: grid !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 3px !important;
+}
+#rolling-excel-overlay .v763-inline-combo-controls button {
+  border: 1px solid rgba(251,191,36,.28) !important;
+  border-radius: 6px !important;
+  background: rgba(251,191,36,.12) !important;
+  color: #fbbf24 !important;
+  font-size: .78rem !important;
+  line-height: 1 !important;
   font-weight: 950 !important;
+  padding: 0 !important;
   cursor: pointer !important;
 }
-#rolling-excel-overlay .v762-excel-day-actions button.active { color: #fde68a !important; border-color: rgba(251,191,36,.22) !important; }
-#rolling-excel-overlay .v762-excel-day-actions button.report { color: #bfdbfe !important; border-color: rgba(96,165,250,.22) !important; }
-body.rolling-active .v758-pending-overlay,
-body.rolling-active .v757-log-center-overlay,
-body.rolling-active .v761-report-center-overlay,
-body.rolling-active .v757-confirm-overlay {
-  z-index: 1000010 !important;
+#rolling-excel-overlay .v763-extra-match-list {
+  display: grid !important;
+  gap: 4px !important;
 }
-@media (max-width: 980px) {
-  .v762-bet-edit-grid,
-  .v762-combo-stake-line,
-  .v762-metrics,
-  .v762-combo-match-row,
-  .v760-target-cards {
-    grid-template-columns: 1fr !important;
-  }
-  .v762-summary-actions {
-    align-items: flex-end !important;
-    flex-direction: column !important;
-  }
+#rolling-excel-overlay .v763-extra-match-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 48px !important;
+  gap: 4px !important;
 }
-body.rolling-active #omega-rolling-block {
-  display: block !important;
+#rolling-excel-overlay .v763-bet-inputs {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+}
+#rolling-excel-overlay .v763-result-combo-list {
+  list-style: none !important;
+  padding: 5px 0 0 !important;
+  margin: 4px 0 0 !important;
+  display: grid !important;
+  gap: 2px !important;
+}
+#rolling-excel-overlay .v763-result-combo-list li {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  color: #cbd5e1 !important;
+  font-size: .65rem !important;
+}
+.v756-rolling-kpis > div,
+.v753-rolling-kpis > div {
+  min-width: 0 !important;
+  overflow: visible !important;
+}
+.v756-rolling-kpis > div b,
+.v753-rolling-kpis > div b,
+.v757-target-summary b,
+.v757-target-summary strong {
+  font-size: clamp(.84rem, 1.5vw, 1.1rem) !important;
+  line-height: 1.12 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  text-overflow: clip !important;
+}
+@media (max-width: 760px) {
+  .v763-combo-match-list li { grid-template-columns: 1fr !important; }
+  .v763-card-actions { justify-content: stretch !important; }
+  .v763-card-actions button { flex: 1 1 0 !important; }
+  #rolling-excel-overlay .kapsul.v32.v763-bet-kapsul { width: 100% !important; }
 }
