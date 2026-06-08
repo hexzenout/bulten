@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — V743 final stabilite checkpoint / görünür sürüm etiketi temizliği
+// ORAN TERMİNALİ — V745 market restore / cache-bust emergency fix
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -7,19 +7,32 @@
   // -------------------------------
   // Constants / State
   // -------------------------------
+  const ODDS_TERMINAL_BUILD = "v745";
   const ODDS_TERMINAL_CSS_MODULES = [
     "assets/css/55-odds-terminal-live-gate.css",
     "assets/css/55-odds-terminal-final-ui.css"
   ];
 
+  function oddsTerminalAssetUrl(path) {
+    const clean = String(path || "").trim();
+    return clean && !clean.includes("?") ? `${clean}?v=${ODDS_TERMINAL_BUILD}` : clean;
+  }
+
+  function oddsTerminalSameAsset(link, href) {
+    const raw = String(link?.getAttribute?.("href") || "");
+    return raw.split("?")[0] === String(href || "").split("?")[0];
+  }
+
   function ensureOddsTerminalCssModules() {
     const head = document.head || document.getElementsByTagName("head")[0];
     if (!head) return;
     ODDS_TERMINAL_CSS_MODULES.forEach(href => {
-      if (document.querySelector(`link[data-odds-terminal-module="${href}"]`)) return;
+      const alreadyLoaded = Array.from(document.querySelectorAll("link[rel='stylesheet']"))
+        .some(link => oddsTerminalSameAsset(link, href) || link.dataset.oddsTerminalModule === href);
+      if (alreadyLoaded) return;
       const link = document.createElement("link");
       link.rel = "stylesheet";
-      link.href = href;
+      link.href = oddsTerminalAssetUrl(href);
       link.dataset.oddsTerminalModule = href;
       head.appendChild(link);
     });
@@ -158,8 +171,12 @@
 
   function applyOddsMarketCatalogData(payload = FALLBACK_MARKET_CATALOG, meta = {}) {
     const data = runtimeObject(payload);
-    MARKET_CATALOG_FOOTBALL_CATEGORIES = runtimeArray(data.footballCategories);
-    MARKET_CATALOG_BASKETBALL_CATEGORIES = runtimeArray(data.basketballCategories);
+    const nextFootball = runtimeArray(data.footballCategories);
+    const nextBasketball = runtimeArray(data.basketballCategories);
+    // Market katalogu kritik alandır: JSON yüklenemezse veya yanlış format gelirse
+    // mevcut dolu katalog boş listeyle ezilmez. Böylece Marketler sekmesi kaybolmaz.
+    if (nextFootball.length || !MARKET_CATALOG_FOOTBALL_CATEGORIES.length) MARKET_CATALOG_FOOTBALL_CATEGORIES = nextFootball;
+    if (nextBasketball.length || !MARKET_CATALOG_BASKETBALL_CATEGORIES.length) MARKET_CATALOG_BASKETBALL_CATEGORIES = nextBasketball;
     MARKET_CATALOG_POLY_FILTERS = runtimeArray(data.polyFilters).length ? runtimeArray(data.polyFilters) : FALLBACK_MARKET_CATALOG.polyFilters;
     TEAM_NAME_ALIASES = runtimeObject(data.teamNameAliases);
     LEAGUE_NAME_ALIASES = runtimeObject(data.leagueNameAliases);
@@ -659,11 +676,25 @@
   }
 
 
+  function countCatalogMarkets(categories) {
+    return runtimeArray(categories).reduce((sum, cat) => sum + runtimeArray(cat?.markets).length, 0);
+  }
+
+  function isUsableMarketCatalogPayload(payload) {
+    if (!payload || typeof payload !== "object") return false;
+    if (!Array.isArray(payload.footballCategories) || !Array.isArray(payload.basketballCategories)) return false;
+    return countCatalogMarkets(payload.footballCategories) >= 400 && countCatalogMarkets(payload.basketballCategories) >= 200;
+  }
+
   async function loadOddsMarketCatalogData({ force = false } = {}) {
     if (!force && marketCatalogDataMeta.status === "loaded") return marketCatalogDataMeta;
     const payload = await loadJson(DATA_MARKET_CATALOG, null);
-    const ok = Boolean(payload && typeof payload === "object" && Array.isArray(payload.footballCategories) && Array.isArray(payload.basketballCategories));
+    const ok = isUsableMarketCatalogPayload(payload);
     applyOddsMarketCatalogData(ok ? payload : FALLBACK_MARKET_CATALOG, { ok, loadedAt: new Date().toISOString() });
+    if (!ok) {
+      marketCatalogDataMeta.status = "blocked_fallback";
+      marketCatalogDataMeta.message = "Market katalogu yüklenemedi veya minimum sayının altında; Marketler sekmesini boş bırakmamak için mevcut/fallback katalog korunur.";
+    }
     return marketCatalogDataMeta;
   }
 

@@ -1,6 +1,6 @@
 {
-  "version": "v701-v740",
-  "note": "Oran Terminali market katalog/taxonomy verisi. Gerçek API verisi değildir.",
+  "version": "v745_market_restore",
+  "note": "V745: market catalog restore guard; football 400+ korunur, basketball 200+ seviyesine tamamlandı.",
   "teamNameAliases": {
     "man utd": "manchester united",
     "manchester utd": "manchester united",
@@ -7944,6 +7944,186 @@
           "line": null,
           "side": "both_teams",
           "dataMode": "catalog_dynamic_placeholder"
+        },
+        {
+          "id": null,
+          "name": "Maç Sonucu ve 160.5 Alt / Üst",
+          "label": "Maç Sonucu ve 160.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Maç Sonucu ve 170.5 Alt / Üst",
+          "label": "Maç Sonucu ve 170.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Maç Sonucu ve 180.5 Alt / Üst",
+          "label": "Maç Sonucu ve 180.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Maç Sonucu ve 190.5 Alt / Üst",
+          "label": "Maç Sonucu ve 190.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 1 Kazanır ve 80+ Sayı Atar",
+          "label": "Takım 1 Kazanır ve 80+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 1 Kazanır ve 90+ Sayı Atar",
+          "label": "Takım 1 Kazanır ve 90+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 1 Kazanır ve 100+ Sayı Atar",
+          "label": "Takım 1 Kazanır ve 100+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 2 Kazanır ve 80+ Sayı Atar",
+          "label": "Takım 2 Kazanır ve 80+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 2 Kazanır ve 90+ Sayı Atar",
+          "label": "Takım 2 Kazanır ve 90+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 2 Kazanır ve 100+ Sayı Atar",
+          "label": "Takım 2 Kazanır ve 100+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Maç Uzatmaya Gider",
+          "label": "Maç Uzatmaya Gider",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Maç Uzatmaya Gitmez",
+          "label": "Maç Uzatmaya Gitmez",
+          "desc": "",
+          "tags": [
+            "ana marketler"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
         }
       ]
     },
@@ -8162,6 +8342,186 @@
           "line": null,
           "side": null,
           "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "İlk Çeyrek Toplam 35.5 Alt / Üst",
+          "label": "İlk Çeyrek Toplam 35.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "İlk Çeyrek Toplam 40.5 Alt / Üst",
+          "label": "İlk Çeyrek Toplam 40.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "İlk Çeyrek Toplam 45.5 Alt / Üst",
+          "label": "İlk Çeyrek Toplam 45.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "İkinci Çeyrek Toplam 35.5 Alt / Üst",
+          "label": "İkinci Çeyrek Toplam 35.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "İkinci Çeyrek Toplam 40.5 Alt / Üst",
+          "label": "İkinci Çeyrek Toplam 40.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "İkinci Çeyrek Toplam 45.5 Alt / Üst",
+          "label": "İkinci Çeyrek Toplam 45.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Üçüncü Çeyrek Toplam 35.5 Alt / Üst",
+          "label": "Üçüncü Çeyrek Toplam 35.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Üçüncü Çeyrek Toplam 40.5 Alt / Üst",
+          "label": "Üçüncü Çeyrek Toplam 40.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Üçüncü Çeyrek Toplam 45.5 Alt / Üst",
+          "label": "Üçüncü Çeyrek Toplam 45.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Dördüncü Çeyrek Toplam 35.5 Alt / Üst",
+          "label": "Dördüncü Çeyrek Toplam 35.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Dördüncü Çeyrek Toplam 40.5 Alt / Üst",
+          "label": "Dördüncü Çeyrek Toplam 40.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Dördüncü Çeyrek Toplam 45.5 Alt / Üst",
+          "label": "Dördüncü Çeyrek Toplam 45.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "çeyrek marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
         }
       ]
     },
@@ -8373,6 +8733,186 @@
           "desc": "",
           "tags": [
             "takım sayı"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 65.5 Alt / Üst",
+          "label": "Her İki Takım da 65.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 68.5 Alt / Üst",
+          "label": "Her İki Takım da 68.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 70.5 Alt / Üst",
+          "label": "Her İki Takım da 70.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 72.5 Alt / Üst",
+          "label": "Her İki Takım da 72.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 75.5 Alt / Üst",
+          "label": "Her İki Takım da 75.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 80.5 Alt / Üst",
+          "label": "Her İki Takım da 80.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 1 İlk Yarı 35.5 Alt / Üst",
+          "label": "Takım 1 İlk Yarı 35.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 1 İlk Yarı 40.5 Alt / Üst",
+          "label": "Takım 1 İlk Yarı 40.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 1 İlk Yarı 45.5 Alt / Üst",
+          "label": "Takım 1 İlk Yarı 45.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 2 İlk Yarı 35.5 Alt / Üst",
+          "label": "Takım 2 İlk Yarı 35.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 2 İlk Yarı 40.5 Alt / Üst",
+          "label": "Takım 2 İlk Yarı 40.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Takım 2 İlk Yarı 45.5 Alt / Üst",
+          "label": "Takım 2 İlk Yarı 45.5 Alt / Üst",
+          "desc": "",
+          "tags": [
+            "takım sayı marketleri"
           ],
           "aliases": [],
           "period": null,
@@ -9078,6 +9618,51 @@
           "line": null,
           "side": null,
           "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu Sayı + Ribaund Alt / Üst",
+          "label": "Oyuncu Sayı + Ribaund Alt / Üst",
+          "desc": "",
+          "tags": [
+            "oyuncu sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu Sayı + Asist Alt / Üst",
+          "label": "Oyuncu Sayı + Asist Alt / Üst",
+          "desc": "",
+          "tags": [
+            "oyuncu sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu Sayı + Ribaund + Asist Alt / Üst",
+          "label": "Oyuncu Sayı + Ribaund + Asist Alt / Üst",
+          "desc": "",
+          "tags": [
+            "oyuncu sayı marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
         }
       ]
     },
@@ -9289,6 +9874,66 @@
           "desc": "",
           "tags": [
             "oyuncu ribaund asist"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu 12+ Asist",
+          "label": "Oyuncu 12+ Asist",
+          "desc": "",
+          "tags": [
+            "oyuncu ribaund / asist"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu 15+ Ribaund",
+          "label": "Oyuncu 15+ Ribaund",
+          "desc": "",
+          "tags": [
+            "oyuncu ribaund / asist"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu Ribaund + Asist Alt / Üst",
+          "label": "Oyuncu Ribaund + Asist Alt / Üst",
+          "desc": "",
+          "tags": [
+            "oyuncu ribaund / asist"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu Double Double Evet/Hayır",
+          "label": "Oyuncu Double Double Evet/Hayır",
+          "desc": "",
+          "tags": [
+            "oyuncu ribaund / asist"
           ],
           "aliases": [],
           "period": null,
@@ -9973,6 +10618,96 @@
           "line": null,
           "side": null,
           "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 70+ Sayı Atar",
+          "label": "Her İki Takım da 70+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "özel basketbol marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 75+ Sayı Atar",
+          "label": "Her İki Takım da 75+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "özel basketbol marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Her İki Takım da 80+ Sayı Atar",
+          "label": "Her İki Takım da 80+ Sayı Atar",
+          "desc": "",
+          "tags": [
+            "özel basketbol marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "İlk Yarı Beraberlik",
+          "label": "İlk Yarı Beraberlik",
+          "desc": "",
+          "tags": [
+            "özel basketbol marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "İlk Çeyrek Beraberlik",
+          "label": "İlk Çeyrek Beraberlik",
+          "desc": "",
+          "tags": [
+            "özel basketbol marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Son 2 Dakika En Çok Sayı Atan Takım",
+          "label": "Son 2 Dakika En Çok Sayı Atan Takım",
+          "desc": "",
+          "tags": [
+            "özel basketbol marketleri"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
         }
       ]
     },
@@ -10380,6 +11115,66 @@
           "desc": "",
           "tags": [
             "oyuncu alternatif baraj"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu 6+ Üçlük",
+          "label": "Oyuncu 6+ Üçlük",
+          "desc": "",
+          "tags": [
+            "oyuncu alternatif barajları"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu 40+ Sayı",
+          "label": "Oyuncu 40+ Sayı",
+          "desc": "",
+          "tags": [
+            "oyuncu alternatif barajları"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu 45+ Sayı",
+          "label": "Oyuncu 45+ Sayı",
+          "desc": "",
+          "tags": [
+            "oyuncu alternatif barajları"
+          ],
+          "aliases": [],
+          "period": null,
+          "marketType": null,
+          "line": null,
+          "side": null,
+          "dataMode": "catalog_static"
+        },
+        {
+          "id": null,
+          "name": "Oyuncu 12+ Ribaund",
+          "label": "Oyuncu 12+ Ribaund",
+          "desc": "",
+          "tags": [
+            "oyuncu alternatif barajları"
           ],
           "aliases": [],
           "period": null,
