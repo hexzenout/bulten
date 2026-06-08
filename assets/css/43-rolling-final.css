@@ -3033,3 +3033,124 @@
     width: 100% !important;
   }
 }
+
+
+/* ===============================
+   V765 — 7/15/30/60/90 Rolling modal gerçek Aktif/Geçmiş/Rapor entegrasyonu
+   =============================== */
+#rolling-excel-overlay .v765-excel-feature-controls {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 7px !important;
+  margin-top: 9px !important;
+  width: 100% !important;
+}
+#rolling-excel-overlay .v765-excel-feature-controls .v758-row-tool {
+  width: 100% !important;
+  min-height: 34px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 7px 9px !important;
+  white-space: normal !important;
+  text-align: center !important;
+}
+#rolling-excel-overlay .v765-excel-feature-controls .v759-row-tool.active {
+  background: linear-gradient(135deg, rgba(34,197,94,.18), rgba(15,23,42,.88)) !important;
+  border-color: rgba(34,197,94,.28) !important;
+  color: #bbf7d0 !important;
+}
+#rolling-excel-overlay .v765-excel-feature-controls .v758-row-tool.history {
+  background: linear-gradient(135deg, rgba(251,191,36,.18), rgba(15,23,42,.86)) !important;
+  border-color: rgba(251,191,36,.28) !important;
+  color: #fde68a !important;
+}
+#rolling-excel-overlay .v765-excel-feature-controls .v758-row-tool.report,
+#rolling-excel-overlay .v765-excel-feature-controls .v759-row-tool.report {
+  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(15,23,42,.88)) !important;
+  border-color: rgba(96,165,250,.30) !important;
+  color: #bfdbfe !important;
+}
+#omega-rolling-feature-host .v758-pending-overlay,
+#omega-rolling-feature-host .v757-log-center-overlay,
+#omega-rolling-feature-host .v757-confirm-overlay {
+  z-index: 100500 !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul {
+  width: auto !important;
+  max-width: none !important;
+  flex: initial !important;
+  min-height: 104px !important;
+  padding: 9px !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+#rolling-excel-overlay .v765-bet-entry {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+  min-width: 0 !important;
+}
+#rolling-excel-overlay .v765-match-line {
+  display: grid !important;
+  grid-template-columns: 23px minmax(0, 1fr) !important;
+  gap: 5px !important;
+  align-items: start !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls {
+  display: grid !important;
+  grid-template-rows: 15px 15px !important;
+  gap: 3px !important;
+  align-self: start !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls button {
+  width: 21px !important;
+  min-width: 21px !important;
+  height: 15px !important;
+  min-height: 15px !important;
+  padding: 0 !important;
+  border: 1px solid rgba(251,191,36,.42) !important;
+  border-radius: 6px !important;
+  background: rgba(251,191,36,.12) !important;
+  color: #fbbf24 !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls button:hover {
+  background: rgba(251,191,36,.24) !important;
+}
+#rolling-excel-overlay .v765-extra-match-list {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#rolling-excel-overlay .v765-extra-match-row {
+  display: grid !important;
+  grid-template-columns: 23px minmax(0, 1fr) minmax(58px, .45fr) !important;
+  gap: 5px !important;
+  align-items: start !important;
+}
+#rolling-excel-overlay .v765-extra-spacer {
+  display: block !important;
+  width: 21px !important;
+  height: 1px !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul input {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  margin: 0 0 5px !important;
+  box-sizing: border-box !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul .k-actions.v32 button {
+  min-width: 0 !important;
+  min-height: 31px !important;
+  font-size: .7rem !important;
+  white-space: nowrap !important;
+}

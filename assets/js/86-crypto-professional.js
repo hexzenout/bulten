@@ -443,20 +443,20 @@
   }
 
   window.omega_RollingToggleComboRow = function(day, slot, dir) {
-    const kapsul = document.querySelector(`[data-v763-kapsul="${day}:${slot}"]`);
+    const kapsul = document.querySelector(`[data-v765-kapsul="${day}:${slot}"]`);
     if (!kapsul) return;
-    const list = kapsul.querySelector(".v763-extra-match-list");
+    const list = kapsul.querySelector(".v765-extra-match-list");
     if (!list) return;
     if (dir === "minus") {
-      const rows = list.querySelectorAll(".v763-extra-match-row");
+      const rows = list.querySelectorAll(".v765-extra-match-row");
       rows[rows.length - 1]?.remove();
       return;
     }
-    const count = list.querySelectorAll(".v763-extra-match-row").length + 2;
+    const count = list.querySelectorAll(".v765-extra-match-row").length + 2;
     const row = document.createElement("div");
-    row.className = "v763-extra-match-row";
+    row.className = "v765-extra-match-row";
     row.setAttribute("data-v763-extra-row", `${day}:${slot}`);
-    row.innerHTML = `<span class="v764-extra-spacer" aria-hidden="true"></span><input type="text" data-v763-extra-note placeholder="Maç"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01">`;
+    row.innerHTML = `<span class="v765-extra-spacer" aria-hidden="true"></span><input type="text" data-v763-extra-note placeholder="Maç"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01">`;
     list.appendChild(row);
     row.querySelector("input")?.focus();
   };
@@ -473,11 +473,29 @@
 
   function v763DayToolButtons(mode) {
     const activeLabel = mode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
-    return `<div class="v758-row-controls v759-row-controls v764-excel-feature-tools">
-      <button type="button" class="v758-row-tool v759-row-tool active" onclick="window.omega_RollingOpenPendingBoard && window.omega_RollingOpenPendingBoard('${mode}')"><i class="fa-solid fa-list-check"></i> ${activeLabel}</button>
-      <button type="button" class="v758-row-tool v759-row-tool history" onclick="window.omega_RollingOpenLogCenter && window.omega_RollingOpenLogCenter('${mode}')"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
-      <button type="button" class="v758-row-tool v759-row-tool report" onclick="window.omega_RollingOpenReportCenter ? window.omega_RollingOpenReportCenter('${mode}') : (window.omega_RollingCreateReport && window.omega_RollingCreateReport('${mode}'))"><i class="fa-solid fa-image"></i> Rapor</button>
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v765-excel-feature-controls" data-v765-feature-controls="${mode}">
+      <button type="button" class="v758-row-tool v759-row-tool active" data-v765-feature-open="${mode}:active"><i class="fa-solid fa-list-check"></i> ${activeLabel}</button>
+      <button type="button" class="v758-row-tool v759-row-tool history" data-v765-feature-open="${mode}:history"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
+      <button type="button" class="v758-row-tool v759-row-tool report" data-v765-feature-open="${mode}:report"><i class="fa-solid fa-image"></i> Rapor</button>
     </div>`;
+  }
+
+  function v765BindExcelFeatureControls(root) {
+    const scope = root || document;
+    scope.querySelectorAll("[data-v765-feature-open]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const [modeRaw, kindRaw] = String(btn.dataset.v765FeatureOpen || "bet:active").split(":");
+        const mode = modeRaw === "crypto" ? "crypto" : "bet";
+        const kind = kindRaw === "history" ? "history" : kindRaw === "report" ? "report" : "active";
+        if (typeof window.omega_RollingOpenFloatingPanel === "function") {
+          window.omega_RollingOpenFloatingPanel(kind, mode);
+          return;
+        }
+        if (kind === "history" && typeof window.omega_RollingOpenLogCenter === "function") window.omega_RollingOpenLogCenter(mode);
+        else if (kind === "report" && typeof window.omega_RollingOpenReportCenter === "function") window.omega_RollingOpenReportCenter(mode);
+        else if (typeof window.omega_RollingOpenPendingBoard === "function") window.omega_RollingOpenPendingBoard(mode);
+      });
+    });
   }
 
   window.omega_RenderExcelTable = function() {
@@ -530,21 +548,21 @@
           `);
         } else {
           cards.push(`
-            <div class="kapsul v32 ${isCryptoV491 ? "" : "v763-bet-kapsul v764-bet-kapsul"}" data-v763-kapsul="${day}:${slot}">
+            <div class="kapsul v32 ${isCryptoV491 ? "" : "v765-bet-kapsul"}" data-v765-kapsul="${day}:${slot}">
               ${isCryptoV491 ? `
                 <input type="text" id="e-n-${day}-${slot}" placeholder="İşlem">
                 <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
                 <input type="number" id="e-o-${day}-${slot}" placeholder="Net K/Z $">
               ` : `
-                <div class="v764-bet-entry">
-                  <div class="v763-match-line v764-match-line">
-                    <div class="v763-inline-combo-controls v764-inline-combo-controls">
+                <div class="v765-bet-entry">
+                  <div class="v765-match-line">
+                    <div class="v765-inline-combo-controls">
                       <button type="button" onclick="omega_RollingToggleComboRow(${day}, ${slot}, 'plus')" title="Maç + oran ekle">+</button>
                       <button type="button" onclick="omega_RollingToggleComboRow(${day}, ${slot}, 'minus')" title="Son ek maçı sil">−</button>
                     </div>
                     <input type="text" id="e-n-${day}-${slot}" placeholder="Maç">
                   </div>
-                  <div class="v763-extra-match-list v764-extra-match-list"></div>
+                  <div class="v765-extra-match-list"></div>
                   <input type="number" id="e-o-${day}-${slot}" placeholder="Oran" step="0.01">
                   <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01">
                 </div>
@@ -580,6 +598,7 @@
     }
 
     wrapper.innerHTML = htmlBuffer;
+    v765BindExcelFeatureControls(wrapper);
 
     const current = qs("#excel-current-bal");
     if (current) current.innerText = `$${runningBalance.toFixed(2)}`;

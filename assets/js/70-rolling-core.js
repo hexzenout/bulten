@@ -677,6 +677,21 @@
   function createSlots(type = "bet", count = 5) {
     return Array.from({ length: count }, (_, i) => createSlot(type, i));
   }
+  function sanitizeEmptyPendingSlot(slot, type) {
+    if (!slot || slot.status === "win" || slot.status === "loss") return;
+    const hasMainName = !!cleanText(slot.name);
+    const hasExtraName = Array.isArray(slot.extraMatches) && slot.extraMatches.some(m => cleanText(m?.name));
+    if (hasMainName || hasExtraName) return;
+    slot.name = "";
+    slot.stake = "";
+    slot.odds = "";
+    slot.pnl = 0;
+    slot.status = "pending";
+    if (type === "bet") {
+      slot.extraMatches = [];
+      slot.comboResults = [];
+    }
+  }
   function ensureStateShape(state) {
     if (!state.modeSlots || typeof state.modeSlots !== "object") {
       const old = Array.isArray(state.slots) ? state.slots : createSlots("bet", 5);
@@ -694,8 +709,8 @@
     state.rowCounts.crypto = Math.max(1, Math.min(20, Number(state.rowCounts.crypto || 20)));
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
     while (state.modeSlots.crypto.length < state.rowCounts.crypto) state.modeSlots.crypto.push(createSlot("crypto", state.modeSlots.crypto.length));
-    state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; });
-    state.modeSlots.crypto.forEach((s, i) => { s.type = "crypto"; s.id = i + 1; if (!s.cryptoPnlMode) s.cryptoPnlMode = "amount"; });
+    state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; sanitizeEmptyPendingSlot(s, "bet"); });
+    state.modeSlots.crypto.forEach((s, i) => { s.type = "crypto"; s.id = i + 1; if (!s.cryptoPnlMode) s.cryptoPnlMode = "amount"; sanitizeEmptyPendingSlot(s, "crypto"); });
   }
   function loadState() {
     try {
@@ -954,8 +969,33 @@
     saveState(state);
   }
 
+  function renderFloatingPanel() {
+    let host = document.getElementById("omega-rolling-feature-host");
+    const hasOpen = Boolean(PENDING_BOARD_OPEN_MODE || LOG_CENTER_OPEN_MODE || REPORT_CENTER_OPEN_MODE || CONFIRM_DIALOG);
+    if (!hasOpen) {
+      if (host) host.remove();
+      return;
+    }
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-rolling-feature-host";
+      host.dataset.rollingFloating = "1";
+      document.body.appendChild(host);
+    }
+    const state = loadState();
+    host.dataset.rollingFloating = "1";
+    host.innerHTML = `${renderPendingModal(state)}${renderLogCenterModal(state)}${renderReportCenterModal(state)}${renderConfirmDialog()}`;
+    bindEvents(host, state);
+  }
+
+  function refreshForMount(mount) {
+    if (mount && mount.dataset && mount.dataset.rollingFloating === "1") renderFloatingPanel();
+    else renderModule();
+  }
+
   function bindEvents(mount, state) {
-    mount.querySelectorAll("[data-roll-tab]").forEach(btn => btn.addEventListener("click", () => { setActiveMode(btn.dataset.rollTab); renderModule(); }));
+    const refresh = () => refreshForMount(mount);
+    mount.querySelectorAll("[data-roll-tab]").forEach(btn => btn.addEventListener("click", () => { setActiveMode(btn.dataset.rollTab); refresh(); }));
     mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => { const [mode, days] = String(btn.dataset.roll || "bet:7").split(":"); openRolling(mode, Number(days || 7)); }));
     mount.querySelectorAll("[data-row-op]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, op] = String(btn.dataset.rowOp || "bet:plus").split(":");
@@ -965,7 +1005,7 @@
         state.rowCounts[mode] = Math.min(20, current + 1);
         while (state.modeSlots[mode].length < state.rowCounts[mode]) state.modeSlots[mode].push(createSlot(mode, state.modeSlots[mode].length));
       } else state.rowCounts[mode] = Math.max(1, current - 1);
-      saveState(state); renderModule();
+      saveState(state); refresh();
     }));
     mount.querySelectorAll("[data-row-preset]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, raw] = String(btn.dataset.rowPreset || "bet:20").split(":");
@@ -974,7 +1014,7 @@
       state.rowCounts[mode] = count;
       while (state.modeSlots[mode].length < count) state.modeSlots[mode].push(createSlot(mode, state.modeSlots[mode].length));
       saveState(state);
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-quick-template]").forEach(input => input.addEventListener("input", () => {
       const [mode, key] = String(input.dataset.quickTemplate || "bet:stake").split(":");
@@ -1002,7 +1042,7 @@
         applied++;
       });
       saveState(state);
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("input[data-mode]").forEach(input => {
       const saveInput = () => {
@@ -1019,7 +1059,7 @@
         saveState(state);
       };
       input.addEventListener("input", saveInput);
-      input.addEventListener("change", () => { saveInput(); renderModule(); });
+      input.addEventListener("change", () => { saveInput(); refresh(); });
     });
     mount.querySelectorAll("[data-clear-row]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, slotRaw] = String(btn.dataset.clearRow || "bet:0").split(":");
@@ -1027,7 +1067,7 @@
       const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
       list[i] = createSlot(mode, i);
       saveState(state);
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-rolling-quick]").forEach(input => {
       input.addEventListener("input", () => {
@@ -1036,7 +1076,7 @@
         state.quickPlan[key] = input.value === "" ? "" : Number(input.value || 0);
         saveState(state);
       });
-      input.addEventListener("change", () => renderModule());
+      input.addEventListener("change", () => refresh());
     });
     mount.querySelectorAll("[data-target-complete]").forEach(btn => btn.addEventListener("click", () => {
       const betSum = slotSummary(state.modeSlots.bet);
@@ -1047,7 +1087,7 @@
       const result = addTargetLogRecord(state, totalPnl);
       if (!result.ok) { alert(result.message); return; }
       saveState(state);
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
       const betSum = slotSummary(state.modeSlots.bet);
@@ -1058,17 +1098,17 @@
       const plan = getPlanNumbers(state, totalPnl);
       state.quickPlan = { start: Number(plan.current.toFixed(2)), target: "", currentOverride: "" };
       saveState(state);
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = btn.dataset.historyOpen === "crypto" ? "crypto" : "bet";
       LOG_CENTER_OPEN_MODE = null;
       HISTORY_FILTER = "today";
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-history-close]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-log-center]").forEach(btn => btn.addEventListener("click", () => {
       LOG_CENTER_OPEN_MODE = btn.dataset.logCenter === "crypto" ? "crypto" : "bet";
@@ -1076,44 +1116,44 @@
       PENDING_BOARD_OPEN_MODE = null;
       HISTORY_OPEN_MODE = null;
       HISTORY_FILTER = "today";
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-pending-open]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = btn.dataset.pendingOpen === "crypto" ? "crypto" : "bet";
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;
       HISTORY_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-report-open]").forEach(btn => btn.addEventListener("click", () => {
       REPORT_CENTER_OPEN_MODE = btn.dataset.reportOpen === "crypto" ? "crypto" : "bet";
       LOG_CENTER_OPEN_MODE = null;
       PENDING_BOARD_OPEN_MODE = null;
       HISTORY_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-report-center-close]").forEach(btn => btn.addEventListener("click", () => {
       REPORT_CENTER_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll(".v758-pending-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
       PENDING_BOARD_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-log-center-close]").forEach(btn => btn.addEventListener("click", () => {
       LOG_CENTER_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll(".v757-log-center-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-history-delete]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, id] = String(btn.dataset.historyDelete || "bet:").split(":");
@@ -1128,21 +1168,21 @@
         detail: "Bu sadece LOG geçmişi kaydını siler; aktif kutudaki yazıları ayrıca istersen temizleyebilirsin.",
         confirmText: "Kalıcı olarak sil"
       };
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-confirm-no]").forEach(btn => btn.addEventListener("click", () => {
       CONFIRM_DIALOG = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll(".v757-confirm-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
       CONFIRM_DIALOG = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-confirm-yes]").forEach(btn => btn.addEventListener("click", () => {
       const action = CONFIRM_DIALOG;
       CONFIRM_DIALOG = null;
-      if (!action) return renderModule();
+      if (!action) return refresh();
       if (action.type === "settle") {
         const fresh = loadState();
         applySlotResult(fresh, action.mode, Number(action.slot || 0), action.status);
@@ -1171,16 +1211,16 @@
       } else if (action.type === "deleteHistory") {
         deleteHistoryRecord(action.mode, action.id);
       }
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll(".v512-history-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
       HISTORY_OPEN_MODE = null;
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-history-filter]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_FILTER = btn.dataset.historyFilter || "today";
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-combo-match-status]").forEach(btn => btn.addEventListener("click", () => {
       const [slotRaw, matchRaw, statusRaw] = String(btn.dataset.comboMatchStatus || "0:0:win").split(":");
@@ -1202,7 +1242,7 @@
         detail: "Kombine tüm maçlar sonuçlanana kadar aktif listede kalır.",
         confirmText: status === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle"
       };
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-card-screenshot]").forEach(btn => btn.addEventListener("click", () => {
       downloadActiveCardScreenshot(btn.dataset.cardScreenshot || "");
@@ -1211,12 +1251,12 @@
       const mode = btn.dataset.reportCreate === "crypto" ? "crypto" : "bet";
       createReportCard(mode, state);
       saveState(state);
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-report-delete]").forEach(btn => btn.addEventListener("click", () => {
       const id = btn.dataset.reportDelete;
       saveReportCards(loadReportCards().filter(x => x.id !== id));
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("[data-report-download]").forEach(btn => btn.addEventListener("click", () => {
       downloadReportCard(btn.dataset.reportDownload);
@@ -1245,19 +1285,30 @@
           detail: "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et.",
           confirmText: `${resultLabel} olarak kaydet`
         };
-        renderModule();
+        refresh();
         return;
       }
       applySlotResult(state, mode, i, nextStatus);
       saveState(state);
-      renderModule();
+      refresh();
     }));
     mount.querySelectorAll("button[data-clear]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.clear;
       if (!confirm(mode === "crypto" ? "Kripto işlem alanları temizlensin mi?" : "Bahis kupon alanları temizlensin mi?")) return;
-      state.modeSlots[mode] = createSlots(mode, 20); saveState(state); renderModule();
+      state.modeSlots[mode] = createSlots(mode, 20); saveState(state); refresh();
     }));
   }
+  window.omega_RollingOpenFloatingPanel = function(kind = "active", mode = "bet") {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
+    PENDING_BOARD_OPEN_MODE = k === "active" ? m : null;
+    LOG_CENTER_OPEN_MODE = k === "history" ? m : null;
+    REPORT_CENTER_OPEN_MODE = k === "report" ? m : null;
+    HISTORY_OPEN_MODE = null;
+    if (k === "history") HISTORY_FILTER = "today";
+    renderFloatingPanel();
+  };
+
   window.omega_RenderRollingModule = renderModule;
   window.omega_RollingOpenLogCenter = function(mode = "bet") {
     LOG_CENTER_OPEN_MODE = mode === "crypto" ? "crypto" : "bet";
