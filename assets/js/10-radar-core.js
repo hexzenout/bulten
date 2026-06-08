@@ -92,6 +92,10 @@ async function omega_InitializeEngine() {
         });
 
 
+        function omega_IsRollingModalRouteV769() {
+            return /^#(?:finance|rolling)\/rolling\/\d+/.test(String(location.hash || ''));
+        }
+
         function omega_HardHideRollingV493() {
             const rollingBlock = document.getElementById('omega-rolling-block');
             if (rollingBlock) {
@@ -103,15 +107,18 @@ async function omega_InitializeEngine() {
                 rollingBlock.removeAttribute('data-visible');
                 rollingBlock.setAttribute('aria-hidden', 'true');
             }
-            document.body.classList.remove('omega-tab-rolling', 'rolling-active');
-            document.documentElement.classList.remove('rolling-hash-boot');
+            document.body.classList.remove('omega-tab-rolling');
+            if (!omega_IsRollingModalRouteV769()) {
+                document.body.classList.remove('rolling-active');
+                document.documentElement.classList.remove('rolling-hash-boot');
+            }
         }
 
         function omega_SwitchMainTab(targetModule, clickedElement, updateHistory = true) {
             const keepRollingOpen = (targetModule === 'finance' || targetModule === 'rolling') && /^#(finance|rolling)\/rolling\/\d+/.test(String(location.hash || ''));
             if (!keepRollingOpen) omega_CloseRollingExcel(true);
             omega_CloseChannelManager();
-            if (targetModule !== 'rolling') omega_HardHideRollingV493();
+            if (targetModule !== 'rolling' && !keepRollingOpen) omega_HardHideRollingV493();
 
             const topMenu = document.getElementById('main-dropdown-nav');
             if(topMenu) topMenu.classList.remove('active-menu');
@@ -142,8 +149,13 @@ async function omega_InitializeEngine() {
                 rollingBlock.removeAttribute('data-visible');
                 rollingBlock.setAttribute('aria-hidden', 'true');
             }
-            document.documentElement.classList.remove('rolling-hash-boot');
-            document.body.classList.remove('rolling-active');
+            if (keepRollingOpen) {
+                document.documentElement.classList.add('rolling-hash-boot');
+                document.body.classList.add('rolling-active');
+            } else {
+                document.documentElement.classList.remove('rolling-hash-boot');
+                document.body.classList.remove('rolling-active');
+            }
             if (financeBlock) financeBlock.classList.remove('active');
 
             const centerWrapper = document.querySelector('.center-wrapper');

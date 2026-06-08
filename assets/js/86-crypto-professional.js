@@ -588,25 +588,43 @@
 
   function v763DayToolButtons(mode) {
     const activeLabel = mode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v768-excel-feature-controls" data-v768-feature-controls="${mode}">
-      <button type="button" class="v758-row-tool v759-row-tool active" data-v768-feature-open="${mode}:active" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'active')">${activeLabel}</button>
-      <button type="button" class="v758-row-tool v759-row-tool history" data-v768-feature-open="${mode}:history" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'history')">Geçmiş</button>
-      <button type="button" class="v758-row-tool v759-row-tool report" data-v768-feature-open="${mode}:report" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'report')">Rapor</button>
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v769-excel-feature-controls" data-v769-feature-controls="${mode}">
+      <button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}" data-v769-excel-panel="${mode}:active" onclick="return window.omega_RollingExcelOpenCorePanel(event, '${mode}', 'active')">${activeLabel}</button>
+      <button type="button" class="v758-row-tool v759-row-tool history" data-log-center="${mode}" data-v769-excel-panel="${mode}:history" onclick="return window.omega_RollingExcelOpenCorePanel(event, '${mode}', 'history')">Geçmiş</button>
+      <button type="button" class="v758-row-tool v759-row-tool report" data-report-open="${mode}" data-v769-excel-panel="${mode}:report" onclick="return window.omega_RollingExcelOpenCorePanel(event, '${mode}', 'report')">Rapor</button>
     </div>`;
   }
 
-  window.omega_RollingExcelOpenFeature = function(event, mode = "bet", kind = "active") {
+  window.omega_RollingExcelOpenCorePanel = function(event, mode = "bet", kind = "active") {
     if (event && typeof event.preventDefault === "function") event.preventDefault();
     if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
     const m = mode === "crypto" ? "crypto" : "bet";
     const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
-    v768OpenFeaturePanel(m, k);
+    if (typeof window.omega_RollingOpenFloatingPanel === "function") {
+      window.omega_RollingOpenFloatingPanel(k, m);
+    } else {
+      v768OpenFeaturePanel(m, k);
+    }
     return false;
+  };
+
+  window.omega_RollingExcelOpenFeature = function(event, mode = "bet", kind = "active") {
+    return window.omega_RollingExcelOpenCorePanel(event, mode, kind);
   };
 
   if (!window.__omegaV768ExcelFeatureDelegationBound) {
     window.__omegaV768ExcelFeatureDelegationBound = true;
     document.addEventListener("click", function(event) {
+      const coreFeatureBtn = event.target.closest && event.target.closest("#rolling-excel-overlay [data-v769-excel-panel]");
+      if (coreFeatureBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        const [modeRaw, kindRaw] = String(coreFeatureBtn.dataset.v769ExcelPanel || "bet:active").split(":");
+        window.omega_RollingExcelOpenCorePanel(event, modeRaw, kindRaw);
+        return;
+      }
       const featureBtn = event.target.closest && event.target.closest("[data-v768-feature-open]");
       if (featureBtn) {
         if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
