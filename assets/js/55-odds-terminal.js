@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — V747 market guard / catalog audit
+// ORAN TERMİNALİ — V748 runtime asset audit / safe checkpoint
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -7,7 +7,7 @@
   // -------------------------------
   // Constants / State
   // -------------------------------
-  const ODDS_TERMINAL_BUILD = "v747";
+  const ODDS_TERMINAL_BUILD = "v748";
   const ODDS_TERMINAL_CSS_MODULES = [
     "assets/css/55-odds-terminal-live-gate.css",
     "assets/css/55-odds-terminal-final-ui.css"
@@ -94,6 +94,7 @@
   let staticRepoDataCache = null;
   let v617MegaReportCache = null;
   const loadJsonWarningKeys = new Set();
+  const staticAssetLoadAudit = {};
 
 
   const FALLBACK_SOURCES = { sites: [], groups: [], marketCategories: [] };
@@ -630,8 +631,11 @@
     try {
       const res = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
-      return await res.json();
+      const json = await res.json();
+      recordStaticAssetLoad(url, "loaded", { message: "JSON yüklendi." });
+      return json;
     } catch (err) {
+      recordStaticAssetLoad(url, "error", { message: err?.message || String(err || "Bilinmeyen hata") });
       if (!loadJsonWarningKeys.has(url)) {
         loadJsonWarningKeys.add(url);
         console.warn("Oran Terminali yerel JSON yüklenemedi; güvenli fallback kullanılacak:", url, err?.message || err);
@@ -738,6 +742,69 @@
       <header><span><i class="fa-solid ${icon}"></i> ${escapeHtml(title)}</span><em>${escapeHtml(audit.sourceStatus)}</em></header>
       <p>${escapeHtml(body)}</p>
       ${audit.notes.length ? `<small>${escapeHtml(audit.notes.join(" "))}</small>` : ""}
+    </section>`;
+  }
+
+  function staticAssetAuditLabel(status) {
+    const value = String(status || "bekliyor");
+    const labels = { loaded: "Yüklendi", ok: "Yüklendi", fallback: "Fallback", missing: "Eksik", error: "Hata", blocked_fallback: "Bloklu", initial: "Bekliyor" };
+    return labels[value] || value;
+  }
+
+  function staticAssetAuditTone(status) {
+    const value = String(status || "");
+    if (["loaded", "ok"].includes(value)) return "good";
+    if (["fallback", "missing", "initial"].includes(value)) return "warn";
+    return "danger";
+  }
+
+  function recordStaticAssetLoad(url, status, extra = {}) {
+    if (!isRepoStaticDataPath(url)) return;
+    staticAssetLoadAudit[url] = {
+      file: url,
+      status,
+      checkedAt: new Date().toISOString(),
+      ...extra
+    };
+  }
+
+  function buildRuntimeAssetAuditReport() {
+    const catalog = marketCatalogAudit();
+    const dataRows = [
+      { file: DATA_MARKET_CATALOG, label: "Market katalogu", status: marketCatalogDataMeta.status || staticAssetLoadAudit[DATA_MARKET_CATALOG]?.status || "initial", note: `Futbol ${catalog.footballCount} / Basket ${catalog.basketballCount}` },
+      { file: DATA_RUNTIME, label: "Runtime demo verisi", status: oddsRuntimeDataMeta.status || staticAssetLoadAudit[DATA_RUNTIME]?.status || "initial", note: `${Number(oddsRuntimeDataMeta.recordCount || 0)} kayıt · ${Number(oddsRuntimeDataMeta.mappingCount || 0)} mapping` },
+      { file: DATA_SOURCES, label: "Kaynak registry", status: state.sourcesMeta?.status || staticAssetLoadAudit[DATA_SOURCES]?.status || "initial", note: state.sourcesMeta?.message || "Kaynak listesi kontrol edilir" },
+      { file: DATA_SNAPSHOT, label: "Statik snapshot", status: state.snapshotMeta?.status || staticAssetLoadAudit[DATA_SNAPSHOT]?.status || "initial", note: state.snapshotMeta?.message || "Snapshot kontrol edilir" }
+    ];
+    const cssRows = ODDS_TERMINAL_CSS_MODULES.map(file => {
+      const loaded = typeof document !== "undefined" && Array.from(document.querySelectorAll('link[rel="stylesheet"]')).some(link => oddsTerminalSameAsset(link, file));
+      return { file, label: file.split("/").pop(), status: loaded ? "loaded" : "missing", note: loaded ? "CSS modülü sayfada" : "CSS modülü linkte görünmedi" };
+    });
+    const hardIssues = [];
+    if (!catalog.ok) hardIssues.push(...catalog.issues);
+    dataRows.concat(cssRows).forEach(row => {
+      if (["error", "blocked_fallback"].includes(String(row.status || ""))) hardIssues.push(`${row.label}: ${staticAssetAuditLabel(row.status)}`);
+    });
+    return {
+      ok: hardIssues.length === 0,
+      status: hardIssues.length ? "warning" : "ok",
+      build: ODDS_TERMINAL_BUILD,
+      catalog,
+      dataRows,
+      cssRows,
+      hardIssues,
+      checkedAt: new Date().toISOString()
+    };
+  }
+
+  function renderRuntimeAssetAuditPanel() {
+    const report = buildRuntimeAssetAuditReport();
+    const rows = [...report.dataRows, ...report.cssRows];
+    const icon = report.ok ? "fa-circle-check" : "fa-triangle-exclamation";
+    return `<section class="v641-final-panel v747-market-guard ${report.ok ? "ok" : "warning"}" aria-label="Runtime asset denetimi">
+      <header><span><i class="fa-solid ${icon}"></i> Runtime Asset Denetimi</span><em>${escapeHtml(report.build)}</em></header>
+      <p>${escapeHtml(report.ok ? "Market katalogu, runtime data ve CSS modülleri güvenli görünüyor. Market seçenekleri kullanıcı onayı olmadan değiştirilmez." : report.hardIssues.join(" "))}</p>
+      <div class="v640-user-grid">${rows.map(row => renderV629CheckpointMetric(row.label, staticAssetAuditLabel(row.status), row.note || row.file, staticAssetAuditTone(row.status))).join("")}</div>
     </section>`;
   }
 
@@ -5714,6 +5781,9 @@
     const decisionReport = buildV651CheckpointDecisionReport(report);
     return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration v608-source-configuration v612-source-configuration v616-source-configuration v628-source-configuration v640-source-configuration" aria-label="Kaynak Yapılandırması">
       ${renderV641SourcesFinal(report)}
+      ${renderDeveloperCollapse("Runtime Asset / Market Koruma Denetimi", `
+        ${renderRuntimeAssetAuditPanel()}
+      `, "Market katalogu, runtime data, snapshot, kaynak listesi ve CSS modül yükleri")}
       ${renderDeveloperCollapse("Checkpoint ve kaynak teknik arşivi", `
         ${renderV651SourcesSlimArchive(decisionReport)}
       `, "Eski checkpoint, connector ve panel denetim kartları tek özet altında tutulur.")}
@@ -6176,6 +6246,8 @@
     BOOKMAKER_SOURCE_REGISTRY,
     POLYMARKET_SOURCE_REGISTRY,
     POLYMARKET_EVENT_ADAPTER,
+    buildRuntimeAssetAuditReport,
+    marketCatalogAudit,
     mockOddsRecords,
     validateMockOddsRecords,
     calculateBestOdds,
