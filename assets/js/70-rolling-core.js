@@ -163,7 +163,7 @@
   }
   function renderModeCommand(mode, slots, state, summary, rollSummaryForMode) {
     const isCrypto = mode === "crypto";
-    const rowCount = 20;
+    const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const visible = slots.slice(0, rowCount);
     const pending = visible.filter(s => s.status === "pending" || s.status === "empty" || !s.status).length;
     const settled = visible.filter(s => s.status === "win" || s.status === "loss").length;
@@ -224,8 +224,8 @@
     if (!state.rowCounts || typeof state.rowCounts !== "object") state.rowCounts = { bet: 20, crypto: 20 };
     if (!state.quickPlan || typeof state.quickPlan !== "object") state.quickPlan = { start: 100, target: 1000 };
     ensureQuickTemplates(state);
-    state.rowCounts.bet = 20;
-    state.rowCounts.crypto = 20;
+    state.rowCounts.bet = Math.max(1, Math.min(20, Number(state.rowCounts.bet || 20)));
+    state.rowCounts.crypto = Math.max(1, Math.min(20, Number(state.rowCounts.crypto || 20)));
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
     while (state.modeSlots.crypto.length < state.rowCounts.crypto) state.modeSlots.crypto.push(createSlot("crypto", state.modeSlots.crypto.length));
     state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; });
@@ -305,8 +305,9 @@
     return [7, 15, 30, 60, 90].map(d => `<button type="button" data-roll="${mode}:${d}"><span>${d} GÜNLÜK ROLLING</span></button>`).join("");
   }
   function renderRowControls(mode, state) {
+    const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const label = mode === "crypto" ? "Kripto" : "Bahis";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v753-row-log-note"><span>20 ${label} alanı sabit · sonuçlar LOG'a gider</span></div>`;
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls"><span>${count}/20 ${label}</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button></div>`;
   }
 
   function escapeHtml(str) {
@@ -314,7 +315,7 @@
   }
   function renderTable(mode, slots, state) {
     const isCrypto = mode === "crypto";
-    const rowCount = 20;
+    const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const visible = slots.slice(0, rowCount);
     const noteHead = isCrypto ? "AKTİF İŞLEM" : "MAÇ";
     const notePH = isCrypto ? "İşlem" : "Maç";
@@ -498,6 +499,11 @@
       renderModule();
     }));
     mount.querySelectorAll("[data-history-close]").forEach(btn => btn.addEventListener("click", () => {
+      HISTORY_OPEN_MODE = null;
+      renderModule();
+    }));
+    mount.querySelectorAll(".v512-history-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
+      if (event.target !== overlay) return;
       HISTORY_OPEN_MODE = null;
       renderModule();
     }));
