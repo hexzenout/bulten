@@ -1,13 +1,13 @@
 // ===============================
-// BULTEN SITE HEALTHCHECK — V749
-// Genel site guard: modül, asset, route ve katalog sağlık denetimi.
+// BULTEN SITE HEALTHCHECK — V750
+// Genel site guard: modül, asset, route izolasyonu ve katalog sağlık denetimi.
 // UI'yi değiştirmez; console, body dataset ve window.BULTEN_HEALTH üzerinden rapor verir.
 // ===============================
 
 (function () {
   "use strict";
 
-  const VERSION = "v749";
+  const VERSION = "v750";
   const CHECK_DELAYS = [500, 1800, 4500];
 
   const REQUIRED_FUNCTION_GROUPS = [
@@ -51,6 +51,8 @@
   const REQUIRED_ASSET_PATTERNS = [
     { type: "css", label: "base css", pattern: "assets/css/00-base.css" },
     { type: "css", label: "odds css", pattern: "assets/css/55-odds-terminal.css" },
+    { type: "css", label: "odds live gate css", pattern: "assets/css/55-odds-terminal-live-gate.css" },
+    { type: "css", label: "odds final ui css", pattern: "assets/css/55-odds-terminal-final-ui.css" },
     { type: "css", label: "final fixes css", pattern: "assets/css/90-final-fixes.css" },
     { type: "js", label: "core js", pattern: "assets/js/00-omega-core.js" },
     { type: "js", label: "stream js", pattern: "assets/js/20-stream-core.js" },
@@ -63,12 +65,44 @@
 
   const ROUTE_BLOCKS = [
     { key: "radar", label: "Radar", id: "omega-radar-block" },
+    { key: "favs", label: "Favoriler", id: "omega-favs-block" },
     { key: "stream", label: "Canlı Yayın", id: "omega-stream-block" },
+    { key: "live", label: "Canlı Takip", id: "omega-live-block" },
     { key: "crypto", label: "Kripto", id: "omega-crypto-block" },
     { key: "odds", label: "Oran Terminali", id: "omega-odds-block" },
     { key: "rolling", label: "Rolling", id: "omega-rolling-block" },
-    { key: "finance", label: "Kasa", id: "finance-dashboard" }
+    { key: "finance", label: "Kasa", id: "v19-finance-block" }
   ];
+
+  const ROUTE_EXPECTATIONS = {
+    futbol: { expected: ["radar"], bodyClass: "omega-tab-futbol", nav: "nav-futbol" },
+    basketbol: { expected: ["radar"], bodyClass: "omega-tab-basketbol", nav: "nav-basketbol" },
+    home: { expected: ["radar"], bodyClass: "omega-tab-futbol", nav: "nav-home" },
+    favs: { expected: ["favs"], bodyClass: "omega-tab-favs", nav: "nav-favs" },
+    stream: { expected: ["stream"], bodyClass: "omega-tab-stream", nav: "nav-stream" },
+    live: { expected: ["live"], bodyClass: "omega-tab-live", nav: "nav-live" },
+    crypto: { expected: ["crypto"], bodyClass: "omega-tab-crypto", nav: "nav-crypto" },
+    odds: { expected: ["odds"], bodyClass: "omega-tab-odds", nav: "nav-odds" },
+    rolling: { expected: ["rolling"], bodyClass: "omega-tab-rolling", nav: "nav-rolling" },
+    finance: { expected: ["finance"], bodyClass: "omega-tab-finance", nav: "nav-finance" }
+  };
+
+  const ROUTE_ALIASES = {
+    "": "futbol",
+    ana: "futbol",
+    home: "futbol",
+    soccer: "futbol",
+    football: "futbol",
+    basket: "basketbol",
+    canli: "stream",
+    "canli-yayin": "stream",
+    yayin: "stream",
+    oran: "odds",
+    odds_terminal: "odds",
+    polymarket: "odds",
+    poly: "odds",
+    kasa: "finance"
+  };
 
   function normalizeAssetUrl(value) {
     try {
@@ -82,7 +116,18 @@
   function visible(el) {
     if (!el) return false;
     const style = getComputedStyle(el);
-    return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity || 1) !== 0;
+    const rects = typeof el.getClientRects === "function" ? el.getClientRects().length : 1;
+    return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity || 1) !== 0 && rects > 0;
+  }
+
+  function getRouteKey(hashValue) {
+    const raw = String(hashValue || location.hash || "#futbol").replace(/^#\/?/, "").split("/")[0].toLowerCase();
+    return ROUTE_ALIASES[raw] || raw || "futbol";
+  }
+
+  function getExpectedRoute(hashValue) {
+    const key = getRouteKey(hashValue);
+    return ROUTE_EXPECTATIONS[key] ? key : "futbol";
   }
 
   function collectAssets() {
@@ -132,15 +177,84 @@
     });
   }
 
-  function checkRoutes() {
-    const rows = ROUTE_BLOCKS.map(row => {
+  function collectRouteRows() {
+    return ROUTE_BLOCKS.map(row => {
       const el = document.getElementById(row.id);
-      return { ...row, exists: Boolean(el), visible: visible(el) };
+      const isVisible = visible(el);
+      return {
+        ...row,
+        exists: Boolean(el),
+        visible: isVisible,
+        display: el ? getComputedStyle(el).display : "missing",
+        classes: el ? Array.from(el.classList || []) : []
+      };
     });
-    const visibleRows = rows.filter(row => row.visible);
+  }
+
+  function checkRoutes() {
+    const rows = collectRouteRows();
     const activeHash = String(location.hash || "#futbol");
-    const suspicious = visibleRows.length > 2;
-    return { rows, visibleRows, activeHash, suspicious };
+    const activeRoute = getExpectedRoute(activeHash);
+    const expectation = ROUTE_EXPECTATIONS[activeRoute] || ROUTE_EXPECTATIONS.futbol;
+    const expectedKeys = new Set(expectation.expected || []);
+    const visibleRows = rows.filter(row => row.visible);
+    const unexpectedVisible = visibleRows.filter(row => !expectedKeys.has(row.key));
+    const expectedMissing = Array.from(expectedKeys)
+      .map(key => rows.find(row => row.key === key))
+      .filter(row => !row || !row.exists || !row.visible)
+      .map(row => row ? row.key : "missing");
+
+    const bodyClasses = document.body ? Array.from(document.body.classList || []) : [];
+    const omegaTabClasses = bodyClasses.filter(name => /^omega-tab-/.test(name));
+    const navActive = Array.from(document.querySelectorAll("#main-dropdown-nav .nav-link.active"))
+      .map(el => el.id || el.getAttribute("href") || el.textContent.trim());
+    const expectedBodyClass = expectation.bodyClass;
+    const expectedNav = expectation.nav;
+
+    const bodyMismatch = Boolean(expectedBodyClass && document.body && !document.body.classList.contains(expectedBodyClass));
+    const multipleTabClasses = omegaTabClasses.length > 1;
+    const navMismatch = Boolean(expectedNav && navActive.length && !navActive.includes(expectedNav));
+    const suspicious = unexpectedVisible.length > 0 || expectedMissing.length > 0 || multipleTabClasses || navMismatch;
+
+    return {
+      rows,
+      visibleRows,
+      activeHash,
+      activeRoute,
+      expectedKeys: Array.from(expectedKeys),
+      unexpectedVisible,
+      expectedMissing,
+      omegaTabClasses,
+      multipleTabClasses,
+      bodyMismatch,
+      navActive,
+      navMismatch,
+      suspicious
+    };
+  }
+
+  function checkModuleIsolation() {
+    const routes = checkRoutes();
+    const issues = [];
+    if (routes.unexpectedVisible.length) {
+      issues.push(`Beklenmeyen görünür modül: ${routes.unexpectedVisible.map(row => row.label).join(", ")}`);
+    }
+    if (routes.expectedMissing.length) {
+      issues.push(`Beklenen modül gizli/eksik: ${routes.expectedMissing.join(", ")}`);
+    }
+    if (routes.multipleTabClasses) {
+      issues.push(`Birden fazla omega-tab body class var: ${routes.omegaTabClasses.join(", ")}`);
+    }
+    if (routes.navMismatch) {
+      issues.push(`Aktif menü hash ile uyumsuz: ${routes.navActive.join(", ") || "yok"}`);
+    }
+    return {
+      ok: issues.length === 0,
+      activeRoute: routes.activeRoute,
+      activeHash: routes.activeHash,
+      issues,
+      routes
+    };
   }
 
   function checkOddsCatalog() {
@@ -177,6 +291,7 @@
     const duplicateAssets = findDuplicateAssets(assets);
     const functions = checkFunctions();
     const routes = checkRoutes();
+    const moduleIsolation = checkModuleIsolation();
     const oddsCatalog = checkOddsCatalog();
     const libraries = checkExternalLibraries();
 
@@ -187,7 +302,7 @@
     duplicateAssets.forEach(row => softIssues.push(`Tekrarlı asset: ${row.key} x${row.count}`));
     functions.filter(row => !row.ok).forEach(row => hardIssues.push(`${row.label} eksik fonksiyon: ${row.missing.join(", ")}`));
     libraries.filter(row => !row.ok).forEach(row => softIssues.push(`${row.label} henüz hazır değil`));
-    if (routes.suspicious) softIssues.push(`Route görünürlük şüphesi: ${routes.visibleRows.map(row => row.label).join(", ")}`);
+    if (routes.suspicious) softIssues.push(`Route izolasyon şüphesi: ${moduleIsolation.issues.join(" | ")}`);
     if (oddsCatalog.available && oddsCatalog.ok === false) hardIssues.push(`Market katalog audit uyarısı: ${(oddsCatalog.issues || []).join(" | ") || "kontrol gerekli"}`);
 
     const ok = hardIssues.length === 0;
@@ -197,19 +312,22 @@
       status: ok ? (softIssues.length ? "warning" : "ok") : "error",
       checkedAt: new Date().toISOString(),
       activeHash: routes.activeHash,
+      activeRoute: routes.activeRoute,
       counts: {
         scripts: assets.scripts.length,
         styles: assets.styles.length,
         requiredAssets: requiredAssets.length,
         duplicateAssets: duplicateAssets.length,
         functionGroups: functions.length,
-        visibleRoutes: routes.visibleRows.length
+        visibleRoutes: routes.visibleRows.length,
+        unexpectedVisibleRoutes: routes.unexpectedVisible.length
       },
       hardIssues,
       softIssues,
       assets: { required: requiredAssets, duplicates: duplicateAssets },
       functions,
       routes,
+      moduleIsolation,
       oddsCatalog,
       libraries
     };
@@ -219,9 +337,13 @@
     if (!document.body) return;
     document.body.dataset.bultenHealth = report.status;
     document.body.dataset.bultenHealthVersion = VERSION;
+    document.body.dataset.bultenActiveRoute = report.activeRoute;
+    document.body.dataset.bultenRouteGuard = report.moduleIsolation.ok ? "ok" : "warning";
     document.body.dataset.v30Modules = report.ok ? "ok" : "missing";
     if (report.ok) document.body.classList.add("v30-modular-ready", "bulten-health-ready");
     else document.body.classList.add("bulten-health-warning");
+    if (report.moduleIsolation.ok) document.body.classList.add("bulten-route-guard-ready");
+    else document.body.classList.add("bulten-route-guard-warning");
   }
 
   function logReport(report) {
@@ -229,8 +351,10 @@
     const log = report.ok ? console.info : console.warn;
     log(title, {
       status: report.status,
+      activeRoute: report.activeRoute,
       hardIssues: report.hardIssues,
       softIssues: report.softIssues,
+      routeGuard: report.moduleIsolation.ok ? "ok" : report.moduleIsolation.issues,
       oddsCatalog: report.oddsCatalog?.available ? {
         football: report.oddsCatalog.footballCount,
         basketball: report.oddsCatalog.basketballCount,
@@ -248,11 +372,25 @@
     return lastReport;
   }
 
+  function routeAudit() {
+    const report = runHealthcheck({ silent: true });
+    return report.moduleIsolation;
+  }
+
+  window.BULTEN_ROUTE_GUARD = {
+    version: VERSION,
+    audit: routeAudit,
+    report: routeAudit,
+    expectedRoute: () => getExpectedRoute(location.hash),
+    visibleRoutes: () => collectRouteRows().filter(row => row.visible)
+  };
+
   window.BULTEN_HEALTH = {
     version: VERSION,
     run: runHealthcheck,
     report: () => lastReport || runHealthcheck({ silent: true }),
-    status: () => (lastReport || runHealthcheck({ silent: true })).status
+    status: () => (lastReport || runHealthcheck({ silent: true })).status,
+    route: routeAudit
   };
 
   window.addEventListener("DOMContentLoaded", function () {
@@ -261,5 +399,6 @@
 
   window.addEventListener("hashchange", function () {
     setTimeout(() => runHealthcheck({ silent: true }), 250);
+    setTimeout(() => runHealthcheck({ silent: true }), 900);
   });
 })();
