@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V681-V700 runtime data ayrıştırma
+// ORAN TERMİNALİ — güvenli JS toparlama / V701-V740 taxonomy ayrıştırma
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -105,6 +105,7 @@
   // Runtime Demo Data / Adapter Helpers
   // -------------------------------
   const DATA_RUNTIME = "assets/data/55-odds-terminal-runtime.json";
+  const DATA_MARKET_CATALOG = "assets/data/55-odds-terminal-catalog.json";
   const FALLBACK_RUNTIME_DATA = {
     mockSourceRawRecords: [],
     sourceMarketMappings: [],
@@ -117,7 +118,22 @@
     dryRunSamplePayloads: {}
   };
 
+
+  const FALLBACK_MARKET_CATALOG = {
+    footballCategories: [],
+    basketballCategories: [],
+    polyFilters: [["all", "Hepsi"], ["sports", "Spor"], ["crypto", "Kripto"], ["economy", "Ekonomi"], ["news", "Haber"], ["short", "Kısa Vade"], ["liquid", "Yüksek Likidite"], ["value", "Fırsat Adayı"]],
+    teamNameAliases: {},
+    leagueNameAliases: {}
+  };
+
   let oddsRuntimeDataMeta = { status: "initial", loadedAt: null, file: DATA_RUNTIME };
+  let marketCatalogDataMeta = { status: "initial", loadedAt: null, file: DATA_MARKET_CATALOG };
+  let MARKET_CATALOG_FOOTBALL_CATEGORIES = [];
+  let MARKET_CATALOG_BASKETBALL_CATEGORIES = [];
+  let MARKET_CATALOG_POLY_FILTERS = FALLBACK_MARKET_CATALOG.polyFilters;
+  let TEAM_NAME_ALIASES = {};
+  let LEAGUE_NAME_ALIASES = {};
   let MOCK_SOURCE_RAW_RECORDS = [];
   let SOURCE_MARKET_MAPPINGS = [];
   let MOCK_SOURCE_IDS = [];
@@ -134,6 +150,33 @@
 
   function runtimeArray(value) { return Array.isArray(value) ? value : []; }
   function runtimeObject(value) { return value && typeof value === "object" && !Array.isArray(value) ? value : {}; }
+
+
+  function resetMarketCatalogCaches() {
+    curatedMarketCategoryCache = null;
+    marketCategoryCacheBySport = {};
+    marketMapCache = null;
+  }
+
+  function applyOddsMarketCatalogData(payload = FALLBACK_MARKET_CATALOG, meta = {}) {
+    const data = runtimeObject(payload);
+    MARKET_CATALOG_FOOTBALL_CATEGORIES = runtimeArray(data.footballCategories);
+    MARKET_CATALOG_BASKETBALL_CATEGORIES = runtimeArray(data.basketballCategories);
+    MARKET_CATALOG_POLY_FILTERS = runtimeArray(data.polyFilters).length ? runtimeArray(data.polyFilters) : FALLBACK_MARKET_CATALOG.polyFilters;
+    TEAM_NAME_ALIASES = runtimeObject(data.teamNameAliases);
+    LEAGUE_NAME_ALIASES = runtimeObject(data.leagueNameAliases);
+    marketCatalogDataMeta = {
+      status: meta.ok ? "loaded" : "fallback",
+      loadedAt: meta.loadedAt || new Date().toISOString(),
+      file: DATA_MARKET_CATALOG,
+      footballCategoryCount: MARKET_CATALOG_FOOTBALL_CATEGORIES.length,
+      basketballCategoryCount: MARKET_CATALOG_BASKETBALL_CATEGORIES.length,
+      footballMarketCount: MARKET_CATALOG_FOOTBALL_CATEGORIES.reduce((sum, cat) => sum + runtimeArray(cat?.markets).length, 0),
+      basketballMarketCount: MARKET_CATALOG_BASKETBALL_CATEGORIES.reduce((sum, cat) => sum + runtimeArray(cat?.markets).length, 0),
+      polyFilterCount: MARKET_CATALOG_POLY_FILTERS.length
+    };
+    resetMarketCatalogCaches();
+  }
 
   function buildPolymarketSourceRegistry() {
     return {
@@ -278,25 +321,7 @@
     return Number.isFinite(x) ? x.toFixed(1) + "%" : "-";
   }
 
-  const TEAM_NAME_ALIASES = {
-    "man utd": "manchester united",
-    "manchester utd": "manchester united",
-    "man united": "manchester united",
-    "fenerbahce": "fenerbahce",
-    "efes": "anadolu efes",
-    "anadolu efes sk": "anadolu efes",
-    "arsenal fc": "arsenal",
-    "chelsea fc": "chelsea"
-  };
-
-  const LEAGUE_NAME_ALIASES = {
-    "ing basketbol super ligi": "bsl",
-    "basketbol super ligi": "bsl",
-    "turkiye basketbol super ligi": "bsl",
-    "super lig": "super-lig",
-    "premier league": "premier-league",
-    "la liga": "la-liga"
-  };
+  // Team/league alias dictionaries are loaded from assets/data/55-odds-terminal-catalog.json.
 
   // -------------------------------
   // Search / Alias Helpers
@@ -635,6 +660,15 @@
     return oddsRuntimeDataMeta;
   }
 
+
+  async function loadOddsMarketCatalogData({ force = false } = {}) {
+    if (!force && marketCatalogDataMeta.status === "loaded") return marketCatalogDataMeta;
+    const payload = await loadJson(DATA_MARKET_CATALOG, null);
+    const ok = Boolean(payload && typeof payload === "object" && Array.isArray(payload.footballCategories) && Array.isArray(payload.basketballCategories));
+    applyOddsMarketCatalogData(ok ? payload : FALLBACK_MARKET_CATALOG, { ok, loadedAt: new Date().toISOString() });
+    return marketCatalogDataMeta;
+  }
+
   // -------------------------------
   // Market Catalog / Taxonomy
   // -------------------------------
@@ -648,20 +682,6 @@
     if (id.includes("basket")) return "basketball";
     return "football";
   }
-
-  const marketItem = (name, extra = {}) => ({
-    id: extra.id || null,
-    name,
-    label: extra.label || name,
-    desc: extra.desc || "",
-    tags: extra.tags || [],
-    aliases: extra.aliases || [],
-    period: extra.period || null,
-    marketType: extra.marketType || null,
-    line: extra.line ?? null,
-    side: extra.side || null,
-    dataMode: extra.dataMode || "catalog_static"
-  });
 
   function marketId(name) {
     return normalizeText(name).replace(/\s+/g, "_").replace(/\./g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
@@ -679,349 +699,14 @@
     return sport === "basketball" ? "basket" : sport || "market";
   }
 
-  function marketItems(names, tags = []) {
-    return names.map(name => marketItem(name, { tags }));
+  function marketCatalogCategoriesFromData() {
+    const localCatalog = [...MARKET_CATALOG_FOOTBALL_CATEGORIES, ...MARKET_CATALOG_BASKETBALL_CATEGORIES];
+    return localCatalog.length ? localCatalog : allMarketCategories();
   }
 
-  function teamGoalLineMarkets(side, alias) {
-    const sideKey = side === "Ev Sahibi" ? "home" : "away";
-    const sideEn = sideKey === "home" ? "Home Team" : "Away Team";
-    return ["0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5"].map(line => marketItem(`${side} ${line} Gol Alt / Üst`, {
-      id: `football.${sideKey}_goals_${line.replace(".", "_")}_ou`,
-      tags: ["gol", "takım gol", side, line, alias, "alt üst"],
-      aliases: [`${alias} ${line} Gol Alt / Üst`, `${alias} ${line}`, `${sideEn} Goals Over Under ${line}`, `${sideEn} Goals ${line}`],
-      period: "full_time",
-      marketType: "over_under",
-      line: Number(line),
-      side: sideKey
-    }));
+  function polymarketFilters() {
+    return MARKET_CATALOG_POLY_FILTERS.length ? MARKET_CATALOG_POLY_FILTERS : FALLBACK_MARKET_CATALOG.polyFilters;
   }
-
-  function resultTotalCombos() {
-    const outcomes = ["1", "2", "1-X", "1-2", "X-2"];
-    const lines = ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5"];
-    const sidesForLine = line => {
-      if (line === "0.5") return ["Üst"];
-      if (line === "5.5") return ["Alt"];
-      return ["Alt", "Üst"];
-    };
-    return outcomes.flatMap(outcome => lines.flatMap(line => sidesForLine(line).map(side => marketItem(`${outcome} ve ${line} Gol ${side}`, {
-      tags: ["maç sonucu toplam gol", outcome, line, side]
-    }))));
-  }
-
-  function minuteGoalMarkets() {
-    const minutes = [15, 30, 45, 60, 75];
-    const lines = ["0.5", "1", "1.5", "2", "2.5"];
-    const families = [
-      minute => `Ev Sahibi ${minute}. Dakikaya Kadar`,
-      minute => `Deplasman ${minute}. Dakikaya Kadar`,
-      minute => `Maçta ${minute}. Dakikaya Kadar`
-    ];
-    return families.flatMap(makePrefix => minutes.flatMap(minute => lines.map(line => marketItem(`${makePrefix(minute)} ${line} Gol Alt / Üst`, {
-      tags: ["dakikaya kadar gol", `${minute}`, line]
-    }))));
-  }
-
-  // Market catalog remains visible for manual review.
-  // Future live odds adapters should map source markets to stable market ids.
-  const V546_FOOTBALL_CATEGORIES = [
-    {
-      id: "v546_football_result",
-      name: "Ana Sonuç",
-      desc: "Maç sonucu, çifte şans, yarı sonucu ve temel sonuç kombinasyonları",
-      sport: "football",
-      markets: marketItems([
-        "Maç Sonucu", "Çifte Şans", "Beraberlikte İade", "Ev Sahibi Kazanır", "Beraberlik", "Deplasman Kazanır",
-        "İlk Yarı Sonucu", "İkinci Yarı Sonucu", "İlk Yarı / Maç Sonucu", "Maç Sonucu ve KG Var",
-        "Maç Sonucu ve Toplam Gol", "Ev Sahibi İlk Yarıyı Kazanır", "Deplasman İlk Yarıyı Kazanır",
-        "Ev Sahibi İkinci Yarıyı Kazanır", "Deplasman İkinci Yarıyı Kazanır", "Ev Sahibi Herhangi Bir Yarıyı Kazanır",
-        "Deplasman Herhangi Bir Yarıyı Kazanır", "Ev Sahibi Her İki Yarıyı Kazanır", "Deplasman Her İki Yarıyı Kazanır"
-      ], ["futbol ana sonuç"])
-    },
-    {
-      id: "v546_football_result_total_combos",
-      name: "Maç Sonucu Kombinasyonları",
-      desc: "1/X/2 ve çifte şans sonuçlarının toplam gol alt/üst çizgileriyle kombinasyonu",
-      sport: "football",
-      markets: resultTotalCombos()
-    },
-    {
-      id: "v546_football_goals",
-      name: "Gol Alt / Üst",
-      desc: "Toplam gol çizgileri, gol aralığı, gol zamanı ve yarı gol kıyasları",
-      sport: "football",
-      markets: marketItems([
-        "0.5 Gol Alt / Üst", "1.5 Gol Alt / Üst", "2.5 Gol Alt / Üst", "3.5 Gol Alt / Üst", "4.5 Gol Alt / Üst", "5.5 Gol Alt / Üst", "6.5 Gol Alt / Üst",
-        "Toplam 1 Gol Alt / Üst", "Toplam 2 Gol Alt / Üst", "Toplam 3 Gol Alt / Üst", "Toplam 4 Gol Alt / Üst",
-        "Toplam Gol Aralığı 0-1", "Toplam Gol Aralığı 2-3", "Toplam Gol Aralığı 4-5", "Toplam Gol Aralığı 6+",
-        "İlk Gol Zamanı", "En Çok Gol Olan Yarı", "İlk Yarı Daha Çok Gol", "İkinci Yarı Daha Çok Gol", "Her İki Yarıda da Gol Olur"
-      ], ["gol alt üst", "2.5"])
-    },
-    {
-      id: "v546_football_team_goals",
-      name: "Takım Gol Marketleri",
-      desc: "KG, takım golü, takım alt/üst ve gol yememe marketleri",
-      sport: "football",
-      markets: [
-        ...marketItems(["KG Var / Yok", "Karşılıklı Gol Var", "Ev Sahibi Gol Atar", "Deplasman Gol Atar", "Her İki Takım da 1.5 Üst Gol Atar"], ["takım gol"]),
-        ...teamGoalLineMarkets("Ev Sahibi", "Takım 1"),
-        ...teamGoalLineMarkets("Deplasman", "Takım 2"),
-        ...marketItems([
-          "Ev Sahibi İlk Yarı Gol Atar", "Deplasman İlk Yarı Gol Atar", "Ev Sahibi İkinci Yarı Gol Atar", "Deplasman İkinci Yarı Gol Atar",
-          "Ev Sahibi Her İki Yarıda Gol Atar", "Deplasman Her İki Yarıda Gol Atar", "Ev Sahibi Kazanır ve Gol Yemez", "Deplasman Kazanır ve Gol Yemez",
-          "Ev Sahibi Gol Yemez", "Deplasman Gol Yemez"
-        ], ["takım gol"])
-      ]
-    },
-    {
-      id: "v546_football_goal_time",
-      name: "İlk Gol / Gol Zamanı",
-      desc: "İlk gol tarafı, erken gol ve dakikaya kadar gol alt/üst aileleri",
-      sport: "football",
-      markets: [
-        ...marketItems(["İlk Golü Ev Sahibi Atar", "İlk Golü Deplasman Atar", "İlk Gol Dakika Aralığı 1-15 Olur / Olmaz"], ["ilk gol", "gol zamanı"]),
-        ...minuteGoalMarkets()
-      ]
-    },
-    {
-      id: "v546_football_halves",
-      name: "Yarı Marketleri",
-      desc: "İlk yarı, ikinci yarı, takım yarı golleri, yarı handikap ve çifte şans",
-      sport: "football",
-      markets: marketItems([
-        "İlk Yarı 0.5 Gol Alt / Üst", "İlk Yarı 1 Gol Alt / Üst", "İlk Yarı 1.5 Gol Alt / Üst", "İlk Yarı 2 Gol Alt / Üst", "İlk Yarı 2.5 Gol Alt / Üst",
-        "İkinci Yarı 0.5 Gol Alt / Üst", "İkinci Yarı 1 Gol Alt / Üst", "İkinci Yarı 1.5 Gol Alt / Üst", "İkinci Yarı 2 Gol Alt / Üst", "İkinci Yarı 2.5 Gol Alt / Üst",
-        "İlk Yarı KG Var / Yok", "İkinci Yarı KG Var / Yok",
-        "İlk Yarı Ev Sahibi 0.5 Gol Alt / Üst", "İlk Yarı Ev Sahibi 1 Gol Alt / Üst", "İlk Yarı Ev Sahibi 1.5 Gol Alt / Üst", "İlk Yarı Ev Sahibi 2 Gol Alt / Üst", "İlk Yarı Ev Sahibi 2.5 Gol Alt / Üst",
-        "İlk Yarı Deplasman 0.5 Gol Alt / Üst", "İlk Yarı Deplasman 1 Gol Alt / Üst", "İlk Yarı Deplasman 1.5 Gol Alt / Üst", "İlk Yarı Deplasman 2 Gol Alt / Üst", "İlk Yarı Deplasman 2.5 Gol Alt / Üst",
-        "İkinci Yarı Ev Sahibi 0.5 Gol Alt / Üst", "İkinci Yarı Ev Sahibi 1 Gol Alt / Üst", "İkinci Yarı Ev Sahibi 1.5 Gol Alt / Üst", "İkinci Yarı Ev Sahibi 2 Gol Alt / Üst", "İkinci Yarı Ev Sahibi 2.5 Gol Alt / Üst",
-        "İkinci Yarı Deplasman 0.5 Gol Alt / Üst", "İkinci Yarı Deplasman 1 Gol Alt / Üst", "İkinci Yarı Deplasman 1.5 Gol Alt / Üst", "İkinci Yarı Deplasman 2 Gol Alt / Üst", "İkinci Yarı Deplasman 2.5 Gol Alt / Üst",
-        "İlk Yarı Ev Sahibi Handikap 0.5", "İlk Yarı Ev Sahibi Handikap 1.5", "İlk Yarı Deplasman Handikap 0.5", "İlk Yarı Deplasman Handikap 1.5",
-        "İkinci Yarı Ev Sahibi Handikap 0.5", "İkinci Yarı Ev Sahibi Handikap 1.5", "İkinci Yarı Deplasman Handikap 0.5", "İkinci Yarı Deplasman Handikap 1.5",
-        "İlk Yarı Çifte Şans", "İkinci Yarı Çifte Şans"
-      ], ["yarı marketleri"])
-    },
-    {
-      id: "v546_football_corners",
-      name: "Korner",
-      desc: "Toplam, yarı, takım, zaman, art arda korner ve korner yarış marketleri",
-      sport: "football",
-      markets: marketItems([
-        "Toplam Korner Alt / Üst", "Toplam Korner 7 Üst", "Toplam Korner 8 Üst", "Toplam Korner 9 Üst", "Toplam Korner 10 Üst",
-        "6.5 Korner Alt / Üst", "7.5 Korner Alt / Üst", "8.5 Korner Alt / Üst", "9.5 Korner Alt / Üst", "10.5 Korner Alt / Üst", "11.5 Korner Alt / Üst", "12.5 Korner Alt / Üst",
-        "İlk Yarı Korner Alt / Üst", "İlk Yarı Korner 2 Üst", "İlk Yarı Korner 3 Üst", "İlk Yarı Korner 4 Üst", "İlk Yarı Korner 5 Üst",
-        "İlk Yarı 2.5 Korner Alt / Üst", "İlk Yarı 3.5 Korner Alt / Üst", "İlk Yarı 4.5 Korner Alt / Üst", "İlk Yarı 5.5 Korner Alt / Üst",
-        "İkinci Yarı Korner Alt / Üst", "İkinci Yarı Korner 2 Üst", "İkinci Yarı Korner 3 Üst", "İkinci Yarı Korner 4 Üst", "İkinci Yarı Korner 5 Üst",
-        "İkinci Yarı 2.5 Korner Alt / Üst", "İkinci Yarı 3.5 Korner Alt / Üst", "İkinci Yarı 4.5 Korner Alt / Üst", "İkinci Yarı 5.5 Korner Alt / Üst",
-        "Ev Sahibi Korner Alt / Üst", "Deplasman Korner Alt / Üst",
-        "Ev Sahibi İlk Yarı Korner 0.5 Alt / Üst", "Ev Sahibi İlk Yarı Korner 1 Alt / Üst", "Ev Sahibi İlk Yarı Korner 1.5 Alt / Üst", "Ev Sahibi İlk Yarı Korner 2 Alt / Üst", "Ev Sahibi İlk Yarı Korner 2.5 Alt / Üst",
-        "Deplasman İlk Yarı Korner 0.5 Alt / Üst", "Deplasman İlk Yarı Korner 1 Alt / Üst", "Deplasman İlk Yarı Korner 1.5 Alt / Üst", "Deplasman İlk Yarı Korner 2 Alt / Üst", "Deplasman İlk Yarı Korner 2.5 Alt / Üst",
-        "Ev Sahibi İkinci Yarı Korner 0.5 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 1 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 1.5 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 2 Alt / Üst", "Ev Sahibi İkinci Yarı Korner 2.5 Alt / Üst",
-        "Deplasman İkinci Yarı Korner 0.5 Alt / Üst", "Deplasman İkinci Yarı Korner 1 Alt / Üst", "Deplasman İkinci Yarı Korner 1.5 Alt / Üst", "Deplasman İkinci Yarı Korner 2 Alt / Üst", "Deplasman İkinci Yarı Korner 2.5 Alt / Üst",
-        "Korner Handikap", "En Çok Korner Kullanan Takım", "İlk Yarı En Çok Korner", "İkinci Yarı En Çok Korner",
-        "İlk 5 Dakika Korner Olur / Olmaz", "İlk 10 Dakika Korner Olur / Olmaz", "İlk 15 Dakika Korner Olur / Olmaz",
-        "Ev Sahibi Art Arda 2 Korner Kullanır", "Deplasman Art Arda 2 Korner Kullanır", "Herhangi Bir Takım Art Arda 2 Korner Kullanır",
-        "İlk 3 Kornere Ulaşan Takım", "İlk 5 Kornere Ulaşan Takım", "İlk 7 Kornere Ulaşan Takım"
-      ], ["korner", "ilk 5 dakika korner"])
-    },
-    {
-      id: "v546_football_cards",
-      name: "Kart",
-      desc: "Toplam kart, takım kartı, kırmızı kart, ilk kart ve oyuncu kart marketleri",
-      sport: "football",
-      markets: marketItems([
-        "Toplam Kart Alt / Üst", "2.5 Kart Alt / Üst", "3.5 Kart Alt / Üst", "4.5 Kart Alt / Üst", "5.5 Kart Alt / Üst",
-        "Ev Sahibi Kart Alt / Üst", "Deplasman Kart Alt / Üst", "İlk Yarı Kart Alt / Üst", "İkinci Yarı Kart Alt / Üst",
-        "Kırmızı Kart Olur / Olmaz", "Ev Sahibi Kırmızı Kart Görür", "Deplasman Kırmızı Kart Görür", "İlk Kartı Ev Sahibi Görür", "İlk Kartı Deplasman Görür", "En Çok Kart Gören Takım",
-        "Kart Handikap", "Oyuncu Kart Görür", "Oyuncu Sarı Kart Görür", "Oyuncu Kırmızı Kart Görür", "İlk 15 Dakika Kart Olur", "İlk Yarı Kart Olur", "İkinci Yarı Kart Olur",
-        "Her İki Takım da Kart Görür", "Ev Sahibi Daha Fazla Kart Görür", "Deplasman Daha Fazla Kart Görür"
-      ], ["kart"])
-    },
-    {
-      id: "v546_football_handicap",
-      name: "Handikap",
-      desc: "Maç, takım, ev sahibi/deplasman ve yarı handikap seçenekleri",
-      sport: "football",
-      markets: marketItems([
-        "Maç Handikapı", "Ev Sahibi Handikap", "Deplasman Handikap",
-        "Ev Sahibi -0.5 Handikap", "Ev Sahibi -1 Handikap", "Ev Sahibi -1.5 Handikap", "Ev Sahibi -2 Handikap", "Ev Sahibi -2.5 Handikap", "Ev Sahibi -3 Handikap", "Ev Sahibi -3.5 Handikap",
-        "Ev Sahibi +0.5 Handikap", "Ev Sahibi +1 Handikap", "Ev Sahibi +1.5 Handikap", "Ev Sahibi +2 Handikap", "Ev Sahibi +2.5 Handikap",
-        "Deplasman -0.5 Handikap", "Deplasman -1 Handikap", "Deplasman -1.5 Handikap", "Deplasman -2 Handikap", "Deplasman -2.5 Handikap", "Deplasman -3 Handikap", "Deplasman -3.5 Handikap",
-        "Deplasman +0.5 Handikap", "Deplasman +1 Handikap", "Deplasman +1.5 Handikap", "Deplasman +2 Handikap", "Deplasman +2.5 Handikap", "İlk Yarı Handikap", "İkinci Yarı Handikap"
-      ], ["handikap"])
-    },
-    {
-      id: "v546_football_players",
-      name: "Oyuncu Marketleri",
-      desc: "Gol, asist, şut, isabetli şut, faul, kart, ofsayt ve kaleci kurtarışları",
-      sport: "football",
-      markets: marketItems([
-        "Oyuncu Gol Atar", "Oyuncu İlk Golü Atar", "Oyuncu Son Golü Atar", "Oyuncu 2+ Gol Atar", "Oyuncu 3+ Gol Atar", "Oyuncu Asist Yapar", "Oyuncu Gol veya Asist Yapar",
-        "Oyuncu Şut Alt / Üst", "Oyuncu Şut 1+", "Oyuncu Şut 2+", "Oyuncu Şut 3+", "Oyuncu İsabetli Şut Alt / Üst", "Oyuncu İsabetli Şut 1+", "Oyuncu İsabetli Şut 2+", "Oyuncu İsabetli Şut 3+",
-        "Oyuncu Faul Alt / Üst", "Oyuncu Kart Görür", "Oyuncu Ofsayt Alt / Üst", "Kaleci Kurtarış Alt / Üst"
-      ], ["oyuncu", "oyuncu faul", "isabetli şut"])
-    },
-    {
-      id: "v546_football_stats",
-      name: "İstatistik Marketleri",
-      desc: "Şut, isabetli şut, faul, ofsayt ve taç alt/üst marketleri",
-      sport: "football",
-      markets: marketItems([
-        "Toplam Şut Alt / Üst", "Toplam İsabetli Şut Alt / Üst", "Ev Sahibi Şut Alt / Üst", "Deplasman Şut Alt / Üst", "Ev Sahibi İsabetli Şut Alt / Üst", "Deplasman İsabetli Şut Alt / Üst",
-        "Ev Sahibi Şut Alt / Üst", "Deplasman Şut Alt / Üst", "Ev Sahibi İsabetli Şut Alt / Üst", "Deplasman İsabetli Şut Alt / Üst", "Toplam Faul Alt / Üst", "Ev Sahibi Faul Alt / Üst", "Deplasman Faul Alt / Üst",
-        "Ev Sahibi Faul Alt / Üst", "Deplasman Faul Alt / Üst", "Toplam Ofsayt Alt / Üst", "Ev Sahibi Ofsayt Alt / Üst", "Deplasman Ofsayt Alt / Üst", "Ev Sahibi Ofsayt Alt / Üst", "Deplasman Ofsayt Alt / Üst",
-        "Toplam Taç Alt / Üst", "Ev Sahibi Taç Alt / Üst", "Deplasman Taç Alt / Üst", "Ev Sahibi Taç Alt / Üst", "Deplasman Taç Alt / Üst",
-        "İlk Yarı Toplam Faul Alt / Üst", "İlk Yarı Ev Sahibi Faul Alt / Üst", "İlk Yarı Deplasman Faul Alt / Üst",
-        "İkinci Yarı Toplam Faul Alt / Üst", "İkinci Yarı Ev Sahibi Faul Alt / Üst", "İkinci Yarı Deplasman Faul Alt / Üst",
-        "İlk Yarı Toplam Şut Alt / Üst", "İlk Yarı Ev Sahibi Şut Alt / Üst", "İlk Yarı Deplasman Şut Alt / Üst",
-        "İkinci Yarı Toplam Şut Alt / Üst", "İkinci Yarı Ev Sahibi Şut Alt / Üst", "İkinci Yarı Deplasman Şut Alt / Üst",
-        "İlk Yarı Toplam İsabetli Şut Alt / Üst", "İlk Yarı Ev Sahibi İsabetli Şut Alt / Üst", "İlk Yarı Deplasman İsabetli Şut Alt / Üst",
-        "İkinci Yarı Toplam İsabetli Şut Alt / Üst", "İkinci Yarı Ev Sahibi İsabetli Şut Alt / Üst", "İkinci Yarı Deplasman İsabetli Şut Alt / Üst",
-        "İlk Yarı Toplam Ofsayt Alt / Üst", "İlk Yarı Ev Sahibi Ofsayt Alt / Üst", "İlk Yarı Deplasman Ofsayt Alt / Üst",
-        "İkinci Yarı Toplam Ofsayt Alt / Üst", "İkinci Yarı Ev Sahibi Ofsayt Alt / Üst", "İkinci Yarı Deplasman Ofsayt Alt / Üst",
-        "İlk Yarı Toplam Taç Alt / Üst", "İlk Yarı Ev Sahibi Taç Alt / Üst", "İlk Yarı Deplasman Taç Alt / Üst",
-        "İkinci Yarı Toplam Taç Alt / Üst", "İkinci Yarı Ev Sahibi Taç Alt / Üst", "İkinci Yarı Deplasman Taç Alt / Üst"
-      ], ["istatistik", "isabetli şut", "faul"])
-    },
-    {
-      id: "v546_football_streak_goals",
-      name: "Art Arda Gol / Seri Gol",
-      desc: "Evet / Hayır sonucuyla art arda gol serisi marketleri",
-      sport: "football",
-      markets: marketItems([
-        "Ev Sahibi Art Arda 2 Gol Atar", "Ev Sahibi Art Arda 3 Gol Atar", "Ev Sahibi Art Arda 4 Gol Atar", "Deplasman Art Arda 2 Gol Atar", "Deplasman Art Arda 3 Gol Atar", "Deplasman Art Arda 4 Gol Atar",
-        "Herhangi Bir Takım Art Arda 2 Gol Atar", "Herhangi Bir Takım Art Arda 3 Gol Atar", "Herhangi Bir Takım Art Arda 4 Gol Atar"
-      ], ["art arda gol", "seri gol"])
-    },
-    {
-      id: "v546_football_win_margin",
-      name: "Galibiyet Farkı",
-      desc: "Takım ve herhangi bir takım için galibiyet farkı seçenekleri",
-      sport: "football",
-      markets: marketItems(["Ev Sahibi Tam 1 Farkla Kazanır", "Ev Sahibi Tam 2 Farkla Kazanır", "Ev Sahibi 3+ Farkla Kazanır", "Deplasman Tam 1 Farkla Kazanır", "Deplasman Tam 2 Farkla Kazanır", "Deplasman 3+ Farkla Kazanır", "Herhangi Bir Takım 1 Farkla Kazanır", "Herhangi Bir Takım 2 Farkla Kazanır", "Herhangi Bir Takım 3+ Farkla Kazanır"], ["galibiyet farkı"])
-    },
-    {
-      id: "v546_football_penalties",
-      name: "Özel Bahisler",
-      desc: "Penaltı olur/olmaz özel futbol marketi",
-      sport: "football",
-      markets: marketItems(["Penaltı Olur / Olmaz"], ["penaltı", "özel bahis"])
-    }
-  ];
-
-  const V546_BASKETBALL_CATEGORIES = [
-    {
-      id: "v546_basket_main",
-      name: "Ana Marketler",
-      desc: "Maç, toplam sayı, yarı ve uzatma ana basketbol marketleri",
-      sport: "basketball",
-      markets: [
-        ...marketItems([
-          "Maç Sonucu", "Maç Handikapı", "Toplam Sayı Alt / Üst", "Takım 1 Toplam Sayı Alt / Üst", "Takım 2 Toplam Sayı Alt / Üst", "Kazanan ve Toplam Sayı",
-          "İlk Yarı Sonucu", "İlk Yarı Handikap", "İlk Yarı Toplam Sayı", "İkinci Yarı Sonucu", "İkinci Yarı Handikap", "İkinci Yarı Toplam Sayı",
-          "Uzatma Olur / Olmaz", "Normal Süre Sonucu", "Uzatmalar Dahil Maç Sonucu", "En Çok Sayı Olan Yarı"
-        ], ["basketbol ana market"]),
-        marketItem("Her İki Takım da ____ Alt / Üst Sayı Atar (Uz. dahil)", {
-          id: "basket.both_teams_points_line_ou_ot",
-          desc: "Gerçek oran verisi gelince 64.5, 66.5, 68.5 gibi çizgiler maç bazlı otomatik listelenecek.",
-          aliases: ["Her iki takım 64.5 üst sayı atar", "Her iki takım 66.5 üst sayı atar", "Her iki takım 68.5 üst sayı atar", "Both teams team total over", "Both teams points over"],
-          tags: ["basketbol", "basketbol ana market", "takım sayı", "64.5", "66.5", "68.5", "her iki takım", "alt üst sayı", "uzatma dahil"],
-          period: "full_time_ot_included",
-          marketType: "dynamic_line_over_under",
-          line: null,
-          side: "both_teams",
-          dataMode: "catalog_dynamic_placeholder"
-        })
-      ]
-    },
-    {
-      id: "v546_basket_quarters",
-      name: "Çeyrek Marketleri",
-      desc: "Çeyrek sonuç, handikap, toplam sayı ve en çok/en az sayı çeyreği",
-      sport: "basketball",
-      markets: marketItems(["İlk Çeyrek Sonucu", "İlk Çeyrek Handikap", "İlk Çeyrek Toplam Sayı", "İkinci Çeyrek Sonucu", "İkinci Çeyrek Handikap", "İkinci Çeyrek Toplam Sayı", "Üçüncü Çeyrek Sonucu", "Üçüncü Çeyrek Handikap", "Üçüncü Çeyrek Toplam Sayı", "Dördüncü Çeyrek Sonucu", "Dördüncü Çeyrek Handikap", "Dördüncü Çeyrek Toplam Sayı", "En Çok Sayı Atılan Çeyrek", "En Az Sayı Atılan Çeyrek"], ["çeyrek"])
-    },
-    {
-      id: "v546_basket_team_points",
-      name: "Takım Sayı Marketleri",
-      desc: "Takım toplam, yarı ve çeyrek sayı alt/üst marketleri",
-      sport: "basketball",
-      markets: marketItems(["Takım 1 Toplam Sayı Alt / Üst", "Takım 2 Toplam Sayı Alt / Üst", "Takım 1 İlk Yarı Sayı Alt / Üst", "Takım 2 İlk Yarı Sayı Alt / Üst", "Takım 1 İkinci Yarı Sayı Alt / Üst", "Takım 2 İkinci Yarı Sayı Alt / Üst", "Takım 1 İlk Çeyrek Sayı Alt / Üst", "Takım 2 İlk Çeyrek Sayı Alt / Üst", "Takım 1 İkinci Çeyrek Sayı Alt / Üst", "Takım 2 İkinci Çeyrek Sayı Alt / Üst", "Takım 1 Üçüncü Çeyrek Sayı Alt / Üst", "Takım 2 Üçüncü Çeyrek Sayı Alt / Üst", "Takım 1 Dördüncü Çeyrek Sayı Alt / Üst", "Takım 2 Dördüncü Çeyrek Sayı Alt / Üst"], ["takım sayı"])
-    },
-    {
-      id: "v546_basket_team_handicap",
-      name: "Takım Handikap Marketleri",
-      desc: "Takım, yarı ve çeyrek bazlı handikap marketleri",
-      sport: "basketball",
-      markets: marketItems(["Takım 1 Handikap", "Takım 2 Handikap", "İlk Yarı Takım 1 Handikap", "İlk Yarı Takım 2 Handikap", "İkinci Yarı Takım 1 Handikap", "İkinci Yarı Takım 2 Handikap", "İlk Çeyrek Takım 1 Handikap", "İlk Çeyrek Takım 2 Handikap", "İkinci Çeyrek Takım 1 Handikap", "İkinci Çeyrek Takım 2 Handikap", "Üçüncü Çeyrek Takım 1 Handikap", "Üçüncü Çeyrek Takım 2 Handikap", "Dördüncü Çeyrek Takım 1 Handikap", "Dördüncü Çeyrek Takım 2 Handikap"], ["takım handikap"])
-    },
-    {
-      id: "v546_basket_race",
-      name: "İlk Olan / Yarış Marketleri",
-      desc: "İlk sayı tipi ve ilk X sayıya ulaşan takım marketleri",
-      sport: "basketball",
-      markets: [
-        marketItem("Maçta İlk Sayı Nasıl Olur", { desc: "Faul atışı / 2’lik / 3’lük", tags: ["ilk sayı"] }),
-        marketItem("İlk X Sayıya Ulaşan Takım", { desc: "Gerçek veri gelince 5, 10, 15, 20, 25, 30, 40, 50, 75, 100 çizgileri maça göre çoğalır.", tags: ["ilk x sayıya ulaşan"] }),
-        ...marketItems(["İlk 5 Sayıya Ulaşan Takım", "İlk 10 Sayıya Ulaşan Takım", "İlk 15 Sayıya Ulaşan Takım", "İlk 20 Sayıya Ulaşan Takım", "İlk 25 Sayıya Ulaşan Takım", "İlk 30 Sayıya Ulaşan Takım", "İlk 40 Sayıya Ulaşan Takım", "İlk 50 Sayıya Ulaşan Takım", "İlk 75 Sayıya Ulaşan Takım", "İlk 100 Sayıya Ulaşan Takım", "İlk Çeyrekte İlk X Sayıya Ulaşan Takım", "İkinci Çeyrekte İlk X Sayıya Ulaşan Takım", "Üçüncü Çeyrekte İlk X Sayıya Ulaşan Takım", "Dördüncü Çeyrekte İlk X Sayıya Ulaşan Takım"], ["ilk x sayıya ulaşan", "yarış"])
-      ]
-    },
-    {
-      id: "v546_basket_player_points",
-      name: "Oyuncu Sayı Marketleri",
-      desc: "Oyuncu sayı, üçlük, serbest atış, iki sayılık ve sayı barajları",
-      sport: "basketball",
-      markets: marketItems(["Oyuncu Sayı Alt / Üst", "Oyuncu İlk Yarı Sayı Alt / Üst", "Oyuncu İlk Çeyrek Sayı Alt / Üst", "Oyuncu Üçlük Alt / Üst", "Oyuncu Serbest Atış Alt / Üst", "Oyuncu İki Sayılık Alt / Üst", "Oyuncu En Çok Sayı Atar", "Oyuncu 10+ Sayı Atar", "Oyuncu 15+ Sayı Atar", "Oyuncu 20+ Sayı Atar", "Oyuncu 25+ Sayı Atar", "Oyuncu 30+ Sayı Atar", "Oyuncu 35+ Sayı Atar", "Oyuncu 40+ Sayı Atar"], ["oyuncu sayı"])
-    },
-    {
-      id: "v546_basket_player_reb_ast",
-      name: "Oyuncu Ribaund / Asist",
-      desc: "Ribaund, asist ve kombine oyuncu üretim marketleri",
-      sport: "basketball",
-      markets: marketItems(["Oyuncu Ribaund Alt / Üst", "Oyuncu Asist Alt / Üst", "Oyuncu Hücum Ribaund Alt / Üst", "Oyuncu Savunma Ribaund Alt / Üst", "Oyuncu 5+ Ribaund", "Oyuncu 7+ Ribaund", "Oyuncu 10+ Ribaund", "Oyuncu 5+ Asist", "Oyuncu 7+ Asist", "Oyuncu 10+ Asist", "Oyuncu Sayı + Ribaund + Asist", "Oyuncu Sayı + Ribaund", "Oyuncu Sayı + Asist", "Oyuncu Ribaund + Asist"], ["oyuncu ribaund asist"])
-    },
-    {
-      id: "v546_basket_player_defense_foul",
-      name: "Oyuncu Savunma / Faul",
-      desc: "Top çalma, blok, top kaybı, faul ve double/triple double marketleri",
-      sport: "basketball",
-      markets: marketItems(["Oyuncu Top Çalma Alt / Üst", "Oyuncu Blok Alt / Üst", "Oyuncu Top Kaybı Alt / Üst", "Oyuncu Faul Alt / Üst", "Oyuncu Kişisel Faul Alt / Üst", "Oyuncu Teknik Faul Alır", "Oyuncu Double Double Yapar", "Oyuncu Triple Double Yapar"], ["oyuncu faul", "savunma"])
-    },
-    {
-      id: "v546_basket_team_stats",
-      name: "Takım İstatistik Marketleri",
-      desc: "Üçlük, serbest atış, ribaund, asist, top kaybı, faul, blok ve top çalma",
-      sport: "basketball",
-      markets: marketItems(["Takım 1 Üçlük Alt / Üst", "Takım 2 Üçlük Alt / Üst", "Takım 1 Üçlük İsabet Alt / Üst", "Takım 2 Üçlük İsabet Alt / Üst", "Takım 1 Serbest Atış Alt / Üst", "Takım 2 Serbest Atış Alt / Üst", "Takım 1 İki Sayılık Alt / Üst", "Takım 2 İki Sayılık Alt / Üst", "Takım 1 Ribaund Alt / Üst", "Takım 2 Ribaund Alt / Üst", "Takım 1 Hücum Ribaund Alt / Üst", "Takım 2 Hücum Ribaund Alt / Üst", "Takım 1 Savunma Ribaund Alt / Üst", "Takım 2 Savunma Ribaund Alt / Üst", "Takım 1 Asist Alt / Üst", "Takım 2 Asist Alt / Üst", "Takım 1 Top Kaybı Alt / Üst", "Takım 2 Top Kaybı Alt / Üst", "Takım 1 Faul Alt / Üst", "Takım 2 Faul Alt / Üst", "Takım 1 Blok Alt / Üst", "Takım 2 Blok Alt / Üst", "Takım 1 Top Çalma Alt / Üst", "Takım 2 Top Çalma Alt / Üst"], ["takım istatistik"])
-    },
-    {
-      id: "v546_basket_specials",
-      name: "Özel Basketbol Marketleri",
-      desc: "Son çeyrek, yarı/çeyrek kazanıp maç kazanma ve özel takım barajları",
-      sport: "basketball",
-      markets: marketItems(["Son Çeyrekte En Çok Sayı Atan Takım", "İlk Yarıyı Kazanan Maçı Kazanır", "İlk Çeyreği Kazanan Maçı Kazanır", "Her İki Takım da İlk Yarı 40.5 Alt / Üst", "Her İki Takım da İlk Yarı 45.5 Alt / Üst", "Her İki Takım da İlk Çeyrek 20.5 Alt / Üst", "Her İki Takım da İlk Çeyrek 25.5 Alt / Üst", "Takım 1 Her Çeyrek 20+ Sayı Atar", "Takım 2 Her Çeyrek 20+ Sayı Atar", "Takım 1 Her Çeyrek 25+ Sayı Atar", "Takım 2 Her Çeyrek 25+ Sayı Atar"], ["özel basketbol"])
-    },
-    {
-      id: "v546_basket_quarter_wins",
-      name: "Çeyrek Kazanma Kombinasyonları",
-      desc: "Evet / Hayır sonucuyla çeyrek kazanma kombinasyonları",
-      sport: "basketball",
-      markets: marketItems(["Takım 1 En Az 1 Çeyrek Kazanır", "Takım 1 En Az 2 Çeyrek Kazanır", "Takım 1 En Az 3 Çeyrek Kazanır", "Takım 1 Tüm Çeyrekleri Kazanır", "Takım 2 En Az 1 Çeyrek Kazanır", "Takım 2 En Az 2 Çeyrek Kazanır", "Takım 2 En Az 3 Çeyrek Kazanır", "Takım 2 Tüm Çeyrekleri Kazanır"], ["çeyrek kazanma", "evet hayır"])
-    },
-    {
-      id: "v546_basket_player_alt_lines",
-      name: "Oyuncu Alternatif Barajları",
-      desc: "Oyuncu üçlük, sayı, ribaund, asist, blok, top çalma ve kombine barajlar",
-      sport: "basketball",
-      markets: marketItems(["Oyuncu 1+ Üçlük", "Oyuncu 2+ Üçlük", "Oyuncu 3+ Üçlük", "Oyuncu 4+ Üçlük", "Oyuncu 5+ Üçlük", "Oyuncu 5+ Sayı", "Oyuncu 7+ Ribaund", "Oyuncu 7+ Asist", "Oyuncu 1+ Blok", "Oyuncu 2+ Blok", "Oyuncu 1+ Top Çalma", "Oyuncu 2+ Top Çalma", "Oyuncu Blok + Top Çalma", "Oyuncu Sayı + Üçlük", "Oyuncu Sayı + Top Çalma", "Oyuncu Sayı + Blok", "Oyuncu Ribaund + Blok", "Oyuncu Asist + Top Kaybı"], ["oyuncu alternatif baraj"])
-    }
-  ];
-
-  const V544_POLY_FILTERS = [
-    ["all", "Hepsi"], ["sports", "Spor"], ["crypto", "Kripto"], ["economy", "Ekonomi"],
-    ["news", "Haber"], ["short", "Kısa Vade"], ["liquid", "Yüksek Likidite"], ["value", "Fırsat Adayı"]
-  ];
 
   function isPolymarketMode() { return state.sport === "polymarket"; }
 
@@ -1139,7 +824,7 @@
 
   function curatedMarketCategories() {
     if (!curatedMarketCategoryCache) {
-      curatedMarketCategoryCache = [...V546_FOOTBALL_CATEGORIES, ...V546_BASKETBALL_CATEGORIES].map(cat => ({
+      curatedMarketCategoryCache = marketCatalogCategoriesFromData().map(cat => ({
         ...cat,
         markets: (cat.markets || []).map((m, index) => enrichMarket(cat, m, index))
       }));
@@ -5231,7 +4916,7 @@
       </div>
 
       <div class="v544-poly-filters" role="group" aria-label="Polymarket filtreleri">
-        ${V544_POLY_FILTERS.map(([key, label]) => `<button type="button" class="${state.polyFilter === key ? "active" : ""}" data-poly-filter="${escapeAttr(key)}">${escapeHtml(label)}</button>`).join("")}
+        ${polymarketFilters().map(([key, label]) => `<button type="button" class="${state.polyFilter === key ? "active" : ""}" data-poly-filter="${escapeAttr(key)}">${escapeHtml(label)}</button>`).join("")}
       </div>
 
       <div class="v541-poly-kpis">
@@ -6728,7 +6413,7 @@
   // Init / Public API
   // -------------------------------
   async function load({ force = false } = {}) {
-    await loadOddsRuntimeData({ force });
+    await Promise.all([loadOddsRuntimeData({ force }), loadOddsMarketCatalogData({ force })]);
     const repoData = await loadRepoStaticOddsData({ force });
     state.sources = repoData.sources.ok ? repoData.sources.data : FALLBACK_SOURCES;
     state.snapshot = repoData.snapshot.ok ? repoData.snapshot.data : FALLBACK_SNAPSHOT;
