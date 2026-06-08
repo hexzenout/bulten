@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V613-V616 final sağlamlaştırma + görsel sadelik
+// ORAN TERMİNALİ — güvenli JS toparlama / V617-V628 mega stabilizasyon + canlı öncesi final hazırlık
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -59,6 +59,7 @@
   let defaultComparisonEngineCache = null;
   let oddsSignalEngineCache = null;
   let staticRepoDataCache = null;
+  let v617MegaReportCache = null;
   const loadJsonWarningKeys = new Set();
 
 
@@ -1933,6 +1934,7 @@
     sourceRegistryHealthCache = null;
     defaultComparisonEngineCache = null;
     oddsSignalEngineCache = null;
+    v617MegaReportCache = null;
   }
 
   function ensureSourceCacheKey() {
@@ -1944,6 +1946,7 @@
       sourceRegistryHealthCache = null;
       defaultComparisonEngineCache = null;
         oddsSignalEngineCache = null;
+        v617MegaReportCache = null;
       }
     return key;
   }
@@ -3786,13 +3789,14 @@
       ${list.length ? renderSignalCards(list, 4) : empty(emptyText)}
     </section>`;
     return `<section class="v584-movement-board v612-movement-surface v616-movement-surface" aria-label="Oran Hareketleri sade görünüm">
-      ${renderV613MovementFinalPanel(rows)}
+      ${renderV617MovementMegaPanel(rows, buildV617MegaConsolidationReport({ force: true }))}
       ${renderDeveloperCollapse("Detaylı hareket listeleri", `
         <div class="v584-movement-grid">
           ${block("Yükselen Oranlar", rising, "Yükselen oran hareketi yok.")}
           ${block("Düşen Oranlar", falling, "Düşen oran hareketi yok.")}
           ${block("Sert Hareketler", strongest, "Hareket eşiğini geçen aday yok.")}
         </div>
+        ${renderV613MovementFinalPanel(rows)}
         ${renderV609MovementUserBoard(rows)}
         ${renderUserModeBanner("Oran Hareketleri", "Yükselen, düşen ve sert hareket adayları ayrıldı. Popup/hover düzeni korunur; bu alan canlı veri değildir.", ["Yükselen / Düşen", "Sert hareket", "Snapshot/Dry-run"])}
         ${renderV597MovementVerdict(rows)}
@@ -5055,6 +5059,250 @@
 
 
   // -------------------------------
+  // V617-V628 Mega Consolidation / Pre-Live Final Gate
+  // -------------------------------
+  function buildV617MegaConsolidationReport({ force = false } = {}) {
+    if (v617MegaReportCache && !force) return v617MegaReportCache;
+    const adapter = collectAdapterResults();
+    const contract = buildAdapterOutputContractReport(adapter);
+    const gate = buildAdapterGateReport(adapter);
+    const visual = buildV613VisualSimplicityReport();
+    const engine = visual.engine || oddsSignalEngineResults();
+    const comparison = visual.comparison || comparisonEngineResults();
+    const flow = activeDataFlowSummary();
+    const polyRecords = polymarketRecords();
+    const polyQueue = buildV605PolymarketQueues(polyRecords);
+    const contractSummary = contract.summary || {};
+    const gateSummary = gate.summary || {};
+    const clean = Number(contractSummary.clean || visual.clean || 0);
+    const review = Number(contractSummary.review || visual.review || 0);
+    const blocked = Number(contractSummary.blocked || visual.blocked || 0);
+    const stale = Number(contractSummary.stale || visual.stale || 0);
+    const duplicate = Number(contractSummary.duplicates || gateSummary.duplicates || visual.duplicate || 0);
+    const lowConfidence = Number(contractSummary.lowConfidence || visual.lowConfidence || 0);
+    const total = Number(contractSummary.records || clean + review + blocked || 0);
+    const hidden = review + blocked + stale + lowConfidence;
+    const cleanPct = total ? Math.round((clean / total) * 100) : 0;
+    const score = Math.round((Number(contractSummary.averageScore || 0) * 0.42) + (Number(gateSummary.averageScore || 0) * 0.36) + (cleanPct * 0.22));
+    const status = clean && !blocked && !duplicate && score >= ADAPTER_OUTPUT_READY_SCORE ? "ready" : clean ? "review" : "waiting";
+    const headline = status === "ready" ? "Canlı öncesi kapı temiz" : status === "review" ? "Canlı öncesi kontrollü hazır" : "Veri bağlantısı bekliyor";
+    const nextStep = status === "ready"
+      ? "Tek kaynak dry-run ile gerçek veri deneme kapısına geçilebilir."
+      : status === "review"
+        ? "Kontrol kayıtları ana fırsat gibi yükseltilmeden adapter kapısı izlenir."
+        : "Önce dry-run / snapshot kaydı beklenir; canlı API hâlâ kapalı.";
+    const panelBudget = {
+      userPanels: 5,
+      technicalPanels: 13,
+      collapsed: true,
+      renderMode: "compact"
+    };
+    const connectorSlots = [
+      ["Bookmaker connector", LIVE_API_CONNECTION_ENABLED ? "açık" : "kapalı", "API/fetch yok", !LIVE_API_CONNECTION_ENABLED ? "ready" : "review"],
+      ["Scrape connector", FETCH_SCRAPING_ENABLED ? "açık" : "kapalı", "Scraping yok", !FETCH_SCRAPING_ENABLED ? "ready" : "review"],
+      ["Auto-play", AUTO_BETTING_ENABLED ? "açık" : "kapalı", "Otomatik oynama yok", !AUTO_BETTING_ENABLED ? "ready" : "review"],
+      ["Dry-run", hasActiveDryRunPayload() ? "aktif" : "bekle", "Öncelik zincirinde ilk slot", hasActiveDryRunPayload() ? "review" : "muted"],
+      ["Snapshot", flow.stages?.find(stage => stage.id === "static_snapshot")?.count || 0, "Dry-run yoksa ikinci slot", "muted"],
+      ["Mock/Fallback", flow.stages?.find(stage => stage.id === "mock")?.count || 0, "Son yedek slot", "muted"]
+    ];
+    v617MegaReportCache = {
+      adapter,
+      contract,
+      gate,
+      visual,
+      engine,
+      comparison,
+      flow,
+      polyRecords,
+      polyQueue,
+      clean,
+      review,
+      blocked,
+      stale,
+      duplicate,
+      lowConfidence,
+      total,
+      hidden,
+      cleanPct,
+      score,
+      status,
+      headline,
+      nextStep,
+      panelBudget,
+      connectorSlots,
+      mode: flow.mode || adapter.dataMode || visual.mode || "fallback",
+      dataModeLabel: signalDataModeText(flow.mode || adapter.dataMode || visual.mode || "fallback"),
+      liveClosed: !LIVE_API_CONNECTION_ENABLED && !FETCH_SCRAPING_ENABLED && !AUTO_BETTING_ENABLED,
+      matchPct: Number(comparison.summary?.records || 0)
+        ? Math.round((Number(comparison.summary?.matchedMarkets || 0) / Number(comparison.summary.records || 0)) * 100)
+        : 0,
+      topSource: engine.sourceDiffSignals?.[0] || null,
+      topLine: engine.lineDiffSignals?.[0] || null,
+      topMovement: engine.movementSignals?.[0] || null,
+      topReview: engine.lowConfidenceSignals?.[0] || null
+    };
+    return v617MegaReportCache;
+  }
+
+  function renderV617MegaMetric(label, value, note = "", tone = "neutral") {
+    return `<article class="${escapeAttr(tone || "neutral")}"><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value ?? "-"))}</b>${note ? `<small>${escapeHtml(String(note))}</small>` : ""}</article>`;
+  }
+
+  function renderV617MegaHero(report = buildV617MegaConsolidationReport()) {
+    const cards = [
+      ["Kapı", report.headline, report.nextStep, report.status],
+      ["Temiz / saklı", `${report.clean}/${report.hidden}`, "Ana paneller sadece temiz adayları yükseltir", report.hidden ? "review" : "ready"],
+      ["Skor", `${report.score}/100`, "Adapter output + kaynak kapısı + temiz kayıt oranı", report.score >= 75 ? "ready" : "review"],
+      ["Veri modu", report.dataModeLabel, "Dry-run → snapshot → mock sırası korunur", "muted"],
+      ["Canlı kapı", report.liveClosed ? "Kapalı" : "Kontrol et", "API, scraping ve otomatik oynama kapalı tutulur", report.liveClosed ? "ready" : "review"],
+      ["POLYMARKET", "Ayrı", "YES/NO akışı bookmaker motoruna karışmaz", "poly"]
+    ];
+    return `<section class="v628-mega-hero ${escapeAttr(report.status)}" aria-label="V617-V628 canlı öncesi mega kontrol">
+      <div class="v628-mega-head">
+        <div>
+          <span>V617-V628 MEGA STABİLİZASYON</span>
+          <h3>${escapeHtml(report.headline)}</h3>
+          <p>Kod içi tekrar azaltma, kapalı connector sözleşmesi ve panel final sadeleştirme tek büyük pakette birleştirildi. Gerçek API hâlâ kapalı.</p>
+        </div>
+        <strong>${escapeHtml(report.dataModeLabel)}</strong>
+      </div>
+      <div class="v628-mega-grid">${cards.map(([label, value, note, tone]) => renderV617MegaMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV620SourceGateMatrix(report = buildV617MegaConsolidationReport()) {
+    const gateRows = (report.gate?.gateRows || []).slice(0, 6);
+    const rows = gateRows.length ? gateRows : [{ displayName: "Kaynak bekleniyor", sourceId: "waiting", score: 0, status: "waiting", note: "Dry-run/snapshot/mock kayıt beklenir." }];
+    return `<section class="v628-gate-matrix" aria-label="Kaynak kapısı matris özeti">
+      <div class="v628-section-head"><div><span>V620 KAYNAK KAPISI</span><h3>Hazır / kontrol / bekle matrisi</h3><p>Kaynak güveni, stale, duplicate ve adapter durumu tek tabloya indi.</p></div><em>${escapeHtml(String(report.gate?.summary?.averageScore || 0))}/100 ortalama</em></div>
+      <div class="v628-gate-rows">${rows.map(row => `<article class="${escapeAttr(row.status || "waiting")}">
+        <b>${escapeHtml(row.displayName || row.sourceName || row.sourceId || "Kaynak")}</b>
+        <span>${escapeHtml(sourceGateLabel(row.status || "waiting"))}</span>
+        <strong>${escapeHtml(String(Math.round(Number(row.score || 0))))}/100</strong>
+        <small>${escapeHtml(row.note || row.message || "Canlı bağlantı kapalı")}</small>
+      </article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV624ConnectorSlotPanel(report = buildV617MegaConsolidationReport()) {
+    return `<section class="v628-connector-slots" aria-label="Kapalı connector slotları">
+      <div class="v628-section-head"><div><span>V624 KAPALI CONNECTOR SÖZLEŞMESİ</span><h3>Gerçek veri bağlanacak yer hazır ama pasif</h3><p>Bu slotlar ileride tek kaynakla dry-run canlı okuma başlatmak için ayrıldı; şu an fetch/API/scraping yok.</p></div><em>Güvenli kapalı</em></div>
+      <div class="v628-slot-grid">${report.connectorSlots.map(([label, value, note, tone]) => renderV617MegaMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV628PanelCleanupBoard(report = buildV617MegaConsolidationReport()) {
+    const rows = [
+      ["Ana görünüm", `${report.panelBudget.userPanels} panel`, "Kullanıcı karar kartları önde"],
+      ["Teknik detay", `${report.panelBudget.technicalPanels} blok`, "Kapalı geliştirici alanında"],
+      ["Render dili", "Kompakt", "Tekrarlı eski kartlar geriye alındı"],
+      ["Route sınırı", "Korundu", "Rolling / Crypto / Stream etkilenmez"],
+      ["Cache", "Dokunulmadı", "index.html ve sw.js değişmedi"],
+      ["Canlı etiket", "Kapalı", "Gerçek veri bağlanana kadar canlı denmez"]
+    ];
+    return `<section class="v628-cleanup-board" aria-label="Panel temizlik panosu">
+      <div class="v628-section-head compact"><div><span>V628 PANEL TEMİZLİĞİ</span><h3>Karmaşa kapalı alana, karar ana alana</h3><p>Önceki paketlerden kalan tekrar kartları silinmeden teknik bloklara taşınır.</p></div><em>${escapeHtml(report.liveClosed ? "Güvenli" : "Kontrol")}</em></div>
+      <div class="v628-cleanup-list">${rows.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(value)}</b><small>${escapeHtml(note)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV617OpportunityMegaPanel(engine = oddsSignalEngineResults(), report = buildV617MegaConsolidationReport()) {
+    const cards = [
+      ["Ana aksiyon", report.topSource ? "Kaynak farkını incele" : report.topMovement ? "Hareketi izle" : report.topLine ? "Barem farkını ele" : "Veri bekle", "Canlı fırsat değildir; ön kontrol sırasıdır", report.status],
+      ["En iyi aday", report.topSource ? `${report.topSource.value} · ${report.topSource.score}/100` : "Aday yok", report.topSource ? report.topSource.title : "Aynı market/baremde iki kaynak beklenir", report.topSource ? "ready" : "muted"],
+      ["Yanıltıcı fark", report.topLine ? report.topLine.value : "Temiz", report.topLine ? "Barem eşitliği yoksa aday yükselmez" : "Barem riski öne çıkmadı", report.topLine ? "review" : "ready"],
+      ["Hareket", report.topMovement ? report.topMovement.value : "Yok", report.topMovement ? report.topMovement.title : "Önceki/güncel oran hareketi yok", report.topMovement ? "movement" : "muted"],
+      ["Saklı kayıt", report.hidden, "Review, blocked, stale ve low-confidence teknik alanda", report.hidden ? "review" : "ready"]
+    ];
+    return `<section class="v628-user-panel opportunity" aria-label="V617 fırsat radarı mega karar">
+      <div class="v628-panel-head"><div><span>FIRSAT RADARI FINAL</span><h3>${escapeHtml(report.headline)}</h3><p>Kaynak farkı, barem riski ve hareket aynı karar panelinde birleşti.</p></div><em>Canlı veri değildir</em></div>
+      <div class="v628-user-grid">${cards.map(([label, value, note, tone]) => renderV617MegaMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV617ComparisonMegaPanel(data = comparisonEngineResults(), engine = oddsSignalEngineResults(), report = buildV617MegaConsolidationReport()) {
+    const verdict = report.matchPct >= 70 && !report.blocked ? "Karşılaştırma okunabilir" : report.matchPct ? "Kontrollü karşılaştır" : "Veri bekle";
+    const cards = [
+      ["Karar", verdict, "Eşleşme yüzdesi + barem riski birlikte okunur", report.matchPct >= 70 ? "ready" : "review"],
+      ["Eşleşme", `${report.matchPct}%`, `${data.summary?.matchedMarkets || 0}/${data.summary?.records || 0} kayıt markete bağlandı`, report.matchPct >= 70 ? "ready" : "review"],
+      ["En iyi oran", report.topSource ? report.topSource.value : "Yok", report.topSource ? report.topSource.title : "Kaynak farkı adayı yok", report.topSource ? "ready" : "muted"],
+      ["Barem riski", report.topLine ? report.topLine.value : "Temiz", report.topLine ? "Çizgi farkı kontrol ister" : "Yanıltıcı çizgi farkı görünmüyor", report.topLine ? "review" : "ready"],
+      ["Saklı kayıt", report.hidden, "Düşük güven/bayat/bloklu kayıtlar ana tabloya fırsat gibi çıkmaz", report.hidden ? "review" : "ready"]
+    ];
+    return `<section class="v628-user-panel comparison" aria-label="V617 oran karşılaştırma mega karar">
+      <div class="v628-panel-head"><div><span>ORAN KARŞILAŞTIRMA FINAL</span><h3>${escapeHtml(verdict)}</h3><p>Tablo korunur; karar paneli önce gelir, teknik analiz kapalı blokta kalır.</p></div><em>${escapeHtml(displayModeLabel(data.summary?.dataMode || report.mode || "mock"))}</em></div>
+      <div class="v628-user-grid">${cards.map(([label, value, note, tone]) => renderV617MegaMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV617MovementMegaPanel(rows = oddsSignalEngineResults().movementSignals || [], report = buildV617MegaConsolidationReport()) {
+    const list = Array.isArray(rows) ? rows : [];
+    const delta = row => Number(row.deltaPct ?? row.raw?.changePct ?? row.changePct ?? 0);
+    const rising = list.filter(row => delta(row) > 0);
+    const falling = list.filter(row => delta(row) < 0);
+    const strongest = [...list].sort((a, b) => Math.abs(delta(b)) - Math.abs(delta(a)))[0] || null;
+    const cards = [
+      ["Karar", strongest ? "Hareketi izle" : "Hareket bekle", "Snapshot/dry-run hareketidir; canlı fiyat değildir", strongest ? "movement" : "muted"],
+      ["Yükselen", rising.length, "Pozitif değişim adedi", rising.length ? "ready" : "muted"],
+      ["Düşen", falling.length, "Negatif değişim adedi", falling.length ? "review" : "muted"],
+      ["Sert hareket", strongest ? strongest.value : "Yok", strongest ? strongest.title : "Eşik üstü hareket yok", strongest ? "movement" : "muted"],
+      ["Veri modu", report.dataModeLabel, "Canlı hareket etiketi kapalı", "muted"]
+    ];
+    return `<section class="v628-user-panel movement" aria-label="V617 oran hareketleri mega karar">
+      <div class="v628-panel-head"><div><span>ORAN HAREKETLERİ FINAL</span><h3>${escapeHtml(strongest ? "Hareketi izle" : "Hareket bekle")}</h3><p>Yükselen/düşen/sert hareket listeleri teknik alanda durur; kullanıcıya kısa karar kalır.</p></div><em>Canlı veri değildir</em></div>
+      <div class="v628-user-grid movement">${cards.map(([label, value, note, tone]) => renderV617MegaMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV617SourcesMegaPanel(report = buildV617MegaConsolidationReport()) {
+    const cards = [
+      ["Son karar", report.headline, report.nextStep, report.status],
+      ["Kapı skoru", `${report.score}/100`, "Output + kaynak + temiz kayıt hesabı", report.score >= 75 ? "ready" : "review"],
+      ["Temiz kayıt", report.clean, "Ana panellere çıkabilir", report.clean ? "ready" : "muted"],
+      ["Saklı kayıt", report.hidden, "Kontrol/blok/bayat/düşük güven", report.hidden ? "review" : "ready"],
+      ["Duplicate", report.duplicate, "Ana akışı şişirmez", report.duplicate ? "review" : "ready"],
+      ["Son okuma", formatSourceUpdatedAt(report.flow?.lastReadAt), "Dry-run > snapshot > mock", "muted"]
+    ];
+    return `<section class="v628-user-panel sources ${escapeAttr(report.status)}" aria-label="V617 kaynaklar mega kontrol merkezi">
+      <div class="v628-panel-head"><div><span>KAYNAKLAR FINAL KONTROL</span><h3>${escapeHtml(report.headline)}</h3><p>Kaynaklar sekmesi tek kontrol merkezine indirildi; connector ve dry-run detayları kapalı bloklarda.</p></div><em>API kapalı</em></div>
+      <div class="v628-user-grid">${cards.map(([label, value, note, tone]) => renderV617MegaMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV617PolymarketMegaPanel(polyRecords = polymarketRecords()) {
+    const queue = buildV605PolymarketQueues(polyRecords);
+    const summary = queue.summary || polymarketSummary(polyRecords);
+    const rows = (queue.byDecision || getPolymarketSignals(polyRecords)).slice(0, 4);
+    const renderRow = (row, index) => {
+      if (!row) return `<article class="empty"><span>#${index + 1}</span><b>Veri bekle</b><small>POLYMARKET ayrı akış</small></article>`;
+      const yes = Number.isFinite(Number(row.yesPrice)) ? Math.max(0, Math.min(100, Number(row.yesPrice) * 100)) : 0;
+      const no = Number.isFinite(Number(row.noPrice)) ? Math.max(0, Math.min(100, Number(row.noPrice) * 100)) : Math.max(0, 100 - yes);
+      const title = row.question || row.title || row.match || "Polymarket marketi";
+      return `<article>
+        <span>#${index + 1} · ${escapeHtml(row.hoursLeft != null ? `${Math.round(row.hoursLeft)}s` : "kapanış yok")}</span>
+        <b>${escapeHtml(title)}</b>
+        <small>Skor ${Math.round(row.rankingScore || row.score || 0)} · Likidite $${Math.round(Number(row.liquidity || 0)).toLocaleString("en-US")}</small>
+        <div class="v628-yesno-bars">
+          <em style="--w:${yes.toFixed(1)}%">YES ${yes.toFixed(1)}¢</em>
+          <em style="--w:${no.toFixed(1)}%">NO ${no.toFixed(1)}¢</em>
+        </div>
+      </article>`;
+    };
+    const cards = [
+      ["Market", summary.records || polyRecords.length || 0, "Prediction market sayısı", "poly"],
+      ["Kısa vade", summary.shortTerm || 0, "48 saat altı kapananlar", "review"],
+      ["Likidite", `$${Math.round(summary.liquidity || summary.liquidityTotal || 0).toLocaleString("en-US")}`, "YES/NO piyasası likiditesi", "ready"],
+      ["24s hacim", `$${Math.round(summary.volume24h || summary.volume24hTotal || 0).toLocaleString("en-US")}`, "Bookmaker oranına bağlanmaz", "muted"]
+    ];
+    return `<section class="v628-poly-mega" aria-label="POLYMARKET V617-V628 final görünüm">
+      <div class="v628-panel-head"><div><span>POLYMARKET FINAL YES/NO</span><h3>Kısa vade, likidite ve fiyat ayrı okunur</h3><p>Prediction market akışı normal bookmaker oran, barem, fixture ve kaynak farkı motorundan ayrı kalır.</p></div><em>Ayrı akış</em></div>
+      <div class="v628-poly-kpis">${cards.map(([label, value, note, tone]) => renderV617MegaMetric(label, value, note, tone)).join("")}</div>
+      <div class="v628-poly-grid">${[0,1,2,3].map(index => renderRow(rows[index], index)).join("")}</div>
+    </section>`;
+  }
+
+
+  // -------------------------------
   // Polymarket Helpers
   // -------------------------------
   function hoursUntil(value) {
@@ -5681,9 +5929,10 @@
         <div><span>Ortalama Güven</span><b>${s.avgScore}</b></div>
       </div>
 
-      ${renderV613PolymarketYesNoProBoard(polyBase)}
+      ${renderV617PolymarketMegaPanel(polyBase)}
       ${list.length ? `<div class="v541-poly-grid v616-poly-card-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
       ${renderDeveloperCollapse("POLYMARKET teknik özetleri", `
+        ${renderV613PolymarketYesNoProBoard(polyBase)}
         ${renderV609PolymarketDecisionDesk(polyBase)}
         ${renderV605PolymarketQueuePanel(polyBase)}
         ${renderV601PolymarketYesNoBoard(polyBase)}
@@ -5773,16 +6022,21 @@
 
   function renderOpportunities() {
     const engine = oddsSignalEngineResults();
-    const report = buildV613VisualSimplicityReport();
+    const megaReport = buildV617MegaConsolidationReport({ force: true });
+    const report = megaReport.visual;
     const legacyReport = buildV601StabilizationReport();
     return `
-      ${renderV613FinalSimplicityHero(report)}
-      ${renderV613OpportunityFinalPanel(engine, report)}
+      ${renderV617MegaHero(megaReport)}
+      ${renderV617OpportunityMegaPanel(engine, megaReport)}
       ${renderDeveloperCollapse("Detaylı radar ve sinyal teknik alanı", `
+        ${renderV613FinalSimplicityHero(report)}
+        ${renderV613OpportunityFinalPanel(engine, report)}
+        ${renderV628PanelCleanupBoard(megaReport)}
+        ${renderV624ConnectorSlotPanel(megaReport)}
         ${renderV609FinalUserCommandCenter(report)}
         ${renderV609OpportunityUserBoard(engine, report)}
         ${renderOpportunityComparisonDemoCard()}
-        ${renderV613TechnicalOrderPanel(report)}
+        ${renderV613TechnicalOrderPanel(report.visual || report)}
         ${renderV605DataModeCleanupPanel()}
         ${renderV601StabilityRibbon(legacyReport)}
         ${renderV601OpportunityFocusPanel(engine, legacyReport)}
@@ -5932,7 +6186,7 @@
   function renderComparisonEnginePanel() {
     const data = comparisonEngineResults();
     const engine = oddsSignalEngineResults();
-    const report = buildV613VisualSimplicityReport();
+    const report = buildV617MegaConsolidationReport({ force: true });
     const legacyReport = buildV601StabilizationReport();
     return `<section class="v557-comparison-engine v616-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
@@ -5943,13 +6197,15 @@
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
-      ${renderV613ComparisonFinalPanel(data, engine, report)}
+      ${renderV617MegaHero(report)}
+      ${renderV617ComparisonMegaPanel(data, engine, report)}
       ${renderComparisonRows(data)}
       ${renderLineDifferencePreview(data)}
       ${renderDryRunComparisonPreview()}
       ${renderDeveloperCollapse("Karşılaştırma teknik özetleri", `
-        ${renderV609ComparisonUserBoard(data, engine, report)}
-        ${renderV613TechnicalOrderPanel(report)}
+        ${renderV613ComparisonFinalPanel(data, engine, report.visual || report)}
+        ${renderV609ComparisonUserBoard(data, engine, report.visual || report)}
+        ${renderV613TechnicalOrderPanel(report.visual || report)}
         ${renderV601StabilityRibbon(legacyReport)}
         ${renderV605DataModeCleanupPanel()}
         ${renderV601ComparisonControlPanel(data, engine, legacyReport)}
@@ -6809,12 +7065,16 @@
   }
 
   function renderSources() {
-    const report = buildV613VisualSimplicityReport();
-    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration v608-source-configuration v612-source-configuration v616-source-configuration" aria-label="Kaynak Yapılandırması">
-      ${renderV613SourceFinalPanel(report)}
+    const report = buildV617MegaConsolidationReport({ force: true });
+    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration v608-source-configuration v612-source-configuration v616-source-configuration v628-source-configuration" aria-label="Kaynak Yapılandırması">
+      ${renderV617SourcesMegaPanel(report)}
+      ${renderV620SourceGateMatrix(report)}
       ${renderDeveloperCollapse("Kaynak kontrol merkezi", `
-        ${renderV609SourceControlCenter(report)}
-        ${renderV613TechnicalOrderPanel(report)}
+        ${renderV613SourceFinalPanel(report.visual || report)}
+        ${renderV628PanelCleanupBoard(report)}
+        ${renderV624ConnectorSlotPanel(report)}
+        ${renderV609SourceControlCenter(report.visual || report)}
+        ${renderV613TechnicalOrderPanel(report.visual || report)}
         ${renderSourcesUserModePanel()}
         ${renderV605SourcePreflightPanel()}
         ${renderV605ConnectorContractPanel()}
@@ -6871,6 +7131,7 @@
   }
 
   function renderContentOnly({ preserveScroll = true } = {}) {
+    v617MegaReportCache = null;
     const contentBox = qs("[data-odds-content]");
     if (!contentBox) {
       render();
@@ -7231,6 +7492,7 @@
   }
 
   function render() {
+    v617MegaReportCache = null;
     const mount = qs("#omega-odds-render");
     if (!mount) return;
     clearTimeout(marketSearchRenderTimer);
