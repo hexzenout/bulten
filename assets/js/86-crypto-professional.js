@@ -9,6 +9,35 @@
 
   function qs(sel) { return document.querySelector(sel); }
   function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
+  function v761Escape(str) { return String(str || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
+  function v761ReadRollingBetMatches(day, slot) {
+    const rows = qsa(`[data-roll-match-row="${day}-${slot}"]`);
+    return rows.map((row, idx) => {
+      const name = row.querySelector(`[data-roll-match-name]`)?.value || "";
+      const odds = parseFloat(row.querySelector(`[data-roll-match-odds]`)?.value);
+      return { no: idx + 1, name: name.trim(), odds };
+    }).filter(m => m.name || !isNaN(m.odds));
+  }
+  function v761RollingMatchesText(matches, fallback) {
+    const clean = (matches || []).filter(Boolean);
+    if (!clean.length) return fallback || "Maç";
+    return clean.map(m => m.name || `Maç ${m.no}`).join(" + ");
+  }
+  function v761RollingOddsProduct(matches) {
+    const clean = (matches || []).filter(m => !isNaN(Number(m.odds)) && Number(m.odds) > 0);
+    if (!clean.length || clean.length !== (matches || []).length) return NaN;
+    return clean.reduce((p, m) => p * Number(m.odds), 1);
+  }
+  window.omega_RollingAddComboMatch = function(day, slot) {
+    const box = qs(`#e-extra-${day}-${slot}`);
+    if (!box) return;
+    const count = qsa(`[data-roll-match-row="${day}-${slot}"]`).length;
+    const row = document.createElement("div");
+    row.className = "v761-roll-match-row extra";
+    row.setAttribute("data-roll-match-row", `${day}-${slot}`);
+    row.innerHTML = `<input type="text" data-roll-match-name id="e-n-${day}-${slot}-${count}" placeholder="Maç ${count + 1}"><input type="number" data-roll-match-odds id="e-o-${day}-${slot}-${count}" placeholder="Oran ${count + 1}" step="0.01"><button type="button" onclick="this.closest('.v761-roll-match-row').remove()" title="Bu maçı kaldır">×</button>`;
+    box.appendChild(row);
+  };
 
   function getSoundSettings() {
     try {
@@ -460,22 +489,38 @@
             <div class="kapsul v32 ${op.res}">
               <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
               <div class="k-result">
-                <div class="k-note-show">${op.note || (isCryptoV491 ? "İşlem" : "Maç")}</div>
-                <b>${isCryptoV491 ? `$${amt} · Net $${Number(odds || 0).toFixed(2)}${Number(op.fee || 0) ? ' · Fee $' + Number(op.fee || 0).toFixed(2) : ''}` : `$${amt} x ${odds}`}</b>
+                <div class="k-note-show">${isCryptoV491 ? (op.note || "İşlem") : v761Escape(op.note || v761RollingMatchesText(op.matches, "Maç"))}</div>
+                <b>${isCryptoV491 ? `$${amt} · Net $${Number(odds || 0).toFixed(2)}${Number(op.fee || 0) ? ' · Fee $' + Number(op.fee || 0).toFixed(2) : ''}` : `$${amt} x ${Number(odds || 0).toFixed(2)}${Array.isArray(op.matches) && op.matches.length > 1 ? ` · ${op.matches.length} maç kombine` : ''}`}</b>
                 <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
               </div>
             </div>
           `);
         } else {
-          cards.push(`
+          cards.push(isCryptoV491 ? `
             <div class="kapsul v32">
-              <input type="text" id="e-n-${day}-${slot}" placeholder="${isCryptoV491 ? 'İşlem' : 'Maç'}">
+              <input type="text" id="e-n-${day}-${slot}" placeholder="İşlem">
               <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
-              <input type="number" id="e-o-${day}-${slot}" placeholder="${isCryptoV491 ? 'Net K/Z $' : 'Oran'}">
-              ${isCryptoV491 ? `<input type="number" id="e-f-${day}-${slot}" placeholder="Fee/Funding $" step="0.01">` : ''}
+              <input type="number" id="e-o-${day}-${slot}" placeholder="Net K/Z $">
+              <input type="number" id="e-f-${day}-${slot}" placeholder="Fee/Funding $" step="0.01">
               <div class="k-actions v32">
-                <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
-                <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>
+                <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">KAZANÇ</button>
+                <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">KAYIP</button>
+              </div>
+            </div>
+          ` : `
+            <div class="kapsul v32 v761-roll-bet-slot">
+              <div class="v761-roll-match-head"><b>Maç / Oran</b><button type="button" onclick="omega_RollingAddComboMatch(${day}, ${slot})">+ Maç/Oran</button></div>
+              <div class="v761-roll-match-list">
+                <div class="v761-roll-match-row" data-roll-match-row="${day}-${slot}">
+                  <input type="text" data-roll-match-name id="e-n-${day}-${slot}" placeholder="Maç 1">
+                  <input type="number" data-roll-match-odds id="e-o-${day}-${slot}" placeholder="Oran 1" step="0.01">
+                </div>
+                <div class="v761-roll-extra-matches" id="e-extra-${day}-${slot}"></div>
+              </div>
+              <input type="number" class="v761-roll-stake" id="e-a-${day}-${slot}" placeholder="Tutar">
+              <div class="k-actions v32">
+                <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">KAZANDI</button>
+                <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">KAYBETTİ</button>
               </div>
             </div>
           `);
@@ -494,6 +539,11 @@
               <button onclick="omega_RollingSetDaySlots(${day}, 10)">10</button>
               <button onclick="omega_RollingSetDaySlots(${day}, 20)">20</button>
               <button onclick="omega_RollingClearDay(${day})">TEMİZLE</button>
+            </div>
+            <div class="v761-excel-day-links">
+              <button type="button" onclick="window.omega_RollingOpenPending && window.omega_RollingOpenPending('${rollModeV491}')">${isCryptoV491 ? 'Aktif İşlemler' : 'Aktif Bahisler / Kuponlar'}</button>
+              <button type="button" onclick="window.omega_RollingOpenLogCenter && window.omega_RollingOpenLogCenter('${rollModeV491}')">Geçmiş</button>
+              <button type="button" onclick="window.omega_RollingOpenReportCenter && window.omega_RollingOpenReportCenter('${rollModeV491}')">Rapor</button>
             </div>
           </div>
           <div class="capsule-container v32">${cards.join("")}</div>
@@ -519,6 +569,32 @@
     if (progressBar) progressBar.style.width = progressPercentage + "%";
 
     omega_SaveRollingDB();
+  };
+
+
+  const oldResolveExcelOpV761 = window.omega_ResolveExcelOp;
+  window.omega_ResolveExcelOp = function(day, slot, result) {
+    const isCrypto = localStorage.getItem("finance_rolling_mode") === "crypto";
+    if (isCrypto || typeof oldResolveExcelOpV761 !== "function") return oldResolveExcelOpV761 ? oldResolveExcelOpV761(day, slot, result) : undefined;
+    const matches = v761ReadRollingBetMatches(day, slot);
+    const amt = parseFloat(qs(`#e-a-${day}-${slot}`)?.value);
+    const totalOdds = v761RollingOddsProduct(matches);
+    if (isNaN(amt) || isNaN(totalOdds) || matches.length < 1) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Maç, oran ve tutar alanlarını doldur.");
+      return;
+    }
+    const currentPlan = ensureRollingPlan();
+    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    currentPlan.ops[day][slot] = {
+      note: v761RollingMatchesText(matches, "Maç"),
+      amt,
+      odds: Number(totalOdds.toFixed(4)),
+      res: result,
+      netMode: "odds",
+      matches: matches.map(m => ({ no: m.no, name: m.name, odds: Number(m.odds || 0) }))
+    };
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
   };
 
   const oldOpenRolling = window.omega_OpenRollingExcel;
