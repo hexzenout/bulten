@@ -1475,3 +1475,152 @@
   .v753-log-strip button { grid-column: 1 / -1; }
   .v753-log-mini-list li { grid-template-columns: 1fr; }
 }
+
+/* ===============================
+   V755 Rolling hedef yönetimi + hedef LOG
+   =============================== */
+.v755-target-plan {
+  grid-template-columns: repeat(3, minmax(135px, 1fr)) minmax(260px, 1.35fr) auto !important;
+  align-items: stretch !important;
+}
+.v755-target-plan label span {
+  white-space: nowrap !important;
+}
+.v755-target-plan input[data-rolling-quick="currentOverride"] {
+  color: #bfdbfe !important;
+  border-color: rgba(96,165,250,.42) !important;
+}
+.v755-target-progress {
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 13px !important;
+  background: #0b0b0b !important;
+  padding: 10px 12px !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+.v755-target-progress > div span {
+  display: block !important;
+  color: #a3a3a3 !important;
+  font-size: .62rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .6px !important;
+  text-transform: uppercase !important;
+}
+.v755-target-progress > div b {
+  display: block !important;
+  margin-top: 4px !important;
+  color: #fff !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 950 !important;
+  font-size: .82rem !important;
+  white-space: nowrap !important;
+}
+.v755-target-progress > div b.pos { color: var(--green) !important; }
+.v755-target-progress > div b.neg { color: var(--red) !important; }
+.v755-target-progress > i {
+  grid-column: 1 / -1 !important;
+  height: 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.08) !important;
+  overflow: hidden !important;
+}
+.v755-target-progress > i em {
+  display: block !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  background: linear-gradient(90deg, var(--green), var(--rolling-gold)) !important;
+}
+.v755-target-actions {
+  display: grid !important;
+  gap: 8px !important;
+  min-width: 135px !important;
+}
+.v755-target-actions button {
+  border: 1px solid rgba(255,255,255,.12) !important;
+  border-radius: 12px !important;
+  color: #fff !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+  padding: 10px 12px !important;
+}
+.v755-target-complete {
+  background: linear-gradient(135deg, rgba(16,185,129,.90), rgba(5,150,105,.72)) !important;
+  border-color: rgba(16,185,129,.45) !important;
+  box-shadow: 0 0 16px rgba(16,185,129,.16) !important;
+}
+.v755-target-complete:disabled {
+  opacity: .42 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(.35) !important;
+}
+.v755-target-reset {
+  background: rgba(255,255,255,.06) !important;
+}
+.v755-target-log {
+  grid-column: 1 / -1 !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  gap: 7px !important;
+}
+.v755-target-log li {
+  display: grid !important;
+  grid-template-columns: 150px 1fr auto !important;
+  gap: 10px !important;
+  align-items: center !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 12px !important;
+  background: rgba(255,255,255,.035) !important;
+  padding: 9px 10px !important;
+}
+.v755-target-log span {
+  color: var(--muted) !important;
+  font-size: .72rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+}
+.v755-target-log b {
+  color: #fff !important;
+  font-size: .82rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.v755-target-log em {
+  font-style: normal !important;
+  font-weight: 950 !important;
+}
+.v755-target-log em.pos { color: var(--green) !important; }
+.v755-target-log em.neg { color: var(--red) !important; }
+.v755-target-log li.empty b { color: var(--muted) !important; }
+.rolling-v47-card.crypto .rolling-v493-title.crypto .rolling-v518-crypto-icons {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  margin-right: 2px !important;
+}
+.rolling-v47-card.crypto .rolling-v493-title.crypto .rolling-v518-crypto-icons i,
+.rolling-v47-card.crypto .rolling-v493-title.crypto .rolling-v518-crypto-icons img {
+  width: 22px !important;
+  height: 22px !important;
+  object-fit: contain !important;
+}
+@media (max-width: 1180px) {
+  .v755-target-plan {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .v755-target-progress,
+  .v755-target-actions,
+  .v755-target-log { grid-column: 1 / -1 !important; }
+}
+@media (max-width: 720px) {
+  .v755-target-plan {
+    grid-template-columns: 1fr !important;
+  }
+  .v755-target-progress { grid-template-columns: 1fr !important; }
+  .v755-target-log li { grid-template-columns: 1fr !important; }
+}

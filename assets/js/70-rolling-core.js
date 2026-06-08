@@ -9,6 +9,7 @@
   const PAGE_MODE_KEY = "v48_rolling_page_mode";
   const RAIL_KEY = "v48_rolling_rail_collapsed";
   const HISTORY_KEY = "v512_rolling_history_v1";
+  const TARGET_LOG_KEY = "v755_rolling_target_log_v1";
   let HISTORY_OPEN_MODE = null;
   let HISTORY_FILTER = "today";
 
@@ -52,6 +53,49 @@
     h.bet = (h.bet || []).filter(x => Number(x.ts || 0) >= twoYearsAgo).slice(0, 1200);
     h.crypto = (h.crypto || []).filter(x => Number(x.ts || 0) >= twoYearsAgo).slice(0, 1200);
     localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+  }
+  function loadTargetLog() {
+    try {
+      const rows = JSON.parse(localStorage.getItem(TARGET_LOG_KEY) || "[]");
+      return Array.isArray(rows) ? rows : [];
+    } catch {
+      return [];
+    }
+  }
+  function saveTargetLog(rows) {
+    const twoYearsAgo = Date.now() - 730 * 24 * 60 * 60 * 1000;
+    localStorage.setItem(TARGET_LOG_KEY, JSON.stringify((rows || []).filter(x => Number(x.ts || 0) >= twoYearsAgo).slice(0, 500)));
+  }
+  function getPlanNumbers(state, totalPnl) {
+    const plan = state.quickPlan || {};
+    const start = Number.isFinite(Number(plan.start)) ? Number(plan.start) : 100;
+    const target = plan.target === "" || plan.target === null || plan.target === undefined ? 0 : Number(plan.target || 0);
+    const autoCurrent = start + Number(totalPnl || 0);
+    const hasManualCurrent = plan.currentOverride !== "" && plan.currentOverride !== null && plan.currentOverride !== undefined && Number.isFinite(Number(plan.currentOverride));
+    const current = hasManualCurrent ? Number(plan.currentOverride) : autoCurrent;
+    const pnl = current - start;
+    const growth = growthPct(pnl, start);
+    const pct = target > start ? Math.max(0, Math.min(100, ((current - start) / (target - start)) * 100)) : progressPct(current, target || start);
+    const done = target > 0 && current >= target;
+    return { start, target, current, autoCurrent, pnl, growth, pct, done, hasManualCurrent };
+  }
+  function addTargetLogRecord(state, totalPnl) {
+    const plan = getPlanNumbers(state, totalPnl);
+    if (!plan.target) return { ok: false, message: "Önce hedef tutarı gir." };
+    if (!plan.done) return { ok: false, message: "Güncel bakiye hedefe ulaşmadan yeşil onay verilemez." };
+    const rows = loadTargetLog();
+    rows.unshift({
+      id: "rt_" + Date.now() + "_" + Math.random().toString(36).slice(2),
+      ts: Date.now(),
+      start: plan.start,
+      target: plan.target,
+      current: plan.current,
+      pnl: plan.pnl,
+      growth: plan.growth
+    });
+    saveTargetLog(rows);
+    state.quickPlan = { start: Number(plan.current.toFixed(2)), target: "", currentOverride: "" };
+    return { ok: true, plan };
   }
   function addHistoryRecord(mode, slot, index) {
     if (!slot || (slot.status !== "win" && slot.status !== "loss")) return;
@@ -168,10 +212,11 @@
     const pending = visible.filter(s => s.status === "pending" || s.status === "empty" || !s.status).length;
     const settled = visible.filter(s => s.status === "win" || s.status === "loss").length;
     const totalPnl = Number(summary.pnl || 0) + Number(rollSummaryForMode.pnlTotal || 0);
-    const start = Number(rollSummaryForMode.startTotal || state.quickPlan?.start || 100);
-    const target = Number(rollSummaryForMode.currentTotal || start) + Math.max(0, Number(state.quickPlan?.target || 0) - Number(state.quickPlan?.start || 0));
-    const current = start + totalPnl;
-    const pct = progressPct(current, target || start);
+    const modePlan = getPlanNumbers(state, totalPnl);
+    const start = modePlan.start;
+    const target = modePlan.target;
+    const current = modePlan.current;
+    const pct = modePlan.pct;
     const history = loadHistory()[mode] || [];
     const today = filterHistoryRows(history, "today");
     const week = filterHistoryRows(history, "week");
@@ -193,7 +238,7 @@
             <span>20 alan sabit · ${settled} kapalı · ${pending} açık · ${summary.wins} W / ${summary.losses} L · ROI ${Number(summary.roi || 0).toFixed(1)}%</span>
           </div>
           <div class="v751-roll-progress">
-            <span>${target ? `${money(current)} / ${money(target)}` : `${money(current)} güncel`}</span>
+            <span>Başlangıç ${money(start)} · Güncel ${money(current)}${target ? ` · Hedef ${money(target)}` : " · Hedef bekliyor"}</span>
             <i><em style="width:${pct.toFixed(1)}%"></em></i>
           </div>
         </div>
@@ -222,7 +267,10 @@
     if (!Array.isArray(state.modeSlots.bet)) state.modeSlots.bet = createSlots("bet", 5);
     if (!Array.isArray(state.modeSlots.crypto)) state.modeSlots.crypto = createSlots("crypto", 5);
     if (!state.rowCounts || typeof state.rowCounts !== "object") state.rowCounts = { bet: 20, crypto: 20 };
-    if (!state.quickPlan || typeof state.quickPlan !== "object") state.quickPlan = { start: 100, target: 1000 };
+    if (!state.quickPlan || typeof state.quickPlan !== "object") state.quickPlan = { start: 100, target: 1000, currentOverride: "" };
+    if (state.quickPlan.currentOverride === undefined || state.quickPlan.currentOverride === null) state.quickPlan.currentOverride = "";
+    if (state.quickPlan.target === undefined || state.quickPlan.target === null) state.quickPlan.target = 1000;
+    if (state.quickPlan.start === undefined || state.quickPlan.start === null || state.quickPlan.start === "") state.quickPlan.start = 100;
     ensureQuickTemplates(state);
     state.rowCounts.bet = Math.max(1, Math.min(20, Number(state.rowCounts.bet || 20)));
     state.rowCounts.crypto = Math.max(1, Math.min(20, Number(state.rowCounts.crypto || 20)));
@@ -339,7 +387,7 @@
       <section class="rolling-v47-card ${mode} v49-mode-card">
         <div class="rolling-v47-head">
           <div>
-            <h3 class="${isCrypto ? "rolling-v493-title crypto" : "rolling-v493-title bet"}">${isCrypto ? '<i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} <span>${isCrypto ? "KRİPTO" : "BAHİS"}</span></h3>
+            <h3 class="${isCrypto ? "rolling-v493-title crypto" : "rolling-v493-title bet"}">${isCrypto ? '<span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} <span>${isCrypto ? "KRİPTO" : "BAHİS"}</span></h3>
           </div>
           <div class="rolling-v47-mini">
             <span>${sum.settled} kapalı · Rolling ${money(rollSum.pnlTotal)}</span>
@@ -366,6 +414,34 @@
         </details>
       </section>`;
   }
+  function renderPlanControl(state, totalPnl) {
+    const plan = getPlanNumbers(state, totalPnl);
+    const rows = loadTargetLog();
+    const latest = rows.slice(0, 3).map(r => `
+      <li>
+        <span>${escapeHtml(formatDateTime(r.ts))}</span>
+        <b>${money(r.start)} → ${money(r.target)}</b>
+        <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</em>
+      </li>`).join("") || `<li class="empty"><span>Henüz hedef tamamlanmadı.</span><b>Yeşil tik ile tamamladığında buraya düşer.</b><em>-</em></li>`;
+    return `
+      <div class="rolling-v495-quick-plan v755-target-plan">
+        <label><span>BAŞLANGIÇ BAKİYESİ</span><input type="number" step="1" data-rolling-quick="start" value="${plan.start}"></label>
+        <label><span>HEDEF BAKİYE</span><input type="number" step="1" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
+        <label><span>GÜNCEL BAKİYE</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Otomatik: ${money(plan.autoCurrent)}"></label>
+        <div class="v755-target-progress">
+          <div><span>Başlangıç</span><b>${money(plan.start)}</b></div>
+          <div><span>Güncel</span><b class="${plan.pnl >= 0 ? "pos" : "neg"}">${money(plan.current)}</b></div>
+          <div><span>Hedef</span><b>${plan.target ? money(plan.target) : "Hedef bekliyor"}</b></div>
+          <i><em style="width:${plan.pct.toFixed(1)}%"></em></i>
+        </div>
+        <div class="v755-target-actions">
+          <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> HEDEFİ BİTİR</button>
+          <button type="button" class="v755-target-reset" data-target-reset>YENİ HEDEF</button>
+        </div>
+        <ul class="v755-target-log">${latest}</ul>
+      </div>`;
+  }
+
   function renderModule() {
     const mount = qs("omega-rolling-render");
     if (!mount) return;
@@ -394,11 +470,7 @@
             <div><span>Toplam Kar/Zarar</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${signedMoney(totalPnl)}</b></div>
             <div><span>Toplam Büyüme</span><b class="${totalGrowth >= 0 ? "pos" : "neg"}">${pctText(totalGrowth)}</b></div>
           </div>
-          <div class="rolling-v495-quick-plan">
-            <label><span>BAŞLANGIÇ:</span><input type="number" step="1" data-rolling-quick="start" value="${Number(state.quickPlan?.start || 100)}"></label>
-            <label><span>HEDEF:</span><input type="number" step="1" data-rolling-quick="target" value="${Number(state.quickPlan?.target || 1000)}"></label>
-            <label><span>GÜNCEL:</span><b>${money(Number(state.quickPlan?.start || 100) + totalPnl)}</b></label>
-          </div>
+          ${renderPlanControl(state, totalPnl)}
         </div>
 
         <div class="rolling-v48-layout v49-rolling-layout">
@@ -487,12 +559,35 @@
     }));
     mount.querySelectorAll("[data-rolling-quick]").forEach(input => {
       input.addEventListener("input", () => {
-        state.quickPlan = state.quickPlan || { start: 100, target: 1000 };
-        state.quickPlan[input.dataset.rollingQuick] = Number(input.value || 0);
+        state.quickPlan = state.quickPlan || { start: 100, target: 1000, currentOverride: "" };
+        const key = input.dataset.rollingQuick;
+        state.quickPlan[key] = input.value === "" ? "" : Number(input.value || 0);
         saveState(state);
       });
       input.addEventListener("change", () => renderModule());
     });
+    mount.querySelectorAll("[data-target-complete]").forEach(btn => btn.addEventListener("click", () => {
+      const betSum = slotSummary(state.modeSlots.bet);
+      const cryptoSum = slotSummary(state.modeSlots.crypto);
+      const betRollSum = rollingSummary("bet");
+      const cryptoRollSum = rollingSummary("crypto");
+      const totalPnl = Number(betSum.pnl || 0) + Number(cryptoSum.pnl || 0) + Number(betRollSum.pnlTotal || 0) + Number(cryptoRollSum.pnlTotal || 0);
+      const result = addTargetLogRecord(state, totalPnl);
+      if (!result.ok) { alert(result.message); return; }
+      saveState(state);
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
+      const betSum = slotSummary(state.modeSlots.bet);
+      const cryptoSum = slotSummary(state.modeSlots.crypto);
+      const betRollSum = rollingSummary("bet");
+      const cryptoRollSum = rollingSummary("crypto");
+      const totalPnl = Number(betSum.pnl || 0) + Number(cryptoSum.pnl || 0) + Number(betRollSum.pnlTotal || 0) + Number(cryptoRollSum.pnlTotal || 0);
+      const plan = getPlanNumbers(state, totalPnl);
+      state.quickPlan = { start: Number(plan.current.toFixed(2)), target: "", currentOverride: "" };
+      saveState(state);
+      renderModule();
+    }));
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = btn.dataset.historyOpen === "crypto" ? "crypto" : "bet";
       HISTORY_FILTER = "today";
