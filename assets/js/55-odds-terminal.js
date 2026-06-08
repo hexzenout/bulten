@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V741-V780 helper-render temizlik
+// ORAN TERMİNALİ — V743 final stabilite checkpoint / görünür sürüm etiketi temizliği
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -3205,7 +3205,7 @@
     ];
     return `<section class="v581-signal-engine" aria-label="Oran Terminali Sinyal Motoru">
       <div class="v581-signal-head">
-        <div><span>V581-V583 Sinyal Motoru</span><h3>Tek skor sistemi: kaynak farkı / barem farkı / oran hareketi</h3></div>
+        <div><span>Sinyal Motoru</span><h3>Tek skor sistemi: kaynak farkı / barem farkı / oran hareketi</h3></div>
         <em>Canlı veri değildir · otomatik oynama kapalı</em>
       </div>
       <div class="v581-signal-kpis">${cells.map(([label, value]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b></article>`).join("")}</div>
@@ -3380,7 +3380,7 @@
     ];
     return `<section class="v596-adapter-contract ${escapeAttr(report.status)}" aria-label="Adapter output sözleşmesi">
       <div class="v590-user-decision-head compact">
-        <div><span>V593-V596 SON ADAPTER KAPISI</span><h3>Adapter output formatı standart kontrolü</h3><p>Gerçek veri bağlanmadan önce kayıtlar hazır / kontrol / bekle sınıfına ayrılır. Ana paneller temiz kayıtları öne alır.</p></div>
+        <div><span>SON ADAPTER KAPISI</span><h3>Adapter output formatı standart kontrolü</h3><p>Gerçek veri bağlanmadan önce kayıtlar hazır / kontrol / bekle sınıfına ayrılır. Ana paneller temiz kayıtları öne alır.</p></div>
         <em>${escapeHtml(signalDataModeText(s.dataMode))}</em>
       </div>
       <div class="v596-contract-grid">${cards.map(([label, value, note]) => `<article><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b><small>${escapeHtml(String(note))}</small></article>`).join("")}</div>
@@ -3896,8 +3896,8 @@
       ["Hareket", movement ? movement.value : "Yok", movement ? movement.title : "Önceki/güncel oran farkı yok", movement ? "movement" : "muted"],
       ["Saklı", report.hidden, "Düşük güven/bayat/blok kayıtlar teknik arşivde", report.hidden ? "review" : "ready"]
     ];
-    return `<section class="v640-user-final opportunity" aria-label="V641 Fırsat Radarı final sade görünüm">
-      <div class="v640-user-head"><div><span>FIRSAT RADARI FINAL</span><h3>${escapeHtml(action)}</h3><p>Radar tek karar kartına indirildi; teknik sinyal listeleri kapalı arşivde kalır.</p></div><em>Canlı veri değildir</em></div>
+    return `<section class="v640-user-final opportunity" aria-label="Fırsat Radarı final sade görünüm">
+      <div class="v640-user-head"><div><span>FIRSAT RADARI</span><h3>${escapeHtml(action)}</h3><p>Radar tek karar kartına indirildi; teknik sinyal listeleri kapalı arşivde kalır.</p></div><em>Canlı veri değildir</em></div>
       <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
     </section>`;
   }
@@ -3914,8 +3914,8 @@
       ["Barem riski", line ? line.value : "Temiz", line ? "Çizgi farkı kontrol ister" : "Yanıltıcı çizgi farkı görünmüyor", line ? "review" : "ready"],
       ["Saklı kayıt", report.hidden, "Düşük güven/bayat/blok kayıtlar teknik arşivde", report.hidden ? "review" : "ready"]
     ];
-    return `<section class="v640-user-final comparison" aria-label="V641 Oran karşılaştırma final sade görünüm">
-      <div class="v640-user-head"><div><span>ORAN KARŞILAŞTIRMA FINAL</span><h3>${escapeHtml(verdict)}</h3><p>Görünür alanda karar + tablo kalır; line/dry-run ve eski özetler teknik arşive alınır.</p></div><em>${escapeHtml(displayModeLabel(data.summary?.dataMode || report.mode || "mock"))}</em></div>
+    return `<section class="v640-user-final comparison" aria-label="Oran karşılaştırma final sade görünüm">
+      <div class="v640-user-head"><div><span>ORAN KARŞILAŞTIRMA</span><h3>${escapeHtml(verdict)}</h3><p>Görünür alanda karar + tablo kalır; line/dry-run ve eski özetler teknik arşive alınır.</p></div><em>${escapeHtml(displayModeLabel(data.summary?.dataMode || report.mode || "mock"))}</em></div>
       <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
     </section>`;
   }
@@ -3934,8 +3934,8 @@
       ["Sert hareket", strongest ? strongest.value : "Yok", strongest ? strongest.title : "Eşik üstü hareket yok", strongest ? "movement" : "muted"],
       ["Veri", report.dataModeLabel || signalDataModeText(report.mode), "Dry-run/snapshot/mock", "muted"]
     ];
-    return `<section class="v640-user-final movement" aria-label="V641 Oran hareketleri final sade görünüm">
-      <div class="v640-user-head"><div><span>ORAN HAREKETLERİ FINAL</span><h3>${escapeHtml(strongest ? "Hareketi izle" : "Hareket bekle")}</h3><p>Yükselen/düşen/sert hareket listeleri teknik arşivde; ana ekranda kısa karar kalır.</p></div><em>Canlı veri değildir</em></div>
+    return `<section class="v640-user-final movement" aria-label="Oran hareketleri final sade görünüm">
+      <div class="v640-user-head"><div><span>ORAN HAREKETLERİ</span><h3>${escapeHtml(strongest ? "Hareketi izle" : "Hareket bekle")}</h3><p>Yükselen/düşen/sert hareket listeleri teknik arşivde; ana ekranda kısa karar kalır.</p></div><em>Canlı veri değildir</em></div>
       <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
     </section>`;
   }
@@ -3950,8 +3950,8 @@
       ["Duplicate", report.duplicate, "Ana akışı şişirmez", report.duplicate ? "review" : "ready"],
       ["Son okuma", formatSourceUpdatedAt(report.flow?.lastReadAt), "Dry-run → snapshot → mock", "muted"]
     ];
-    return `<section class="v640-user-final sources ${escapeAttr(report.uiStatus)}" aria-label="V641 Kaynaklar final kontrol merkezi">
-      <div class="v640-user-head"><div><span>KAYNAKLAR FINAL KONTROL</span><h3>${escapeHtml(report.uiHeadline)}</h3><p>Kaynaklar ilk ekranı tek kontrol merkezine indirildi; connector, dry-run ve adapter detayları kapalı arşivdedir.</p></div><em>API kapalı</em></div>
+    return `<section class="v640-user-final sources ${escapeAttr(report.uiStatus)}" aria-label="Kaynaklar final kontrol merkezi">
+      <div class="v640-user-head"><div><span>KAYNAKLAR KONTROL MERKEZİ</span><h3>${escapeHtml(report.uiHeadline)}</h3><p>Kaynaklar ilk ekranı tek kontrol merkezine indirildi; connector, dry-run ve adapter detayları kapalı arşivdedir.</p></div><em>API kapalı</em></div>
       <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
     </section>`;
   }
@@ -3969,8 +3969,8 @@
       ["Likidite", `$${Math.round(summary.liquidity || summary.liquidityTotal || 0).toLocaleString("en-US")}`, "YES/NO likiditesi", "ready"],
       ["Öne çıkan", top ? (top.question || top.title || top.match || "Market") : "Veri bekle", top ? `Skor ${Math.round(top.rankingScore || top.score || 0)}` : "Ayrı akış", top ? "poly" : "muted"]
     ];
-    return `<section class="v640-poly-checkpoint" aria-label="V641 POLYMARKET final ayrı görünüm">
-      <div class="v640-user-head"><div><span>POLYMARKET FINAL</span><h3>YES/NO akışı ayrı kalıyor</h3><p>Kısa vade, likidite ve fiyat dengesi bookmaker oran motoruna bağlanmadan gösterilir.</p></div><em>Prediction market</em></div>
+    return `<section class="v640-poly-checkpoint" aria-label="POLYMARKET final ayrı görünüm">
+      <div class="v640-user-head"><div><span>POLYMARKET KONTROL</span><h3>YES/NO akışı ayrı kalıyor</h3><p>Kısa vade, likidite ve fiyat dengesi bookmaker oran motoruna bağlanmadan gösterilir.</p></div><em>Prediction market</em></div>
       <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
       ${top ? `<div class="v640-poly-focus"><b>${escapeHtml(top.question || top.title || top.match || "Polymarket marketi")}</b><span>${escapeHtml(formatDeadline(top.expiresAt || top.kickoff))} · Likidite $${Math.round(Number(top.liquidity || 0)).toLocaleString("en-US")}</span><div class="v640-yesno-line"><em style="--w:${(yes ?? 0).toFixed(1)}%">YES ${(yes ?? 0).toFixed(1)}¢</em><em style="--w:${(no ?? 0).toFixed(1)}%">NO ${(no ?? 0).toFixed(1)}¢</em></div></div>` : empty("POLYMARKET kayıt bekliyor.")}
     </section>`;
@@ -4203,7 +4203,7 @@
     const manualKeep = [
       "Fırsat/Karşılaştırma/Hareket ana yüzeyi korunur.",
       "Dry-run ve kaynak ayarları erişilebilir kalır.",
-      "Eski V590-V640 kartları render yükü oluşturmadan özetlenir.",
+      "Eski teknik kartlar render yükü oluşturmadan özetlenir.",
       "POLYMARKET YES/NO hattı bookmaker motorundan ayrı tutulur."
     ];
     const readyToPause = liveClosed && Number(cleanup.clean || 0) >= 0 && score >= 60;
@@ -4248,10 +4248,10 @@
       ["Render yükü", `${report.archivedCallCount} eski blok özetlendi`, "Eski arşiv panelleri tek satır indekse alındı", "ready"],
       ["Canlı kapı", report.liveClosed ? "Kapalı" : "Kontrol et", "API/fetch/scrape/auto-play yok", report.liveClosed ? "ready" : "review"]
     ];
-    return `<section class="v640-checkpoint-hero ${escapeAttr(report.readyToPause ? "ready" : "review")}" aria-label="V651-V660 checkpoint karar kilidi">
+    return `<section class="v640-checkpoint-hero ${escapeAttr(report.readyToPause ? "ready" : "review")}" aria-label="Checkpoint karar kilidi">
       <div class="v640-checkpoint-head">
         <div>
-          <span>V651-V660 CHECKPOINT KARAR</span>
+          <span>CHECKPOINT KARAR</span>
           <h3>${escapeHtml(report.decision)}</h3>
           <p>Final temizlik sonrası eski teknik paneller artık tek tek render edilmez; ana ekran sade kalır, gerçek veri kapısı kapalıdır.</p>
         </div>
@@ -4265,12 +4265,12 @@
   function renderV651SlimArchive(scope = "Genel", rows = [], note = "Eski teknik paneller silinmedi; görünür yük oluşturmadan özetlendi.") {
     const safeRows = Array.isArray(rows) ? rows : [];
     const normalized = safeRows.length ? safeRows : [
-      ["Eski özet paneller", "Özetlendi", "V590-V640 arası tekrar kartları tek indekse indirildi", "ready"],
+      ["Eski özet paneller", "Özetlendi", "Eski tekrar kartları tek indekse indirildi", "ready"],
       ["Canlı kapı", "Kapalı", "Gerçek API/fetch/scrape/auto-play yok", "ready"],
       ["Teknik detay", "Geliştirici alanı", "Gerektiğinde ayrı refactor ile açılır", "muted"]
     ];
     return `<section class="v640-panel-audit v651-slim-archive" aria-label="${escapeAttr(scope)} sade teknik arşiv">
-      <div class="v640-section-head"><div><span>V651 SADE TEKNİK ARŞİV</span><h3>${escapeHtml(scope)}</h3><p>${escapeHtml(note)}</p></div><em>Render yükü azaltıldı</em></div>
+      <div class="v640-section-head"><div><span>SADE TEKNİK ARŞİV</span><h3>${escapeHtml(scope)}</h3><p>${escapeHtml(note)}</p></div><em>Render yükü azaltıldı</em></div>
       <div class="v640-audit-rows">${normalized.map(([panel, mode, desc, tone]) => `<article class="${escapeAttr(tone || "muted")}"><b>${escapeHtml(panel)}</b><span>${escapeHtml(mode)}</span><small>${escapeHtml(desc)}</small></article>`).join("")}</div>
     </section>`;
   }
@@ -4779,7 +4779,7 @@
       ${renderV641OpportunityFinal(engine, megaReport)}
       ${renderDeveloperCollapse("Teknik arşiv: radar ve sinyal özeti", `
         ${renderV651RadarSlimArchive(decisionReport)}
-      `, "V590-V640 eski radar kartları tek özet altında tutulur; ana görünüm sade kalır.")}
+      `, "Eski radar kartları tek özet altında tutulur; ana görünüm sade kalır.")}
     `;
   }
 
@@ -4850,7 +4850,7 @@
     return `<section class="v557-comparison-engine v616-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
         <div>
-          <span>V651 final sade karşılaştırma</span>
+          <span>Final sade karşılaştırma</span>
           <h3>Oran Karşılaştırma</h3>
           <p>Ana görünümde karar ve tablo kalır. Eski karşılaştırma/checkpoint panelleri tek teknik özet altında tutulur.</p>
         </div>
@@ -5230,7 +5230,7 @@
         <div>
           <span>Kaynak Ayarları</span>
           <h3>Kaynak Ayarları</h3>
-          <p>Aktif/Pasif kaynak seçimi ileride gerçek veri akışını kontrol edecek. Sürüm V561 hazırlığı yalnızca yardımcı not olarak tutulur.</p>
+          <p>Aktif/Pasif kaynak seçimi ileride gerçek veri akışını kontrol edecek. Bu hazırlık yalnızca yardımcı not olarak tutulur.</p>
         </div>
         <em>Gerçek API yok · fetch yok · scraping yok</em>
       </div>
