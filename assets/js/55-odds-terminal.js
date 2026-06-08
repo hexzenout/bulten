@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — V745 market restore / cache-bust emergency fix
+// ORAN TERMİNALİ — V747 market guard / catalog audit
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -7,7 +7,7 @@
   // -------------------------------
   // Constants / State
   // -------------------------------
-  const ODDS_TERMINAL_BUILD = "v745";
+  const ODDS_TERMINAL_BUILD = "v747";
   const ODDS_TERMINAL_CSS_MODULES = [
     "assets/css/55-odds-terminal-live-gate.css",
     "assets/css/55-odds-terminal-final-ui.css"
@@ -110,6 +110,14 @@
   const ADAPTER_OUTPUT_READY_SCORE = 76;
   const MAIN_PANEL_MIN_CONFIDENCE = 62;
   const ADAPTER_RECORD_STALE_HOURS = 96;
+  const MARKET_CATALOG_LOCK = Object.freeze({
+    lockedAt: "V746",
+    footballExpected: 445,
+    basketballExpected: 201,
+    footballMin: 400,
+    basketballMin: 200,
+    rule: "Market seçenekleri kullanıcı onayı olmadan eklenmez, kaldırılmaz veya yeniden adlandırılmaz."
+  });
 
 
   // -------------------------------
@@ -678,6 +686,59 @@
 
   function countCatalogMarkets(categories) {
     return runtimeArray(categories).reduce((sum, cat) => sum + runtimeArray(cat?.markets).length, 0);
+  }
+
+  function marketCatalogAudit() {
+    const footballCount = countCatalogMarkets(MARKET_CATALOG_FOOTBALL_CATEGORIES);
+    const basketballCount = countCatalogMarkets(MARKET_CATALOG_BASKETBALL_CATEGORIES);
+    const footballGroups = runtimeArray(MARKET_CATALOG_FOOTBALL_CATEGORIES).length;
+    const basketballGroups = runtimeArray(MARKET_CATALOG_BASKETBALL_CATEGORIES).length;
+    const issues = [];
+    const notes = [];
+    if (footballCount < MARKET_CATALOG_LOCK.footballMin) {
+      issues.push(`Futbol market sayısı kritik eşiğin altında: ${footballCount}/${MARKET_CATALOG_LOCK.footballMin}`);
+    }
+    if (basketballCount < MARKET_CATALOG_LOCK.basketballMin) {
+      issues.push(`Basket market sayısı kritik eşiğin altında: ${basketballCount}/${MARKET_CATALOG_LOCK.basketballMin}`);
+    }
+    if (!footballGroups) issues.push("Futbol market grupları yüklenmedi.");
+    if (!basketballGroups) issues.push("Basket market grupları yüklenmedi.");
+    if (marketCatalogDataMeta.status && !["loaded", "initial"].includes(marketCatalogDataMeta.status)) {
+      issues.push(marketCatalogDataMeta.message || "Market katalogu güvenli yükleme kontrolünden geçemedi.");
+    }
+    if (footballCount !== MARKET_CATALOG_LOCK.footballExpected || basketballCount !== MARKET_CATALOG_LOCK.basketballExpected) {
+      notes.push(`Kilitli referans: Futbol ${MARKET_CATALOG_LOCK.footballExpected}, Basket ${MARKET_CATALOG_LOCK.basketballExpected}. Mevcut: Futbol ${footballCount}, Basket ${basketballCount}.`);
+    }
+    return {
+      ok: issues.length === 0,
+      status: issues.length ? "warning" : "ok",
+      footballCount,
+      basketballCount,
+      footballGroups,
+      basketballGroups,
+      issues,
+      notes,
+      loadedAt: marketCatalogDataMeta.loadedAt || "-",
+      sourceStatus: marketCatalogDataMeta.status || "initial",
+      rule: MARKET_CATALOG_LOCK.rule
+    };
+  }
+
+  function renderMarketCatalogGuard({ compact = false } = {}) {
+    const audit = marketCatalogAudit();
+    const icon = audit.ok ? "fa-shield-halved" : "fa-triangle-exclamation";
+    const title = audit.ok ? "Market katalogu kilitli" : "Market katalogu kontrol istiyor";
+    const body = audit.ok
+      ? `Futbol ${audit.footballCount} · Basket ${audit.basketballCount} · Kullanıcı onayı olmadan seçenek değişmez.`
+      : audit.issues.join(" ");
+    if (compact) {
+      return `<div class="v546-market-meta v747-market-guard ${audit.ok ? "ok" : "warning"}"><span><i class="fa-solid ${icon}"></i> ${escapeHtml(title)}</span><span>${escapeHtml(`Futbol ${audit.footballCount} / Basket ${audit.basketballCount}`)}</span></div>`;
+    }
+    return `<section class="v641-final-panel v747-market-guard ${audit.ok ? "ok" : "warning"}">
+      <header><span><i class="fa-solid ${icon}"></i> ${escapeHtml(title)}</span><em>${escapeHtml(audit.sourceStatus)}</em></header>
+      <p>${escapeHtml(body)}</p>
+      ${audit.notes.length ? `<small>${escapeHtml(audit.notes.join(" "))}</small>` : ""}
+    </section>`;
   }
 
   function isUsableMarketCatalogPayload(payload) {
@@ -5073,13 +5134,15 @@
         <input id="odds-v546-market-search" type="search" placeholder="${escapeAttr(placeholder)}" value="${escapeAttr(state.marketSearch || "")}">
         ${renderMarketGroupFilters()}
         <div class="v546-market-meta"><span>${escapeHtml(sportLabel)}</span><span>0 sonuç</span></div>
-      </div>${empty("Aradığın market katalogda bulunamadı.")}`;
+        ${renderMarketCatalogGuard({ compact: true })}
+      </div>${renderMarketCatalogGuard()}${empty("Aradığın market katalogda bulunamadı. Market katalogu yüklenememişse assets/data/55-odds-terminal-catalog.json dosyasını ve index cache-bust sürümünü kontrol et.")}`;
     }
     return `<div class="v546-market-search-panel v549-sport-market-panel">
       <label for="odds-v546-market-search">Marketler</label>
       <input id="odds-v546-market-search" type="search" placeholder="${escapeAttr(placeholder)}" value="${escapeAttr(state.marketSearch || "")}">
       ${renderMarketGroupFilters()}
       <div class="v546-market-meta"><span>${escapeHtml(sportLabel)}</span><span>${total} sonuç · ${cats.length} grup</span></div>
+      ${renderMarketCatalogGuard({ compact: true })}
       ${renderMockAdapterBadges()}
     </div>
     <div class="v530-market-catalog v546-market-catalog v549-sport-market-catalog">
