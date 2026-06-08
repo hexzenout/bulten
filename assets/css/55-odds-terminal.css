@@ -632,37 +632,7 @@
 }
 
 /* Spor seçimi artık select değil; sol menü ikonlu butonlar. */
-.v531-filters {
-    grid-template-columns: minmax(260px, 360px) minmax(260px, 420px) minmax(0, 1fr) !important;
-    align-items: center !important;
-}
 
-.v531-sport-switch {
-    display: flex !important;
-    gap: 8px !important;
-    align-items: center !important;
-    min-height: 42px !important;
-    padding: 4px !important;
-    border: 1px solid rgba(255,255,255,.10) !important;
-    border-radius: 16px !important;
-    background: #050505 !important;
-}
-
-.v531-sport-switch button {
-    flex: 1 1 0 !important;
-    min-height: 34px !important;
-    border: 1px solid transparent !important;
-    border-radius: 12px !important;
-    background: rgba(255,255,255,.04) !important;
-    color: #d4d4d8 !important;
-    font-size: .72rem !important;
-    font-weight: 950 !important;
-    cursor: pointer !important;
-}
-
-.v531-sport-switch button i {
-    margin-right: 6px !important;
-}
 
 .v531-sport-switch button.football i {
     color: #22c55e !important;
@@ -691,36 +661,7 @@
 }
 
 /* Oran değişimleri alt alta ve daha okunur. */
-.v531-flow-list {
-    display: grid !important;
-    gap: 4px !important;
-    min-width: 170px !important;
-    max-width: 280px !important;
-}
 
-.v531-flow-list span {
-    display: flex !important;
-    justify-content: space-between !important;
-    gap: 10px !important;
-    align-items: center !important;
-    min-height: 22px !important;
-    padding: 0 8px !important;
-    border-radius: 8px !important;
-    background: rgba(255,255,255,.035) !important;
-}
-
-.v531-flow-list em {
-    color: #a3a3a3 !important;
-    font-style: normal !important;
-    font-size: .68rem !important;
-    font-weight: 850 !important;
-}
-
-.v531-flow-list b {
-    color: #fbbf24 !important;
-    font-size: .72rem !important;
-    font-weight: 950 !important;
-}
 
 .odds-v528-table .flow {
     font-family: inherit !important;
@@ -736,21 +677,6 @@
     line-height: 1.2 !important;
 }
 
-@media (max-width: 1200px) {
-    .v531-filters {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-@media (max-width: 720px) {
-    .v531-sport-switch {
-        flex-wrap: wrap !important;
-    }
-
-    .v531-sport-switch button {
-        flex-basis: calc(50% - 6px) !important;
-    }
-}
 
 /* ===============================
    Panel Contrast / Gray Balance
@@ -903,10 +829,7 @@
 }
 
 /* TÜMÜ en solda ve daha dengeli. */
-.v533-filters {
-    grid-template-columns: minmax(280px, 380px) minmax(330px, 520px) minmax(0, 1fr) !important;
-    align-items: stretch !important;
-}
+
 
 .v531-sport-switch button.all {
     order: 0 !important;
@@ -921,24 +844,7 @@
 }
 
 /* Akıllı market arama alanı */
-.v533-market-picker {
-    position: relative !important;
-    display: grid !important;
-    gap: 7px !important;
-    padding: 8px !important;
-    border: 1px solid rgba(255,255,255,.12) !important;
-    border-radius: 16px !important;
-    background: #1a1d22 !important;
-    min-width: 0 !important;
-}
 
-.v533-market-picker label {
-    color: #a3a3a3 !important;
-    font-size: .66rem !important;
-    font-weight: 950 !important;
-    letter-spacing: .45px !important;
-    text-transform: uppercase !important;
-}
 
 #odds-v533-market-search {
     width: 100% !important;
@@ -952,30 +858,6 @@
     outline: none !important;
 }
 
-.v533-selected-market {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 8px !important;
-    min-height: 28px !important;
-    border-radius: 10px !important;
-    background: rgba(168,85,247,.12) !important;
-    color: #e9d5ff !important;
-    padding: 0 8px !important;
-    font-size: .72rem !important;
-    font-weight: 950 !important;
-}
-
-.v533-selected-market button {
-    border: 0 !important;
-    border-radius: 999px !important;
-    background: rgba(255,255,255,.10) !important;
-    color: #fff !important;
-    font-size: .64rem !important;
-    font-weight: 950 !important;
-    padding: 4px 8px !important;
-    cursor: pointer !important;
-}
 
 .v533-market-results {
     display: grid !important;
@@ -1020,111 +902,12 @@
 }
 
 /* İstihbarat terminali */
-.v533-intel {
-    display: grid !important;
-    gap: 14px !important;
-    margin-bottom: 14px !important;
-    padding: 18px !important;
-    border: 1px solid rgba(134,239,172,.20) !important;
-    border-radius: 24px !important;
-    background:
-      radial-gradient(circle at top right, rgba(34,197,94,.16), transparent 34%),
-      linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.020)),
-      #191d22 !important;
-    box-shadow: 0 22px 60px rgba(0,0,0,.32) !important;
-}
+
 
 .v533-intel.hot {
     border-color: rgba(34,197,94,.44) !important;
 }
 
-.v533-intel-head {
-    display: flex !important;
-    justify-content: space-between !important;
-    gap: 16px !important;
-    align-items: flex-start !important;
-}
-
-.v533-intel-head span {
-    color: #f5f5f5 !important;
-    font-weight: 950 !important;
-    letter-spacing: .55px !important;
-    font-size: .78rem !important;
-}
-
-.v533-intel-head h3 {
-    margin: 8px 0 6px !important;
-    color: #fff !important;
-    font-size: 1.35rem !important;
-    font-weight: 950 !important;
-}
-
-.v533-intel-head p {
-    margin: 0 !important;
-    color: #a3a3a3 !important;
-    max-width: 840px !important;
-    line-height: 1.45 !important;
-    font-size: .86rem !important;
-}
-
-.v533-intel-score {
-    min-width: 96px !important;
-    min-height: 76px !important;
-    display: grid !important;
-    place-items: center !important;
-    border: 1px solid rgba(34,197,94,.34) !important;
-    border-radius: 18px !important;
-    background: rgba(34,197,94,.10) !important;
-}
-
-.v533-intel-score small {
-    color: #bbf7d0 !important;
-    font-size: .62rem !important;
-    font-weight: 950 !important;
-    text-transform: uppercase !important;
-}
-
-.v533-intel-score b {
-    color: #22c55e !important;
-    font-size: 1.9rem !important;
-    font-weight: 950 !important;
-}
-
-.v533-intel-body {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.4fr) minmax(280px, .8fr) !important;
-    gap: 14px !important;
-}
-
-.v533-intel-chart,
-.v533-intel-list {
-    border: 1px solid rgba(255,255,255,.09) !important;
-    border-radius: 18px !important;
-    background: #12151a !important;
-    padding: 12px !important;
-}
-
-.v533-intel-chart > b {
-    display: block !important;
-    color: #fff !important;
-    margin-bottom: 8px !important;
-    font-size: .78rem !important;
-    font-weight: 950 !important;
-    text-transform: uppercase !important;
-}
-
-.v533-pressure-chart {
-    width: 100% !important;
-    min-height: 150px !important;
-    display: block !important;
-    background: #0e1116 !important;
-    border-radius: 16px !important;
-    overflow: hidden !important;
-}
-
-.v533-pressure-chart .area {
-    fill: rgba(134,239,172,.12) !important;
-}
 
 .v533-pressure-chart .line {
     fill: none !important;
@@ -1133,99 +916,6 @@
     filter: drop-shadow(0 0 8px rgba(134,239,172,.25)) !important;
 }
 
-.v533-pressure-chart circle {
-    fill: #bbf7d0 !important;
-    opacity: .8 !important;
-}
-
-.v533-chart-axis {
-    display: flex !important;
-    justify-content: space-between !important;
-    padding: 8px 4px 0 !important;
-    color: #e5e7eb !important;
-    font-size: .68rem !important;
-    font-weight: 850 !important;
-}
-
-.v533-intel-list {
-    display: grid !important;
-    gap: 8px !important;
-}
-
-.v533-intel-list article {
-    display: grid !important;
-    gap: 4px !important;
-    padding: 10px !important;
-    border-radius: 14px !important;
-    background: rgba(255,255,255,.045) !important;
-    border: 1px solid rgba(255,255,255,.08) !important;
-}
-
-.v533-intel-list strong {
-    color: #22c55e !important;
-    font-size: .68rem !important;
-    font-weight: 950 !important;
-}
-
-.v533-intel-list b {
-    color: #fff !important;
-    font-weight: 950 !important;
-}
-
-.v533-intel-list span {
-    color: #d4d4d8 !important;
-    font-size: .72rem !important;
-}
-
-.v533-intel-list em {
-    color: #fbbf24 !important;
-    font-size: .72rem !important;
-    font-style: normal !important;
-    font-weight: 900 !important;
-}
-
-.v533-intel-empty {
-    color: #a3a3a3 !important;
-    text-align: center !important;
-    padding: 20px !important;
-}
-
-.v533-intel-controls {
-    display: grid !important;
-    grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) 190px !important;
-    gap: 10px !important;
-    align-items: end !important;
-}
-
-.v533-intel-controls label {
-    display: grid !important;
-    gap: 6px !important;
-    color: #d4d4d8 !important;
-    font-size: .72rem !important;
-    font-weight: 950 !important;
-}
-
-.v533-intel-controls input[type="text"] {
-    min-height: 40px !important;
-    border: 1px solid rgba(255,255,255,.12) !important;
-    border-radius: 12px !important;
-    background: #101216 !important;
-    color: #f5f5f5 !important;
-    padding: 0 10px !important;
-}
-
-.v533-intel-controls input[type="range"] {
-    accent-color: #86efac !important;
-}
-
-.v533-intel-controls button {
-    min-height: 42px !important;
-    border: 1px solid rgba(255,255,255,.12) !important;
-    border-radius: 14px !important;
-    background: #2a2a2a !important;
-    color: #d4d4d8 !important;
-    font-weight: 950 !important;
-}
 
 .v533-intel-controls button.active {
     border-color: rgba(34,197,94,.45) !important;
@@ -1377,121 +1067,19 @@
     font-size: .68rem !important;
 }
 
-@media (max-width: 1200px) {
-    .v533-filters,
-    .v533-intel-body,
-    .v533-intel-controls {
-        grid-template-columns: 1fr !important;
-    }
-}
 
 /* ===============================
    Sub Tabs / Filter Reset
 ================================ */
 
 /* Eski grafik alanı kapalı kalsın. */
-.v533-intel,
-.v533-pressure-chart,
-.v533-chart-axis,
-.v533-intel-chart {
-    display: none !important;
-}
+
 
 /* Üst filtre artık taşmaz: TÜMÜ/FUTBOL/BASKETBOL aynı satırda kalır. */
-.v534-filters {
-    grid-template-columns: minmax(290px, 390px) minmax(250px, 360px) minmax(260px, 1fr) !important;
-    align-items: center !important;
-}
 
-.v531-sport-switch {
-    align-self: stretch !important;
-    min-height: 52px !important;
-    overflow: hidden !important;
-}
-
-.v531-sport-switch button {
-    min-width: 0 !important;
-    white-space: nowrap !important;
-}
 
 /* Market arama artık dev panel gibi sabit durmaz; sadece açılır seçim olarak çalışır. */
-.v534-market-toggle {
-    min-height: 52px !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 4px 10px !important;
-    border: 1px solid rgba(255,255,255,.12) !important;
-    border-radius: 16px !important;
-    background: #191d23 !important;
-    color: #e5e7eb !important;
-    padding: 8px 12px !important;
-    text-align: left !important;
-    cursor: pointer !important;
-    min-width: 0 !important;
-}
 
-.v534-market-toggle span {
-    grid-column: 1 / -1 !important;
-    color: #a3a3a3 !important;
-    font-size: .64rem !important;
-    font-weight: 950 !important;
-    text-transform: uppercase !important;
-    letter-spacing: .45px !important;
-}
-
-.v534-market-toggle b {
-    min-width: 0 !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-    color: #f3e8ff !important;
-    font-size: .78rem !important;
-    font-weight: 950 !important;
-}
-
-.v534-market-toggle i {
-    color: #c084fc !important;
-}
-
-.v534-market-drawer {
-    margin-top: 12px !important;
-    display: grid !important;
-    gap: 10px !important;
-    padding: 14px !important;
-    border: 1px solid rgba(168,85,247,.24) !important;
-    border-radius: 20px !important;
-    background: linear-gradient(180deg, rgba(168,85,247,.09), rgba(255,255,255,.025)), #181c22 !important;
-    box-shadow: 0 18px 46px rgba(0,0,0,.30) !important;
-}
-
-.v534-market-drawer-head {
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: space-between !important;
-    gap: 12px !important;
-}
-
-.v534-market-drawer-head b {
-    display: block !important;
-    color: #fff !important;
-    font-weight: 950 !important;
-}
-
-.v534-market-drawer-head span {
-    color: #a3a3a3 !important;
-    font-size: .76rem !important;
-}
-
-.v534-market-drawer-head button {
-    width: 34px !important;
-    height: 34px !important;
-    border: 1px solid rgba(255,255,255,.12) !important;
-    border-radius: 10px !important;
-    background: #252a31 !important;
-    color: #fff !important;
-    cursor: pointer !important;
-}
 
 #odds-v533-market-search {
     min-height: 44px !important;
@@ -1512,110 +1100,7 @@
 }
 
 /* Ayrı İstihbarat sekmesi: grafik yok, kartlar var. */
-.v534-intel-page {
-    display: grid !important;
-    gap: 14px !important;
-    border: 1px solid rgba(34,197,94,.24) !important;
-    border-radius: 22px !important;
-    background: linear-gradient(180deg, rgba(34,197,94,.08), rgba(255,255,255,.025)), #1b1f25 !important;
-    padding: 16px !important;
-}
 
-.v534-intel-title {
-    display: flex !important;
-    justify-content: space-between !important;
-    gap: 14px !important;
-    align-items: flex-start !important;
-}
-
-.v534-intel-title span {
-    color: #22c55e !important;
-    font-size: .72rem !important;
-    font-weight: 950 !important;
-    letter-spacing: .7px !important;
-}
-
-.v534-intel-title h3 {
-    margin: 6px 0 !important;
-    color: #fff !important;
-    font-size: 1.45rem !important;
-    font-weight: 950 !important;
-}
-
-.v534-intel-title p {
-    margin: 0 !important;
-    color: #a3a3a3 !important;
-    line-height: 1.45 !important;
-}
-
-.v534-intel-title button,
-.v534-intel-controls button {
-    min-height: 42px !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(34,197,94,.35) !important;
-    background: rgba(34,197,94,.12) !important;
-    color: #bbf7d0 !important;
-    font-weight: 950 !important;
-}
-
-.v534-intel-controls {
-    display: grid !important;
-    gap: 8px !important;
-}
-
-.v534-intel-controls label {
-    color: #d4d4d8 !important;
-    font-size: .76rem !important;
-    font-weight: 950 !important;
-}
-
-.v534-intel-controls input {
-    width: 100% !important;
-    accent-color: #22c55e !important;
-}
-
-.v534-intel-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 10px !important;
-}
-
-.v534-intel-grid article {
-    display: grid !important;
-    gap: 6px !important;
-    border: 1px solid rgba(255,255,255,.10) !important;
-    border-radius: 16px !important;
-    background: #141820 !important;
-    padding: 12px !important;
-}
-
-.v534-intel-grid strong {
-    color: #22c55e !important;
-    font-size: .68rem !important;
-    font-weight: 950 !important;
-}
-
-.v534-intel-grid b {
-    color: #fff !important;
-    font-weight: 950 !important;
-}
-
-.v534-intel-grid span {
-    color: #d4d4d8 !important;
-    font-size: .74rem !important;
-}
-
-.v534-intel-grid em {
-    color: #fbbf24 !important;
-    font-style: normal !important;
-    font-size: .74rem !important;
-    font-weight: 900 !important;
-}
-
-.v534-intel-grid small {
-    color: #a3a3a3 !important;
-    font-size: .68rem !important;
-}
 
 /* Gri dengesi: komple gri değil, paneller gri / iç alanlar koyu kontrast. */
 .omega-tab-odds .odds-v528-hero,
@@ -1644,44 +1129,10 @@
    Market Filters / Drawer Cleanup
 ================================ */
 /* Eski gömülü drawer ve grafikler kesin kapalı. */
-.v534-market-drawer,
-.v533-market-picker,
-.v533-intel,
-.v533-pressure-chart,
-.v533-chart-axis,
-.v533-intel-chart {
-    display: none !important;
-}
+
 
 /* Üst filtre sadece: spor butonları + mavi market butonu. Maç/site araması yok. */
-.v536-filters {
-    grid-template-columns: minmax(300px, 390px) minmax(260px, 420px) !important;
-    align-items: center !important;
-    justify-content: start !important;
-    gap: 12px !important;
-    overflow: visible !important;
-}
 
-.v536-filters > input#odds-v528-search {
-    display: none !important;
-}
-
-.v536-filters .v531-sport-switch {
-    min-height: 50px !important;
-    height: 50px !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important;
-    gap: 6px !important;
-    overflow: hidden !important;
-}
-
-.v536-filters .v531-sport-switch button {
-    min-width: 0 !important;
-    height: 38px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
 
 .v536-market-menu {
     position: relative !important;
@@ -1690,42 +1141,6 @@
     max-width: 420px !important;
 }
 
-.v536-market-toggle {
-    width: 100% !important;
-    min-height: 50px !important;
-    display: grid !important;
-    grid-template-columns: minmax(0,1fr) auto !important;
-    gap: 2px 10px !important;
-    align-items: center !important;
-    border: 1px solid rgba(59,130,246,.52) !important;
-    border-radius: 16px !important;
-    background: linear-gradient(180deg, rgba(59,130,246,.20), rgba(59,130,246,.08)), #111827 !important;
-    color: #dbeafe !important;
-    padding: 7px 12px !important;
-    text-align: left !important;
-    cursor: pointer !important;
-    box-shadow: 0 0 0 1px rgba(59,130,246,.10) !important;
-}
-
-.v536-market-toggle span {
-    grid-column: 1 / -1 !important;
-    color: #93c5fd !important;
-    font-size: .64rem !important;
-    font-weight: 950 !important;
-    text-transform: uppercase !important;
-    letter-spacing: .45px !important;
-}
-
-.v536-market-toggle b {
-    color: #eff6ff !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-    font-size: .78rem !important;
-    font-weight: 950 !important;
-}
-
-.v536-market-toggle i { color: #60a5fa !important; }
 
 .v536-market-menu.open .v536-market-toggle {
     border-color: rgba(96,165,250,.80) !important;
@@ -1733,43 +1148,7 @@
 }
 
 /* Ok ile açılan eski düzen: alt alta liste. */
-.v536-market-dropdown {
-    position: absolute !important;
-    top: calc(100% + 8px) !important;
-    left: 0 !important;
-    width: min(520px, calc(100vw - 36px)) !important;
-    max-height: 420px !important;
-    overflow: hidden !important;
-    display: grid !important;
-    gap: 10px !important;
-    padding: 12px !important;
-    border: 1px solid rgba(59,130,246,.42) !important;
-    border-radius: 16px !important;
-    background: linear-gradient(180deg, rgba(59,130,246,.10), rgba(255,255,255,.025)), #111827 !important;
-    box-shadow: 0 22px 55px rgba(0,0,0,.50) !important;
-}
 
-.v536-market-dropdown #odds-v533-market-search {
-    min-height: 42px !important;
-    width: 100% !important;
-    border: 1px solid rgba(96,165,250,.35) !important;
-    border-radius: 12px !important;
-    background: #0b1220 !important;
-    color: #f8fafc !important;
-    padding: 0 12px !important;
-    font-weight: 850 !important;
-    outline: none !important;
-}
-
-.v536-market-dropdown #odds-v533-market-search:focus {
-    border-color: rgba(96,165,250,.80) !important;
-    box-shadow: 0 0 0 3px rgba(59,130,246,.16) !important;
-}
-
-.v536-market-dropdown .v533-selected-market {
-    background: rgba(59,130,246,.14) !important;
-    color: #dbeafe !important;
-}
 
 .v536-market-dropdown .v533-market-results {
     display: grid !important;
@@ -1811,35 +1190,7 @@
 }
 
 /* Ayrı İstihbarat sekmesi: grafik yok. */
-.v536-intel-page {
-    display: grid !important;
-    gap: 14px !important;
-    border: 1px solid rgba(34,197,94,.24) !important;
-    border-radius: 22px !important;
-    background: linear-gradient(180deg, rgba(34,197,94,.08), rgba(255,255,255,.025)), #1b1f25 !important;
-    padding: 16px !important;
-}
 
-.v536-intel-title {
-    display: flex !important;
-    justify-content: space-between !important;
-    gap: 14px !important;
-    align-items: flex-start !important;
-}
-
-.v536-intel-title span { color: #22c55e !important; font-size: .72rem !important; font-weight: 950 !important; letter-spacing: .7px !important; }
-.v536-intel-title h3 { margin: 6px 0 !important; color: #fff !important; font-size: 1.45rem !important; font-weight: 950 !important; }
-.v536-intel-title p { margin: 0 !important; color: #a3a3a3 !important; line-height: 1.45 !important; }
-.v536-intel-title button { min-height: 42px !important; border-radius: 14px !important; border: 1px solid rgba(34,197,94,.35) !important; background: rgba(34,197,94,.12) !important; color: #bbf7d0 !important; font-weight: 950 !important; }
-.v536-intel-controls label { display: grid !important; gap: 8px !important; color: #d4d4d8 !important; font-size: .76rem !important; font-weight: 950 !important; }
-.v536-intel-controls input { width: 100% !important; accent-color: #22c55e !important; }
-.v536-intel-grid { display: grid !important; grid-template-columns: repeat(3, minmax(0,1fr)) !important; gap: 10px !important; }
-.v536-intel-grid article { display: grid !important; gap: 6px !important; border: 1px solid rgba(255,255,255,.10) !important; border-radius: 16px !important; background: #141820 !important; padding: 12px !important; }
-.v536-intel-grid strong { color: #22c55e !important; font-size: .68rem !important; font-weight: 950 !important; }
-.v536-intel-grid b { color: #fff !important; font-weight: 950 !important; }
-.v536-intel-grid span { color: #d4d4d8 !important; font-size: .74rem !important; }
-.v536-intel-grid em { color: #fbbf24 !important; font-style: normal !important; font-size: .74rem !important; font-weight: 900 !important; }
-.v536-intel-grid small { color: #a3a3a3 !important; font-size: .68rem !important; }
 
 /* Gri/koyu denge: her şey gri değil; paneller gri, iç kartlar koyu. */
 .omega-tab-odds .odds-v528-hero,
@@ -1854,10 +1205,10 @@
 .omega-tab-odds .v530-site-odd { background: #141820 !important; }
 
 @media (max-width: 900px) {
-    .v536-filters { grid-template-columns: 1fr !important; }
+    
     .v536-market-menu { max-width: 100% !important; width: 100% !important; }
-    .v536-market-dropdown { width: 100% !important; }
-    .v536-intel-grid { grid-template-columns: 1fr !important; }
+    
+    
 }
 
 /* ===============================
@@ -1929,63 +1280,9 @@
     box-shadow: none !important;
 }
 
-.v536-market-toggle span,
-.v537-market-toggle span {
-    color: #a3a3a3 !important;
-}
-
-.v536-market-toggle b,
-.v537-market-toggle b {
-    color: #f4f4f5 !important;
-}
-
-.v536-market-toggle i,
-.v537-market-toggle i {
-    color: #d4d4d8 !important;
-}
 
 /* Dropdown dar ve butonun altında kalır; sayfaya gömülmüş panel gibi davranmaz. */
-.v536-market-dropdown,
-.v537-market-dropdown {
-    position: absolute !important;
-    top: calc(100% + 8px) !important;
-    left: 0 !important;
-    width: min(540px, calc(100vw - 36px)) !important;
-    max-height: 510px !important;
-    overflow: hidden !important;
-    display: grid !important;
-    gap: 10px !important;
-    padding: 12px !important;
-    border: 1px solid rgba(255,255,255,.16) !important;
-    border-radius: 16px !important;
-    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)), #161a20 !important;
-    box-shadow: 0 22px 55px rgba(0,0,0,.50) !important;
-}
 
-.v536-market-dropdown #odds-v533-market-search,
-.v537-market-dropdown #odds-v533-market-search {
-    min-height: 42px !important;
-    width: 100% !important;
-    border: 1px solid rgba(255,255,255,.14) !important;
-    border-radius: 12px !important;
-    background: #101318 !important;
-    color: #f8fafc !important;
-    padding: 0 12px !important;
-    font-weight: 850 !important;
-    outline: none !important;
-}
-
-.v536-market-dropdown #odds-v533-market-search:focus,
-.v537-market-dropdown #odds-v533-market-search:focus {
-    border-color: rgba(251,191,36,.68) !important;
-    box-shadow: 0 0 0 3px rgba(251,191,36,.12) !important;
-}
-
-.v536-market-dropdown .v533-selected-market,
-.v537-market-dropdown .v533-selected-market {
-    background: rgba(255,255,255,.065) !important;
-    color: #e5e7eb !important;
-}
 
 /* Yeni kapalı/açık kategori yapısı */
 .v537-market-accordion {
@@ -2133,10 +1430,7 @@
 }
 
 @media (max-width: 900px) {
-    .v536-market-dropdown,
-    .v537-market-dropdown {
-        width: min(100%, calc(100vw - 28px)) !important;
-    }
+    
 
     .v537-market-list {
         padding-left: 16px !important;
@@ -2162,68 +1456,9 @@
     box-shadow: none !important;
 }
 
-.v536-market-toggle span,
-.v537-market-toggle span,
-.v535-market-toggle span,
-.v536-market-toggle b,
-.v537-market-toggle b,
-.v535-market-toggle b,
-.v536-market-toggle i,
-.v537-market-toggle i,
-.v535-market-toggle i {
-    color: #e5e7eb !important;
-}
-
-.v536-market-toggle span,
-.v537-market-toggle span,
-.v535-market-toggle span {
-    color: #a3a3a3 !important;
-}
 
 /* Açılan dropdown ve altındaki tüm seçili/sonuç alanları artık mavi değil. */
-.v536-market-dropdown,
-.v537-market-dropdown,
-.v535-market-dropdown {
-    border-color: rgba(255,255,255,.16) !important;
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.022)),
-        #151922 !important;
-}
 
-.v536-market-dropdown #odds-v533-market-search,
-.v537-market-dropdown #odds-v533-market-search,
-.v535-market-dropdown #odds-v533-market-search {
-    border-color: rgba(255,255,255,.16) !important;
-    background: #101318 !important;
-    color: #f8fafc !important;
-}
-
-.v536-market-dropdown #odds-v533-market-search:focus,
-.v537-market-dropdown #odds-v533-market-search:focus,
-.v535-market-dropdown #odds-v533-market-search:focus {
-    border-color: rgba(251,191,36,.70) !important;
-    box-shadow: 0 0 0 3px rgba(251,191,36,.12) !important;
-}
-
-.v536-market-dropdown .v533-selected-market,
-.v537-market-dropdown .v533-selected-market,
-.v535-market-dropdown .v533-selected-market {
-    background: rgba(255,255,255,.065) !important;
-    color: #e5e7eb !important;
-}
-
-.v536-market-dropdown .v533-selected-market span,
-.v537-market-dropdown .v533-selected-market span,
-.v535-market-dropdown .v533-selected-market span {
-    color: #e5e7eb !important;
-}
-
-.v536-market-dropdown .v533-selected-market button,
-.v537-market-dropdown .v533-selected-market button,
-.v535-market-dropdown .v533-selected-market button {
-    background: #2a2f38 !important;
-    color: #f5f5f5 !important;
-}
 
 /* Mavi kategori/list item kalıntıları gri temada kalsın. */
 .v535-market-dropdown .v533-market-results button,
@@ -5507,18 +4742,6 @@
     line-height: 1.45 !important;
 }
 
-.v566-dry-run-preview {
-    display: grid !important;
-    gap: 10px !important;
-    margin-top: 10px !important;
-}
-
-.v566-dry-run-preview span {
-    color: #fde68a !important;
-    font-size: .68rem !important;
-    font-weight: 950 !important;
-    text-transform: uppercase !important;
-}
 
 /* V568 — Statik snapshot veri modu ve kaynak durumu */
 .v568-data-mode,
@@ -5532,12 +4755,6 @@
   margin: 14px 0;
 }
 
-.v568-data-mode {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(140px, 1fr));
-  gap: 10px;
-  align-items: stretch;
-}
 
 .v568-data-mode > div,
 .v568-snapshot-grid article {
