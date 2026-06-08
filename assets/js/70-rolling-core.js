@@ -13,7 +13,9 @@
   const SNAPSHOT_KEY = "v756_rolling_report_cards_v1";
   const SNAPSHOT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
   let HISTORY_OPEN_MODE = null;
+  let LOG_CENTER_OPEN_MODE = null;
   let HISTORY_FILTER = "today";
+  let CONFIRM_DIALOG = null;
 
   const DEFAULT_STATE = {
     bank: 1000,
@@ -307,7 +309,7 @@
         <td>${money(r.stake)}</td>
         <td>${isCrypto ? money(r.odds || 0) : escapeHtml(String(r.odds || 0))}</td>
         <td><span class="v512-history-status ${r.status}">${r.status === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</span></td>
-        <td class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${money(r.pnl)}</td>
+        <td><div class="v757-history-pnl-cell"><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${money(r.pnl)}</span><button type="button" class="v757-history-delete" data-history-delete="${mode}:${escapeHtml(r.id || "")}" title="Bu LOG kaydını sil"><i class="fa-solid fa-trash"></i></button></div></td>
       </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede geçmiş kaydı yok.</td></tr>`;
     return `
       <div class="v512-history-overlay">
@@ -315,14 +317,14 @@
           <div class="v512-history-head">
             <div>
               <b>${isCrypto ? "KRİPTO İŞLEM GEÇMİŞİ" : "BAHİS GEÇMİŞİ"}</b>
-              <span>${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · ${wins} kazanç / ${losses} kayıp · P/L ${money(pnl)}</span>
+              <span>${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · ${wins} kazanç / ${losses} kayıp · K/Z ${money(pnl)}</span>
             </div>
             <button type="button" data-history-close>×</button>
           </div>
           <div class="v512-history-filters">${filters}</div>
           <div class="v512-history-table-wrap">
             <table class="v512-history-table">
-              <thead><tr><th>Tarih / Saat</th><th>${isCrypto ? "İşlem" : "Maç / Not"}</th><th>Tutar</th><th>${isCrypto ? "Net K/Z $" : "Oran"}</th><th>Sonuç</th><th>P/L</th></tr></thead>
+              <thead><tr><th>Tarih / Saat</th><th>${isCrypto ? "İşlem" : "Maç / Not"}</th><th>Tutar</th><th>${isCrypto ? "Net K/Z $" : "Oran"}</th><th>Sonuç</th><th>K/Z</th></tr></thead>
               <tbody>${body}</tbody>
             </table>
           </div>
@@ -330,6 +332,26 @@
       </div>`;
   }
 
+  function renderConfirmDialog() {
+    if (!CONFIRM_DIALOG) return "";
+    const tone = CONFIRM_DIALOG.tone || "warn";
+    return `
+      <div class="v757-confirm-overlay">
+        <section class="v757-confirm-modal ${tone}">
+          <button type="button" class="v757-confirm-x" data-confirm-no>×</button>
+          <div class="v757-confirm-icon"><i class="fa-solid ${tone === "danger" ? "fa-triangle-exclamation" : "fa-circle-check"}"></i></div>
+          <div>
+            <b>${escapeHtml(CONFIRM_DIALOG.title || "İşlem Onayı")}</b>
+            <p>${escapeHtml(CONFIRM_DIALOG.message || "Bu işlemi onaylıyor musun?")}</p>
+            ${CONFIRM_DIALOG.detail ? `<span>${escapeHtml(CONFIRM_DIALOG.detail)}</span>` : ""}
+          </div>
+          <div class="v757-confirm-actions">
+            <button type="button" class="ghost" data-confirm-no>İptal</button>
+            <button type="button" class="ok" data-confirm-yes>${escapeHtml(CONFIRM_DIALOG.confirmText || "Onayla")}</button>
+          </div>
+        </section>
+      </div>`;
+  }
 
   function ensureQuickTemplates(state) {
     if (!state.quickTemplates || typeof state.quickTemplates !== "object") state.quickTemplates = {};
@@ -343,56 +365,113 @@
     if (!t) return 0;
     return Math.max(0, Math.min(100, (Number(current || 0) / t) * 100));
   }
+  function activeRowsForMode(mode, state) {
+    const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
+    const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
+    return list.slice(0, count).map((slot, index) => ({ ...slot, index })).filter(s => String(s.name || "").trim() || Number(s.stake || 0) || Number(s.odds || 0));
+  }
+  function pendingRowsForMode(mode, state) {
+    return activeRowsForMode(mode, state).filter(s => s.status !== "win" && s.status !== "loss");
+  }
+  function renderPendingBoard(mode, state) {
+    const isCrypto = mode === "crypto";
+    const rows = pendingRowsForMode(mode, state);
+    const totalStake = rows.reduce((sum, s) => sum + Number(s.stake || 0), 0);
+    const totalOdds = !isCrypto && rows.length ? rows.reduce((p, s) => p * Math.max(1, Number(s.odds || 1)), 1) : 0;
+    const possibleReturn = !isCrypto ? totalStake * totalOdds : 0;
+    const cryptoTarget = isCrypto ? rows.reduce((sum, s) => sum + Math.abs(Number(s.odds || 0)), 0) : 0;
+    const list = rows.length ? rows.slice(0, 20).map(s => `
+      <li>
+        <span>#${s.index + 1}</span>
+        <b>${escapeHtml(s.name || (isCrypto ? "Kripto işlem" : "Maç / seçim"))}</b>
+        <em>${money(s.stake || 0)}</em>
+        <strong>${isCrypto ? `${money(s.odds || 0)} net` : `Oran ${escapeHtml(String(s.odds || "-"))}`}</strong>
+      </li>`).join("") : `<li class="empty"><span>0</span><b>${isCrypto ? "Kutulara işlem yazınca burada bekleyen işlem olarak görünür." : "Kutulara maç yazınca burada kupon listesi oluşur."}</b><em>-</em><strong>BEKLİYOR</strong></li>`;
+    return `
+      <div class="v757-pending-board ${mode}">
+        <div class="v757-pending-head">
+          <div>
+            <b>${isCrypto ? "Bekleyen Kripto İşlemleri" : "Kombine Kupon Alanı"}</b>
+            <span>${isCrypto ? "Tek tek yazdığın işlemler sonuçlanana kadar burada takip edilir." : "Yazdığın maçlar kupon gibi burada toplanır; sonuç verince LOG'a gider."}</span>
+          </div>
+          <div class="v757-pending-metrics">
+            <span>${rows.length} bekleyen</span>
+            <span>${money(totalStake)} tutar</span>
+            <span>${isCrypto ? `${money(cryptoTarget)} net hedef` : `Toplam oran ${totalOdds ? totalOdds.toFixed(2) : "-"}`}</span>
+            ${!isCrypto ? `<span>Olası dönüş ${possibleReturn ? money(possibleReturn) : "-"}</span>` : ""}
+          </div>
+        </div>
+        <ul>${list}</ul>
+      </div>`;
+  }
   function renderModeCommand(mode, slots, state, summary, rollSummaryForMode) {
     const isCrypto = mode === "crypto";
     const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const visible = slots.slice(0, rowCount);
-    const pending = visible.filter(s => s.status === "pending" || s.status === "empty" || !s.status).length;
+    const pending = visible.filter(s => (s.status === "pending" || s.status === "empty" || !s.status) && (String(s.name || "").trim() || Number(s.stake || 0) || Number(s.odds || 0))).length;
     const settled = visible.filter(s => s.status === "win" || s.status === "loss").length;
-    const totalPnl = Number(summary.pnl || 0) + Number(rollSummaryForMode.pnlTotal || 0);
-    const modePlan = getPlanNumbers(state, totalPnl);
-    const start = modePlan.start;
-    const target = modePlan.target;
-    const current = modePlan.current;
-    const pct = modePlan.pct;
+    const history = loadHistory()[mode] || [];
+    const today = filterHistoryRows(history, "today");
+    const week = filterHistoryRows(history, "week");
+    const todayPnl = today.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
+    return `
+      <div class="v751-roll-command v753-roll-log-command v757-roll-compact-command ${mode}">
+        <div class="v757-command-summary">
+          <div>
+            <b>${isCrypto ? "Kripto İşlem Paneli" : "Bahis Kupon Paneli"}</b>
+            <span>${pending} bekleyen · ${settled} kapalı · Bugün ${today.length} LOG · ${summary.wins} W / ${summary.losses} L · ROI ${Number(summary.roi || 0).toFixed(1)}%</span>
+          </div>
+          <div class="v757-command-actions">
+            <button type="button" data-log-center="${mode}"><i class="fa-solid fa-table-list"></i> LOG / Rapor Merkezi</button>
+            <button type="button" data-report-create="${mode}"><i class="fa-solid fa-image"></i> Rapor Resmi</button>
+          </div>
+        </div>
+        <div class="v757-command-micro">
+          <span>Bugün <b class="${todayPnl >= 0 ? "pos" : "neg"}">${signedMoney(todayPnl)}</b></span>
+          <span>Bu hafta <b>${week.length} kayıt</b></span>
+          <span>Sonuç verirken gerçek işlem onayı çıkar; deneme tıklaması LOG'a düşmez.</span>
+        </div>
+      </div>`;
+  }
+
+  function renderLogCenterModal(state) {
+    if (!LOG_CENTER_OPEN_MODE) return "";
+    const mode = LOG_CENTER_OPEN_MODE === "crypto" ? "crypto" : "bet";
+    const isCrypto = mode === "crypto";
     const history = loadHistory()[mode] || [];
     const today = filterHistoryRows(history, "today");
     const week = filterHistoryRows(history, "week");
     const month = filterHistoryRows(history, "month");
-    const todayPnl = today.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
-    const weekPnl = week.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
-    const monthPnl = month.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
-    const todayRows = today.slice(0, 5).map(r => `
+    const pnl = rows => rows.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
+    const todayRows = today.slice(0, 6).map(r => `
       <li>
         <span>${escapeHtml(formatDateTime(r.ts))}</span>
         <b>${escapeHtml(r.name || (isCrypto ? "Kripto işlem" : "Bahis / maç"))}</b>
         <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</em>
-      </li>`).join("") || `<li class="empty"><span>Bugün kapatılan kayıt yok.</span><b>W/L ile kapattığında otomatik loga düşer.</b><em>-</em></li>`;
+      </li>`).join("") || `<li class="empty"><span>Bugün kayıt yok</span><b>Sonuçlanan işlemler burada görünür.</b><em>-</em></li>`;
     return `
-      <div class="v751-roll-command v753-roll-log-command ${mode}">
-        <div class="v751-roll-command-head">
-          <div>
-            <b>${isCrypto ? "Kripto Log Kontrol" : "Bahis Log Kontrol"}</b>
-            <span>20 alan sabit · ${settled} kapalı · ${pending} açık · ${summary.wins} W / ${summary.losses} L · ROI ${Number(summary.roi || 0).toFixed(1)}%</span>
+      <div class="v757-log-center-overlay">
+        <section class="v757-log-center-modal ${mode}">
+          <div class="v512-history-head">
+            <div>
+              <b>${isCrypto ? "KRİPTO LOG / RAPOR MERKEZİ" : "BAHİS LOG / RAPOR MERKEZİ"}</b>
+              <span>LOG geçmişi ayrı, rapor görselleri 7 gün saklanır.</span>
+            </div>
+            <button type="button" data-log-center-close>×</button>
           </div>
-          <div class="v751-roll-progress">
-            <span>Başlangıç ${money(start)} · Güncel ${money(current)}${target ? ` · Hedef ${money(target)}` : " · Hedef bekliyor"}</span>
-            <i><em style="width:${pct.toFixed(1)}%"></em></i>
+          <div class="v753-log-strip v757-log-strip-modal">
+            <div><span>Bugün</span><b>${today.length} kayıt</b><em class="${pnl(today) >= 0 ? "pos" : "neg"}">${signedMoney(pnl(today))}</em></div>
+            <div><span>Bu Hafta</span><b>${week.length} kayıt</b><em class="${pnl(week) >= 0 ? "pos" : "neg"}">${signedMoney(pnl(week))}</em></div>
+            <div><span>Bu Ay</span><b>${month.length} kayıt</b><em class="${pnl(month) >= 0 ? "pos" : "neg"}">${signedMoney(pnl(month))}</em></div>
+            <button type="button" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Detaylı LOG Geçmişi</button>
           </div>
-        </div>
-        <div class="v753-log-strip">
-          <div><span>Bugün Log</span><b>${today.length} kayıt</b><em class="${todayPnl >= 0 ? "pos" : "neg"}">${signedMoney(todayPnl)}</em></div>
-          <div><span>Bu Hafta</span><b>${week.length} kayıt</b><em class="${weekPnl >= 0 ? "pos" : "neg"}">${signedMoney(weekPnl)}</em></div>
-          <div><span>Bu Ay</span><b>${month.length} kayıt</b><em class="${monthPnl >= 0 ? "pos" : "neg"}">${signedMoney(monthPnl)}</em></div>
-          <button type="button" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> LOG / GEÇMİŞ</button>
-        </div>
-        <ul class="v753-log-mini-list">${todayRows}</ul>
-        <div class="v756-report-actions">
-          <button type="button" data-report-create="${mode}"><i class="fa-solid fa-image"></i> Rapor Resmi Oluştur</button>
-          <span>Rapor görselleri 7 gün saklanır; istersen indirir veya silersin.</span>
-        </div>
-        ${renderReportGallery(mode)}
-        <p class="v753-log-note">W/L verdiğinde önce gerçek işlem onayı çıkar. Onaylanan sonuç LOG'a kaydedilir; deneme tıklaması LOG'a düşmez.</p>
+          <ul class="v753-log-mini-list">${todayRows}</ul>
+          <div class="v756-report-actions">
+            <button type="button" data-report-create="${mode}"><i class="fa-solid fa-image"></i> Rapor Resmi Oluştur</button>
+            <span>Raporları indirebilir, silebilir veya 7 gün sonra otomatik temizlenmesini bekleyebilirsin.</span>
+          </div>
+          ${renderReportGallery(mode)}
+        </section>
       </div>`;
   }
 
@@ -517,7 +596,7 @@
     return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
       const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span>${i === 0 ? `<button type="button" class="v512-history-btn ${mode} v515-history-row" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> GEÇMİŞ</button>` : ""}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td>${status}</td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button><button type="button" class="pending" data-mode="${mode}" data-slot="${i}" data-status="pending">BEKLİYOR</button></div></td></tr>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span>${i === 0 ? `<button type="button" class="v512-history-btn ${mode} v515-history-row" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> GEÇMİŞ</button>` : ""}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModePanel(mode, state) {
@@ -539,6 +618,7 @@
         </div>
 
         ${renderModeCommand(mode, slots, state, sum, rollSum)}
+        ${renderPendingBoard(mode, state)}
 
         <details class="rolling-v49-fold ${mode}" open>
           <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
@@ -560,34 +640,37 @@
   function renderPlanControl(state, totalPnl) {
     const plan = getPlanNumbers(state, totalPnl);
     const rows = loadTargetLog();
-    const latest = rows.slice(0, 5).map(r => `
+    const latest = rows.slice(0, 4).map(r => `
       <li>
         <span>${escapeHtml(formatDateTime(r.ts))}</span>
         <b>${money(r.start)} → ${money(r.target)}</b>
         <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</em>
       </li>`).join("") || `<li class="empty"><span>Kayıt yok</span><b>Hedefi bitirince burada kalır.</b><em>-</em></li>`;
     return `
-      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan">
-        <div class="v756-target-title">
-          <b>Rolling Hedef Kontrol</b>
-          <span>Başlangıç, hedef ve güncel bakiye tek satırda tutulur; hedef tamamlanınca LOG'a düşer.</span>
+      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan v757-target-plan">
+        <div class="v756-target-title v757-target-title">
+          <b>Rolling Hedef Takibi</b>
+          <span>Başlangıç ve hedefi yaz. Güncel bakiye otomatik kar/zarardan gelir; gerekirse manuel güncel girebilirsin.</span>
         </div>
-        <div class="v756-target-grid">
+        <div class="v756-target-grid v757-target-grid">
           <label><span>BAŞLANGIÇ</span><input type="number" step="1" data-rolling-quick="start" value="${plan.start}"></label>
           <label><span>HEDEF</span><input type="number" step="1" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
-          <label><span>GÜNCEL</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Otomatik: ${money(plan.autoCurrent)}"></label>
+          <label class="v757-current-field"><span>GÜNCEL</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Manuel güncel"><small>Otomatik güncel: ${money(plan.autoCurrent)}</small></label>
         </div>
-        <div class="v755-target-progress v756-target-progress">
-          <div><span>Başlangıç</span><b>${money(plan.start)}</b></div>
-          <div><span>Güncel</span><b class="${plan.pnl >= 0 ? "pos" : "neg"}">${money(plan.current)}</b></div>
-          <div><span>Hedef</span><b>${plan.target ? money(plan.target) : "Bekliyor"}</b></div>
-          <i><em style="width:${plan.pct.toFixed(1)}%"></em></i>
+        <div class="v757-target-summary">
+          <span>Başlangıç <b>${money(plan.start)}</b></span>
+          <i>→</i>
+          <span>Güncel <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${money(plan.current)}</b></span>
+          <i>→</i>
+          <span>Hedef <b>${plan.target ? money(plan.target) : "Bekliyor"}</b></span>
+          <strong class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)} · ${pctText(plan.growth)}</strong>
+          <em><u style="width:${plan.pct.toFixed(1)}%"></u></em>
         </div>
-        <div class="v755-target-actions v756-target-actions">
-          <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> BİTİR</button>
+        <div class="v755-target-actions v756-target-actions v757-target-actions">
+          <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> HEDEFİ BİTİR</button>
           <button type="button" class="v755-target-reset" data-target-reset>YENİ HEDEF</button>
         </div>
-        <details class="v756-target-log-fold">
+        <details class="v756-target-log-fold v757-target-log-fold">
           <summary>Hedef LOG <span>${rows.length} kayıt</span></summary>
           <ul class="v755-target-log v756-target-log">${latest}</ul>
         </details>
@@ -631,10 +714,34 @@
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
         </div>
+        ${renderLogCenterModal(state)}
         ${renderHistoryModal()}
+        ${renderConfirmDialog()}
       </div>`;
     bindEvents(mount, state);
   }
+  function applySlotResult(state, mode, i, nextStatus) {
+    const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
+    if (!list[i]) list[i] = createSlot(mode, i);
+    const prevStatus = list[i].status;
+    list[i].type = mode;
+    list[i].status = nextStatus;
+    recalcSlot(list[i]);
+    if ((list[i].status === "win" || list[i].status === "loss") && (prevStatus !== list[i].status || list[i].historyStatus !== list[i].status)) {
+      addHistoryRecord(mode, list[i], i);
+    }
+  }
+  function deleteHistoryRecord(mode, id) {
+    const h = loadHistory();
+    h[mode] = (h[mode] || []).filter(r => r.id !== id);
+    saveHistory(h);
+    const state = loadState();
+    ["bet", "crypto"].forEach(m => (state.modeSlots[m] || []).forEach(slot => {
+      if (slot && slot.historyId === id) { slot.historyId = ""; slot.historyStatus = ""; }
+    }));
+    saveState(state);
+  }
+
   function bindEvents(mount, state) {
     mount.querySelectorAll("[data-roll-tab]").forEach(btn => btn.addEventListener("click", () => { setActiveMode(btn.dataset.rollTab); renderModule(); }));
     mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => { const [mode, days] = String(btn.dataset.roll || "bet:7").split(":"); openRolling(mode, Number(days || 7)); }));
@@ -692,6 +799,9 @@
         if (!list[i]) list[i] = createSlot(mode, i);
         list[i][key] = input.value;
         list[i].type = mode;
+        if (String(list[i].name || "").trim() || Number(list[i].stake || 0) || Number(list[i].odds || 0)) {
+          if (list[i].status !== "win" && list[i].status !== "loss") list[i].status = "pending";
+        }
         if (mode === "crypto" && key === "odds") list[i].cryptoPnlMode = "amount";
         recalcSlot(list[i]);
         saveState(state);
@@ -740,11 +850,62 @@
     }));
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = btn.dataset.historyOpen === "crypto" ? "crypto" : "bet";
+      LOG_CENTER_OPEN_MODE = null;
       HISTORY_FILTER = "today";
       renderModule();
     }));
     mount.querySelectorAll("[data-history-close]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = null;
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-log-center]").forEach(btn => btn.addEventListener("click", () => {
+      LOG_CENTER_OPEN_MODE = btn.dataset.logCenter === "crypto" ? "crypto" : "bet";
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-log-center-close]").forEach(btn => btn.addEventListener("click", () => {
+      LOG_CENTER_OPEN_MODE = null;
+      renderModule();
+    }));
+    mount.querySelectorAll(".v757-log-center-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
+      if (event.target !== overlay) return;
+      LOG_CENTER_OPEN_MODE = null;
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-history-delete]").forEach(btn => btn.addEventListener("click", () => {
+      const [mode, id] = String(btn.dataset.historyDelete || "bet:").split(":");
+      if (!id) return;
+      CONFIRM_DIALOG = {
+        type: "deleteHistory",
+        mode: mode === "crypto" ? "crypto" : "bet",
+        id,
+        tone: "danger",
+        title: "LOG kaydı silinsin mi?",
+        message: "Bu işlem geçmişini tamamen silmek istediğinden emin misin?",
+        detail: "Bu sadece LOG geçmişi kaydını siler; aktif kutudaki yazıları ayrıca istersen temizleyebilirsin.",
+        confirmText: "Kalıcı olarak sil"
+      };
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-confirm-no]").forEach(btn => btn.addEventListener("click", () => {
+      CONFIRM_DIALOG = null;
+      renderModule();
+    }));
+    mount.querySelectorAll(".v757-confirm-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
+      if (event.target !== overlay) return;
+      CONFIRM_DIALOG = null;
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-confirm-yes]").forEach(btn => btn.addEventListener("click", () => {
+      const action = CONFIRM_DIALOG;
+      CONFIRM_DIALOG = null;
+      if (!action) return renderModule();
+      if (action.type === "settle") {
+        const fresh = loadState();
+        applySlotResult(fresh, action.mode, Number(action.slot || 0), action.status);
+        saveState(fresh);
+      } else if (action.type === "deleteHistory") {
+        deleteHistoryRecord(action.mode, action.id);
+      }
       renderModule();
     }));
     mount.querySelectorAll(".v512-history-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
@@ -774,20 +935,26 @@
       const mode = btn.dataset.mode, i = Number(btn.dataset.slot);
       const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
       if (!list[i]) list[i] = createSlot(mode, i);
-      const prevStatus = list[i].status;
       const nextStatus = btn.dataset.status;
       if (nextStatus === "win" || nextStatus === "loss") {
         const label = mode === "crypto" ? "kripto işlem" : "bahis / maç";
         const resultLabel = nextStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ");
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
-        if (!confirm(`${name} için sonuç ${resultLabel} olarak LOG'a kaydedilsin mi?\n\nBu gerçek işlem değilse İptal'e bas.`)) return;
+        CONFIRM_DIALOG = {
+          type: "settle",
+          mode,
+          slot: i,
+          status: nextStatus,
+          tone: nextStatus === "loss" ? "danger" : "success",
+          title: "Gerçek işlem onayı",
+          message: `${name} sonucu ${resultLabel} olarak LOG geçmişine kaydedilecek.`,
+          detail: "Deneme tıklamasıysa iptal et. Onaydan sonra bu sonuç LOG'a düşer.",
+          confirmText: `${resultLabel} olarak kaydet`
+        };
+        renderModule();
+        return;
       }
-      list[i].type = mode;
-      list[i].status = nextStatus;
-      recalcSlot(list[i]);
-      if ((list[i].status === "win" || list[i].status === "loss") && (prevStatus !== list[i].status || list[i].historyStatus !== list[i].status)) {
-        addHistoryRecord(mode, list[i], i);
-      }
+      applySlotResult(state, mode, i, nextStatus);
       saveState(state);
       renderModule();
     }));
