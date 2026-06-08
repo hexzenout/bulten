@@ -456,7 +456,7 @@
     const row = document.createElement("div");
     row.className = "v765-extra-match-row";
     row.setAttribute("data-v763-extra-row", `${day}:${slot}`);
-    row.innerHTML = `<span class="v765-extra-spacer" aria-hidden="true"></span><input type="text" data-v763-extra-note placeholder="Maç"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01">`;
+    row.innerHTML = `<input type="text" data-v763-extra-note placeholder="Maç"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01">`;
     list.appendChild(row);
     row.querySelector("input")?.focus();
   };
@@ -473,27 +473,46 @@
 
   function v763DayToolButtons(mode) {
     const activeLabel = mode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v765-excel-feature-controls" data-v765-feature-controls="${mode}">
-      <button type="button" class="v758-row-tool v759-row-tool active" data-v765-feature-open="${mode}:active"><i class="fa-solid fa-list-check"></i> ${activeLabel}</button>
-      <button type="button" class="v758-row-tool v759-row-tool history" data-v765-feature-open="${mode}:history"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
-      <button type="button" class="v758-row-tool v759-row-tool report" data-v765-feature-open="${mode}:report"><i class="fa-solid fa-image"></i> Rapor</button>
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v766-excel-feature-controls" data-v766-feature-controls="${mode}">
+      <button type="button" class="v758-row-tool v759-row-tool active" data-v766-feature-open="${mode}:active" onclick="return omega_RollingExcelOpenFeature(event, '${mode}', 'active')"><i class="fa-solid fa-list-check"></i> ${activeLabel}</button>
+      <button type="button" class="v758-row-tool v759-row-tool history" data-v766-feature-open="${mode}:history" onclick="return omega_RollingExcelOpenFeature(event, '${mode}', 'history')"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
+      <button type="button" class="v758-row-tool v759-row-tool report" data-v766-feature-open="${mode}:report" onclick="return omega_RollingExcelOpenFeature(event, '${mode}', 'report')"><i class="fa-solid fa-image"></i> Rapor</button>
     </div>`;
+  }
+
+  window.omega_RollingExcelOpenFeature = function(event, mode = "bet", kind = "active") {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
+    if (typeof window.omega_RollingOpenFloatingPanel === "function") {
+      window.omega_RollingOpenFloatingPanel(k, m);
+      return false;
+    }
+    if (k === "history" && typeof window.omega_RollingOpenLogCenter === "function") window.omega_RollingOpenLogCenter(m);
+    else if (k === "report" && typeof window.omega_RollingOpenReportCenter === "function") window.omega_RollingOpenReportCenter(m);
+    else if (typeof window.omega_RollingOpenPendingBoard === "function") window.omega_RollingOpenPendingBoard(m);
+    return false;
+  };
+
+  if (!window.__omegaV766ExcelFeatureDelegationBound) {
+    window.__omegaV766ExcelFeatureDelegationBound = true;
+    document.addEventListener("click", function(event) {
+      const btn = event.target.closest && event.target.closest("[data-v766-feature-open]");
+      if (!btn) return;
+      const [modeRaw, kindRaw] = String(btn.dataset.v766FeatureOpen || "bet:active").split(":");
+      window.omega_RollingExcelOpenFeature(event, modeRaw, kindRaw);
+    }, true);
   }
 
   function v765BindExcelFeatureControls(root) {
     const scope = root || document;
-    scope.querySelectorAll("[data-v765-feature-open]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const [modeRaw, kindRaw] = String(btn.dataset.v765FeatureOpen || "bet:active").split(":");
-        const mode = modeRaw === "crypto" ? "crypto" : "bet";
-        const kind = kindRaw === "history" ? "history" : kindRaw === "report" ? "report" : "active";
-        if (typeof window.omega_RollingOpenFloatingPanel === "function") {
-          window.omega_RollingOpenFloatingPanel(kind, mode);
-          return;
-        }
-        if (kind === "history" && typeof window.omega_RollingOpenLogCenter === "function") window.omega_RollingOpenLogCenter(mode);
-        else if (kind === "report" && typeof window.omega_RollingOpenReportCenter === "function") window.omega_RollingOpenReportCenter(mode);
-        else if (typeof window.omega_RollingOpenPendingBoard === "function") window.omega_RollingOpenPendingBoard(mode);
+    scope.querySelectorAll("[data-v766-feature-open]").forEach(btn => {
+      if (btn.dataset.v766Bound === "1") return;
+      btn.dataset.v766Bound = "1";
+      btn.addEventListener("click", event => {
+        const [modeRaw, kindRaw] = String(btn.dataset.v766FeatureOpen || "bet:active").split(":");
+        window.omega_RollingExcelOpenFeature(event, modeRaw, kindRaw);
       });
     });
   }
@@ -589,7 +608,7 @@
               <button onclick="omega_RollingSetDaySlots(${day}, 20)">20</button>
               <button onclick="omega_RollingClearDay(${day})">TEMİZLE</button>
             </div>
-            ${v763DayToolButtons(rollModeV491)}
+            ${day === 1 ? v763DayToolButtons(rollModeV491) : ""}
           </div>
           <div class="capsule-container v32">${cards.join("")}</div>
           <div class="day-result v32"><small>Gün Sonu</small>$${runningBalance.toFixed(2)}</div>
