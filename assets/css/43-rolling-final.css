@@ -3076,3 +3076,221 @@
     flex-direction: column !important;
   }
 }
+
+/* ===============================
+   V762 - Sade aktif bahis ve eski rolling kapsül düzeltmesi
+   =============================== */
+.v762-bet-board {
+  background: rgba(2,6,23,.44) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+.v762-pending-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 12px !important;
+}
+.v762-pending-head .v757-pending-metrics {
+  display: flex !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+}
+.v762-active-list {
+  display: grid !important;
+  gap: 10px !important;
+}
+.v762-active-card {
+  border-radius: 16px !important;
+  padding: 12px !important;
+  background: rgba(15,23,42,.46) !important;
+  box-shadow: none !important;
+}
+.v762-active-card.combo {
+  padding: 0 !important;
+}
+.v762-active-card.combo[open] {
+  border-color: rgba(251,191,36,.24) !important;
+}
+.v762-active-card.combo:not([open]) .v761-combo-stake-line,
+.v762-active-card.combo:not([open]) .v761-metrics,
+.v762-active-card.combo:not([open]) .v761-combo-match-list {
+  display: none !important;
+}
+.v762-active-head {
+  margin-bottom: 10px !important;
+}
+.v762-active-card.combo > .v762-active-head {
+  margin-bottom: 0 !important;
+  padding: 12px !important;
+  background: rgba(251,191,36,.06) !important;
+}
+.v762-summary-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+.v762-shot-btn,
+.v762-mini-add,
+.v762-remove-match {
+  border: 1px solid rgba(255,255,255,.12) !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.78) !important;
+  color: #e5e7eb !important;
+  padding: 7px 9px !important;
+  font-size: .7rem !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+.v762-shot-btn {
+  color: #fde68a !important;
+  border-color: rgba(251,191,36,.22) !important;
+  background: rgba(251,191,36,.08) !important;
+}
+.v762-mini-add,
+.v762-remove-match {
+  width: 34px !important;
+  height: 34px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+.v762-remove-match {
+  color: #fecaca !important;
+  border-color: rgba(248,113,113,.24) !important;
+  background: rgba(248,113,113,.08) !important;
+}
+.v762-bet-edit-grid,
+.v762-combo-stake-line {
+  grid-template-columns: minmax(180px, 1.2fr) minmax(110px,.6fr) minmax(110px,.6fr) !important;
+}
+.v762-combo-stake-line {
+  grid-template-columns: minmax(160px, 240px) 34px auto !important;
+  padding: 12px 12px 0 !important;
+}
+.v762-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  margin-top: 10px !important;
+}
+.v762-metrics span {
+  padding: 8px 9px !important;
+}
+.v762-card-actions {
+  margin-top: 10px !important;
+}
+.v762-combo-match-row {
+  grid-template-columns: 34px minmax(160px,1fr) 96px 90px auto 34px !important;
+  padding: 7px !important;
+}
+.v762-active-table input[value="1.30"]:not(:focus) {
+  color: transparent !important;
+}
+.v760-target-cards {
+  grid-template-columns: repeat(3, minmax(120px, 1fr)) !important;
+  align-items: stretch !important;
+}
+.v760-target-cards div {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.v760-target-cards b {
+  font-size: clamp(.82rem, 1.1vw, .98rem) !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.v760-target-mini span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.v760-target-mini b {
+  white-space: nowrap !important;
+}
+#rolling-excel-overlay .v762-roll-bet-slot {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 7px !important;
+}
+#rolling-excel-overlay .v762-roll-base-row,
+#rolling-excel-overlay .v762-roll-extra-row {
+  display: grid !important;
+  grid-template-columns: minmax(90px, 1fr) 78px auto !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+#rolling-excel-overlay .v762-roll-extra-row {
+  grid-template-columns: minmax(90px, 1fr) 78px !important;
+}
+#rolling-excel-overlay .v762-roll-extra-matches {
+  display: grid !important;
+  gap: 6px !important;
+}
+#rolling-excel-overlay .v762-roll-mini-tools {
+  display: flex !important;
+  gap: 4px !important;
+}
+#rolling-excel-overlay .v762-roll-mini-tools button {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(251,191,36,.25) !important;
+  background: rgba(251,191,36,.10) !important;
+  color: #fde68a !important;
+  font-size: .82rem !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+#rolling-excel-overlay .v762-roll-mini-tools button:last-child {
+  border-color: rgba(248,113,113,.22) !important;
+  color: #fecaca !important;
+  background: rgba(248,113,113,.08) !important;
+}
+#rolling-excel-overlay .v762-roll-stake {
+  margin-top: 0 !important;
+}
+#rolling-excel-overlay .v762-excel-day-actions {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  margin-top: 8px !important;
+}
+#rolling-excel-overlay .v762-excel-day-actions button {
+  border: 1px solid rgba(255,255,255,.12) !important;
+  border-radius: 9px !important;
+  background: rgba(15,23,42,.78) !important;
+  color: #e5e7eb !important;
+  padding: 7px 8px !important;
+  font-size: .68rem !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+#rolling-excel-overlay .v762-excel-day-actions button.active { color: #fde68a !important; border-color: rgba(251,191,36,.22) !important; }
+#rolling-excel-overlay .v762-excel-day-actions button.report { color: #bfdbfe !important; border-color: rgba(96,165,250,.22) !important; }
+body.rolling-active .v758-pending-overlay,
+body.rolling-active .v757-log-center-overlay,
+body.rolling-active .v761-report-center-overlay,
+body.rolling-active .v757-confirm-overlay {
+  z-index: 1000010 !important;
+}
+@media (max-width: 980px) {
+  .v762-bet-edit-grid,
+  .v762-combo-stake-line,
+  .v762-metrics,
+  .v762-combo-match-row,
+  .v760-target-cards {
+    grid-template-columns: 1fr !important;
+  }
+  .v762-summary-actions {
+    align-items: flex-end !important;
+    flex-direction: column !important;
+  }
+}
+body.rolling-active #omega-rolling-block {
+  display: block !important;
+}

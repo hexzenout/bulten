@@ -33,10 +33,15 @@
     if (!box) return;
     const count = qsa(`[data-roll-match-row="${day}-${slot}"]`).length;
     const row = document.createElement("div");
-    row.className = "v761-roll-match-row extra";
+    row.className = "v762-roll-extra-row";
     row.setAttribute("data-roll-match-row", `${day}-${slot}`);
-    row.innerHTML = `<input type="text" data-roll-match-name id="e-n-${day}-${slot}-${count}" placeholder="Maç ${count + 1}"><input type="number" data-roll-match-odds id="e-o-${day}-${slot}-${count}" placeholder="Oran ${count + 1}" step="0.01"><button type="button" onclick="this.closest('.v761-roll-match-row').remove()" title="Bu maçı kaldır">×</button>`;
+    row.innerHTML = `<input type="text" data-roll-match-name id="e-n-${day}-${slot}-${count}" placeholder="Maç"><input type="number" data-roll-match-odds id="e-o-${day}-${slot}-${count}" placeholder="Oran" step="0.01">`;
     box.appendChild(row);
+  };
+  window.omega_RollingRemoveComboMatch = function(day, slot) {
+    const rows = qsa(`#e-extra-${day}-${slot} [data-roll-match-row="${day}-${slot}"]`);
+    const last = rows[rows.length - 1];
+    if (last) last.remove();
   };
 
   function getSoundSettings() {
@@ -508,16 +513,17 @@
               </div>
             </div>
           ` : `
-            <div class="kapsul v32 v761-roll-bet-slot">
-              <div class="v761-roll-match-head"><b>Maç / Oran</b><button type="button" onclick="omega_RollingAddComboMatch(${day}, ${slot})">+ Maç/Oran</button></div>
-              <div class="v761-roll-match-list">
-                <div class="v761-roll-match-row" data-roll-match-row="${day}-${slot}">
-                  <input type="text" data-roll-match-name id="e-n-${day}-${slot}" placeholder="Maç 1">
-                  <input type="number" data-roll-match-odds id="e-o-${day}-${slot}" placeholder="Oran 1" step="0.01">
+            <div class="kapsul v32 v762-roll-bet-slot">
+              <div class="v762-roll-base-row" data-roll-match-row="${day}-${slot}">
+                <input type="text" data-roll-match-name id="e-n-${day}-${slot}" placeholder="Maç">
+                <input type="number" data-roll-match-odds id="e-o-${day}-${slot}" placeholder="Oran" step="0.01">
+                <div class="v762-roll-mini-tools">
+                  <button type="button" onclick="omega_RollingAddComboMatch(${day}, ${slot})" title="Maç / oran ekle">+</button>
+                  <button type="button" onclick="omega_RollingRemoveComboMatch(${day}, ${slot})" title="Son eklenen maçı kaldır">−</button>
                 </div>
-                <div class="v761-roll-extra-matches" id="e-extra-${day}-${slot}"></div>
               </div>
-              <input type="number" class="v761-roll-stake" id="e-a-${day}-${slot}" placeholder="Tutar">
+              <div class="v762-roll-extra-matches" id="e-extra-${day}-${slot}"></div>
+              <input type="number" class="v762-roll-stake" id="e-a-${day}-${slot}" placeholder="Tutar">
               <div class="k-actions v32">
                 <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">KAZANDI</button>
                 <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">KAYBETTİ</button>
@@ -540,10 +546,10 @@
               <button onclick="omega_RollingSetDaySlots(${day}, 20)">20</button>
               <button onclick="omega_RollingClearDay(${day})">TEMİZLE</button>
             </div>
-            <div class="v761-excel-day-links">
-              <button type="button" onclick="window.omega_RollingOpenPending && window.omega_RollingOpenPending('${rollModeV491}')">${isCryptoV491 ? 'Aktif İşlemler' : 'Aktif Bahisler / Kuponlar'}</button>
-              <button type="button" onclick="window.omega_RollingOpenLogCenter && window.omega_RollingOpenLogCenter('${rollModeV491}')">Geçmiş</button>
-              <button type="button" onclick="window.omega_RollingOpenReportCenter && window.omega_RollingOpenReportCenter('${rollModeV491}')">Rapor</button>
+            <div class="v762-excel-day-actions">
+              <button type="button" class="active" onclick="window.omega_RollingOpenPending && window.omega_RollingOpenPending('${rollModeV491}')">${isCryptoV491 ? 'Aktif İşlemler' : 'Aktif Bahisler / Kuponlar'}</button>
+              <button type="button" class="history" onclick="window.omega_RollingOpenLogCenter && window.omega_RollingOpenLogCenter('${rollModeV491}')">Geçmiş</button>
+              <button type="button" class="report" onclick="window.omega_RollingOpenReportCenter && window.omega_RollingOpenReportCenter('${rollModeV491}')">Rapor</button>
             </div>
           </div>
           <div class="capsule-container v32">${cards.join("")}</div>
@@ -602,7 +608,11 @@
     const result = typeof oldOpenRolling === "function" ? oldOpenRolling(days, skipHash) : undefined;
     document.documentElement.classList.remove("rolling-hash-boot");
     document.body.classList.add("rolling-active");
-    if(!skipHash) history.replaceState(null, "", `#finance/rolling/${days}`);
+    if(!skipHash) {
+      const rollingBlock = qs("#omega-rolling-block");
+      const baseHash = (rollingBlock && getComputedStyle(rollingBlock).display !== "none") ? "rolling" : "finance";
+      history.replaceState(null, "", `#${baseHash}/rolling/${days}`);
+    }
     return result;
   };
 

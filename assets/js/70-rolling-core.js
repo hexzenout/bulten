@@ -23,7 +23,7 @@
     bank: 1000,
     modeSlots: { bet: createSlots("bet", 20), crypto: createSlots("crypto", 20) },
     rowCounts: { bet: 20, crypto: 20 },
-    quickTemplates: { bet: { stake: "", odds: "1.30", name: "" }, crypto: { stake: "", odds: "", name: "" } }
+    quickTemplates: { bet: { stake: "", odds: "", name: "" }, crypto: { stake: "", odds: "", name: "" } }
   };
 
   function qs(id) { return document.getElementById(id); }
@@ -208,6 +208,73 @@
       img.src = card.dataUrl;
     } catch { fallback(); }
   }
+  function makeActiveBetShotSvg(slot, index) {
+    const combo = isComboSlot(slot);
+    const totals = combo ? comboTotals(slot) : singleTotals(slot);
+    const matches = combo ? totals.matches : getBetMatches(slot, true).slice(0, 1);
+    const rows = (matches.length ? matches : [{ name: slot.name || "Bahis", odds: slot.odds || "", matchIndex: 0 }]).slice(0, 8);
+    const height = 260 + rows.length * 48;
+    const line = (txt, x, y, size = 18, fill = "#ffffff", weight = 800) => `<text x="${x}" y="${y}" font-family="Inter, Arial, sans-serif" font-size="${size}" font-weight="${weight}" fill="${fill}">${escapeXml(txt)}</text>`;
+    const rowsSvg = rows.map((m, idx) => {
+      const y = 214 + idx * 48;
+      const status = combo ? matchStatusFor(slot, m.matchIndex) : (slot.status || "pending");
+      const statusText = status === "win" ? "KAZANDI" : status === "loss" ? "KAYBETTİ" : "BEKLİYOR";
+      const statusColor = status === "win" ? "#22c55e" : status === "loss" ? "#ef4444" : "#fbbf24";
+      return `
+        <rect x="44" y="${y - 28}" width="992" height="38" rx="12" fill="${idx % 2 ? '#111827' : '#0b1220'}" opacity=".96"/>
+        ${line(String(idx + 1).padStart(2, '0'), 62, y - 4, 14, "#94a3b8", 950)}
+        ${line(String(m.name || `Maç ${idx + 1}`).slice(0, 48), 116, y - 4, 16, "#f8fafc", 900)}
+        ${line("Oran " + (Number(m.odds || 0) > 0 ? Number(m.odds || 0).toFixed(2) : "-"), 700, y - 4, 15, "#e5e7eb", 900)}
+        ${line(statusText, 870, y - 4, 14, statusColor, 950)}`;
+    }).join("");
+    return `<?xml version="1.0" encoding="UTF-8"?>
+      <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="${height}" viewBox="0 0 1080 ${height}">
+        <defs><linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#020617"/><stop offset="1" stop-color="#1f1300"/></linearGradient></defs>
+        <rect width="1080" height="${height}" rx="34" fill="url(#bg)"/>
+        <rect x="28" y="28" width="1024" height="${height - 56}" rx="28" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="2"/>
+        ${line("BULTEN · AKTİF BAHİS", 48, 76, 18, "#fbbf24", 950)}
+        ${line(combo ? "KOMBİNE" : (String(slot.name || "BAHİS").slice(0, 34)), 48, 118, 34, "#ffffff", 950)}
+        ${line(formatDateTime(Date.now()), 48, 149, 15, "#94a3b8", 850)}
+        ${line("Tutar: " + money(totals.stake), 48, 178, 16, "#e5e7eb", 900)}
+        ${line((combo ? "Toplam oran: " : "Oran: ") + (totals.complete ? Number(totals.odds || 0).toFixed(2) : "Eksik bilgi"), 248, 178, 16, "#e5e7eb", 900)}
+        ${line("Olası Kazanç: " + (totals.complete ? money(totals.possibleReturn) : "Eksik bilgi"), 500, 178, 16, "#22c55e", 950)}
+        ${rowsSvg}
+      </svg>`;
+  }
+  function downloadActiveBetShot(slotIndex) {
+    const state = loadState();
+    const slot = state.modeSlots.bet?.[Number(slotIndex || 0)];
+    if (!slot || !slotHasAnyInput(slot)) return;
+    const svg = makeActiveBetShotSvg(slot, Number(slotIndex || 0));
+    const dataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    const fallback = () => {
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `bulten-aktif-bahis-${Number(slotIndex || 0) + 1}.svg`;
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+    try {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth || 1080;
+        canvas.height = img.naturalHeight || 720;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(blob => {
+          if (!blob) return fallback();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `bulten-aktif-bahis-${Number(slotIndex || 0) + 1}.png`;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+        }, "image/png");
+      };
+      img.onerror = fallback;
+      img.src = dataUrl;
+    } catch { fallback(); }
+  }
   function getPlanNumbers(state, totalPnl) {
     const plan = state.quickPlan || {};
     const start = Number.isFinite(Number(plan.start)) ? Number(plan.start) : 100;
@@ -364,9 +431,9 @@
 
   function ensureQuickTemplates(state) {
     if (!state.quickTemplates || typeof state.quickTemplates !== "object") state.quickTemplates = {};
-    if (!state.quickTemplates.bet || typeof state.quickTemplates.bet !== "object") state.quickTemplates.bet = { stake: "", odds: "1.30", name: "" };
+    if (!state.quickTemplates.bet || typeof state.quickTemplates.bet !== "object") state.quickTemplates.bet = { stake: "", odds: "", name: "" };
     if (!state.quickTemplates.crypto || typeof state.quickTemplates.crypto !== "object") state.quickTemplates.crypto = { stake: "", odds: "", name: "" };
-    if (state.quickTemplates.bet.odds === undefined || state.quickTemplates.bet.odds === null || state.quickTemplates.bet.odds === "") state.quickTemplates.bet.odds = "1.30";
+    if (state.quickTemplates.bet.odds === undefined || state.quickTemplates.bet.odds === null) state.quickTemplates.bet.odds = "";
     if (state.quickTemplates.crypto.odds === undefined || state.quickTemplates.crypto.odds === null) state.quickTemplates.crypto.odds = "";
   }
   function progressPct(current, target) {
@@ -378,13 +445,14 @@
     return !!(match && (String(match.name || "").trim() || Number(match.odds || 0) || String(match.status || "").toLowerCase() === "win" || String(match.status || "").toLowerCase() === "loss"));
   }
   function slotHasAnyInput(slot) {
-    return !!(slot && (
-      String(slot.name || "").trim() ||
-      Number(slot.stake || 0) ||
-      Number(slot.odds || 0) ||
-      String(slot.couponStake || "").trim() ||
-      (Array.isArray(slot.matches) && slot.matches.length > 0)
-    ));
+    if (!slot) return false;
+    const hasName = !!String(slot.name || "").trim();
+    const hasStake = Number(slot.stake || 0) > 0;
+    const hasOdds = Number(slot.odds || 0) > 0;
+    const hasCouponStake = !!String(slot.couponStake || "").trim();
+    const hasMatches = Array.isArray(slot.matches) && slot.matches.some(matchHasAnyInput);
+    if (slot.type === "crypto") return hasName || hasStake || hasOdds;
+    return hasName || hasStake || hasCouponStake || hasMatches || (hasOdds && (hasName || hasStake || hasMatches));
   }
   function activeRowsForMode(mode, state) {
     const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
@@ -425,7 +493,7 @@
     return isComboSlot(slot) ? "combo" : "single";
   }
   function betTypeLabel(slot) {
-    return isComboSlot(slot) ? "Kombine" : "Tek";
+    return isComboSlot(slot) ? "Kombine" : "Bahis";
   }
   function comboMatchStatus(slot) {
     return normalMatchStatus(slot?.matchStatus);
@@ -543,41 +611,41 @@
     const disabledAttr = totals.complete ? "" : "disabled";
     const title = String(row.name || "").trim() || `Bahis #${slotIndex + 1}`;
     return `
-      <article class="v761-active-card single">
-        <div class="v761-active-head">
+      <article class="v761-active-card v762-active-card single">
+        <div class="v761-active-head v762-active-head">
           <div>
             <b>${escapeHtml(title)}</b>
-            <span>Bahis Türü: Tek ${infoPillForSlot("bet", row)}</span>
+            <span>Bahis ${infoPillForSlot("bet", row)}</span>
           </div>
-          <button type="button" class="v761-add-match" data-add-bet-match="${slotIndex}"><i class="fa-solid fa-plus"></i> Maç/Oran ekle</button>
+          <button type="button" class="v762-shot-btn" data-bet-shot="${slotIndex}" title="Bu bahsin görselini indir"><i class="fa-solid fa-camera"></i> Screenshot</button>
         </div>
-        <div class="v761-bet-edit-grid single">
+        <div class="v761-bet-edit-grid v762-bet-edit-grid single">
           <label><span>Maç</span><input data-bet-match-edit="${slotIndex}:0:name" value="${escapeHtml(row.name || "")}" placeholder="Maç / seçim"></label>
           <label><span>Oran</span><input data-bet-match-edit="${slotIndex}:0:odds" type="number" step="0.01" value="${row.odds || ""}" placeholder="Oran"></label>
           <label><span>Tutar</span><input data-bet-stake="${slotIndex}" type="number" step="0.01" value="${row.stake || ""}" placeholder="Tutar"></label>
         </div>
-        <div class="v761-metrics">
-          <span>Bahis tutarı <b>${moneyMetric(totals.stake, !totals.missingStake)}</b></span>
+        <div class="v761-metrics v762-metrics">
+          <span>Tutar <b>${moneyMetric(totals.stake, !totals.missingStake)}</b></span>
           <span>Oran <b>${oddsMetric(totals.odds, !totals.missingOdds)}</b></span>
-          <span>Olası dönüş <b>${moneyMetric(totals.possibleReturn, totals.complete)}</b></span>
-          <span>Net kâr <b>${moneyMetric(totals.netProfit, totals.complete)}</b></span>
+          <span>Olası Kazanç <b>${moneyMetric(totals.possibleReturn, totals.complete)}</b></span>
         </div>
-        <div class="v759-pending-actions v761-card-actions">
+        <div class="v759-pending-actions v761-card-actions v762-card-actions">
           <button type="button" class="win" data-mode="bet" data-slot="${slotIndex}" data-status="win" ${disabledAttr}>KAZANDI</button>
           <button type="button" class="loss" data-mode="bet" data-slot="${slotIndex}" data-status="loss" ${disabledAttr}>KAYBETTİ</button>
         </div>
       </article>`;
   }
+
   function renderComboMatchRow(slotIndex, match) {
     const idx = Number(match.matchIndex || 0);
     const status = matchStatusFor({ ...match, matchStatus: match.status }, 0);
     const statusText = status === "win" ? "KAZANDI" : status === "loss" ? "KAYBETTİ" : "BEKLİYOR";
     const ready = Number(match.odds || 0) > 0;
     const disabledAttr = ready ? "" : "disabled";
-    const removeBtn = idx > 0 ? `<button type="button" class="v761-remove-match" data-remove-bet-match="${slotIndex}:${idx}" title="Maçı kaldır"><i class="fa-solid fa-trash"></i></button>` : "";
+    const removeBtn = idx > 0 ? `<button type="button" class="v761-remove-match v762-remove-match" data-remove-bet-match="${slotIndex}:${idx}" title="Maçı kaldır"><i class="fa-solid fa-minus"></i></button>` : "";
     return `
-      <div class="v761-combo-match-row ${status}">
-        <span class="v761-match-no">Maç ${idx + 1}</span>
+      <div class="v761-combo-match-row v762-combo-match-row ${status}">
+        <span class="v761-match-no">${idx + 1}</span>
         <input data-bet-match-edit="${slotIndex}:${idx}:name" value="${escapeHtml(match.name || "")}" placeholder="Maç / seçim">
         <input data-bet-match-edit="${slotIndex}:${idx}:odds" type="number" step="0.01" value="${match.odds || ""}" placeholder="Oran">
         <span class="v757-status-pill ${status}">${statusText}</span>
@@ -588,37 +656,39 @@
         ${removeBtn}
       </div>`;
   }
+
   function renderComboBetCard(row, order, totalCombos) {
     const slotIndex = Number(row.index || 0);
     const totals = comboTotals(row);
-    const title = "Kombine";
     const missingMatchResults = totals.matches.filter(m => matchStatusFor(row, m.matchIndex) === "pending").length;
     const names = totals.matches.map(m => String(m.name || "").trim()).filter(Boolean).join(" + ");
     return `
-      <details class="v761-active-card combo" open>
-        <summary class="v761-active-head combo">
+      <details class="v761-active-card v762-active-card combo">
+        <summary class="v761-active-head v762-active-head combo">
           <div>
-            <b>${title}</b>
-            <span>Bahis Türü: Kombine · ${totals.matches.length} maç · ${missingMatchResults ? `${missingMatchResults} maç sonucu bekliyor` : "tüm maçlar işaretlendi"}</span>
+            <b>Kombine</b>
+            <span>${totals.matches.length} maç · ${missingMatchResults ? `${missingMatchResults} sonuç bekliyor` : "tamamlandı"} ${infoPillForSlot("bet", row)}</span>
             ${names ? `<em>${escapeHtml(names)}</em>` : ""}
           </div>
-          <i class="fa-solid fa-chevron-down"></i>
+          <div class="v762-summary-actions">
+            <button type="button" class="v762-shot-btn" data-bet-shot="${slotIndex}" title="Bu kombinenin görselini indir"><i class="fa-solid fa-camera"></i> Screenshot</button>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
         </summary>
-        <div class="v761-combo-stake-line">
-          <label><span>Kupon Tutarı</span><input data-bet-stake="${slotIndex}" type="number" step="0.01" value="${row.stake || ""}" placeholder="Tek tutar"></label>
-          <button type="button" class="v761-add-match" data-add-bet-match="${slotIndex}"><i class="fa-solid fa-plus"></i> Maç/Oran ekle</button>
+        <div class="v761-combo-stake-line v762-combo-stake-line">
+          <label><span>Kupon Tutarı</span><input data-bet-stake="${slotIndex}" type="number" step="0.01" value="${row.stake || ""}" placeholder="Tutar"></label>
+          <button type="button" class="v761-add-match v762-mini-add" data-add-bet-match="${slotIndex}" title="Maç / oran ekle"><i class="fa-solid fa-plus"></i></button>
           ${infoPillForSlot("bet", row)}
         </div>
-        <div class="v761-metrics">
-          <span>Bahis tutarı <b>${moneyMetric(totals.stake, !totals.missingStake)}</b></span>
-          <span>Toplam oran <b>${oddsMetric(totals.odds, !totals.missingOdds)}</b></span>
-          <span>Olası dönüş <b>${moneyMetric(totals.possibleReturn, totals.complete)}</b></span>
-          <span>Net kâr <b>${moneyMetric(totals.netProfit, totals.complete)}</b></span>
+        <div class="v761-metrics v762-metrics">
+          <span>Tutar <b>${moneyMetric(totals.stake, !totals.missingStake)}</b></span>
+          <span>Toplam Oran <b>${oddsMetric(totals.odds, !totals.missingOdds)}</b></span>
+          <span>Olası Kazanç <b>${moneyMetric(totals.possibleReturn, totals.complete)}</b></span>
         </div>
-        <div class="v761-combo-note">Kombine aktif kalır. Tüm maçlara KAZANDI/KAYBETTİ onayı verildiğinde otomatik Geçmiş’e taşınır.</div>
         <div class="v761-combo-match-list">${totals.matches.map(m => renderComboMatchRow(slotIndex, m)).join("")}</div>
       </details>`;
   }
+
   function addComboHistoryRecord(state, row) {
     const slot = state.modeSlots.bet[row.index];
     if (!slot) return false;
@@ -653,64 +723,34 @@
     const isCrypto = mode === "crypto";
     if (isCrypto) {
       const rows = pendingRowsForMode(mode, state);
-      const totalStake = rows.reduce((sum, s) => sum + Number(s.stake || 0), 0);
-      const cryptoTarget = rows.reduce((sum, s) => sum + Math.abs(Number(s.odds || 0)), 0);
       const missing = rows.filter(s => !isResultReady("crypto", s)).length;
       return `
         <div class="v757-pending-board v759-pending-board v760-crypto-edit-board crypto">
-          <div class="v757-pending-head">
+          <div class="v757-pending-head v762-pending-head">
             <div>
               <b>Aktif Kripto İşlemleri</b>
-              <span>Ayrı kripto düzenleme modalı: işlem/tutar/net K/Z girilen kutu aktif kabul edilir; eksik tutar veya net K/Z varsa sonuç butonu kilitli kalır.</span>
+              <span>İşlem, tutar ve net K/Z alanlarını düzenle; eksik bilgi varsa sonuç butonu kilitli kalır.</span>
             </div>
-            <div class="v757-pending-metrics">
-              <span>${rows.length} aktif</span>
-              <span>${missing} eksik bilgi</span>
-              <span>${money(totalStake)} toplam marjin</span>
-              <span>${money(cryptoTarget)} net hedef</span>
-            </div>
+            <div class="v757-pending-metrics"><span>${rows.length} aktif</span><span>${missing} eksik bilgi</span></div>
           </div>
           <div class="v759-pending-editor v760-pending-editor">
-            ${rows.length ? rows.map((r, idx) => renderCryptoEditRow(r, idx)).join("") : `<div class="v759-empty-note">Kutulara kripto işlem/tutar/net K/Z yazınca burada aktif işlem olarak görünür.</div>`}
+            ${rows.length ? rows.map((r, idx) => renderCryptoEditRow(r, idx)).join("") : `<div class="v759-empty-note">Aktif işlem yok.</div>`}
           </div>
         </div>`;
     }
     const grouped = getBetCouponGroups(state);
-    const totalRows = grouped.rows.length;
-    const singleMissing = grouped.singles.filter(s => !isResultReady("bet", s)).length;
-    const comboMissing = grouped.combos.filter(s => !comboTotals(s).complete).length;
-    const singleCards = grouped.singles.length ? `
-      <div class="v759-pending-section v760-single-section v761-active-section">
-        <h4>Tek Bahisler <span>Bahis Türü: Tek · ${grouped.singles.length}</span></h4>
-        <div class="v760-section-note">Tek bahis kendi maç adı, tutarı ve oranıyla görünür. Kazandı/Kaybetti onayından sonra aktiften düşer ve Geçmiş’e gider.</div>
-        <div class="v761-active-list">${grouped.singles.map(renderSingleBetCard).join("")}</div>
-      </div>` : "";
-    const comboCards = grouped.combos.length ? `
-      <div class="v759-pending-section v760-combo-section v761-active-section">
-        <h4>Kombine Bahisler <span>Bahis Türü: Kombine · ${grouped.combos.length}</span></h4>
-        <div class="v760-section-note">2 veya daha fazla maç/oran satırı varsa sistem otomatik Kombine kabul eder. Tek tutar kullanılır; tüm maçlar işaretlenince kayıt otomatik kapanır.</div>
-        <div class="v761-active-list combo">${grouped.combos.map((r, idx) => renderComboBetCard(r, idx, grouped.combos.length)).join("")}</div>
-      </div>` : "";
+    const cards = grouped.rows.map(row => isComboSlot(row) ? renderComboBetCard(row, 0, grouped.combos.length) : renderSingleBetCard(row)).join("");
     return `
-      <div class="v757-pending-board v759-pending-board v760-bet-board v761-bet-board bet">
-        <div class="v757-pending-head">
+      <div class="v757-pending-board v759-pending-board v760-bet-board v761-bet-board v762-bet-board bet">
+        <div class="v757-pending-head v762-pending-head">
           <div>
             <b>Aktif Bahisler / Kuponlar</b>
-            <span>1 kutu = 1 bahis kaydı. 1 maç varsa Tek, 2+ maç/oran varsa Kombine otomatik oluşur; manuel seçim butonu yok.</span>
-          </div>
-          <div class="v757-pending-metrics">
-            <span>${grouped.singles.length} tek</span>
-            <span>${grouped.combos.length} kombine</span>
-            <span>${totalRows} aktif kayıt</span>
-            <span>${singleMissing + comboMissing} eksik bilgi</span>
+            <span>Boş kutular burada görünmez. 1 maç bahis, 2+ maç otomatik kombine olur.</span>
           </div>
         </div>
-        ${singleCards || ""}
-        ${comboCards || ""}
-        ${!totalRows ? `<div class="v759-empty-note">Kutulara maç/seçim, oran ve tutar yazınca burada aktif bahis veya kombine olarak görünür.</div>` : ""}
+        <div class="v761-active-list v762-active-list">${cards || `<div class="v759-empty-note">Aktif bahis / kupon yok.</div>`}</div>
       </div>`;
   }
-
 
   function renderModeCommand(mode, slots, state, summary, rollSummaryForMode) {
     const isCrypto = mode === "crypto";
@@ -824,7 +864,7 @@
           <div class="v512-history-head">
             <div>
               <b>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ / DÜZENLE" : "AKTİF BAHİSLER / KUPONLAR"}</b>
-              <span>${isCrypto ? "Kripto işlemleri burada ayrı modalda düzenlenir; tutar + net K/Z tamamlanınca sonuç onayı açılır." : "Tek bahis ve kombine kuponlar ayrı akışta tutulur; eksikler etiketlenir, sonuçlar onayla Geçmiş’e gider."}</span>
+              <span>${isCrypto ? "Kripto işlemleri burada ayrı modalda düzenlenir; tutar + net K/Z tamamlanınca sonuç onayı açılır." : "Aktif bahisler sade listelenir; kombine tıklanınca maçlar açılır, eksikler etiketlenir."}</span>
             </div>
             <button type="button" data-pending-close>×</button>
           </div>
@@ -834,7 +874,7 @@
   }
 
   function createSlot(type = "bet", i = 0) {
-    return { id: i + 1, type, name: "", stake: "", odds: type === "bet" ? "1.30" : "", matches: type === "bet" ? [] : undefined, cryptoPnlMode: type === "crypto" ? "amount" : "odds", status: "pending", pnl: 0 };
+    return { id: i + 1, type, name: "", stake: "", odds: "", matches: type === "bet" ? [] : undefined, cryptoPnlMode: type === "crypto" ? "amount" : "odds", status: "pending", pnl: 0 };
   }
   function createSlots(type = "bet", count = 5) {
     return Array.from({ length: count }, (_, i) => createSlot(type, i));
@@ -856,7 +896,13 @@
     state.rowCounts.crypto = Math.max(1, Math.min(20, Number(state.rowCounts.crypto || 20)));
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
     while (state.modeSlots.crypto.length < state.rowCounts.crypto) state.modeSlots.crypto.push(createSlot("crypto", state.modeSlots.crypto.length));
-    state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; if (!Array.isArray(s.matches)) s.matches = []; });
+    state.modeSlots.bet.forEach((s, i) => {
+      s.type = "bet";
+      s.id = i + 1;
+      if (!Array.isArray(s.matches)) s.matches = [];
+      const onlyDefaultOdd = String(s.odds || "") === "1.30" && !String(s.name || "").trim() && !Number(s.stake || 0) && !s.matches.some(matchHasAnyInput);
+      if (onlyDefaultOdd) s.odds = "";
+    });
     state.modeSlots.crypto.forEach((s, i) => { s.type = "crypto"; s.id = i + 1; if (!s.cryptoPnlMode) s.cryptoPnlMode = "amount"; });
   }
   function loadState() {
@@ -936,7 +982,7 @@
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const label = mode === "crypto" ? "Kripto" : "Bahis";
     const pendingLabel = mode === "crypto" ? "Aktif İşlemler" : "Aktif Bahisler / Kuponlar";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls"><span>${count}/20 ${label}</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button><button type="button" class="v758-row-tool report" data-report-center="${mode}"><i class="fa-solid fa-image"></i> Rapor</button></div>`;
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls"><span>${count}/20 ${label}</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-log-center="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button><button type="button" class="v758-row-tool report" data-report-center="${mode}"><i class="fa-solid fa-image"></i> Rapor</button></div>`;
   }
 
   function escapeHtml(str) {
@@ -952,23 +998,16 @@
     const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
     const pnlHead = isCrypto ? "PNL" : "K/Z";
-    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table v761-active-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>${valHead}</th><th>Tutar</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
-      const betType = !isCrypto ? betDisplayType(s) : "";
-      const isCombo = !isCrypto && betType === "combo";
-      const rowStatus = isCombo ? (comboTotals(s).allSettled ? comboTotals(s).finalStatus : "pending") : (s.status === "win" || s.status === "loss" ? s.status : "pending");
-      const status = rowStatus === "win" ? winText : rowStatus === "loss" ? lossText : (isCombo ? `${betMatchCount(s)} MAÇ BEKLİYOR` : "BEKLİYOR");
-      const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      const typeText = isCrypto ? "Kripto" : betTypeLabel(s);
+    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table v761-active-table v762-active-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>${valHead}</th><th>Tutar</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
       const ready = isResultReady(mode, s);
-      const disabledAttr = ready ? "" : "disabled";
-      const comboNames = isCombo ? getBetMatches(s, true).map(m => String(m.name || "").trim()).filter(Boolean).join(" + ") : "";
-      const displayName = isCombo ? (comboNames || `${betMatchCount(s)} maçlık kombine`) : (s.name || "");
-      const oddsVal = isCombo ? (comboTotals(s).odds ? comboTotals(s).odds.toFixed(2) : "") : (s.odds || "");
-      const pnlValue = isCombo && s.status !== "win" && s.status !== "loss" ? `<span class="v760-muted-dash">Tüm maçlar bekliyor</span>` : money(s.pnl || 0);
-      const actions = isCombo
-        ? `<button type="button" class="ghost" data-pending-open="bet">DÜZENLE</button>`
-        : `<button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win" ${disabledAttr}>${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss" ${disabledAttr}>${lossText}</button>`;
-      return `<tr class="${!ready && slotHasAnyInput(s) ? "v760-row-missing" : ""}"><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode} ${isCombo ? "combo" : ""}">${typeText}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(displayName)}" placeholder="${notePH}" ${isCombo ? "readonly" : ""}></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${oddsVal}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}" ${isCombo ? "readonly" : ""}></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><div class="v760-table-status"><span class="v757-status-pill ${rowStatus}">${status}</span>${slotHasAnyInput(s) ? infoPillForSlot(mode, s) : ""}</div></td><td class="${pnlClass}">${pnlValue}</td><td><div class="rolling-v47-actions v757-actions">${actions}</div></td></tr>`;
+      const isCombo = mode === "bet" && isComboSlot(s);
+      const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
+      const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
+      const typeText = isCrypto ? "Kripto" : (isCombo ? "Kombine" : "Bahis");
+      const displayName = isCombo ? (getBetMatches(s, false).map(m => String(m.name || "").trim()).filter(Boolean).join(" + ") || "Kombine") : String(s.name || "");
+      const oddsVal = isCombo ? (comboTotals(s).complete ? comboTotals(s).odds.toFixed(2) : "") : (s.odds || "");
+      const actions = `<button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win" ${ready ? "" : "disabled"}>${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss" ${ready ? "" : "disabled"}>${lossText}</button>`;
+      return `<tr class="${!ready && slotHasAnyInput(s) ? "v760-row-missing" : ""}"><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode} ${isCombo ? "combo" : ""}">${typeText}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(displayName)}" placeholder="${notePH}" ${isCombo ? "readonly" : ""}></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${oddsVal}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}" ${isCombo ? "readonly" : ""}></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><div class="v760-table-status"><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span>${slotHasAnyInput(s) ? infoPillForSlot(mode, s) : ""}</div></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions">${actions}</div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
 
@@ -1479,6 +1518,11 @@
     mount.querySelectorAll("[data-report-download]").forEach(btn => btn.addEventListener("click", () => {
       downloadReportCard(btn.dataset.reportDownload);
     }));
+    mount.querySelectorAll("[data-bet-shot]").forEach(btn => btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      downloadActiveBetShot(btn.dataset.betShot);
+    }));
     mount.querySelectorAll("button[data-status]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.mode, i = Number(btn.dataset.slot);
       const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
@@ -1488,7 +1532,7 @@
         const isCombo = mode === "bet" && betDisplayType(list[i]) === "combo";
         const ready = isResultReady(mode, list[i], { comboMatch: isCombo });
         if (!ready) return;
-        const label = mode === "crypto" ? "kripto işlem" : (isCombo ? "kombine maç" : "tek bahis");
+        const label = mode === "crypto" ? "kripto işlem" : (isCombo ? "kombine maç" : "bahis");
         const resultLabel = nextStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ");
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
         const stake = Number(list[i].stake || 0);
@@ -1503,10 +1547,10 @@
           message: `${name} için sonuç: ${resultLabel}.`,
           detail: isCombo ? "Bu sadece kombine içindeki maç sonucunu işaretler; tüm maçlar tamamlanınca kayıt otomatik Geçmiş’e gider." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek.",
           metrics: [
-            { label: "Bahis Türü", value: mode === "crypto" ? "Kripto" : (isCombo ? "Kombine" : "Tek") },
+            { label: "Bahis Türü", value: mode === "crypto" ? "Kripto" : (isCombo ? "Kombine" : "Bahis") },
             { label: "Tutar", value: mode === "crypto" ? money(stake) : (isCombo ? "Kupon tutarı" : money(stake)) },
             { label: mode === "crypto" ? "Net K/Z" : "Oran", value: mode === "crypto" ? money(val) : val.toFixed(2) },
-            { label: "Beklenen K/Z", value: mode === "crypto" ? money(Math.abs(val)) : (isCombo ? "Kupondan hesaplanır" : money(stake * (val - 1))) }
+            { label: "Olası Kazanç", value: mode === "crypto" ? money(Math.abs(val)) : (isCombo ? "Kupondan hesaplanır" : money(stake * val)) }
           ],
           confirmText: `${resultLabel} olarak kaydet`
         };
