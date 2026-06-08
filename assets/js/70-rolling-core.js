@@ -1343,6 +1343,19 @@
     HISTORY_OPEN_MODE = null;
     renderModule();
   };
+  if (!window.__omegaV767RollingFeatureCoreDelegationBound) {
+    window.__omegaV767RollingFeatureCoreDelegationBound = true;
+    document.addEventListener("click", event => {
+      const btn = event.target.closest && event.target.closest("[data-v767-feature-open]");
+      if (!btn) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+      const [modeRaw, kindRaw] = String(btn.dataset.v767FeatureOpen || "bet:active").split(":");
+      window.omega_RollingOpenFloatingPanel(kindRaw, modeRaw);
+    }, true);
+  }
+
   window.omega_RollingV47 = { loadState, saveState, slotSummary, rollingSummary, money };
   window.addEventListener("storage", e => { if ((e.key === STORAGE_KEY || e.key === ROLLING_KEY) && location.hash.startsWith("#rolling")) renderModule(); });
 })();

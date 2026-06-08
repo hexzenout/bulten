@@ -3202,3 +3202,184 @@
     padding-left: 28px !important;
   }
 }
+
+/* ===============================
+   V767 — Bahis 7 Günlük Rolling: Gün 1 panel butonları, +/− dış-sol, dikey kombine kutuları, F5 sızıntı kapatma
+   =============================== */
+#rolling-excel-overlay .v767-excel-feature-controls {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 7px !important;
+  width: 100% !important;
+  margin: 9px 0 0 !important;
+  padding: 0 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+#rolling-excel-overlay .v767-excel-feature-controls .v758-row-tool,
+#rolling-excel-overlay .v767-excel-feature-controls .v759-row-tool {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 100% !important;
+  min-height: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 7px 9px !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  background: rgba(15,23,42,.88) !important;
+  color: #e5e7eb !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  box-shadow: none !important;
+}
+#rolling-excel-overlay .v767-excel-feature-controls .v758-row-tool::before,
+#rolling-excel-overlay .v767-excel-feature-controls .v758-row-tool::after,
+#rolling-excel-overlay .v767-excel-feature-controls .v759-row-tool::before,
+#rolling-excel-overlay .v767-excel-feature-controls .v759-row-tool::after,
+#rolling-excel-overlay .v767-excel-feature-controls i {
+  display: none !important;
+  content: none !important;
+}
+#rolling-excel-overlay .v767-excel-feature-controls .v759-row-tool.active {
+  background: linear-gradient(135deg, rgba(34,197,94,.18), rgba(15,23,42,.88)) !important;
+  border-color: rgba(34,197,94,.30) !important;
+  color: #bbf7d0 !important;
+}
+#rolling-excel-overlay .v767-excel-feature-controls .v759-row-tool.history {
+  background: linear-gradient(135deg, rgba(251,191,36,.18), rgba(15,23,42,.86)) !important;
+  border-color: rgba(251,191,36,.30) !important;
+  color: #fde68a !important;
+}
+#rolling-excel-overlay .v767-excel-feature-controls .v759-row-tool.report {
+  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(15,23,42,.88)) !important;
+  border-color: rgba(96,165,250,.32) !important;
+  color: #bfdbfe !important;
+}
+#rolling-excel-overlay .v767-excel-feature-controls .v759-row-tool:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.08) !important;
+}
+#rolling-excel-overlay .capsule-container.v32 {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  gap: 12px !important;
+  padding: 2px 2px 12px 44px !important;
+  scroll-behavior: smooth !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul {
+  flex: 0 0 260px !important;
+  width: 260px !important;
+  max-width: 260px !important;
+  min-width: 260px !important;
+  min-height: 142px !important;
+  overflow: visible !important;
+}
+#rolling-excel-overlay .v765-bet-entry {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+#rolling-excel-overlay .v765-match-line {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls {
+  position: absolute !important;
+  left: -38px !important;
+  top: 0 !important;
+  width: 25px !important;
+  display: grid !important;
+  grid-template-rows: 17px 17px !important;
+  gap: 4px !important;
+  pointer-events: auto !important;
+  z-index: 6 !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls button {
+  width: 25px !important;
+  min-width: 25px !important;
+  height: 17px !important;
+  min-height: 17px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 5px !important;
+  border: 1px solid rgba(251,191,36,.45) !important;
+  background: rgba(10,10,10,.96) !important;
+  color: #fbbf24 !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls button::before,
+#rolling-excel-overlay .v765-inline-combo-controls button::after {
+  display: none !important;
+  content: none !important;
+}
+#rolling-excel-overlay .v765-extra-match-list {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+#rolling-excel-overlay .v765-extra-match-row {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul input {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+#omega-rolling-feature-host,
+#omega-rolling-feature-host .v758-pending-overlay,
+#omega-rolling-feature-host .v757-log-center-overlay,
+#omega-rolling-feature-host .v757-confirm-overlay {
+  z-index: 100700 !important;
+  pointer-events: auto !important;
+}
+html.rolling-hash-boot body > *:not(#rolling-excel-overlay),
+body.rolling-active > header,
+body.rolling-active > nav,
+body.rolling-active > main {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+@media (max-width: 760px) {
+  #rolling-excel-overlay .capsule-container.v32 {
+    padding-left: 44px !important;
+  }
+  #rolling-excel-overlay .kapsul.v32.v765-bet-kapsul {
+    flex-basis: 240px !important;
+    width: 240px !important;
+    max-width: 240px !important;
+    min-width: 240px !important;
+  }
+}
