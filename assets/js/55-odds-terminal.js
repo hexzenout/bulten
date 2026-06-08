@@ -597,7 +597,7 @@
   }
 
   function isRepoStaticDataPath(url) {
-    return [DATA_SNAPSHOT, DATA_SOURCES, DATA_RUNTIME].includes(String(url || ""));
+    return [DATA_SNAPSHOT, DATA_SOURCES, DATA_RUNTIME, DATA_MARKET_CATALOG].includes(String(url || ""));
   }
 
   async function loadJson(url, fallback) {
