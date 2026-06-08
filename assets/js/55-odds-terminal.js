@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V661-V680 modüler temizlik
+// ORAN TERMİNALİ — güvenli JS toparlama / V681-V700 runtime data ayrıştırma
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -102,207 +102,150 @@
 
 
   // -------------------------------
-  // Mock Odds / Adapter Helpers
+  // Runtime Demo Data / Adapter Helpers
   // -------------------------------
-  const MOCK_SOURCE_RAW_RECORDS = [
-    {
-      id: "raw_fb_a_001", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
-      homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League", startsAt: "2026-06-05T19:00:00Z",
-      sourceMarketName: "Total Goals Over/Under 2.5", selection: "over", line: 2.5, odds: 1.87,
-      period: "full_time", updatedAt: "2026-06-05T18:30:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_fb_a_002", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
-      homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League", startsAt: "2026-06-05T19:00:00Z",
-      sourceMarketName: "Home Team Goals O/U 1.5", selection: "over", line: 1.5, odds: 2.14,
-      period: "full_time", updatedAt: "2026-06-05T18:32:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_fb_a_003", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
-      homeTeam: "Real Madrid", awayTeam: "Barcelona", league: "La Liga", startsAt: "2026-06-05T20:00:00Z",
-      sourceMarketName: "Corners O/U 9.5", selection: "over", line: 9.5, odds: 1.96,
-      period: "full_time", updatedAt: "2026-06-05T18:37:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_fb_a_004", source: "mock_book_a", sourceName: "Mock Book A", sport: "football",
-      homeTeam: "Galatasaray", awayTeam: "Fenerbahçe", league: "Süper Lig", startsAt: "2026-06-05T18:45:00Z",
-      sourceMarketName: "First Half Team 1 Fouls O/U", selection: "over", line: 5.5, odds: 1.81,
-      period: "first_half", updatedAt: "2026-06-05T18:10:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_fb_b_001", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
-      homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League", startsAt: "2026-06-05T19:00:00Z",
-      sourceMarketName: "Match Goals 2.5 O/U", selection: "over", line: 3.5, odds: 2.22,
-      period: "full_time", updatedAt: "2026-06-05T18:34:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_fb_b_002", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
-      homeTeam: "Real Madrid", awayTeam: "Barcelona", league: "La Liga", startsAt: "2026-06-05T20:00:00Z",
-      sourceMarketName: "Away Team Goals O/U 1.5", selection: "under", line: 1.5, odds: 1.69,
-      period: "full_time", updatedAt: "2026-06-05T18:35:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_fb_b_003", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
-      homeTeam: "Galatasaray", awayTeam: "Fenerbahçe", league: "Süper Lig", startsAt: "2026-06-05T18:45:00Z",
-      sourceMarketName: "First Half Home Team Fouls Over 5.5", selection: "over", line: 5.5, odds: 1.84,
-      period: "first_half", updatedAt: "2026-06-05T18:12:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_fb_b_004", source: "mock_book_b", sourceName: "Mock Book B", sport: "football",
-      homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League", startsAt: "2026-06-05T19:00:00Z",
-      sourceMarketName: "Experimental Pressing Index O/U", selection: "over", line: 72.5, odds: 1.77,
-      period: "full_time", updatedAt: "2026-06-05T18:38:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_bk_a_001", source: "mock_book_a", sourceName: "Mock Book A", sport: "basketball",
-      homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-      sourceMarketName: "Both Teams To Score Over 68.5 Points Including OT", selection: "over", line: 68.5, odds: 1.74,
-      period: "full_time_ot_included", updatedAt: "2026-06-05T17:45:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_bk_a_002", source: "mock_book_a", sourceName: "Mock Book A", sport: "basketball",
-      homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
-      sourceMarketName: "Team 1 Points O/U", selection: "over", line: 80.5, odds: 1.82,
-      period: "full_time", updatedAt: "2026-06-05T17:50:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_bk_a_003", source: "mock_book_a", sourceName: "Mock Book A", sport: "basketball",
-      homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
-      sourceMarketName: "Player Points O/U", selection: "over", line: 21.5, odds: 1.79,
-      period: "full_time", updatedAt: "2026-06-05T17:52:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_bk_a_004", source: "mock_book_a", sourceName: "Mock Book A", sport: "basketball",
-      homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-      sourceMarketName: "Total Points O/U", selection: "under", line: 164.5, odds: 1.91,
-      period: "full_time", updatedAt: "2026-06-05T17:46:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_bk_c_001", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
-      homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-      sourceMarketName: "Game Total Points Under 164.5", selection: "under", line: 164.5, odds: 1.88,
-      period: "full_time", updatedAt: "2026-06-05T17:48:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_bk_c_002", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
-      homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
-      sourceMarketName: "Player Points Over 21.5", selection: "over", line: 21.5, odds: 1.76,
-      period: "full_time", updatedAt: "2026-06-05T17:55:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_bk_c_003", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
-      homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-      sourceMarketName: "Both Clubs Over 66.5 Points Including OT", selection: "over", line: 66.5, odds: 1.93,
-      period: "full_time_ot_included", updatedAt: "2026-06-05T17:57:00Z", dataMode: "mock_source"
-    },
-    {
-      id: "raw_bk_c_004", source: "mock_book_c", sourceName: "Mock Book C", sport: "basketball",
-      homeTeam: "Beşiktaş", awayTeam: "Karşıyaka", league: "BSL", startsAt: "2026-06-05T19:30:00Z",
-      sourceMarketName: "Bench Celebration Count O/U", selection: "over", line: 12.5, odds: 1.66,
-      period: "full_time", updatedAt: "2026-06-05T17:58:00Z", dataMode: "mock_source"
-    }
-  ];
-
-  const SOURCE_MARKET_MAPPINGS = [
-    { source: "mock_book_a", sport: "football", sourceMarketName: "Total Goals Over/Under 2.5", marketId: "football.goals.total_2_5_ou", confidence: 0.95 },
-    { source: "mock_book_b", sport: "football", sourceMarketName: "Match Goals 2.5 O/U", marketId: "football.goals.total_2_5_ou", confidence: 0.9 },
-    { source: "mock_book_a", sport: "football", sourceMarketName: "Home Team Goals O/U 1.5", marketId: "football.home_goals_1_5_ou", confidence: 0.92 },
-    { source: "mock_book_b", sport: "football", sourceMarketName: "Away Team Goals O/U 1.5", marketId: "football.away_goals_1_5_ou", confidence: 0.91 },
-    { source: "mock_book_a", sport: "football", sourceMarketName: "Corners O/U 9.5", marketId: "football.corner.total_9_5_ou", confidence: 0.89 },
-    { source: "mock_book_a", sport: "basketball", sourceMarketName: "Both Teams To Score Over 68.5 Points Including OT", marketId: "basket.both_teams_points_line_ou_ot", confidence: 0.88 },
-    { source: "mock_book_a", sport: "basketball", sourceMarketName: "Total Points O/U", marketId: "basket.total_points_ou", confidence: 0.91 },
-    { source: "mock_book_c", sport: "basketball", sourceMarketName: "Game Total Points Under 164.5", marketId: "basket.total_points_ou", confidence: 0.87 },
-    { source: "mock_book_a", sport: "basketball", sourceMarketName: "Team 1 Points O/U", marketId: "basket.team1_points_ou", confidence: 0.86 },
-    { source: "mock_book_c", sport: "basketball", sourceMarketName: "Both Clubs Over 66.5 Points Including OT", marketId: "basket.both_teams_points_line_ou_ot", confidence: 0.84 }
-  ];
-
-  const MOCK_SOURCE_IDS = [...new Set(MOCK_SOURCE_RAW_RECORDS.map(row => row.source))];
-
-  const POLYMARKET_MOCK_RECORDS = [
-    {
-      id: "poly_mock_001", source: "polymarket_mock", category: "crypto",
-      title: "Bitcoin bu hafta 70.000$ üzerinde kapanır mı?", yesPrice: 0.52, noPrice: 0.48,
-      liquidity: 260000, volume24h: 88000, closesInHours: 5.4,
-      tags: ["kripto", "bitcoin", "kısa vade"], dataMode: "mock"
-    }
-  ];
-
-
-  const MOCK_SOURCE_SLOT_MAP = {
-    mock_book_a: "source_book_02",
-    mock_book_b: "source_book_03",
-    mock_book_c: "source_book_04"
+  const DATA_RUNTIME = "assets/data/55-odds-terminal-runtime.json";
+  const FALLBACK_RUNTIME_DATA = {
+    mockSourceRawRecords: [],
+    sourceMarketMappings: [],
+    polymarketMockRecords: [],
+    mockSourceSlotMap: {},
+    sourceTypeSequence: [],
+    mockFixtureSourceA: [],
+    mockFixtureSourceB: [],
+    dryRunSamplePayload: [],
+    dryRunSamplePayloads: {}
   };
 
-  const SOURCE_TYPE_SEQUENCE = [
-    "bookmaker", "bookmaker", "bookmaker", "bookmaker", "bookmaker",
-    "bookmaker", "bookmaker", "bookmaker", "bookmaker", "bookmaker",
-    "bookmaker", "bookmaker", "exchange", "api", "bookmaker"
-  ];
+  let oddsRuntimeDataMeta = { status: "initial", loadedAt: null, file: DATA_RUNTIME };
+  let MOCK_SOURCE_RAW_RECORDS = [];
+  let SOURCE_MARKET_MAPPINGS = [];
+  let MOCK_SOURCE_IDS = [];
+  let POLYMARKET_MOCK_RECORDS = [];
+  let MOCK_SOURCE_SLOT_MAP = {};
+  let SOURCE_TYPE_SEQUENCE = [];
+  let BOOKMAKER_SOURCE_REGISTRY = [];
+  let POLYMARKET_SOURCE_REGISTRY = {};
+  let SOURCE_REGISTRY = [];
+  let MOCK_FIXTURE_SOURCE_A = [];
+  let MOCK_FIXTURE_SOURCE_B = [];
+  let DRY_RUN_SAMPLE_PAYLOAD = [];
+  let DRY_RUN_SAMPLE_PAYLOADS = {};
 
-  const BOOKMAKER_SOURCE_REGISTRY = Array.from({ length: 15 }, (_, index) => {
-    const slot = String(index + 1).padStart(2, "0");
-    const displaySlot = String(index + 1);
-    const sourceId = `source_book_${slot}`;
-    const isFootballFirst = index % 2 === 0;
-    const sports = index % 3 === 0 ? ["football", "basketball"] : isFootballFirst ? ["football"] : ["basketball"];
-    const marketFamilies = sports.flatMap(sport => sport === "football"
-      ? ["football.result", "football.goals", "football.handicap", "football.corners", "football.team_goals"]
-      : ["basket.match", "basket.totals", "basket.handicap", "basket.team_points", "basket.player_props"]);
-    const rawSourceId = Object.entries(MOCK_SOURCE_SLOT_MAP).find(([, mappedSourceId]) => mappedSourceId === sourceId)?.[0] || "";
-    const isMockSlot = Boolean(rawSourceId);
-    const isFirstLiveSlot = index === 0;
-    const mode = isMockSlot ? "mock" : isFirstLiveSlot ? "live_ready" : "planned";
-    const adapterStatus = isMockSlot ? "mock" : isFirstLiveSlot ? "planned" : "missing";
+  function runtimeArray(value) { return Array.isArray(value) ? value : []; }
+  function runtimeObject(value) { return value && typeof value === "object" && !Array.isArray(value) ? value : {}; }
+
+  function buildPolymarketSourceRegistry() {
     return {
-      sourceId,
-      displayName: `Planlanan Kaynak ${displaySlot}`,
-      sourceName: `Planlanan Kaynak ${displaySlot}`,
-      technicalName: sourceId,
-      rawSourceId,
-      type: SOURCE_TYPE_SEQUENCE[index] || "bookmaker",
-      mode,
-      enabled: index < 12,
-      sports,
-      supportedMarketFamilies: [...new Set(marketFamilies)],
-      requiresKey: !isMockSlot,
-      authType: isMockSlot ? "none" : index % 5 === 0 ? "session" : index % 4 === 0 ? "manual" : "api_key",
-      adapterStatus,
-      rateLimitNote: isMockSlot
-        ? "Demo adapter kuru çalıştırılır; gerçek fetch/API/scraping yok."
-        : "Gerçek bağlantı öncesi limit bilgisi bekleniyor; fetch/scraping yok.",
-      legalNote: "Kaynak bağlantısı açılmadan önce kullanım şartları, lisans ve bölgesel uygunluk manuel kontrol edilecek.",
-      lastStatus: isMockSlot ? "mock" : isFirstLiveSlot ? "live_ready" : "planned",
-      priority: index + 1,
-      notes: isMockSlot
-        ? "Dry-run ve karşılaştırma önizlemesi için mock adapter slotu; canlı bağlantı kapalı."
-        : isFirstLiveSlot
-          ? "İlk canlı kaynak slotu için hazırlık alanı; API anahtarı, fetch ve scraping kapalı."
-          : "Güvenli planlanan kaynak; gerçek kaynak adı ve API modeli daha sonra eklenecek."
+      sourceId: "polymarket_mock",
+      displayName: "POLYMARKET Demo",
+      sourceName: "POLYMARKET Demo",
+      technicalName: "polymarket_mock",
+      type: "prediction_market",
+      mode: "mock",
+      enabled: true,
+      sports: ["polymarket", "football", "basketball", "crypto", "macro", "news"],
+      supportedMarketFamilies: ["polymarket.yes_no", "polymarket.liquidity", "polymarket.volume", "polymarket.close_time"],
+      requiresKey: false,
+      authType: "none",
+      adapterStatus: "mock",
+      rateLimitNote: "Demo adapter; gerçek Polymarket bağlantısı yok.",
+      legalNote: "Prediction market verisi bookmaker odds modelinden ayrı değerlendirilir; gerçek bağlantı kapalı.",
+      lastStatus: "mock",
+      priority: 90,
+      notes: "YES/NO, likidite, hacim ve kapanış zamanı bookmaker odds modelinden ayrı tutulur."
     };
-  });
+  }
 
-  const POLYMARKET_SOURCE_REGISTRY = {
-    sourceId: "polymarket_mock",
-    displayName: "POLYMARKET Demo",
-    sourceName: "POLYMARKET Demo",
-    technicalName: "polymarket_mock",
-    type: "prediction_market",
-    mode: "mock",
-    enabled: true,
-    sports: ["polymarket", "football", "basketball", "crypto", "macro", "news"],
-    supportedMarketFamilies: ["polymarket.yes_no", "polymarket.liquidity", "polymarket.volume", "polymarket.close_time"],
-    requiresKey: false,
-    authType: "none",
-    adapterStatus: "mock",
-    rateLimitNote: "Demo adapter; gerçek Polymarket bağlantısı yok.",
-    legalNote: "Prediction market verisi bookmaker odds modelinden ayrı değerlendirilir; gerçek bağlantı kapalı.",
-    lastStatus: "mock",
-    priority: 90,
-    notes: "YES/NO, likidite, hacim ve kapanış zamanı bookmaker odds modelinden ayrı tutulur."
-  };
+  function buildBookmakerSourceRegistry() {
+    const typeSequence = SOURCE_TYPE_SEQUENCE.length ? SOURCE_TYPE_SEQUENCE : [
+      "bookmaker", "bookmaker", "bookmaker", "bookmaker", "bookmaker",
+      "bookmaker", "bookmaker", "bookmaker", "bookmaker", "bookmaker",
+      "bookmaker", "bookmaker", "exchange", "api", "bookmaker"
+    ];
+    return Array.from({ length: 15 }, (_, index) => {
+      const slot = String(index + 1).padStart(2, "0");
+      const displaySlot = String(index + 1);
+      const sourceId = `source_book_${slot}`;
+      const isFootballFirst = index % 2 === 0;
+      const sports = index % 3 === 0 ? ["football", "basketball"] : isFootballFirst ? ["football"] : ["basketball"];
+      const marketFamilies = sports.flatMap(sport => sport === "football"
+        ? ["football.result", "football.goals", "football.handicap", "football.corners", "football.team_goals"]
+        : ["basket.match", "basket.totals", "basket.handicap", "basket.team_points", "basket.player_props"]);
+      const rawSourceId = Object.entries(MOCK_SOURCE_SLOT_MAP).find(([, mappedSourceId]) => mappedSourceId === sourceId)?.[0] || "";
+      const isMockSlot = Boolean(rawSourceId);
+      const isFirstLiveSlot = index === 0;
+      const mode = isMockSlot ? "mock" : isFirstLiveSlot ? "live_ready" : "planned";
+      const adapterStatus = isMockSlot ? "mock" : isFirstLiveSlot ? "planned" : "missing";
+      return {
+        sourceId,
+        displayName: `Planlanan Kaynak ${displaySlot}`,
+        sourceName: `Planlanan Kaynak ${displaySlot}`,
+        technicalName: sourceId,
+        rawSourceId,
+        type: typeSequence[index] || "bookmaker",
+        mode,
+        enabled: index < 12,
+        sports,
+        supportedMarketFamilies: [...new Set(marketFamilies)],
+        requiresKey: !isMockSlot,
+        authType: isMockSlot ? "none" : index % 5 === 0 ? "session" : index % 4 === 0 ? "manual" : "api_key",
+        adapterStatus,
+        rateLimitNote: isMockSlot
+          ? "Demo adapter kuru çalıştırılır; gerçek fetch/API/scraping yok."
+          : "Gerçek bağlantı öncesi limit bilgisi bekleniyor; fetch/scraping yok.",
+        legalNote: "Kaynak bağlantısı açılmadan önce kullanım şartları, lisans ve bölgesel uygunluk manuel kontrol edilecek.",
+        lastStatus: isMockSlot ? "mock" : isFirstLiveSlot ? "live_ready" : "planned",
+        priority: index + 1,
+        notes: isMockSlot
+          ? "Dry-run ve karşılaştırma önizlemesi için mock adapter slotu; canlı bağlantı kapalı."
+          : isFirstLiveSlot
+            ? "İlk canlı kaynak slotu için hazırlık alanı; API anahtarı, fetch ve scraping kapalı."
+            : "Güvenli planlanan kaynak; gerçek kaynak adı ve API modeli daha sonra eklenecek."
+      };
+    });
+  }
 
-  const SOURCE_REGISTRY = [...BOOKMAKER_SOURCE_REGISTRY, POLYMARKET_SOURCE_REGISTRY];
+  function rebuildRuntimeDerivedData() {
+    MOCK_SOURCE_IDS = [...new Set(MOCK_SOURCE_RAW_RECORDS.map(row => row.source))];
+    BOOKMAKER_SOURCE_REGISTRY = buildBookmakerSourceRegistry();
+    POLYMARKET_SOURCE_REGISTRY = buildPolymarketSourceRegistry();
+    SOURCE_REGISTRY = [...BOOKMAKER_SOURCE_REGISTRY, POLYMARKET_SOURCE_REGISTRY];
+  }
+
+  function applyOddsRuntimeData(payload = FALLBACK_RUNTIME_DATA, meta = {}) {
+    const data = runtimeObject(payload);
+    MOCK_SOURCE_RAW_RECORDS = runtimeArray(data.mockSourceRawRecords);
+    SOURCE_MARKET_MAPPINGS = runtimeArray(data.sourceMarketMappings);
+    POLYMARKET_MOCK_RECORDS = runtimeArray(data.polymarketMockRecords);
+    MOCK_SOURCE_SLOT_MAP = runtimeObject(data.mockSourceSlotMap);
+    SOURCE_TYPE_SEQUENCE = runtimeArray(data.sourceTypeSequence);
+    MOCK_FIXTURE_SOURCE_A = runtimeArray(data.mockFixtureSourceA);
+    MOCK_FIXTURE_SOURCE_B = runtimeArray(data.mockFixtureSourceB);
+    DRY_RUN_SAMPLE_PAYLOAD = runtimeArray(data.dryRunSamplePayload);
+    DRY_RUN_SAMPLE_PAYLOADS = runtimeObject(data.dryRunSamplePayloads);
+    if (!Object.keys(DRY_RUN_SAMPLE_PAYLOADS).length && DRY_RUN_SAMPLE_PAYLOAD.length) {
+      DRY_RUN_SAMPLE_PAYLOADS = {
+        flat: { label: "Bookmaker düz dizi", note: "Runtime fallback örneği.", payload: DRY_RUN_SAMPLE_PAYLOAD }
+      };
+    }
+    oddsRuntimeDataMeta = {
+      status: meta.ok ? "loaded" : "fallback",
+      loadedAt: meta.loadedAt || new Date().toISOString(),
+      file: DATA_RUNTIME,
+      recordCount: MOCK_SOURCE_RAW_RECORDS.length,
+      mappingCount: SOURCE_MARKET_MAPPINGS.length,
+      polymarketCount: POLYMARKET_MOCK_RECORDS.length
+    };
+    rebuildRuntimeDerivedData();
+    normalizedMockOddsCache = null;
+    mockComparisonCache = null;
+    polymarketAdapterRecordsCache = null;
+    clearSourceDerivedCaches();
+  }
+
+  rebuildRuntimeDerivedData();
+
   const SOURCE_CONFIG_FILTERS = [
     { id: "all", label: "Tümü" },
     { id: "active", label: "Aktif" },
@@ -312,17 +255,6 @@
     { id: "polymarket", label: "Polymarket" },
     { id: "mock", label: "Demo" },
     { id: "planned", label: "Planlandı" }
-  ];
-
-  const MOCK_FIXTURE_SOURCE_A = [
-    { id: "source_a_arsenal_chelsea", source: "Kaynak A", sport: "football", league: "Premier League", homeTeam: "Arsenal", awayTeam: "Chelsea", startsAt: "2026-06-05T19:00:00Z" },
-    { id: "source_a_fenerbahce_efes", source: "Kaynak A", sport: "basketball", league: "BSL", homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", startsAt: "2026-06-05T18:00:00Z" }
-  ];
-
-  const MOCK_FIXTURE_SOURCE_B = [
-    { id: "source_b_arsenal_chelsea", source: "Kaynak B", sport: "football", league: "Premier League", homeTeam: "Arsenal FC", awayTeam: "Chelsea FC", startsAt: "2026-06-05T19:06:00Z" },
-    { id: "source_b_fenerbahce_efes", source: "Kaynak B", sport: "basketball", league: "Basketbol Süper Ligi", homeTeam: "Fenerbahce Beko", awayTeam: "Anadolu Efes SK", startsAt: "2026-06-05T18:09:00Z" },
-    { id: "source_b_wrong_time", source: "Kaynak B", sport: "basketball", league: "BSL", homeTeam: "Fenerbahce", awayTeam: "Anadolu Efes", startsAt: "2026-06-05T18:45:00Z" }
   ];
 
   // -------------------------------
@@ -642,7 +574,7 @@
   }
 
   function isRepoStaticDataPath(url) {
-    return [DATA_SNAPSHOT, DATA_SOURCES].includes(String(url || ""));
+    return [DATA_SNAPSHOT, DATA_SOURCES, DATA_RUNTIME].includes(String(url || ""));
   }
 
   async function loadJson(url, fallback) {
@@ -693,6 +625,14 @@
     const [sources, snapshot] = await Promise.all([loadStaticOddsSources(force), loadStaticOddsSnapshot(force)]);
     staticRepoDataCache = { sources, snapshot, loadedAt: new Date().toISOString() };
     return staticRepoDataCache;
+  }
+
+  async function loadOddsRuntimeData({ force = false } = {}) {
+    if (!force && oddsRuntimeDataMeta.status === "loaded") return oddsRuntimeDataMeta;
+    const payload = await loadJson(DATA_RUNTIME, null);
+    const ok = Boolean(payload && typeof payload === "object" && Array.isArray(payload.mockSourceRawRecords));
+    applyOddsRuntimeData(ok ? payload : FALLBACK_RUNTIME_DATA, { ok, loadedAt: new Date().toISOString() });
+    return oddsRuntimeDataMeta;
   }
 
   // -------------------------------
@@ -2625,81 +2565,7 @@
   }
 
 
-  const DRY_RUN_SAMPLE_PAYLOAD = [
-    {
-      source: "source_book_01", sport: "football", homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League",
-      startsAt: "2026-06-05T19:00:00Z", sourceMarketName: "Total Goals Over/Under 2.5", selection: "over", line: 2.5, odds: 1.87
-    },
-    {
-      source: "source_book_03", sport: "football", homeTeam: "Arsenal", awayTeam: "Chelsea", league: "Premier League",
-      startsAt: "2026-06-05T19:00:00Z", sourceMarketName: "Match Goals 2.5 O/U", selection: "over", line: 2.5, odds: 1.94
-    }
-  ];
-
-  const DRY_RUN_SAMPLE_PAYLOADS = {
-    flat: {
-      label: "Bookmaker düz dizi",
-      note: "En basit format; her kayıt kendi source/sport bilgisini taşır.",
-      payload: DRY_RUN_SAMPLE_PAYLOAD
-    },
-    nested: {
-      label: "Bookmaker nested",
-      note: "Gerçek adapter çıktısına daha yakın nested records formatı.",
-      payload: {
-        source: "mock_book_a",
-        sport: "basketball",
-        payload: {
-          records: [
-            {
-              homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-              sourceMarketName: "Both Teams To Score Over 68.5 Points Including OT", selection: "over", line: 68.5, odds: 1.74
-            },
-            {
-              homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL", startsAt: "2026-06-05T18:00:00Z",
-              sourceMarketName: "Total Points O/U", selection: "under", line: 164.5, odds: 1.91
-            }
-          ]
-        }
-      }
-    },
-    marketId: {
-      label: "Market ID direkt",
-      note: "Kaynak market adı yoksa stable marketId ile doğrudan katalog bağlantısı.",
-      payload: [
-        {
-          source: "source_book_01", sport: "football", homeTeam: "Real Madrid", awayTeam: "Barcelona", league: "La Liga",
-          startsAt: "2026-06-05T20:00:00Z", marketId: "football.corner.total_9_5_ou", selection: "over", line: 9.5, odds: 1.96
-        },
-        {
-          source: "source_book_04", sport: "basketball", homeTeam: "Fenerbahçe", awayTeam: "Anadolu Efes", league: "BSL",
-          startsAt: "2026-06-05T18:00:00Z", marketId: "basket.total_points_ou", selection: "under", line: 164.5, odds: 1.88
-        }
-      ]
-    },
-    polymarket: {
-      label: "POLYMARKET ayrı",
-      note: "YES/NO fiyatı; bookmaker odds karşılaştırmasına dahil olmaz.",
-      payload: [
-        {
-          source: "polymarket_mock", category: "crypto", title: "Bitcoin bu hafta 70.000$ üzerinde kapanır mı?",
-          yesPrice: 0.52, noPrice: 0.48, liquidity: 260000, volume24h: 88000, closesInHours: 5.4, tags: ["kripto", "bitcoin", "kısa vade"]
-        }
-      ]
-    },
-    mixedError: {
-      label: "Hatalı karışık örnek",
-      note: "Bookmaker + Polymarket karışırsa bilerek reddedilir.",
-      payload: [
-        {
-          source: "mock_book_a", sport: "football", homeTeam: "Arsenal", awayTeam: "Chelsea", startsAt: "2026-06-05T19:00:00Z",
-          sourceMarketName: "Total Goals Over/Under 2.5", selection: "over", line: 2.5, odds: 1.87
-        },
-        {
-          source: "polymarket_mock", category: "crypto", title: "ETH bugün 4000$ üstü kapanır mı?", yesPrice: 0.43, noPrice: 0.57
-        }
-      ]
-    }
-  };
+  // Dry-run sample payloads are loaded from assets/data/55-odds-terminal-runtime.json.
 
   const DRY_RUN_CONTRACT_ROWS = [
     ["Giriş", "JSON Array veya records içeren object"],
@@ -6862,6 +6728,7 @@
   // Init / Public API
   // -------------------------------
   async function load({ force = false } = {}) {
+    await loadOddsRuntimeData({ force });
     const repoData = await loadRepoStaticOddsData({ force });
     state.sources = repoData.sources.ok ? repoData.sources.data : FALLBACK_SOURCES;
     state.snapshot = repoData.snapshot.ok ? repoData.snapshot.data : FALLBACK_SNAPSHOT;
