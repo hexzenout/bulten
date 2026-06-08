@@ -9530,3 +9530,294 @@
   .v628-gate-rows,
   .v628-poly-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------------------------------------------------------
+   V629-V640 — Checkpoint + gerçek veri öncesi final kontrol
+   --------------------------------------------------------- */
+.v640-checkpoint-hero,
+.v640-user-final,
+.v640-boundary-map,
+.v640-panel-audit,
+.v640-release-check,
+.v640-poly-checkpoint {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 24px;
+  padding: 18px;
+  margin: 14px 0;
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.10), transparent 38%),
+    rgba(2, 6, 23, 0.72);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+}
+
+.v640-checkpoint-hero.ready,
+.v640-user-final.ready { border-color: rgba(34, 197, 94, 0.32); }
+.v640-checkpoint-hero.review,
+.v640-user-final.review { border-color: rgba(245, 158, 11, 0.34); }
+.v640-checkpoint-hero.waiting,
+.v640-user-final.waiting { border-color: rgba(148, 163, 184, 0.24); }
+
+.v640-checkpoint-head,
+.v640-section-head,
+.v640-user-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.v640-checkpoint-head span,
+.v640-section-head span,
+.v640-user-head span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(125, 211, 252, 0.92);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.v640-checkpoint-head h3,
+.v640-section-head h3,
+.v640-user-head h3 {
+  margin: 5px 0 4px;
+  color: #f8fafc;
+  font-size: clamp(18px, 2vw, 25px);
+  line-height: 1.12;
+}
+
+.v640-checkpoint-head p,
+.v640-section-head p,
+.v640-user-head p {
+  max-width: 860px;
+  margin: 0;
+  color: rgba(203, 213, 225, 0.74);
+  line-height: 1.45;
+}
+
+.v640-checkpoint-head strong,
+.v640-section-head em,
+.v640-user-head em {
+  flex: 0 0 auto;
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #dbeafe;
+  background: rgba(15, 23, 42, 0.70);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.v640-checkpoint-grid,
+.v640-user-grid,
+.v640-boundary-grid,
+.v640-audit-rows,
+.v640-release-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.v640-user-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.v640-boundary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.v640-audit-rows { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.v640-release-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.v640-checkpoint-grid article,
+.v640-user-grid article,
+.v640-boundary-grid article,
+.v640-audit-rows article,
+.v640-release-steps article {
+  min-height: 104px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 18px;
+  padding: 13px;
+  background: rgba(15, 23, 42, 0.66);
+}
+
+.v640-checkpoint-grid article span,
+.v640-user-grid article span,
+.v640-boundary-grid article span,
+.v640-audit-rows article span,
+.v640-release-steps article span {
+  display: block;
+  margin-bottom: 7px;
+  color: rgba(148, 163, 184, 0.88);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.v640-checkpoint-grid article b,
+.v640-user-grid article b,
+.v640-boundary-grid article b,
+.v640-audit-rows article b,
+.v640-release-steps article b {
+  display: block;
+  color: #f8fafc;
+  font-size: 17px;
+  line-height: 1.18;
+  word-break: break-word;
+}
+
+.v640-checkpoint-grid article small,
+.v640-user-grid article small,
+.v640-boundary-grid article small,
+.v640-audit-rows article small,
+.v640-release-steps article small {
+  display: block;
+  margin-top: 8px;
+  color: rgba(203, 213, 225, 0.68);
+  line-height: 1.35;
+}
+
+.v640-checkpoint-grid article.ready,
+.v640-user-grid article.ready,
+.v640-boundary-grid article.ready,
+.v640-audit-rows article.ready,
+.v640-release-steps article.ready { border-color: rgba(34, 197, 94, 0.30); background: rgba(6, 78, 59, 0.18); }
+
+.v640-checkpoint-grid article.review,
+.v640-user-grid article.review,
+.v640-boundary-grid article.review,
+.v640-audit-rows article.review,
+.v640-release-steps article.review,
+.v640-checkpoint-grid article.warning,
+.v640-user-grid article.warning { border-color: rgba(245, 158, 11, 0.32); background: rgba(120, 53, 15, 0.20); }
+
+.v640-checkpoint-grid article.movement,
+.v640-user-grid article.movement { border-color: rgba(96, 165, 250, 0.32); background: rgba(30, 64, 175, 0.17); }
+
+.v640-checkpoint-grid article.poly,
+.v640-user-grid article.poly,
+.v640-audit-rows article.poly { border-color: rgba(168, 85, 247, 0.32); background: rgba(88, 28, 135, 0.19); }
+
+.v640-checkpoint-grid article.muted,
+.v640-user-grid article.muted,
+.v640-boundary-grid article.muted,
+.v640-audit-rows article.muted,
+.v640-release-steps article.muted { opacity: .82; }
+
+.v640-checkpoint-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.v640-checkpoint-notes span {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: rgba(226, 232, 240, 0.82);
+  background: rgba(15, 23, 42, 0.60);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.v640-user-final.opportunity { background: radial-gradient(circle at top right, rgba(34, 197, 94, 0.14), transparent 38%), rgba(2, 6, 23, 0.72); }
+.v640-user-final.comparison { background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 38%), rgba(2, 6, 23, 0.72); }
+.v640-user-final.movement { background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.13), transparent 38%), rgba(2, 6, 23, 0.72); }
+.v640-user-final.sources { background: radial-gradient(circle at top right, rgba(20, 184, 166, 0.13), transparent 38%), rgba(2, 6, 23, 0.72); }
+
+.v640-poly-checkpoint {
+  border-color: rgba(168, 85, 247, 0.24);
+  background:
+    radial-gradient(circle at top left, rgba(168, 85, 247, 0.18), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.10), transparent 38%),
+    rgba(15, 23, 42, 0.72);
+}
+
+.v640-poly-focus {
+  margin-top: 12px;
+  border: 1px solid rgba(168, 85, 247, 0.20);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(15, 23, 42, 0.68);
+}
+
+.v640-poly-focus b,
+.v640-poly-focus span { display: block; }
+.v640-poly-focus b { color: #f8fafc; font-size: 16px; }
+.v640-poly-focus span { margin-top: 5px; color: rgba(216, 180, 254, 0.82); font-size: 12px; font-weight: 800; }
+
+.v640-yesno-line {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.v640-yesno-line em {
+  position: relative;
+  overflow: hidden;
+  min-height: 30px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 999px;
+  padding: 8px 11px;
+  color: #f8fafc;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 950;
+  background: rgba(2, 6, 23, 0.62);
+}
+
+.v640-yesno-line em::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--w, 0%);
+  background: rgba(34, 197, 94, 0.28);
+  pointer-events: none;
+}
+
+.v640-yesno-line em + em::before { background: rgba(59, 130, 246, 0.26); }
+.v640-source-configuration .v640-boundary-map,
+.v640-source-configuration .v640-panel-audit,
+.v640-source-configuration .v640-release-check { margin-top: 12px; }
+
+@media (max-width: 1220px) {
+  .v640-checkpoint-grid,
+  .v640-user-grid,
+  .v640-boundary-grid,
+  .v640-audit-rows,
+  .v640-release-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 820px) {
+  .v640-checkpoint-head,
+  .v640-section-head,
+  .v640-user-head { flex-direction: column; }
+  .v640-checkpoint-head strong,
+  .v640-section-head em,
+  .v640-user-head em { white-space: normal; }
+  .v640-checkpoint-grid,
+  .v640-user-grid,
+  .v640-boundary-grid,
+  .v640-audit-rows,
+  .v640-release-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .v640-checkpoint-hero,
+  .v640-user-final,
+  .v640-boundary-map,
+  .v640-panel-audit,
+  .v640-release-check,
+  .v640-poly-checkpoint { border-radius: 18px; padding: 14px; }
+  .v640-checkpoint-grid,
+  .v640-user-grid,
+  .v640-boundary-grid,
+  .v640-audit-rows,
+  .v640-release-steps,
+  .v640-yesno-line { grid-template-columns: 1fr; }
+}

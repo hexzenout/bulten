@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V617-V628 mega stabilizasyon + canlı öncesi final hazırlık
+// ORAN TERMİNALİ — güvenli JS toparlama / V629-V640 checkpoint + gerçek veri öncesi final kontrol
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -3788,9 +3788,11 @@
       <h3>${escapeHtml(title)}</h3>
       ${list.length ? renderSignalCards(list, 4) : empty(emptyText)}
     </section>`;
-    return `<section class="v584-movement-board v612-movement-surface v616-movement-surface" aria-label="Oran Hareketleri sade görünüm">
-      ${renderV617MovementMegaPanel(rows, buildV617MegaConsolidationReport({ force: true }))}
+    const checkpointReport = buildV617MegaConsolidationReport({ force: true });
+    return `<section class="v584-movement-board v612-movement-surface v616-movement-surface v640-movement-surface" aria-label="Oran Hareketleri sade görünüm">
+      ${renderV629MovementCheckpoint(rows, checkpointReport)}
       ${renderDeveloperCollapse("Detaylı hareket listeleri", `
+        ${renderV617MovementMegaPanel(rows, checkpointReport)}
         <div class="v584-movement-grid">
           ${block("Yükselen Oranlar", rising, "Yükselen oran hareketi yok.")}
           ${block("Düşen Oranlar", falling, "Düşen oran hareketi yok.")}
@@ -5303,6 +5305,214 @@
 
 
   // -------------------------------
+  // V629-V640 Checkpoint / Final Pre-Live Control
+  // -------------------------------
+  function buildV629CheckpointReport(baseReport = buildV617MegaConsolidationReport()) {
+    const report = baseReport || buildV617MegaConsolidationReport();
+    const gateRows = Array.isArray(report.gate?.gateRows) ? report.gate.gateRows : [];
+    const readySources = gateRows.filter(row => row.status === "ready").length;
+    const reviewSources = gateRows.filter(row => row.status === "review").length;
+    const waitingSources = gateRows.filter(row => row.status === "waiting").length;
+    const totalSources = gateRows.length;
+    const stableScore = Math.round((Number(report.score || 0) * 0.52) + (Number(report.matchPct || 0) * 0.22) + (Number(report.cleanPct || 0) * 0.26));
+    const blockers = [];
+    if (!report.liveClosed) blockers.push("Canlı kapı beklenmedik şekilde açık görünüyor");
+    if (!Number(report.clean || 0)) blockers.push("Temiz bookmaker kayıt yok");
+    if (Number(report.blocked || 0) > 0) blockers.push("Bloklu kayıt geliştirici kontrolü istiyor");
+    if (stableScore < 70) blockers.push("Checkpoint skoru 70 altında");
+    const warnings = [];
+    if (Number(report.hidden || 0) > 0) warnings.push(`${report.hidden} kayıt ana panel dışında tutuluyor`);
+    if (Number(report.duplicate || 0) > 0) warnings.push(`${report.duplicate} duplicate kayıt temizlendi`);
+    if (Number(report.stale || 0) > 0) warnings.push(`${report.stale} bayat kayıt saklı alanda`);
+    if (Number(report.lowConfidence || 0) > 0) warnings.push(`${report.lowConfidence} düşük güven kaydı teknik alanda`);
+    const status = blockers.length ? (Number(report.clean || 0) ? "review" : "waiting") : "ready";
+    const headline = status === "ready" ? "Checkpoint temiz" : status === "review" ? "Checkpoint kontrollü hazır" : "Checkpoint veri bekliyor";
+    const nextAction = status === "ready"
+      ? "Bir sonraki aşamada tek kaynaklı gerçek veri dry-run denemesi planlanabilir."
+      : status === "review"
+        ? "Saklı/bloklu kayıtlar ana fırsat gibi yükseltilmeden teknik blokta kalmalı."
+        : "Önce dry-run veya snapshot kayıt üretimi beklenir.";
+    const finalSteps = [
+      ["1", "Checkpoint", headline, status],
+      ["2", "Tek kaynak dry-run", status === "ready" ? "Sıradaki güvenli aday" : "Kontrol sonrası", status === "ready" ? "ready" : "review"],
+      ["3", "Gerçek adapter", "Kapalı slot hazır", "muted"],
+      ["4", "Ana panel canlı etiketi", "Gerçek veri gelmeden kapalı", "ready"]
+    ];
+    return {
+      ...report,
+      checkpointStatus: status,
+      checkpointHeadline: headline,
+      checkpointNextAction: nextAction,
+      checkpointScore: stableScore,
+      blockers,
+      warnings,
+      readySources,
+      reviewSources,
+      waitingSources,
+      totalSources,
+      finalSteps,
+      panelAudit: [
+        ["Fırsat Radarı", "Kullanıcı", "Tek karar kartı", "ready"],
+        ["Oran Karşılaştırma", "Kullanıcı", "Eşleşme + barem riski", "ready"],
+        ["Oran Hareketleri", "Kullanıcı", "Yükselen/düşen özet", "ready"],
+        ["Kaynaklar", "Kontrol", "Checkpoint + kapalı connector", status],
+        ["POLYMARKET", "Ayrı", "YES/NO prediction akışı", "poly"],
+        ["Dry-run / Adapter", "Geliştirici", "Kapalı teknik blok", "muted"]
+      ]
+    };
+  }
+
+  function renderV629CheckpointMetric(label, value, note = "", tone = "neutral") {
+    return `<article class="${escapeAttr(tone || "neutral")}"><span>${escapeHtml(label)}</span><b>${escapeHtml(String(value ?? "-"))}</b>${note ? `<small>${escapeHtml(String(note))}</small>` : ""}</article>`;
+  }
+
+  function renderV629CheckpointHero(baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV629CheckpointReport(baseReport);
+    const cards = [
+      ["Checkpoint", report.checkpointHeadline, report.checkpointNextAction, report.checkpointStatus],
+      ["Skor", `${report.checkpointScore}/100`, "Mega skor + eşleşme + temiz kayıt oranı", report.checkpointScore >= 75 ? "ready" : "review"],
+      ["Temiz / saklı", `${report.clean}/${report.hidden}`, "Ana panele yalnızca temiz adaylar yükselir", report.hidden ? "review" : "ready"],
+      ["Kaynak", `${report.readySources}/${report.totalSources || 0}`, "Hazır kaynak / toplam kaynak kapısı", report.readySources ? "ready" : "muted"],
+      ["Canlı kapı", report.liveClosed ? "Kapalı" : "Kontrol et", "API, fetch, scraping ve otomatik oynama kapalı", report.liveClosed ? "ready" : "review"],
+      ["Sıradaki", report.checkpointStatus === "ready" ? "Tek kaynak dry-run" : "Kontrol", "Gerçek veri bağlamadan önce son geçiş", report.checkpointStatus]
+    ];
+    const issues = report.blockers.length ? report.blockers : report.warnings.slice(0, 3);
+    return `<section class="v640-checkpoint-hero ${escapeAttr(report.checkpointStatus)}" aria-label="V629-V640 Oran Terminali checkpoint">
+      <div class="v640-checkpoint-head">
+        <div>
+          <span>V629-V640 CHECKPOINT</span>
+          <h3>${escapeHtml(report.checkpointHeadline)}</h3>
+          <p>Oran Terminali gerçek veri öncesi final kontrolde: ana paneller sade, teknik alanlar kapalı, canlı bağlantı kapısı bilinçli şekilde kapalı.</p>
+        </div>
+        <strong>${escapeHtml(report.dataModeLabel)}</strong>
+      </div>
+      <div class="v640-checkpoint-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
+      <div class="v640-checkpoint-notes">${issues.length ? issues.map(item => `<span>${escapeHtml(item)}</span>`).join("") : `<span>Bloklayıcı not yok; canlı etiketi yine kapalı tutuluyor.</span>`}</div>
+    </section>`;
+  }
+
+  function renderV632ConnectorBoundaryMap(baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV629CheckpointReport(baseReport);
+    const slots = [
+      ["Bookmaker API", LIVE_API_CONNECTION_ENABLED ? "açık" : "kapalı", "Gerçek veri bağlanmadı", !LIVE_API_CONNECTION_ENABLED ? "ready" : "review"],
+      ["Fetch / Scrape", FETCH_SCRAPING_ENABLED ? "açık" : "kapalı", "Tarama yok", !FETCH_SCRAPING_ENABLED ? "ready" : "review"],
+      ["Otomatik oynama", AUTO_BETTING_ENABLED ? "açık" : "kapalı", "Sadece izleme / ön kontrol", !AUTO_BETTING_ENABLED ? "ready" : "review"],
+      ["Dry-run", hasActiveDryRunPayload() ? "aktif" : "bekle", "Test verisi önce gelir", hasActiveDryRunPayload() ? "review" : "muted"],
+      ["Snapshot", report.flow?.stages?.find(stage => stage.id === "static_snapshot")?.count || 0, "İkinci veri slotu", "muted"],
+      ["Mock", report.flow?.stages?.find(stage => stage.id === "mock")?.count || 0, "Son fallback slotu", "muted"]
+    ];
+    return `<section class="v640-boundary-map" aria-label="Gerçek veri bağlantı sınırı">
+      <div class="v640-section-head"><div><span>V632 CONNECTOR SINIRI</span><h3>Bağlantı noktası hazır, gerçek veri kapalı</h3><p>Canlı API bağlanacak yer kod içinde ayrıdır; şu an dry-run/snapshot/mock zinciri korunur.</p></div><em>Kapalı güvenlik</em></div>
+      <div class="v640-boundary-grid">${slots.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV636PanelAuditBoard(baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV629CheckpointReport(baseReport);
+    return `<section class="v640-panel-audit" aria-label="Panel sadeleşme denetimi">
+      <div class="v640-section-head"><div><span>V636 PANEL DENETİMİ</span><h3>Ana görünüm kısa, teknik detay kapalı</h3><p>Eski özetler silinmeden geliştirici bloklarına taşındı; route sınırları değişmedi.</p></div><em>${escapeHtml(report.checkpointHeadline)}</em></div>
+      <div class="v640-audit-rows">${report.panelAudit.map(([panel, mode, note, tone]) => `<article class="${escapeAttr(tone)}"><b>${escapeHtml(panel)}</b><span>${escapeHtml(mode)}</span><small>${escapeHtml(note)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV640ReleaseCheckpointPanel(baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV629CheckpointReport(baseReport);
+    return `<section class="v640-release-check" aria-label="V640 final geçiş kontrolü">
+      <div class="v640-section-head"><div><span>V640 FINAL KONTROL</span><h3>Gerçek veri öncesi son karar yolu</h3><p>Bu paket sonrası Oran Terminali hazırlık hattı checkpoint alır; sonraki karar gerçek veri mi, Rolling/Kripto dönüşü mü olacak netleşir.</p></div><em>${escapeHtml(report.checkpointStatus)}</em></div>
+      <div class="v640-release-steps">${report.finalSteps.map(([idx, title, note, tone]) => `<article class="${escapeAttr(tone)}"><span>${escapeHtml(idx)}</span><b>${escapeHtml(title)}</b><small>${escapeHtml(note)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV629OpportunityCheckpoint(engine = oddsSignalEngineResults(), baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV629CheckpointReport(baseReport);
+    const action = report.topSource ? "Kaynak farkını incele" : report.topMovement ? "Hareketi izle" : report.topLine ? "Barem farkını ele" : "Veri bekle";
+    const cards = [
+      ["Aksiyon", action, "Canlı fırsat değildir; ön kontrol sonucudur", report.checkpointStatus],
+      ["En iyi aday", report.topSource ? `${report.topSource.value} · ${report.topSource.score}/100` : "Aday yok", report.topSource ? report.topSource.title : "Aynı market/baremde en az iki kaynak beklenir", report.topSource ? "ready" : "muted"],
+      ["Barem uyarısı", report.topLine ? report.topLine.value : "Temiz", report.topLine ? "Yanıltıcı fark ana fırsat gibi yükselmez" : "Barem riski öne çıkmadı", report.topLine ? "review" : "ready"],
+      ["Hareket", report.topMovement ? report.topMovement.value : "Yok", report.topMovement ? report.topMovement.title : "Snapshot/dry-run hareketi yok", report.topMovement ? "movement" : "muted"],
+      ["Saklı", report.hidden, "Review/blok/bayat/düşük güven teknik alanda", report.hidden ? "review" : "ready"]
+    ];
+    return `<section class="v640-user-final opportunity" aria-label="Fırsat Radarı checkpoint">
+      <div class="v640-user-head"><div><span>FIRSAT RADARI CHECKPOINT</span><h3>${escapeHtml(action)}</h3><p>Fırsat Radarı artık tek karar yüzeyiyle açılır; eski sinyal listeleri kapalı teknik blokta kalır.</p></div><em>Canlı veri değildir</em></div>
+      <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV629ComparisonCheckpoint(data = comparisonEngineResults(), engine = oddsSignalEngineResults(), baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV629CheckpointReport(baseReport);
+    const verdict = report.matchPct >= 70 && !report.blocked ? "Karşılaştırma okunabilir" : report.matchPct ? "Kontrollü karşılaştır" : "Veri bekle";
+    const cards = [
+      ["Karar", verdict, "Market eşleşmesi + barem riski birlikte okunur", report.matchPct >= 70 ? "ready" : "review"],
+      ["Eşleşme", `${report.matchPct}%`, `${data.summary?.matchedMarkets || 0}/${data.summary?.records || 0} kayıt`, report.matchPct >= 70 ? "ready" : "review"],
+      ["En iyi oran", report.topSource ? report.topSource.value : "Yok", report.topSource ? report.topSource.title : "Kaynak farkı adayı yok", report.topSource ? "ready" : "muted"],
+      ["Barem riski", report.topLine ? report.topLine.value : "Temiz", report.topLine ? "Çizgi farkı kontrol ister" : "Yanıltıcı fark görünmüyor", report.topLine ? "review" : "ready"],
+      ["Checkpoint", `${report.checkpointScore}/100`, report.checkpointHeadline, report.checkpointStatus]
+    ];
+    return `<section class="v640-user-final comparison" aria-label="Oran karşılaştırma checkpoint">
+      <div class="v640-user-head"><div><span>ORAN KARŞILAŞTIRMA CHECKPOINT</span><h3>${escapeHtml(verdict)}</h3><p>Karşılaştırma ana karar, eşleşme, en iyi oran ve barem riskine indirildi.</p></div><em>${escapeHtml(displayModeLabel(data.summary?.dataMode || report.mode || "mock"))}</em></div>
+      <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV629MovementCheckpoint(rows = oddsSignalEngineResults().movementSignals || [], baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV629CheckpointReport(baseReport);
+    const list = Array.isArray(rows) ? rows : [];
+    const delta = row => Number(row.deltaPct ?? row.raw?.changePct ?? row.changePct ?? 0);
+    const rising = list.filter(row => delta(row) > 0);
+    const falling = list.filter(row => delta(row) < 0);
+    const strongest = [...list].sort((a, b) => Math.abs(delta(b)) - Math.abs(delta(a)))[0] || null;
+    const cards = [
+      ["Karar", strongest ? "Hareketi izle" : "Hareket bekle", "Canlı fiyat hareketi değildir", strongest ? "movement" : "muted"],
+      ["Yükselen", rising.length, "Pozitif değişim", rising.length ? "ready" : "muted"],
+      ["Düşen", falling.length, "Negatif değişim", falling.length ? "review" : "muted"],
+      ["Sert hareket", strongest ? strongest.value : "Yok", strongest ? strongest.title : "Eşik üstü hareket yok", strongest ? "movement" : "muted"],
+      ["Veri", report.dataModeLabel, "Dry-run/snapshot/mock", "muted"]
+    ];
+    return `<section class="v640-user-final movement" aria-label="Oran hareketleri checkpoint">
+      <div class="v640-user-head"><div><span>ORAN HAREKETLERİ CHECKPOINT</span><h3>${escapeHtml(strongest ? "Hareketi izle" : "Hareket bekle")}</h3><p>Detay listeleri teknik blokta; ana görünümde yükselen/düşen/sert hareket özeti kalır.</p></div><em>Canlı veri değildir</em></div>
+      <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV629SourceCheckpoint(baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV629CheckpointReport(baseReport);
+    const cards = [
+      ["Son karar", report.checkpointHeadline, report.checkpointNextAction, report.checkpointStatus],
+      ["Hazır kaynak", `${report.readySources}/${report.totalSources || 0}`, `${report.reviewSources} kontrol · ${report.waitingSources} bekle`, report.readySources ? "ready" : "muted"],
+      ["Temiz kayıt", report.clean, "Ana panellere çıkabilir", report.clean ? "ready" : "muted"],
+      ["Saklı kayıt", report.hidden, "Kontrol/blok/bayat/düşük güven", report.hidden ? "review" : "ready"],
+      ["Duplicate", report.duplicate, "Ana akışı şişirmez", report.duplicate ? "review" : "ready"],
+      ["Son okuma", formatSourceUpdatedAt(report.flow?.lastReadAt), "Dry-run → snapshot → mock", "muted"]
+    ];
+    return `<section class="v640-user-final sources ${escapeAttr(report.checkpointStatus)}" aria-label="Kaynaklar checkpoint">
+      <div class="v640-user-head"><div><span>KAYNAKLAR CHECKPOINT</span><h3>${escapeHtml(report.checkpointHeadline)}</h3><p>Kaynaklar sekmesinde ilk ekran tek kontrol merkezidir; dry-run/adapter/connector teknik alanda kalır.</p></div><em>API kapalı</em></div>
+      <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
+    </section>`;
+  }
+
+  function renderV629PolymarketCheckpoint(polyRecords = polymarketRecords()) {
+    const queue = buildV605PolymarketQueues(polyRecords);
+    const summary = queue.summary || polymarketSummary(polyRecords);
+    const rows = (queue.byDecision || getPolymarketSignals(polyRecords)).slice(0, 3);
+    const top = rows[0] || null;
+    const yes = top && Number.isFinite(Number(top.yesPrice)) ? Math.max(0, Math.min(100, Number(top.yesPrice) * 100)) : null;
+    const no = top && Number.isFinite(Number(top.noPrice)) ? Math.max(0, Math.min(100, Number(top.noPrice) * 100)) : (yes != null ? 100 - yes : null);
+    const cards = [
+      ["Market", summary.records || polyRecords.length || 0, "Prediction market sayısı", "poly"],
+      ["Kısa vade", summary.shortTerm || 0, "48 saat altı", "review"],
+      ["Likidite", `$${Math.round(summary.liquidity || summary.liquidityTotal || 0).toLocaleString("en-US")}`, "YES/NO likiditesi", "ready"],
+      ["Öne çıkan", top ? (top.question || top.title || top.match || "Market") : "Veri bekle", top ? `Skor ${Math.round(top.rankingScore || top.score || 0)}` : "Ayrı akış", top ? "poly" : "muted"]
+    ];
+    return `<section class="v640-poly-checkpoint" aria-label="POLYMARKET checkpoint">
+      <div class="v640-user-head"><div><span>POLYMARKET CHECKPOINT</span><h3>YES/NO akışı ayrı kalıyor</h3><p>Kısa vade, likidite ve fiyat dengesi normal bookmaker oran motoruna bağlanmadan gösterilir.</p></div><em>Prediction market</em></div>
+      <div class="v640-user-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
+      ${top ? `<div class="v640-poly-focus"><b>${escapeHtml(top.question || top.title || top.match || "Polymarket marketi")}</b><span>${escapeHtml(formatDeadline(top.expiresAt || top.kickoff))} · Likidite $${Math.round(Number(top.liquidity || 0)).toLocaleString("en-US")}</span><div class="v640-yesno-line"><em style="--w:${(yes ?? 0).toFixed(1)}%">YES ${(yes ?? 0).toFixed(1)}¢</em><em style="--w:${(no ?? 0).toFixed(1)}%">NO ${(no ?? 0).toFixed(1)}¢</em></div></div>` : empty("POLYMARKET kayıt bekliyor.")}
+    </section>`;
+  }
+
+
+  // -------------------------------
   // Polymarket Helpers
   // -------------------------------
   function hoursUntil(value) {
@@ -5929,9 +6139,10 @@
         <div><span>Ortalama Güven</span><b>${s.avgScore}</b></div>
       </div>
 
-      ${renderV617PolymarketMegaPanel(polyBase)}
+      ${renderV629PolymarketCheckpoint(polyBase)}
       ${list.length ? `<div class="v541-poly-grid v616-poly-card-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
       ${renderDeveloperCollapse("POLYMARKET teknik özetleri", `
+        ${renderV617PolymarketMegaPanel(polyBase)}
         ${renderV613PolymarketYesNoProBoard(polyBase)}
         ${renderV609PolymarketDecisionDesk(polyBase)}
         ${renderV605PolymarketQueuePanel(polyBase)}
@@ -6026,9 +6237,12 @@
     const report = megaReport.visual;
     const legacyReport = buildV601StabilizationReport();
     return `
-      ${renderV617MegaHero(megaReport)}
-      ${renderV617OpportunityMegaPanel(engine, megaReport)}
+      ${renderV629CheckpointHero(megaReport)}
+      ${renderV629OpportunityCheckpoint(engine, megaReport)}
       ${renderDeveloperCollapse("Detaylı radar ve sinyal teknik alanı", `
+        ${renderV617MegaHero(megaReport)}
+        ${renderV617OpportunityMegaPanel(engine, megaReport)}
+        ${renderV640ReleaseCheckpointPanel(megaReport)}
         ${renderV613FinalSimplicityHero(report)}
         ${renderV613OpportunityFinalPanel(engine, report)}
         ${renderV628PanelCleanupBoard(megaReport)}
@@ -6197,12 +6411,15 @@
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
-      ${renderV617MegaHero(report)}
-      ${renderV617ComparisonMegaPanel(data, engine, report)}
+      ${renderV629CheckpointHero(report)}
+      ${renderV629ComparisonCheckpoint(data, engine, report)}
       ${renderComparisonRows(data)}
       ${renderLineDifferencePreview(data)}
       ${renderDryRunComparisonPreview()}
       ${renderDeveloperCollapse("Karşılaştırma teknik özetleri", `
+        ${renderV617MegaHero(report)}
+        ${renderV617ComparisonMegaPanel(data, engine, report)}
+        ${renderV640ReleaseCheckpointPanel(report)}
         ${renderV613ComparisonFinalPanel(data, engine, report.visual || report)}
         ${renderV609ComparisonUserBoard(data, engine, report.visual || report)}
         ${renderV613TechnicalOrderPanel(report.visual || report)}
@@ -7066,10 +7283,14 @@
 
   function renderSources() {
     const report = buildV617MegaConsolidationReport({ force: true });
-    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration v608-source-configuration v612-source-configuration v616-source-configuration v628-source-configuration" aria-label="Kaynak Yapılandırması">
-      ${renderV617SourcesMegaPanel(report)}
-      ${renderV620SourceGateMatrix(report)}
+    return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration v608-source-configuration v612-source-configuration v616-source-configuration v628-source-configuration v640-source-configuration" aria-label="Kaynak Yapılandırması">
+      ${renderV629SourceCheckpoint(report)}
+      ${renderV632ConnectorBoundaryMap(report)}
+      ${renderV636PanelAuditBoard(report)}
+      ${renderV640ReleaseCheckpointPanel(report)}
       ${renderDeveloperCollapse("Kaynak kontrol merkezi", `
+        ${renderV617SourcesMegaPanel(report)}
+        ${renderV620SourceGateMatrix(report)}
         ${renderV613SourceFinalPanel(report.visual || report)}
         ${renderV628PanelCleanupBoard(report)}
         ${renderV624ConnectorSlotPanel(report)}
