@@ -247,11 +247,13 @@
       mode,
       ts: now,
       row: index + 1,
-      name: String(slot.name || "").trim() || (mode === "crypto" ? "Kripto işlem" : "Bahis / maç"),
+      name: mode === "bet" ? `Bahis Türü: ${betTypeLabel(slot)} · ${String(slot.name || "").trim() || "Bahis / maç"}` : (String(slot.name || "").trim() || "Kripto işlem"),
       stake: Number(slot.stake || 0),
       odds: Number(slot.odds || 0),
       status: slot.status,
-      pnl: Number(slot.pnl || 0)
+      pnl: Number(slot.pnl || 0),
+      betType: mode === "bet" ? betDisplayType(slot) : "",
+      matchStatus: mode === "bet" ? comboMatchStatus(slot) : ""
     };
     h[mode].unshift(rec);
     saveHistory(h);
@@ -336,9 +338,12 @@
   function renderConfirmDialog() {
     if (!CONFIRM_DIALOG) return "";
     const tone = CONFIRM_DIALOG.tone || "warn";
+    const metrics = Array.isArray(CONFIRM_DIALOG.metrics) && CONFIRM_DIALOG.metrics.length
+      ? `<div class="v760-confirm-metrics">${CONFIRM_DIALOG.metrics.map(m => `<div><span>${escapeHtml(m.label || "")}</span><b>${escapeHtml(m.value || "-")}</b></div>`).join("")}</div>`
+      : "";
     return `
       <div class="v757-confirm-overlay">
-        <section class="v757-confirm-modal ${tone}">
+        <section class="v757-confirm-modal v760-confirm-modal ${tone}">
           <button type="button" class="v757-confirm-x" data-confirm-no>×</button>
           <div class="v757-confirm-icon"><i class="fa-solid ${tone === "danger" ? "fa-triangle-exclamation" : "fa-circle-check"}"></i></div>
           <div>
@@ -346,6 +351,8 @@
             <p>${escapeHtml(CONFIRM_DIALOG.message || "Bu işlemi onaylıyor musun?")}</p>
             ${CONFIRM_DIALOG.detail ? `<span>${escapeHtml(CONFIRM_DIALOG.detail)}</span>` : ""}
           </div>
+          ${metrics}
+          <div class="v760-confirm-warning"><i class="fa-solid fa-shield-halved"></i><span>Onaydan sonra kayıt LOG/Geçmiş merkezine işlenir. Deneme tıklamasıysa iptal et.</span></div>
           <div class="v757-confirm-actions">
             <button type="button" class="ghost" data-confirm-no>İptal</button>
             <button type="button" class="ok" data-confirm-yes>${escapeHtml(CONFIRM_DIALOG.confirmText || "Onayla")}</button>
@@ -366,19 +373,28 @@
     if (!t) return 0;
     return Math.max(0, Math.min(100, (Number(current || 0) / t) * 100));
   }
+  function slotHasAnyInput(slot) {
+    return !!(slot && (String(slot.name || "").trim() || Number(slot.stake || 0) || Number(slot.odds || 0) || String(slot.couponStake || "").trim()));
+  }
   function activeRowsForMode(mode, state) {
     const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
-    return list.slice(0, count).map((slot, index) => ({ ...slot, index })).filter(s => String(s.name || "").trim() || Number(s.stake || 0) || Number(s.odds || 0));
+    return list.slice(0, count).map((slot, index) => ({ ...slot, index })).filter(slotHasAnyInput);
   }
   function pendingRowsForMode(mode, state) {
     return activeRowsForMode(mode, state).filter(s => s.status !== "win" && s.status !== "loss");
   }
-  function betDisplayType(slot, totalActive = 1) {
+  function betDisplayType(slot) {
     const raw = String(slot?.betType || "").toLowerCase();
-    if (raw === "single" || raw === "tek") return "single";
     if (raw === "combo" || raw === "kombine") return "combo";
-    return totalActive > 1 ? "combo" : "single";
+    return "single";
+  }
+  function betTypeLabel(slot) {
+    return betDisplayType(slot) === "combo" ? "Kombine" : "Tek";
+  }
+  function comboMatchStatus(slot) {
+    const raw = String(slot?.matchStatus || "pending").toLowerCase();
+    return raw === "win" || raw === "loss" ? raw : "pending";
   }
   function betCouponId(slot) {
     const id = Math.max(1, Math.min(4, Number(slot?.couponId || 1)));
@@ -386,11 +402,10 @@
   }
   function getBetCouponGroups(state) {
     const rows = pendingRowsForMode("bet", state);
-    const totalActive = rows.length;
     const singles = [];
     const groups = {};
     rows.forEach(row => {
-      const type = betDisplayType(row, totalActive);
+      const type = betDisplayType(row);
       if (type === "single") {
         singles.push(row);
         return;
@@ -402,37 +417,79 @@
     const coupons = Object.entries(groups).map(([id, list]) => ({ id: Number(id), rows: list })).sort((a,b) => a.id - b.id);
     return { singles, coupons, rows };
   }
+  function couponStake(rows) {
+    const clean = (rows || []).filter(Boolean);
+    const explicit = clean.find(s => Number(s.couponStake || 0) > 0);
+    if (explicit) return Number(explicit.couponStake || 0);
+    const firstStake = clean.find(s => Number(s.stake || 0) > 0);
+    return Number(firstStake?.stake || 0);
+  }
   function couponTotals(rows) {
     const clean = (rows || []).filter(Boolean);
-    const odds = clean.reduce((p, s) => p * Math.max(1, Number(s.odds || 1)), 1);
-    const firstStake = clean.find(s => Number(s.stake || 0) > 0);
-    const stake = Number(firstStake?.stake || 0);
-    const possibleReturn = stake * odds;
-    const netProfit = possibleReturn - stake;
-    return { stake, odds, possibleReturn, netProfit };
+    const stake = couponStake(clean);
+    const missingStake = stake <= 0;
+    const missingOdds = !clean.length || clean.some(s => Number(s.odds || 0) <= 0);
+    const odds = missingOdds ? 0 : clean.reduce((p, s) => p * Number(s.odds || 1), 1);
+    const possibleReturn = (!missingStake && !missingOdds) ? stake * odds : 0;
+    const netProfit = (!missingStake && !missingOdds) ? possibleReturn - stake : 0;
+    return { stake, odds, possibleReturn, netProfit, missingStake, missingOdds, complete: !missingStake && !missingOdds };
   }
-  function renderPendingEditRow(mode, row, index, totalActive) {
+  function missingInfoForSlot(mode, slot, opts = {}) {
+    const isCrypto = mode === "crypto";
+    const isComboMatch = !!opts.comboMatch;
+    const missing = [];
+    if (!isCrypto && !isComboMatch && Number(slot?.stake || 0) <= 0) missing.push("tutar");
+    if (isCrypto && Number(slot?.stake || 0) <= 0) missing.push("tutar");
+    if (Number(slot?.odds || 0) <= 0) missing.push(isCrypto ? "net K/Z" : "oran");
+    return missing;
+  }
+  function isResultReady(mode, slot, opts = {}) {
+    return missingInfoForSlot(mode, slot, opts).length === 0;
+  }
+  function infoPillForSlot(mode, slot, opts = {}) {
+    const missing = missingInfoForSlot(mode, slot, opts);
+    if (!missing.length) return `<span class="v760-info-pill ready">Bilgi tamam</span>`;
+    return `<span class="v760-info-pill missing">Eksik bilgi: ${escapeHtml(missing.join(" + "))}</span>`;
+  }
+  function moneyMetric(value, ok = true) {
+    return ok ? money(value) : `<em class="v760-missing-text">Eksik bilgi</em>`;
+  }
+  function oddsMetric(value, ok = true) {
+    return ok ? Number(value || 0).toFixed(2) : `<em class="v760-missing-text">Eksik bilgi</em>`;
+  }
+  function renderPendingEditRow(mode, row, index, totalActive, opts = {}) {
     const isCrypto = mode === "crypto";
     const slotIndex = Number(row.index ?? index);
-    const betType = !isCrypto ? betDisplayType(row, totalActive) : "";
+    const betType = !isCrypto ? betDisplayType(row) : "";
+    const isComboMatch = !isCrypto && betType === "combo" && !!opts.comboMatch;
     const couponId = !isCrypto ? betCouponId(row) : 1;
     const resultWin = isCrypto ? "KAZANÇ" : "KAZANDI";
     const resultLoss = isCrypto ? "KAYIP" : "KAYBETTİ";
+    const ready = isResultReady(mode, row, { comboMatch: isComboMatch });
+    const matchStatus = isComboMatch ? comboMatchStatus(row) : (row.status === "win" || row.status === "loss" ? row.status : "pending");
+    const matchStatusText = matchStatus === "win" ? resultWin : matchStatus === "loss" ? resultLoss : "BEKLİYOR";
+    const stakeInput = isComboMatch
+      ? `<input class="v760-combo-stake-locked" value="" placeholder="Kupon tutarı üstte" disabled>`
+      : `<input data-pending-edit="${mode}:${slotIndex}:stake" type="number" step="0.01" value="${row.stake || ""}" placeholder="Tutar">`;
+    const actionAttrs = isComboMatch ? `data-combo-match-status="${slotIndex}:` : `data-mode="${mode}" data-slot="${slotIndex}" data-status="`;
+    const disabledAttr = ready ? "" : "disabled";
     return `
-      <div class="v759-pending-edit-row ${mode}">
+      <div class="v759-pending-edit-row v760-pending-edit-row ${mode} ${isComboMatch ? "combo-match" : ""}">
         <span class="v759-row-no">#${slotIndex + 1}</span>
         ${!isCrypto ? `<select data-pending-edit="${mode}:${slotIndex}:betType"><option value="single" ${betType === "single" ? "selected" : ""}>Tek</option><option value="combo" ${betType === "combo" ? "selected" : ""}>Kombine</option></select><select data-pending-edit="${mode}:${slotIndex}:couponId" ${betType === "combo" ? "" : "disabled"}>${[1,2,3,4].map(n => `<option value="${n}" ${couponId === n ? "selected" : ""}>Kupon ${n}</option>`).join("")}</select>` : ""}
         <input data-pending-edit="${mode}:${slotIndex}:name" value="${escapeHtml(row.name || "")}" placeholder="${isCrypto ? "İşlem" : "Maç / seçim"}">
-        <input data-pending-edit="${mode}:${slotIndex}:stake" type="number" step="0.01" value="${row.stake || ""}" placeholder="Tutar">
+        ${stakeInput}
         <input data-pending-edit="${mode}:${slotIndex}:odds" type="number" step="0.01" value="${row.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}">
+        <div class="v760-row-state"><span class="v757-status-pill ${matchStatus}">${matchStatusText}</span>${infoPillForSlot(mode, row, { comboMatch: isComboMatch })}</div>
         <div class="v759-pending-actions">
-          <button type="button" class="win" data-mode="${mode}" data-slot="${slotIndex}" data-status="win">${resultWin}</button>
-          <button type="button" class="loss" data-mode="${mode}" data-slot="${slotIndex}" data-status="loss">${resultLoss}</button>
+          <button type="button" class="win" ${actionAttrs}win" ${disabledAttr}>${resultWin}</button>
+          <button type="button" class="loss" ${actionAttrs}loss" ${disabledAttr}>${resultLoss}</button>
         </div>
       </div>`;
   }
   function addCouponHistoryRecord(state, coupon, status) {
     const totals = couponTotals(coupon.rows);
+    if (!totals.complete) return false;
     const h = loadHistory();
     const now = Date.now();
     const names = coupon.rows.map(s => String(s.name || "").trim()).filter(Boolean);
@@ -441,11 +498,18 @@
       mode: "bet",
       ts: now,
       row: coupon.id,
-      name: `${coupon.rows.length > 1 ? `Kupon ${coupon.id}` : "Tek Bahis"}: ${names.join(" + ") || "Bahis / maç"}`,
+      name: `Bahis Türü: Kombine · ${names.join(" + ") || "Bahis / maç"}`,
       stake: totals.stake,
       odds: Number(totals.odds.toFixed(4)),
       status,
-      pnl: status === "win" ? totals.netProfit : -totals.stake
+      pnl: status === "win" ? totals.netProfit : -totals.stake,
+      couponId: coupon.id,
+      matches: coupon.rows.map((r, idx) => ({
+        no: idx + 1,
+        name: String(r.name || "").trim(),
+        odds: Number(r.odds || 0),
+        status: comboMatchStatus(r)
+      }))
     };
     h.bet.unshift(rec);
     saveHistory(h);
@@ -453,10 +517,14 @@
       const slot = state.modeSlots.bet[row.index];
       if (!slot) return;
       slot.status = status;
+      slot.matchStatus = status === "win" ? "win" : (comboMatchStatus(slot) === "pending" ? "loss" : comboMatchStatus(slot));
+      slot.couponStake = totals.stake;
+      slot.stake = totals.stake;
       slot.pnl = row.index === coupon.rows[0].index ? rec.pnl : 0;
       slot.historyId = rec.id;
       slot.historyStatus = status;
     });
+    return true;
   }
   function renderPendingBoard(mode, state) {
     const isCrypto = mode === "crypto";
@@ -464,66 +532,81 @@
       const rows = pendingRowsForMode(mode, state);
       const totalStake = rows.reduce((sum, s) => sum + Number(s.stake || 0), 0);
       const cryptoTarget = rows.reduce((sum, s) => sum + Math.abs(Number(s.odds || 0)), 0);
+      const missing = rows.filter(s => !isResultReady("crypto", s)).length;
       return `
-        <div class="v757-pending-board v759-pending-board crypto">
+        <div class="v757-pending-board v759-pending-board v760-crypto-edit-board crypto">
           <div class="v757-pending-head">
             <div>
               <b>Aktif Kripto İşlemleri</b>
-              <span>Kutuya yazdığın işlem otomatik aktif işlem sayılır; sonuç verince Geçmiş'e işlenir.</span>
+              <span>Ayrı kripto düzenleme modalı: işlem/tutar/net K/Z girilen kutu aktif kabul edilir; eksik tutar veya net K/Z varsa sonuç butonu kilitli kalır.</span>
             </div>
             <div class="v757-pending-metrics">
               <span>${rows.length} aktif</span>
+              <span>${missing} eksik bilgi</span>
               <span>${money(totalStake)} toplam marjin</span>
               <span>${money(cryptoTarget)} net hedef</span>
             </div>
           </div>
-          <div class="v759-pending-editor">
+          <div class="v759-pending-editor v760-pending-editor">
             ${rows.length ? rows.map((r, idx) => renderPendingEditRow(mode, r, idx, rows.length)).join("") : `<div class="v759-empty-note">Kutulara kripto işlem/tutar/net K/Z yazınca burada aktif işlem olarak görünür.</div>`}
           </div>
         </div>`;
     }
     const grouped = getBetCouponGroups(state);
     const totalRows = grouped.rows.length;
+    const singleMissing = grouped.singles.filter(s => !isResultReady("bet", s)).length;
     const singleCards = grouped.singles.length ? `
-      <div class="v759-pending-section">
-        <h4>Tek Bahisler <span>${grouped.singles.length}</span></h4>
-        <div class="v759-pending-editor">${grouped.singles.map((r, idx) => renderPendingEditRow("bet", r, idx, totalRows)).join("")}</div>
+      <div class="v759-pending-section v760-single-section">
+        <h4>Tek Bahisler <span>Bahis Türü: Tek · ${grouped.singles.length}</span></h4>
+        <div class="v760-section-note">Her tek bahis kendi tutarı ve oranıyla ayrı sonuçlanır. Eksik tutar/oran varsa “Eksik bilgi” etiketi görünür.</div>
+        <div class="v759-pending-editor v760-pending-editor">${grouped.singles.map((r, idx) => renderPendingEditRow("bet", r, idx, totalRows)).join("")}</div>
       </div>` : "";
     const couponCards = grouped.coupons.length ? grouped.coupons.map(coupon => {
       const totals = couponTotals(coupon.rows);
       const showNumbered = grouped.coupons.length > 1;
+      const title = showNumbered ? `Kupon ${coupon.id}` : "Kombine Kupon";
+      const missingCount = coupon.rows.filter(r => !isResultReady("bet", r, { comboMatch: true })).length + (totals.missingStake ? 1 : 0);
+      const matchRows = coupon.rows.map((r, idx) => renderPendingEditRow("bet", r, idx, totalRows, { comboMatch: true })).join("");
+      const settleDisabled = totals.complete ? "" : "disabled";
       return `
-        <div class="v759-coupon-card">
-          <div class="v759-coupon-head">
+        <div class="v759-coupon-card v760-coupon-card">
+          <div class="v759-coupon-head v760-coupon-head">
             <div>
-              <b>${showNumbered ? `Kupon ${coupon.id}` : "Kombine Kupon"}</b>
-              <span>Bahis Türü: Kombine · ${coupon.rows.length} maç</span>
+              <b>${title}</b>
+              <span>Bahis Türü: Kombine · ${coupon.rows.length} maç · ${missingCount ? `${missingCount} eksik bilgi` : "bilgi tamam"}</span>
             </div>
             <div class="v759-coupon-actions">
-              <button type="button" class="win" data-settle-coupon="${coupon.id}:win">KAZANDI</button>
-              <button type="button" class="loss" data-settle-coupon="${coupon.id}:loss">KAYBETTİ</button>
+              <button type="button" class="win" data-settle-coupon="${coupon.id}:win" ${settleDisabled}>KAZANDI</button>
+              <button type="button" class="loss" data-settle-coupon="${coupon.id}:loss" ${settleDisabled}>KAYBETTİ</button>
             </div>
           </div>
-          <div class="v759-coupon-metrics">
-            <span>Bahis tutarı <b>${money(totals.stake)}</b></span>
-            <span>Toplam oran <b>${totals.odds ? totals.odds.toFixed(2) : "-"}</b></span>
-            <span title="Kazanırsa geri alınacak toplam tutar">Olası dönüş <b>${totals.possibleReturn ? money(totals.possibleReturn) : "-"}</b></span>
-            <span>Net kâr <b>${totals.netProfit ? money(totals.netProfit) : "-"}</b></span>
+          <div class="v760-coupon-stake-row">
+            <label><span>Kupon Tutarı</span><input data-coupon-stake="${coupon.id}" type="number" step="0.01" value="${totals.stake || ""}" placeholder="Kupon tutarı"></label>
+            <small>Olası dönüş = kupon tutarı × toplam oran · Net kâr = olası dönüş - kupon tutarı</small>
+            ${totals.complete ? `<em class="ready">Kupon bilgisi tamam</em>` : `<em class="missing">Eksik bilgi</em>`}
           </div>
-          <div class="v759-pending-editor">${coupon.rows.map((r, idx) => renderPendingEditRow("bet", r, idx, totalRows)).join("")}</div>
+          <div class="v759-coupon-metrics v760-coupon-metrics">
+            <span>Bahis tutarı <b>${moneyMetric(totals.stake, !totals.missingStake)}</b></span>
+            <span>Toplam oran <b>${oddsMetric(totals.odds, !totals.missingOdds)}</b></span>
+            <span title="Kazanırsa geri alınacak toplam tutar">Olası dönüş <b>${moneyMetric(totals.possibleReturn, totals.complete)}</b></span>
+            <span>Net kâr <b>${moneyMetric(totals.netProfit, totals.complete)}</b></span>
+          </div>
+          <div class="v760-coupon-match-title">Kupon içindeki maçlar</div>
+          <div class="v759-pending-editor v760-pending-editor">${matchRows}</div>
         </div>`;
     }).join("") : "";
     return `
-      <div class="v757-pending-board v759-pending-board bet">
+      <div class="v757-pending-board v759-pending-board v760-bet-board bet">
         <div class="v757-pending-head">
           <div>
             <b>Aktif Bahisler / Kuponlar</b>
-            <span>Tek bahis ve kombine kuponlar ayrı görünür. Kombine için kupon numarasını satırdan değiştirebilirsin.</span>
+            <span>Maç/seçim, tutar veya oran girilen kutu aktif/bekleyen sayılır. Varsayılan bahis türü Tek’tir; kombineyi satırdan seçersin.</span>
           </div>
           <div class="v757-pending-metrics">
             <span>${grouped.singles.length} tek</span>
             <span>${grouped.coupons.length} kupon</span>
             <span>${totalRows} aktif maç</span>
+            <span>${singleMissing} tek eksik bilgi</span>
           </div>
         </div>
         ${singleCards || ""}
@@ -531,6 +614,7 @@
         ${!totalRows ? `<div class="v759-empty-note">Kutulara maç/seçim, tutar ve oran yazınca burada aktif bahis veya kupon olarak görünür.</div>` : ""}
       </div>`;
   }
+
 
   function renderModeCommand(mode, slots, state, summary, rollSummaryForMode) {
     const isCrypto = mode === "crypto";
@@ -618,8 +702,8 @@
         <section class="v758-pending-modal ${mode}">
           <div class="v512-history-head">
             <div>
-              <b>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR"}</b>
-              <span>Kutulara yazdığın satırlar otomatik aktif olarak burada toplanır; sonuç verince Geçmiş'e gider.</span>
+              <b>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ / DÜZENLE" : "AKTİF BAHİSLER / KUPONLAR"}</b>
+              <span>${isCrypto ? "Kripto işlemleri burada ayrı modalda düzenlenir; tutar + net K/Z tamamlanınca sonuç onayı açılır." : "Tek bahis ve kombine kuponlar ayrı akışta tutulur; eksikler etiketlenir, sonuçlar onayla Geçmiş’e gider."}</span>
             </div>
             <button type="button" data-pending-close>×</button>
           </div>
@@ -748,11 +832,20 @@
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
     const pnlHead = isCrypto ? "PNL" : "K/Z";
     return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
-      const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
+      const betType = !isCrypto ? betDisplayType(s) : "";
+      const isCombo = !isCrypto && betType === "combo";
+      const rowStatus = isCombo ? comboMatchStatus(s) : (s.status === "win" || s.status === "loss" ? s.status : "pending");
+      const status = rowStatus === "win" ? winText : rowStatus === "loss" ? lossText : (isCombo ? "MAÇ BEKLİYOR" : "BEKLİYOR");
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
+      const typeText = isCrypto ? "Kripto" : betTypeLabel(s);
+      const ready = isResultReady(mode, s, { comboMatch: isCombo });
+      const actionAttrs = isCombo ? `data-combo-match-status="${i}:` : `data-mode="${mode}" data-slot="${i}" data-status="`;
+      const disabledAttr = ready ? "" : "disabled";
+      const pnlValue = isCombo && s.status !== "win" && s.status !== "loss" ? `<span class="v760-muted-dash">Kupon bekliyor</span>` : money(s.pnl || 0);
+      return `<tr class="${!ready && slotHasAnyInput(s) ? "v760-row-missing" : ""}"><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode} ${isCombo ? "combo" : ""}">${typeText}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="${isCombo ? "Kupon tutarı" : "Tutar"}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td><div class="v760-table-status"><span class="v757-status-pill ${rowStatus}">${status}</span>${slotHasAnyInput(s) ? infoPillForSlot(mode, s, { comboMatch: isCombo }) : ""}</div></td><td class="${pnlClass}">${pnlValue}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" ${actionAttrs}win" ${disabledAttr}>${winText}</button><button type="button" class="loss" ${actionAttrs}loss" ${disabledAttr}>${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
+
   function renderModePanel(mode, state) {
     const isCrypto = mode === "crypto";
     const slots = isCrypto ? state.modeSlots.crypto : state.modeSlots.bet;
@@ -779,7 +872,7 @@
         </details>
 
         <details class="rolling-v49-fold ${mode}" open>
-          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "KOMBİNE KUPON MAÇLARI"}</span></summary>
+          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR"}</span></summary>
           <div class="rolling-v47-section-title">
             <div>${renderRowControls(mode, state)}</div>
             <button type="button" data-clear="${mode}">${isCrypto ? "KRİPTOYU TEMİZLE" : "BAHİSİ TEMİZLE"}</button>
@@ -798,34 +891,41 @@
         <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</em>
       </li>`).join("") || `<li class="empty"><span>Kayıt yok</span><b>Hedefi bitirince burada kalır.</b><em>-</em></li>`;
     return `
-      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan v757-target-plan v759-target-plan">
-        <div class="v756-target-title v757-target-title v758-target-title v759-target-title">
+      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan v757-target-plan v759-target-plan v760-target-plan">
+        <div class="v756-target-title v757-target-title v758-target-title v759-target-title v760-target-title">
           <b>Rolling Hedef Takibi</b>
+          <span>Başlangıç, güncel ve hedef tek ayar alanında tutulur; durum kartları sadece ilerlemeyi gösterir.</span>
         </div>
-        <div class="v759-target-layout">
-          <div class="v759-target-edit">
+        <div class="v759-target-layout v760-target-layout">
+          <div class="v759-target-edit v760-target-edit">
             <h4>Hedef Ayarları</h4>
             <label><span>Başlangıç $</span><input type="number" step="1" data-rolling-quick="start" value="${plan.start}"></label>
+            <label><span>Güncel $</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Boşsa otomatik"></label>
             <label><span>Hedef $</span><input type="number" step="1" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
-            <label><span>Manuel Güncel $</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Otomatik kullan"></label>
+            <small>Güncel alanı boşsa sistem başlangıç + toplam K/Z üzerinden otomatik hesaplar.</small>
           </div>
-          <div class="v759-target-status">
-            <h4>İlerleme Özeti</h4>
-            <div class="v759-target-flow"><span>Başlangıç <b>${money(plan.start)}</b></span><i>→</i><span>Güncel <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${money(plan.current)}</b></span><i>→</i><span>Hedef <b>${plan.target ? money(plan.target) : "Bekliyor"}</b></span></div>
-            <div class="v759-target-pnl"><strong class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</strong><em>${pctText(plan.growth)} büyüme</em><small>Otomatik güncel: ${money(plan.autoCurrent)}</small></div>
-            <div class="v759-target-bar"><u style="width:${plan.pct.toFixed(1)}%"></u></div>
-            <div class="v755-target-actions v756-target-actions v757-target-actions v759-target-actions">
+          <div class="v759-target-status v760-target-status">
+            <h4>Durum Özeti</h4>
+            <div class="v760-target-cards">
+              <div><span>K/Z</span><b class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</b></div>
+              <div><span>Büyüme</span><b>${pctText(plan.growth)}</b></div>
+              <div><span>İlerleme</span><b>${plan.target ? `${plan.pct.toFixed(1)}%` : "Hedef bekliyor"}</b></div>
+            </div>
+            <div class="v759-target-bar v760-target-bar"><u style="width:${plan.pct.toFixed(1)}%"></u></div>
+            <div class="v760-target-mini"><span>Otomatik güncel: <b>${money(plan.autoCurrent)}</b></span><span>Manuel güncel: <b>${plan.hasManualCurrent ? money(plan.current) : "Kapalı"}</b></span></div>
+            <div class="v755-target-actions v756-target-actions v757-target-actions v759-target-actions v760-target-actions">
               <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> HEDEFİ BİTİR</button>
               <button type="button" class="v755-target-reset" data-target-reset>YENİ HEDEF</button>
             </div>
           </div>
         </div>
-        <details class="v756-target-log-fold v757-target-log-fold v759-target-log-fold">
+        <details class="v756-target-log-fold v757-target-log-fold v759-target-log-fold v760-target-log-fold">
           <summary>Hedef Geçmişi <span>${rows.length} kayıt</span></summary>
           <ul class="v755-target-log v756-target-log">${latest}</ul>
         </details>
       </div>`;
   }
+
 
   function renderModule() {
     const mount = qs("omega-rolling-render");
@@ -874,6 +974,12 @@
   function applySlotResult(state, mode, i, nextStatus) {
     const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
     if (!list[i]) list[i] = createSlot(mode, i);
+    if (mode === "bet" && betDisplayType(list[i]) === "combo") {
+      list[i].type = "bet";
+      list[i].matchStatus = nextStatus === "loss" ? "loss" : "win";
+      if (list[i].status !== "win" && list[i].status !== "loss") list[i].status = "pending";
+      return;
+    }
     const prevStatus = list[i].status;
     list[i].type = mode;
     list[i].status = nextStatus;
@@ -950,7 +1056,15 @@
         if (!list[i]) list[i] = createSlot(mode, i);
         list[i][key] = input.value;
         list[i].type = mode;
-        if (String(list[i].name || "").trim() || Number(list[i].stake || 0) || Number(list[i].odds || 0)) {
+        if (mode === "bet" && key === "stake" && betDisplayType(list[i]) === "combo") {
+          const couponId = betCouponId(list[i]);
+          list.forEach(slot => {
+            if (!slot || betDisplayType(slot) !== "combo" || betCouponId(slot) !== couponId) return;
+            slot.stake = input.value;
+            slot.couponStake = input.value;
+          });
+        }
+        if (slotHasAnyInput(list[i])) {
           if (list[i].status !== "win" && list[i].status !== "loss") list[i].status = "pending";
         }
         if (mode === "crypto" && key === "odds") list[i].cryptoPnlMode = "amount";
@@ -1030,14 +1144,66 @@
       list[i].type = mode;
       if (key === "couponId") list[i][key] = Math.max(1, Math.min(4, Number(input.value || 1)));
       else list[i][key] = input.value;
-      if (mode === "bet" && !list[i].betType) list[i].betType = key === "betType" ? input.value : betDisplayType(list[i], activeRowsForMode("bet", state).length);
+      if (mode === "bet" && key === "betType") {
+        list[i].betType = input.value === "combo" ? "combo" : "single";
+        if (list[i].betType === "combo") {
+          if (list[i].status === "win" || list[i].status === "loss") list[i].status = "pending";
+          list[i].historyId = "";
+          list[i].historyStatus = "";
+          list[i].matchStatus = comboMatchStatus(list[i]);
+        } else {
+          list[i].matchStatus = "";
+        }
+      }
+      if (mode === "bet" && !list[i].betType) list[i].betType = "single";
       if (mode === "bet" && !list[i].couponId) list[i].couponId = 1;
-      if (String(list[i].name || "").trim() || Number(list[i].stake || 0) || Number(list[i].odds || 0)) {
+      if (slotHasAnyInput(list[i])) {
         if (list[i].status !== "win" && list[i].status !== "loss") list[i].status = "pending";
       }
       if (mode === "crypto" && key === "odds") list[i].cryptoPnlMode = "amount";
       recalcSlot(list[i]);
       saveState(state);
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-coupon-stake]").forEach(input => {
+      const applyStake = () => {
+        const couponId = Math.max(1, Math.min(4, Number(input.dataset.couponStake || 1)));
+        const value = input.value;
+        const list = state.modeSlots.bet || [];
+        list.forEach(slot => {
+          if (!slot || betDisplayType(slot) !== "combo" || betCouponId(slot) !== couponId) return;
+          slot.couponStake = value;
+          slot.stake = value;
+          if (slotHasAnyInput(slot) && slot.status !== "win" && slot.status !== "loss") slot.status = "pending";
+          recalcSlot(slot);
+        });
+        saveState(state);
+      };
+      input.addEventListener("input", applyStake);
+      input.addEventListener("change", () => { applyStake(); renderModule(); });
+    });
+    mount.querySelectorAll("[data-combo-match-status]").forEach(btn => btn.addEventListener("click", () => {
+      const [slotRaw, statusRaw] = String(btn.dataset.comboMatchStatus || "0:win").split(":");
+      const i = Number(slotRaw || 0);
+      const status = statusRaw === "loss" ? "loss" : "win";
+      const row = state.modeSlots.bet?.[i];
+      if (!row) return;
+      const resultLabel = status === "loss" ? "KAYBETTİ" : "KAZANDI";
+      CONFIRM_DIALOG = {
+        type: "comboMatch",
+        slot: i,
+        status,
+        tone: status === "loss" ? "danger" : "success",
+        title: "Kupon içi maç sonucunu işaretle",
+        message: `${String(row.name || "Maç / seçim").trim()} için sonuç: ${resultLabel}.`,
+        detail: "Bu işlem sadece kombine kupon içindeki maç işaretidir; kuponun finansal sonucu ayrıca Kupon KAZANDI/KAYBETTİ onayıyla LOG'a düşer.",
+        metrics: [
+          { label: "Bahis Türü", value: "Kombine" },
+          { label: "Kupon", value: `Kupon ${betCouponId(row)}` },
+          { label: "Oran", value: Number(row.odds || 0) > 0 ? Number(row.odds || 0).toFixed(2) : "Eksik bilgi" }
+        ],
+        confirmText: `${resultLabel} işaretle`
+      };
       renderModule();
     }));
     mount.querySelectorAll("[data-settle-coupon]").forEach(btn => btn.addEventListener("click", () => {
@@ -1047,15 +1213,24 @@
       const coupon = grouped.coupons.find(c => c.id === couponId);
       if (!coupon || !coupon.rows.length) return;
       const totals = couponTotals(coupon.rows);
+      if (!totals.complete) return;
+      const resultText = status === "loss" ? "KAYBETTİ" : "KAZANDI";
       CONFIRM_DIALOG = {
         type: "settleCoupon",
         couponId,
         status: status === "loss" ? "loss" : "win",
         tone: status === "loss" ? "danger" : "success",
-        title: "Kupon sonucunu kaydet",
-        message: `Kupon ${couponId} için ${status === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
-        detail: `${coupon.rows.length} maç · Bahis tutarı ${money(totals.stake)} · Olası dönüş ${money(totals.possibleReturn)}. Denemeyse iptal et.`,
-        confirmText: status === "loss" ? "KAYBETTİ olarak kaydet" : "KAZANDI olarak kaydet"
+        title: "Kombine kupon sonucunu kaydet",
+        message: `${coupon.rows.length} maçlık kombine kupon için sonuç: ${resultText}.`,
+        detail: "Bu onay kuponu tek finansal kayıt olarak Geçmiş/Rapor merkezine işler.",
+        metrics: [
+          { label: "Bahis Türü", value: "Kombine" },
+          { label: "Kupon Tutarı", value: money(totals.stake) },
+          { label: "Toplam Oran", value: totals.odds.toFixed(2) },
+          { label: "Olası Dönüş", value: money(totals.possibleReturn) },
+          { label: "Net Kâr", value: money(totals.netProfit) }
+        ],
+        confirmText: status === "loss" ? "Kuponu KAYBETTİ kaydet" : "Kuponu KAZANDI kaydet"
       };
       renderModule();
     }));
@@ -1109,6 +1284,14 @@
         const fresh = loadState();
         applySlotResult(fresh, action.mode, Number(action.slot || 0), action.status);
         saveState(fresh);
+      } else if (action.type === "comboMatch") {
+        const fresh = loadState();
+        const i = Number(action.slot || 0);
+        if (!fresh.modeSlots.bet[i]) fresh.modeSlots.bet[i] = createSlot("bet", i);
+        fresh.modeSlots.bet[i].betType = "combo";
+        fresh.modeSlots.bet[i].matchStatus = action.status === "loss" ? "loss" : "win";
+        if (fresh.modeSlots.bet[i].status !== "win" && fresh.modeSlots.bet[i].status !== "loss") fresh.modeSlots.bet[i].status = "pending";
+        saveState(fresh);
       } else if (action.type === "settleCoupon") {
         const fresh = loadState();
         const coupon = getBetCouponGroups(fresh).coupons.find(c => c.id === Number(action.couponId || 1));
@@ -1150,18 +1333,29 @@
       if (!list[i]) list[i] = createSlot(mode, i);
       const nextStatus = btn.dataset.status;
       if (nextStatus === "win" || nextStatus === "loss") {
-        const label = mode === "crypto" ? "kripto işlem" : "bahis / maç";
+        const isCombo = mode === "bet" && betDisplayType(list[i]) === "combo";
+        const ready = isResultReady(mode, list[i], { comboMatch: isCombo });
+        if (!ready) return;
+        const label = mode === "crypto" ? "kripto işlem" : (isCombo ? "kombine maç" : "tek bahis");
         const resultLabel = nextStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ");
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
+        const stake = Number(list[i].stake || 0);
+        const val = Number(list[i].odds || 0);
         CONFIRM_DIALOG = {
-          type: "settle",
+          type: isCombo ? "comboMatch" : "settle",
           mode,
           slot: i,
           status: nextStatus,
           tone: nextStatus === "loss" ? "danger" : "success",
-          title: "Sonucu kaydetmeden önce onayla",
+          title: isCombo ? "Kupon içi maç sonucunu işaretle" : "Sonucu kaydetmeden önce onayla",
           message: `${name} için sonuç: ${resultLabel}.`,
-          detail: "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et.",
+          detail: isCombo ? "Bu sadece kombine kupon içindeki maç işaretidir; kuponun finansal sonucu ayrıca kupon onayıyla kaydedilir." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek.",
+          metrics: [
+            { label: "Bahis Türü", value: mode === "crypto" ? "Kripto" : (isCombo ? "Kombine" : "Tek") },
+            { label: "Tutar", value: mode === "crypto" ? money(stake) : (isCombo ? "Kupon tutarı" : money(stake)) },
+            { label: mode === "crypto" ? "Net K/Z" : "Oran", value: mode === "crypto" ? money(val) : val.toFixed(2) },
+            { label: "Beklenen K/Z", value: mode === "crypto" ? money(Math.abs(val)) : (isCombo ? "Kupondan hesaplanır" : money(stake * (val - 1))) }
+          ],
           confirmText: `${resultLabel} olarak kaydet`
         };
         renderModule();
