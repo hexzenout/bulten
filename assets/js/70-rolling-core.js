@@ -10,6 +10,8 @@
   const RAIL_KEY = "v48_rolling_rail_collapsed";
   const HISTORY_KEY = "v512_rolling_history_v1";
   const TARGET_LOG_KEY = "v755_rolling_target_log_v1";
+  const SNAPSHOT_KEY = "v756_rolling_report_cards_v1";
+  const SNAPSHOT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
   let HISTORY_OPEN_MODE = null;
   let HISTORY_FILTER = "today";
 
@@ -65,6 +67,142 @@
   function saveTargetLog(rows) {
     const twoYearsAgo = Date.now() - 730 * 24 * 60 * 60 * 1000;
     localStorage.setItem(TARGET_LOG_KEY, JSON.stringify((rows || []).filter(x => Number(x.ts || 0) >= twoYearsAgo).slice(0, 500)));
+  }
+
+  function escapeXml(str) {
+    return String(str || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+  }
+  function loadReportCards() {
+    try {
+      const now = Date.now();
+      const rows = JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || "[]");
+      const clean = Array.isArray(rows) ? rows.filter(x => x && Number(x.ts || 0) >= now - SNAPSHOT_TTL_MS).slice(0, 80) : [];
+      if (clean.length !== (Array.isArray(rows) ? rows.length : 0)) localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(clean));
+      return clean;
+    } catch {
+      return [];
+    }
+  }
+  function saveReportCards(rows) {
+    const now = Date.now();
+    localStorage.setItem(SNAPSHOT_KEY, JSON.stringify((rows || []).filter(x => x && Number(x.ts || 0) >= now - SNAPSHOT_TTL_MS).slice(0, 80)));
+  }
+  function snapshotRowsForMode(mode, state) {
+    const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
+    const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
+    return list.slice(0, count).filter(s => {
+      return String(s.name || "").trim() || Number(s.stake || 0) || Number(s.odds || 0) || s.status === "win" || s.status === "loss";
+    });
+  }
+  function makeReportSvg(mode, state) {
+    const isCrypto = mode === "crypto";
+    const rows = snapshotRowsForMode(mode, state);
+    const sum = slotSummary(mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet);
+    const title = isCrypto ? "KRİPTO İŞLEM RAPORU" : "BAHİS / MAÇ RAPORU";
+    const date = formatDateTime(Date.now());
+    const safeRows = rows.slice(0, 20);
+    const rowHeight = 34;
+    const height = 230 + Math.max(1, safeRows.length) * rowHeight;
+    const line = (txt, x, y, size = 17, fill = "#ffffff", weight = 800) => `<text x="${x}" y="${y}" font-family="Inter, Arial, sans-serif" font-size="${size}" font-weight="${weight}" fill="${fill}">${escapeXml(txt)}</text>`;
+    const rowSvg = (safeRows.length ? safeRows : [{ name: "Henüz rapora girecek satır yok", stake: "", odds: "", status: "pending", pnl: 0 }]).map((s, idx) => {
+      const y = 196 + idx * rowHeight;
+      const status = s.status === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : s.status === "loss" ? (isCrypto ? "KAYIP" : "KAYBETTİ") : "BEKLİYOR";
+      const pnl = Number(s.pnl || 0);
+      const color = pnl >= 0 ? "#22c55e" : "#ef4444";
+      return `
+        <rect x="42" y="${y - 22}" width="996" height="29" rx="9" fill="${idx % 2 ? '#111827' : '#0b1220'}" opacity=".92"/>
+        ${line(String(idx + 1).padStart(2, '0'), 58, y, 13, "#94a3b8", 900)}
+        ${line(String(s.name || (isCrypto ? "Kripto işlem" : "Bahis / maç")).slice(0, 44), 108, y, 14, "#f8fafc", 900)}
+        ${line(money(s.stake || 0), 560, y, 14, "#e5e7eb", 900)}
+        ${line(isCrypto ? money(s.odds || 0) : String(s.odds || "-"), 705, y, 14, "#e5e7eb", 900)}
+        ${line(status, 825, y, 13, status === "BEKLİYOR" ? "#fbbf24" : color, 950)}
+        ${line(signedMoney(pnl), 940, y, 14, color, 950)}`;
+    }).join("");
+    return `<?xml version="1.0" encoding="UTF-8"?>
+      <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="${height}" viewBox="0 0 1080 ${height}">
+        <defs>
+          <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#020617"/><stop offset="1" stop-color="${isCrypto ? '#0f172a' : '#1f1300'}"/>
+          </linearGradient>
+        </defs>
+        <rect width="1080" height="${height}" rx="34" fill="url(#bg)"/>
+        <rect x="28" y="28" width="1024" height="${height - 56}" rx="28" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="2"/>
+        ${line("BULTEN · ROLLING", 48, 74, 18, "#fbbf24", 950)}
+        ${line(title, 48, 112, 34, "#ffffff", 950)}
+        ${line(date, 48, 143, 15, "#94a3b8", 850)}
+        ${line("Kayıt: " + safeRows.length, 48, 174, 15, "#cbd5e1", 850)}
+        ${line("W/L: " + sum.wins + " / " + sum.losses, 178, 174, 15, "#cbd5e1", 850)}
+        ${line("Toplam K/Z: " + signedMoney(sum.pnl), 315, 174, 15, Number(sum.pnl) >= 0 ? "#22c55e" : "#ef4444", 950)}
+        ${line("Not: Görsel rapor 7 gün saklanır.", 740, 174, 13, "#94a3b8", 750)}
+        <rect x="42" y="184" width="996" height="1" fill="rgba(255,255,255,.16)"/>
+        ${rowSvg}
+      </svg>`;
+  }
+  function createReportCard(mode, state) {
+    const svg = makeReportSvg(mode, state);
+    const dataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    const rows = snapshotRowsForMode(mode, state);
+    const sum = slotSummary(mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet);
+    const card = {
+      id: "rp_" + Date.now() + "_" + Math.random().toString(36).slice(2),
+      ts: Date.now(),
+      mode,
+      title: mode === "crypto" ? "Kripto işlem raporu" : "Bahis / maç raporu",
+      count: rows.length,
+      pnl: Number(sum.pnl || 0),
+      dataUrl
+    };
+    const all = loadReportCards();
+    all.unshift(card);
+    saveReportCards(all);
+    return card;
+  }
+  function renderReportGallery(mode) {
+    const rows = loadReportCards().filter(x => x.mode === mode).slice(0, 6);
+    if (!rows.length) {
+      return `<div class="v756-report-gallery empty"><span>Henüz rapor resmi yok.</span><b>İstediğin anda “Rapor Resmi Oluştur” butonuna bas.</b></div>`;
+    }
+    return `<div class="v756-report-gallery">${rows.map(r => `
+      <article class="v756-report-card" data-report-id="${escapeHtml(r.id)}">
+        <img src="${r.dataUrl}" alt="${escapeHtml(r.title)}">
+        <div>
+          <b>${escapeHtml(r.title)}</b>
+          <span>${escapeHtml(formatDateTime(r.ts))} · ${r.count} satır · <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</em></span>
+        </div>
+        <button type="button" data-report-download="${escapeHtml(r.id)}"><i class="fa-solid fa-download"></i></button>
+        <button type="button" data-report-delete="${escapeHtml(r.id)}"><i class="fa-solid fa-trash"></i></button>
+      </article>`).join("")}</div>`;
+  }
+  function downloadReportCard(id) {
+    const card = loadReportCards().find(x => x.id === id);
+    if (!card) return;
+    const fallback = () => {
+      const a = document.createElement("a");
+      a.href = card.dataUrl;
+      a.download = `bulten-${card.mode}-rapor-${new Date(card.ts).toISOString().slice(0,10)}.svg`;
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+    try {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth || 1080;
+        canvas.height = img.naturalHeight || 720;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(blob => {
+          if (!blob) return fallback();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `bulten-${card.mode}-rapor-${new Date(card.ts).toISOString().slice(0,10)}.png`;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+        }, "image/png");
+      };
+      img.onerror = fallback;
+      img.src = card.dataUrl;
+    } catch { fallback(); }
   }
   function getPlanNumbers(state, totalPnl) {
     const plan = state.quickPlan || {};
@@ -249,7 +387,12 @@
           <button type="button" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> LOG / GEÇMİŞ</button>
         </div>
         <ul class="v753-log-mini-list">${todayRows}</ul>
-        <p class="v753-log-note">Sonuç verdiğin her satır LOG'a kaydedilir. Yarın yeni günlük tablo açılır; eski kayıtlar LOG / GEÇMİŞ içinde kalır.</p>
+        <div class="v756-report-actions">
+          <button type="button" data-report-create="${mode}"><i class="fa-solid fa-image"></i> Rapor Resmi Oluştur</button>
+          <span>Rapor görselleri 7 gün saklanır; istersen indirir veya silersin.</span>
+        </div>
+        ${renderReportGallery(mode)}
+        <p class="v753-log-note">W/L verdiğinde önce gerçek işlem onayı çıkar. Onaylanan sonuç LOG'a kaydedilir; deneme tıklaması LOG'a düşmez.</p>
       </div>`;
   }
 
@@ -417,28 +560,37 @@
   function renderPlanControl(state, totalPnl) {
     const plan = getPlanNumbers(state, totalPnl);
     const rows = loadTargetLog();
-    const latest = rows.slice(0, 3).map(r => `
+    const latest = rows.slice(0, 5).map(r => `
       <li>
         <span>${escapeHtml(formatDateTime(r.ts))}</span>
         <b>${money(r.start)} → ${money(r.target)}</b>
         <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</em>
-      </li>`).join("") || `<li class="empty"><span>Henüz hedef tamamlanmadı.</span><b>Yeşil tik ile tamamladığında buraya düşer.</b><em>-</em></li>`;
+      </li>`).join("") || `<li class="empty"><span>Kayıt yok</span><b>Hedefi bitirince burada kalır.</b><em>-</em></li>`;
     return `
-      <div class="rolling-v495-quick-plan v755-target-plan">
-        <label><span>BAŞLANGIÇ BAKİYESİ</span><input type="number" step="1" data-rolling-quick="start" value="${plan.start}"></label>
-        <label><span>HEDEF BAKİYE</span><input type="number" step="1" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
-        <label><span>GÜNCEL BAKİYE</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Otomatik: ${money(plan.autoCurrent)}"></label>
-        <div class="v755-target-progress">
+      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan">
+        <div class="v756-target-title">
+          <b>Rolling Hedef Kontrol</b>
+          <span>Başlangıç, hedef ve güncel bakiye tek satırda tutulur; hedef tamamlanınca LOG'a düşer.</span>
+        </div>
+        <div class="v756-target-grid">
+          <label><span>BAŞLANGIÇ</span><input type="number" step="1" data-rolling-quick="start" value="${plan.start}"></label>
+          <label><span>HEDEF</span><input type="number" step="1" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
+          <label><span>GÜNCEL</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Otomatik: ${money(plan.autoCurrent)}"></label>
+        </div>
+        <div class="v755-target-progress v756-target-progress">
           <div><span>Başlangıç</span><b>${money(plan.start)}</b></div>
           <div><span>Güncel</span><b class="${plan.pnl >= 0 ? "pos" : "neg"}">${money(plan.current)}</b></div>
-          <div><span>Hedef</span><b>${plan.target ? money(plan.target) : "Hedef bekliyor"}</b></div>
+          <div><span>Hedef</span><b>${plan.target ? money(plan.target) : "Bekliyor"}</b></div>
           <i><em style="width:${plan.pct.toFixed(1)}%"></em></i>
         </div>
-        <div class="v755-target-actions">
-          <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> HEDEFİ BİTİR</button>
+        <div class="v755-target-actions v756-target-actions">
+          <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> BİTİR</button>
           <button type="button" class="v755-target-reset" data-target-reset>YENİ HEDEF</button>
         </div>
-        <ul class="v755-target-log">${latest}</ul>
+        <details class="v756-target-log-fold">
+          <summary>Hedef LOG <span>${rows.length} kayıt</span></summary>
+          <ul class="v755-target-log v756-target-log">${latest}</ul>
+        </details>
       </div>`;
   }
 
@@ -462,16 +614,14 @@
       <div class="rolling-v47-page v48-rolling-page v49-rolling-page">
         <div class="rolling-v47-hero v48-rolling-hero">
           <div><h2><i class="fa-solid fa-layer-group"></i> ROLLING</h2></div>
-          <div class="rolling-v47-hero-kpis v753-rolling-kpis">
-            <div><span>Bahis Kar/Zarar</span><b class="${betTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(betTotalPnl)}</b></div>
-            <div><span>Bahis Büyüme</span><b class="${betGrowth >= 0 ? "pos" : "neg"}">${pctText(betGrowth)}</b></div>
-            <div><span>Kripto Kar/Zarar</span><b class="${cryptoTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(cryptoTotalPnl)}</b></div>
-            <div><span>Kripto Büyüme</span><b class="${cryptoGrowth >= 0 ? "pos" : "neg"}">${pctText(cryptoGrowth)}</b></div>
-            <div><span>Toplam Kar/Zarar</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${signedMoney(totalPnl)}</b></div>
-            <div><span>Toplam Büyüme</span><b class="${totalGrowth >= 0 ? "pos" : "neg"}">${pctText(totalGrowth)}</b></div>
+          <div class="rolling-v47-hero-kpis v753-rolling-kpis v756-rolling-kpis">
+            <div><span>Bahis Kar/Zarar</span><b class="${betTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(betTotalPnl)}</b><em>${pctText(betGrowth)} büyüme</em></div>
+            <div><span>Kripto Kar/Zarar</span><b class="${cryptoTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(cryptoTotalPnl)}</b><em>${pctText(cryptoGrowth)} büyüme</em></div>
+            <div><span>Toplam Kar/Zarar</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${signedMoney(totalPnl)}</b><em>${pctText(totalGrowth)} büyüme</em></div>
           </div>
-          ${renderPlanControl(state, totalPnl)}
         </div>
+
+        ${renderPlanControl(state, totalPnl)}
 
         <div class="rolling-v48-layout v49-rolling-layout">
           <aside class="rolling-v48-rail v49-rolling-rail">
@@ -606,13 +756,34 @@
       HISTORY_FILTER = btn.dataset.historyFilter || "today";
       renderModule();
     }));
+    mount.querySelectorAll("[data-report-create]").forEach(btn => btn.addEventListener("click", () => {
+      const mode = btn.dataset.reportCreate === "crypto" ? "crypto" : "bet";
+      createReportCard(mode, state);
+      saveState(state);
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-report-delete]").forEach(btn => btn.addEventListener("click", () => {
+      const id = btn.dataset.reportDelete;
+      saveReportCards(loadReportCards().filter(x => x.id !== id));
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-report-download]").forEach(btn => btn.addEventListener("click", () => {
+      downloadReportCard(btn.dataset.reportDownload);
+    }));
     mount.querySelectorAll("button[data-status]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.mode, i = Number(btn.dataset.slot);
       const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
       if (!list[i]) list[i] = createSlot(mode, i);
       const prevStatus = list[i].status;
+      const nextStatus = btn.dataset.status;
+      if (nextStatus === "win" || nextStatus === "loss") {
+        const label = mode === "crypto" ? "kripto işlem" : "bahis / maç";
+        const resultLabel = nextStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ");
+        const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
+        if (!confirm(`${name} için sonuç ${resultLabel} olarak LOG'a kaydedilsin mi?\n\nBu gerçek işlem değilse İptal'e bas.`)) return;
+      }
       list[i].type = mode;
-      list[i].status = btn.dataset.status;
+      list[i].status = nextStatus;
       recalcSlot(list[i]);
       if ((list[i].status === "win" || list[i].status === "loss") && (prevStatus !== list[i].status || list[i].historyStatus !== list[i].status)) {
         addHistoryRecord(mode, list[i], i);
