@@ -3383,3 +3383,293 @@ body.rolling-active > main {
     min-width: 240px !important;
   }
 }
+
+/* ===============================
+   V768 — Bahis 7 günlük Rolling kesin düzeltme: çalışan panel, +/− dışarıda, dikey maç/oran, wrap grid, hesap alanı
+   =============================== */
+#rolling-excel-overlay .v768-excel-feature-controls {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  width: 100% !important;
+  margin: 10px 0 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 30 !important;
+}
+#rolling-excel-overlay .v768-excel-feature-controls::before,
+#rolling-excel-overlay .v768-excel-feature-controls::after,
+#rolling-excel-overlay .v768-excel-feature-controls .v758-row-tool::before,
+#rolling-excel-overlay .v768-excel-feature-controls .v758-row-tool::after,
+#rolling-excel-overlay .v768-excel-feature-controls .v759-row-tool::before,
+#rolling-excel-overlay .v768-excel-feature-controls .v759-row-tool::after,
+#rolling-excel-overlay .v768-excel-feature-controls i {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+#rolling-excel-overlay .v768-excel-feature-controls .v758-row-tool,
+#rolling-excel-overlay .v768-excel-feature-controls .v759-row-tool {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 100% !important;
+  min-height: 35px !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  color: #e5e7eb !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  line-height: 1.1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 7px 10px !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+#rolling-excel-overlay .v768-excel-feature-controls .v759-row-tool.active {
+  background: linear-gradient(135deg, rgba(34,197,94,.20), rgba(15,23,42,.92)) !important;
+  border-color: rgba(34,197,94,.35) !important;
+  color: #bbf7d0 !important;
+}
+#rolling-excel-overlay .v768-excel-feature-controls .v759-row-tool.history {
+  background: linear-gradient(135deg, rgba(251,191,36,.20), rgba(15,23,42,.92)) !important;
+  border-color: rgba(251,191,36,.35) !important;
+  color: #fde68a !important;
+}
+#rolling-excel-overlay .v768-excel-feature-controls .v759-row-tool.report {
+  background: linear-gradient(135deg, rgba(59,130,246,.20), rgba(15,23,42,.92)) !important;
+  border-color: rgba(96,165,250,.35) !important;
+  color: #bfdbfe !important;
+}
+#rolling-excel-overlay .capsule-container.v32 {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)) !important;
+  gap: 12px !important;
+  overflow: visible !important;
+  padding: 2px 2px 12px 46px !important;
+  width: 100% !important;
+  flex-wrap: initial !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  flex: initial !important;
+  min-height: 172px !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+#rolling-excel-overlay .v765-bet-entry {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  position: relative !important;
+  padding: 0 !important;
+}
+#rolling-excel-overlay .v765-match-line {
+  display: block !important;
+  width: 100% !important;
+  position: relative !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls {
+  position: absolute !important;
+  left: -44px !important;
+  top: 1px !important;
+  width: 28px !important;
+  display: grid !important;
+  grid-template-rows: 18px 18px !important;
+  gap: 5px !important;
+  z-index: 20 !important;
+  pointer-events: auto !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls button {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  max-height: 18px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(251,191,36,.55) !important;
+  background: #090909 !important;
+  color: #fbbf24 !important;
+  box-shadow: none !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls button::before,
+#rolling-excel-overlay .v765-inline-combo-controls button::after {
+  display: none !important;
+  content: none !important;
+}
+#rolling-excel-overlay .v765-extra-match-list {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#rolling-excel-overlay .v765-extra-match-row,
+#rolling-excel-overlay .v768-extra-match-row {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul input,
+#rolling-excel-overlay .v765-extra-match-row input,
+#rolling-excel-overlay .v768-extra-match-row input {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+#rolling-excel-overlay .v768-bet-calc {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 3px !important;
+  padding: 7px 8px !important;
+  border-radius: 9px !important;
+  border: 1px solid rgba(251,191,36,.18) !important;
+  background: rgba(2,6,23,.52) !important;
+  color: #cbd5e1 !important;
+  font-size: 10.5px !important;
+  font-weight: 850 !important;
+  line-height: 1.15 !important;
+}
+#rolling-excel-overlay .v768-bet-calc b {
+  color: #fbbf24 !important;
+}
+#omega-rolling-feature-host,
+#omega-rolling-feature-host .v768-feature-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 100900 !important;
+  pointer-events: auto !important;
+}
+#omega-rolling-feature-host .v768-feature-overlay {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 18px !important;
+  background: rgba(0,0,0,.58) !important;
+  backdrop-filter: blur(6px) !important;
+}
+#omega-rolling-feature-host .v768-feature-modal {
+  width: min(920px, 96vw) !important;
+  max-height: 86vh !important;
+  overflow: auto !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(251,191,36,.22) !important;
+  background: linear-gradient(180deg, #101010, #050505) !important;
+  box-shadow: 0 28px 80px rgba(0,0,0,.55) !important;
+  color: #f8fafc !important;
+}
+#omega-rolling-feature-host .v768-feature-head {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  padding: 16px 18px !important;
+  border-bottom: 1px solid rgba(255,255,255,.08) !important;
+}
+#omega-rolling-feature-host .v768-feature-head b {
+  display: block !important;
+  color: #fbbf24 !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+#omega-rolling-feature-host .v768-feature-head span {
+  display: block !important;
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  margin-top: 3px !important;
+}
+#omega-rolling-feature-host [data-v768-feature-close] {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background: rgba(15,23,42,.85) !important;
+  color: #fff !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+#omega-rolling-feature-host .v768-feature-body {
+  display: grid !important;
+  gap: 10px !important;
+  padding: 16px 18px 18px !important;
+}
+#omega-rolling-feature-host .v768-feature-card {
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 14px !important;
+  padding: 12px !important;
+  background: rgba(15,23,42,.62) !important;
+}
+#omega-rolling-feature-host .v768-feature-card > div {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+#omega-rolling-feature-host .v768-feature-card b { color: #fff !important; font-weight: 950 !important; }
+#omega-rolling-feature-host .v768-feature-card span,
+#omega-rolling-feature-host .v768-feature-card p,
+#omega-rolling-feature-host .v768-feature-card li { color: #cbd5e1 !important; font-size: 12px !important; font-weight: 800 !important; }
+#omega-rolling-feature-host .v768-feature-card p { margin: 6px 0 0 !important; }
+#omega-rolling-feature-host .v768-feature-card ul { margin: 8px 0 0 !important; padding-left: 16px !important; }
+#omega-rolling-feature-host .v768-feature-card em { font-style: normal !important; color: #fde68a !important; font-size: 11px !important; font-weight: 950 !important; }
+#omega-rolling-feature-host .v768-feature-card em.pos { color: #bbf7d0 !important; }
+#omega-rolling-feature-host .v768-feature-card em.neg { color: #fecaca !important; }
+#omega-rolling-feature-host .v768-feature-empty {
+  padding: 18px !important;
+  border-radius: 14px !important;
+  border: 1px dashed rgba(255,255,255,.16) !important;
+  color: #94a3b8 !important;
+  text-align: center !important;
+  font-weight: 900 !important;
+}
+#omega-rolling-feature-host .v768-feature-report {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+  gap: 10px !important;
+}
+#omega-rolling-feature-host .v768-feature-report div,
+#omega-rolling-feature-host .v768-feature-report button {
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(15,23,42,.62) !important;
+  padding: 14px !important;
+  color: #fff !important;
+  font-weight: 950 !important;
+}
+#omega-rolling-feature-host .v768-feature-report span { display:block !important; color:#94a3b8 !important; font-size:11px !important; margin-bottom:5px !important; }
+#omega-rolling-feature-host .v768-feature-report button { cursor:pointer !important; grid-column: 1 / -1 !important; color:#bfdbfe !important; }
+@media (max-width: 760px) {
+  #rolling-excel-overlay .capsule-container.v32 {
+    grid-template-columns: 1fr !important;
+    padding-left: 44px !important;
+  }
+  #omega-rolling-feature-host .v768-feature-report { grid-template-columns: 1fr !important; }
+}

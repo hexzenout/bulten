@@ -444,21 +444,24 @@
 
   window.omega_RollingToggleComboRow = function(day, slot, dir) {
     const kapsul = document.querySelector(`[data-v765-kapsul="${day}:${slot}"]`);
-    if (!kapsul) return;
+    if (!kapsul) return false;
     const list = kapsul.querySelector(".v765-extra-match-list");
-    if (!list) return;
+    if (!list) return false;
     if (dir === "minus") {
       const rows = list.querySelectorAll(".v765-extra-match-row");
       rows[rows.length - 1]?.remove();
-      return;
+      v768UpdateBetCalc(day, slot);
+      return false;
     }
-    const count = list.querySelectorAll(".v765-extra-match-row").length + 2;
     const row = document.createElement("div");
-    row.className = "v765-extra-match-row";
+    row.className = "v765-extra-match-row v768-extra-match-row";
     row.setAttribute("data-v763-extra-row", `${day}:${slot}`);
     row.innerHTML = `<input type="text" data-v763-extra-note placeholder="Maç"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01">`;
     list.appendChild(row);
+    v768BindBetCalc(kapsul);
+    v768UpdateBetCalc(day, slot);
     row.querySelector("input")?.focus();
+    return false;
   };
 
   function v763BetTotalOdds(primary, comboRows) {
@@ -471,59 +474,193 @@
     return total;
   }
 
+  function v768Money(value) {
+    const n = Number(value || 0);
+    return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function v768SlotOdds(day, slot) {
+    const mainOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+    const extras = v763ComboRows(day, slot);
+    return v763BetTotalOdds(mainOdds, extras);
+  }
+
+  function v768UpdateBetCalc(day, slot) {
+    const box = document.querySelector(`[data-v768-calc="${day}:${slot}"]`);
+    if (!box) return;
+    const totalOdds = v768SlotOdds(day, slot);
+    const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
+    const possible = totalOdds && stake ? stake * totalOdds : 0;
+    box.innerHTML = `<span>Toplam Oran: <b>${totalOdds ? totalOdds.toFixed(2) : "-"}</b></span><span>Tahmini Kazanç: <b>${possible ? v768Money(possible) : "-"}</b></span>`;
+  }
+
+  function v768BindBetCalc(root) {
+    const scope = root || document;
+    scope.querySelectorAll('[id^="e-o-"], [id^="e-a-"], [data-v763-extra-odds]').forEach(input => {
+      if (input.dataset.v768CalcBound === "1") return;
+      input.dataset.v768CalcBound = "1";
+      input.addEventListener("input", () => {
+        const kapsul = input.closest("[data-v765-kapsul]");
+        if (!kapsul) return;
+        const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
+        v768UpdateBetCalc(day, slot);
+      });
+    });
+  }
+
+  function v768LiveRows(mode) {
+    const plan = ensureRollingPlan();
+    const isCrypto = mode === "crypto";
+    const rows = [];
+    for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
+      const dayOps = plan.ops?.[day] || [];
+      for (let slot = 0; slot < dayOps.length; slot++) {
+        const saved = dayOps[slot];
+        if (saved) continue;
+        const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
+        const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
+        const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+        const combo = isCrypto ? [] : v763ComboRows(day, slot);
+        if (!note && !stake && !odds && !combo.length) continue;
+        const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
+        rows.push({ day, slot, note, stake, odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0 });
+      }
+    }
+    return rows;
+  }
+
+  function v768HistoryRows(mode) {
+    const plan = ensureRollingPlan();
+    const isCrypto = mode === "crypto";
+    const rows = [];
+    for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
+      const dayOps = plan.ops?.[day] || [];
+      dayOps.forEach((op, slot) => {
+        if (!op) return;
+        const combo = Array.isArray(op.combo) ? op.combo : [];
+        const totalOdds = isCrypto ? Number(op.odds || 0) : v763BetTotalOdds(Number(op.odds || 0), combo);
+        const stake = Number(op.amt || 0);
+        const pnl = isCrypto ? Number(op.odds || 0) : (op.res === "win" ? (stake * totalOdds) - stake : -stake);
+        rows.push({ day, slot, note: op.note || (isCrypto ? "İşlem" : "Maç"), stake, odds: op.odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, res: op.res, pnl });
+      });
+    }
+    return rows;
+  }
+
+  function v768FeatureRowsHtml(mode, kind) {
+    const isCrypto = mode === "crypto";
+    const rows = kind === "active" ? v768LiveRows(mode) : v768HistoryRows(mode);
+    if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif kutu yok. Maç/işlem yazınca burada görünür." : "Geçmiş kayıt yok."}</div>`;
+    return rows.map(row => {
+      const comboHtml = (!isCrypto && row.combo?.length) ? `<ul>${[`<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`, ...row.combo.map(x => `<li>${v763EscapeHtml(x.note || "Maç")} <b>${Number(x.odds || 0).toFixed(2)}</b></li>`)].join("")}</ul>` : "";
+      const title = isCrypto ? (row.note || "İşlem") : (row.combo?.length ? "Kombine" : (row.note || "Maç"));
+      const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
+      const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Tahmini Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
+      return `<article class="v768-feature-card"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Kutu ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
+    }).join("");
+  }
+
+  function v768OpenFeaturePanel(mode = "bet", kind = "active") {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
+    let host = document.getElementById("omega-rolling-feature-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-rolling-feature-host";
+      document.body.appendChild(host);
+    }
+    const title = k === "active" ? (m === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR") : k === "history" ? "Geçmiş" : "Rapor";
+    const reportRows = v768HistoryRows(m);
+    const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>Toplam K/Z</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
+    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük modal</span></div><button type="button" data-v768-feature-close>×</button></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
+    host.style.display = "block";
+  }
+
+  function v768DownloadReport(mode) {
+    const rows = v768HistoryRows(mode);
+    const pnl = rows.reduce((a,r)=>a+Number(r.pnl||0),0);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420"><rect width="900" height="420" rx="28" fill="#020617"/><rect x="26" y="26" width="848" height="368" rx="22" fill="none" stroke="#fbbf24" stroke-width="2"/><text x="52" y="80" fill="#fbbf24" font-size="26" font-family="Arial" font-weight="900">BULTEN · ${mode === "crypto" ? "KRİPTO" : "BAHİS"} ROLLING RAPOR</text><text x="52" y="140" fill="#fff" font-size="22" font-family="Arial" font-weight="800">Kayıt: ${rows.length}</text><text x="52" y="180" fill="#fff" font-size="22" font-family="Arial" font-weight="800">Toplam K/Z: ${v768Money(pnl)}</text><text x="52" y="230" fill="#94a3b8" font-size="16" font-family="Arial">${new Date().toLocaleString("tr-TR")}</text></svg>`;
+    const a = document.createElement("a");
+    a.href = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    a.download = `bulten-${mode}-rolling-rapor.svg`;
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
   function v763DayToolButtons(mode) {
     const activeLabel = mode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v767-excel-feature-controls" data-v767-feature-controls="${mode}">
-      <button type="button" class="v758-row-tool v759-row-tool active" data-v767-feature-open="${mode}:active" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'active')">${activeLabel}</button>
-      <button type="button" class="v758-row-tool v759-row-tool history" data-v767-feature-open="${mode}:history" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'history')">Geçmiş</button>
-      <button type="button" class="v758-row-tool v759-row-tool report" data-v767-feature-open="${mode}:report" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'report')">Rapor</button>
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v768-excel-feature-controls" data-v768-feature-controls="${mode}">
+      <button type="button" class="v758-row-tool v759-row-tool active" data-v768-feature-open="${mode}:active" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'active')">${activeLabel}</button>
+      <button type="button" class="v758-row-tool v759-row-tool history" data-v768-feature-open="${mode}:history" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'history')">Geçmiş</button>
+      <button type="button" class="v758-row-tool v759-row-tool report" data-v768-feature-open="${mode}:report" onclick="return window.omega_RollingExcelOpenFeature(event, '${mode}', 'report')">Rapor</button>
     </div>`;
   }
 
   window.omega_RollingExcelOpenFeature = function(event, mode = "bet", kind = "active") {
     if (event && typeof event.preventDefault === "function") event.preventDefault();
     if (event && typeof event.stopPropagation === "function") event.stopPropagation();
-    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
     const m = mode === "crypto" ? "crypto" : "bet";
     const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
-    if (typeof window.omega_RollingOpenFloatingPanel === "function") {
-      window.omega_RollingOpenFloatingPanel(k, m);
-      setTimeout(() => {
-        const host = document.getElementById("omega-rolling-feature-host");
-        if (host) {
-          host.style.display = "block";
-          host.style.position = "relative";
-          host.style.zIndex = "100600";
-        }
-      }, 0);
-      return false;
-    }
-    // Son güvenlik: 70-rolling-core eski kalırsa buton pasif görünmesin.
-    if (k === "history" && typeof window.omega_RollingOpenLogCenter === "function") window.omega_RollingOpenLogCenter(m);
-    else if (k === "report" && typeof window.omega_RollingOpenReportCenter === "function") window.omega_RollingOpenReportCenter(m);
-    else if (typeof window.omega_RollingOpenPendingBoard === "function") window.omega_RollingOpenPendingBoard(m);
+    v768OpenFeaturePanel(m, k);
     return false;
   };
 
-  if (!window.__omegaV766ExcelFeatureDelegationBound) {
-    window.__omegaV766ExcelFeatureDelegationBound = true;
+  if (!window.__omegaV768ExcelFeatureDelegationBound) {
+    window.__omegaV768ExcelFeatureDelegationBound = true;
     document.addEventListener("click", function(event) {
-      const btn = event.target.closest && event.target.closest("[data-v767-feature-open], [data-v766-feature-open]");
-      if (!btn) return;
-      const [modeRaw, kindRaw] = String(btn.dataset.v767FeatureOpen || btn.dataset.v766FeatureOpen || "bet:active").split(":");
-      window.omega_RollingExcelOpenFeature(event, modeRaw, kindRaw);
+      const featureBtn = event.target.closest && event.target.closest("[data-v768-feature-open]");
+      if (featureBtn) {
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        const [modeRaw, kindRaw] = String(featureBtn.dataset.v768FeatureOpen || "bet:active").split(":");
+        window.omega_RollingExcelOpenFeature(event, modeRaw, kindRaw);
+        return;
+      }
+      const comboBtn = event.target.closest && event.target.closest("[data-v768-combo]");
+      if (comboBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        const [dayRaw, slotRaw, dirRaw] = String(comboBtn.dataset.v768Combo || "0:0:plus").split(":");
+        window.omega_RollingToggleComboRow(Number(dayRaw), Number(slotRaw), dirRaw === "minus" ? "minus" : "plus");
+        return;
+      }
+      const closeBtn = event.target.closest && event.target.closest("[data-v768-feature-close]");
+      if (closeBtn) {
+        event.preventDefault();
+        document.getElementById("omega-rolling-feature-host")?.remove();
+        return;
+      }
+      if (event.target && event.target.matches && event.target.matches(".v768-feature-overlay")) {
+        document.getElementById("omega-rolling-feature-host")?.remove();
+        return;
+      }
+      const reportBtn = event.target.closest && event.target.closest("[data-v768-report-download]");
+      if (reportBtn) {
+        event.preventDefault();
+        v768DownloadReport(reportBtn.dataset.v768ReportDownload === "crypto" ? "crypto" : "bet");
+      }
+    }, true);
+    document.addEventListener("input", function(event) {
+      const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
+      if (!kapsul) return;
+      const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
+      v768UpdateBetCalc(day, slot);
     }, true);
   }
 
   function v765BindExcelFeatureControls(root) {
     const scope = root || document;
-    scope.querySelectorAll("[data-v767-feature-open], [data-v766-feature-open]").forEach(btn => {
-      if (btn.dataset.v767Bound === "1") return;
-      btn.dataset.v767Bound = "1";
+    scope.querySelectorAll("[data-v768-feature-open]").forEach(btn => {
+      if (btn.dataset.v768Bound === "1") return;
+      btn.dataset.v768Bound = "1";
       btn.addEventListener("click", event => {
-        const [modeRaw, kindRaw] = String(btn.dataset.v767FeatureOpen || btn.dataset.v766FeatureOpen || "bet:active").split(":");
+        const [modeRaw, kindRaw] = String(btn.dataset.v768FeatureOpen || "bet:active").split(":");
         window.omega_RollingExcelOpenFeature(event, modeRaw, kindRaw);
       });
+    });
+    v768BindBetCalc(scope);
+    scope.querySelectorAll("[data-v768-calc]").forEach(box => {
+      const [day, slot] = String(box.dataset.v768Calc || "0:0").split(":").map(Number);
+      v768UpdateBetCalc(day, slot);
     });
   }
 
@@ -586,14 +723,15 @@
                 <div class="v765-bet-entry">
                   <div class="v765-match-line">
                     <div class="v765-inline-combo-controls">
-                      <button type="button" onclick="omega_RollingToggleComboRow(${day}, ${slot}, 'plus')" title="Maç + oran ekle">+</button>
-                      <button type="button" onclick="omega_RollingToggleComboRow(${day}, ${slot}, 'minus')" title="Son ek maçı sil">−</button>
+                      <button type="button" data-v768-combo="${day}:${slot}:plus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'plus')" title="Maç + oran ekle">+</button>
+                      <button type="button" data-v768-combo="${day}:${slot}:minus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'minus')" title="Son ek maçı sil">−</button>
                     </div>
                     <input type="text" id="e-n-${day}-${slot}" placeholder="Maç">
                   </div>
                   <input type="number" id="e-o-${day}-${slot}" placeholder="Oran" step="0.01">
                   <div class="v765-extra-match-list"></div>
                   <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01">
+                  <div class="v768-bet-calc" data-v768-calc="${day}:${slot}"><span>Toplam Oran: <b>-</b></span><span>Tahmini Kazanç: <b>-</b></span></div>
                 </div>
               `}
               <div class="k-actions v32">
