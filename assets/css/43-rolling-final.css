@@ -2838,3 +2838,198 @@
   .v763-card-actions button { flex: 1 1 0 !important; }
   #rolling-excel-overlay .kapsul.v32.v763-bet-kapsul { width: 100% !important; }
 }
+
+/* ===============================
+   V764 — 7/15/30/60/90 Rolling modal tasarım geri alma + sade kombine giriş
+   Not: Oran Terminali / POLYMARKET / Stream etkilenmez.
+   =============================== */
+#rolling-excel-overlay .v764-excel-feature-tools {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 7px !important;
+  margin-top: 9px !important;
+  width: 100% !important;
+}
+#rolling-excel-overlay .v764-excel-feature-tools .v758-row-tool {
+  width: 100% !important;
+  min-height: 34px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 7px 9px !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  background: rgba(15,23,42,.82) !important;
+  color: #e5e7eb !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  letter-spacing: .01em !important;
+  line-height: 1.05 !important;
+  white-space: normal !important;
+  cursor: pointer !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.025) !important;
+}
+#rolling-excel-overlay .v764-excel-feature-tools .v759-row-tool.active {
+  background: linear-gradient(135deg, rgba(34,197,94,.18), rgba(15,23,42,.88)) !important;
+  border-color: rgba(34,197,94,.28) !important;
+  color: #bbf7d0 !important;
+}
+#rolling-excel-overlay .v764-excel-feature-tools .v758-row-tool.history {
+  background: linear-gradient(135deg, rgba(251,191,36,.18), rgba(15,23,42,.86)) !important;
+  border-color: rgba(251,191,36,.28) !important;
+  color: #fde68a !important;
+}
+#rolling-excel-overlay .v764-excel-feature-tools .v758-row-tool.report,
+#rolling-excel-overlay .v764-excel-feature-tools .v759-row-tool.report {
+  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(15,23,42,.88)) !important;
+  border-color: rgba(96,165,250,.30) !important;
+  color: #bfdbfe !important;
+}
+#rolling-excel-overlay .v764-excel-feature-tools .v758-row-tool:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.08) !important;
+}
+
+/* V763'te küçülen bahis kapsülünü eski geniş, temiz karta geri al. */
+#rolling-excel-overlay .capsule-container.v32 {
+  grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)) !important;
+  gap: 10px !important;
+  overflow: visible !important;
+  padding: 0 !important;
+}
+#rolling-excel-overlay .kapsul.v32.v763-bet-kapsul,
+#rolling-excel-overlay .kapsul.v32.v764-bet-kapsul {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  min-height: 142px !important;
+  padding: 11px !important;
+  border-radius: 13px !important;
+  background: #111 !important;
+  border: 1px solid #303030 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  overflow: hidden !important;
+}
+#rolling-excel-overlay .kapsul.v32.v763-bet-kapsul.win,
+#rolling-excel-overlay .kapsul.v32.v764-bet-kapsul.win {
+  border-color: rgba(16,185,129,.55) !important;
+  background: rgba(16,185,129,.09) !important;
+}
+#rolling-excel-overlay .kapsul.v32.v763-bet-kapsul.loss,
+#rolling-excel-overlay .kapsul.v32.v764-bet-kapsul.loss {
+  border-color: rgba(239,68,68,.55) !important;
+  background: rgba(239,68,68,.08) !important;
+}
+#rolling-excel-overlay .v764-bet-entry {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+}
+#rolling-excel-overlay .v763-match-line.v764-match-line {
+  display: grid !important;
+  grid-template-columns: 24px minmax(0, 1fr) !important;
+  gap: 6px !important;
+  align-items: stretch !important;
+}
+#rolling-excel-overlay .v763-inline-combo-controls.v764-inline-combo-controls {
+  display: grid !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 3px !important;
+  min-height: 34px !important;
+}
+#rolling-excel-overlay .v763-inline-combo-controls.v764-inline-combo-controls button {
+  width: 22px !important;
+  min-width: 22px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  border: 1px solid rgba(251,191,36,.38) !important;
+  border-radius: 6px !important;
+  background: rgba(251,191,36,.12) !important;
+  color: #fbbf24 !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+#rolling-excel-overlay .v763-inline-combo-controls.v764-inline-combo-controls button:hover {
+  background: rgba(251,191,36,.24) !important;
+}
+#rolling-excel-overlay .v763-extra-match-list.v764-extra-match-list {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 5px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#rolling-excel-overlay .v763-extra-match-row {
+  display: grid !important;
+  grid-template-columns: 24px minmax(0, 1fr) minmax(58px, .45fr) !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+#rolling-excel-overlay .v763-extra-match-row .v764-extra-spacer {
+  display: block !important;
+  width: 22px !important;
+  height: 1px !important;
+}
+#rolling-excel-overlay .v763-bet-inputs {
+  display: contents !important;
+}
+#rolling-excel-overlay .kapsul.v32.v763-bet-kapsul input,
+#rolling-excel-overlay .kapsul.v32.v764-bet-kapsul input {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  border: 1px solid #363636 !important;
+  background: #050505 !important;
+  color: #fff !important;
+  padding: 0 9px !important;
+  font-size: .84rem !important;
+  font-weight: 900 !important;
+  box-sizing: border-box !important;
+}
+#rolling-excel-overlay .kapsul.v32.v763-bet-kapsul .k-actions.v32,
+#rolling-excel-overlay .kapsul.v32.v764-bet-kapsul .k-actions.v32 {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 6px !important;
+  margin-top: 2px !important;
+}
+#rolling-excel-overlay .kapsul.v32.v763-bet-kapsul .k-actions.v32 button,
+#rolling-excel-overlay .kapsul.v32.v764-bet-kapsul .k-actions.v32 button {
+  min-width: 0 !important;
+  min-height: 32px !important;
+  padding: 0 5px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  font-size: .72rem !important;
+}
+#rolling-excel-overlay[data-roll-mode="crypto"] .kapsul.v32 input[id^="e-f-"] {
+  display: none !important;
+}
+
+/* Rolling modalın üstündeyken açılan Aktif / Geçmiş / Rapor pencereleri altta kalmasın. */
+.v758-pending-overlay,
+.v757-log-center-overlay,
+.v757-confirm-overlay {
+  z-index: 100250 !important;
+}
+
+@media (max-width: 760px) {
+  #rolling-excel-overlay .capsule-container.v32 {
+    grid-template-columns: 1fr !important;
+  }
+  #rolling-excel-overlay .kapsul.v32.v763-bet-kapsul,
+  #rolling-excel-overlay .kapsul.v32.v764-bet-kapsul {
+    width: 100% !important;
+  }
+}
