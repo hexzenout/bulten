@@ -451,17 +451,18 @@
         if (op) {
           const amt = Number(op.amt || 0);
           const odds = Number(op.odds || 0);
-          const pnl = isCryptoV491 ? Math.abs(amt * (odds / 100)) : (op.res === "win" ? (amt * odds) - amt : amt);
-          if (op.res === "win") { runningBalance += pnl; totalProfit += pnl; dayProfit += pnl; }
-          else { runningBalance -= pnl; totalProfit -= pnl; dayProfit -= pnl; }
+          const fee = Math.max(0, Number(op.fee || op.cost || 0));
+          const pnl = isCryptoV491 ? (op.netMode === 'amount' ? (op.res === "win" ? Math.abs(odds) - fee : Math.abs(odds) + fee) : Math.abs(amt * (odds / 100))) : (op.res === "win" ? (amt * odds) - amt : amt);
+          const effect = op.res === "win" ? pnl : -pnl;
+          runningBalance += effect; totalProfit += effect; dayProfit += effect;
 
           cards.push(`
             <div class="kapsul v32 ${op.res}">
               <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
               <div class="k-result">
                 <div class="k-note-show">${op.note || (isCryptoV491 ? "İşlem" : "Maç")}</div>
-                <b>$${amt} x ${odds}</b>
-                <span>${op.res === "win" ? "+" : "-"}$${pnl.toFixed(2)}</span>
+                <b>${isCryptoV491 ? `$${amt} · Net $${Number(odds || 0).toFixed(2)}${Number(op.fee || 0) ? ' · Fee $' + Number(op.fee || 0).toFixed(2) : ''}` : `$${amt} x ${odds}`}</b>
+                <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
               </div>
             </div>
           `);
@@ -470,7 +471,8 @@
             <div class="kapsul v32">
               <input type="text" id="e-n-${day}-${slot}" placeholder="${isCryptoV491 ? 'İşlem' : 'Maç'}">
               <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
-              <input type="number" id="e-o-${day}-${slot}" placeholder="${isCryptoV491 ? 'Kâr %' : 'Oran'}">
+              <input type="number" id="e-o-${day}-${slot}" placeholder="${isCryptoV491 ? 'Net K/Z $' : 'Oran'}">
+              ${isCryptoV491 ? `<input type="number" id="e-f-${day}-${slot}" placeholder="Fee/Funding $" step="0.01">` : ''}
               <div class="k-actions v32">
                 <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
                 <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>

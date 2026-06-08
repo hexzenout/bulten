@@ -78,20 +78,20 @@ function omega_GetRollingModeV46D() {
                 for (let slot = 0; slot < 10; slot++) {
                     if (dayOps[slot]) {
                         const op = dayOps[slot];
-                        const sign = op.res === 'win' ? '+' : '-';
                         const raw = parseFloat(op.odds);
+                        const fee = Math.max(0, Number(op.fee || op.cost || 0));
                         const pnl = isCrypto
-                            ? Math.abs(op.amt * (raw / 100))
+                            ? (op.netMode === 'amount' ? (op.res === 'win' ? Math.abs(raw) - fee : Math.abs(raw) + fee) : Math.abs(op.amt * (raw / 100)))
                             : (op.res === 'win' ? (op.amt * raw) - op.amt : op.amt);
-                        if (op.res === 'win') { runningBalance += pnl; totalProfit += pnl; dayProfit += pnl; }
-                        else { runningBalance -= pnl; totalProfit -= pnl; dayProfit -= pnl; }
+                        const effect = op.res === 'win' ? pnl : -pnl;
+                        runningBalance += effect; totalProfit += effect; dayProfit += effect;
                         htmlBuffer += `
                             <div class="kapsul ${op.res}">
                                 <button class="k-undo" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al"><i class="fa-solid fa-xmark"></i></button>
                                 <div class="k-result">
                                     <div class="k-note-show">${op.note || (isCrypto ? 'İşlem' : 'Maç')}</div>
-                                    <b>${isCrypto ? `$${op.amt} · %${op.odds}` : `$${op.amt} x ${op.odds}`}</b>
-                                    <span>${sign}$${pnl.toFixed(2)}</span>
+                                    <b>${isCrypto ? `$${op.amt} · Net $${Number(op.odds || 0).toFixed(2)}${Number(op.fee || 0) ? ' · Fee $' + Number(op.fee || 0).toFixed(2) : ''}` : `$${op.amt} x ${op.odds}`}</b>
+                                    <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
                                 </div>
                             </div>`;
                     } else {
@@ -100,7 +100,8 @@ function omega_GetRollingModeV46D() {
                                 <input type="text" class="k-note-input" id="e-n-${day}-${slot}" placeholder="${isCrypto ? 'İşlem' : 'Maç'}">
                                 <div class="k-inputs">
                                     <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
-                                    <input type="number" id="e-o-${day}-${slot}" placeholder="${isCrypto ? 'Kâr %' : 'Oran'}">
+                                    <input type="number" id="e-o-${day}-${slot}" placeholder="${isCrypto ? 'Net K/Z $' : 'Oran'}">
+                                    ${isCrypto ? `<input type="number" id="e-f-${day}-${slot}" placeholder="Fee/Funding $" step="0.01">` : ''}
                                 </div>
                                 <div class="k-actions">
                                     <button class="k-btn w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCrypto ? 'KAZANÇ' : 'KAZANDI'}</button>
@@ -125,15 +126,17 @@ function omega_GetRollingModeV46D() {
 
         function omega_ResolveExcelOp(day, slot, result) {
             const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || '').trim();
+            const isCrypto = omega_GetRollingModeV46D() === 'crypto';
             const amt = parseFloat(document.getElementById(`e-a-${day}-${slot}`).value);
             const odds = parseFloat(document.getElementById(`e-o-${day}-${slot}`).value);
+            const fee = Math.max(0, parseFloat(document.getElementById(`e-f-${day}-${slot}`)?.value) || 0);
             if (isNaN(amt) || isNaN(odds)) {
-                if (typeof omega_ShowFinanceToast === 'function') omega_ShowFinanceToast('Tutar ve ilgili oran/yüzde alanını doldur.');
+                if (typeof omega_ShowFinanceToast === 'function') omega_ShowFinanceToast('Tutar ve ilgili oran / net K/Z alanını doldur.');
                 return;
             }
             const currentPlan = _ROLLING_DB[omega_GetRollingPlanKeyV47(_ACTIVE_EXCEL_DAYS)];
             if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
-            currentPlan.ops[day][slot] = { note, amt, odds, res: result };
+            currentPlan.ops[day][slot] = { note, amt, odds, fee, res: result, netMode: isCrypto ? 'amount' : 'odds' };
             omega_SaveRollingDB();
             omega_RenderExcelTable();
         }
@@ -178,6 +181,8 @@ function omega_GetRollingModeV46D() {
                 cryptoTradeCount: 20,
                 cryptoTpPct: 1,
                 cryptoLeverage: 10,
+                cryptoNetProfitAmount: '',
+                cryptoCostAmount: 0,
                 cryptoDefaultExchange: 'binance',
                 cryptoDefaultQuote: 'USDT',
                 cryptoDefaultSymbol: 'BTC',
@@ -220,6 +225,8 @@ function omega_GetRollingModeV46D() {
             omega_SetVal('crypto-split-count', _FINANCE_SETTINGS.cryptoSplitCount);
             omega_SetVal('crypto-tp-pct', _FINANCE_SETTINGS.cryptoTpPct);
             omega_SetVal('crypto-leverage', _FINANCE_SETTINGS.cryptoLeverage);
+            omega_SetVal('crypto-net-profit-amount', _FINANCE_SETTINGS.cryptoNetProfitAmount || '');
+            omega_SetVal('crypto-cost-amount', _FINANCE_SETTINGS.cryptoCostAmount || 0);
             omega_SetVal('crypto-default-symbol', _FINANCE_SETTINGS.cryptoDefaultSymbol || 'BTC');
             const exSel = document.getElementById('crypto-default-exchange'); if(exSel) exSel.value = _FINANCE_SETTINGS.cryptoDefaultExchange || 'binance';
             const qSel = document.getElementById('crypto-default-quote'); if(qSel) qSel.value = _FINANCE_SETTINGS.cryptoDefaultQuote || 'USDT';
@@ -327,6 +334,8 @@ function omega_SetFinanceMode(mode, refresh = true) {
             _FINANCE_SETTINGS.cryptoSplitCount = Math.min(100, Math.max(1, parseInt(document.getElementById('crypto-split-count')?.value) || 20));
             _FINANCE_SETTINGS.cryptoTpPct = parseFloat(document.getElementById('crypto-tp-pct')?.value) || 1;
             _FINANCE_SETTINGS.cryptoLeverage = parseFloat(document.getElementById('crypto-leverage')?.value) || 1;
+            _FINANCE_SETTINGS.cryptoNetProfitAmount = parseFloat(document.getElementById('crypto-net-profit-amount')?.value) || '';
+            _FINANCE_SETTINGS.cryptoCostAmount = Math.max(0, parseFloat(document.getElementById('crypto-cost-amount')?.value) || 0);
             _FINANCE_SETTINGS.cryptoDefaultExchange = document.getElementById('crypto-default-exchange')?.value || 'binance';
             _FINANCE_SETTINGS.cryptoDefaultQuote = document.getElementById('crypto-default-quote')?.value || 'USDT';
             _FINANCE_SETTINGS.cryptoDefaultSymbol = (document.getElementById('crypto-default-symbol')?.value || 'BTC').toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -353,17 +362,24 @@ function omega_SetFinanceMode(mode, refresh = true) {
             omega_EnsureFinanceSettings();
             const bank = Number(_WALLET_BALANCE || 0);
             if(_FINANCE_MODE === 'crypto') {
-                const targetProfit = bank * ((_FINANCE_SETTINGS.cryptoTargetPct || 0) / 100);
                 const count = Math.max(1, _FINANCE_SETTINGS.cryptoTradeCount || 20);
                 const splitCount = Math.max(1, _FINANCE_SETTINGS.cryptoSplitCount || 20);
                 const tpPct = Math.max(.01, _FINANCE_SETTINGS.cryptoTpPct || 1);
                 const lev = Math.max(1, _FINANCE_SETTINGS.cryptoLeverage || 1);
-                const profitRate = (tpPct / 100) * lev;
-                const stakeByTarget = targetProfit / count / profitRate;
+                const grossRate = (tpPct / 100) * lev;
+                const costAmount = Math.max(0, Number(_FINANCE_SETTINGS.cryptoCostAmount || 0));
+                const manualNetProfit = Number(_FINANCE_SETTINGS.cryptoNetProfitAmount || 0);
+                const percentTargetProfit = bank * ((_FINANCE_SETTINGS.cryptoTargetPct || 0) / 100);
+                const netProfitPerTrade = manualNetProfit > 0 ? manualNetProfit : (percentTargetProfit / count);
+                const targetProfit = netProfitPerTrade * count;
+                const grossNeededPerTrade = netProfitPerTrade + costAmount;
+                const stakeByTarget = grossRate > 0 ? (grossNeededPerTrade / grossRate) : 0;
                 const stakeBySplit = bank / splitCount;
-                const stake = stakeBySplit;
-                const syntheticOdds = 1 + profitRate;
-                return { mode:'crypto', bank, targetProfit, count, splitCount, odds:syntheticOdds, stake, stakeByTarget, stakeBySplit, tpPct, lev, profitRate };
+                const stake = manualNetProfit > 0 ? stakeByTarget : stakeBySplit;
+                const syntheticOdds = 1 + grossRate;
+                const grossProfitPerTrade = stake * grossRate;
+                const netEstimatedProfit = grossProfitPerTrade - costAmount;
+                return { mode:'crypto', bank, targetProfit, count, splitCount, odds:syntheticOdds, stake, stakeByTarget, stakeBySplit, tpPct, lev, profitRate:grossRate, grossRate, costAmount, manualNetProfit, netProfitPerTrade, grossProfitPerTrade, netEstimatedProfit };
             }
             const targetProfit = bank * ((_FINANCE_SETTINGS.targetPct || 0) / 100);
             const count = Math.max(1, _FINANCE_SETTINGS.tradeCount || 20);
@@ -400,9 +416,9 @@ function omega_SetFinanceMode(mode, refresh = true) {
             if(!box) return r.stake;
             let perProfit, label, detail;
             if(r.mode === 'crypto') {
-                perProfit = r.stake * r.profitRate;
+                perProfit = r.netEstimatedProfit;
                 label = 'MARJİN';
-                detail = `%${r.tpPct} TP · ${r.lev}x`;
+                detail = `${r.manualNetProfit > 0 ? 'Net hedef $' + r.manualNetProfit.toFixed(2) : '%' + r.tpPct + ' TP'} · ${r.lev}x · Kesinti $${Number(r.costAmount || 0).toFixed(2)}`;
             } else {
                 perProfit = r.stake * (r.odds - 1);
                 label = 'STAKE';
@@ -410,7 +426,7 @@ function omega_SetFinanceMode(mode, refresh = true) {
             }
             box.innerHTML = `
                 <div class="plan-metric main"><span>Önerilen ${label}</span><b>$${r.stake.toFixed(2)}</b></div>
-                <div class="plan-metric"><span>İşlem Başı Kâr</span><b>$${perProfit.toFixed(2)}</b></div>
+                <div class="plan-metric"><span>${r.mode === 'crypto' ? 'İşlem Başı Net Kâr' : 'İşlem Başı Kâr'}</span><b>${perProfit >= 0 ? '' : '-'}$${Math.abs(perProfit).toFixed(2)}</b></div>
                 <div class="plan-metric"><span>Günlük Hedef</span><b>$${r.targetProfit.toFixed(2)}</b></div>
                 <div class="plan-metric good"><span>Model</span><b>${detail}</b></div>
             `;
@@ -526,8 +542,10 @@ function omega_SetFinanceMode(mode, refresh = true) {
             let pnlCls = '';
             if(price && !isNaN(entry) && entry > 0 && !isNaN(stake) && stake > 0) {
                 const change = side === 'short' ? (entry - price) / entry : (price - entry) / entry;
-                const pnl = stake * change;
-                pnlText = `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} · ${(change*100).toFixed(2)}%`;
+                const fee = Math.max(0, Number(slot.fee || slot.cost || 0));
+                const grossPnl = stake * change;
+                const pnl = grossPnl - fee;
+                pnlText = `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} net · ${(change*100).toFixed(2)}%${fee ? ' · fee $' + fee.toFixed(2) : ''}`;
                 pnlCls = pnl >= 0 ? 'live-pnl-pos' : 'live-pnl-neg';
             }
             const status = data && data.error ? `<span class="crypto-live-pill err">Veri yok</span>` : `<span class="crypto-live-pill ok">Canlı</span>`;
@@ -659,6 +677,7 @@ function omega_SetFinanceMode(mode, refresh = true) {
                     </div>
                     <input type="text" value="${slot.name || ''}" placeholder="Alınan işlem notu: BTC Long, SOL Short..." onchange="omega_UpdateSlot(${idx}, 'name', this.value)" style="margin-top:6px;">
                     <input class="slot-mini-input" type="number" value="${slot.entry || ''}" placeholder="Giriş fiyatı (opsiyonel)" onchange="omega_UpdateSlot(${idx}, 'entry', this.value)" style="margin-top:6px;">
+                    <input class="slot-mini-input" type="number" value="${slot.fee || ''}" placeholder="Fee/Funding $" onchange="omega_UpdateSlot(${idx}, 'fee', this.value)" style="margin-top:6px;">
                 ` : `<input type="text" value="${slot.name || ''}" placeholder="Oynanan maç / bahis notu" onchange="omega_UpdateSlot(${idx}, 'name', this.value)">`;
                 const oddsPlaceholder = slot.type === 'crypto' ? 'K/Z manuel $' : 'Alınan oran';
                 const oddsStep = slot.type === 'crypto' ? '0.01' : '0.01';
@@ -682,7 +701,7 @@ function omega_SetFinanceMode(mode, refresh = true) {
 
         function omega_UpdateSlot(index, field, value) {
             const slots = omega_GetTodaySlots(); if(!slots[index]) return;
-            if(['stake','odds','entry'].includes(field)) value = parseFloat(value) || '';
+            if(['stake','odds','entry','fee'].includes(field)) value = parseFloat(value) || '';
             if(['symbol'].includes(field)) value = String(value || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
             slots[index][field] = value;
             if(field === 'type' && value === 'crypto') {
@@ -694,7 +713,7 @@ function omega_SetFinanceMode(mode, refresh = true) {
             if(slots[index].status === 'empty' && (slots[index].stake || slots[index].name || slots[index].symbol)) slots[index].status = 'pending';
             omega_SaveFinanceAll();
             omega_RefreshFinanceDashboard();
-            if(['type','exchange','quote','symbol','side','entry'].includes(field)) {
+            if(['type','exchange','quote','symbol','side','entry','fee'].includes(field)) {
                 omega_RenderDailyTradeGrid();
                 omega_RefreshCryptoLive(true);
             }
@@ -707,15 +726,16 @@ function omega_SetFinanceMode(mode, refresh = true) {
             if(isNaN(stake) || stake <= 0) { alert('Tutar / marjin gir.'); return; }
             let pnl;
             if(slot.type === 'crypto') {
-                if(isNaN(oddsOrPnl)) { alert('Kripto satırı için K/Z tutarını gir. Örnek: 12.5'); return; }
-                pnl = result === 'win' ? Math.abs(oddsOrPnl) : -Math.abs(oddsOrPnl);
+                if(isNaN(oddsOrPnl)) { alert('Kripto satırı için net K/Z tutarını gir. Örnek: 12.5'); return; }
+                const fee = Math.max(0, parseFloat(slot.fee || 0) || 0);
+                pnl = result === 'win' ? (Math.abs(oddsOrPnl) - fee) : -(Math.abs(oddsOrPnl) + fee);
             } else {
                 if(isNaN(oddsOrPnl) || oddsOrPnl <= 1) { alert('Bahis satırı için alınan oran gir.'); return; }
                 pnl = result === 'win' ? stake * (oddsOrPnl - 1) : -stake;
             }
             slot.status = result; slot.pnl = pnl; slot.resolvedAt = Date.now(); slot.name = slot.name || `${slot.type === 'crypto' ? 'KRİPTO' : 'BAHİS'} #${index+1}`;
             _WALLET_BALANCE += pnl; _BALANCE_HISTORY.push(Number(_WALLET_BALANCE.toFixed(2)));
-            _COMPLETED_LEDGER.unshift({ id: slot.resolvedAt, name: slot.name, type: slot.type, amt: stake, odds: oddsOrPnl || 0, res: result, pnl, bal: _WALLET_BALANCE });
+            _COMPLETED_LEDGER.unshift({ id: slot.resolvedAt, name: slot.name, type: slot.type, amt: stake, odds: oddsOrPnl || 0, fee: slot.type === 'crypto' ? Math.max(0, parseFloat(slot.fee || 0) || 0) : 0, res: result, pnl, bal: _WALLET_BALANCE });
             omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard(); omega_RenderApexSupremeChart();
         }
 

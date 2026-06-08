@@ -16,7 +16,7 @@
     bank: 1000,
     modeSlots: { bet: createSlots("bet", 20), crypto: createSlots("crypto", 20) },
     rowCounts: { bet: 20, crypto: 20 },
-    quickTemplates: { bet: { stake: "", odds: "1.30", name: "" }, crypto: { stake: "", odds: "2", name: "" } }
+    quickTemplates: { bet: { stake: "", odds: "1.30", name: "" }, crypto: { stake: "", odds: "", name: "" } }
   };
 
   function qs(id) { return document.getElementById(id); }
@@ -111,7 +111,7 @@
         <td>${escapeHtml(formatDateTime(r.ts))}</td>
         <td>${escapeHtml(r.name)}</td>
         <td>${money(r.stake)}</td>
-        <td>${isCrypto ? escapeHtml(String(r.odds || 0)) + "%" : escapeHtml(String(r.odds || 0))}</td>
+        <td>${isCrypto ? money(r.odds || 0) : escapeHtml(String(r.odds || 0))}</td>
         <td><span class="v512-history-status ${r.status}">${r.status === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</span></td>
         <td class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${money(r.pnl)}</td>
       </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede geçmiş kaydı yok.</td></tr>`;
@@ -128,7 +128,7 @@
           <div class="v512-history-filters">${filters}</div>
           <div class="v512-history-table-wrap">
             <table class="v512-history-table">
-              <thead><tr><th>Tarih / Saat</th><th>${isCrypto ? "İşlem" : "Maç / Not"}</th><th>Tutar</th><th>${isCrypto ? "Kâr %" : "Oran"}</th><th>Sonuç</th><th>P/L</th></tr></thead>
+              <thead><tr><th>Tarih / Saat</th><th>${isCrypto ? "İşlem" : "Maç / Not"}</th><th>Tutar</th><th>${isCrypto ? "Net K/Z $" : "Oran"}</th><th>Sonuç</th><th>P/L</th></tr></thead>
               <tbody>${body}</tbody>
             </table>
           </div>
@@ -140,9 +140,9 @@
   function ensureQuickTemplates(state) {
     if (!state.quickTemplates || typeof state.quickTemplates !== "object") state.quickTemplates = {};
     if (!state.quickTemplates.bet || typeof state.quickTemplates.bet !== "object") state.quickTemplates.bet = { stake: "", odds: "1.30", name: "" };
-    if (!state.quickTemplates.crypto || typeof state.quickTemplates.crypto !== "object") state.quickTemplates.crypto = { stake: "", odds: "2", name: "" };
+    if (!state.quickTemplates.crypto || typeof state.quickTemplates.crypto !== "object") state.quickTemplates.crypto = { stake: "", odds: "", name: "" };
     if (state.quickTemplates.bet.odds === undefined || state.quickTemplates.bet.odds === null || state.quickTemplates.bet.odds === "") state.quickTemplates.bet.odds = "1.30";
-    if (state.quickTemplates.crypto.odds === undefined || state.quickTemplates.crypto.odds === null || state.quickTemplates.crypto.odds === "") state.quickTemplates.crypto.odds = "2";
+    if (state.quickTemplates.crypto.odds === undefined || state.quickTemplates.crypto.odds === null) state.quickTemplates.crypto.odds = "";
   }
   function progressPct(current, target) {
     const t = Number(target || 0);
@@ -174,7 +174,7 @@
         </div>
         <div class="v751-roll-tools">
           <label><span>${isCrypto ? "Marjin" : "Tutar"}</span><input type="number" step="0.01" data-quick-template="${mode}:stake" value="${escapeHtml(tpl.stake)}" placeholder="0.00"></label>
-          <label><span>${isCrypto ? "Kâr %" : "Oran"}</span><input type="number" step="0.01" data-quick-template="${mode}:odds" value="${escapeHtml(tpl.odds)}" placeholder="${isCrypto ? "2" : "1.30"}"></label>
+          <label><span>${isCrypto ? "Net K/Z $" : "Oran"}</span><input type="number" step="0.01" data-quick-template="${mode}:odds" value="${escapeHtml(tpl.odds)}" placeholder="${isCrypto ? "Örn: 12.5" : "1.30"}"></label>
           <label class="wide"><span>${isCrypto ? "İşlem notu" : "Maç / not"}</span><input type="text" data-quick-template="${mode}:name" value="${escapeHtml(tpl.name)}" placeholder="Boş satırlara not yaz"></label>
           <button type="button" class="apply" data-quick-apply="${mode}">Boş satırlara uygula</button>
           <button type="button" data-row-preset="${mode}:20">20 alan aç</button>
@@ -183,7 +183,7 @@
   }
 
   function createSlot(type = "bet", i = 0) {
-    return { id: i + 1, type, name: "", stake: "", odds: type === "bet" ? "1.30" : "2", status: "pending", pnl: 0 };
+    return { id: i + 1, type, name: "", stake: "", odds: type === "bet" ? "1.30" : "", cryptoPnlMode: type === "crypto" ? "amount" : "odds", status: "pending", pnl: 0 };
   }
   function createSlots(type = "bet", count = 5) {
     return Array.from({ length: count }, (_, i) => createSlot(type, i));
@@ -203,7 +203,7 @@
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
     while (state.modeSlots.crypto.length < state.rowCounts.crypto) state.modeSlots.crypto.push(createSlot("crypto", state.modeSlots.crypto.length));
     state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; });
-    state.modeSlots.crypto.forEach((s, i) => { s.type = "crypto"; s.id = i + 1; });
+    state.modeSlots.crypto.forEach((s, i) => { s.type = "crypto"; s.id = i + 1; if (!s.cryptoPnlMode) s.cryptoPnlMode = "amount"; });
   }
   function loadState() {
     try {
@@ -225,9 +225,9 @@
     const stake = Number(slot.stake || 0);
     const val = Number(slot.odds || 0);
     if (slot.status === "win") {
-      slot.pnl = slot.type === "bet" ? stake * (val - 1) : stake * (val / 100);
+      slot.pnl = slot.type === "bet" ? stake * (val - 1) : Math.abs(val);
     } else if (slot.status === "loss") {
-      slot.pnl = slot.type === "bet" ? -stake : -Math.abs(stake * (val / 100));
+      slot.pnl = slot.type === "bet" ? -stake : -Math.abs(val);
     } else slot.pnl = 0;
   }
   function slotSummary(slots) {
@@ -256,7 +256,10 @@
         if (!op) return;
         const amt = Number(op.amt || 0);
         const val = Number(op.odds || 0);
-        const pnl = mode === "crypto" ? Math.abs(amt * (val / 100)) : (op.res === "win" ? (amt * val) - amt : amt);
+        const fee = Math.max(0, Number(op.fee || op.cost || 0));
+        const pnl = mode === "crypto"
+          ? (op.netMode === "amount" ? Math.abs(val) + (op.res === "loss" ? fee : -fee) : Math.abs(amt * (val / 100)))
+          : (op.res === "win" ? (amt * val) - amt : amt);
         balance += op.res === "win" ? pnl : -pnl;
       }));
       startTotal += start; currentTotal += balance; pnlTotal += (balance - start);
@@ -289,14 +292,14 @@
     const visible = slots.slice(0, rowCount);
     const noteHead = isCrypto ? "AKTİF İŞLEM" : "MAÇ";
     const notePH = isCrypto ? "İşlem" : "Maç";
-    const valHead = isCrypto ? "KÂR %" : "ORAN";
+    const valHead = isCrypto ? "NET K/Z $" : "ORAN";
     const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
     const pnlHead = isCrypto ? "PNL" : "K/Z";
     return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
       const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span>${i === 0 ? `<button type="button" class="v512-history-btn ${mode} v515-history-row" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> GEÇMİŞ</button>` : ""}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Kâr %" : "Oran"}"></td><td>${status}</td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button><button type="button" class="pending" data-mode="${mode}" data-slot="${i}" data-status="pending">BEKLİYOR</button></div></td></tr>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span>${i === 0 ? `<button type="button" class="v512-history-btn ${mode} v515-history-row" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> GEÇMİŞ</button>` : ""}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td>${status}</td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button><button type="button" class="pending" data-mode="${mode}" data-slot="${i}" data-status="pending">BEKLİYOR</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModePanel(mode, state) {
@@ -415,6 +418,7 @@
         slot.type = mode;
         if (tpl.stake !== "") slot.stake = tpl.stake;
         if (tpl.odds !== "") slot.odds = tpl.odds;
+        if (mode === "crypto") slot.cryptoPnlMode = "amount";
         if (tpl.name && !String(slot.name || "").trim()) slot.name = tpl.name;
         slot.status = "pending";
         recalcSlot(slot);
@@ -430,6 +434,7 @@
         if (!list[i]) list[i] = createSlot(mode, i);
         list[i][key] = input.value;
         list[i].type = mode;
+        if (mode === "crypto" && key === "odds") list[i].cryptoPnlMode = "amount";
         recalcSlot(list[i]);
         saveState(state);
       };
