@@ -1373,3 +1373,105 @@
   .v751-roll-tools label.wide { grid-column: 1 / -1; }
   .v751-roll-tools button { width: 100%; }
 }
+
+
+/* ===============================
+   V753 ROLLING LOG + CLEAN CONTROL
+   =============================== */
+.v753-rolling-kpis {
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+}
+.v753-roll-log-command .v751-roll-command-head {
+  margin-bottom: 12px;
+}
+.v753-log-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(130px, 1fr)) auto;
+  gap: 10px;
+  align-items: stretch;
+}
+.v753-log-strip > div,
+.v753-log-strip > button {
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 14px;
+  background: rgba(0,0,0,.22);
+  padding: 11px 12px;
+}
+.v753-log-strip span,
+.v753-log-mini-list span,
+.v753-row-log-note span {
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.v753-log-strip b {
+  display: block;
+  color: #fff;
+  margin-top: 3px;
+  font-weight: 950;
+}
+.v753-log-strip em {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-weight: 950;
+}
+.v753-log-strip em.pos,
+.v753-log-mini-list em.pos { color: var(--green); }
+.v753-log-strip em.neg,
+.v753-log-mini-list em.neg { color: var(--red); }
+.v753-log-strip button {
+  color: #fff;
+  cursor: pointer;
+  font-weight: 950;
+  background: linear-gradient(135deg, rgba(251,191,36,.22), rgba(255,255,255,.05));
+}
+.v753-log-mini-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+.v753-log-mini-list li {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,.035);
+  padding: 9px 10px;
+}
+.v753-log-mini-list b {
+  color: #fff;
+  font-size: .82rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v753-log-mini-list em {
+  font-style: normal;
+  font-weight: 950;
+}
+.v753-log-mini-list li.empty b { color: var(--muted); }
+.v753-log-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
+}
+.v753-row-log-note {
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.035);
+  border-radius: 999px;
+  padding: 8px 12px;
+}
+@media (max-width: 980px) {
+  .v753-rolling-kpis { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .v753-log-strip { grid-template-columns: 1fr 1fr; }
+  .v753-log-strip button { grid-column: 1 / -1; }
+  .v753-log-mini-list li { grid-template-columns: 1fr; }
+}

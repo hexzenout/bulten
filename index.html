@@ -17,11 +17,11 @@
   <link rel="stylesheet" href="assets/css/10-route-crypto.css?v=v517">
   <link rel="stylesheet" href="assets/css/20-module-helpers.css?v=v517">
   <link rel="stylesheet" href="assets/css/30-finance-core.css?v=v517">
-  <link rel="stylesheet" href="assets/css/31-finance-panels.css?v=v751">
+  <link rel="stylesheet" href="assets/css/31-finance-panels.css?v=v753">
   <link rel="stylesheet" href="assets/css/40-rolling-prep.css?v=v517">
   <link rel="stylesheet" href="assets/css/41-rolling-main.css?v=v517">
   <link rel="stylesheet" href="assets/css/42-rolling-route.css?v=v517">
-  <link rel="stylesheet" href="assets/css/43-rolling-final.css?v=v751">
+  <link rel="stylesheet" href="assets/css/43-rolling-final.css?v=v753">
   <link rel="stylesheet" href="assets/css/50-sound-center.css?v=v536">
   <link rel="stylesheet" href="assets/css/55-odds-terminal.css?v=v745">
   <link rel="stylesheet" href="assets/css/90-final-fixes.css?v=v517"> 
@@ -477,11 +477,10 @@ html.v536-sound-preboot #v28-sound-mount::before {
 
                                 <div class="finance-actions">
                                     <button class="btn-finance gold" onclick="omega_CalculateStakePlan()">HESAPLA</button>
-                                    <button class="btn-finance green" onclick="omega_ApplyStakeToEmptySlots()">20 ALANA UYGULA</button>
                                     <button class="btn-finance" onclick="omega_ClearTodaySlots()">GÜNÜ TEMİZLE</button>
                                     <button class="btn-finance red" onclick="omega_ResetFinanceAll()">SIFIRLA</button>
                                 </div>
-                                <div class="simple-plan-help">Hesapla butonu önerilen tutarı üretir; 20 Alana Uygula açık satırları doldurur, W/L kapalı satırlara dokunmaz.</div>
+                                <div class="simple-plan-help">Hesapla butonu sadece önerilen tutarı gösterir. Asıl kayıtlar aşağıdaki 20 alanlı tabloda tutulur; W/L ile kapattığın sonuçlar LOG/Geçmiş alanına düşer.</div>
                             </div>
                         </div>
                     </div>
@@ -522,7 +521,7 @@ html.v536-sound-preboot #v28-sound-mount::before {
 
                     <div class="finance-secondary-grid">
                         <div class="finance-card">
-                            <div class="finance-card-head"><div><h3><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</h3><span>Son işlemler</span></div></div>
+                            <div class="finance-card-head"><div><h3><i class="fa-solid fa-clock-rotate-left"></i> LOG / Geçmiş</h3><span>Bugün, dün ve önceki günlerin kapanan işlemleri</span></div></div>
                             <div class="ledger-panel-scroll"><table class="supreme-data-table" id="omega-data-table"></table></div>
                         </div>
 </div>
@@ -574,12 +573,12 @@ html.v536-sound-preboot #v28-sound-mount::before {
 <script src="assets/js/00-omega-core.js?v=v528"></script>
 <script src="assets/js/10-radar-core.js?v=v529"></script>
 <script src="assets/js/20-stream-core.js?v=v536"></script>
-<script src="assets/js/30-finance-core.js?v=v752"></script>
+<script src="assets/js/30-finance-core.js?v=v753"></script>
 <script src="assets/js/40-live-center-core.js?v=v517"></script>
 <script src="assets/js/50-daily-trade-core.js?v=v517"></script>
 <script src="assets/js/55-odds-terminal.js?v=v748"></script>
     <script src="assets/js/60-crypto-core.js?v=v529"></script>
-<script src="assets/js/70-rolling-core.js?v=v752"></script>
+<script src="assets/js/70-rolling-core.js?v=v753"></script>
 <script src="assets/js/71-finance-ui.js?v=v517"></script>
 <script src="assets/js/72-crypto-ui.js?v=v517"></script>
 <script src="assets/js/73-crypto-alarm-audio.js?v=v517"></script>

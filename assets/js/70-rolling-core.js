@@ -24,6 +24,18 @@
     const n = Number(v || 0);
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
+  function signedMoney(v) {
+    const n = Number(v || 0);
+    return (n >= 0 ? "+" : "-") + money(Math.abs(n));
+  }
+  function pctText(v) {
+    const n = Number.isFinite(Number(v)) ? Number(v) : 0;
+    return (n >= 0 ? "+" : "") + n.toFixed(1) + "%";
+  }
+  function growthPct(pnl, base) {
+    const b = Math.abs(Number(base || 0));
+    return b ? (Number(pnl || 0) / b) * 100 : 0;
+  }
   function loadHistory() {
     try {
       const h = JSON.parse(localStorage.getItem(HISTORY_KEY) || "{}");
@@ -151,34 +163,48 @@
   }
   function renderModeCommand(mode, slots, state, summary, rollSummaryForMode) {
     const isCrypto = mode === "crypto";
-    const tpl = state.quickTemplates?.[mode] || { stake: "", odds: isCrypto ? "2" : "1.30", name: "" };
-    const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
+    const rowCount = 20;
     const visible = slots.slice(0, rowCount);
     const pending = visible.filter(s => s.status === "pending" || s.status === "empty" || !s.status).length;
+    const settled = visible.filter(s => s.status === "win" || s.status === "loss").length;
     const totalPnl = Number(summary.pnl || 0) + Number(rollSummaryForMode.pnlTotal || 0);
-    const start = Number(state.quickPlan?.start || 0);
-    const target = Number(state.quickPlan?.target || 0);
+    const start = Number(rollSummaryForMode.startTotal || state.quickPlan?.start || 100);
+    const target = Number(rollSummaryForMode.currentTotal || start) + Math.max(0, Number(state.quickPlan?.target || 0) - Number(state.quickPlan?.start || 0));
     const current = start + totalPnl;
-    const pct = progressPct(current, target);
+    const pct = progressPct(current, target || start);
+    const history = loadHistory()[mode] || [];
+    const today = filterHistoryRows(history, "today");
+    const week = filterHistoryRows(history, "week");
+    const month = filterHistoryRows(history, "month");
+    const todayPnl = today.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
+    const weekPnl = week.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
+    const monthPnl = month.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
+    const todayRows = today.slice(0, 5).map(r => `
+      <li>
+        <span>${escapeHtml(formatDateTime(r.ts))}</span>
+        <b>${escapeHtml(r.name || (isCrypto ? "Kripto işlem" : "Bahis / maç"))}</b>
+        <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</em>
+      </li>`).join("") || `<li class="empty"><span>Bugün kapatılan kayıt yok.</span><b>W/L ile kapattığında otomatik loga düşer.</b><em>-</em></li>`;
     return `
-      <div class="v751-roll-command ${mode}">
+      <div class="v751-roll-command v753-roll-log-command ${mode}">
         <div class="v751-roll-command-head">
           <div>
-            <b>${isCrypto ? "Kripto Kontrol" : "Bahis Kontrol"}</b>
-            <span>${rowCount}/20 alan · ${pending} açık · ${summary.wins} W / ${summary.losses} L · ROI ${Number(summary.roi || 0).toFixed(1)}%</span>
+            <b>${isCrypto ? "Kripto Log Kontrol" : "Bahis Log Kontrol"}</b>
+            <span>20 alan sabit · ${settled} kapalı · ${pending} açık · ${summary.wins} W / ${summary.losses} L · ROI ${Number(summary.roi || 0).toFixed(1)}%</span>
           </div>
           <div class="v751-roll-progress">
             <span>${target ? `${money(current)} / ${money(target)}` : `${money(current)} güncel`}</span>
             <i><em style="width:${pct.toFixed(1)}%"></em></i>
           </div>
         </div>
-        <div class="v751-roll-tools">
-          <label><span>${isCrypto ? "Marjin" : "Tutar"}</span><input type="number" step="0.01" data-quick-template="${mode}:stake" value="${escapeHtml(tpl.stake)}" placeholder="0.00"></label>
-          <label><span>${isCrypto ? "Net K/Z $" : "Oran"}</span><input type="number" step="0.01" data-quick-template="${mode}:odds" value="${escapeHtml(tpl.odds)}" placeholder="${isCrypto ? "Örn: 12.5" : "1.30"}"></label>
-          <label class="wide"><span>${isCrypto ? "İşlem notu" : "Maç / not"}</span><input type="text" data-quick-template="${mode}:name" value="${escapeHtml(tpl.name)}" placeholder="Boş satırlara not yaz"></label>
-          <button type="button" class="apply" data-quick-apply="${mode}">Boş satırlara uygula</button>
-          <button type="button" data-row-preset="${mode}:20">20 alan aç</button>
+        <div class="v753-log-strip">
+          <div><span>Bugün Log</span><b>${today.length} kayıt</b><em class="${todayPnl >= 0 ? "pos" : "neg"}">${signedMoney(todayPnl)}</em></div>
+          <div><span>Bu Hafta</span><b>${week.length} kayıt</b><em class="${weekPnl >= 0 ? "pos" : "neg"}">${signedMoney(weekPnl)}</em></div>
+          <div><span>Bu Ay</span><b>${month.length} kayıt</b><em class="${monthPnl >= 0 ? "pos" : "neg"}">${signedMoney(monthPnl)}</em></div>
+          <button type="button" data-history-open="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> LOG / GEÇMİŞ</button>
         </div>
+        <ul class="v753-log-mini-list">${todayRows}</ul>
+        <p class="v753-log-note">Sonuç verdiğin her satır LOG'a kaydedilir. Yarın yeni günlük tablo açılır; eski kayıtlar LOG / GEÇMİŞ içinde kalır.</p>
       </div>`;
   }
 
@@ -195,11 +221,11 @@
     }
     if (!Array.isArray(state.modeSlots.bet)) state.modeSlots.bet = createSlots("bet", 5);
     if (!Array.isArray(state.modeSlots.crypto)) state.modeSlots.crypto = createSlots("crypto", 5);
-    if (!state.rowCounts || typeof state.rowCounts !== "object") state.rowCounts = { bet: 5, crypto: 5 };
+    if (!state.rowCounts || typeof state.rowCounts !== "object") state.rowCounts = { bet: 20, crypto: 20 };
     if (!state.quickPlan || typeof state.quickPlan !== "object") state.quickPlan = { start: 100, target: 1000 };
     ensureQuickTemplates(state);
-    state.rowCounts.bet = Math.max(1, Math.min(20, Number(state.rowCounts.bet || 5)));
-    state.rowCounts.crypto = Math.max(1, Math.min(20, Number(state.rowCounts.crypto || 5)));
+    state.rowCounts.bet = 20;
+    state.rowCounts.crypto = 20;
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
     while (state.modeSlots.crypto.length < state.rowCounts.crypto) state.modeSlots.crypto.push(createSlot("crypto", state.modeSlots.crypto.length));
     state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; });
@@ -279,16 +305,16 @@
     return [7, 15, 30, 60, 90].map(d => `<button type="button" data-roll="${mode}:${d}"><span>${d} GÜNLÜK ROLLING</span></button>`).join("");
   }
   function renderRowControls(mode, state) {
-    const count = Number(state.rowCounts?.[mode] || 20);
     const label = mode === "crypto" ? "Kripto" : "Bahis";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls"><span>${count}/20 ${label}</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button></div>`;
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v753-row-log-note"><span>20 ${label} alanı sabit · sonuçlar LOG'a gider</span></div>`;
   }
+
   function escapeHtml(str) {
     return String(str || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
   }
   function renderTable(mode, slots, state) {
     const isCrypto = mode === "crypto";
-    const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 5)));
+    const rowCount = 20;
     const visible = slots.slice(0, rowCount);
     const noteHead = isCrypto ? "AKTİF İŞLEM" : "MAÇ";
     const notePH = isCrypto ? "İşlem" : "Maç";
@@ -345,18 +371,27 @@
     const state = loadState();
     const betSum = slotSummary(state.modeSlots.bet);
     const cryptoSum = slotSummary(state.modeSlots.crypto);
+    const betRollSum = rollingSummary("bet");
+    const cryptoRollSum = rollingSummary("crypto");
     const rollSum = rollingSummary();
-    const totalPnl = betSum.pnl + cryptoSum.pnl + rollSum.pnlTotal;
+    const betTotalPnl = betSum.pnl + betRollSum.pnlTotal;
+    const cryptoTotalPnl = cryptoSum.pnl + cryptoRollSum.pnlTotal;
+    const totalPnl = betTotalPnl + cryptoTotalPnl;
+    const betGrowth = growthPct(betTotalPnl, betRollSum.startTotal || state.quickPlan?.start || 100);
+    const cryptoGrowth = growthPct(cryptoTotalPnl, cryptoRollSum.startTotal || state.quickPlan?.start || 100);
+    const totalGrowth = growthPct(totalPnl, (betRollSum.startTotal || 0) + (cryptoRollSum.startTotal || 0) || state.quickPlan?.start || 100);
     const mode = activeMode();
     mount.innerHTML = `
       <div class="rolling-v47-page v48-rolling-page v49-rolling-page">
         <div class="rolling-v47-hero v48-rolling-hero">
           <div><h2><i class="fa-solid fa-layer-group"></i> ROLLING</h2></div>
-          <div class="rolling-v47-hero-kpis">
-            <div><span>Bahis P/L</span><b class="${betSum.pnl >= 0 ? "pos" : "neg"}">${money(betSum.pnl)}</b></div>
-            <div><span>Kripto P/L</span><b class="${cryptoSum.pnl >= 0 ? "pos" : "neg"}">${money(cryptoSum.pnl)}</b></div>
-            <div><span>Rolling P/L</span><b class="${rollSum.pnlTotal >= 0 ? "pos" : "neg"}">${money(rollSum.pnlTotal)}</b></div>
-            <div><span>Toplam</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${money(totalPnl)}</b></div>
+          <div class="rolling-v47-hero-kpis v753-rolling-kpis">
+            <div><span>Bahis Kar/Zarar</span><b class="${betTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(betTotalPnl)}</b></div>
+            <div><span>Bahis Büyüme</span><b class="${betGrowth >= 0 ? "pos" : "neg"}">${pctText(betGrowth)}</b></div>
+            <div><span>Kripto Kar/Zarar</span><b class="${cryptoTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(cryptoTotalPnl)}</b></div>
+            <div><span>Kripto Büyüme</span><b class="${cryptoGrowth >= 0 ? "pos" : "neg"}">${pctText(cryptoGrowth)}</b></div>
+            <div><span>Toplam Kar/Zarar</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${signedMoney(totalPnl)}</b></div>
+            <div><span>Toplam Büyüme</span><b class="${totalGrowth >= 0 ? "pos" : "neg"}">${pctText(totalGrowth)}</b></div>
           </div>
           <div class="rolling-v495-quick-plan">
             <label><span>BAŞLANGIÇ:</span><input type="number" step="1" data-rolling-quick="start" value="${Number(state.quickPlan?.start || 100)}"></label>
@@ -487,7 +522,7 @@
     mount.querySelectorAll("button[data-clear]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.clear;
       if (!confirm(mode === "crypto" ? "Kripto işlem alanları temizlensin mi?" : "Bahis kupon alanları temizlensin mi?")) return;
-      state.modeSlots[mode] = createSlots(mode, state.rowCounts?.[mode] || 5); saveState(state); renderModule();
+      state.modeSlots[mode] = createSlots(mode, 20); saveState(state); renderModule();
     }));
   }
   window.omega_RenderRollingModule = renderModule;

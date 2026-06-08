@@ -167,6 +167,21 @@ function omega_GetRollingModeV46D() {
             const d = new Date();
             return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
         }
+        function omega_DateKeyFromTs(ts) {
+            const d = new Date(Number(ts || Date.now()));
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+        function omega_FilterLedgerByKey(key) {
+            return (_COMPLETED_LEDGER || []).filter(item => omega_DateKeyFromTs(item.id || item.resolvedAt) === key);
+        }
+        function omega_MoneySigned(value) {
+            const n = Number(value || 0);
+            return `${n >= 0 ? '+' : '-'}$${Math.abs(n).toFixed(2)}`;
+        }
+        function omega_FormatLogDate(ts) {
+            try { return new Date(Number(ts || Date.now())).toLocaleString('tr-TR', { dateStyle:'short', timeStyle:'short' }); }
+            catch(e) { return '-'; }
+        }
 
         function omega_DefaultFinanceSettings() {
             return {
@@ -455,11 +470,22 @@ function omega_SetFinanceMode(mode, refresh = true) {
             const empty = slots.filter(s => !s.status || s.status === 'empty').length;
             const pnl = slots.reduce((sum, s) => sum + (Number(s.pnl) || 0), 0);
             const risk = slots.filter(s => s.status === 'pending').reduce((sum, s) => sum + (parseFloat(s.stake) || 0), 0);
+            const todayKey = omega_TodayKey();
+            const todayLog = omega_FilterLedgerByKey(todayKey);
+            const betLog = todayLog.filter(x => (x.type || 'bet') === 'bet');
+            const cryptoLog = todayLog.filter(x => x.type === 'crypto');
+            const logPnl = todayLog.reduce((sum, item) => sum + Number(item.pnl || 0), 0);
+            const lastRows = todayLog.slice(0, 5).map(item => `
+                <li>
+                    <span>${omega_FormatLogDate(item.id || item.resolvedAt)}</span>
+                    <b>${(item.name || (item.type === 'crypto' ? 'Kripto işlem' : 'Bahis / maç')).toString().replace(/[<>]/g,'')}</b>
+                    <em class="${Number(item.pnl || 0) >= 0 ? 'pos' : 'neg'}">${omega_MoneySigned(item.pnl)}</em>
+                </li>`).join('') || `<li class="empty"><span>Bugün log yok.</span><b>W/L ile kapatınca burada kalır.</b><em>-</em></li>`;
             return `
-                <div class="v751-daily-control">
+                <div class="v751-daily-control v753-daily-log-control">
                     <div class="v751-daily-title">
-                        <b>Günlük 20 Alan Kontrolü</b>
-                        <span>Hesapla → 20 alana uygula → sonucu W/L ile kapat.</span>
+                        <b>Günlük 20 Alan + LOG</b>
+                        <span>Satırları aşağıdaki tabloda doldur. W/L ile kapatınca sonuç otomatik LOG'a düşer; yarın yeni günlük tablo açılır.</span>
                     </div>
                     <div class="v751-daily-metrics">
                         <div><span>Alan</span><b>${slots.length}/20</b></div>
@@ -467,10 +493,17 @@ function omega_SetFinanceMode(mode, refresh = true) {
                         <div><span>Boş</span><b>${empty}</b></div>
                         <div><span>W / L</span><b>${wins} / ${losses}</b></div>
                         <div><span>Açık Risk</span><b>$${risk.toFixed(2)}</b></div>
-                        <div><span>Gün P/L</span><b class="${pnl >= 0 ? 'pos' : 'neg'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</b></div>
+                        <div><span>Gün K/Z</span><b class="${pnl >= 0 ? 'pos' : 'neg'}">${omega_MoneySigned(pnl)}</b></div>
                     </div>
+                    <div class="v753-daily-log-summary">
+                        <div><span>Bugün LOG</span><b>${todayLog.length} kayıt</b><em class="${logPnl >= 0 ? 'pos' : 'neg'}">${omega_MoneySigned(logPnl)}</em></div>
+                        <div><span>Bahis LOG</span><b>${betLog.length}</b><em>${betLog.filter(x=>x.res==='win').length}W / ${betLog.filter(x=>x.res==='loss').length}L</em></div>
+                        <div><span>Kripto LOG</span><b>${cryptoLog.length}</b><em>${cryptoLog.filter(x=>x.res==='win').length}W / ${cryptoLog.filter(x=>x.res==='loss').length}L</em></div>
+                    </div>
+                    <ul class="v753-daily-log-list">${lastRows}</ul>
                 </div>`;
         }
+
 
         function omega_ApplyStakeToEmptySlots() {
             const r = omega_CalculateRecommendedStake();
@@ -735,7 +768,7 @@ function omega_SetFinanceMode(mode, refresh = true) {
             }
             slot.status = result; slot.pnl = pnl; slot.resolvedAt = Date.now(); slot.name = slot.name || `${slot.type === 'crypto' ? 'KRİPTO' : 'BAHİS'} #${index+1}`;
             _WALLET_BALANCE += pnl; _BALANCE_HISTORY.push(Number(_WALLET_BALANCE.toFixed(2)));
-            _COMPLETED_LEDGER.unshift({ id: slot.resolvedAt, name: slot.name, type: slot.type, amt: stake, odds: oddsOrPnl || 0, fee: slot.type === 'crypto' ? Math.max(0, parseFloat(slot.fee || 0) || 0) : 0, res: result, pnl, bal: _WALLET_BALANCE });
+            _COMPLETED_LEDGER.unshift({ id: slot.resolvedAt, resolvedKey: omega_TodayKey(), name: slot.name, type: slot.type, amt: stake, odds: oddsOrPnl || 0, fee: slot.type === 'crypto' ? Math.max(0, parseFloat(slot.fee || 0) || 0) : 0, res: result, pnl, bal: _WALLET_BALANCE });
             omega_SaveFinanceAll(); omega_RenderDailyTradeGrid(); omega_RefreshFinanceDashboard(); omega_RenderApexSupremeChart();
         }
 
@@ -782,15 +815,17 @@ function omega_SetFinanceMode(mode, refresh = true) {
 
         function omega_RenderSupremeLedgerTable() {
             const tableElement = document.getElementById('omega-data-table'); if(!tableElement) return;
-            let headerHtml = `<tr><th>TARİH</th><th>TÜR</th><th>KOD</th><th>STAKE</th><th>ORAN</th><th>DURUM</th><th>P/L</th><th>KASA</th></tr>`;
+            let headerHtml = `<tr><th>TARİH</th><th>TÜR</th><th>LOG</th><th>TUTAR</th><th>ORAN / NET K/Z</th><th>FEE</th><th>DURUM</th><th>K/Z</th><th>KASA</th></tr>`;
             let rowsHtml = '';
             const list = [..._PENDING_OPS.map(x=>({...x,pending:true})), ..._COMPLETED_LEDGER.slice(0,40)];
-            if(list.length===0) rowsHtml = `<tr><td colspan="8" style="text-align:center; padding:28px; color:var(--muted); font-weight:900;">Henüz işlem yok.</td></tr>`;
+            if(list.length===0) rowsHtml = `<tr><td colspan="9" style="text-align:center; padding:28px; color:var(--muted); font-weight:900;">Henüz LOG kaydı yok. W/L ile kapattığın işlemler burada kalır.</td></tr>`;
             list.forEach(item=>{
                 const dateStr = new Date(item.id).toLocaleDateString('tr-TR');
                 const statusBadge = item.pending ? `<span style="color:var(--gold); font-weight:900;">BEKLEMEDE</span>` : item.res==='win' ? `<b style="color:var(--green)">KAZANDI</b>` : `<b style="color:var(--red)">KAYBETTİ</b>`;
                 const pnlDisplay = item.pending ? '-' : `<span style="color:${item.pnl>=0?'var(--green)':'var(--red)'}; font-weight:900;">${item.pnl>=0?'+':''}${item.pnl.toFixed(2)}</span>`;
-                rowsHtml += `<tr><td>${dateStr}</td><td>${omega_TypeText(item.type||'bet')}</td><td style="color:#fff; font-weight:800;">${item.name}</td><td>$${Number(item.amt||0).toFixed(2)}</td><td>@${Number(item.odds||0).toFixed(2)}</td><td>${statusBadge}</td><td>${pnlDisplay}</td><td>${item.bal?'$'+Number(item.bal).toFixed(2):'-'}</td></tr>`;
+                const valueLabel = (item.type || 'bet') === 'crypto' ? `$${Number(item.odds||0).toFixed(2)}` : `@${Number(item.odds||0).toFixed(2)}`;
+                const feeLabel = (item.type || 'bet') === 'crypto' && Number(item.fee || 0) ? '$' + Number(item.fee || 0).toFixed(2) : '-';
+                rowsHtml += `<tr><td>${dateStr}</td><td>${omega_TypeText(item.type||'bet')}</td><td style="color:#fff; font-weight:800;">${item.name}</td><td>$${Number(item.amt||0).toFixed(2)}</td><td>${valueLabel}</td><td>${feeLabel}</td><td>${statusBadge}</td><td>${pnlDisplay}</td><td>${item.bal?'$'+Number(item.bal).toFixed(2):'-'}</td></tr>`;
             });
             tableElement.innerHTML = headerHtml + rowsHtml;
         }
