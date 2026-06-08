@@ -417,14 +417,51 @@ function omega_SetFinanceMode(mode, refresh = true) {
             return r.stake;
         }
 
-        function omega_GetTodaySlots() { omega_EnsureFinanceSettings(); return _DAILY_SLOTS[omega_TodayKey()]; }
+        function omega_EnsureTodaySlotCount() {
+            omega_EnsureFinanceSettings();
+            const key = omega_TodayKey();
+            if (!_DAILY_SLOTS[key]) _DAILY_SLOTS[key] = [];
+            while (_DAILY_SLOTS[key].length < 20) _DAILY_SLOTS[key].push(omega_NewSlot(_DAILY_SLOTS[key].length));
+            if (_DAILY_SLOTS[key].length > 20) _DAILY_SLOTS[key] = _DAILY_SLOTS[key].slice(0, 20);
+            _DAILY_SLOTS[key].forEach((slot, i) => {
+                if (!slot || typeof slot !== 'object') _DAILY_SLOTS[key][i] = omega_NewSlot(i);
+                _DAILY_SLOTS[key][i].index = i + 1;
+            });
+            return _DAILY_SLOTS[key];
+        }
+
+        function omega_GetTodaySlots() { return omega_EnsureTodaySlotCount(); }
+
+        function omega_BuildDailyStatusPanel(slots) {
+            const wins = slots.filter(s => s.status === 'win').length;
+            const losses = slots.filter(s => s.status === 'loss').length;
+            const pending = slots.filter(s => s.status === 'pending').length;
+            const empty = slots.filter(s => !s.status || s.status === 'empty').length;
+            const pnl = slots.reduce((sum, s) => sum + (Number(s.pnl) || 0), 0);
+            const risk = slots.filter(s => s.status === 'pending').reduce((sum, s) => sum + (parseFloat(s.stake) || 0), 0);
+            return `
+                <div class="v751-daily-control">
+                    <div class="v751-daily-title">
+                        <b>Günlük 20 Alan Kontrolü</b>
+                        <span>Hesapla → 20 alana uygula → sonucu W/L ile kapat.</span>
+                    </div>
+                    <div class="v751-daily-metrics">
+                        <div><span>Alan</span><b>${slots.length}/20</b></div>
+                        <div><span>Bekleyen</span><b>${pending}</b></div>
+                        <div><span>Boş</span><b>${empty}</b></div>
+                        <div><span>W / L</span><b>${wins} / ${losses}</b></div>
+                        <div><span>Açık Risk</span><b>$${risk.toFixed(2)}</b></div>
+                        <div><span>Gün P/L</span><b class="${pnl >= 0 ? 'pos' : 'neg'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</b></div>
+                    </div>
+                </div>`;
+        }
 
         function omega_ApplyStakeToEmptySlots() {
             const r = omega_CalculateRecommendedStake();
             window.__lastFinancePlan = r;
             const slots = omega_GetTodaySlots();
             let applied = 0;
-            slots.forEach((slot, idx) => {
+            slots.forEach((slot) => {
                 if(slot.status !== 'win' && slot.status !== 'loss') {
                     slot.type = _FINANCE_MODE;
                     if(!slot.name) slot.name = '';
@@ -447,7 +484,7 @@ function omega_SetFinanceMode(mode, refresh = true) {
             omega_RenderDailyTradeGrid();
             omega_RefreshFinanceDashboard();
             omega_CalculateStakePlan();
-            omega_FinanceToast(`${applied} satıra önerilen tutar yazıldı.`);
+            omega_FinanceToast(`${applied} açık alana önerilen tutar yazıldı. Kapalı W/L satırlarına dokunulmadı.`);
         }
 
         function omega_StatusText(status) {
@@ -606,7 +643,7 @@ function omega_SetFinanceMode(mode, refresh = true) {
             const grid = document.getElementById('daily-trade-grid'); if(!grid) return;
             omega_RenderCryptoSymbolDatalist();
             const slots = omega_GetTodaySlots();
-            let html = `<table class="trade-table trade-table-v35"><thead><tr><th>#</th><th>Tür</th><th>Bahis / Kripto Detayı</th><th>Tutar / Marjin</th><th>Oran / K/Z</th><th>Canlı Takip</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
+            let html = `${omega_BuildDailyStatusPanel(slots)}<table class="trade-table trade-table-v35"><thead><tr><th>#</th><th>Tür</th><th>Bahis / Kripto Detayı</th><th>Tutar / Marjin</th><th>Oran / K/Z</th><th>Canlı Takip</th><th>Durum</th><th>K/Z</th><th>Sonuç</th></tr></thead><tbody>`;
             slots.forEach((slot, idx) => {
                 const pnl = Number(slot.pnl || 0);
                 const pnlClass = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
