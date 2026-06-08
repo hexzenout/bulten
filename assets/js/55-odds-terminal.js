@@ -1,5 +1,5 @@
 // ===============================
-// ORAN TERMİNALİ — güvenli JS toparlama / V641-V650 final temizlik + checkpoint kilidi
+// ORAN TERMİNALİ — güvenli JS toparlama / V651-V660 checkpoint karar + teknik arşiv sadeleştirme
 // Gerçek veri bağlantısı, fetch/scraping ve otomatik bahis kapalıdır.
 // ===============================
 
@@ -3781,31 +3781,13 @@
 
   function renderMovementBoard() {
     const rows = oddsSignalEngineResults().movementSignals || [];
-    const rising = rows.filter(signal => Number(signal.raw?.changePct || 0) > 0).slice(0, 4);
-    const falling = rows.filter(signal => Number(signal.raw?.changePct || 0) < 0).slice(0, 4);
-    const strongest = rows.slice(0, 6);
-    const block = (title, list, emptyText) => `<section class="v584-movement-column">
-      <h3>${escapeHtml(title)}</h3>
-      ${list.length ? renderSignalCards(list, 4) : empty(emptyText)}
-    </section>`;
     const checkpointReport = buildV617MegaConsolidationReport({ force: true });
+    const decisionReport = buildV651CheckpointDecisionReport(checkpointReport);
     return `<section class="v584-movement-board v612-movement-surface v616-movement-surface v640-movement-surface" aria-label="Oran Hareketleri sade görünüm">
       ${renderV641MovementFinal(rows, checkpointReport)}
       ${renderDeveloperCollapse("Detaylı hareket teknik arşivi", `
-        ${renderV629MovementCheckpoint(rows, checkpointReport)}
-        ${renderV617MovementMegaPanel(rows, checkpointReport)}
-        <div class="v584-movement-grid">
-          ${block("Yükselen Oranlar", rising, "Yükselen oran hareketi yok.")}
-          ${block("Düşen Oranlar", falling, "Düşen oran hareketi yok.")}
-          ${block("Sert Hareketler", strongest, "Hareket eşiğini geçen aday yok.")}
-        </div>
-        ${renderV613MovementFinalPanel(rows)}
-        ${renderV609MovementUserBoard(rows)}
-        ${renderUserModeBanner("Oran Hareketleri", "Yükselen, düşen ve sert hareket adayları ayrıldı. Popup/hover düzeni korunur; bu alan canlı veri değildir.", ["Yükselen / Düşen", "Sert hareket", "Snapshot/Dry-run"])}
-        ${renderV597MovementVerdict(rows)}
-        ${renderV590MovementSummary(rows)}
-        ${renderSignalEngineHeader(oddsSignalEngineResults())}
-      `, "Yükselen/düşen/sinyal kartları ve eski hareket özetleri")}
+        ${renderV651MovementSlimArchive(rows, decisionReport)}
+      `, "Yükselen/düşen/sinyal kartları tek özet altında tutulur; eski hareket blokları tekrar render edilmez.")}
     </section>`;
   }
 
@@ -5906,6 +5888,146 @@
     };
   }
 
+  // -------------------------------
+  // V651-V660 Checkpoint Decision / Slim Archive Layer
+  // -------------------------------
+  function buildV651CheckpointDecisionReport(baseReport = buildV617MegaConsolidationReport()) {
+    const cleanup = buildV641FinalCleanupReport(baseReport);
+    const flow = activeDataFlowSummary();
+    const data = comparisonEngineResults();
+    const engine = oddsSignalEngineResults();
+    const polyRecords = polymarketRecords();
+    const polyQueue = buildV605PolymarketQueues(polyRecords);
+    const score = Number(cleanup.score || cleanup.checkpointScore || 0);
+    const liveClosed = !LIVE_API_CONNECTION_ENABLED && !FETCH_SCRAPING_ENABLED && !AUTO_BETTING_ENABLED;
+    const archivedCallCount = 32;
+    const manualKeep = [
+      "Fırsat/Karşılaştırma/Hareket ana yüzeyi korunur.",
+      "Dry-run ve kaynak ayarları erişilebilir kalır.",
+      "Eski V590-V640 kartları render yükü oluşturmadan özetlenir.",
+      "POLYMARKET YES/NO hattı bookmaker motorundan ayrı tutulur."
+    ];
+    const readyToPause = liveClosed && Number(cleanup.clean || 0) >= 0 && score >= 60;
+    const decision = readyToPause
+      ? "Oran Terminali hazırlığı checkpoint alınabilir"
+      : Number(cleanup.clean || 0)
+        ? "Oran Terminali kontrollü checkpoint modunda"
+        : "Veri bekleyen hazırlık modu";
+    const nextStep = readyToPause
+      ? "Bundan sonra gerçek veri bağlama ya da Rolling/Kripto modülüne dönüş kararı verilebilir."
+      : "Saklı/blok kayıtlar geliştirici alanında kalırken dry-run/snapshot akışı izlenir.";
+    return {
+      ...cleanup,
+      flow,
+      data,
+      engine,
+      polyRecords,
+      polyQueue,
+      score,
+      liveClosed,
+      archivedCallCount,
+      manualKeep,
+      readyToPause,
+      decision,
+      nextStep,
+      comparisonPct: Number(data.summary?.records || 0)
+        ? Math.round((Number(data.summary?.matchedMarkets || 0) / Number(data.summary.records || 0)) * 100)
+        : 0,
+      signalTotal: Number(engine.summary?.total || 0),
+      polyCount: Number(polyRecords.length || 0),
+      hiddenTotal: Number(cleanup.hidden || 0) + Number(cleanup.duplicate || 0) + Number(cleanup.blocked || 0)
+    };
+  }
+
+  function renderV651CheckpointDecisionHero(baseReport = buildV617MegaConsolidationReport()) {
+    const report = buildV651CheckpointDecisionReport(baseReport);
+    const cards = [
+      ["Karar", report.decision, report.nextStep, report.readyToPause ? "ready" : "review"],
+      ["Skor", `${report.score}/100`, "Checkpoint + kapı + eşleşme özeti", report.score >= 70 ? "ready" : "review"],
+      ["Temiz / saklı", `${report.clean}/${report.hiddenTotal}`, "Ana yüzey / teknik arşiv ayrımı", report.hiddenTotal ? "review" : "ready"],
+      ["Akış", report.dataModeLabel || signalDataModeText(report.flow?.mode), "Dry-run → snapshot → mock", "muted"],
+      ["Render yükü", `${report.archivedCallCount} eski blok özetlendi`, "Eski arşiv panelleri tek satır indekse alındı", "ready"],
+      ["Canlı kapı", report.liveClosed ? "Kapalı" : "Kontrol et", "API/fetch/scrape/auto-play yok", report.liveClosed ? "ready" : "review"]
+    ];
+    return `<section class="v640-checkpoint-hero ${escapeAttr(report.readyToPause ? "ready" : "review")}" aria-label="V651-V660 checkpoint karar kilidi">
+      <div class="v640-checkpoint-head">
+        <div>
+          <span>V651-V660 CHECKPOINT KARAR</span>
+          <h3>${escapeHtml(report.decision)}</h3>
+          <p>Final temizlik sonrası eski teknik paneller artık tek tek render edilmez; ana ekran sade kalır, gerçek veri kapısı kapalıdır.</p>
+        </div>
+        <strong>${escapeHtml(report.readyToPause ? "Checkpoint alınabilir" : "Kontrollü izle")}</strong>
+      </div>
+      <div class="v640-checkpoint-grid">${cards.map(([label, value, note, tone]) => renderV629CheckpointMetric(label, value, note, tone)).join("")}</div>
+      <div class="v640-checkpoint-notes">${report.manualKeep.map(item => `<span>${escapeHtml(item)}</span>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV651SlimArchive(scope = "Genel", rows = [], note = "Eski teknik paneller silinmedi; görünür yük oluşturmadan özetlendi.") {
+    const safeRows = Array.isArray(rows) ? rows : [];
+    const normalized = safeRows.length ? safeRows : [
+      ["Eski özet paneller", "Özetlendi", "V590-V640 arası tekrar kartları tek indekse indirildi", "ready"],
+      ["Canlı kapı", "Kapalı", "Gerçek API/fetch/scrape/auto-play yok", "ready"],
+      ["Teknik detay", "Geliştirici alanı", "Gerektiğinde ayrı refactor ile açılır", "muted"]
+    ];
+    return `<section class="v640-panel-audit v651-slim-archive" aria-label="${escapeAttr(scope)} sade teknik arşiv">
+      <div class="v640-section-head"><div><span>V651 SADE TEKNİK ARŞİV</span><h3>${escapeHtml(scope)}</h3><p>${escapeHtml(note)}</p></div><em>Render yükü azaltıldı</em></div>
+      <div class="v640-audit-rows">${normalized.map(([panel, mode, desc, tone]) => `<article class="${escapeAttr(tone || "muted")}"><b>${escapeHtml(panel)}</b><span>${escapeHtml(mode)}</span><small>${escapeHtml(desc)}</small></article>`).join("")}</div>
+    </section>`;
+  }
+
+  function renderV651RadarSlimArchive(report = buildV651CheckpointDecisionReport()) {
+    return renderV651SlimArchive("Radar ve sinyal arşivi", [
+      ["Kaynak farkı", `${report.engine?.sourceDiffSignals?.length || 0} aday`, "Eski sinyal kartları tek özet altında tutuldu", "ready"],
+      ["Barem kontrol", `${report.engine?.lineDiffSignals?.length || 0} aday`, "Barem farkı fırsat gibi yükseltilmez", "review"],
+      ["Oran hareketi", `${report.engine?.movementSignals?.length || 0} aday`, "Detay kartları ana ekranda çoğaltılmaz", "movement"],
+      ["Saklı kayıt", String(report.hiddenTotal || 0), "Düşük güven/bayat/blok kayıtlar ana fırsat değildir", report.hiddenTotal ? "review" : "ready"]
+    ]);
+  }
+
+  function renderV651ComparisonSlimArchive(report = buildV651CheckpointDecisionReport()) {
+    return renderV651SlimArchive("Karşılaştırma arşivi", [
+      ["Eşleşme", `${report.comparisonPct}%`, "Line farkı ve eski karşılaştırma özetleri tek arşivde", report.comparisonPct >= 70 ? "ready" : "review"],
+      ["En iyi aday", report.topSource ? report.topSource.value : "Yok", report.topSource ? report.topSource.title : "Kaynak farkı beklenir", report.topSource ? "ready" : "muted"],
+      ["Barem riski", report.topLine ? report.topLine.value : "Temiz", report.topLine ? "Yanıltıcı çizgi farkı kontrol ister" : "Barem riski öne çıkmadı", report.topLine ? "review" : "ready"],
+      ["Canlı veri", "Kapalı", "Gerçek oran karşılaştırması değildir", "muted"]
+    ]);
+  }
+
+  function renderV651MovementSlimArchive(rows = oddsSignalEngineResults().movementSignals || [], report = buildV651CheckpointDecisionReport()) {
+    const list = Array.isArray(rows) ? rows : [];
+    const delta = row => Number(row.deltaPct ?? row.raw?.changePct ?? row.changePct ?? 0);
+    const rising = list.filter(row => delta(row) > 0).length;
+    const falling = list.filter(row => delta(row) < 0).length;
+    return renderV651SlimArchive("Oran hareketleri arşivi", [
+      ["Yükselen", String(rising), "Detay listesi ana ekranda tekrar render edilmez", rising ? "ready" : "muted"],
+      ["Düşen", String(falling), "Detay listesi ana ekranda tekrar render edilmez", falling ? "review" : "muted"],
+      ["Toplam hareket", String(list.length), "Sinyal motorundan gelen hareket sayısı", list.length ? "movement" : "muted"],
+      ["Veri modu", report.dataModeLabel || signalDataModeText(report.mode), "Canlı fiyat hareketi değildir", "muted"]
+    ]);
+  }
+
+  function renderV651SourcesSlimArchive(report = buildV651CheckpointDecisionReport()) {
+    return renderV651SlimArchive("Kaynak checkpoint arşivi", [
+      ["Hazır kaynak", `${report.readySources}/${report.totalSources || 0}`, `${report.reviewSources || 0} kontrol · ${report.waitingSources || 0} bekle`, report.readySources ? "ready" : "muted"],
+      ["Temiz kayıt", String(report.clean || 0), "Ana panelde kullanılabilir kayıt", report.clean ? "ready" : "muted"],
+      ["Saklı kayıt", String(report.hiddenTotal || 0), "Kontrol/blok/bayat/düşük güven/duplicate", report.hiddenTotal ? "review" : "ready"],
+      ["Connector", report.liveClosed ? "Kapalı" : "Kontrol", "API/fetch/scrape/auto-play sınırı korunur", report.liveClosed ? "ready" : "review"]
+    ]);
+  }
+
+  function renderV651PolymarketSlimArchive(polyRecords = polymarketRecords()) {
+    const queue = buildV605PolymarketQueues(polyRecords);
+    const summary = queue.summary || polymarketSummary(polyRecords);
+    return renderV651SlimArchive("POLYMARKET YES/NO arşivi", [
+      ["Market", String(summary.records || polyRecords.length || 0), "Prediction-market kayıt sayısı", "poly"],
+      ["Kısa vade", String(summary.shortTerm || 0), "Kapanış süresi ayrı okunur", "review"],
+      ["Likidite", `$${Math.round(summary.liquidity || summary.liquidityTotal || 0).toLocaleString("en-US")}`, "Bookmaker oran motoruna karışmaz", "ready"],
+      ["YES/NO", "Ayrı", "Normal decimal odds karşılaştırmasına bağlanmaz", "poly"]
+    ], "Eski POLYMARKET ranking/queue panelleri tek özet altında tutuldu.");
+  }
+
+
   function renderDataFlowStatusBand() {
     const flow = dataFlowStatusSummary();
     const cells = [
@@ -6326,16 +6448,8 @@
       ${renderV641PolymarketFinal(polyBase)}
       ${list.length ? `<div class="v541-poly-grid v616-poly-card-grid">${list.map(renderPolymarketCard).join("")}</div>` : empty(state.marketSearch ? "Bu aramayla eşleşen Polymarket demo marketi bulunamadı." : "Polymarket kaydı yok. odds-snapshot.json içine bookmaker: polymarket kayıtları gelince burada görünecek.")}
       ${renderDeveloperCollapse("POLYMARKET teknik arşivi", `
-        ${renderV629PolymarketCheckpoint(polyBase)}
-        ${renderV617PolymarketMegaPanel(polyBase)}
-        ${renderV613PolymarketYesNoProBoard(polyBase)}
-        ${renderV609PolymarketDecisionDesk(polyBase)}
-        ${renderV605PolymarketQueuePanel(polyBase)}
-        ${renderV601PolymarketYesNoBoard(polyBase)}
-        ${renderV596PolymarketRankingPanel(polyBase)}
-        ${renderV590PolymarketPredictionSummary(polyBase)}
-        ${renderV597PolymarketProfessionalPanel(polyBase)}
-      `, "Prediction market teknik skorları ve eski YES/NO özetleri")}
+        ${renderV651PolymarketSlimArchive(polyBase)}
+      `, "Prediction market teknik skorları tek özet altında tutulur; bookmaker motoruna karışmaz.")}
     </section>`;
   }
 
@@ -6419,42 +6533,13 @@
   function renderOpportunities() {
     const engine = oddsSignalEngineResults();
     const megaReport = buildV617MegaConsolidationReport({ force: true });
-    const report = megaReport.visual;
-    const legacyReport = buildV601StabilizationReport();
+    const decisionReport = buildV651CheckpointDecisionReport(megaReport);
     return `
-      ${renderV641FinalCleanupHero(megaReport)}
+      ${renderV651CheckpointDecisionHero(megaReport)}
       ${renderV641OpportunityFinal(engine, megaReport)}
-      ${renderDeveloperCollapse("Teknik arşiv: radar ve sinyal geçmişi", `
-        ${renderV641TechnicalArchiveIndex(megaReport)}
-        ${renderV629CheckpointHero(megaReport)}
-        ${renderV629OpportunityCheckpoint(engine, megaReport)}
-        ${renderV617MegaHero(megaReport)}
-        ${renderV617OpportunityMegaPanel(engine, megaReport)}
-        ${renderV640ReleaseCheckpointPanel(megaReport)}
-        ${renderV613FinalSimplicityHero(report)}
-        ${renderV613OpportunityFinalPanel(engine, report)}
-        ${renderV628PanelCleanupBoard(megaReport)}
-        ${renderV624ConnectorSlotPanel(megaReport)}
-        ${renderV609FinalUserCommandCenter(report)}
-        ${renderV609OpportunityUserBoard(engine, report)}
-        ${renderOpportunityComparisonDemoCard()}
-        ${renderV613TechnicalOrderPanel(report.visual || report)}
-        ${renderV605DataModeCleanupPanel()}
-        ${renderV601StabilityRibbon(legacyReport)}
-        ${renderV601OpportunityFocusPanel(engine, legacyReport)}
-        ${renderV597OpportunityActionStrip(engine)}
-        ${renderOpportunityCleanBoard(engine)}
-        ${renderV590OpportunityDecisionPanel(engine)}
-        ${renderOpportunityRadarStatus()}
-        ${renderCompactSignalStrip(engine)}
-        ${renderSignalEngineHeader(engine)}
-        <div class="odds-v528-grid v581-opportunity-grid">
-          ${panel("Kaynak Farkı Sinyalleri", renderSignalCards(engine.sourceDiffSignals, 5), "green")}
-          ${panel("Barem Farkı Kontrolü", renderSignalCards(engine.lineDiffSignals, 5), "blue")}
-          ${panel("Oran Hareketi Sinyalleri", renderSignalCards(engine.movementSignals, 5), "red")}
-          ${panel("Düşük Güven / Kontrol", renderSignalCards(engine.lowConfidenceSignals, 5), "purple")}
-        </div>
-      `, "Eski V590-V640 radar kartları, sinyal motoru ve teknik özetler")}
+      ${renderDeveloperCollapse("Teknik arşiv: radar ve sinyal özeti", `
+        ${renderV651RadarSlimArchive(decisionReport)}
+      `, "V590-V640 eski radar kartları tek özet altında tutulur; ana görünüm sade kalır.")}
     `;
   }
 
@@ -6588,45 +6673,21 @@
     const data = comparisonEngineResults();
     const engine = oddsSignalEngineResults();
     const report = buildV617MegaConsolidationReport({ force: true });
-    const legacyReport = buildV601StabilizationReport();
+    const decisionReport = buildV651CheckpointDecisionReport(report);
     return `<section class="v557-comparison-engine v616-comparison-engine" aria-label="Kaynaklar Arası Karşılaştırma Motoru">
       <div class="v554-mock-preview-head v557-comparison-head">
         <div>
-          <span>V641 final sade karşılaştırma</span>
+          <span>V651 final sade karşılaştırma</span>
           <h3>Oran Karşılaştırma</h3>
-          <p>Ana görünümde karar ve tablo kalır. Barem/dry-run/eski checkpoint detayları kapalı teknik arşive taşındı.</p>
+          <p>Ana görünümde karar ve tablo kalır. Eski karşılaştırma/checkpoint panelleri tek teknik özet altında tutulur.</p>
         </div>
         <em>Gerçek API yok · otomatik bahis yok</em>
       </div>
       ${renderV641ComparisonFinal(data, engine, report)}
       ${renderComparisonRows(data)}
       ${renderDeveloperCollapse("Karşılaştırma teknik arşivi", `
-        ${renderV641TechnicalArchiveIndex(report)}
-        ${renderV629CheckpointHero(report)}
-        ${renderV629ComparisonCheckpoint(data, engine, report)}
-        ${renderLineDifferencePreview(data)}
-        ${renderDryRunComparisonPreview()}
-        ${renderV617MegaHero(report)}
-        ${renderV617ComparisonMegaPanel(data, engine, report)}
-        ${renderV640ReleaseCheckpointPanel(report)}
-        ${renderV613ComparisonFinalPanel(data, engine, report.visual || report)}
-        ${renderV609ComparisonUserBoard(data, engine, report.visual || report)}
-        ${renderV613TechnicalOrderPanel(report.visual || report)}
-        ${renderV601StabilityRibbon(legacyReport)}
-        ${renderV605DataModeCleanupPanel()}
-        ${renderV601ComparisonControlPanel(data, engine, legacyReport)}
-        ${renderComparisonCleanBoard(data, engine)}
-        ${renderV597ComparisonVerdict(data, engine)}
-        ${renderV590ComparisonDecisionGuide(data, engine)}
-        ${renderComparisonReadableDigest(data)}
-        ${renderCompactSignalStrip(engine)}
-        ${renderDataModeNotice()}
-        ${renderComparisonSummaryBoxes(data)}
-        ${renderComparisonHealth(data)}
-        ${renderSignalEngineHeader(engine)}
-        ${renderReadinessChecklist()}
-        ${renderStaticSnapshotStatusPanel()}
-      `, "Line farkı, dry-run, eski özetler, sinyal motoru ve snapshot durumu")}
+        ${renderV651ComparisonSlimArchive(decisionReport)}
+      `, "Line farkı, dry-run, eski özetler, sinyal motoru ve snapshot durumu tek özet altında tutulur.")}
     </section>`;
   }
 
@@ -7472,30 +7533,12 @@
 
   function renderSources() {
     const report = buildV617MegaConsolidationReport({ force: true });
+    const decisionReport = buildV651CheckpointDecisionReport(report);
     return `<section class="v565-source-configuration v584-source-configuration v597-source-configuration v604-source-configuration v608-source-configuration v612-source-configuration v616-source-configuration v628-source-configuration v640-source-configuration" aria-label="Kaynak Yapılandırması">
       ${renderV641SourcesFinal(report)}
       ${renderDeveloperCollapse("Checkpoint ve kaynak teknik arşivi", `
-        ${renderV641TechnicalArchiveIndex(report)}
-        ${renderV629SourceCheckpoint(report)}
-        ${renderV632ConnectorBoundaryMap(report)}
-        ${renderV636PanelAuditBoard(report)}
-        ${renderV640ReleaseCheckpointPanel(report)}
-        ${renderV617SourcesMegaPanel(report)}
-        ${renderV620SourceGateMatrix(report)}
-        ${renderV613SourceFinalPanel(report.visual || report)}
-        ${renderV628PanelCleanupBoard(report)}
-        ${renderV624ConnectorSlotPanel(report)}
-        ${renderV609SourceControlCenter(report.visual || report)}
-        ${renderV613TechnicalOrderPanel(report.visual || report)}
-        ${renderSourcesUserModePanel()}
-        ${renderV605SourcePreflightPanel()}
-        ${renderV605ConnectorContractPanel()}
-        ${renderV605DataModeCleanupPanel()}
-        ${renderV601SourcesCompactPanel()}
-        ${renderV597SourceCommandPanel()}
-        ${renderV597LiveConnectorPanel()}
-        ${renderV590SourceGateUserPanel()}
-      `, "Eski checkpoint, connector, panel denetimi ve kullanıcı kontrol kartları")}
+        ${renderV651SourcesSlimArchive(decisionReport)}
+      `, "Eski checkpoint, connector ve panel denetim kartları tek özet altında tutulur.")}
       ${renderDeveloperCollapse("Kaynak Ayarları ve Özet", `
         ${renderSourceOverviewPanel()}
         ${renderSourceSettingsPanel()}
