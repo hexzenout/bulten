@@ -3364,7 +3364,7 @@
   z-index: 100700 !important;
   pointer-events: auto !important;
 }
-html.rolling-hash-boot body > *:not(#rolling-excel-overlay),
+html.rolling-hash-boot body > *:not(#rolling-excel-overlay):not(#omega-rolling-feature-host),
 body.rolling-active > header,
 body.rolling-active > nav,
 body.rolling-active > main {
@@ -3759,16 +3759,16 @@ body.rolling-active > main {
   z-index: 101500 !important;
   pointer-events: auto !important;
 }
-html.rolling-hash-boot body > *:not(#rolling-excel-overlay) {
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-html.rolling-hash-boot #omega-rolling-block,
-html.rolling-hash-boot #v19-finance-block {
+html.rolling-hash-boot body > *:not(#rolling-excel-overlay):not(#omega-rolling-feature-host) {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
+}
+html.rolling-hash-boot #rolling-excel-overlay,
+html.rolling-hash-boot #omega-rolling-feature-host {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 html.rolling-hash-boot::before {
   content: "" !important;
@@ -3776,5 +3776,5 @@ html.rolling-hash-boot::before {
   inset: 0 !important;
   z-index: 90000 !important;
   pointer-events: none !important;
-  background: rgba(5,5,5,.08) !important;
+  background: #050505 !important;
 }

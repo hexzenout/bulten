@@ -589,10 +589,10 @@
   function v763DayToolButtons(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const activeLabel = m === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v770-excel-feature-controls" data-v770-feature-controls="${m}">
-      <button type="button" class="v758-row-tool v759-row-tool active" data-v770-excel-open="${m}:active" onpointerdown="return window.omega_ExcelRollingOpenMainPanel(event, '${m}', 'active')" onclick="return window.omega_ExcelRollingOpenMainPanel(event, '${m}', 'active')">${activeLabel}</button>
-      <button type="button" class="v758-row-tool v759-row-tool history" data-v770-excel-open="${m}:history" onpointerdown="return window.omega_ExcelRollingOpenMainPanel(event, '${m}', 'history')" onclick="return window.omega_ExcelRollingOpenMainPanel(event, '${m}', 'history')">Geçmiş</button>
-      <button type="button" class="v758-row-tool v759-row-tool report" data-v770-excel-open="${m}:report" onpointerdown="return window.omega_ExcelRollingOpenMainPanel(event, '${m}', 'report')" onclick="return window.omega_ExcelRollingOpenMainPanel(event, '${m}', 'report')">Rapor</button>
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v770-excel-feature-controls v771-excel-feature-controls" data-v771-feature-controls="${m}">
+      <button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${m}">${activeLabel}</button>
+      <button type="button" class="v758-row-tool v759-row-tool history" data-log-center="${m}">Geçmiş</button>
+      <button type="button" class="v758-row-tool v759-row-tool report" data-report-open="${m}">Rapor</button>
     </div>`;
   }
 

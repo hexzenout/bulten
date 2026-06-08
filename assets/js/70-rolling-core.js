@@ -1309,6 +1309,30 @@
     renderFloatingPanel();
   };
 
+  if (!window.__omegaV771ExcelRollingBridgeBound) {
+    window.__omegaV771ExcelRollingBridgeBound = true;
+    const openFromExcelButton = function(event) {
+      const target = event.target;
+      const overlay = target && target.closest ? target.closest("#rolling-excel-overlay") : null;
+      if (!overlay) return;
+      const pendingBtn = target.closest("[data-pending-open]");
+      const historyBtn = target.closest("[data-log-center]");
+      const reportBtn = target.closest("[data-report-open]");
+      const btn = pendingBtn || historyBtn || reportBtn;
+      if (!btn) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+      const rawMode = pendingBtn ? pendingBtn.dataset.pendingOpen : historyBtn ? historyBtn.dataset.logCenter : reportBtn.dataset.reportOpen;
+      const mode = rawMode === "crypto" ? "crypto" : "bet";
+      const kind = pendingBtn ? "active" : historyBtn ? "history" : "report";
+      window.omega_RollingOpenFloatingPanel(kind, mode);
+      return false;
+    };
+    document.addEventListener("pointerdown", openFromExcelButton, true);
+    document.addEventListener("click", openFromExcelButton, true);
+  }
+
   window.omega_RenderRollingModule = renderModule;
   window.omega_RollingOpenLogCenter = function(mode = "bet") {
     LOG_CENTER_OPEN_MODE = mode === "crypto" ? "crypto" : "bet";
