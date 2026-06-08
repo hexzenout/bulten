@@ -2341,3 +2341,260 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ===============================
+   V759 Rolling: aktif kupon/işlem merkezi + hedef alan sadeliği
+   =============================== */
+.v759-row-controls .v759-row-tool.active {
+  background: linear-gradient(135deg, rgba(34,197,94,.18), rgba(15,23,42,.88)) !important;
+  border-color: rgba(34,197,94,.28) !important;
+  color: #bbf7d0 !important;
+}
+.v759-row-controls .v758-row-tool.report {
+  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(15,23,42,.88)) !important;
+  border-color: rgba(96,165,250,.30) !important;
+  color: #bfdbfe !important;
+}
+.v759-pending-board {
+  display: grid !important;
+  gap: 14px !important;
+}
+.v759-pending-section,
+.v759-coupon-card {
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 16px !important;
+  background: rgba(2,6,23,.34) !important;
+  padding: 12px !important;
+}
+.v759-pending-section h4 {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin: 0 0 10px !important;
+  color: #fff !important;
+  font-size: .9rem !important;
+  font-weight: 950 !important;
+}
+.v759-pending-section h4 span {
+  border: 1px solid rgba(255,255,255,.12) !important;
+  border-radius: 999px !important;
+  padding: 3px 8px !important;
+  color: var(--muted) !important;
+  font-size: .72rem !important;
+}
+.v759-coupon-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  align-items: flex-start !important;
+  margin-bottom: 10px !important;
+}
+.v759-coupon-head b {
+  color: #fff !important;
+  font-weight: 950 !important;
+  display: block !important;
+}
+.v759-coupon-head span {
+  color: var(--muted) !important;
+  font-size: .74rem !important;
+  font-weight: 850 !important;
+}
+.v759-coupon-actions,
+.v759-pending-actions {
+  display: flex !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+}
+.v759-coupon-actions button,
+.v759-pending-actions button {
+  border: 0 !important;
+  border-radius: 10px !important;
+  padding: 8px 10px !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+.v759-coupon-actions .win,
+.v759-pending-actions .win { background: rgba(34,197,94,.18) !important; color: #bbf7d0 !important; }
+.v759-coupon-actions .loss,
+.v759-pending-actions .loss { background: rgba(239,68,68,.18) !important; color: #fecaca !important; }
+.v759-coupon-metrics {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin-bottom: 10px !important;
+}
+.v759-coupon-metrics span {
+  border: 1px solid rgba(255,255,255,.09) !important;
+  border-radius: 12px !important;
+  background: rgba(0,0,0,.18) !important;
+  padding: 8px !important;
+  color: var(--muted) !important;
+  font-size: .72rem !important;
+  font-weight: 850 !important;
+}
+.v759-coupon-metrics b {
+  display: block !important;
+  margin-top: 2px !important;
+  color: #fff !important;
+  font-size: .86rem !important;
+}
+.v759-pending-editor {
+  display: grid !important;
+  gap: 8px !important;
+}
+.v759-pending-edit-row {
+  display: grid !important;
+  grid-template-columns: 42px 96px 108px minmax(160px,1fr) 96px 104px auto !important;
+  gap: 7px !important;
+  align-items: center !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 13px !important;
+  background: rgba(15,23,42,.52) !important;
+  padding: 8px !important;
+}
+.v759-pending-edit-row.crypto { grid-template-columns: 42px minmax(180px,1fr) 100px 110px auto !important; }
+.v759-row-no {
+  color: var(--muted) !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+}
+.v759-pending-edit-row input,
+.v759-pending-edit-row select {
+  width: 100% !important;
+  min-width: 0 !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 10px !important;
+  background: rgba(0,0,0,.24) !important;
+  color: #fff !important;
+  padding: 8px !important;
+  font-size: .76rem !important;
+  font-weight: 850 !important;
+}
+.v759-pending-edit-row select:disabled {
+  opacity: .38 !important;
+}
+.v759-empty-note {
+  border: 1px dashed rgba(255,255,255,.14) !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  color: var(--muted) !important;
+  font-weight: 850 !important;
+  background: rgba(0,0,0,.14) !important;
+}
+.v759-target-plan {
+  padding: 14px !important;
+}
+.v759-target-layout {
+  display: grid !important;
+  grid-template-columns: minmax(260px,.85fr) minmax(320px,1.15fr) !important;
+  gap: 12px !important;
+  grid-column: 1 / -1 !important;
+}
+.v759-target-edit,
+.v759-target-status {
+  border: 1px solid rgba(255,255,255,.09) !important;
+  border-radius: 16px !important;
+  background: rgba(0,0,0,.16) !important;
+  padding: 12px !important;
+}
+.v759-target-edit h4,
+.v759-target-status h4 {
+  margin: 0 0 9px !important;
+  color: #fff !important;
+  font-size: .84rem !important;
+  font-weight: 950 !important;
+}
+.v759-target-edit label {
+  display: grid !important;
+  grid-template-columns: 130px minmax(0,1fr) !important;
+  gap: 8px !important;
+  align-items: center !important;
+  margin-bottom: 7px !important;
+}
+.v759-target-edit span {
+  color: var(--muted) !important;
+  font-size: .72rem !important;
+  font-weight: 900 !important;
+}
+.v759-target-edit input {
+  min-width: 0 !important;
+  width: 100% !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 10px !important;
+  background: rgba(0,0,0,.24) !important;
+  color: #fff !important;
+  padding: 8px !important;
+  font-weight: 900 !important;
+}
+.v759-target-flow {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 8px !important;
+}
+.v759-target-flow span {
+  border: 1px solid rgba(255,255,255,.09) !important;
+  border-radius: 12px !important;
+  background: rgba(15,23,42,.52) !important;
+  padding: 8px 9px !important;
+  color: var(--muted) !important;
+  font-size: .72rem !important;
+  font-weight: 850 !important;
+}
+.v759-target-flow b { display: block !important; color: #fff !important; margin-top: 2px !important; }
+.v759-target-flow i { color: var(--muted) !important; }
+.v759-target-pnl {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+  margin-bottom: 9px !important;
+}
+.v759-target-pnl strong { font-size: 1rem !important; }
+.v759-target-pnl em,
+.v759-target-pnl small { color: var(--muted) !important; font-style: normal !important; font-weight: 850 !important; }
+.v759-target-bar {
+  height: 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.08) !important;
+  overflow: hidden !important;
+  margin-bottom: 10px !important;
+}
+.v759-target-bar u {
+  display: block !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  background: linear-gradient(90deg, #22c55e, #fbbf24) !important;
+}
+.v759-target-actions {
+  display: flex !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+.v759-target-log-fold { grid-column: 1 / -1 !important; }
+.v759-excel-day-tools {
+  display: grid !important;
+  gap: 6px !important;
+  margin-top: 8px !important;
+}
+.v759-excel-day-tools button {
+  border: 1px solid rgba(255,255,255,.12) !important;
+  border-radius: 9px !important;
+  background: rgba(15,23,42,.78) !important;
+  color: #e5e7eb !important;
+  padding: 7px 9px !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+@media (max-width: 900px) {
+  .v759-target-layout,
+  .v759-coupon-metrics { grid-template-columns: 1fr !important; }
+  .v759-pending-edit-row,
+  .v759-pending-edit-row.crypto { grid-template-columns: 1fr !important; }
+  .v759-coupon-head { display: grid !important; }
+  .v759-target-edit label { grid-template-columns: 1fr !important; }
+}

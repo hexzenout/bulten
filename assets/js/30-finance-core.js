@@ -73,7 +73,7 @@ function omega_GetRollingModeV46D() {
                 let dayProfit = 0;
                 htmlBuffer += `
                 <div class="day-row-capsule">
-                    <div class="day-info"><h3>GÜN ${day}</h3><span>${isCrypto ? 'Gün P/L' : 'Gün K/Z'}</span></div>
+                    <div class="day-info"><h3>GÜN ${day}</h3><span>${isCrypto ? 'Gün P/L' : 'Gün K/Z'}</span><div class="v759-excel-day-tools"><button type="button" onclick="window.omega_RollingOpenLogCenter && window.omega_RollingOpenLogCenter('${rollMode}')">Geçmiş</button><button type="button" onclick="window.omega_RollingCreateReport && window.omega_RollingCreateReport('${rollMode}')">Rapor</button></div></div>
                     <div class="capsule-container">`;
                 for (let slot = 0; slot < 10; slot++) {
                     if (dayOps[slot]) {

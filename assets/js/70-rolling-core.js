@@ -374,37 +374,164 @@
   function pendingRowsForMode(mode, state) {
     return activeRowsForMode(mode, state).filter(s => s.status !== "win" && s.status !== "loss");
   }
-  function renderPendingBoard(mode, state) {
+  function betDisplayType(slot, totalActive = 1) {
+    const raw = String(slot?.betType || "").toLowerCase();
+    if (raw === "single" || raw === "tek") return "single";
+    if (raw === "combo" || raw === "kombine") return "combo";
+    return totalActive > 1 ? "combo" : "single";
+  }
+  function betCouponId(slot) {
+    const id = Math.max(1, Math.min(4, Number(slot?.couponId || 1)));
+    return Number.isFinite(id) ? id : 1;
+  }
+  function getBetCouponGroups(state) {
+    const rows = pendingRowsForMode("bet", state);
+    const totalActive = rows.length;
+    const singles = [];
+    const groups = {};
+    rows.forEach(row => {
+      const type = betDisplayType(row, totalActive);
+      if (type === "single") {
+        singles.push(row);
+        return;
+      }
+      const id = betCouponId(row);
+      if (!groups[id]) groups[id] = [];
+      groups[id].push(row);
+    });
+    const coupons = Object.entries(groups).map(([id, list]) => ({ id: Number(id), rows: list })).sort((a,b) => a.id - b.id);
+    return { singles, coupons, rows };
+  }
+  function couponTotals(rows) {
+    const clean = (rows || []).filter(Boolean);
+    const odds = clean.reduce((p, s) => p * Math.max(1, Number(s.odds || 1)), 1);
+    const firstStake = clean.find(s => Number(s.stake || 0) > 0);
+    const stake = Number(firstStake?.stake || 0);
+    const possibleReturn = stake * odds;
+    const netProfit = possibleReturn - stake;
+    return { stake, odds, possibleReturn, netProfit };
+  }
+  function renderPendingEditRow(mode, row, index, totalActive) {
     const isCrypto = mode === "crypto";
-    const rows = pendingRowsForMode(mode, state);
-    const totalStake = rows.reduce((sum, s) => sum + Number(s.stake || 0), 0);
-    const totalOdds = !isCrypto && rows.length ? rows.reduce((p, s) => p * Math.max(1, Number(s.odds || 1)), 1) : 0;
-    const possibleReturn = !isCrypto ? totalStake * totalOdds : 0;
-    const cryptoTarget = isCrypto ? rows.reduce((sum, s) => sum + Math.abs(Number(s.odds || 0)), 0) : 0;
-    const list = rows.length ? rows.slice(0, 20).map(s => `
-      <li>
-        <span>#${s.index + 1}</span>
-        <b>${escapeHtml(s.name || (isCrypto ? "Kripto işlem" : "Maç / seçim"))}</b>
-        <em>${money(s.stake || 0)}</em>
-        <strong>${isCrypto ? `${money(s.odds || 0)} net` : `Oran ${escapeHtml(String(s.odds || "-"))}`}</strong>
-      </li>`).join("") : `<li class="empty"><span>0</span><b>${isCrypto ? "Kutulara işlem yazınca burada bekleyen işlem olarak görünür." : "Kutulara maç yazınca burada kupon listesi oluşur."}</b><em>-</em><strong>BEKLİYOR</strong></li>`;
+    const slotIndex = Number(row.index ?? index);
+    const betType = !isCrypto ? betDisplayType(row, totalActive) : "";
+    const couponId = !isCrypto ? betCouponId(row) : 1;
+    const resultWin = isCrypto ? "KAZANÇ" : "KAZANDI";
+    const resultLoss = isCrypto ? "KAYIP" : "KAYBETTİ";
     return `
-      <div class="v757-pending-board ${mode}">
-        <div class="v757-pending-head">
-          <div>
-            <b>${isCrypto ? "Bekleyen Kripto İşlemleri" : "Kombine Kupon Alanı"}</b>
-            <span>${isCrypto ? "Tek tek yazdığın işlemler sonuçlanana kadar burada takip edilir." : "Yazdığın maçlar kupon gibi burada toplanır; sonuç verince LOG'a gider."}</span>
-          </div>
-          <div class="v757-pending-metrics">
-            <span>${rows.length} bekleyen</span>
-            <span>${money(totalStake)} tutar</span>
-            <span>${isCrypto ? `${money(cryptoTarget)} net hedef` : `Toplam oran ${totalOdds ? totalOdds.toFixed(2) : "-"}`}</span>
-            ${!isCrypto ? `<span>Olası dönüş ${possibleReturn ? money(possibleReturn) : "-"}</span>` : ""}
-          </div>
+      <div class="v759-pending-edit-row ${mode}">
+        <span class="v759-row-no">#${slotIndex + 1}</span>
+        ${!isCrypto ? `<select data-pending-edit="${mode}:${slotIndex}:betType"><option value="single" ${betType === "single" ? "selected" : ""}>Tek</option><option value="combo" ${betType === "combo" ? "selected" : ""}>Kombine</option></select><select data-pending-edit="${mode}:${slotIndex}:couponId" ${betType === "combo" ? "" : "disabled"}>${[1,2,3,4].map(n => `<option value="${n}" ${couponId === n ? "selected" : ""}>Kupon ${n}</option>`).join("")}</select>` : ""}
+        <input data-pending-edit="${mode}:${slotIndex}:name" value="${escapeHtml(row.name || "")}" placeholder="${isCrypto ? "İşlem" : "Maç / seçim"}">
+        <input data-pending-edit="${mode}:${slotIndex}:stake" type="number" step="0.01" value="${row.stake || ""}" placeholder="Tutar">
+        <input data-pending-edit="${mode}:${slotIndex}:odds" type="number" step="0.01" value="${row.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}">
+        <div class="v759-pending-actions">
+          <button type="button" class="win" data-mode="${mode}" data-slot="${slotIndex}" data-status="win">${resultWin}</button>
+          <button type="button" class="loss" data-mode="${mode}" data-slot="${slotIndex}" data-status="loss">${resultLoss}</button>
         </div>
-        <ul>${list}</ul>
       </div>`;
   }
+  function addCouponHistoryRecord(state, coupon, status) {
+    const totals = couponTotals(coupon.rows);
+    const h = loadHistory();
+    const now = Date.now();
+    const names = coupon.rows.map(s => String(s.name || "").trim()).filter(Boolean);
+    const rec = {
+      id: "rh_" + now + "_coupon_" + Math.random().toString(36).slice(2),
+      mode: "bet",
+      ts: now,
+      row: coupon.id,
+      name: `${coupon.rows.length > 1 ? `Kupon ${coupon.id}` : "Tek Bahis"}: ${names.join(" + ") || "Bahis / maç"}`,
+      stake: totals.stake,
+      odds: Number(totals.odds.toFixed(4)),
+      status,
+      pnl: status === "win" ? totals.netProfit : -totals.stake
+    };
+    h.bet.unshift(rec);
+    saveHistory(h);
+    coupon.rows.forEach(row => {
+      const slot = state.modeSlots.bet[row.index];
+      if (!slot) return;
+      slot.status = status;
+      slot.pnl = row.index === coupon.rows[0].index ? rec.pnl : 0;
+      slot.historyId = rec.id;
+      slot.historyStatus = status;
+    });
+  }
+  function renderPendingBoard(mode, state) {
+    const isCrypto = mode === "crypto";
+    if (isCrypto) {
+      const rows = pendingRowsForMode(mode, state);
+      const totalStake = rows.reduce((sum, s) => sum + Number(s.stake || 0), 0);
+      const cryptoTarget = rows.reduce((sum, s) => sum + Math.abs(Number(s.odds || 0)), 0);
+      return `
+        <div class="v757-pending-board v759-pending-board crypto">
+          <div class="v757-pending-head">
+            <div>
+              <b>Aktif Kripto İşlemleri</b>
+              <span>Kutuya yazdığın işlem otomatik aktif işlem sayılır; sonuç verince Geçmiş'e işlenir.</span>
+            </div>
+            <div class="v757-pending-metrics">
+              <span>${rows.length} aktif</span>
+              <span>${money(totalStake)} toplam marjin</span>
+              <span>${money(cryptoTarget)} net hedef</span>
+            </div>
+          </div>
+          <div class="v759-pending-editor">
+            ${rows.length ? rows.map((r, idx) => renderPendingEditRow(mode, r, idx, rows.length)).join("") : `<div class="v759-empty-note">Kutulara kripto işlem/tutar/net K/Z yazınca burada aktif işlem olarak görünür.</div>`}
+          </div>
+        </div>`;
+    }
+    const grouped = getBetCouponGroups(state);
+    const totalRows = grouped.rows.length;
+    const singleCards = grouped.singles.length ? `
+      <div class="v759-pending-section">
+        <h4>Tek Bahisler <span>${grouped.singles.length}</span></h4>
+        <div class="v759-pending-editor">${grouped.singles.map((r, idx) => renderPendingEditRow("bet", r, idx, totalRows)).join("")}</div>
+      </div>` : "";
+    const couponCards = grouped.coupons.length ? grouped.coupons.map(coupon => {
+      const totals = couponTotals(coupon.rows);
+      const showNumbered = grouped.coupons.length > 1;
+      return `
+        <div class="v759-coupon-card">
+          <div class="v759-coupon-head">
+            <div>
+              <b>${showNumbered ? `Kupon ${coupon.id}` : "Kombine Kupon"}</b>
+              <span>Bahis Türü: Kombine · ${coupon.rows.length} maç</span>
+            </div>
+            <div class="v759-coupon-actions">
+              <button type="button" class="win" data-settle-coupon="${coupon.id}:win">KAZANDI</button>
+              <button type="button" class="loss" data-settle-coupon="${coupon.id}:loss">KAYBETTİ</button>
+            </div>
+          </div>
+          <div class="v759-coupon-metrics">
+            <span>Bahis tutarı <b>${money(totals.stake)}</b></span>
+            <span>Toplam oran <b>${totals.odds ? totals.odds.toFixed(2) : "-"}</b></span>
+            <span title="Kazanırsa geri alınacak toplam tutar">Olası dönüş <b>${totals.possibleReturn ? money(totals.possibleReturn) : "-"}</b></span>
+            <span>Net kâr <b>${totals.netProfit ? money(totals.netProfit) : "-"}</b></span>
+          </div>
+          <div class="v759-pending-editor">${coupon.rows.map((r, idx) => renderPendingEditRow("bet", r, idx, totalRows)).join("")}</div>
+        </div>`;
+    }).join("") : "";
+    return `
+      <div class="v757-pending-board v759-pending-board bet">
+        <div class="v757-pending-head">
+          <div>
+            <b>Aktif Bahisler / Kuponlar</b>
+            <span>Tek bahis ve kombine kuponlar ayrı görünür. Kombine için kupon numarasını satırdan değiştirebilirsin.</span>
+          </div>
+          <div class="v757-pending-metrics">
+            <span>${grouped.singles.length} tek</span>
+            <span>${grouped.coupons.length} kupon</span>
+            <span>${totalRows} aktif maç</span>
+          </div>
+        </div>
+        ${singleCards || ""}
+        ${couponCards || ""}
+        ${!totalRows ? `<div class="v759-empty-note">Kutulara maç/seçim, tutar ve oran yazınca burada aktif bahis veya kupon olarak görünür.</div>` : ""}
+      </div>`;
+  }
+
   function renderModeCommand(mode, slots, state, summary, rollSummaryForMode) {
     const isCrypto = mode === "crypto";
     const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
@@ -420,17 +547,13 @@
         <div class="v757-command-summary">
           <div>
             <b>${isCrypto ? "Kripto İşlem Paneli" : "Bahis Kupon Paneli"}</b>
-            <span>${pending} bekleyen · ${settled} kapalı · Bugün ${today.length} LOG · ${summary.wins} W / ${summary.losses} L · ROI ${Number(summary.roi || 0).toFixed(1)}%</span>
-          </div>
-          <div class="v757-command-actions">
-            <button type="button" data-log-center="${mode}"><i class="fa-solid fa-table-list"></i> LOG / Rapor Merkezi</button>
-            <button type="button" data-report-create="${mode}"><i class="fa-solid fa-image"></i> Rapor Resmi</button>
+            <span>${pending} aktif/bekleyen · ${settled} kapalı · Bugün ${today.length} geçmiş · ${summary.wins} W / ${summary.losses} L · ROI ${Number(summary.roi || 0).toFixed(1)}%</span>
           </div>
         </div>
         <div class="v757-command-micro">
           <span>Bugün <b class="${todayPnl >= 0 ? "pos" : "neg"}">${signedMoney(todayPnl)}</b></span>
           <span>Bu hafta <b>${week.length} kayıt</b></span>
-          <span>Sonuç verirken gerçek işlem onayı çıkar; deneme tıklaması LOG'a düşmez.</span>
+          <span>Sonuç verirken profesyonel onay penceresi açılır; deneme tıklaması Geçmiş'e düşmez.</span>
         </div>
       </div>`;
   }
@@ -495,8 +618,8 @@
         <section class="v758-pending-modal ${mode}">
           <div class="v512-history-head">
             <div>
-              <b>${isCrypto ? "BEKLEYEN KRİPTO İŞLEMLERİ" : "BEKLEYEN KOMBİNE KUPON"}</b>
-              <span>Kutulara yazdığın satırlar otomatik bekleyen olarak burada toplanır.</span>
+              <b>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR"}</b>
+              <span>Kutulara yazdığın satırlar otomatik aktif olarak burada toplanır; sonuç verince Geçmiş'e gider.</span>
             </div>
             <button type="button" data-pending-close>×</button>
           </div>
@@ -607,8 +730,8 @@
   function renderRowControls(mode, state) {
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const label = mode === "crypto" ? "Kripto" : "Bahis";
-    const pendingLabel = mode === "crypto" ? "Bekleyen İşlemler" : "Kupon";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls"><span>${count}/20 ${label}</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-log-center="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş / Rapor</button></div>`;
+    const pendingLabel = mode === "crypto" ? "Aktif İşlemler" : "Aktif Bahisler / Kuponlar";
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls"><span>${count}/20 ${label}</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-log-center="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button><button type="button" class="v758-row-tool report" data-report-create="${mode}"><i class="fa-solid fa-image"></i> Rapor</button></div>`;
   }
 
   function escapeHtml(str) {
@@ -675,30 +798,30 @@
         <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</em>
       </li>`).join("") || `<li class="empty"><span>Kayıt yok</span><b>Hedefi bitirince burada kalır.</b><em>-</em></li>`;
     return `
-      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan v757-target-plan">
-        <div class="v756-target-title v757-target-title v758-target-title">
+      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan v757-target-plan v759-target-plan">
+        <div class="v756-target-title v757-target-title v758-target-title v759-target-title">
           <b>Rolling Hedef Takibi</b>
         </div>
-        <div class="v756-target-grid v757-target-grid">
-          <label><span>BAŞLANGIÇ</span><input type="number" step="1" data-rolling-quick="start" value="${plan.start}"></label>
-          <label><span>HEDEF</span><input type="number" step="1" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
-          <label class="v757-current-field"><span>GÜNCEL</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Manuel güncel"><small>Otomatik: ${money(plan.autoCurrent)}</small></label>
+        <div class="v759-target-layout">
+          <div class="v759-target-edit">
+            <h4>Hedef Ayarları</h4>
+            <label><span>Başlangıç $</span><input type="number" step="1" data-rolling-quick="start" value="${plan.start}"></label>
+            <label><span>Hedef $</span><input type="number" step="1" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
+            <label><span>Manuel Güncel $</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Otomatik kullan"></label>
+          </div>
+          <div class="v759-target-status">
+            <h4>İlerleme Özeti</h4>
+            <div class="v759-target-flow"><span>Başlangıç <b>${money(plan.start)}</b></span><i>→</i><span>Güncel <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${money(plan.current)}</b></span><i>→</i><span>Hedef <b>${plan.target ? money(plan.target) : "Bekliyor"}</b></span></div>
+            <div class="v759-target-pnl"><strong class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</strong><em>${pctText(plan.growth)} büyüme</em><small>Otomatik güncel: ${money(plan.autoCurrent)}</small></div>
+            <div class="v759-target-bar"><u style="width:${plan.pct.toFixed(1)}%"></u></div>
+            <div class="v755-target-actions v756-target-actions v757-target-actions v759-target-actions">
+              <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> HEDEFİ BİTİR</button>
+              <button type="button" class="v755-target-reset" data-target-reset>YENİ HEDEF</button>
+            </div>
+          </div>
         </div>
-        <div class="v757-target-summary">
-          <span>Başlangıç <b>${money(plan.start)}</b></span>
-          <i>→</i>
-          <span>Güncel <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${money(plan.current)}</b></span>
-          <i>→</i>
-          <span>Hedef <b>${plan.target ? money(plan.target) : "Bekliyor"}</b></span>
-          <strong class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)} · ${pctText(plan.growth)}</strong>
-          <em><u style="width:${plan.pct.toFixed(1)}%"></u></em>
-        </div>
-        <div class="v755-target-actions v756-target-actions v757-target-actions">
-          <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> HEDEFİ BİTİR</button>
-          <button type="button" class="v755-target-reset" data-target-reset>YENİ HEDEF</button>
-        </div>
-        <details class="v756-target-log-fold v757-target-log-fold">
-          <summary>Hedef LOG <span>${rows.length} kayıt</span></summary>
+        <details class="v756-target-log-fold v757-target-log-fold v759-target-log-fold">
+          <summary>Hedef Geçmişi <span>${rows.length} kayıt</span></summary>
           <ul class="v755-target-log v756-target-log">${latest}</ul>
         </details>
       </div>`;
@@ -899,6 +1022,43 @@
       HISTORY_OPEN_MODE = null;
       renderModule();
     }));
+    mount.querySelectorAll("[data-pending-edit]").forEach(input => input.addEventListener("change", () => {
+      const [mode, slotRaw, key] = String(input.dataset.pendingEdit || "bet:0:name").split(":");
+      const i = Number(slotRaw || 0);
+      const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
+      if (!list[i]) list[i] = createSlot(mode, i);
+      list[i].type = mode;
+      if (key === "couponId") list[i][key] = Math.max(1, Math.min(4, Number(input.value || 1)));
+      else list[i][key] = input.value;
+      if (mode === "bet" && !list[i].betType) list[i].betType = key === "betType" ? input.value : betDisplayType(list[i], activeRowsForMode("bet", state).length);
+      if (mode === "bet" && !list[i].couponId) list[i].couponId = 1;
+      if (String(list[i].name || "").trim() || Number(list[i].stake || 0) || Number(list[i].odds || 0)) {
+        if (list[i].status !== "win" && list[i].status !== "loss") list[i].status = "pending";
+      }
+      if (mode === "crypto" && key === "odds") list[i].cryptoPnlMode = "amount";
+      recalcSlot(list[i]);
+      saveState(state);
+      renderModule();
+    }));
+    mount.querySelectorAll("[data-settle-coupon]").forEach(btn => btn.addEventListener("click", () => {
+      const [couponRaw, status] = String(btn.dataset.settleCoupon || "1:win").split(":");
+      const couponId = Math.max(1, Math.min(4, Number(couponRaw || 1)));
+      const grouped = getBetCouponGroups(state);
+      const coupon = grouped.coupons.find(c => c.id === couponId);
+      if (!coupon || !coupon.rows.length) return;
+      const totals = couponTotals(coupon.rows);
+      CONFIRM_DIALOG = {
+        type: "settleCoupon",
+        couponId,
+        status: status === "loss" ? "loss" : "win",
+        tone: status === "loss" ? "danger" : "success",
+        title: "Kupon sonucunu kaydet",
+        message: `Kupon ${couponId} için ${status === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
+        detail: `${coupon.rows.length} maç · Bahis tutarı ${money(totals.stake)} · Olası dönüş ${money(totals.possibleReturn)}. Denemeyse iptal et.`,
+        confirmText: status === "loss" ? "KAYBETTİ olarak kaydet" : "KAZANDI olarak kaydet"
+      };
+      renderModule();
+    }));
     mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = null;
       renderModule();
@@ -949,6 +1109,13 @@
         const fresh = loadState();
         applySlotResult(fresh, action.mode, Number(action.slot || 0), action.status);
         saveState(fresh);
+      } else if (action.type === "settleCoupon") {
+        const fresh = loadState();
+        const coupon = getBetCouponGroups(fresh).coupons.find(c => c.id === Number(action.couponId || 1));
+        if (coupon) {
+          addCouponHistoryRecord(fresh, coupon, action.status === "loss" ? "loss" : "win");
+          saveState(fresh);
+        }
       } else if (action.type === "deleteHistory") {
         deleteHistoryRecord(action.mode, action.id);
       }
@@ -1011,6 +1178,19 @@
     }));
   }
   window.omega_RenderRollingModule = renderModule;
+  window.omega_RollingOpenLogCenter = function(mode = "bet") {
+    LOG_CENTER_OPEN_MODE = mode === "crypto" ? "crypto" : "bet";
+    PENDING_BOARD_OPEN_MODE = null;
+    HISTORY_OPEN_MODE = null;
+    HISTORY_FILTER = "today";
+    renderModule();
+  };
+  window.omega_RollingCreateReport = function(mode = "bet") {
+    const fresh = loadState();
+    createReportCard(mode === "crypto" ? "crypto" : "bet", fresh);
+    saveState(fresh);
+    renderModule();
+  };
   window.omega_RollingV47 = { loadState, saveState, slotSummary, rollingSummary, money };
   window.addEventListener("storage", e => { if ((e.key === STORAGE_KEY || e.key === ROLLING_KEY) && location.hash.startsWith("#rolling")) renderModule(); });
 })();
