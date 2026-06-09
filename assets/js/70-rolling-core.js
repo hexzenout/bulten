@@ -646,7 +646,10 @@
     const totalOdds = data.length === 1 ? Number(data[0].odds || 0) : 0;
     const title = v788PhotoTitle(data, titleText);
     const footerY = cursorY + 20;
-    const height = Math.max(360, footerY + 104);
+    const footerH = 130;
+    const height = Math.max(430, footerY + footerH + 46);
+    const totalOddsLabel = totalOdds ? totalOdds.toFixed(2) : "-";
+    const totalPossibleLabel = totalPossible ? money(totalPossible) : "-";
 
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <rect width="${width}" height="${height}" fill="#020617"/>
@@ -654,10 +657,13 @@
       <text x="${padX}" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">${escapeHtml(title)}</text>
       <text x="${padX}" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text>
       ${rowHtml.join("")}
-      <rect x="${rowX}" y="${footerY}" width="${rowW}" height="58" rx="14" fill="#111827" stroke="#334155"/>
-      <text x="64" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran: ${totalOdds ? totalOdds.toFixed(2) : "-"}</text>
-      <text x="330" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar: ${money(totalStake)}</text>
-      <text x="836" y="${footerY + 36}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">Tahmini Kazanç: ${totalPossible ? money(totalPossible) : "-"}</text>
+      <rect x="${rowX}" y="${footerY}" width="${rowW}" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/>
+      <text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text>
+      <text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text>
+      <text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text>
+      <text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${money(totalStake)}</text>
+      <text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text>
+      <text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${totalPossibleLabel}</text>
     </svg>`;
   }
   function v781BuildTablePhotoSvg(mode, state) {
