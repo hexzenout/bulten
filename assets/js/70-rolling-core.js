@@ -18,6 +18,24 @@
   let PENDING_BOARD_OPEN_MODE = null;
   let HISTORY_FILTER = "today";
   let CONFIRM_DIALOG = null;
+  let CONFIRM_RETURN_PANEL_MODE = null;
+
+  function restoreActivePanelAfterConfirm(mode) {
+    const panelMode = mode === "crypto" ? "crypto" : "bet";
+    PENDING_BOARD_OPEN_MODE = panelMode;
+    LOG_CENTER_OPEN_MODE = null;
+    REPORT_CENTER_OPEN_MODE = null;
+    HISTORY_OPEN_MODE = null;
+    CONFIRM_RETURN_PANEL_MODE = panelMode;
+    setTimeout(() => {
+      PENDING_BOARD_OPEN_MODE = panelMode;
+      LOG_CENTER_OPEN_MODE = null;
+      REPORT_CENTER_OPEN_MODE = null;
+      HISTORY_OPEN_MODE = null;
+      CONFIRM_DIALOG = null;
+      renderFloatingPanel();
+    }, 0);
+  }
 
   const DEFAULT_STATE = {
     bank: 1000,
@@ -1421,6 +1439,7 @@
     }));
     mount.querySelectorAll("[data-pending-open]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = btn.dataset.pendingOpen === "crypto" ? "crypto" : "bet";
+      CONFIRM_RETURN_PANEL_MODE = PENDING_BOARD_OPEN_MODE;
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;
       HISTORY_OPEN_MODE = null;
@@ -1439,11 +1458,13 @@
     }));
     mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = null;
+      CONFIRM_RETURN_PANEL_MODE = null;
       refresh();
     }));
     mount.querySelectorAll(".v758-pending-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
       PENDING_BOARD_OPEN_MODE = null;
+      CONFIRM_RETURN_PANEL_MODE = null;
       refresh();
     }));
     mount.querySelectorAll("[data-log-center-close]").forEach(btn => btn.addEventListener("click", () => {
@@ -1472,12 +1493,16 @@
       refresh();
     }));
     mount.querySelectorAll("[data-confirm-no]").forEach(btn => btn.addEventListener("click", () => {
+      const keepPanel = CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
       CONFIRM_DIALOG = null;
+      if (keepPanel) restoreActivePanelAfterConfirm(keepPanel);
       refresh();
     }));
     mount.querySelectorAll(".v757-confirm-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
+      const keepPanel = CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
       CONFIRM_DIALOG = null;
+      if (keepPanel) restoreActivePanelAfterConfirm(keepPanel);
       refresh();
     }));
     mount.querySelectorAll("[data-confirm-yes]").forEach(btn => btn.addEventListener("click", () => {
@@ -1514,12 +1539,8 @@
       } else if (action.type === "deleteHistory") {
         deleteHistoryRecord(action.mode, action.id);
       }
-      if (action.keepActivePanel) {
-        PENDING_BOARD_OPEN_MODE = action.keepActivePanel === "crypto" ? "crypto" : "bet";
-        LOG_CENTER_OPEN_MODE = null;
-        REPORT_CENTER_OPEN_MODE = null;
-        HISTORY_OPEN_MODE = null;
-      }
+      const keepPanel = action.keepActivePanel || CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
+      if (keepPanel) restoreActivePanelAfterConfirm(keepPanel);
       refresh();
     }));
     mount.querySelectorAll(".v512-history-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
@@ -1540,12 +1561,14 @@
       if (!list[i]) return;
       const matches = getSlotMatches(list[i]);
       const matchName = matches[mi]?.name || `Maç ${mi + 1}`;
+      const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || "bet") : (PENDING_BOARD_OPEN_MODE || null);
+      if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
       CONFIRM_DIALOG = {
         type: "comboMatch",
         slot: i,
         match: mi,
         status,
-        keepActivePanel: PENDING_BOARD_OPEN_MODE || "bet",
+        keepActivePanel: keepPanel,
         tone: status === "loss" ? "danger" : "success",
         title: "Kombine maç sonucunu onayla",
         message: `${matchName} için ${status === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
@@ -1584,12 +1607,14 @@
         const label = mode === "crypto" ? "kripto işlem" : "bahis / maç";
         const resultLabel = nextStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ");
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
+        const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
+        if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
         CONFIRM_DIALOG = {
           type: "settle",
           mode,
           slot: i,
           status: nextStatus,
-          keepActivePanel: PENDING_BOARD_OPEN_MODE || null,
+          keepActivePanel: keepPanel,
           tone: nextStatus === "loss" ? "danger" : "success",
           title: "Sonucu kaydetmeden önce onayla",
           message: `${name} için sonuç: ${resultLabel}.`,
@@ -1613,6 +1638,7 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
     PENDING_BOARD_OPEN_MODE = k === "active" ? m : null;
+    CONFIRM_RETURN_PANEL_MODE = k === "active" ? m : null;
     LOG_CENTER_OPEN_MODE = k === "history" ? m : null;
     REPORT_CENTER_OPEN_MODE = k === "report" ? m : null;
     HISTORY_OPEN_MODE = null;
