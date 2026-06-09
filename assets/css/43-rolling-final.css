@@ -4844,3 +4844,167 @@ html.rolling-hash-boot::before {
 .rolling-v48-rail .v798-target-card:not([open]) .v796-target-log {
   display: none !important;
 }
+
+
+/* V799: Aktif Kripto İşlemleri profesyonel kart + Rapor özet */
+.v799-crypto-card {
+  border-color: rgba(56,189,248,.22) !important;
+}
+
+.v799-crypto-card .v763-card-top {
+  align-items: center !important;
+}
+
+.v799-crypto-info {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.v799-crypto-detail-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin-top: 10px !important;
+}
+
+.v799-crypto-detail-grid label {
+  display: grid !important;
+  gap: 6px !important;
+  padding: 10px !important;
+  border-radius: 12px !important;
+  background: rgba(15,23,42,.72) !important;
+  border: 1px solid rgba(56,189,248,.14) !important;
+}
+
+.v799-crypto-detail-grid span {
+  color: #94a3b8 !important;
+  font-size: .72rem !important;
+  font-weight: 900 !important;
+}
+
+.v799-crypto-detail-grid input,
+.v799-crypto-tp-row input {
+  width: 100% !important;
+  min-width: 0 !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  border-radius: 10px !important;
+  background: rgba(2,6,23,.86) !important;
+  color: #f8fafc !important;
+  padding: 8px 10px !important;
+  font-weight: 850 !important;
+  box-sizing: border-box !important;
+}
+
+.v799-crypto-tp-box {
+  margin-top: 10px !important;
+  padding: 10px !important;
+  border-radius: 14px !important;
+  background: rgba(2,6,23,.42) !important;
+  border: 1px solid rgba(56,189,248,.16) !important;
+  display: grid !important;
+  gap: 8px !important;
+}
+
+.v799-crypto-tp-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.v799-crypto-tp-head b {
+  color: #f8fafc !important;
+  font-size: .86rem !important;
+  font-weight: 950 !important;
+}
+
+.v799-crypto-tp-head button,
+.v799-crypto-tp-row button {
+  border: 1px solid rgba(56,189,248,.28) !important;
+  border-radius: 10px !important;
+  background: rgba(56,189,248,.12) !important;
+  color: #bae6fd !important;
+  font-weight: 950 !important;
+  padding: 7px 10px !important;
+  cursor: pointer !important;
+}
+
+.v799-crypto-tp-row {
+  display: grid !important;
+  grid-template-columns: 44px minmax(120px, 1fr) minmax(90px, .7fr) 34px !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.v799-crypto-tp-row > span {
+  color: #38bdf8 !important;
+  font-size: .78rem !important;
+  font-weight: 950 !important;
+}
+
+.v799-crypto-tp-row button.minus {
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  border-color: rgba(239,68,68,.32) !important;
+  background: rgba(239,68,68,.12) !important;
+  color: #fecaca !important;
+}
+
+.v799-report-metrics {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin: 12px 0 !important;
+}
+
+.v799-report-metrics div {
+  min-width: 0 !important;
+  padding: 12px !important;
+  border-radius: 14px !important;
+  background: rgba(15,23,42,.78) !important;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  display: grid !important;
+  gap: 5px !important;
+}
+
+.v799-report-metrics span {
+  color: #94a3b8 !important;
+  font-size: .72rem !important;
+  font-weight: 900 !important;
+}
+
+.v799-report-metrics b {
+  color: #f8fafc !important;
+  font-size: 1.05rem !important;
+  font-weight: 950 !important;
+}
+
+.v799-report-metrics b.pos { color: #22c55e !important; }
+.v799-report-metrics b.neg { color: #ef4444 !important; }
+
+.v799-report-metrics em {
+  color: #cbd5e1 !important;
+  font-style: normal !important;
+  font-size: .72rem !important;
+  font-weight: 850 !important;
+  line-height: 1.35 !important;
+}
+
+.v799-report-table {
+  margin-top: 10px !important;
+}
+
+@media (max-width: 900px) {
+  .v799-crypto-info,
+  .v799-crypto-detail-grid,
+  .v799-report-metrics {
+    grid-template-columns: 1fr !important;
+  }
+  .v799-crypto-tp-row {
+    grid-template-columns: 42px 1fr !important;
+  }
+  .v799-crypto-tp-row input,
+  .v799-crypto-tp-row button {
+    grid-column: span 1 !important;
+  }
+}

@@ -93,6 +93,29 @@
     localStorage.setItem(TARGET_LOG_KEY, JSON.stringify((rows || []).filter(x => Number(x.ts || 0) >= twoYearsAgo).slice(0, 500)));
   }
 
+  function syncStateWithHistory(state) {
+    const h = loadHistory();
+    const ids = new Set([...(h.bet || []), ...(h.crypto || [])].map(r => String(r.id || "")).filter(Boolean));
+    ["bet", "crypto"].forEach(mode => {
+      const list = state.modeSlots?.[mode] || [];
+      list.forEach(slot => {
+        if (!slot) return;
+        const finished = slot.status === "win" || slot.status === "loss";
+        const historyId = String(slot.historyId || "");
+        const orphanFinished = finished && (!historyId || !ids.has(historyId));
+        if (!orphanFinished) return;
+        slot.status = slotHasUserEntry(slot, mode) ? "pending" : "pending";
+        slot.pnl = 0;
+        slot.historyId = "";
+        slot.historyStatus = "";
+        if (mode === "bet") {
+          slot.comboResults = [];
+        }
+      });
+    });
+    return state;
+  }
+
   function escapeXml(str) {
     return String(str || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
   }
@@ -245,8 +268,10 @@
     const start = Number.isFinite(Number(plan.start)) ? Number(plan.start) : 100;
     const target = plan.target === "" || plan.target === null || plan.target === undefined ? 0 : Number(plan.target || 0);
     const autoCurrent = start + Number(totalPnl || 0);
-    const hasManualCurrent = plan.currentOverride !== "" && plan.currentOverride !== null && plan.currentOverride !== undefined && Number.isFinite(Number(plan.currentOverride));
-    const current = hasManualCurrent ? Number(plan.currentOverride) : autoCurrent;
+    const hasOverrideValue = plan.currentOverride !== "" && plan.currentOverride !== null && plan.currentOverride !== undefined && Number.isFinite(Number(plan.currentOverride));
+    const manualCurrent = hasOverrideValue ? Number(plan.currentOverride) : autoCurrent;
+    const hasManualCurrent = hasOverrideValue && Math.abs(manualCurrent - autoCurrent) > 0.0001;
+    const current = hasManualCurrent ? manualCurrent : autoCurrent;
     const pnl = current - start;
     const growth = growthPct(pnl, start);
     const pct = target > start ? Math.max(0, Math.min(100, ((current - start) / (target - start)) * 100)) : progressPct(current, target || start);
@@ -793,15 +818,34 @@
   }
   function renderCryptoCard(row) {
     const cardId = `v763-crypto-card-${row.index}`;
-    const missing = !cleanText(row.name) || !Number(row.stake || 0) || !Number(row.odds || 0);
-    return `<article class="v763-active-card crypto" id="${cardId}">
+    const missing = !cleanText(row.name) || !Number(row.stake || 0);
+    const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [{ price: "", note: "TP1" }];
+    const tpRows = tps.map((tp, idx) => `
+      <div class="v799-crypto-tp-row">
+        <span>TP${idx + 1}</span>
+        <input type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:price" value="${escapeHtml(tp?.price ?? "")}" placeholder="Kar alma fiyatı">
+        <input type="text" data-crypto-tp="${row.index}:${idx}:note" value="${escapeHtml(tp?.note || `TP${idx + 1}`)}" placeholder="Not">
+        <button type="button" class="minus" data-crypto-tp-op="${row.index}:${idx}:minus" title="TP sil">−</button>
+      </div>`).join("");
+    return `<article class="v763-active-card crypto v799-crypto-card" id="${cardId}">
       <div class="v763-card-top">
-        <div><b>${escapeHtml(cleanText(row.name) || "Kripto işlem")}</b><span>Kripto</span></div>
+        <div><b>${escapeHtml(cleanText(row.name) || "Kripto işlem")}</b><span>Kripto · Long/Short planı</span></div>
+        ${renderCardShotButton(cardId)}
       </div>
-      <div class="v763-card-info">
+      <div class="v763-card-info v799-crypto-info">
         <span>Tutar <b>${Number(row.stake || 0) ? money(row.stake) : "-"}</b></span>
         <span>Net K/Z $ <b>${Number(row.odds || 0) ? money(row.odds) : "-"}</b></span>
+        <span>Giriş <b>${Number(row.entryPrice || 0) ? Number(row.entryPrice).toLocaleString("en-US") : "-"}</b></span>
+        <span>Liq <b>${Number(row.liquidationPrice || 0) ? Number(row.liquidationPrice).toLocaleString("en-US") : "-"}</b></span>
         ${missing ? `<em>Eksik bilgi</em>` : ""}
+      </div>
+      <div class="v799-crypto-detail-grid">
+        <label><span>Giriş Fiyatı</span><input type="number" step="0.01" data-crypto-detail="${row.index}:entryPrice" value="${escapeHtml(row.entryPrice || "")}" placeholder="Örn. 68000"></label>
+        <label><span>Likidasyon</span><input type="number" step="0.01" data-crypto-detail="${row.index}:liquidationPrice" value="${escapeHtml(row.liquidationPrice || "")}" placeholder="Örn. 62000"></label>
+      </div>
+      <div class="v799-crypto-tp-box">
+        <div class="v799-crypto-tp-head"><b>Kar Alma Noktaları</b><button type="button" data-crypto-tp-op="${row.index}:0:plus">+ TP</button></div>
+        ${tpRows}
       </div>
       <div class="v763-card-actions">
         <button type="button" class="win" data-mode="crypto" data-slot="${row.index}" data-status="win">KAZANÇ</button>
@@ -950,24 +994,46 @@
       </div>`;
   }
 
+  function reportMetricBlock(label, rows) {
+    const pnl = rows.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
+    const stake = rows.reduce((sum, r) => sum + Number(r.stake || 0), 0);
+    const wins = rows.filter(r => r.status === "win").length;
+    const losses = rows.filter(r => r.status === "loss").length;
+    const roi = stake ? (pnl / stake) * 100 : 0;
+    return `<div><span>${label}</span><b class="${pnl >= 0 ? "pos" : "neg"}">${signedMoney(pnl)}</b><em>${rows.length} kayıt · ${wins} W / ${losses} L · ROI ${roi.toFixed(1)}%</em></div>`;
+  }
   function renderReportCenterModal(state) {
     if (!REPORT_CENTER_OPEN_MODE) return "";
     const mode = REPORT_CENTER_OPEN_MODE === "crypto" ? "crypto" : "bet";
     const isCrypto = mode === "crypto";
+    const history = loadHistory()[mode] || [];
+    const today = filterHistoryRows(history, "today");
+    const week = filterHistoryRows(history, "week");
+    const month = filterHistoryRows(history, "month");
+    const all = filterHistoryRows(history, "all");
+    const recent = all.slice(0, 8).map(r => `<tr><td>${escapeHtml(formatDateTime(r.ts))}</td><td>${escapeHtml(r.name || "-")}</td><td>${money(r.stake)}</td><td><span class="v512-history-status ${r.status}">${r.status === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</span></td><td class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${money(r.pnl)}</td></tr>`).join("") || `<tr><td colspan="5" class="v512-history-empty">Henüz rapora girecek kayıt yok.</td></tr>`;
     return `
       <div class="v757-log-center-overlay v758-log-center-overlay">
-        <section class="v757-log-center-modal v758-log-center-modal v763-report-modal ${mode}">
+        <section class="v757-log-center-modal v758-log-center-modal v763-report-modal v799-report-modal ${mode}">
           <div class="v512-history-head">
             <div>
               <b>${isCrypto ? "KRİPTO RAPOR" : "BAHİS RAPOR"}</b>
-              <span>Rapor görselleri oluşturulur, indirilir ve silinir.</span>
+              <span>Rapor, Geçmiş kayıtlarından otomatik hesaplanır. Geçmiş silinirse rapor da sıfırlanır.</span>
             </div>
             <button type="button" data-report-center-close>×</button>
           </div>
-          <div class="v756-report-actions v758-report-actions v763-report-actions">
-            <span>Kayıtlı rapor görselleri burada görünür, indirilebilir ve manuel silinebilir.</span>
+          <div class="v799-report-metrics">
+            ${reportMetricBlock("Bugün", today)}
+            ${reportMetricBlock("Bu Hafta", week)}
+            ${reportMetricBlock("Bu Ay", month)}
+            ${reportMetricBlock("Tümü", all)}
           </div>
-          ${renderReportGallery(mode)}
+          <div class="v512-history-table-wrap v799-report-table">
+            <table class="v512-history-table">
+              <thead><tr><th>Tarih</th><th>${isCrypto ? "İşlem" : "Maç / Kupon"}</th><th>Tutar</th><th>Sonuç</th><th>K/Z</th></tr></thead>
+              <tbody>${recent}</tbody>
+            </table>
+          </div>
         </section>
       </div>`;
   }
@@ -1030,13 +1096,23 @@
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
     while (state.modeSlots.crypto.length < state.rowCounts.crypto) state.modeSlots.crypto.push(createSlot("crypto", state.modeSlots.crypto.length));
     state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; sanitizeEmptyPendingSlot(s, "bet"); });
-    state.modeSlots.crypto.forEach((s, i) => { s.type = "crypto"; s.id = i + 1; if (!s.cryptoPnlMode) s.cryptoPnlMode = "amount"; sanitizeEmptyPendingSlot(s, "crypto"); });
+    state.modeSlots.crypto.forEach((s, i) => {
+      s.type = "crypto";
+      s.id = i + 1;
+      if (!s.cryptoPnlMode) s.cryptoPnlMode = "amount";
+      if (s.entryPrice === undefined || s.entryPrice === null) s.entryPrice = "";
+      if (s.liquidationPrice === undefined || s.liquidationPrice === null) s.liquidationPrice = "";
+      if (!Array.isArray(s.takeProfits)) s.takeProfits = [];
+      if (!s.takeProfits.length) s.takeProfits = [{ price: "", note: "TP1" }];
+      sanitizeEmptyPendingSlot(s, "crypto");
+    });
   }
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const state = { ...DEFAULT_STATE, ...(raw ? JSON.parse(raw) : {}) };
       ensureStateShape(state);
+      syncStateWithHistory(state);
       return state;
     } catch {
       const state = JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -1169,7 +1245,7 @@
           <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "KOMBİNE KUPON MAÇLARI"}</span></summary>
           <div class="rolling-v47-section-title">
             <div>${renderRowControls(mode, state)}</div>
-            <button type="button" data-clear="${mode}">"TÜMÜNÜ TEMİZLE"</button>
+            <button type="button" data-clear="${mode}">TÜMÜNÜ TEMİZLE</button>
           </div>
           ${renderTable(mode, slots, state)}
         </details>
@@ -1332,14 +1408,42 @@
     v781DownloadPngFromSvg(dataUrl, `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`);
   }
 
+  function buildCryptoCardPhotoSvg(row) {
+    const safe = escapeHtml;
+    const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [];
+    const tpLines = tps.slice(0, 8).map((tp, idx) => {
+      const y = 255 + idx * 42;
+      return `<rect x="42" y="${y - 27}" width="816" height="34" rx="10" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">TP${idx + 1} · ${safe(tp?.note || "")}</text><text x="830" y="${y - 4}" text-anchor="end" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${tp?.price ? safe(tp.price) : "-"}</text>`;
+    }).join("");
+    const footerY = 280 + Math.max(1, tps.length) * 42;
+    const height = footerY + 130;
+    const title = safe(cleanText(row.name) || "Kripto İşlem");
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#38bdf8" stroke-width="2"/><text x="42" y="72" fill="#38bdf8" font-size="28" font-family="Arial" font-weight="900">AKTİF KRİPTO İŞLEMİ</text><text x="42" y="108" fill="#f8fafc" font-size="22" font-family="Arial" font-weight="900">${title}</text><text x="42" y="145" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text><rect x="42" y="170" width="816" height="50" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Giriş: ${row.entryPrice || "-"}</text><text x="330" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Likidasyon: ${row.liquidationPrice || "-"}</text><text x="830" y="202" text-anchor="end" fill="${Number(row.odds || 0) >= 0 ? "#22c55e" : "#ef4444"}" font-size="18" font-family="Arial" font-weight="950">Net K/Z: ${money(row.odds || 0)}</text><text x="42" y="246" fill="#94a3b8" font-size="15" font-family="Arial" font-weight="900">KAR ALMA NOKTALARI</text>${tpLines || `<text x="64" y="268" fill="#94a3b8" font-size="18" font-family="Arial" font-weight="800">TP noktası yok</text>`}<rect x="42" y="${footerY}" width="816" height="58" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="900">Tutar: ${money(row.stake || 0)}</text><text x="830" y="${footerY + 36}" text-anchor="end" fill="${Number(row.pnl || 0) >= 0 ? "#22c55e" : "#ef4444"}" font-size="20" font-family="Arial" font-weight="950">PNL: ${money(row.pnl || 0)}</text></svg>`;
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+  function downloadCryptoCardScreenshot(slotIndex) {
+    const state = loadState();
+    const row = { ...(state.modeSlots.crypto[Number(slotIndex || 0)] || {}), index: Number(slotIndex || 0) };
+    if (!slotHasUserEntry(row, "crypto")) return;
+    const dataUrl = buildCryptoCardPhotoSvg(row);
+    v781DownloadPngFromSvg(dataUrl, `bulten-kripto-islem-${new Date().toISOString().slice(0,10)}.png`);
+  }
+
   function deleteHistoryRecord(mode, id) {
     const h = loadHistory();
     h[mode] = (h[mode] || []).filter(r => r.id !== id);
     saveHistory(h);
     const state = loadState();
     ["bet", "crypto"].forEach(m => (state.modeSlots[m] || []).forEach(slot => {
-      if (slot && slot.historyId === id) { slot.historyId = ""; slot.historyStatus = ""; }
+      if (slot && slot.historyId === id) {
+        slot.historyId = "";
+        slot.historyStatus = "";
+        slot.status = slotHasUserEntry(slot, m) ? "pending" : "pending";
+        slot.pnl = 0;
+        if (m === "bet") slot.comboResults = [];
+      }
     }));
+    syncStateWithHistory(state);
     saveState(state);
   }
 
@@ -1446,6 +1550,47 @@
     mount.querySelectorAll("[data-main-table-photo]").forEach(btn => btn.addEventListener("click", () => {
       openTablePhoto(btn.dataset.mainTablePhoto === "crypto" ? "crypto" : "bet", state);
     }));
+    mount.querySelectorAll("[data-crypto-detail]").forEach(input => {
+      const saveCryptoDetail = () => {
+        const [slotRaw, key] = String(input.dataset.cryptoDetail || "0:entryPrice").split(":");
+        const i = Number(slotRaw || 0);
+        if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
+        state.modeSlots.crypto[i][key] = input.value;
+        state.modeSlots.crypto[i].status = state.modeSlots.crypto[i].status === "win" || state.modeSlots.crypto[i].status === "loss" ? state.modeSlots.crypto[i].status : "pending";
+        saveState(state);
+      };
+      input.addEventListener("input", saveCryptoDetail);
+      input.addEventListener("change", saveCryptoDetail);
+    });
+    mount.querySelectorAll("[data-crypto-tp]").forEach(input => {
+      const saveTp = () => {
+        const [slotRaw, tpRaw, key] = String(input.dataset.cryptoTp || "0:0:price").split(":");
+        const i = Number(slotRaw || 0);
+        const ti = Number(tpRaw || 0);
+        if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
+        const slot = state.modeSlots.crypto[i];
+        if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
+        while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}` });
+        slot.takeProfits[ti][key] = input.value;
+        saveState(state);
+      };
+      input.addEventListener("input", saveTp);
+      input.addEventListener("change", saveTp);
+    });
+    mount.querySelectorAll("[data-crypto-tp-op]").forEach(btn => btn.addEventListener("click", () => {
+      const [slotRaw, tpRaw, op] = String(btn.dataset.cryptoTpOp || "0:0:plus").split(":");
+      const i = Number(slotRaw || 0);
+      const ti = Number(tpRaw || 0);
+      if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
+      const slot = state.modeSlots.crypto[i];
+      if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
+      if (op === "plus") slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}` });
+      else slot.takeProfits.splice(ti, 1);
+      if (!slot.takeProfits.length) slot.takeProfits.push({ price: "", note: "TP1" });
+      saveState(state);
+      refresh();
+    }));
+
     mount.querySelectorAll("[data-rolling-quick]").forEach(input => {
       input.addEventListener("input", () => {
         const mode = input.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
@@ -1481,7 +1626,9 @@
     }));
     mount.querySelectorAll("[data-target-card]").forEach(card => {
       card.addEventListener("toggle", () => {
+        const y = window.scrollY || document.documentElement.scrollTop || 0;
         setTargetCardOpen(card.dataset.targetCard === "crypto" ? "crypto" : "bet", card.open);
+        requestAnimationFrame(() => window.scrollTo({ top: y, left: 0, behavior: "auto" }));
       });
     });
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
@@ -1658,7 +1805,13 @@
       refresh();
     }));
     mount.querySelectorAll("[data-card-screenshot]").forEach(btn => btn.addEventListener("click", () => {
-      downloadActiveCardScreenshot(btn.dataset.cardScreenshot || "");
+      const cardId = btn.dataset.cardScreenshot || "";
+      if (String(cardId).includes("crypto-card")) {
+        const m = String(cardId).match(/v763-crypto-card-(\d+)/);
+        downloadCryptoCardScreenshot(m ? Number(m[1]) : 0);
+      } else {
+        downloadActiveCardScreenshot(cardId);
+      }
     }));
     mount.querySelectorAll("[data-report-create]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.reportCreate === "crypto" ? "crypto" : "bet";
