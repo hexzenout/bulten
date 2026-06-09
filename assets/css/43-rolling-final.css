@@ -6500,3 +6500,215 @@ html.rolling-hash-boot::before {
     width: 100% !important;
   }
 }
+
+/* V812: Kasa Hedefi bağımsız bahis/kripto kutusu - taşma yok, sade kayıt mantığı */
+.rolling-v48-rail .v812-target-self,
+.rolling-v48-rail .v812-target-self * {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.rolling-v48-rail .v812-target-self {
+  overflow: hidden !important;
+  padding: 10px !important;
+  display: grid !important;
+  gap: 8px !important;
+}
+
+.rolling-v48-rail .v812-target-self-title {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.rolling-v48-rail .v812-target-self-title b {
+  color: #fff !important;
+  font-size: .76rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+}
+
+.rolling-v48-rail .v812-target-self-title span,
+.rolling-v48-rail .v812-target-self-summary {
+  color: #cbd5e1 !important;
+  font-size: .66rem !important;
+  font-weight: 850 !important;
+  line-height: 1.25 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.rolling-v48-rail .v812-target-self-summary {
+  padding: 6px 8px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.62) !important;
+  border: 1px solid rgba(148,163,184,.12) !important;
+}
+
+.rolling-v48-rail .v812-target-self-form {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 7px !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.rolling-v48-rail .v812-target-self-form input,
+.rolling-v48-rail .v812-target-self-form button {
+  width: 100% !important;
+  height: 34px !important;
+  min-height: 34px !important;
+}
+
+.rolling-v48-rail .v812-target-bet-leg-list,
+.rolling-v48-rail .v811-target-tp-list {
+  display: grid !important;
+  gap: 6px !important;
+  width: 100% !important;
+}
+
+.rolling-v48-rail .v812-target-bet-leg,
+.rolling-v48-rail .v812-target-stop-row,
+.rolling-v48-rail .v811-target-tp-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, .72fr) 30px !important;
+  gap: 6px !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.rolling-v48-rail .v812-target-stop-row {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+}
+
+.rolling-v48-rail .v812-target-bet-leg button[data-target-bet-leg-remove],
+.rolling-v48-rail .v811-target-tp-row button[data-target-tp-remove] {
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  border-color: rgba(248,113,113,.22) !important;
+  background: rgba(127,29,29,.22) !important;
+  color: #fecaca !important;
+}
+
+.rolling-v48-rail .v812-target-form-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 7px !important;
+  width: 100% !important;
+}
+
+.rolling-v48-rail .v812-target-form-actions button:first-child {
+  border-color: rgba(59,130,246,.25) !important;
+  background: linear-gradient(135deg, rgba(59,130,246,.16), rgba(15,23,42,.78)) !important;
+  color: #bfdbfe !important;
+}
+
+.rolling-v48-rail .v812-target-self-details ul {
+  gap: 7px !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row,
+.rolling-v48-rail .v811-target-self-details li.v812-target-detail-row {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 7px !important;
+  padding: 8px !important;
+  overflow: hidden !important;
+}
+
+.rolling-v48-rail .v812-target-detail-main {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 3px !important;
+  min-width: 0 !important;
+}
+
+.rolling-v48-rail .v812-target-detail-main span,
+.rolling-v48-rail .v812-target-detail-main b,
+.rolling-v48-rail .v812-target-detail-main em {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  text-align: left !important;
+  line-height: 1.25 !important;
+}
+
+.rolling-v48-rail .v812-target-detail-main span {
+  color: #fff !important;
+  font-weight: 950 !important;
+  font-size: .72rem !important;
+}
+
+.rolling-v48-rail .v812-target-detail-main b {
+  color: #facc15 !important;
+  font-weight: 900 !important;
+  font-size: .68rem !important;
+}
+
+.rolling-v48-rail .v812-target-detail-main em {
+  color: #cbd5e1 !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+  font-size: .66rem !important;
+}
+
+.rolling-v48-rail .v812-target-detail-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 34px !important;
+  gap: 6px !important;
+  width: 100% !important;
+}
+
+.rolling-v48-rail .v812-target-detail-actions button {
+  width: 100% !important;
+  min-height: 30px !important;
+  height: 30px !important;
+  border-radius: 9px !important;
+  padding: 0 7px !important;
+  font-size: .66rem !important;
+  font-weight: 950 !important;
+}
+
+.rolling-v48-rail .v812-target-detail-actions button.win {
+  border-color: rgba(34,197,94,.25) !important;
+  background: rgba(22,101,52,.20) !important;
+  color: #bbf7d0 !important;
+}
+
+.rolling-v48-rail .v812-target-detail-actions button.loss {
+  border-color: rgba(248,113,113,.25) !important;
+  background: rgba(127,29,29,.22) !important;
+  color: #fecaca !important;
+}
+
+.rolling-v48-rail .v812-target-detail-actions button.win.active {
+  background: linear-gradient(135deg, rgba(34,197,94,.90), rgba(134,239,172,.72)) !important;
+  color: #052e16 !important;
+}
+
+.rolling-v48-rail .v812-target-detail-actions button.loss.active {
+  background: linear-gradient(135deg, rgba(239,68,68,.88), rgba(252,165,165,.70)) !important;
+  color: #450a0a !important;
+}
+
+.rolling-v48-rail .v812-target-detail-actions button.delete {
+  padding: 0 !important;
+  border-color: rgba(248,113,113,.18) !important;
+  background: rgba(127,29,29,.20) !important;
+  color: #fecaca !important;
+}
+
+@media (max-width: 900px) {
+  .rolling-v48-rail .v812-target-bet-leg,
+  .rolling-v48-rail .v811-target-tp-row {
+    grid-template-columns: 1fr !important;
+  }
+  .rolling-v48-rail .v812-target-bet-leg button[data-target-bet-leg-remove],
+  .rolling-v48-rail .v811-target-tp-row button[data-target-tp-remove] {
+    width: 100% !important;
+  }
+}
