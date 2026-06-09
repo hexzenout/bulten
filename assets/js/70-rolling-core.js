@@ -1179,7 +1179,7 @@
     const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
     const currentTag = plan.hasManualCurrent ? "Manuel güncel" : "Otomatik güncel";
     return `
-      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan v757-target-plan v759-target-plan v796-target-card ${m}">
+      <div class="v796-target-card ${m}">
         <div class="v796-target-head">
           <div>
             <b>Rolling Hedef Takibi</b>
