@@ -744,6 +744,7 @@
     const cardId = `v763-bet-card-${row.index}`;
     const matches = coupon.matches;
     const done = matches.filter(m => m.status === "win" || m.status === "loss").length;
+    const keepOpen = done > 0 && done < matches.length;
     const matchRows = matches.map((m, idx) => `<li class="${m.status || "pending"}">
       <span>${idx + 1}. ${escapeHtml(m.name)}</span>
       <b>${Number(m.odds || 0) ? Number(m.odds).toFixed(2) : "Oran eksik"}</b>
@@ -753,7 +754,7 @@
       </div>
     </li>`).join("");
     return `<article class="v763-active-card bet combo" id="${cardId}">
-      <details>
+      <details ${keepOpen ? "open" : ""}>
         <summary>
           <div><b>Kombine</b><span>${matches.length} maç · ${done}/${matches.length} sonuçlandı</span></div>
           ${renderCardShotButton(cardId)}
@@ -1526,10 +1527,12 @@
         const slot = fresh.modeSlots.bet[baseIndex];
         if (slot) {
           if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
-          slot.comboResults[Number(action.match || 0)] = action.status === "loss" ? "loss" : "win";
+          const matchIndex = Number(action.match || 0);
+          if (action.status === "pending") slot.comboResults[matchIndex] = "";
+          else slot.comboResults[matchIndex] = action.status === "loss" ? "loss" : "win";
           const updatedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === baseIndex);
           const matches = updatedCoupon ? updatedCoupon.matches : getSlotMatches({ ...slot, index: baseIndex });
-          const allDone = matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
+          const allDone = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
           if (allDone) {
             const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
             addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
@@ -1560,6 +1563,8 @@
       const list = state.modeSlots.bet;
       if (!list[i]) return;
       const matches = getSlotMatches(list[i]);
+      const currentStatus = matches[mi]?.status || "";
+      const nextStatus = currentStatus === status ? "pending" : status;
       const matchName = matches[mi]?.name || `Maç ${mi + 1}`;
       const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || "bet") : (PENDING_BOARD_OPEN_MODE || null);
       if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
@@ -1567,13 +1572,15 @@
         type: "comboMatch",
         slot: i,
         match: mi,
-        status,
+        status: nextStatus,
         keepActivePanel: keepPanel,
-        tone: status === "loss" ? "danger" : "success",
-        title: "Kombine maç sonucunu onayla",
-        message: `${matchName} için ${status === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
-        detail: "Kombine tüm maçlar sonuçlanana kadar aktif listede kalır.",
-        confirmText: status === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle"
+        tone: nextStatus === "loss" ? "danger" : "success",
+        title: nextStatus === "pending" ? "Maçı bekliyor durumuna al" : "Kombine maç sonucunu onayla",
+        message: nextStatus === "pending"
+          ? `${matchName} tekrar BEKLİYOR durumuna alınacak.`
+          : `${matchName} için ${nextStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
+        detail: nextStatus === "pending" ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur." : "Kombine tüm maçlar sonuçlanana kadar aktif listede kalır.",
+        confirmText: nextStatus === "pending" ? "BEKLİYOR olarak işaretle" : (nextStatus === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle")
       };
       refresh();
     }));
