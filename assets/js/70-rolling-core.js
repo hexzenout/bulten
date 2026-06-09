@@ -1514,6 +1514,12 @@
       } else if (action.type === "deleteHistory") {
         deleteHistoryRecord(action.mode, action.id);
       }
+      if (action.keepActivePanel) {
+        PENDING_BOARD_OPEN_MODE = action.keepActivePanel === "crypto" ? "crypto" : "bet";
+        LOG_CENTER_OPEN_MODE = null;
+        REPORT_CENTER_OPEN_MODE = null;
+        HISTORY_OPEN_MODE = null;
+      }
       refresh();
     }));
     mount.querySelectorAll(".v512-history-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
@@ -1539,6 +1545,7 @@
         slot: i,
         match: mi,
         status,
+        keepActivePanel: PENDING_BOARD_OPEN_MODE || "bet",
         tone: status === "loss" ? "danger" : "success",
         title: "Kombine maç sonucunu onayla",
         message: `${matchName} için ${status === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
@@ -1582,6 +1589,7 @@
           mode,
           slot: i,
           status: nextStatus,
+          keepActivePanel: PENDING_BOARD_OPEN_MODE || null,
           tone: nextStatus === "loss" ? "danger" : "success",
           title: "Sonucu kaydetmeden önce onayla",
           message: `${name} için sonuç: ${resultLabel}.`,
