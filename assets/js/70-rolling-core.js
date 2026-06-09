@@ -316,7 +316,10 @@
       stake: Number(slot.stake || 0),
       odds: Number(slot.odds || 0),
       status: slot.status,
-      pnl: Number(slot.pnl || 0)
+      pnl: Number(slot.pnl || 0),
+      entryPrice: slot.entryPrice || "",
+      liquidationPrice: slot.liquidationPrice || "",
+      takeProfits: Array.isArray(slot.takeProfits) ? slot.takeProfits.map(tp => ({ ...tp })) : []
     };
     h[mode].unshift(rec);
     saveHistory(h);
@@ -816,43 +819,81 @@
       </details>
     </article>`;
   }
+  function cryptoTpProfit(row, tp) {
+    const entry = Number(row?.entryPrice || 0);
+    const price = Number(tp?.price || 0);
+    const stake = Number(row?.stake || 0);
+    if (!entry || !price || !stake) return { pct: 0, usd: 0, ok: false };
+    const pct = ((price - entry) / entry) * 100;
+    const usd = stake * (pct / 100);
+    return { pct, usd, ok: true };
+  }
+  function cryptoTpProfitLabel(row, tp) {
+    const p = cryptoTpProfit(row, tp);
+    if (!p.ok) return "Beklenen kar -";
+    return `KAR ${p.pct >= 0 ? "+" : ""}${p.pct.toFixed(1)}% ${signedMoney(p.usd)}`;
+  }
+  function cryptoRealizedProfit(row) {
+    const tps = Array.isArray(row?.takeProfits) ? row.takeProfits : [];
+    const done = tps.filter(tp => tp && tp.done);
+    const sum = done.reduce((acc, tp) => acc + cryptoTpProfit(row, tp).usd, 0);
+    if (done.length && Number.isFinite(sum)) return sum;
+    return Number(row?.odds || 0);
+  }
+  function cryptoFormatPrice(v) {
+    const n = Number(v || 0);
+    return n ? n.toLocaleString("en-US", { maximumFractionDigits: 8 }) : "-";
+  }
+
   function renderCryptoCard(row) {
     const cardId = `v763-crypto-card-${row.index}`;
     const missing = !cleanText(row.name) || !Number(row.stake || 0);
-    const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [{ price: "", note: "TP1" }];
-    const tpRows = tps.map((tp, idx) => `
-      <div class="v799-crypto-tp-row">
-        <span>TP${idx + 1}</span>
+    const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [{ price: "", note: "TP1", done: false }];
+    const realized = cryptoRealizedProfit(row);
+    const tpRows = tps.map((tp, idx) => {
+      const label = tp?.note || `TP${idx + 1}`;
+      return `
+      <div class="v800-crypto-tp-row ${tp?.done ? "done" : ""}">
+        <span class="tp-label">${escapeHtml(label)}</span>
         <input type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:price" value="${escapeHtml(tp?.price ?? "")}" placeholder="Kar alma fiyatı">
-        <input type="text" data-crypto-tp="${row.index}:${idx}:note" value="${escapeHtml(tp?.note || `TP${idx + 1}`)}" placeholder="Not">
-        <button type="button" class="minus" data-crypto-tp-op="${row.index}:${idx}:minus" title="TP sil">−</button>
-      </div>`).join("");
-    return `<article class="v763-active-card crypto v799-crypto-card" id="${cardId}">
+        <strong>${cryptoTpProfitLabel(row, tp)}</strong>
+        <button type="button" class="take" data-crypto-tp-taken="${row.index}:${idx}">${tp?.done ? "Alındı" : "Kar alındı"}</button>
+      </div>`;
+    }).join("");
+    return `<article class="v763-active-card crypto v799-crypto-card v800-crypto-card" id="${cardId}">
       <div class="v763-card-top">
-        <div><b>${escapeHtml(cleanText(row.name) || "Kripto işlem")}</b><span>Kripto · Long/Short planı</span></div>
+        <div><b>${escapeHtml(cleanText(row.name) || "Kripto işlem")}</b><span>Kripto · Long planı · İşlem kapanana kadar aktif kalır</span></div>
         ${renderCardShotButton(cardId)}
       </div>
-      <div class="v763-card-info v799-crypto-info">
-        <span>Tutar <b>${Number(row.stake || 0) ? money(row.stake) : "-"}</b></span>
-        <span>Net K/Z $ <b>${Number(row.odds || 0) ? money(row.odds) : "-"}</b></span>
-        <span>Giriş <b>${Number(row.entryPrice || 0) ? Number(row.entryPrice).toLocaleString("en-US") : "-"}</b></span>
-        <span>Liq <b>${Number(row.liquidationPrice || 0) ? Number(row.liquidationPrice).toLocaleString("en-US") : "-"}</b></span>
+      <div class="v763-card-info v799-crypto-info v800-crypto-info">
+        <span>Tutar / Marjin <b>${Number(row.stake || 0) ? money(row.stake) : "-"}</b></span>
+        <span>Giriş <b>${cryptoFormatPrice(row.entryPrice)}</b></span>
+        <span>Liq <b>${cryptoFormatPrice(row.liquidationPrice)}</b></span>
+        <span>TP Kar <b class="${realized >= 0 ? "pos" : "neg"}">${signedMoney(realized)}</b></span>
         ${missing ? `<em>Eksik bilgi</em>` : ""}
       </div>
-      <div class="v799-crypto-detail-grid">
+      <div class="v799-crypto-detail-grid v800-crypto-detail-grid">
+        <label><span>Tutar / Marjin</span><input type="number" step="0.01" data-crypto-detail="${row.index}:stake" value="${escapeHtml(row.stake || "")}" placeholder="Örn. 300"></label>
         <label><span>Giriş Fiyatı</span><input type="number" step="0.01" data-crypto-detail="${row.index}:entryPrice" value="${escapeHtml(row.entryPrice || "")}" placeholder="Örn. 68000"></label>
         <label><span>Likidasyon</span><input type="number" step="0.01" data-crypto-detail="${row.index}:liquidationPrice" value="${escapeHtml(row.liquidationPrice || "")}" placeholder="Örn. 62000"></label>
       </div>
-      <div class="v799-crypto-tp-box">
-        <div class="v799-crypto-tp-head"><b>Kar Alma Noktaları</b><button type="button" data-crypto-tp-op="${row.index}:0:plus">+ TP</button></div>
+      <div class="v799-crypto-tp-box v800-crypto-tp-box">
+        <div class="v799-crypto-tp-head v800-crypto-tp-head">
+          <b>Kar Alma Noktaları</b>
+          <div>
+            <button type="button" class="tp-add" data-crypto-tp-op="${row.index}:0:plus">+ TP</button>
+            <button type="button" class="tp-remove" data-crypto-tp-op="${row.index}:0:minus" ${tps.length <= 1 ? "disabled" : ""}>− TP</button>
+          </div>
+        </div>
         ${tpRows}
       </div>
-      <div class="v763-card-actions">
-        <button type="button" class="win" data-mode="crypto" data-slot="${row.index}" data-status="win">KAZANÇ</button>
-        <button type="button" class="loss" data-mode="crypto" data-slot="${row.index}" data-status="loss">KAYIP</button>
+      <div class="v800-crypto-close-row">
+        <span>TP işaretlemek işlemi kapatmaz. İşlem tamamen bittiyse kapatıp geçmişe al.</span>
+        <button type="button" class="close-trade" data-crypto-close="${row.index}">İşlem Kapandı</button>
       </div>
     </article>`;
   }
+
   function addCouponHistoryRecord(state, coupon, status) {
     const row = coupon.row || coupon.rows?.[0];
     if (!row) return;
@@ -966,7 +1007,7 @@
         <td>${money(r.stake)}</td>
         <td>${isCrypto ? money(r.odds || 0) : escapeHtml(String(r.odds || 0))}</td>
         <td><span class="v512-history-status ${r.status}">${r.status === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</span></td>
-        <td><div class="v757-history-pnl-cell"><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${money(r.pnl)}</span><button type="button" class="v757-history-delete" data-history-delete="${mode}:${escapeHtml(r.id || "")}" title="Bu geçmiş kaydını sil"><i class="fa-solid fa-trash"></i></button></div></td>
+        <td><div class="v757-history-pnl-cell v800-history-actions"><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${money(r.pnl)}</span><button type="button" class="v800-history-restore" data-history-restore="${mode}:${escapeHtml(r.id || "")}" title="Aktife geri al"><i class="fa-solid fa-rotate-left"></i></button><button type="button" class="v757-history-delete" data-history-delete="${mode}:${escapeHtml(r.id || "")}" title="Bu geçmiş kaydını sil"><i class="fa-solid fa-trash"></i></button></div></td>
       </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede geçmiş kaydı yok.</td></tr>`;
     return `
       <div class="v757-log-center-overlay v758-log-center-overlay">
@@ -986,7 +1027,7 @@
           <div class="v512-history-filters v758-history-filters">${filters}</div>
           <div class="v512-history-table-wrap v758-history-table-wrap">
             <table class="v512-history-table">
-              <thead><tr><th>Tarih / Saat</th><th>${isCrypto ? "İşlem" : "Maç / Not"}</th><th>Tutar</th><th>${isCrypto ? "Net K/Z $" : "Oran"}</th><th>Sonuç</th><th>K/Z / Sil</th></tr></thead>
+              <thead><tr><th>Tarih / Saat</th><th>${isCrypto ? "İşlem" : "Maç / Not"}</th><th>Tutar</th><th>${isCrypto ? "Net K/Z $" : "Oran"}</th><th>Sonuç</th><th>K/Z / İşlem</th></tr></thead>
               <tbody>${tableRows}</tbody>
             </table>
           </div>
@@ -1413,14 +1454,18 @@
     const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [];
     const tpLines = tps.slice(0, 8).map((tp, idx) => {
       const y = 255 + idx * 42;
-      return `<rect x="42" y="${y - 27}" width="816" height="34" rx="10" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">TP${idx + 1} · ${safe(tp?.note || "")}</text><text x="830" y="${y - 4}" text-anchor="end" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${tp?.price ? safe(tp.price) : "-"}</text>`;
+      const profit = cryptoTpProfitLabel(row, tp);
+      const status = tp?.done ? "ALINDI" : "BEKLİYOR";
+      return `<rect x="42" y="${y - 27}" width="816" height="34" rx="10" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">TP${idx + 1}</text><text x="160" y="${y - 4}" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${tp?.price ? safe(tp.price) : "-"}</text><text x="430" y="${y - 4}" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${safe(profit)}</text><text x="830" y="${y - 4}" text-anchor="end" fill="${tp?.done ? "#22c55e" : "#94a3b8"}" font-size="16" font-family="Arial" font-weight="950">${status}</text>`;
     }).join("");
     const footerY = 280 + Math.max(1, tps.length) * 42;
     const height = footerY + 130;
     const title = safe(cleanText(row.name) || "Kripto İşlem");
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#38bdf8" stroke-width="2"/><text x="42" y="72" fill="#38bdf8" font-size="28" font-family="Arial" font-weight="900">AKTİF KRİPTO İŞLEMİ</text><text x="42" y="108" fill="#f8fafc" font-size="22" font-family="Arial" font-weight="900">${title}</text><text x="42" y="145" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text><rect x="42" y="170" width="816" height="50" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Giriş: ${row.entryPrice || "-"}</text><text x="330" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Likidasyon: ${row.liquidationPrice || "-"}</text><text x="830" y="202" text-anchor="end" fill="${Number(row.odds || 0) >= 0 ? "#22c55e" : "#ef4444"}" font-size="18" font-family="Arial" font-weight="950">Net K/Z: ${money(row.odds || 0)}</text><text x="42" y="246" fill="#94a3b8" font-size="15" font-family="Arial" font-weight="900">KAR ALMA NOKTALARI</text>${tpLines || `<text x="64" y="268" fill="#94a3b8" font-size="18" font-family="Arial" font-weight="800">TP noktası yok</text>`}<rect x="42" y="${footerY}" width="816" height="58" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="900">Tutar: ${money(row.stake || 0)}</text><text x="830" y="${footerY + 36}" text-anchor="end" fill="${Number(row.pnl || 0) >= 0 ? "#22c55e" : "#ef4444"}" font-size="20" font-family="Arial" font-weight="950">PNL: ${money(row.pnl || 0)}</text></svg>`;
+    const realized = cryptoRealizedProfit(row);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#38bdf8" stroke-width="2"/><text x="42" y="72" fill="#38bdf8" font-size="28" font-family="Arial" font-weight="900">AKTİF KRİPTO İŞLEMİ</text><text x="42" y="108" fill="#f8fafc" font-size="22" font-family="Arial" font-weight="900">${title}</text><text x="42" y="145" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text><rect x="42" y="170" width="816" height="50" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Giriş: ${row.entryPrice || "-"}</text><text x="330" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Likidasyon: ${row.liquidationPrice || "-"}</text><text x="830" y="202" text-anchor="end" fill="${realized >= 0 ? "#22c55e" : "#ef4444"}" font-size="18" font-family="Arial" font-weight="950">TP Kar: ${signedMoney(realized)}</text><text x="42" y="246" fill="#94a3b8" font-size="15" font-family="Arial" font-weight="900">KAR ALMA NOKTALARI</text>${tpLines || `<text x="64" y="268" fill="#94a3b8" font-size="18" font-family="Arial" font-weight="800">TP noktası yok</text>`}<rect x="42" y="${footerY}" width="816" height="58" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="900">Tutar / Marjin: ${money(row.stake || 0)}</text><text x="830" y="${footerY + 36}" text-anchor="end" fill="${Number(row.pnl || 0) >= 0 ? "#22c55e" : "#ef4444"}" font-size="20" font-family="Arial" font-weight="950">PNL: ${money(row.pnl || 0)}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
+
   function downloadCryptoCardScreenshot(slotIndex) {
     const state = loadState();
     const row = { ...(state.modeSlots.crypto[Number(slotIndex || 0)] || {}), index: Number(slotIndex || 0) };
@@ -1444,6 +1489,43 @@
       }
     }));
     syncStateWithHistory(state);
+    saveState(state);
+  }
+
+  function restoreHistoryRecord(mode, id) {
+    const h = loadHistory();
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const rec = (h[m] || []).find(r => r.id === id);
+    if (!rec) return;
+    const state = loadState();
+    const list = state.modeSlots[m] || [];
+    let index = list.findIndex(s => s && s.historyId === id);
+    if (index < 0) index = list.findIndex(s => !slotHasUserEntry(s, m));
+    if (index < 0) {
+      index = list.length;
+      list.push(createSlot(m, index));
+    }
+    const slot = { ...createSlot(m, index), ...(list[index] || {}) };
+    slot.type = m;
+    slot.id = index + 1;
+    slot.name = rec.name || "";
+    slot.stake = rec.stake || "";
+    slot.odds = rec.odds || "";
+    slot.status = "pending";
+    slot.pnl = 0;
+    slot.historyId = "";
+    slot.historyStatus = "";
+    if (m === "crypto") {
+      slot.entryPrice = rec.entryPrice || slot.entryPrice || "";
+      slot.liquidationPrice = rec.liquidationPrice || slot.liquidationPrice || "";
+      slot.takeProfits = Array.isArray(rec.takeProfits) && rec.takeProfits.length
+        ? rec.takeProfits.map((tp, i) => ({ price: tp.price || "", note: tp.note || `TP${i + 1}`, done: !!tp.done }))
+        : [{ price: "", note: "TP1", done: false }];
+    }
+    list[index] = slot;
+    state.modeSlots[m] = list;
+    h[m] = (h[m] || []).filter(r => r.id !== id);
+    saveHistory(h);
     saveState(state);
   }
 
@@ -1557,10 +1639,12 @@
         if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
         state.modeSlots.crypto[i][key] = input.value;
         state.modeSlots.crypto[i].status = state.modeSlots.crypto[i].status === "win" || state.modeSlots.crypto[i].status === "loss" ? state.modeSlots.crypto[i].status : "pending";
+        if (key === "stake" || key === "odds") recalcSlot(state.modeSlots.crypto[i]);
         saveState(state);
       };
       input.addEventListener("input", saveCryptoDetail);
-      input.addEventListener("change", saveCryptoDetail);
+      input.addEventListener("change", () => { saveCryptoDetail(); refresh(); });
+      input.addEventListener("blur", () => { saveCryptoDetail(); refresh(); });
     });
     mount.querySelectorAll("[data-crypto-tp]").forEach(input => {
       const saveTp = () => {
@@ -1570,26 +1654,63 @@
         if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
         const slot = state.modeSlots.crypto[i];
         if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
-        while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}` });
+        while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, done: false });
         slot.takeProfits[ti][key] = input.value;
+        if (!slot.takeProfits[ti].note) slot.takeProfits[ti].note = `TP${ti + 1}`;
         saveState(state);
       };
       input.addEventListener("input", saveTp);
-      input.addEventListener("change", saveTp);
+      input.addEventListener("change", () => { saveTp(); refresh(); });
+      input.addEventListener("blur", () => { saveTp(); refresh(); });
     });
     mount.querySelectorAll("[data-crypto-tp-op]").forEach(btn => btn.addEventListener("click", () => {
       const [slotRaw, tpRaw, op] = String(btn.dataset.cryptoTpOp || "0:0:plus").split(":");
+      const i = Number(slotRaw || 0);
+      if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
+      const slot = state.modeSlots.crypto[i];
+      if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
+      if (op === "plus") slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, done: false });
+      else slot.takeProfits.pop();
+      if (!slot.takeProfits.length) slot.takeProfits.push({ price: "", note: "TP1", done: false });
+      saveState(state);
+      refresh();
+    }));
+    mount.querySelectorAll("[data-crypto-tp-taken]").forEach(btn => btn.addEventListener("click", () => {
+      const [slotRaw, tpRaw] = String(btn.dataset.cryptoTpTaken || "0:0").split(":");
       const i = Number(slotRaw || 0);
       const ti = Number(tpRaw || 0);
       if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
       const slot = state.modeSlots.crypto[i];
       if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
-      if (op === "plus") slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}` });
-      else slot.takeProfits.splice(ti, 1);
-      if (!slot.takeProfits.length) slot.takeProfits.push({ price: "", note: "TP1" });
+      while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, done: false });
+      slot.takeProfits[ti].done = !slot.takeProfits[ti].done;
+      slot.odds = Number(cryptoRealizedProfit(slot).toFixed(2));
+      recalcSlot(slot);
       saveState(state);
       refresh();
     }));
+    mount.querySelectorAll("[data-crypto-close]").forEach(btn => btn.addEventListener("click", () => {
+      const i = Number(btn.dataset.cryptoClose || 0);
+      const slot = state.modeSlots.crypto[i];
+      if (!slot) return;
+      slot.odds = Number(cryptoRealizedProfit(slot).toFixed(2));
+      recalcSlot(slot);
+      saveState(state);
+      CONFIRM_DIALOG = {
+        type: "settle",
+        mode: "crypto",
+        slot: i,
+        status: Number(slot.odds || 0) >= 0 ? "win" : "loss",
+        keepActivePanel: "crypto",
+        tone: Number(slot.odds || 0) >= 0 ? "success" : "danger",
+        title: "Kripto işlemi kapatılsın mı?",
+        message: `${cleanText(slot.name) || "Kripto işlem"} geçmişe alınacak.`,
+        detail: "TP işaretlemek işlemi kapatmaz. Sadece bu onay işlem kapandı olarak geçmişe taşır. Hatalıysa Geçmiş'ten aktife geri alabilirsin.",
+        confirmText: "İşlem kapandı"
+      };
+      refresh();
+    }));
+
 
     mount.querySelectorAll("[data-rolling-quick]").forEach(input => {
       input.addEventListener("input", () => {
@@ -1628,6 +1749,12 @@
       card.addEventListener("toggle", () => {
         const y = window.scrollY || document.documentElement.scrollTop || 0;
         setTargetCardOpen(card.dataset.targetCard === "crypto" ? "crypto" : "bet", card.open);
+        requestAnimationFrame(() => window.scrollTo({ top: y, left: 0, behavior: "auto" }));
+      });
+    });
+    mount.querySelectorAll(".v796-target-log").forEach(log => {
+      log.addEventListener("toggle", () => {
+        const y = window.scrollY || document.documentElement.scrollTop || 0;
         requestAnimationFrame(() => window.scrollTo({ top: y, left: 0, behavior: "auto" }));
       });
     });
@@ -1706,6 +1833,22 @@
       };
       refresh();
     }));
+    mount.querySelectorAll("[data-history-restore]").forEach(btn => btn.addEventListener("click", () => {
+      const [mode, id] = String(btn.dataset.historyRestore || "crypto:").split(":");
+      if (!id) return;
+      CONFIRM_DIALOG = {
+        type: "restoreHistory",
+        mode: mode === "crypto" ? "crypto" : "bet",
+        id,
+        keepActivePanel: mode === "crypto" ? "crypto" : "bet",
+        tone: "success",
+        title: "Kayıt tekrar aktife alınsın mı?",
+        message: "Bu geçmiş kaydı aktif ekrana geri alınacak ve geçmişten kaldırılacak.",
+        detail: "Hatalı kapanan işlemler için kullan.",
+        confirmText: "Aktife geri al"
+      };
+      refresh();
+    }));
     mount.querySelectorAll("[data-confirm-no]").forEach(btn => btn.addEventListener("click", () => {
       const keepPanel = CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
       CONFIRM_DIALOG = null;
@@ -1756,6 +1899,8 @@
         }
       } else if (action.type === "deleteHistory") {
         deleteHistoryRecord(action.mode, action.id);
+      } else if (action.type === "restoreHistory") {
+        restoreHistoryRecord(action.mode, action.id);
       }
       const keepPanel = action.keepActivePanel || CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
       if (keepPanel) {
