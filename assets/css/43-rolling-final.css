@@ -5644,3 +5644,137 @@ html.rolling-hash-boot::before {
     max-width: 100% !important;
   }
 }
+
+
+/* V803: LOG kutu içinde açılır + dışarı tıklayınca kapanır */
+.rolling-v48-rail > .v802-target-card,
+.rolling-v48-rail .v802-target-detail,
+.rolling-v48-rail .v802-target-log-wrap {
+  overflow: hidden !important;
+}
+
+.rolling-v48-rail .v802-target-log-panel {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: auto !important;
+  display: block !important;
+  max-height: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  border-width: 0 !important;
+  padding: 0 8px !important;
+  margin-top: 0 !important;
+  box-shadow: none !important;
+  transition: max-height .16s ease, opacity .12s ease, padding .12s ease, margin .12s ease !important;
+}
+
+.rolling-v48-rail .v802-target-log-wrap.open .v802-target-log-panel {
+  max-height: 178px !important;
+  opacity: 1 !important;
+  overflow-y: auto !important;
+  border-width: 1px !important;
+  padding: 8px !important;
+  margin-top: 6px !important;
+}
+
+/* V803: Aktif Kripto TP satırı kompakt ve net */
+.v803-crypto-tp-row {
+  grid-template-columns: 42px 126px 126px 154px minmax(120px, 1fr) !important;
+  gap: 8px !important;
+  padding: 8px !important;
+}
+
+.v803-crypto-tp-row .tp-price,
+.v803-crypto-tp-row .tp-profit {
+  max-width: 126px !important;
+  width: 126px !important;
+  height: 38px !important;
+  font-size: .82rem !important;
+  border-radius: 12px !important;
+  background: #020617 !important;
+  border: 1px solid rgba(56,189,248,.34) !important;
+  color: #e0f2fe !important;
+}
+
+.v803-crypto-tp-row .tp-profit::placeholder {
+  color: #e0f2fe !important;
+  opacity: .9 !important;
+}
+
+.v803-crypto-tp-row .tp-price::placeholder {
+  color: transparent !important;
+}
+
+.v803-crypto-tp-row .tp-result-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 7px !important;
+}
+
+.v803-crypto-tp-row .tp-result-actions button {
+  height: 38px !important;
+  border-radius: 12px !important;
+  font-size: .74rem !important;
+  font-weight: 950 !important;
+}
+
+.v803-crypto-tp-row .tp-result-actions .tp {
+  border: 1px solid rgba(34,197,94,.42) !important;
+  background: rgba(34,197,94,.14) !important;
+  color: #86efac !important;
+}
+
+.v803-crypto-tp-row .tp-result-actions .tp.selected {
+  background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+  border-color: rgba(187,247,208,.85) !important;
+  color: #052e16 !important;
+}
+
+.v803-crypto-tp-row .tp-result-actions .stop.selected {
+  background: linear-gradient(135deg, #b91c1c, #ef4444) !important;
+  border-color: rgba(254,202,202,.85) !important;
+  color: #fee2e2 !important;
+}
+
+.v803-crypto-tp-row .tp-final {
+  min-height: 38px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: #020617 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 9px !important;
+  font-size: .76rem !important;
+  font-weight: 950 !important;
+  white-space: nowrap !important;
+}
+
+.v803-crypto-tp-row .tp-final.pos { color: #22c55e !important; }
+.v803-crypto-tp-row .tp-final.neg { color: #ef4444 !important; }
+.v803-crypto-tp-row .tp-final.muted { color: transparent !important; }
+
+.v803-crypto-tp-row .tp-percent {
+  display: none !important;
+}
+
+.v803-crypto-main-table th:nth-child(5),
+.v803-crypto-main-table td:nth-child(5) {
+  min-width: 120px !important;
+}
+
+@media (max-width: 900px) {
+  .v803-crypto-tp-row {
+    grid-template-columns: 42px minmax(0, 1fr) !important;
+  }
+  .v803-crypto-tp-row .tp-price,
+  .v803-crypto-tp-row .tp-profit,
+  .v803-crypto-tp-row .tp-result-actions,
+  .v803-crypto-tp-row .tp-final {
+    grid-column: 2 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

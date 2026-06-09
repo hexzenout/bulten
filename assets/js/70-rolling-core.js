@@ -868,19 +868,21 @@
     const tpRows = tps.map((tp, idx) => {
       const label = tp?.note || `TP${idx + 1}`;
       const result = tp?.result || (tp?.done ? "tp" : "");
+      const p = cryptoTpProfit(row, tp);
+      const finalText = result && p.ok ? `${cryptoTpPercentLabel(row, tp)} ${signedMoney(p.usd)}` : "";
       return `
-      <div class="v800-crypto-tp-row v801-crypto-tp-row v802-crypto-tp-row ${result ? "done " + result : ""}">
+      <div class="v800-crypto-tp-row v801-crypto-tp-row v802-crypto-tp-row v803-crypto-tp-row ${result ? "done " + result : ""}">
         <span class="tp-label">${escapeHtml(label)}</span>
-        <input class="tp-price" type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:price" value="${escapeHtml(tp?.price ?? "")}" placeholder="Kar alma">
-        <input class="tp-profit" type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:profitAmount" value="${escapeHtml(tp?.profitAmount ?? "")}" placeholder="Kar $">
-        <span class="tp-percent ${Number(cryptoTpProfit(row, tp).usd || 0) >= 0 ? "pos" : "neg"}">${cryptoTpPercentLabel(row, tp)}</span>
+        <input class="tp-price" type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:price" value="${escapeHtml(tp?.price ?? "")}" placeholder="">
+        <input class="tp-profit" type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:profitAmount" value="${escapeHtml(tp?.profitAmount ?? "")}" placeholder="Kâr">
         <div class="tp-result-actions">
-          <button type="button" class="stop ${result === "stop" ? "selected" : ""}" data-crypto-tp-result="${row.index}:${idx}:stop">${result === "stop" ? "Zarar" : "STOP"}</button>
           <button type="button" class="tp ${result === "tp" ? "selected" : ""}" data-crypto-tp-result="${row.index}:${idx}:tp">${result === "tp" ? "Kar alındı" : "TP ✓"}</button>
+          <button type="button" class="stop ${result === "stop" ? "selected" : ""}" data-crypto-tp-result="${row.index}:${idx}:stop">${result === "stop" ? "Zarar" : "STOP"}</button>
         </div>
+        <span class="tp-final ${result === "stop" ? "neg" : result === "tp" ? "pos" : "muted"}">${escapeHtml(finalText)}</span>
       </div>`;
     }).join("");
-    return `<article class="v763-active-card crypto v799-crypto-card v800-crypto-card v801-crypto-card v802-crypto-card" id="${cardId}">
+    return `<article class="v763-active-card crypto v799-crypto-card v800-crypto-card v801-crypto-card v802-crypto-card v803-crypto-card" id="${cardId}">
       <div class="v763-card-top">
         <div><b>${escapeHtml(cleanText(row.name) || "Kripto işlem")}</b></div>
         ${renderCardShotButton(cardId)}
@@ -899,7 +901,7 @@
         <label><span>Giriş Fiyatı</span><input type="number" step="0.01" data-crypto-detail="${row.index}:entryPrice" value="${escapeHtml(row.entryPrice || "")}" placeholder="68000"></label>
         <label><span>Likidasyon</span><input type="number" step="0.01" data-crypto-detail="${row.index}:liquidationPrice" value="${escapeHtml(row.liquidationPrice || "")}" placeholder="62000"></label>
       </div>
-      <div class="v799-crypto-tp-box v800-crypto-tp-box v801-crypto-tp-box v802-crypto-tp-box">
+      <div class="v799-crypto-tp-box v800-crypto-tp-box v801-crypto-tp-box v802-crypto-tp-box v803-crypto-tp-box">
         <div class="v799-crypto-tp-head v800-crypto-tp-head">
           <b>Kar Alma Noktaları</b>
           <div>
@@ -1275,16 +1277,21 @@
     const isCrypto = mode === "crypto";
     const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const visible = slots.slice(0, rowCount);
-    const noteHead = isCrypto ? "AKTİF İŞLEM" : "MAÇ";
-    const notePH = isCrypto ? "İşlem" : "Maç";
-    const valHead = isCrypto ? "NET K/Z $" : "ORAN";
-    const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
-    const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
-    const pnlHead = isCrypto ? "PNL" : "K/Z";
-    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th>${isCrypto ? "" : `<button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`}</th><th>#</th><th>Tür</th><th>${noteHead}</th><th>${valHead}</th><th>Tutar</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
+    if (isCrypto) {
+      return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table v803-crypto-main-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>AKTİF İŞLEM</th><th>Tutar</th></tr></thead><tbody>${visible.map((s, i) => {
+        return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Kripto</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="İşlem"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td></tr>`;
+      }).join("")}</tbody></table></div>`;
+    }
+    const noteHead = "MAÇ";
+    const notePH = "Maç";
+    const valHead = "ORAN";
+    const winText = "KAZANDI";
+    const lossText = "KAYBETTİ";
+    const pnlHead = "K/Z";
+    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th><button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>${valHead}</th><th>Tutar</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
       const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModePanel(mode, state) {
@@ -1553,7 +1560,7 @@
       slot.liquidationPrice = rec.liquidationPrice || slot.liquidationPrice || "";
       slot.leverage = rec.leverage || slot.leverage || 1;
       slot.takeProfits = Array.isArray(rec.takeProfits) && rec.takeProfits.length
-        ? rec.takeProfits.map((tp, i) => ({ price: tp.price || "", note: tp.note || `TP${i + 1}`, done: !!tp.done }))
+        ? rec.takeProfits.map((tp, i) => ({ price: tp.price || "", profitAmount: tp.profitAmount || "", note: tp.note || `TP${i + 1}`, result: tp.result || (tp.done ? "tp" : ""), done: !!tp.done }))
         : [{ price: "", profitAmount: "", note: "TP1", result: "" }];
     }
     list[index] = slot;
@@ -1793,12 +1800,49 @@
     mount.querySelectorAll("[data-target-log-toggle]").forEach(btn => btn.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
       const mode = btn.dataset.targetLogToggle === "crypto" ? "crypto" : "bet";
       const wrap = btn.closest(".v802-target-log-wrap");
       const next = !(wrap && wrap.classList.contains("open"));
+      mount.querySelectorAll(".v802-target-log-wrap.open").forEach(item => {
+        if (item !== wrap) item.classList.remove("open");
+      });
       setTargetLogOpen(mode, next);
       if (wrap) wrap.classList.toggle("open", next);
+      const keep = () => window.scrollTo({ top: y, left: 0, behavior: "auto" });
+      requestAnimationFrame(keep);
+      setTimeout(keep, 0);
+      setTimeout(keep, 80);
     }));
+    mount.addEventListener("click", (event) => {
+      if (event.target && event.target.closest && event.target.closest(".v802-target-log-wrap")) return;
+      let changed = false;
+      mount.querySelectorAll(".v802-target-log-wrap.open").forEach(wrap => {
+        wrap.classList.remove("open");
+        changed = true;
+      });
+      if (changed) {
+        setTargetLogOpen("bet", false);
+        setTargetLogOpen("crypto", false);
+      }
+    });
+    if (!window.__omegaV803TargetLogOutsideBound) {
+      window.__omegaV803TargetLogOutsideBound = true;
+      document.addEventListener("click", (event) => {
+        if (event.target && event.target.closest && event.target.closest(".v802-target-log-wrap")) return;
+        const mainMount = qs("omega-rolling-render");
+        if (!mainMount) return;
+        let changed = false;
+        mainMount.querySelectorAll(".v802-target-log-wrap.open").forEach(wrap => {
+          wrap.classList.remove("open");
+          changed = true;
+        });
+        if (changed) {
+          setTargetLogOpen("bet", false);
+          setTargetLogOpen("crypto", false);
+        }
+      });
+    }
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = btn.dataset.historyOpen === "crypto" ? "crypto" : "bet";
       LOG_CENTER_OPEN_MODE = null;
