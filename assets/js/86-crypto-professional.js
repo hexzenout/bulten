@@ -1158,6 +1158,22 @@
     }
   }, true);
 
+
+  // V779: Kamera ikonunda CSS/katman çakışması olursa işlev yine çalışsın.
+  document.addEventListener("click", function(event) {
+    const btn = event.target && event.target.closest ? event.target.closest(".v776-slot-camera") : null;
+    if (!btn || !btn.closest("#rolling-excel-overlay")) return;
+    const kapsul = btn.closest("[data-v765-kapsul]");
+    if (!kapsul) return;
+    const parts = String(kapsul.dataset.v765Kapsul || "").split(":");
+    const day = Number(parts[0] || 1);
+    const slot = Number(parts[1] || 0);
+    if (!Number.isFinite(day) || !Number.isFinite(slot)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (typeof window.omega_RollingSlotPhoto === "function") window.omega_RollingSlotPhoto(day, slot);
+  }, true);
+
   function reviveRollingFromHashV39() {
     const m = String(location.hash || "").match(/^#(?:finance|rolling)\/rolling\/(\d+)/);
     if (!m) return;

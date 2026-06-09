@@ -4134,3 +4134,48 @@ html.rolling-hash-boot::before {
   display: none !important;
   content: none !important;
 }
+
+
+/* V779: kamera ikonu sade-şık, amber renkte ve tıklama alanı net */
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera {
+  width: 29px !important;
+  min-width: 29px !important;
+  max-width: 29px !important;
+  height: 29px !important;
+  min-height: 29px !important;
+  max-height: 29px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #fbbf24 !important;
+  box-shadow: none !important;
+  text-shadow: 0 0 10px rgba(251,191,36,.38) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.16rem !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 60 !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera i {
+  pointer-events: none !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera:hover {
+  color: #fde68a !important;
+  background: transparent !important;
+  transform: translateY(-1px) scale(1.04) !important;
+  filter: none !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera:active {
+  transform: translateY(0) scale(.98) !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera::before,
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera::after {
+  display: none !important;
+  content: none !important;
+}
