@@ -542,7 +542,7 @@
       possible: Number(row.pnl || 0)
     }));
   }
-  function v785WrapPhotoText(text, limit = 54) {
+  function v785WrapPhotoText(text, limit = 38) {
     const raw = String(text || "").trim();
     if (!raw) return [""];
     const words = raw.split(/\s+/);
@@ -562,62 +562,67 @@
     if (current) lines.push(current);
     return lines.length ? lines : [raw];
   }
-  function v786MatchRowsForPhoto(row) {
-    const lines = [];
-    const rawLines = Array.isArray(row.matchLines) && row.matchLines.length ? row.matchLines : [row.name || ""];
-    const oddsList = Array.isArray(row.matchOdds) && row.matchOdds.length ? row.matchOdds : [];
-    rawLines.forEach((name, idx) => {
-      const odds = Number(oddsList[idx] || 0);
-      const wrapped = v785WrapPhotoText(`${idx + 1}. ${name}`, 56).slice(0, 3);
+  function v787PhotoMatchRowsForEntry(row) {
+    const names = Array.isArray(row.matchLines) && row.matchLines.length ? row.matchLines : [row.name || "Maç"];
+    const odds = Array.isArray(row.matchOdds) && row.matchOdds.length ? row.matchOdds : [row.odds || 0];
+    const out = [];
+    names.forEach((name, idx) => {
+      const prefix = names.length > 1 ? `${idx + 1}. ` : "";
+      const wrapped = v785WrapPhotoText(prefix + String(name || "Maç").trim(), 42).slice(0, 4);
       wrapped.forEach((line, part) => {
-        lines.push({ text: line, odds: part === 0 ? odds : 0 });
+        out.push({ text: line, odds: part === 0 ? Number(odds[idx] || 0) : 0 });
       });
     });
-    return lines.length ? lines : [{ text: row.name || "Maç", odds: Number(row.odds || 0) }];
+    return out.length ? out : [{ text: "Maç", odds: Number(row.odds || 0) }];
+  }
+  function v787PhotoTitle(rows, fallback) {
+    if (rows.length === 1) {
+      if (rows[0].type === "Kombine") return "KOMBİNE KUPON";
+      if (rows[0].type === "Bahis") return "TEKLİ BAHİS";
+    }
+    return fallback || "AKTİF BAHİSLER / KUPONLAR";
   }
   function v785BuildBetPhotoSvg(rows, titleText) {
     const data = (rows || []).filter(Boolean);
     if (!data.length) return null;
-    const width = 1280;
-    const startY = 106;
-    const gapY = 16;
-    const lineH = 25;
-    const rowCards = [];
+
+    const width = 900;
+    const lineH = 26;
+    const startY = 150;
+    const gapY = 10;
+    const rowSvg = [];
     let cursorY = startY;
-    data.forEach(row => {
-      const isCombo = row.type === "Kombine";
-      const matchRows = v786MatchRowsForPhoto(row);
-      const matchAreaHeight = Math.max(34, matchRows.length * lineH + 10);
-      const rowHeight = Math.max(74, matchAreaHeight + 30);
-      const top = cursorY;
-      const typeY = top + 36;
-      rowCards.push(`
-        <rect x="54" y="${top}" width="1172" height="${rowHeight}" rx="18" fill="#111827" stroke="#334155"/>
-        <text x="78" y="${typeY}" fill="#94a3b8" font-size="16" font-family="Arial" font-weight="900">#${row.index}</text>
-        <text x="135" y="${typeY}" fill="#c084fc" font-size="17" font-family="Arial" font-weight="900">${escapeHtml(row.type || "Bahis")}</text>
-        ${matchRows.map((line, idx) => `<text x="280" y="${top + 31 + idx * lineH}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">${escapeHtml(line.text)}</text>${line.odds ? `<text x="1004" y="${top + 31 + idx * lineH}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="950">${Number(line.odds).toFixed(2)}</text>` : ""}`).join('')}
-        <text x="1010" y="${typeY}" text-anchor="end" fill="${isCombo ? '#64748b' : '#fbbf24'}" font-size="18" font-family="Arial" font-weight="950">${isCombo ? (row.odds ? 'Toplam ' + Number(row.odds).toFixed(2) : '-') : (row.odds ? Number(row.odds).toFixed(2) : '-')}</text>
-        <text x="1106" y="${typeY}" text-anchor="end" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">${money(row.stake)}</text>
-        <text x="1200" y="${typeY}" text-anchor="end" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${row.possible ? money(row.possible) : '-'}</text>`);
-      cursorY += rowHeight + gapY;
+
+    data.forEach(entry => {
+      const matchRows = v787PhotoMatchRowsForEntry(entry);
+      matchRows.forEach((match, idx) => {
+        const rowHeight = 38;
+        rowSvg.push(`
+          <rect x="42" y="${cursorY - 28}" width="816" height="${rowHeight}" rx="12" fill="#0f172a" stroke="#334155"/>
+          <text x="64" y="${cursorY - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(match.text)}</text>
+          <text x="830" y="${cursorY - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${match.odds ? Number(match.odds).toFixed(2) : ""}</text>`);
+        cursorY += rowHeight + gapY;
+      });
+      if (data.length > 1) cursorY += 4;
     });
+
     const totalStake = data.reduce((sum, row) => sum + Number(row.stake || 0), 0);
     const totalPossible = data.reduce((sum, row) => sum + Number(row.possible || 0), 0);
-    const footerY = cursorY + 10;
-    const height = footerY + 88;
+    const totalOdds = data.length === 1 ? Number(data[0].odds || 0) : 0;
+    const title = v787PhotoTitle(data, titleText);
+    const footerY = cursorY + 28;
+    const height = Math.max(360, footerY + 112);
+
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <rect width="${width}" height="${height}" fill="#020617"/>
-      <text x="54" y="52" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text>
-      <text x="78" y="86" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text>
-      <text x="135" y="86" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text>
-      <text x="280" y="86" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text>
-      <text x="1004" y="86" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text>
-      <text x="1106" y="86" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text>
-      <text x="1200" y="86" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">KAZANÇ</text>
-      ${rowCards.join('')}
-      <rect x="54" y="${footerY}" width="1172" height="56" rx="16" fill="#111827" stroke="#374151"/>
-      <text x="78" y="${footerY + 36}" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text>
-      <text x="1200" y="${footerY + 36}" text-anchor="end" fill="#22c55e" font-size="21" font-family="Arial" font-weight="950">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text>
+      <rect x="22" y="22" width="856" height="${height - 44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/>
+      <text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">${escapeHtml(title)}</text>
+      <text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text>
+      ${rowSvg.join("")}
+      <rect x="42" y="${footerY}" width="816" height="58" rx="14" fill="#111827" stroke="#334155"/>
+      <text x="64" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran: ${totalOdds ? totalOdds.toFixed(2) : "-"}</text>
+      <text x="330" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar: ${money(totalStake)}</text>
+      <text x="836" y="${footerY + 36}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">Tahmini Kazanç: ${totalPossible ? money(totalPossible) : "-"}</text>
     </svg>`;
   }
   function v781BuildTablePhotoSvg(mode, state) {
@@ -664,7 +669,7 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${mode === "crypto" ? "Kripto Fotoğrafı" : "Bahis Fotoğrafı"}</b><span>Ana ROLLING aktif tablo özeti</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Ana ROLLING</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
