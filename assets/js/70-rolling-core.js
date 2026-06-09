@@ -319,6 +319,7 @@
       pnl: Number(slot.pnl || 0),
       entryPrice: slot.entryPrice || "",
       liquidationPrice: slot.liquidationPrice || "",
+      leverage: slot.leverage || 1,
       takeProfits: Array.isArray(slot.takeProfits) ? slot.takeProfits.map(tp => ({ ...tp })) : []
     };
     h[mode].unshift(rec);
@@ -782,15 +783,15 @@
   }
   function renderBetSingleCard(row) {
     const cardId = `v763-bet-card-${row.index}`;
-    return `<article class="v763-active-card bet single" id="${cardId}">
+    return `<article class="v763-active-card bet single v801-bet-card" id="${cardId}">
       <div class="v763-card-top">
         <div><b>${escapeHtml(cleanText(row.name) || "Bahis")}</b><span>Bahis</span></div>
         ${renderCardShotButton(cardId)}
       </div>
       ${renderBetInfoBar(row)}
-      <div class="v763-card-actions">
-        <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-status="win">KAZANDI</button>
-        <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-status="loss">KAYBETTİ</button>
+      <div class="v763-card-actions v801-bet-close-actions">
+        <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-status="win">Kupon Kazandı</button>
+        <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-status="loss">Kupon Kaybetti</button>
       </div>
     </article>`;
   }
@@ -808,7 +809,7 @@
         <button type="button" class="loss ${m.status === "loss" ? "selected" : ""}" data-combo-match-status="${row.index}:${idx}:loss">KAYBETTİ</button>
       </div>
     </li>`).join("");
-    return `<article class="v763-active-card bet combo" id="${cardId}">
+    return `<article class="v763-active-card bet combo v801-bet-card" id="${cardId}">
       <details ${keepOpen ? "open" : ""}>
         <summary>
           <div><b>Kombine</b><span>${matches.length} maç · ${done}/${matches.length} sonuçlandı</span></div>
@@ -816,6 +817,10 @@
         </summary>
         ${renderBetInfoBar(row)}
         <ul class="v763-combo-match-list">${matchRows}</ul>
+        <div class="v763-card-actions v801-bet-close-actions">
+          <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-status="win">Kupon Kazandı</button>
+          <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-status="loss">Kupon Kaybetti</button>
+        </div>
       </details>
     </article>`;
   }
@@ -823,19 +828,21 @@
     const entry = Number(row?.entryPrice || 0);
     const price = Number(tp?.price || 0);
     const stake = Number(row?.stake || 0);
+    const lev = Math.max(1, Number(row?.leverage || 1));
     if (!entry || !price || !stake) return { pct: 0, usd: 0, ok: false };
     const pct = ((price - entry) / entry) * 100;
-    const usd = stake * (pct / 100);
+    let usd = stake * lev * (pct / 100);
+    if (tp?.result === "stop") usd = -Math.abs(usd || stake);
     return { pct, usd, ok: true };
   }
   function cryptoTpProfitLabel(row, tp) {
     const p = cryptoTpProfit(row, tp);
-    if (!p.ok) return "Beklenen kar -";
+    if (!p.ok) return "Hesapla";
     return `KAR ${p.pct >= 0 ? "+" : ""}${p.pct.toFixed(1)}% ${signedMoney(p.usd)}`;
   }
   function cryptoRealizedProfit(row) {
     const tps = Array.isArray(row?.takeProfits) ? row.takeProfits : [];
-    const done = tps.filter(tp => tp && tp.done);
+    const done = tps.filter(tp => tp && (tp.result === "tp" || tp.result === "stop"));
     const sum = done.reduce((acc, tp) => acc + cryptoTpProfit(row, tp).usd, 0);
     if (done.length && Number.isFinite(sum)) return sum;
     return Number(row?.odds || 0);
@@ -848,36 +855,42 @@
   function renderCryptoCard(row) {
     const cardId = `v763-crypto-card-${row.index}`;
     const missing = !cleanText(row.name) || !Number(row.stake || 0);
-    const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [{ price: "", note: "TP1", done: false }];
+    const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [{ price: "", note: "TP1", result: "" }];
     const realized = cryptoRealizedProfit(row);
     const tpRows = tps.map((tp, idx) => {
       const label = tp?.note || `TP${idx + 1}`;
+      const result = tp?.result || (tp?.done ? "tp" : "");
       return `
-      <div class="v800-crypto-tp-row ${tp?.done ? "done" : ""}">
+      <div class="v800-crypto-tp-row v801-crypto-tp-row ${result ? "done " + result : ""}">
         <span class="tp-label">${escapeHtml(label)}</span>
-        <input type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:price" value="${escapeHtml(tp?.price ?? "")}" placeholder="Kar alma fiyatı">
-        <strong>${cryptoTpProfitLabel(row, tp)}</strong>
-        <button type="button" class="take" data-crypto-tp-taken="${row.index}:${idx}">${tp?.done ? "Alındı" : "Kar alındı"}</button>
+        <input class="tp-price" type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:price" value="${escapeHtml(tp?.price ?? "")}" placeholder="Kar alma">
+        <button type="button" class="profit-pill" data-crypto-profit-focus="${row.index}:${idx}">${cryptoTpProfitLabel(row, tp)}</button>
+        <div class="tp-result-actions">
+          <button type="button" class="stop ${result === "stop" ? "selected" : ""}" data-crypto-tp-result="${row.index}:${idx}:stop">${result === "stop" ? "Zarar" : "STOP"}</button>
+          <button type="button" class="tp ${result === "tp" ? "selected" : ""}" data-crypto-tp-result="${row.index}:${idx}:tp">${result === "tp" ? "Kar alındı" : "TP ✓"}</button>
+        </div>
       </div>`;
     }).join("");
-    return `<article class="v763-active-card crypto v799-crypto-card v800-crypto-card" id="${cardId}">
+    return `<article class="v763-active-card crypto v799-crypto-card v800-crypto-card v801-crypto-card" id="${cardId}">
       <div class="v763-card-top">
-        <div><b>${escapeHtml(cleanText(row.name) || "Kripto işlem")}</b><span>Kripto · Long planı · İşlem kapanana kadar aktif kalır</span></div>
+        <div><b>${escapeHtml(cleanText(row.name) || "Kripto işlem")}</b></div>
         ${renderCardShotButton(cardId)}
       </div>
       <div class="v763-card-info v799-crypto-info v800-crypto-info">
-        <span>Tutar / Marjin <b>${Number(row.stake || 0) ? money(row.stake) : "-"}</b></span>
+        <span>Tutar <b>${Number(row.stake || 0) ? money(row.stake) : "-"}</b></span>
+        <span>Kaldıraç <b>${Number(row.leverage || 1)}x</b></span>
         <span>Giriş <b>${cryptoFormatPrice(row.entryPrice)}</b></span>
         <span>Liq <b>${cryptoFormatPrice(row.liquidationPrice)}</b></span>
         <span>TP Kar <b class="${realized >= 0 ? "pos" : "neg"}">${signedMoney(realized)}</b></span>
         ${missing ? `<em>Eksik bilgi</em>` : ""}
       </div>
-      <div class="v799-crypto-detail-grid v800-crypto-detail-grid">
-        <label><span>Tutar / Marjin</span><input type="number" step="0.01" data-crypto-detail="${row.index}:stake" value="${escapeHtml(row.stake || "")}" placeholder="Örn. 300"></label>
+      <div class="v799-crypto-detail-grid v800-crypto-detail-grid v801-crypto-detail-grid">
+        <label><span>Tutar</span><input type="number" step="0.01" data-crypto-detail="${row.index}:stake" value="${escapeHtml(row.stake || "")}" placeholder="Örn. 300"></label>
+        <label><span>Kaldıraç</span><input type="number" step="1" data-crypto-detail="${row.index}:leverage" value="${escapeHtml(row.leverage || 1)}" placeholder="Örn. 10"></label>
         <label><span>Giriş Fiyatı</span><input type="number" step="0.01" data-crypto-detail="${row.index}:entryPrice" value="${escapeHtml(row.entryPrice || "")}" placeholder="Örn. 68000"></label>
         <label><span>Likidasyon</span><input type="number" step="0.01" data-crypto-detail="${row.index}:liquidationPrice" value="${escapeHtml(row.liquidationPrice || "")}" placeholder="Örn. 62000"></label>
       </div>
-      <div class="v799-crypto-tp-box v800-crypto-tp-box">
+      <div class="v799-crypto-tp-box v800-crypto-tp-box v801-crypto-tp-box">
         <div class="v799-crypto-tp-head v800-crypto-tp-head">
           <b>Kar Alma Noktaları</b>
           <div>
@@ -887,8 +900,7 @@
         </div>
         ${tpRows}
       </div>
-      <div class="v800-crypto-close-row">
-        <span>TP işaretlemek işlemi kapatmaz. İşlem tamamen bittiyse kapatıp geçmişe al.</span>
+      <div class="v800-crypto-close-row v801-crypto-close-row">
         <button type="button" class="close-trade" data-crypto-close="${row.index}">İşlem Kapandı</button>
       </div>
     </article>`;
@@ -1143,6 +1155,7 @@
       if (!s.cryptoPnlMode) s.cryptoPnlMode = "amount";
       if (s.entryPrice === undefined || s.entryPrice === null) s.entryPrice = "";
       if (s.liquidationPrice === undefined || s.liquidationPrice === null) s.liquidationPrice = "";
+      if (s.leverage === undefined || s.leverage === null || s.leverage === "") s.leverage = 1;
       if (!Array.isArray(s.takeProfits)) s.takeProfits = [];
       if (!s.takeProfits.length) s.takeProfits = [{ price: "", note: "TP1" }];
       sanitizeEmptyPendingSlot(s, "crypto");
@@ -1462,7 +1475,7 @@
     const height = footerY + 130;
     const title = safe(cleanText(row.name) || "Kripto İşlem");
     const realized = cryptoRealizedProfit(row);
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#38bdf8" stroke-width="2"/><text x="42" y="72" fill="#38bdf8" font-size="28" font-family="Arial" font-weight="900">AKTİF KRİPTO İŞLEMİ</text><text x="42" y="108" fill="#f8fafc" font-size="22" font-family="Arial" font-weight="900">${title}</text><text x="42" y="145" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text><rect x="42" y="170" width="816" height="50" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Giriş: ${row.entryPrice || "-"}</text><text x="330" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Likidasyon: ${row.liquidationPrice || "-"}</text><text x="830" y="202" text-anchor="end" fill="${realized >= 0 ? "#22c55e" : "#ef4444"}" font-size="18" font-family="Arial" font-weight="950">TP Kar: ${signedMoney(realized)}</text><text x="42" y="246" fill="#94a3b8" font-size="15" font-family="Arial" font-weight="900">KAR ALMA NOKTALARI</text>${tpLines || `<text x="64" y="268" fill="#94a3b8" font-size="18" font-family="Arial" font-weight="800">TP noktası yok</text>`}<rect x="42" y="${footerY}" width="816" height="58" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="900">Tutar / Marjin: ${money(row.stake || 0)}</text><text x="830" y="${footerY + 36}" text-anchor="end" fill="${Number(row.pnl || 0) >= 0 ? "#22c55e" : "#ef4444"}" font-size="20" font-family="Arial" font-weight="950">PNL: ${money(row.pnl || 0)}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#38bdf8" stroke-width="2"/><text x="42" y="72" fill="#38bdf8" font-size="28" font-family="Arial" font-weight="900">AKTİF KRİPTO İŞLEMİ</text><text x="42" y="108" fill="#f8fafc" font-size="22" font-family="Arial" font-weight="900">${title}</text><text x="42" y="145" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text><rect x="42" y="170" width="816" height="50" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Giriş: ${row.entryPrice || "-"}</text><text x="330" y="202" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">Likidasyon: ${row.liquidationPrice || "-"}</text><text x="830" y="202" text-anchor="end" fill="${realized >= 0 ? "#22c55e" : "#ef4444"}" font-size="18" font-family="Arial" font-weight="950">TP Kar: ${signedMoney(realized)}</text><text x="42" y="246" fill="#94a3b8" font-size="15" font-family="Arial" font-weight="900">KAR ALMA NOKTALARI</text>${tpLines || `<text x="64" y="268" fill="#94a3b8" font-size="18" font-family="Arial" font-weight="800">TP noktası yok</text>`}<rect x="42" y="${footerY}" width="816" height="58" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="900">Tutar: ${money(row.stake || 0)}</text><text x="830" y="${footerY + 36}" text-anchor="end" fill="${Number(row.pnl || 0) >= 0 ? "#22c55e" : "#ef4444"}" font-size="20" font-family="Arial" font-weight="950">PNL: ${money(row.pnl || 0)}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
@@ -1518,9 +1531,10 @@
     if (m === "crypto") {
       slot.entryPrice = rec.entryPrice || slot.entryPrice || "";
       slot.liquidationPrice = rec.liquidationPrice || slot.liquidationPrice || "";
+      slot.leverage = rec.leverage || slot.leverage || 1;
       slot.takeProfits = Array.isArray(rec.takeProfits) && rec.takeProfits.length
         ? rec.takeProfits.map((tp, i) => ({ price: tp.price || "", note: tp.note || `TP${i + 1}`, done: !!tp.done }))
-        : [{ price: "", note: "TP1", done: false }];
+        : [{ price: "", note: "TP1", result: "" }];
     }
     list[index] = slot;
     state.modeSlots[m] = list;
@@ -1654,7 +1668,7 @@
         if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
         const slot = state.modeSlots.crypto[i];
         if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
-        while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, done: false });
+        while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
         slot.takeProfits[ti][key] = input.value;
         if (!slot.takeProfits[ti].note) slot.takeProfits[ti].note = `TP${ti + 1}`;
         saveState(state);
@@ -1669,21 +1683,28 @@
       if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
       const slot = state.modeSlots.crypto[i];
       if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
-      if (op === "plus") slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, done: false });
+      if (op === "plus") slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
       else slot.takeProfits.pop();
-      if (!slot.takeProfits.length) slot.takeProfits.push({ price: "", note: "TP1", done: false });
+      if (!slot.takeProfits.length) slot.takeProfits.push({ price: "", note: "TP1", result: "" });
       saveState(state);
       refresh();
     }));
-    mount.querySelectorAll("[data-crypto-tp-taken]").forEach(btn => btn.addEventListener("click", () => {
-      const [slotRaw, tpRaw] = String(btn.dataset.cryptoTpTaken || "0:0").split(":");
+    mount.querySelectorAll("[data-crypto-profit-focus]").forEach(btn => btn.addEventListener("click", () => {
+      const [slotRaw, tpRaw] = String(btn.dataset.cryptoProfitFocus || "0:0").split(":");
+      const input = mount.querySelector(`[data-crypto-tp="${slotRaw}:${tpRaw}:price"]`);
+      if (input) input.focus();
+    }));
+    mount.querySelectorAll("[data-crypto-tp-result]").forEach(btn => btn.addEventListener("click", () => {
+      const [slotRaw, tpRaw, resultRaw] = String(btn.dataset.cryptoTpResult || "0:0:tp").split(":");
       const i = Number(slotRaw || 0);
       const ti = Number(tpRaw || 0);
+      const result = resultRaw === "stop" ? "stop" : "tp";
       if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
       const slot = state.modeSlots.crypto[i];
       if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
-      while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, done: false });
-      slot.takeProfits[ti].done = !slot.takeProfits[ti].done;
+      while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
+      slot.takeProfits[ti].result = slot.takeProfits[ti].result === result ? "" : result;
+      slot.takeProfits[ti].done = slot.takeProfits[ti].result === "tp";
       slot.odds = Number(cryptoRealizedProfit(slot).toFixed(2));
       recalcSlot(slot);
       saveState(state);
@@ -1705,7 +1726,7 @@
         tone: Number(slot.odds || 0) >= 0 ? "success" : "danger",
         title: "Kripto işlemi kapatılsın mı?",
         message: `${cleanText(slot.name) || "Kripto işlem"} geçmişe alınacak.`,
-        detail: "TP işaretlemek işlemi kapatmaz. Sadece bu onay işlem kapandı olarak geçmişe taşır. Hatalıysa Geçmiş'ten aktife geri alabilirsin.",
+        detail: "Hatalıysa Geçmişten aktife geri alabilirsin.",
         confirmText: "İşlem kapandı"
       };
       refresh();
@@ -1752,10 +1773,14 @@
         requestAnimationFrame(() => window.scrollTo({ top: y, left: 0, behavior: "auto" }));
       });
     });
-    mount.querySelectorAll(".v796-target-log").forEach(log => {
-      log.addEventListener("toggle", () => {
+    mount.querySelectorAll(".v796-target-log > summary").forEach(summary => {
+      summary.addEventListener("click", () => {
         const y = window.scrollY || document.documentElement.scrollTop || 0;
-        requestAnimationFrame(() => window.scrollTo({ top: y, left: 0, behavior: "auto" }));
+        const keep = () => window.scrollTo({ top: y, left: 0, behavior: "auto" });
+        requestAnimationFrame(keep);
+        setTimeout(keep, 0);
+        setTimeout(keep, 60);
+        setTimeout(keep, 180);
       });
     });
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
