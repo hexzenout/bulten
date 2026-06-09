@@ -1413,9 +1413,9 @@
           </div>
         </div>
 
-        <div class="rolling-v48-layout v49-rolling-layout">
-          <aside class="rolling-v48-rail v49-rolling-rail">
-            <div class="rolling-v48-rail-toggle v49-rolling-rail-title"><i class="fa-solid fa-bars"></i><span>ROLLING MENÜSÜ</span></div>
+        <div class="rolling-v48-layout v49-rolling-layout ${railCollapsed() ? "v807-rail-is-collapsed" : ""}">
+          <aside class="rolling-v48-rail v49-rolling-rail ${railCollapsed() ? "v807-rail-collapsed" : ""}">
+            <button type="button" class="rolling-v48-rail-toggle v49-rolling-rail-title v807-rail-toggle" data-rail-toggle aria-expanded="${railCollapsed() ? "false" : "true"}" title="${railCollapsed() ? "Menüyü aç" : "Menüyü küçült"}"><i class="fa-solid fa-bars"></i><span>ROLLING MENÜSÜ</span></button>
             <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span><span class="rolling-v493-rail-label">BAHİS</span></button>
             <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span><span class="rolling-v493-rail-label">KRİPTO</span></button>
             ${renderPlanControl(state, mode, mode === "crypto" ? cryptoTotalPnl : betTotalPnl)}
@@ -1596,6 +1596,10 @@
 
   function bindEvents(mount, state) {
     const refresh = () => refreshForMount(mount);
+    mount.querySelectorAll("[data-rail-toggle]").forEach(btn => btn.addEventListener("click", () => {
+      setRailCollapsed(!railCollapsed());
+      refresh();
+    }));
     mount.querySelectorAll("[data-roll-tab]").forEach(btn => btn.addEventListener("click", () => { setActiveMode(btn.dataset.rollTab); refresh(); }));
     mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => { const [mode, days] = String(btn.dataset.roll || "bet:7").split(":"); openRolling(mode, Number(days || 7)); }));
     mount.querySelectorAll("[data-row-op]").forEach(btn => btn.addEventListener("click", () => {

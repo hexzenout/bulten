@@ -5881,3 +5881,101 @@ html.rolling-hash-boot::before {
 .rolling-v48-rail .v802-target-mini-grid span:nth-child(4) b.neg {
   color: #e9d5ff !important;
 }
+
+
+/* V807: Rolling Menü hamburger artık gerçek küçült/aç butonu */
+.rolling-v48-rail .v807-rail-toggle,
+.rolling-v48-rail-toggle.v807-rail-toggle,
+.v49-rolling-rail-title.v807-rail-toggle {
+  width: 100% !important;
+  min-height: 42px !important;
+  border: 1px solid rgba(251,191,36,.20) !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, rgba(251,191,36,.10), rgba(15,23,42,.72)) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding: 0 13px !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+}
+
+.rolling-v48-rail .v807-rail-toggle:hover {
+  border-color: rgba(251,191,36,.36) !important;
+  background: linear-gradient(135deg, rgba(251,191,36,.16), rgba(15,23,42,.78)) !important;
+}
+
+.rolling-v48-rail .v807-rail-toggle i {
+  min-width: 18px !important;
+  text-align: center !important;
+}
+
+.rolling-v48-layout.v807-rail-is-collapsed,
+.v49-rolling-layout.v807-rail-is-collapsed {
+  grid-template-columns: 76px minmax(0, 1fr) !important;
+}
+
+.rolling-v48-rail.v807-rail-collapsed,
+.v49-rolling-rail.v807-rail-collapsed {
+  width: 76px !important;
+  min-width: 76px !important;
+  max-width: 76px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  overflow: visible !important;
+}
+
+.rolling-v48-rail.v807-rail-collapsed .v807-rail-toggle {
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.rolling-v48-rail.v807-rail-collapsed .v807-rail-toggle span,
+.rolling-v48-rail.v807-rail-collapsed .rolling-v493-rail-label,
+.rolling-v48-rail.v807-rail-collapsed .rolling-v48-rail-tab span:not(.rolling-v491-bet-icons):not(.rolling-v518-crypto-icons) {
+  display: none !important;
+}
+
+.rolling-v48-rail.v807-rail-collapsed .rolling-v48-rail-tab {
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 48px !important;
+  padding: 0 !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  border-radius: 14px !important;
+}
+
+.rolling-v48-rail.v807-rail-collapsed .rolling-v491-bet-icons,
+.rolling-v48-rail.v807-rail-collapsed .rolling-v518-crypto-icons {
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  justify-content: center !important;
+}
+
+.rolling-v48-rail.v807-rail-collapsed .v796-target-card,
+.rolling-v48-rail.v807-rail-collapsed .v798-target-card,
+.rolling-v48-rail.v807-rail-collapsed .v802-target-card {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  .rolling-v48-layout.v807-rail-is-collapsed,
+  .v49-rolling-layout.v807-rail-is-collapsed {
+    grid-template-columns: 64px minmax(0, 1fr) !important;
+  }
+
+  .rolling-v48-rail.v807-rail-collapsed,
+  .v49-rolling-rail.v807-rail-collapsed {
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
+  }
+
+  .rolling-v48-rail.v807-rail-collapsed .rolling-v48-rail-tab {
+    width: 48px !important;
+    min-width: 48px !important;
+  }
+}
