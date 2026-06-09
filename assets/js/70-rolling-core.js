@@ -565,6 +565,104 @@
     const t = rowBetTotals(row || {});
     return { stake: t.stake, odds: t.odds, possibleReturn: t.possibleWin, netProfit: t.possibleWin ? t.possibleWin - t.stake : 0 };
   }
+  function v809ShortLabel(value, limit = 30) {
+    const raw = cleanText(value);
+    if (!raw) return "-";
+    return raw.length > limit ? raw.slice(0, limit - 1) + "…" : raw;
+  }
+  function v809CryptoManualProfit(row) {
+    const tps = Array.isArray(row?.takeProfits) ? row.takeProfits : [];
+    let sum = 0;
+    let count = 0;
+    tps.forEach(tp => {
+      if (!tp || tp.profitAmount === "" || tp.profitAmount === undefined || tp.profitAmount === null) return;
+      if (!Number.isFinite(Number(tp.profitAmount))) return;
+      let value = Number(tp.profitAmount || 0);
+      if (tp.result === "stop") value = -Math.abs(value || Number(row?.stake || 0));
+      sum += value;
+      count++;
+    });
+    return { sum, count };
+  }
+  function v809TargetActiveData(state, mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m === "crypto") {
+      const rows = pendingRowsForMode("crypto", state);
+      const margin = rows.reduce((sum, row) => sum + Number(row.stake || 0), 0);
+      let tpTotal = 0, tpDone = 0, stopDone = 0, manualTotal = 0, manualCount = 0;
+      rows.forEach(row => {
+        const tps = Array.isArray(row.takeProfits) ? row.takeProfits : [];
+        tpTotal += tps.length;
+        tpDone += tps.filter(tp => tp?.result === "tp").length;
+        stopDone += tps.filter(tp => tp?.result === "stop").length;
+        const manual = v809CryptoManualProfit(row);
+        manualTotal += manual.sum;
+        manualCount += manual.count;
+      });
+      const details = rows.slice(0, 5).map(row => {
+        const manual = v809CryptoManualProfit(row);
+        const lev = Number(row.leverage || 0) > 1 ? ` · ${Number(row.leverage || 0)}x` : "";
+        return `<li><span>${escapeHtml(v809ShortLabel(row.name || `İşlem ${row.index + 1}`, 28))}</span><b>${money(row.stake || 0)}${lev}</b><em>${manual.count ? signedMoney(manual.sum) : "Kâr girilmedi"}</em></li>`;
+      }).join("");
+      return {
+        mode: m,
+        count: rows.length,
+        headline: rows.length ? `${rows.length} işlem` : "Aktif işlem yok",
+        meta: `${rows.length ? `Marjin ${money(margin)}` : "Marjin -"}`,
+        sub: `${tpTotal ? `TP ${tpDone}/${tpTotal}` : "TP -"}${stopDone ? ` · Stop ${stopDone}` : ""} · Manuel Kâr ${manualCount ? signedMoney(manualTotal) : "-"}`,
+        details: details || `<li class="empty"><span>Aktif kripto işlemi yok</span><b>Aktif panelden işlem ekle.</b><em>-</em></li>`
+      };
+    }
+    const grouped = getBetCouponGroups(state);
+    const items = [];
+    grouped.singles.forEach(row => {
+      const t = rowBetTotals(row);
+      items.push({ index: row.index, type: "Maç", name: cleanText(row.name), count: 1, stake: t.stake, odds: t.odds, possible: t.possibleWin });
+    });
+    grouped.coupons.forEach(coupon => {
+      const t = rowBetTotals(coupon.row);
+      items.push({ index: coupon.slotIndex, type: "Kombine", name: `Kombine ${coupon.id}`, count: coupon.matches.length, stake: t.stake, odds: t.odds, possible: t.possibleWin });
+    });
+    items.sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
+    const matchCount = grouped.singles.length + grouped.coupons.reduce((sum, c) => sum + Number(c.matches?.length || 0), 0);
+    const stake = items.reduce((sum, item) => sum + Number(item.stake || 0), 0);
+    const possible = items.reduce((sum, item) => sum + Number(item.possible || 0), 0);
+    const completeCount = items.filter(item => Number(item.possible || 0) > 0).length;
+    const details = items.slice(0, 5).map(item => {
+      const label = item.type === "Kombine" ? `${item.name} · ${item.count} maç` : v809ShortLabel(item.name || "Maç", 30);
+      return `<li><span>${escapeHtml(label)}</span><b>${item.odds ? item.odds.toFixed(2) : "Oran -"}</b><em>${item.stake ? money(item.stake) : "Tutar -"}</em></li>`;
+    }).join("");
+    return {
+      mode: m,
+      count: items.length,
+      headline: items.length ? `${matchCount} maç · ${grouped.coupons.length} kombine` : "Aktif maç / kombine yok",
+      meta: `Açık ${items.length ? money(stake) : "-"}`,
+      sub: `Olası Dönüş ${completeCount ? money(possible) : "-"}${completeCount ? ` · Net ${signedMoney(possible - stake)}` : ""}`,
+      details: details || `<li class="empty"><span>Aktif bahis yok</span><b>Ana tablodan maç veya kombine ekle.</b><em>-</em></li>`
+    };
+  }
+  function renderTargetActiveBox(state, mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const data = v809TargetActiveData(state, m);
+    const label = m === "crypto" ? "İşlemler" : "Maç / Kombine";
+    return `<div class="v809-target-active ${m}">
+      <div class="v809-target-active-top">
+        <span>${label}</span>
+        <b>${escapeHtml(data.headline)}</b>
+      </div>
+      <div class="v809-target-active-meta">
+        <span>${escapeHtml(data.meta)}</span>
+        <em>${escapeHtml(data.sub)}</em>
+      </div>
+      <div class="v809-target-active-actions">
+        <button type="button" data-target-active-open="${m}">Aktifleri Aç</button>
+        <details>
+          <summary>Detay</summary>
+          <ul>${data.details}</ul>
+        </details>
+      </div>
+    </div>`;
+  }
   function renderCardShotButton(id) {
     return `<button type="button" class="v763-shot-btn" data-card-screenshot="${escapeHtml(id)}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i> Screenshot</button>`;
   }
@@ -826,21 +924,12 @@
     </article>`;
   }
   function cryptoTpProfit(row, tp) {
-    const entry = Number(row?.entryPrice || 0);
-    const price = Number(tp?.price || 0);
     const stake = Number(row?.stake || 0);
-    const lev = Math.max(1, Number(row?.leverage || 1));
     const manualProfit = tp?.profitAmount !== "" && tp?.profitAmount !== undefined && tp?.profitAmount !== null && Number.isFinite(Number(tp.profitAmount));
-    if (manualProfit) {
-      let usd = Number(tp.profitAmount || 0);
-      if (tp?.result === "stop") usd = -Math.abs(usd || stake);
-      const pct = stake ? (usd / stake) * 100 : 0;
-      return { pct, usd, ok: true };
-    }
-    if (!entry || !price || !stake) return { pct: 0, usd: 0, ok: false };
-    const pct = ((price - entry) / entry) * 100;
-    let usd = stake * lev * (pct / 100);
+    if (!manualProfit) return { pct: 0, usd: 0, ok: false };
+    let usd = Number(tp.profitAmount || 0);
     if (tp?.result === "stop") usd = -Math.abs(usd || stake);
+    const pct = stake ? (usd / stake) * 100 : 0;
     return { pct, usd, ok: true };
   }
   function cryptoTpPercentLabel(row, tp) {
@@ -1373,6 +1462,8 @@
             <label><span>Hedef</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
           </div>
 
+          ${renderTargetActiveBox(state, m)}
+
           <div class="v796-target-actions">
             <button type="button" data-target-reset data-rolling-target-mode="${m}">Yeni Hedef</button>
             <button type="button" class="complete" data-target-complete data-rolling-target-mode="${m}" ${plan.done ? "" : "disabled"}>Hedefi Bitir</button>
@@ -1863,6 +1954,14 @@
     }));
     mount.querySelectorAll("[data-pending-open]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = btn.dataset.pendingOpen === "crypto" ? "crypto" : "bet";
+      CONFIRM_RETURN_PANEL_MODE = PENDING_BOARD_OPEN_MODE;
+      LOG_CENTER_OPEN_MODE = null;
+      REPORT_CENTER_OPEN_MODE = null;
+      HISTORY_OPEN_MODE = null;
+      refresh();
+    }));
+    mount.querySelectorAll("[data-target-active-open]").forEach(btn => btn.addEventListener("click", () => {
+      PENDING_BOARD_OPEN_MODE = btn.dataset.targetActiveOpen === "crypto" ? "crypto" : "bet";
       CONFIRM_RETURN_PANEL_MODE = PENDING_BOARD_OPEN_MODE;
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;

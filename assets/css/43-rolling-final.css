@@ -6068,3 +6068,171 @@ html.rolling-hash-boot::before {
     max-width: none !important;
   }
 }
+
+
+/* V809: Kasa Hedefi aktif maç/kombine + kripto işlem özeti */
+.rolling-v48-rail .v809-target-active {
+  margin: 10px 0 0 !important;
+  padding: 10px !important;
+  border-radius: 15px !important;
+  background: linear-gradient(180deg, rgba(15,23,42,.78), rgba(2,6,23,.68)) !important;
+  border: 1px solid rgba(148,163,184,.16) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+.rolling-v48-rail .v809-target-active.bet {
+  border-color: rgba(251,191,36,.22) !important;
+}
+
+.rolling-v48-rail .v809-target-active.crypto {
+  border-color: rgba(249,115,22,.22) !important;
+}
+
+.rolling-v48-rail .v809-target-active-top {
+  display: grid !important;
+  gap: 4px !important;
+}
+
+.rolling-v48-rail .v809-target-active-top span {
+  color: #94a3b8 !important;
+  font-size: .68rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+}
+
+.rolling-v48-rail .v809-target-active-top b {
+  color: #f8fafc !important;
+  font-size: .86rem !important;
+  font-weight: 950 !important;
+  line-height: 1.2 !important;
+}
+
+.rolling-v48-rail .v809-target-active-meta {
+  display: grid !important;
+  gap: 5px !important;
+  margin-top: 8px !important;
+}
+
+.rolling-v48-rail .v809-target-active-meta span,
+.rolling-v48-rail .v809-target-active-meta em {
+  display: block !important;
+  padding: 7px 9px !important;
+  border-radius: 11px !important;
+  background: rgba(2,6,23,.55) !important;
+  border: 1px solid rgba(255,255,255,.075) !important;
+  color: #cbd5e1 !important;
+  font-size: .73rem !important;
+  font-style: normal !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+}
+
+.rolling-v48-rail .v809-target-active.bet .v809-target-active-meta em {
+  color: #fde68a !important;
+  border-color: rgba(251,191,36,.20) !important;
+}
+
+.rolling-v48-rail .v809-target-active.crypto .v809-target-active-meta em {
+  color: #fed7aa !important;
+  border-color: rgba(249,115,22,.20) !important;
+}
+
+.rolling-v48-rail .v809-target-active-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  align-items: start !important;
+  margin-top: 9px !important;
+}
+
+.rolling-v48-rail .v809-target-active-actions > button,
+.rolling-v48-rail .v809-target-active-actions > details > summary {
+  min-height: 34px !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(148,163,184,.18) !important;
+  background: rgba(15,23,42,.78) !important;
+  color: #e5e7eb !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.rolling-v48-rail .v809-target-active-actions > button:hover,
+.rolling-v48-rail .v809-target-active-actions > details > summary:hover {
+  border-color: rgba(251,191,36,.30) !important;
+  background: rgba(30,41,59,.82) !important;
+}
+
+.rolling-v48-rail .v809-target-active-actions > details {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.rolling-v48-rail .v809-target-active-actions > details > summary::-webkit-details-marker {
+  display: none !important;
+}
+
+.rolling-v48-rail .v809-target-active-actions > details[open] {
+  grid-column: 1 / -1 !important;
+}
+
+.rolling-v48-rail .v809-target-active-actions > details[open] > summary {
+  margin-bottom: 7px !important;
+}
+
+.rolling-v48-rail .v809-target-active ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  gap: 6px !important;
+}
+
+.rolling-v48-rail .v809-target-active li {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 4px 8px !important;
+  align-items: center !important;
+  padding: 8px !important;
+  border-radius: 10px !important;
+  background: rgba(2,6,23,.54) !important;
+  border: 1px solid rgba(255,255,255,.065) !important;
+}
+
+.rolling-v48-rail .v809-target-active li span {
+  color: #f8fafc !important;
+  font-size: .73rem !important;
+  font-weight: 900 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.rolling-v48-rail .v809-target-active li b {
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+}
+
+.rolling-v48-rail .v809-target-active.crypto li b {
+  color: #fb923c !important;
+}
+
+.rolling-v48-rail .v809-target-active li em {
+  grid-column: 1 / -1 !important;
+  color: #cbd5e1 !important;
+  font-size: .70rem !important;
+  font-style: normal !important;
+  font-weight: 850 !important;
+}
+
+.rolling-v48-rail .v809-target-active li.empty span,
+.rolling-v48-rail .v809-target-active li.empty b,
+.rolling-v48-rail .v809-target-active li.empty em {
+  color: #94a3b8 !important;
+}
