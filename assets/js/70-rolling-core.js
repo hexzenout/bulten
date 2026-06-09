@@ -1229,6 +1229,13 @@
     if (!list[i]) list[i] = createSlot(mode, i);
     const prevStatus = list[i].status;
     list[i].type = mode;
+    if (nextStatus === "pending") {
+      list[i].status = "pending";
+      list[i].pnl = 0;
+      list[i].historyStatus = "";
+      list[i].historyId = "";
+      return;
+    }
     list[i].status = nextStatus;
     recalcSlot(list[i]);
     if ((list[i].status === "win" || list[i].status === "loss") && (prevStatus !== list[i].status || list[i].historyStatus !== list[i].status)) {
@@ -1562,7 +1569,8 @@
       const status = statusRaw === "loss" ? "loss" : "win";
       const list = state.modeSlots.bet;
       if (!list[i]) return;
-      const matches = getSlotMatches(list[i]);
+      const groupedCoupon = getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === i);
+      const matches = groupedCoupon ? groupedCoupon.matches : getSlotMatches(list[i]);
       const currentStatus = matches[mi]?.status || "";
       const nextStatus = currentStatus === status ? "pending" : status;
       const matchName = matches[mi]?.name || `Maç ${mi + 1}`;
@@ -1611,8 +1619,12 @@
         return;
       }
       if (nextStatus === "win" || nextStatus === "loss") {
+        const currentStatus = list[i]?.status || "";
+        const finalStatus = currentStatus === nextStatus ? "pending" : nextStatus;
         const label = mode === "crypto" ? "kripto işlem" : "bahis / maç";
-        const resultLabel = nextStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ");
+        const resultLabel = finalStatus === "pending"
+          ? "BEKLİYOR"
+          : (finalStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ"));
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
         const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
         if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
@@ -1620,13 +1632,13 @@
           type: "settle",
           mode,
           slot: i,
-          status: nextStatus,
+          status: finalStatus,
           keepActivePanel: keepPanel,
-          tone: nextStatus === "loss" ? "danger" : "success",
-          title: "Sonucu kaydetmeden önce onayla",
-          message: `${name} için sonuç: ${resultLabel}.`,
-          detail: "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et.",
-          confirmText: `${resultLabel} olarak kaydet`
+          tone: finalStatus === "loss" ? "danger" : "success",
+          title: finalStatus === "pending" ? "Tekrar bekliyor durumuna al" : "Sonucu kaydetmeden önce onayla",
+          message: finalStatus === "pending" ? `${name} tekrar BEKLİYOR durumuna alınacak.` : `${name} için sonuç: ${resultLabel}.`,
+          detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et.",
+          confirmText: finalStatus === "pending" ? "BEKLİYOR olarak kaydet" : `${resultLabel} olarak kaydet`
         };
         refresh();
         return;
