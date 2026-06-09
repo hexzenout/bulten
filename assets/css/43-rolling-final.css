@@ -4337,3 +4337,62 @@ html.rolling-hash-boot::before {
   margin: 14px 0 0 !important;
   box-sizing: border-box !important;
 }
+
+
+/* V788: İlerleme Özeti yerleşimini geri al, sadece sayı taşmasını düzelt */
+.v759-target-flow {
+  display: flex !important;
+  grid-template-columns: unset !important;
+  gap: 8px !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 8px !important;
+}
+.v759-target-flow span {
+  flex: 1 1 150px !important;
+  min-width: 150px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+.v759-target-flow b {
+  display: block !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: clamp(.88rem, 1.18vw, 1.02rem) !important;
+  line-height: 1.15 !important;
+}
+.v759-target-edit input,
+.rolling-v495-quick-plan input,
+.rolling-v495-quick-plan b {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  line-height: 34px !important;
+  padding: 0 10px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-variant-numeric: tabular-nums !important;
+}
+.v757-target-summary {
+  display: grid !important;
+  grid-template-columns: auto 14px auto 14px auto auto !important;
+  gap: 7px !important;
+  align-items: center !important;
+  overflow: visible !important;
+}
+.v757-target-summary b,
+.v757-target-summary strong {
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: clamp(.82rem, 1.25vw, 1.04rem) !important;
+}

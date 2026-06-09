@@ -542,7 +542,7 @@
       possible: Number(row.pnl || 0)
     }));
   }
-  function v785WrapPhotoText(text, limit = 38) {
+  function v785WrapPhotoText(text, limit = 42) {
     const raw = String(text || "").trim();
     if (!raw) return [""];
     const words = raw.split(/\s+/);
@@ -562,64 +562,80 @@
     if (current) lines.push(current);
     return lines.length ? lines : [raw];
   }
-  function v787PhotoMatchRowsForEntry(row) {
-    const names = Array.isArray(row.matchLines) && row.matchLines.length ? row.matchLines : [row.name || "Maç"];
-    const odds = Array.isArray(row.matchOdds) && row.matchOdds.length ? row.matchOdds : [row.odds || 0];
-    const out = [];
+
+  function v788PhotoEntryLines(entry) {
+    const names = Array.isArray(entry.matchLines) && entry.matchLines.length ? entry.matchLines : [entry.name || "Maç"];
+    const odds = Array.isArray(entry.matchOdds) && entry.matchOdds.length ? entry.matchOdds : [entry.odds || 0];
+    const rows = [];
     names.forEach((name, idx) => {
       const prefix = names.length > 1 ? `${idx + 1}. ` : "";
-      const wrapped = v785WrapPhotoText(prefix + String(name || "Maç").trim(), 42).slice(0, 4);
-      wrapped.forEach((line, part) => {
-        out.push({ text: line, odds: part === 0 ? Number(odds[idx] || 0) : 0 });
+      const wrapped = v785WrapPhotoText(prefix + String(name || "Maç").trim(), 44).slice(0, 4);
+      wrapped.forEach((line, partIndex) => {
+        rows.push({
+          text: line,
+          odds: partIndex === 0 ? Number(odds[idx] || 0) : 0
+        });
       });
     });
-    return out.length ? out : [{ text: "Maç", odds: Number(row.odds || 0) }];
+    return rows.length ? rows : [{ text: "Maç", odds: Number(entry.odds || 0) }];
   }
-  function v787PhotoTitle(rows, fallback) {
-    if (rows.length === 1) {
+
+  function v788PhotoTitle(rows, titleText) {
+    if (Array.isArray(rows) && rows.length === 1) {
       if (rows[0].type === "Kombine") return "KOMBİNE KUPON";
       if (rows[0].type === "Bahis") return "TEKLİ BAHİS";
     }
-    return fallback || "AKTİF BAHİSLER / KUPONLAR";
+    return titleText || "AKTİF BAHİSLER / KUPONLAR";
   }
+
   function v785BuildBetPhotoSvg(rows, titleText) {
     const data = (rows || []).filter(Boolean);
     if (!data.length) return null;
 
     const width = 900;
-    const lineH = 26;
-    const startY = 150;
-    const gapY = 10;
-    const rowSvg = [];
-    let cursorY = startY;
+    const padX = 42;
+    const rowX = 42;
+    const rowW = 816;
+    const textX = 64;
+    const oddsX = 830;
+    const lineH = 25;
+    const rowGap = 10;
+    let cursorY = 150;
+    const rowHtml = [];
 
-    data.forEach(entry => {
-      const matchRows = v787PhotoMatchRowsForEntry(entry);
-      matchRows.forEach((match, idx) => {
-        const rowHeight = 38;
-        rowSvg.push(`
-          <rect x="42" y="${cursorY - 28}" width="816" height="${rowHeight}" rx="12" fill="#0f172a" stroke="#334155"/>
-          <text x="64" y="${cursorY - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(match.text)}</text>
-          <text x="830" y="${cursorY - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${match.odds ? Number(match.odds).toFixed(2) : ""}</text>`);
-        cursorY += rowHeight + gapY;
+    data.forEach((entry, entryIndex) => {
+      const lineRows = v788PhotoEntryLines(entry);
+      const isMultiEntry = data.length > 1;
+      if (isMultiEntry) {
+        const groupTitle = `${entryIndex + 1}. ${entry.type === "Kombine" ? "Kombine Kupon" : "Tekli Bahis"}`;
+        rowHtml.push(`<text x="${textX}" y="${cursorY - 12}" fill="#c084fc" font-size="16" font-family="Arial" font-weight="900">${escapeHtml(groupTitle)}</text>`);
+      }
+      lineRows.forEach(line => {
+        const wrapped = v785WrapPhotoText(line.text, 44).slice(0, 4);
+        const rowH = Math.max(40, 16 + wrapped.length * lineH);
+        rowHtml.push(`
+          <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="${rowH}" rx="12" fill="#0f172a" stroke="#334155"/>
+          ${wrapped.map((txt, idx) => `<text x="${textX}" y="${cursorY - 3 + idx * lineH}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(txt)}</text>`).join("")}
+          ${line.odds ? `<text x="${oddsX}" y="${cursorY - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${Number(line.odds).toFixed(2)}</text>` : ""}`);
+        cursorY += rowH + rowGap;
       });
-      if (data.length > 1) cursorY += 4;
+      if (isMultiEntry) cursorY += 8;
     });
 
     const totalStake = data.reduce((sum, row) => sum + Number(row.stake || 0), 0);
     const totalPossible = data.reduce((sum, row) => sum + Number(row.possible || 0), 0);
     const totalOdds = data.length === 1 ? Number(data[0].odds || 0) : 0;
-    const title = v787PhotoTitle(data, titleText);
-    const footerY = cursorY + 28;
-    const height = Math.max(360, footerY + 112);
+    const title = v788PhotoTitle(data, titleText);
+    const footerY = cursorY + 20;
+    const height = Math.max(360, footerY + 104);
 
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <rect width="${width}" height="${height}" fill="#020617"/>
       <rect x="22" y="22" width="856" height="${height - 44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/>
-      <text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">${escapeHtml(title)}</text>
-      <text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text>
-      ${rowSvg.join("")}
-      <rect x="42" y="${footerY}" width="816" height="58" rx="14" fill="#111827" stroke="#334155"/>
+      <text x="${padX}" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">${escapeHtml(title)}</text>
+      <text x="${padX}" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text>
+      ${rowHtml.join("")}
+      <rect x="${rowX}" y="${footerY}" width="${rowW}" height="58" rx="14" fill="#111827" stroke="#334155"/>
       <text x="64" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran: ${totalOdds ? totalOdds.toFixed(2) : "-"}</text>
       <text x="330" y="${footerY + 36}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar: ${money(totalStake)}</text>
       <text x="836" y="${footerY + 36}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">Tahmini Kazanç: ${totalPossible ? money(totalPossible) : "-"}</text>
