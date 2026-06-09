@@ -376,29 +376,345 @@
     }
   }
 
-  function ensureRollingPlan() {
-    const mode = localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
-    const key = (typeof window.omega_GetRollingPlanKeyV47 === "function") ? window.omega_GetRollingPlanKeyV47(_ACTIVE_EXCEL_DAYS) : `${mode}_${_ACTIVE_EXCEL_DAYS}`;
-    if (!_ROLLING_DB[key]) _ROLLING_DB[key] = { startBal: 100, targetBal: ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS], ops: {}, mode, days: _ACTIVE_EXCEL_DAYS };
-    const plan = _ROLLING_DB[key];
-    plan.mode = mode;
-    plan.days = _ACTIVE_EXCEL_DAYS;
-    if (!plan.targetBal) plan.targetBal = ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS];
-    if (!plan.ops) plan.ops = {};
-    if (!plan.pending) plan.pending = {};
+
+  let ROLLING_SUBPANEL = null;
+
+  function getRollingModeV86() {
+    return localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
+  }
+
+  function getRollingPlanKeyV86() {
+    return `${getRollingModeV86()}_${_ACTIVE_EXCEL_DAYS}`;
+  }
+
+  function ensurePlanMeta(plan) {
+    if (!plan.ops || typeof plan.ops !== 'object') plan.ops = {};
+    if (!plan.drafts || typeof plan.drafts !== 'object') plan.drafts = {};
+    if (!Array.isArray(plan.history)) plan.history = [];
+    if (!plan.mode) plan.mode = getRollingModeV86();
+    if (!plan.days) plan.days = _ACTIVE_EXCEL_DAYS;
     return plan;
   }
+
+  function ensureRollingPlan() {
+    const key = getRollingPlanKeyV86();
+    if (!_ROLLING_DB[key]) _ROLLING_DB[key] = { startBal: 100, targetBal: ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS], ops: {}, drafts: {}, history: [], mode: getRollingModeV86(), days: _ACTIVE_EXCEL_DAYS };
+    const plan = _ROLLING_DB[key];
+    ensurePlanMeta(plan);
+    return plan;
+  }
+
+  function moneyV86(val) {
+    return `$${Number(val || 0).toFixed(2)}`;
+  }
+
+  function escapeHtmlV86(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function normalizeDraftV86(raw = {}) {
+    return {
+      note: String(raw.note || raw.name || '').trim(),
+      amt: raw.amt === 0 ? '0' : String(raw.amt || '').trim(),
+      odds: raw.odds === 0 ? '0' : String(raw.odds || '').trim(),
+      fee: raw.fee === 0 ? '0' : String(raw.fee || '').trim()
+    };
+  }
+
+  function draftHasDataV86(draft) {
+    const row = normalizeDraftV86(draft);
+    return [row.note, row.amt, row.odds, row.fee].some(v => String(v || '').trim() !== '');
+  }
+
+  function getDraftListV86(plan, day) {
+    ensurePlanMeta(plan);
+    if (!Array.isArray(plan.drafts[day])) plan.drafts[day] = [];
+    return plan.drafts[day];
+  }
+
+  function readDraftV86(plan, day, slot) {
+    return normalizeDraftV86(getDraftListV86(plan, day)[slot] || {});
+  }
+
+  function writeDraftV86(plan, day, slot, draft) {
+    const list = getDraftListV86(plan, day);
+    const normalized = normalizeDraftV86(draft);
+    list[slot] = draftHasDataV86(normalized)
+      ? { ...normalized, status: 'pending', updatedAt: Date.now() }
+      : null;
+  }
+
+  function collectPendingV86(plan) {
+    ensurePlanMeta(plan);
+    const items = [];
+    Object.keys(plan.drafts || {}).sort((a, b) => Number(a) - Number(b)).forEach(dayKey => {
+      const day = Number(dayKey || 0);
+      getDraftListV86(plan, day).forEach((draft, slot) => {
+        if (!draftHasDataV86(draft)) return;
+        if (plan.ops?.[day]?.[slot]) return;
+        items.push({
+          day,
+          slot,
+          note: draft.note || 'Maç',
+          amt: Number(draft.amt || 0),
+          odds: Number(draft.odds || 0),
+          fee: Number(draft.fee || 0),
+          updatedAt: Number(draft.updatedAt || Date.now())
+        });
+      });
+    });
+    return items;
+  }
+
+  function collectHistoryV86(plan) {
+    ensurePlanMeta(plan);
+    return [...plan.history].sort((a, b) => Number(b.resolvedAt || 0) - Number(a.resolvedAt || 0));
+  }
+
+  function captureAllVisibleDraftsV86() {
+    const plan = ensureRollingPlan();
+    for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
+      const max = Math.max(
+        (plan.ops?.[day] || []).length,
+        getDraftListV86(plan, day).length,
+        1
+      );
+      for (let slot = 0; slot < max; slot++) {
+        if (
+          document.getElementById(`e-n-${day}-${slot}`) ||
+          document.getElementById(`e-a-${day}-${slot}`) ||
+          document.getElementById(`e-o-${day}-${slot}`) ||
+          document.getElementById(`e-f-${day}-${slot}`)
+        ) {
+          window.omega_CaptureRollingDraft(day, slot);
+        }
+      }
+    }
+  }
+
+  window.omega_CaptureRollingDraft = function(day, slot) {
+    const plan = ensureRollingPlan();
+    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || '').trim();
+    const amt = (document.getElementById(`e-a-${day}-${slot}`)?.value || '').trim();
+    const odds = (document.getElementById(`e-o-${day}-${slot}`)?.value || '').trim();
+    const fee = (document.getElementById(`e-f-${day}-${slot}`)?.value || '').trim();
+    writeDraftV86(plan, day, slot, { note, amt, odds, fee });
+    omega_SaveRollingDB();
+    renderRollingSubpanelV86();
+    return readDraftV86(plan, day, slot);
+  };
+
+  function buildPendingPanelHtmlV86(plan) {
+    const items = collectPendingV86(plan);
+    const title = `${plan.mode === 'crypto' ? 'KRİPTO' : 'BAHİS'} ${plan.days} GÜNLÜK ROLLING`;
+    const listHtml = items.length
+      ? items.map(item => `
+        <div class="v774-panel-card pending">
+          <div><b>GÜN ${item.day} · ALAN ${item.slot + 1}</b><span>${escapeHtmlV86(item.note || 'Maç')}</span></div>
+          <div class="v774-panel-metrics">
+            <small>Tutar: ${moneyV86(item.amt)}</small>
+            <small>${plan.mode === 'crypto' ? 'Net K/Z $' : 'Oran'}: ${item.odds ? item.odds : '-'}</small>
+            <small>Durum: BEKLİYOR</small>
+          </div>
+        </div>
+      `).join('')
+      : `<div class="v774-empty-state">Bu alan için bekleyen kayıt yok.</div>`;
+    return `
+      <div class="v774-inline-overlay" data-rolling-subpanel-close>
+        <div class="v774-inline-panel" onclick="event.stopPropagation()">
+          <div class="v774-inline-head">
+            <div><h3>Aktif Bahisler / Kuponlar</h3><span>${title} · sadece bu alanın verileri</span></div>
+            <button type="button" onclick="omega_CloseRollingSubpanel()">×</button>
+          </div>
+          <div class="v774-inline-body">${listHtml}</div>
+        </div>
+      </div>`;
+  }
+
+  function buildHistoryPanelHtmlV86(plan) {
+    const items = collectHistoryV86(plan);
+    const title = `${plan.mode === 'crypto' ? 'KRİPTO' : 'BAHİS'} ${plan.days} GÜNLÜK ROLLING`;
+    const listHtml = items.length
+      ? items.map(item => `
+        <div class="v774-panel-card ${item.res === 'loss' ? 'loss' : 'win'}">
+          <div><b>GÜN ${item.day} · ALAN ${item.slot + 1}</b><span>${escapeHtmlV86(item.note || 'Maç')}</span></div>
+          <div class="v774-panel-metrics">
+            <small>Tutar: ${moneyV86(item.amt)}</small>
+            <small>${plan.mode === 'crypto' ? 'Net K/Z $' : 'Oran'}: ${item.odds ? item.odds : '-'}</small>
+            <small>Sonuç: ${item.res === 'loss' ? 'KAYBETTİ' : 'KAZANDI'}</small>
+          </div>
+        </div>
+      `).join('')
+      : `<div class="v774-empty-state">Bu alan için geçmiş kayıt yok.</div>`;
+    return `
+      <div class="v774-inline-overlay" data-rolling-subpanel-close>
+        <div class="v774-inline-panel" onclick="event.stopPropagation()">
+          <div class="v774-inline-head">
+            <div><h3>Geçmiş</h3><span>${title} · sadece bu alanın verileri</span></div>
+            <button type="button" onclick="omega_CloseRollingSubpanel()">×</button>
+          </div>
+          <div class="v774-inline-body">${listHtml}</div>
+        </div>
+      </div>`;
+  }
+
+  function collectSnapshotItemsV86(plan, day) {
+    const items = [];
+    const drafts = getDraftListV86(plan, day);
+    drafts.forEach((draft, slot) => {
+      if (!draftHasDataV86(draft)) return;
+      items.push({
+        slot,
+        note: draft.note || `Maç ${slot + 1}`,
+        odds: Number(draft.odds || 0),
+        amt: Number(draft.amt || 0)
+      });
+    });
+    if (!items.length && Array.isArray(plan.ops?.[day])) {
+      plan.ops[day].forEach((op, slot) => {
+        if (!op) return;
+        items.push({ slot, note: op.note || `Maç ${slot + 1}`, odds: Number(op.odds || 0), amt: Number(op.amt || 0) });
+      });
+    }
+    return items;
+  }
+
+  function buildSnapshotDataUriV86(plan, day) {
+    const items = collectSnapshotItemsV86(plan, day);
+    if (!items.length) return null;
+    const oddsList = items.map(item => Number(item.odds || 0)).filter(v => v > 0);
+    const stakeList = items.map(item => Number(item.amt || 0)).filter(v => v > 0);
+    const totalStake = stakeList.length === 1 ? stakeList[0] : stakeList.reduce((sum, v) => sum + v, 0);
+    const totalOdds = oddsList.length ? oddsList.reduce((acc, v) => acc * v, 1) : 0;
+    const possible = totalStake && totalOdds ? totalStake * totalOdds : 0;
+    const lineHeight = 44;
+    const baseY = 180;
+    const height = baseY + (items.length * lineHeight) + 140;
+    const rowSvg = items.map((item, index) => {
+      const y = baseY + (index * lineHeight);
+      return `
+        <rect x="60" y="${y - 26}" width="960" height="34" rx="12" fill="#0f172a" stroke="#334155"/>
+        <text x="84" y="${y - 4}" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#ffffff" font-weight="700">${escapeHtmlV86(item.note)}</text>
+        <text x="950" y="${y - 4}" text-anchor="end" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#fbbf24" font-weight="800">Oran: ${item.odds ? item.odds.toFixed(2) : '-'}</text>`;
+    }).join('');
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="${height}" viewBox="0 0 1080 ${height}">
+        <rect width="1080" height="${height}" fill="#020617"/>
+        <rect x="28" y="28" width="1024" height="${height - 56}" rx="26" fill="#0b1120" stroke="#334155" stroke-width="2"/>
+        <text x="60" y="88" font-size="34" font-family="Arial, Helvetica, sans-serif" fill="#fbbf24" font-weight="900">BAHİS ${plan.days} GÜNLÜK ROLLING</text>
+        <text x="60" y="128" font-size="24" font-family="Arial, Helvetica, sans-serif" fill="#e5e7eb" font-weight="700">GÜN ${day} · Kupon Özeti</text>
+        ${rowSvg}
+        <rect x="60" y="${height - 118}" width="960" height="70" rx="16" fill="#111827" stroke="#374151"/>
+        <text x="84" y="${height - 78}" font-size="22" font-family="Arial, Helvetica, sans-serif" fill="#e5e7eb" font-weight="700">Toplam Oran: ${totalOdds ? totalOdds.toFixed(2) : '-'}</text>
+        <text x="430" y="${height - 78}" font-size="22" font-family="Arial, Helvetica, sans-serif" fill="#e5e7eb" font-weight="700">Tutar: ${moneyV86(totalStake)}</text>
+        <text x="996" y="${height - 78}" text-anchor="end" font-size="24" font-family="Arial, Helvetica, sans-serif" fill="#22c55e" font-weight="900">Tahmini Kazanç: ${possible ? moneyV86(possible) : '-'}</text>
+      </svg>`;
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  }
+
+  function buildSnapshotPanelHtmlV86(plan, day) {
+    const dataUri = buildSnapshotDataUriV86(plan, day);
+    return `
+      <div class="v774-inline-overlay" data-rolling-subpanel-close>
+        <div class="v774-inline-panel photo" onclick="event.stopPropagation()">
+          <div class="v774-inline-head">
+            <div><h3>Kupon Fotoğrafı</h3><span>GÜN ${day} · sadece bu alanın verileri</span></div>
+            <button type="button" onclick="omega_CloseRollingSubpanel()">×</button>
+          </div>
+          <div class="v774-inline-actions">
+            <button type="button" onclick="omega_ShowRollingSnapshot(${day})">Resmi Göster</button>
+            <button type="button" onclick="omega_DownloadRollingSnapshot(${day})">Resmi İndir</button>
+          </div>
+          <div class="v774-inline-body">
+            ${dataUri ? `<img class="v774-photo-preview" src="${dataUri}" alt="Kupon fotoğrafı">` : `<div class="v774-empty-state">Önce maç, oran ve tutar gir.</div>`}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function ensureSubpanelHostV86() {
+    const overlay = qs('#rolling-excel-overlay');
+    if (!overlay) return null;
+    let host = qs('#v774-rolling-subpanel-host');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'v774-rolling-subpanel-host';
+      overlay.appendChild(host);
+    }
+    return host;
+  }
+
+  function renderRollingSubpanelV86() {
+    const host = ensureSubpanelHostV86();
+    if (!host) return;
+    if (!ROLLING_SUBPANEL) {
+      host.innerHTML = '';
+      host.style.display = 'none';
+      return;
+    }
+    const plan = ensureRollingPlan();
+    let html = '';
+    if (ROLLING_SUBPANEL.type === 'pending') html = buildPendingPanelHtmlV86(plan);
+    else if (ROLLING_SUBPANEL.type === 'history') html = buildHistoryPanelHtmlV86(plan);
+    else if (ROLLING_SUBPANEL.type === 'snapshot') html = buildSnapshotPanelHtmlV86(plan, Number(ROLLING_SUBPANEL.day || 1));
+    host.style.display = 'block';
+    host.innerHTML = html;
+    host.querySelectorAll('[data-rolling-subpanel-close]').forEach(el => el.addEventListener('click', event => {
+      if (event.target !== el) return;
+      window.omega_CloseRollingSubpanel();
+    }));
+  }
+
+  window.omega_CloseRollingSubpanel = function() {
+    ROLLING_SUBPANEL = null;
+    renderRollingSubpanelV86();
+  };
+
+  window.omega_OpenRollingPendingBoard = function() {
+    captureAllVisibleDraftsV86();
+    ROLLING_SUBPANEL = { type: 'pending' };
+    renderRollingSubpanelV86();
+  };
+
+  window.omega_OpenRollingHistoryBoard = function() {
+    captureAllVisibleDraftsV86();
+    ROLLING_SUBPANEL = { type: 'history' };
+    renderRollingSubpanelV86();
+  };
+
+  window.omega_ShowRollingSnapshot = function(day) {
+    captureAllVisibleDraftsV86();
+    ROLLING_SUBPANEL = { type: 'snapshot', day: Number(day || 1) };
+    renderRollingSubpanelV86();
+  };
+
+  window.omega_DownloadRollingSnapshot = function(day) {
+    captureAllVisibleDraftsV86();
+    const plan = ensureRollingPlan();
+    const uri = buildSnapshotDataUriV86(plan, Number(day || 1));
+    if (!uri) {
+      alert('Önce maç, oran ve tutar gir.');
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = uri;
+    link.download = `bahis-rolling-${plan.days}-gun-${Number(day || 1)}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
 
   function setDayCount(day, count) {
     const plan = ensureRollingPlan();
     if (!plan.ops[day]) plan.ops[day] = [];
-    const nextLength = Math.max(count, plan.ops[day].filter(Boolean).length);
-    plan.ops[day].length = nextLength;
-    if (plan.pending?.[day]) {
-      Object.keys(plan.pending[day]).forEach(slot => {
-        if (Number(slot) >= nextLength) delete plan.pending[day][slot];
-      });
-    }
+    const drafts = getDraftListV86(plan, day);
+    plan.ops[day].length = Math.max(count, plan.ops[day].filter(Boolean).length);
+    drafts.length = Math.max(count, drafts.filter(draftHasDataV86).length);
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   }
@@ -407,6 +723,7 @@
     const plan = ensureRollingPlan();
     if (!plan.ops[day]) plan.ops[day] = [];
     plan.ops[day].push(null);
+    getDraftListV86(plan, day).push(null);
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
@@ -414,11 +731,9 @@
   window.omega_RollingRemoveSlot = function(day) {
     const plan = ensureRollingPlan();
     if (!plan.ops[day]) plan.ops[day] = [];
-    if (plan.ops[day].length > 1) {
-      const removedSlot = plan.ops[day].length - 1;
-      plan.ops[day].pop();
-      if (plan.pending?.[day]) delete plan.pending[day][removedSlot];
-    }
+    const drafts = getDraftListV86(plan, day);
+    if (plan.ops[day].length > 1) plan.ops[day].pop();
+    if (drafts.length > 1) drafts.pop();
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
@@ -429,13 +744,9 @@
     const plan = ensureRollingPlan();
     for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
       if (!plan.ops[day]) plan.ops[day] = [];
-      const nextLength = Math.max(count, plan.ops[day].filter(Boolean).length);
-      plan.ops[day].length = nextLength;
-      if (plan.pending?.[day]) {
-        Object.keys(plan.pending[day]).forEach(slot => {
-          if (Number(slot) >= nextLength) delete plan.pending[day][slot];
-        });
-      }
+      const drafts = getDraftListV86(plan, day);
+      plan.ops[day].length = Math.max(count, plan.ops[day].filter(Boolean).length);
+      drafts.length = Math.max(count, drafts.filter(draftHasDataV86).length);
     }
     omega_SaveRollingDB();
     omega_RenderExcelTable();
@@ -444,402 +755,16 @@
   window.omega_RollingClearDay = function(day) {
     const plan = ensureRollingPlan();
     plan.ops[day] = [];
-    if (plan.pending) delete plan.pending[day];
+    plan.drafts[day] = [];
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
-
-  function v763EscapeHtml(value) {
-    return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-  }
-
-  function v763ComboRows(day, slot) {
-    return Array.from(document.querySelectorAll(`[data-v763-extra-row="${day}:${slot}"]`)).map(row => ({
-      note: (row.querySelector(`[data-v763-extra-note]`)?.value || "").trim(),
-      odds: Number(row.querySelector(`[data-v763-extra-odds]`)?.value || 0)
-    })).filter(x => x.note || x.odds);
-  }
-
-  window.omega_RollingToggleComboRow = function(day, slot, dir) {
-    const kapsul = document.querySelector(`[data-v765-kapsul="${day}:${slot}"]`);
-    if (!kapsul) return false;
-    const list = kapsul.querySelector(".v765-extra-match-list");
-    if (!list) return false;
-    if (dir === "minus") {
-      const rows = list.querySelectorAll(".v765-extra-match-row");
-      rows[rows.length - 1]?.remove();
-      v768UpdateBetCalc(day, slot);
-      v774SavePendingSlot(day, slot);
-      return false;
-    }
-    const row = document.createElement("div");
-    row.className = "v765-extra-match-row v768-extra-match-row";
-    row.setAttribute("data-v763-extra-row", `${day}:${slot}`);
-    row.innerHTML = `<input type="text" data-v763-extra-note placeholder="Maç"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01">`;
-    list.appendChild(row);
-    v768BindBetCalc(kapsul);
-    v768UpdateBetCalc(day, slot);
-    v774SavePendingSlot(day, slot);
-    row.querySelector("input")?.focus();
-    return false;
-  };
-
-  function v763BetTotalOdds(primary, comboRows) {
-    let total = Number(primary || 0);
-    if (!total) return 0;
-    comboRows.forEach(row => {
-      const o = Number(row.odds || 0);
-      if (o) total *= o;
-    });
-    return total;
-  }
-
-  function v768Money(value) {
-    const n = Number(value || 0);
-    return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
-  function v768SlotOdds(day, slot) {
-    const mainOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
-    const extras = v763ComboRows(day, slot);
-    return v763BetTotalOdds(mainOdds, extras);
-  }
-
-  function v768UpdateBetCalc(day, slot) {
-    const box = document.querySelector(`[data-v768-calc="${day}:${slot}"]`);
-    if (!box) return;
-    const totalOdds = v768SlotOdds(day, slot);
-    const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
-    const possible = totalOdds && stake ? stake * totalOdds : 0;
-    box.innerHTML = `<span>Toplam Oran: <b>${totalOdds ? totalOdds.toFixed(2) : "-"}</b></span><span>Tahmini Kazanç: <b>${possible ? v768Money(possible) : "-"}</b></span>`;
-  }
-
-  function v768BindBetCalc(root) {
-    const scope = root || document;
-    scope.querySelectorAll('[id^="e-o-"], [id^="e-a-"], [data-v763-extra-odds]').forEach(input => {
-      if (input.dataset.v768CalcBound === "1") return;
-      input.dataset.v768CalcBound = "1";
-      input.addEventListener("input", () => {
-        const kapsul = input.closest("[data-v765-kapsul]");
-        if (!kapsul) return;
-        const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
-        v768UpdateBetCalc(day, slot);
-      });
-    });
-  }
-
-  function v774SmartMemoryEnabled() {
-    const mode = localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
-    return mode === "bet" && (_ACTIVE_EXCEL_DAYS === 7 || _ACTIVE_EXCEL_DAYS === 15);
-  }
-
-  function v774EnsurePending(plan) {
-    if (!plan.pending) plan.pending = {};
-    return plan.pending;
-  }
-
-  function v774NormalizePendingEntry(entry) {
-    if (!entry || typeof entry !== "object") return null;
-    const note = String(entry.note || "").trim();
-    const stake = entry.amt === "" || entry.amt == null ? "" : Number(entry.amt || 0);
-    const odds = entry.odds === "" || entry.odds == null ? "" : Number(entry.odds || 0);
-    const combo = Array.isArray(entry.combo) ? entry.combo.map(row => ({
-      note: String(row?.note || "").trim(),
-      odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0)
-    })).filter(row => row.note || Number(row.odds || 0)) : [];
-    if (!note && stake === "" && odds === "" && !combo.length) return null;
-    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
-  }
-
-  function v774PendingFromDom(day, slot) {
-    if (!v774SmartMemoryEnabled()) return null;
-    const kapsul = document.querySelector(`[data-v765-kapsul="${day}:${slot}"]`);
-    if (!kapsul) return null;
-    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-    const stakeText = document.getElementById(`e-a-${day}-${slot}`)?.value || "";
-    const oddsText = document.getElementById(`e-o-${day}-${slot}`)?.value || "";
-    const stake = stakeText === "" ? "" : Number(stakeText || 0);
-    const odds = oddsText === "" ? "" : Number(oddsText || 0);
-    const combo = v763ComboRows(day, slot).map(row => ({ note: row.note, odds: row.odds || "" }));
-    const hasAny = Boolean(note || stakeText !== "" || oddsText !== "" || combo.length);
-    if (!hasAny) return null;
-    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Date.now() };
-  }
-
-  function v774SetPendingSlot(day, slot, entry) {
-    if (!v774SmartMemoryEnabled()) return;
-    const plan = ensureRollingPlan();
-    const pending = v774EnsurePending(plan);
-    if (!pending[day]) pending[day] = {};
-    const normalized = v774NormalizePendingEntry(entry);
-    // Maç adı olmayan satırları aktif/bekliyor sayma; eski tutar/oran kalıntısını temizle.
-    if (!normalized || !normalized.note) {
-      delete pending[day][slot];
-      if (Object.keys(pending[day]).length === 0) delete pending[day];
-      omega_SaveRollingDB();
-      return;
-    }
-    pending[day][slot] = normalized;
-    omega_SaveRollingDB();
-  }
-
-  function v774GetPendingSlot(day, slot) {
-    const plan = ensureRollingPlan();
-    return v774NormalizePendingEntry(plan.pending?.[day]?.[slot]);
-  }
-
-  function v774ClearPendingSlot(day, slot) {
-    const plan = ensureRollingPlan();
-    if (plan.pending?.[day]) {
-      delete plan.pending[day][slot];
-      if (Object.keys(plan.pending[day]).length === 0) delete plan.pending[day];
-      omega_SaveRollingDB();
-    }
-  }
-
-  function v774SavePendingSlot(day, slot) {
-    const plan = ensureRollingPlan();
-    if (plan.ops?.[day]?.[slot]) {
-      v774ClearPendingSlot(day, slot);
-      return;
-    }
-    v774SetPendingSlot(day, slot, v774PendingFromDom(day, slot));
-  }
-
-  function v774FlushAllPendingFromDom() {
-    if (!v774SmartMemoryEnabled()) return;
-    document.querySelectorAll('#rolling-excel-overlay [data-v765-kapsul]').forEach(kapsul => {
-      const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
-      if (day && Number.isInteger(slot)) v774SavePendingSlot(day, slot);
-    });
-  }
-
-  function v768LiveRows(mode) {
-    const plan = ensureRollingPlan();
-    const isCrypto = mode === "crypto";
-    const smartBet = !isCrypto && v774SmartMemoryEnabled();
-    const rows = [];
-    for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
-      const dayOps = plan.ops?.[day] || [];
-      const dayPending = smartBet ? (plan.pending?.[day] || {}) : {};
-      const domSlots = Array.from(document.querySelectorAll(`#rolling-excel-overlay [data-v765-kapsul^="${day}:"]`)).map(el => Number(String(el.dataset.v765Kapsul || "0:0").split(":")[1] || 0));
-      const maxSlots = Math.max(dayOps.length || 0, ...Object.keys(dayPending).map(Number).map(n => n + 1), ...domSlots.map(n => n + 1), 0);
-      for (let slot = 0; slot < maxSlots; slot++) {
-        const saved = dayOps[slot];
-        if (saved) continue;
-        if (!smartBet) {
-          const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-          const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
-          const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
-          const combo = isCrypto ? [] : v763ComboRows(day, slot);
-          if (!note && !stake && !odds && !combo.length) continue;
-          const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
-          rows.push({ day, slot, note, stake, odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0 });
-          continue;
-        }
-        const pending = v774GetPendingSlot(day, slot);
-        const hasDom = Boolean(document.getElementById(`e-n-${day}-${slot}`));
-        const domPending = hasDom ? v774PendingFromDom(day, slot) : null;
-        const src = v774NormalizePendingEntry(domPending) || pending;
-        if (!src || !src.note) continue;
-        const stake = Number(src.amt || 0);
-        const odds = Number(src.odds || 0);
-        const combo = Array.isArray(src.combo) ? src.combo : [];
-        const totalOdds = v763BetTotalOdds(odds, combo);
-        rows.push({ day, slot, note: src.note, stake, odds, combo, totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true });
-      }
-    }
-    return rows;
-  }
-
-  function v768HistoryRows(mode) {
-    const plan = ensureRollingPlan();
-    const isCrypto = mode === "crypto";
-    const rows = [];
-    for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
-      const dayOps = plan.ops?.[day] || [];
-      dayOps.forEach((op, slot) => {
-        if (!op) return;
-        const combo = Array.isArray(op.combo) ? op.combo : [];
-        const totalOdds = isCrypto ? Number(op.odds || 0) : v763BetTotalOdds(Number(op.odds || 0), combo);
-        const stake = Number(op.amt || 0);
-        const pnl = isCrypto ? Number(op.odds || 0) : (op.res === "win" ? (stake * totalOdds) - stake : -stake);
-        rows.push({ day, slot, note: op.note || (isCrypto ? "İşlem" : "Maç"), stake, odds: op.odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, res: op.res, pnl });
-      });
-    }
-    return rows;
-  }
-
-  function v768FeatureRowsHtml(mode, kind) {
-    const isCrypto = mode === "crypto";
-    const rows = kind === "active" ? v768LiveRows(mode) : v768HistoryRows(mode);
-    if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif kutu yok. Maç/işlem yazınca burada görünür." : "Geçmiş kayıt yok."}</div>`;
-    return rows.map(row => {
-      const comboHtml = (!isCrypto && row.combo?.length) ? `<ul>${[`<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`, ...row.combo.map(x => `<li>${v763EscapeHtml(x.note || "Maç")} <b>${Number(x.odds || 0).toFixed(2)}</b></li>`)].join("")}</ul>` : "";
-      const title = isCrypto ? (row.note || "İşlem") : (row.combo?.length ? "Kombine" : (row.note || "Maç"));
-      const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
-      const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Tahmini Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
-      return `<article class="v768-feature-card"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Kutu ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
-    }).join("");
-  }
-
-  function v768OpenFeaturePanel(mode = "bet", kind = "active") {
-    v774FlushAllPendingFromDom();
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
-    let host = document.getElementById("omega-rolling-feature-host");
-    if (!host) {
-      host = document.createElement("div");
-      host.id = "omega-rolling-feature-host";
-      document.body.appendChild(host);
-    }
-    const title = k === "active" ? (m === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR") : k === "history" ? "Geçmiş" : "Rapor";
-    const reportRows = v768HistoryRows(m);
-    const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>Toplam K/Z</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
-    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük modal</span></div><button type="button" data-v768-feature-close>×</button></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
-    host.style.display = "block";
-  }
-
-  function v768DownloadReport(mode) {
-    const rows = v768HistoryRows(mode);
-    const pnl = rows.reduce((a,r)=>a+Number(r.pnl||0),0);
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420"><rect width="900" height="420" rx="28" fill="#020617"/><rect x="26" y="26" width="848" height="368" rx="22" fill="none" stroke="#fbbf24" stroke-width="2"/><text x="52" y="80" fill="#fbbf24" font-size="26" font-family="Arial" font-weight="900">BULTEN · ${mode === "crypto" ? "KRİPTO" : "BAHİS"} ROLLING RAPOR</text><text x="52" y="140" fill="#fff" font-size="22" font-family="Arial" font-weight="800">Kayıt: ${rows.length}</text><text x="52" y="180" fill="#fff" font-size="22" font-family="Arial" font-weight="800">Toplam K/Z: ${v768Money(pnl)}</text><text x="52" y="230" fill="#94a3b8" font-size="16" font-family="Arial">${new Date().toLocaleString("tr-TR")}</text></svg>`;
-    const a = document.createElement("a");
-    a.href = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-    a.download = `bulten-${mode}-rolling-rapor.svg`;
-    document.body.appendChild(a); a.click(); a.remove();
-  }
-
-  function v763DayToolButtons(mode) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const activeLabel = m === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v770-excel-feature-controls v771-excel-feature-controls" data-v771-feature-controls="${m}">
-      <button type="button" class="v758-row-tool v759-row-tool active" data-v768-feature-open="${m}:active">${activeLabel}</button>
-      <button type="button" class="v758-row-tool v759-row-tool history" data-v768-feature-open="${m}:history">Geçmiş</button>
-      <button type="button" class="v758-row-tool v759-row-tool report" data-v768-feature-open="${m}:report">Rapor</button>
-    </div>`;
-  }
-
-  window.omega_ExcelRollingOpenMainPanel = function(event, mode = "bet", kind = "active") {
-    if (event && typeof event.preventDefault === "function") event.preventDefault();
-    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
-    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
-    const stamp = `${m}:${k}`;
-    const now = Date.now();
-    if (window.__omegaV770ExcelPanelStamp === stamp && (now - Number(window.__omegaV770ExcelPanelTime || 0)) < 180) return false;
-    window.__omegaV770ExcelPanelStamp = stamp;
-    window.__omegaV770ExcelPanelTime = now;
-    try { document.getElementById("omega-rolling-feature-host")?.remove(); } catch(e) {}
-    v768OpenFeaturePanel(m, k);
-    return false;
-  };
-
-  window.omega_RollingExcelOpenFeature = function(event, mode = "bet", kind = "active") {
-    if (event && typeof event.preventDefault === "function") event.preventDefault();
-    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
-    v768OpenFeaturePanel(m, k);
-    return false;
-  };
-
-  if (!window.__omegaV768ExcelFeatureDelegationBound) {
-    window.__omegaV768ExcelFeatureDelegationBound = true;
-    document.addEventListener("click", function(event) {
-      const v770Btn = event.target.closest && event.target.closest("[data-v770-excel-open]");
-      if (v770Btn) {
-        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-        const [modeRaw, kindRaw] = String(v770Btn.dataset.v770ExcelOpen || "bet:active").split(":");
-        window.omega_ExcelRollingOpenMainPanel(event, modeRaw, kindRaw);
-        return;
-      }
-      const featureBtn = event.target.closest && event.target.closest("[data-v768-feature-open]");
-      if (featureBtn) {
-        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-        const [modeRaw, kindRaw] = String(featureBtn.dataset.v768FeatureOpen || "bet:active").split(":");
-        window.omega_RollingExcelOpenFeature(event, modeRaw, kindRaw);
-        return;
-      }
-      const comboBtn = event.target.closest && event.target.closest("[data-v768-combo]");
-      if (comboBtn) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-        const [dayRaw, slotRaw, dirRaw] = String(comboBtn.dataset.v768Combo || "0:0:plus").split(":");
-        window.omega_RollingToggleComboRow(Number(dayRaw), Number(slotRaw), dirRaw === "minus" ? "minus" : "plus");
-        return;
-      }
-      const closeBtn = event.target.closest && event.target.closest("[data-v768-feature-close]");
-      if (closeBtn) {
-        event.preventDefault();
-        document.getElementById("omega-rolling-feature-host")?.remove();
-        return;
-      }
-      if (event.target && event.target.matches && event.target.matches(".v768-feature-overlay")) {
-        document.getElementById("omega-rolling-feature-host")?.remove();
-        return;
-      }
-      const reportBtn = event.target.closest && event.target.closest("[data-v768-report-download]");
-      if (reportBtn) {
-        event.preventDefault();
-        v768DownloadReport(reportBtn.dataset.v768ReportDownload === "crypto" ? "crypto" : "bet");
-        return;
-      }
-      if (event.target?.closest && document.getElementById("rolling-excel-overlay")?.contains(event.target)) {
-        if (!event.target.closest("[data-v765-kapsul]") && !event.target.closest("[data-v768-feature-open]")) v774FlushAllPendingFromDom();
-      }
-    }, true);
-    document.addEventListener("input", function(event) {
-      const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
-      if (!kapsul) return;
-      const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
-      v768UpdateBetCalc(day, slot);
-      v774SavePendingSlot(day, slot);
-    }, true);
-    document.addEventListener("focusout", function(event) {
-      const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
-      if (!kapsul) return;
-      const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
-      v774SavePendingSlot(day, slot);
-    }, true);
-  }
-
-  function v765BindExcelFeatureControls(root) {
-    const scope = root || document;
-    scope.querySelectorAll("[data-v770-excel-open]").forEach(btn => {
-      if (btn.dataset.v770Bound === "1") return;
-      btn.dataset.v770Bound = "1";
-      btn.addEventListener("pointerdown", event => {
-        const [modeRaw, kindRaw] = String(btn.dataset.v770ExcelOpen || "bet:active").split(":");
-        window.omega_ExcelRollingOpenMainPanel(event, modeRaw, kindRaw);
-      }, { passive: false });
-      btn.addEventListener("click", event => {
-        const [modeRaw, kindRaw] = String(btn.dataset.v770ExcelOpen || "bet:active").split(":");
-        window.omega_ExcelRollingOpenMainPanel(event, modeRaw, kindRaw);
-      });
-    });
-    scope.querySelectorAll("[data-v768-feature-open]").forEach(btn => {
-      if (btn.dataset.v768Bound === "1") return;
-      btn.dataset.v768Bound = "1";
-      btn.addEventListener("click", event => {
-        const [modeRaw, kindRaw] = String(btn.dataset.v768FeatureOpen || "bet:active").split(":");
-        window.omega_RollingExcelOpenFeature(event, modeRaw, kindRaw);
-      });
-    });
-    v768BindBetCalc(scope);
-    scope.querySelectorAll("[data-v768-calc]").forEach(box => {
-      const [day, slot] = String(box.dataset.v768Calc || "0:0").split(":").map(Number);
-      v768UpdateBetCalc(day, slot);
-    });
-  }
 
   window.omega_RenderExcelTable = function() {
     const wrapper = qs("#excel-body-content");
     if (!wrapper) return;
     const currentPlan = ensureRollingPlan();
-    const rollModeV491 = localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
+    const rollModeV491 = getRollingModeV86();
     const isCryptoV491 = rollModeV491 === "crypto";
     const overlayV493 = qs("#rolling-excel-overlay");
     if (overlayV493) overlayV493.setAttribute("data-roll-mode", rollModeV491);
@@ -850,6 +775,8 @@
     for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
       if (!currentPlan.ops[day]) currentPlan.ops[day] = new Array(10).fill(null);
       if (currentPlan.ops[day].length < 1) currentPlan.ops[day] = new Array(1).fill(null);
+      const draftList = getDraftListV86(currentPlan, day);
+      if (draftList.length < currentPlan.ops[day].length) draftList.length = currentPlan.ops[day].length;
       const dayOps = currentPlan.ops[day];
       const dayStart = runningBalance;
       let dayProfit = 0;
@@ -859,58 +786,30 @@
         const op = dayOps[slot];
         if (op) {
           const amt = Number(op.amt || 0);
-          const baseOdds = Number(op.odds || 0);
-          const comboRows = Array.isArray(op.combo) ? op.combo : [];
-          const totalOdds = isCryptoV491 ? baseOdds : v763BetTotalOdds(baseOdds, comboRows);
-          const pnl = isCryptoV491 ? Math.abs(baseOdds) : (op.res === "win" ? (amt * totalOdds) - amt : amt);
+          const odds = Number(op.odds || 0);
+          const fee = Math.max(0, Number(op.fee || op.cost || 0));
+          const pnl = isCryptoV491 ? (op.netMode === 'amount' ? (op.res === "win" ? Math.abs(odds) - fee : Math.abs(odds) + fee) : Math.abs(amt * (odds / 100))) : (op.res === "win" ? (amt * odds) - amt : amt);
           const effect = op.res === "win" ? pnl : -pnl;
           runningBalance += effect; totalProfit += effect; dayProfit += effect;
-          const title = isCryptoV491
-            ? (op.note || "İşlem")
-            : (comboRows.length ? "Kombine" : (op.note || "Maç"));
-          const detail = isCryptoV491
-            ? `$${amt} · Net $${Number(baseOdds || 0).toFixed(2)}`
-            : (comboRows.length ? `${comboRows.length + 1} maç · $${amt} x ${Number(totalOdds || 0).toFixed(2)}` : `$${amt} x ${baseOdds}`);
-          const comboHtml = (!isCryptoV491 && comboRows.length) ? `<ul class="v763-result-combo-list"><li>${v763EscapeHtml(op.note || "Maç")} <b>${Number(baseOdds || 0).toFixed(2)}</b></li>${comboRows.map(row => `<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`).join("")}</ul>` : "";
+
           cards.push(`
             <div class="kapsul v32 ${op.res}">
               <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
               <div class="k-result">
-                <div class="k-note-show">${v763EscapeHtml(title)}</div>
-                <b>${detail}</b>
+                <div class="k-note-show">${escapeHtmlV86(op.note || (isCryptoV491 ? "İşlem" : "Maç"))}</div>
+                <b>${isCryptoV491 ? `$${amt} · Net $${Number(odds || 0).toFixed(2)}${Number(op.fee || 0) ? ' · Fee $' + Number(op.fee || 0).toFixed(2) : ''}` : `$${amt} x ${odds}`}</b>
                 <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
-                ${comboHtml}
               </div>
             </div>
           `);
         } else {
-          const pendingV774 = !isCryptoV491 ? v774GetPendingSlot(day, slot) : null;
-          const pNoteV774 = v763EscapeHtml(pendingV774?.note || "");
-          const pOddsV774 = pendingV774?.odds === "" || pendingV774?.odds == null ? "" : v763EscapeHtml(pendingV774.odds);
-          const pStakeV774 = pendingV774?.amt === "" || pendingV774?.amt == null ? "" : v763EscapeHtml(pendingV774.amt);
-          const pComboV774 = Array.isArray(pendingV774?.combo) ? pendingV774.combo : [];
-          const pComboHtmlV774 = pComboV774.map(row => `<div class="v765-extra-match-row v768-extra-match-row" data-v763-extra-row="${day}:${slot}"><input type="text" data-v763-extra-note placeholder="Maç" value="${v763EscapeHtml(row.note || "")}"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01" value="${row.odds === "" || row.odds == null ? "" : v763EscapeHtml(row.odds)}"></div>`).join("");
+          const draft = readDraftV86(currentPlan, day, slot);
           cards.push(`
-            <div class="kapsul v32 ${isCryptoV491 ? "" : "v765-bet-kapsul"}" data-v765-kapsul="${day}:${slot}">
-              ${isCryptoV491 ? `
-                <input type="text" id="e-n-${day}-${slot}" placeholder="İşlem">
-                <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar">
-                <input type="number" id="e-o-${day}-${slot}" placeholder="Net K/Z $">
-              ` : `
-                <div class="v765-bet-entry">
-                  <div class="v765-match-line">
-                    <div class="v765-inline-combo-controls">
-                      <button type="button" data-v768-combo="${day}:${slot}:plus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'plus')" title="Maç + oran ekle">+</button>
-                      <button type="button" data-v768-combo="${day}:${slot}:minus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'minus')" title="Son ek maçı sil">−</button>
-                    </div>
-                    <input type="text" id="e-n-${day}-${slot}" placeholder="Maç" value="${pNoteV774}">
-                  </div>
-                  <input type="number" id="e-o-${day}-${slot}" placeholder="Oran" step="0.01" value="${pOddsV774}">
-                  <div class="v765-extra-match-list">${pComboHtmlV774}</div>
-                  <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
-                  <div class="v768-bet-calc" data-v768-calc="${day}:${slot}"><span>Toplam Oran: <b>-</b></span><span>Tahmini Kazanç: <b>-</b></span></div>
-                </div>
-              `}
+            <div class="kapsul v32">
+              <input type="text" id="e-n-${day}-${slot}" placeholder="${isCryptoV491 ? 'İşlem' : 'Maç'}" value="${escapeHtmlV86(draft.note)}" onblur="omega_CaptureRollingDraft(${day}, ${slot})">
+              <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" value="${escapeHtmlV86(draft.amt)}" onblur="omega_CaptureRollingDraft(${day}, ${slot})">
+              <input type="number" id="e-o-${day}-${slot}" placeholder="${isCryptoV491 ? 'Net K/Z $' : 'Oran'}" value="${escapeHtmlV86(draft.odds)}" onblur="omega_CaptureRollingDraft(${day}, ${slot})">
+              ${isCryptoV491 ? `<input type="number" id="e-f-${day}-${slot}" placeholder="Fee/Funding $" step="0.01" value="${escapeHtmlV86(draft.fee)}" onblur="omega_CaptureRollingDraft(${day}, ${slot})">` : ''}
               <div class="k-actions v32">
                 <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
                 <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>
@@ -919,6 +818,13 @@
           `);
         }
       }
+
+      const betFeatureTools = !isCryptoV491 && day === 1 ? `
+        <div class="v774-day-feature-tools">
+          <button type="button" class="v774-side-tool active" onclick="omega_OpenRollingPendingBoard()">Aktif Bahisler / Kuponlar</button>
+          <button type="button" class="v774-side-tool history" onclick="omega_OpenRollingHistoryBoard()">Geçmiş</button>
+        </div>` : '';
+      const cameraTool = !isCryptoV491 && day === 1 ? `<button class="gold v774-camera-btn" type="button" onclick="omega_ShowRollingSnapshot(${day})"><i class="fa-solid fa-camera"></i> FOTOĞRAF</button>` : '';
 
       htmlBuffer += `
         <div class="day-row-capsule v32">
@@ -932,8 +838,9 @@
               <button onclick="omega_RollingSetDaySlots(${day}, 10)">10</button>
               <button onclick="omega_RollingSetDaySlots(${day}, 20)">20</button>
               <button onclick="omega_RollingClearDay(${day})">TEMİZLE</button>
+              ${cameraTool}
             </div>
-            ${day === 1 ? v763DayToolButtons(rollModeV491) : ""}
+            ${betFeatureTools}
           </div>
           <div class="capsule-container v32">${cards.join("")}</div>
           <div class="day-result v32"><small>Gün Sonu</small>$${runningBalance.toFixed(2)}</div>
@@ -942,7 +849,6 @@
     }
 
     wrapper.innerHTML = htmlBuffer;
-    v765BindExcelFeatureControls(wrapper);
 
     const current = qs("#excel-current-bal");
     if (current) current.innerText = `$${runningBalance.toFixed(2)}`;
@@ -959,43 +865,48 @@
     if (progressBar) progressBar.style.width = progressPercentage + "%";
 
     omega_SaveRollingDB();
+    renderRollingSubpanelV86();
   };
 
   window.omega_ResolveExcelOp = function(day, slot, result) {
-    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-    const isCrypto = localStorage.getItem("finance_rolling_mode") === "crypto";
-    const amt = parseFloat(document.getElementById(`e-a-${day}-${slot}`)?.value);
-    const odds = parseFloat(document.getElementById(`e-o-${day}-${slot}`)?.value);
-    const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
-    const hasComboGap = comboRows.some(row => !row.note || !Number(row.odds || 0));
-    if (isNaN(amt) || isNaN(odds) || (!isCrypto && hasComboGap)) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Tutar ve Net K/Z $ alanını doldur." : "Maç, oran, tutar ve ek maç oranlarını doldur.");
-      return;
-    }
-    if (!note) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "İşlem adını yaz." : "Maç adını yaz.");
+    const draft = window.omega_CaptureRollingDraft(day, slot);
+    const note = String(draft.note || '').trim();
+    const isCrypto = getRollingModeV86() === 'crypto';
+    const amt = parseFloat(draft.amt);
+    const odds = parseFloat(draft.odds);
+    const fee = Math.max(0, parseFloat(draft.fee) || 0);
+    if (isNaN(amt) || isNaN(odds)) {
+      if (typeof omega_ShowFinanceToast === 'function') omega_ShowFinanceToast('Tutar ve ilgili oran / net K/Z alanını doldur.');
+      else alert('Tutar ve ilgili oran / net K/Z alanını doldur.');
       return;
     }
     const currentPlan = ensureRollingPlan();
     if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
-    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, res: result, netMode: isCrypto ? "amount" : "odds" };
-    if (currentPlan.pending?.[day]) {
-      delete currentPlan.pending[day][slot];
-      if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];
-    }
+    const historyId = `rh_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    const entry = { note, amt, odds, fee, res: result, netMode: isCrypto ? 'amount' : 'odds', resolvedAt: Date.now(), day, slot, historyId };
+    currentPlan.ops[day][slot] = entry;
+    currentPlan.history.unshift({ ...entry, mode: getRollingModeV86(), days: _ACTIVE_EXCEL_DAYS });
+    writeDraftV86(currentPlan, day, slot, {});
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
 
+  window.omega_UndoExcelOp = function(day, slot) {
+    const currentPlan = ensureRollingPlan();
+    if (currentPlan.ops[day] && currentPlan.ops[day][slot]) {
+      const historyId = currentPlan.ops[day][slot].historyId;
+      currentPlan.ops[day][slot] = null;
+      if (historyId) currentPlan.history = collectHistoryV86(currentPlan).filter(item => item.historyId !== historyId);
+      omega_SaveRollingDB();
+      omega_RenderExcelTable();
+    }
+  };
   const oldOpenRolling = window.omega_OpenRollingExcel;
   window.omega_OpenRollingExcel = function(days, skipHash = false) {
     const result = typeof oldOpenRolling === "function" ? oldOpenRolling(days, skipHash) : undefined;
     document.documentElement.classList.remove("rolling-hash-boot");
     document.body.classList.add("rolling-active");
-    if(!skipHash) {
-      const baseHash = (document.getElementById("omega-rolling-block") && getComputedStyle(document.getElementById("omega-rolling-block")).display !== "none") ? "rolling" : "finance";
-      history.replaceState(null, "", `#${baseHash}/rolling/${days}`);
-    }
+    if(!skipHash) history.replaceState(null, "", `#finance/rolling/${days}`);
     return result;
   };
 
@@ -1010,7 +921,7 @@
   }, true);
 
   function reviveRollingFromHashV39() {
-    const m = String(location.hash || "").match(/^#(?:finance|rolling)\/rolling\/(\d+)/);
+    const m = String(location.hash || "").match(/^#finance\/rolling\/(\d+)/);
     if (!m) return;
     const days = Number(m[1]);
     if ([7,15,30,60,90].includes(days) && typeof window.omega_OpenRollingExcel === "function") {
