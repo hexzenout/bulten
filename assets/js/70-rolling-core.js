@@ -597,14 +597,30 @@
     const n = Number(value);
     return Number.isFinite(n) ? n : "";
   }
+  function v811CryptoTps(item) {
+    const list = Array.isArray(item?.tps) ? item.tps : [];
+    const cleaned = list.map(tp => ({
+      target: cleanText(tp?.target || ""),
+      profit: v810NumberOrBlank(tp?.profit)
+    })).filter(tp => tp.target || tp.profit !== "");
+    if (!cleaned.length && v810NumberOrBlank(item?.profit) !== "") {
+      cleaned.push({ target: cleanText(item?.target || ""), profit: v810NumberOrBlank(item?.profit) });
+    }
+    return cleaned;
+  }
+  function v811CryptoTpProfit(item) {
+    const tps = v811CryptoTps(item);
+    const values = tps.map(tp => v810NumberOrBlank(tp.profit)).filter(v => v !== "");
+    if (!values.length) return { value: 0, source: "none", count: tps.length, profitCount: 0 };
+    return { value: values.reduce((sum, v) => sum + Number(v || 0), 0), source: "manual", count: tps.length, profitCount: values.length };
+  }
   function v810TargetItemProfit(item, mode) {
+    if (mode === "crypto") return v811CryptoTpProfit(item);
     const manual = v810NumberOrBlank(item?.profit);
     if (manual !== "") return { value: Number(manual), source: "manual" };
-    if (mode === "bet") {
-      const stake = Number(item?.stake || 0);
-      const odds = Number(item?.odds || 0);
-      if (stake > 0 && odds > 0) return { value: stake * odds - stake, source: "auto" };
-    }
+    const stake = Number(item?.stake || 0);
+    const odds = Number(item?.odds || 0);
+    if (stake > 0 && odds > 0) return { value: stake * odds - stake, source: "auto" };
     return { value: 0, source: "none" };
   }
   function v810TargetSelfData(mode) {
@@ -613,22 +629,25 @@
     const rows = (store[m] || []).filter(Boolean);
     if (m === "crypto") {
       const margin = rows.reduce((sum, item) => sum + Number(item.stake || 0), 0);
+      const tpCount = rows.reduce((sum, item) => sum + v811CryptoTps(item).length, 0);
       const profitRows = rows.map(item => v810TargetItemProfit(item, m)).filter(p => p.source === "manual");
       const manualProfit = profitRows.reduce((sum, p) => sum + Number(p.value || 0), 0);
       const details = rows.slice(-5).reverse().map(item => {
         const profit = v810TargetItemProfit(item, m);
-        return `<li data-target-self-row="${escapeHtml(item.id || "")}"><span>${escapeHtml(v810ShortLabel(item.name || "İşlem", 28))}</span><b>${Number(item.stake || 0) ? money(item.stake) : "Marjin -"}</b><em>${profit.source === "manual" ? signedMoney(profit.value) : "Kâr manuel"}</em><button type="button" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></li>`;
+        const tps = v811CryptoTps(item);
+        const tpText = tps.length ? `TP ${tps.length}` : "TP -";
+        const profitText = profit.source === "manual" ? signedMoney(profit.value) : "Kâr manuel";
+        return `<li data-target-self-row="${escapeHtml(item.id || "")}"><span>${escapeHtml(v810ShortLabel(item.name || "İşlem", 28))}</span><b>${Number(item.stake || 0) ? money(item.stake) : "Marjin -"}</b><em>${tpText} · ${profitText}</em><button type="button" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></li>`;
       }).join("");
       return {
         mode: m,
-        headline: rows.length ? `${rows.length} işlem` : "Kayıt yok",
+        headline: rows.length ? `${rows.length} işlem · ${tpCount} TP` : "Kayıt yok",
         meta: rows.length ? `Marjin ${money(margin)}` : "Kasa Hedefi içi bağımsız",
-        sub: profitRows.length ? `Manuel Kâr ${signedMoney(manualProfit)}` : "Kâr manuel girilir",
-        details: details || `<li class="empty"><span>Kayıt yok</span><b>Buraya yazılanlar aktif panel/geçmişten bağımsızdır.</b><em>-</em></li>`
+        sub: profitRows.length ? `Hedef Kâr ${signedMoney(manualProfit)}` : "TP kârı manuel girilir",
+        details: details || `<li class="empty"><span>Kayıt yok</span><b>İşlem adı + TP hedefi + hedef kâr buraya bağımsız eklenir.</b><em>-</em></li>`
       };
     }
-    const matchCount = rows.filter(item => item.kind !== "combo").length;
-    const comboCount = rows.filter(item => item.kind === "combo").length;
+    const matchCount = rows.length;
     const stake = rows.reduce((sum, item) => sum + Number(item.stake || 0), 0);
     let autoPossible = 0;
     let autoCount = 0;
@@ -642,47 +661,71 @@
       if (p.source !== "none") { profitTotal += Number(p.value || 0); profitCount++; }
     });
     const details = rows.slice(-5).reverse().map(item => {
-      const label = item.kind === "combo" ? "Kombine" : "Maç";
       const p = v810TargetItemProfit(item, m);
       const oddsText = Number(item.odds || 0) ? Number(item.odds || 0).toFixed(2) : "Oran -";
       const profitText = p.source === "none" ? "Net -" : `${p.source === "manual" ? "Manuel " : "Oto "}${signedMoney(p.value)}`;
-      return `<li data-target-self-row="${escapeHtml(item.id || "")}"><span>${escapeHtml(label + " · " + v810ShortLabel(item.name || label, 24))}</span><b>${oddsText}</b><em>${Number(item.stake || 0) ? money(item.stake) : "Tutar -"} · ${profitText}</em><button type="button" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></li>`;
+      return `<li data-target-self-row="${escapeHtml(item.id || "")}"><span>${escapeHtml(v810ShortLabel(item.name || "Maç", 28))}</span><b>${oddsText}</b><em>${Number(item.stake || 0) ? money(item.stake) : "Tutar -"} · ${profitText}</em><button type="button" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></li>`;
     }).join("");
     return {
       mode: m,
-      headline: rows.length ? `${matchCount} maç · ${comboCount} kombine` : "Kayıt yok",
+      headline: rows.length ? `${matchCount} maç` : "Kayıt yok",
       meta: rows.length ? `Açık ${money(stake)}` : "Kasa Hedefi içi bağımsız",
       sub: profitCount ? `Net ${signedMoney(profitTotal)}${autoCount ? ` · Dönüş ${money(autoPossible)}` : ""}` : "Net manuel veya oran+tutar",
-      details: details || `<li class="empty"><span>Kayıt yok</span><b>Buraya yazılanlar kupon/aktif/geçmişten bağımsızdır.</b><em>-</em></li>`
+      details: details || `<li class="empty"><span>Kayıt yok</span><b>Maç + oran + tutar sırasıyla bağımsız eklenir.</b><em>-</em></li>`
     };
+  }
+  function v811CryptoTpRow() {
+    return `<div class="v811-target-tp-row" data-target-self-tp="crypto">
+      <input type="text" data-target-self-tp-field="target" placeholder="Hedef TP">
+      <input type="number" step="0.01" inputmode="decimal" data-target-self-tp-field="profit" placeholder="Hedef kâr">
+      <button type="button" data-target-tp-remove title="TP sil">×</button>
+    </div>`;
   }
   function renderTargetActiveBox(state, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const data = v810TargetSelfData(m);
-    const label = m === "crypto" ? "İşlemler" : "Maç / Kombine";
-    const kindField = m === "bet" ? `<select data-target-self-field="${m}:kind"><option value="match">Maç</option><option value="combo">Kombine</option></select>` : "";
-    const oddsField = m === "bet" ? `<input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:odds" placeholder="Oran">` : "";
-    const namePlaceholder = m === "crypto" ? "İşlem adı" : "Maç / Kombine adı";
-    const stakePlaceholder = m === "crypto" ? "Marjin" : "Tutar";
-    const profitPlaceholder = m === "crypto" ? "Manuel Kâr" : "Net Kâr ops.";
-    return `<div class="v810-target-self ${m}">
+    if (m === "crypto") {
+      return `<div class="v810-target-self v811-target-self crypto">
+        <div class="v810-target-self-top">
+          <span>İşlemler</span>
+          <b>${escapeHtml(data.headline)}</b>
+        </div>
+        <div class="v810-target-self-meta">
+          <span>${escapeHtml(data.meta)}</span>
+          <em>${escapeHtml(data.sub)}</em>
+        </div>
+        <div class="v810-target-self-form v811-target-self-form crypto">
+          <input type="text" data-target-self-field="${m}:name" placeholder="İşlem adı">
+          <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Marjin / Tutar">
+          <div class="v811-target-tp-box">
+            <div class="v811-target-tp-head"><span>TP hedefleri</span><button type="button" data-target-tp-add="${m}">+ TP</button></div>
+            <div class="v811-target-tp-list" data-target-tp-list="${m}">${v811CryptoTpRow()}</div>
+          </div>
+          <button type="button" class="v811-target-main-add" data-target-self-add="${m}">+ İşlem Ekle</button>
+        </div>
+        <details class="v810-target-self-details v811-target-self-details">
+          <summary>Detay</summary>
+          <ul>${data.details}</ul>
+        </details>
+      </div>`;
+    }
+    return `<div class="v810-target-self v811-target-self bet">
       <div class="v810-target-self-top">
-        <span>${label}</span>
+        <span>Maç</span>
         <b>${escapeHtml(data.headline)}</b>
       </div>
       <div class="v810-target-self-meta">
         <span>${escapeHtml(data.meta)}</span>
         <em>${escapeHtml(data.sub)}</em>
       </div>
-      <div class="v810-target-self-form ${m}">
-        ${kindField}
-        <input type="text" data-target-self-field="${m}:name" placeholder="${namePlaceholder}">
-        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="${stakePlaceholder}">
-        ${oddsField}
-        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:profit" placeholder="${profitPlaceholder}">
-        <button type="button" data-target-self-add="${m}">+ Ekle</button>
+      <div class="v810-target-self-form v811-target-self-form bet">
+        <input type="text" data-target-self-field="${m}:name" placeholder="Maç">
+        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:odds" placeholder="Oran">
+        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
+        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:profit" placeholder="Net kâr opsiyonel">
+        <button type="button" class="v811-target-main-add" data-target-self-add="${m}">+ Maç Ekle</button>
       </div>
-      <details class="v810-target-self-details">
+      <details class="v810-target-self-details v811-target-self-details">
         <summary>Detay</summary>
         <ul>${data.details}</ul>
       </details>
@@ -1894,21 +1937,58 @@
       saveState(state);
       refresh();
     }));
+    const bindTargetTpRemove = btn => btn.addEventListener("click", () => {
+      const row = btn.closest("[data-target-self-tp]");
+      const list = row?.parentElement;
+      if (!row || !list) return;
+      if (list.querySelectorAll("[data-target-self-tp]").length <= 1) {
+        row.querySelectorAll("input").forEach(input => { input.value = ""; });
+        return;
+      }
+      row.remove();
+    });
+    mount.querySelectorAll("[data-target-tp-remove]").forEach(bindTargetTpRemove);
+    mount.querySelectorAll("[data-target-tp-add]").forEach(btn => btn.addEventListener("click", () => {
+      const mode = btn.dataset.targetTpAdd === "crypto" ? "crypto" : "bet";
+      if (mode !== "crypto") return;
+      const list = mount.querySelector(`[data-target-tp-list="${mode}"]`);
+      if (!list) return;
+      if (list.querySelectorAll("[data-target-self-tp]").length >= 6) {
+        alert("Şimdilik en fazla 6 TP ekleyelim; panel dağılmasın.");
+        return;
+      }
+      list.insertAdjacentHTML("beforeend", v811CryptoTpRow());
+      const last = list.lastElementChild;
+      const removeBtn = last?.querySelector("[data-target-tp-remove]");
+      if (removeBtn) bindTargetTpRemove(removeBtn);
+    }));
     mount.querySelectorAll("[data-target-self-add]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.targetSelfAdd === "crypto" ? "crypto" : "bet";
       const pick = key => mount.querySelector(`[data-target-self-field="${mode}:${key}"]`);
       const name = cleanText(pick("name")?.value || "");
       const stake = v810NumberOrBlank(pick("stake")?.value || "");
-      const odds = v810NumberOrBlank(pick("odds")?.value || "");
-      const profit = v810NumberOrBlank(pick("profit")?.value || "");
-      const kind = mode === "bet" && pick("kind")?.value === "combo" ? "combo" : "match";
-      if (!name && stake === "" && odds === "" && profit === "") {
-        alert(mode === "crypto" ? "Önce işlem adı, marjin veya manuel kâr gir." : "Önce maç/kombine adı, tutar, oran veya net kâr gir.");
-        return;
-      }
       const store = loadTargetItems();
       store[mode] = Array.isArray(store[mode]) ? store[mode] : [];
-      store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind, name, stake, odds, profit });
+      if (mode === "crypto") {
+        const tps = Array.from(mount.querySelectorAll(`[data-target-self-tp="${mode}"]`)).map(row => ({
+          target: cleanText(row.querySelector('[data-target-self-tp-field="target"]')?.value || ""),
+          profit: v810NumberOrBlank(row.querySelector('[data-target-self-tp-field="profit"]')?.value || "")
+        })).filter(tp => tp.target || tp.profit !== "");
+        if (!name && stake === "" && !tps.length) {
+          alert("Önce işlem adı, marjin/tutar veya en az bir TP hedefi gir.");
+          return;
+        }
+        const profit = tps.reduce((sum, tp) => tp.profit !== "" ? sum + Number(tp.profit || 0) : sum, 0);
+        store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: "crypto", name, stake, tps, profit });
+      } else {
+        const odds = v810NumberOrBlank(pick("odds")?.value || "");
+        const profit = v810NumberOrBlank(pick("profit")?.value || "");
+        if (!name && stake === "" && odds === "" && profit === "") {
+          alert("Önce maç, oran, tutar veya net kâr gir.");
+          return;
+        }
+        store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: "match", name, stake, odds, profit });
+      }
       saveTargetItems(store);
       refresh();
     }));
