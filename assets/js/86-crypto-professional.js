@@ -745,6 +745,51 @@
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
+  function v777DownloadPhotoPng(svgUri, filename) {
+    const img = new Image();
+    img.onload = function() {
+      try {
+        const scale = 2;
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round((img.naturalWidth || 900) * scale));
+        canvas.height = Math.max(1, Math.round((img.naturalHeight || 420) * scale));
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#020617";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const save = blob => {
+          if (!blob) {
+            const fallback = canvas.toDataURL("image/png");
+            const a = document.createElement("a");
+            a.href = fallback;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            return;
+          }
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1200);
+        };
+        if (canvas.toBlob) canvas.toBlob(save, "image/png", 0.95);
+        else save(null);
+      } catch (err) {
+        console.error("PNG oluşturulamadı", err);
+        alert("PNG oluşturulamadı. Tarayıcı engellediyse tekrar deneyin.");
+      }
+    };
+    img.onerror = function() {
+      alert("Resim hazırlanamadı. Maç/oran/tutar bilgisini kontrol et.");
+    };
+    img.src = svgUri;
+  }
+
   window.omega_RollingSlotPhoto = function(day, slot) {
     v774SavePendingSlot(day, slot);
     const uri = v776BuildSlotPhotoSvg(day, slot);
@@ -759,7 +804,7 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Kutu ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><a href="${uri}" download="bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-kutu-${slot + 1}.svg">Resmi İndir</a></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Kutu ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><button type="button" data-v777-photo-download>Resmi İndir PNG</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
@@ -769,6 +814,9 @@
     host.querySelector("[data-v776-photo-show]")?.addEventListener("click", () => {
       const w = window.open("", "_blank");
       if (w) w.document.write(`<img src="${uri}" style="max-width:100%;height:auto;background:#020617;display:block;margin:0 auto;">`);
+    });
+    host.querySelector("[data-v777-photo-download]")?.addEventListener("click", () => {
+      v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-kutu-${slot + 1}.png`);
     });
     return false;
   };
@@ -961,9 +1009,11 @@
               ` : `
                 <div class="v765-bet-entry">
                   <div class="v765-match-line">
-                    <div class="v765-inline-combo-controls">
-                      <button type="button" data-v768-combo="${day}:${slot}:plus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'plus')" title="Maç + oran ekle">+</button>
-                      <button type="button" data-v768-combo="${day}:${slot}:minus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'minus')" title="Son ek maçı sil">−</button>
+                    <div class="v777-slot-tools">
+                      <div class="v765-inline-combo-controls">
+                        <button type="button" data-v768-combo="${day}:${slot}:plus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'plus')" title="Maç + oran ekle">+</button>
+                        <button type="button" data-v768-combo="${day}:${slot}:minus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'minus')" title="Son ek maçı sil">−</button>
+                      </div>
                       <button type="button" class="v776-slot-camera" onclick="return omega_RollingSlotPhoto(${day}, ${slot})" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>
                     </div>
                     <input type="text" id="e-n-${day}-${slot}" placeholder="Maç" value="${pNoteV774}">

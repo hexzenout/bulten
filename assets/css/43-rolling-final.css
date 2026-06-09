@@ -3950,3 +3950,84 @@ html.rolling-hash-boot::before {
   border: 1px solid rgba(255,255,255,.12);
   background: #020617;
 }
+
+
+/* V777: kamera simgesi + / - grubundan bağımsız ve daha belirgin */
+#rolling-excel-overlay .capsule-container.v32 {
+  align-items: start !important;
+  grid-auto-rows: max-content !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul {
+  align-self: start !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+#rolling-excel-overlay .v765-bet-entry,
+#rolling-excel-overlay .v765-extra-match-list,
+#rolling-excel-overlay .v765-extra-match-row,
+#rolling-excel-overlay .v768-extra-match-row {
+  min-width: 0 !important;
+}
+#rolling-excel-overlay .v777-slot-tools {
+  position: absolute !important;
+  left: -44px !important;
+  top: 0 !important;
+  width: 30px !important;
+  display: grid !important;
+  grid-template-rows: auto auto !important;
+  gap: 8px !important;
+  z-index: 35 !important;
+  pointer-events: auto !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v765-inline-combo-controls {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  width: 30px !important;
+  display: grid !important;
+  grid-template-rows: 18px 18px !important;
+  gap: 5px !important;
+  z-index: auto !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v765-inline-combo-controls button {
+  width: 30px !important;
+  min-width: 30px !important;
+  max-width: 30px !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  max-height: 18px !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(251,191,36,.95) !important;
+  background: linear-gradient(180deg, rgba(251,191,36,.30), rgba(146,64,14,.95)) !important;
+  color: #fff7ed !important;
+  box-shadow: 0 0 0 2px rgba(251,191,36,.12), 0 10px 22px rgba(0,0,0,.32) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: .92rem !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.12) !important;
+}
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera::before,
+#rolling-excel-overlay .v777-slot-tools .v776-slot-camera::after {
+  display: none !important;
+  content: none !important;
+}
+.v776-photo-actions button {
+  cursor: pointer !important;
+}
