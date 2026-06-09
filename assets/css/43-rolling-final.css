@@ -4317,3 +4317,23 @@ html.rolling-hash-boot::before {
 .v781-photo-modal img {
   margin-top: 12px !important;
 }
+
+
+/* V784: fotoğraf modalı kenar boşluk ve üst boşluk düzeltmesi */
+.v781-photo-modal {
+  padding: 16px !important;
+  box-sizing: border-box !important;
+}
+.v781-photo-modal .v776-photo-head {
+  margin-bottom: 10px !important;
+  padding: 2px 2px 0 !important;
+}
+.v781-photo-modal .v776-photo-actions {
+  margin-bottom: 0 !important;
+  padding: 0 2px !important;
+}
+.v781-photo-modal img {
+  width: 100% !important;
+  margin: 14px 0 0 !important;
+  box-sizing: border-box !important;
+}

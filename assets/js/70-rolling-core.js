@@ -541,9 +541,10 @@
     if (!rows.length) return null;
     const title = mode === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR";
     const width = 1280;
-    const height = Math.max(470, 225 + rows.length * 54 + 118);
+    const headerBase = 204;
+    const height = Math.max(500, 255 + rows.length * 54 + 126);
     const rowSvg = rows.map((r, idx) => {
-      const y = 184 + idx * 54;
+      const y = headerBase + idx * 54;
       const clippedName = String(r.name || (mode === "crypto" ? "İşlem" : "Maç")).slice(0, 58);
       return `
         <rect x="70" y="${y - 31}" width="1140" height="44" rx="14" fill="#111827" stroke="#334155"/>
@@ -559,14 +560,14 @@
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <rect width="${width}" height="${height}" fill="#020617"/>
       <rect x="34" y="28" width="1212" height="${height - 56}" rx="30" fill="#0b1120" stroke="#334155" stroke-width="2"/>
-      <text x="70" y="88" fill="#fbbf24" font-size="34" font-family="Arial" font-weight="900">BULTEN · ${escapeHtml(title)}</text>
-      <text x="70" y="126" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${rows.length} kayıt</text>
-      <text x="94" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text>
-      <text x="152" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text>
-      <text x="285" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text>
-      <text x="815" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text>
-      <text x="980" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text>
-      <text x="1185" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>
+      <text x="70" y="96" fill="#fbbf24" font-size="34" font-family="Arial" font-weight="900">BULTEN · ${escapeHtml(title)}</text>
+      <text x="70" y="140" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${rows.length} kayıt</text>
+      <text x="94" y="170" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text>
+      <text x="152" y="170" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text>
+      <text x="285" y="170" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text>
+      <text x="815" y="170" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text>
+      <text x="980" y="170" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text>
+      <text x="1185" y="170" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>
       ${rowSvg}
       <rect x="70" y="${height - 96}" width="1140" height="56" rx="16" fill="#111827" stroke="#374151"/>
       <text x="94" y="${height - 60}" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text>
@@ -1178,15 +1179,16 @@
     try {
       dataUrl = (function() {
         const width = 1280;
-        const height = 470;
+        const headerBase = 204;
+        const height = 500;
         const rowSvg = rows.map((r, idx) => {
-          const y = 184 + idx * 54;
+          const y = headerBase + idx * 54;
           const clippedName = String(r.name || "Maç").slice(0, 58);
           return `<rect x="70" y="${y - 31}" width="1140" height="44" rx="14" fill="#111827" stroke="#334155"/><text x="94" y="${y - 4}" fill="#94a3b8" font-size="16" font-family="Arial" font-weight="900">#${r.index}</text><text x="152" y="${y - 4}" fill="#c084fc" font-size="17" font-family="Arial" font-weight="900">${escapeHtml(r.type)}</text><text x="285" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">${escapeHtml(clippedName)}</text><text x="815" y="${y - 4}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="950">${r.odds ? Number(r.odds).toFixed(2) : '-'}</text><text x="980" y="${y - 4}" text-anchor="end" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">${money(r.stake)}</text><text x="1185" y="${y - 4}" text-anchor="end" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${r.possible ? money(r.possible) : '-'}</text>`;
         }).join("");
         const totalStake = rows.reduce((sum, r) => sum + Number(r.stake || 0), 0);
         const totalPossible = rows.reduce((sum, r) => sum + Number(r.possible || 0), 0);
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="34" y="28" width="1212" height="${height - 56}" rx="30" fill="#0b1120" stroke="#334155" stroke-width="2"/><text x="70" y="88" fill="#fbbf24" font-size="34" font-family="Arial" font-weight="900">BULTEN · BAHİS FOTOĞRAFI</text><text x="70" y="126" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${rows.length} kayıt</text><text x="94" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text><text x="152" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text><text x="285" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text><text x="815" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text><text x="980" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text><text x="1185" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>${rowSvg}<rect x="70" y="${height - 96}" width="1140" height="56" rx="16" fill="#111827" stroke="#374151"/><text x="94" y="${height - 60}" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text><text x="1185" y="${height - 60}" text-anchor="end" fill="#22c55e" font-size="21" font-family="Arial" font-weight="950">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text></svg>`;
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="34" y="28" width="1212" height="${height - 56}" rx="30" fill="#0b1120" stroke="#334155" stroke-width="2"/><text x="70" y="96" fill="#fbbf24" font-size="34" font-family="Arial" font-weight="900">BULTEN · BAHİS FOTOĞRAFI</text><text x="70" y="140" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${rows.length} kayıt</text><text x="94" y="170" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text><text x="152" y="170" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text><text x="285" y="170" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text><text x="815" y="170" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text><text x="980" y="170" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text><text x="1185" y="170" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>${rowSvg}<rect x="70" y="${height - 96}" width="1140" height="56" rx="16" fill="#111827" stroke="#374151"/><text x="94" y="${height - 60}" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text><text x="1185" y="${height - 60}" text-anchor="end" fill="#22c55e" font-size="21" font-family="Arial" font-weight="950">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text></svg>`;
         return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
       })();
     } catch { return; }
