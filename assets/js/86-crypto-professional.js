@@ -806,12 +806,16 @@
     const data = v776SlotPhotoRows(day, slot);
     if (!data.rows.length) return null;
     const safe = v763EscapeHtml;
-    const height = Math.max(420, 245 + data.rows.length * 48);
+    const footerY = 150 + data.rows.length * 48 + 40;
+    const footerH = 130;
+    const height = Math.max(520, footerY + footerH + 46);
+    const totalOddsLabel = data.totalOdds ? data.totalOdds.toFixed(2) : "-";
+    const possibleLabel = data.possible ? v768Money(data.possible) : "-";
     const rowHtml = data.rows.map((row, idx) => {
       const y = 150 + idx * 48;
       return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text><text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
     }).join('');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · KUTU ${slot + 1}</text>${rowHtml}<rect x="42" y="${height - 104}" width="816" height="58" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${height - 68}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran: ${data.totalOdds ? data.totalOdds.toFixed(2) : '-'}</text><text x="330" y="${height - 68}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar: ${v768Money(data.stake)}</text><text x="836" y="${height - 68}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">Tahmini Kazanç: ${data.possible ? v768Money(data.possible) : '-'}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · KUTU ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
