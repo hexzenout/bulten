@@ -4705,3 +4705,142 @@ html.rolling-hash-boot::before {
 .rolling-v48-rail .v796-target-actions {
   width: 100% !important;
 }
+
+
+/* V798: Kasa Hedefi kompakt açılır/kapanır kart */
+.v798-hero-note {
+  display: block !important;
+  margin-top: 5px !important;
+  color: #94a3b8 !important;
+  font-size: .78rem !important;
+  font-weight: 850 !important;
+  letter-spacing: .02em !important;
+}
+
+.rolling-v48-rail > .v798-target-card {
+  padding: 0 !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+
+.rolling-v48-rail > .v798-target-card summary {
+  list-style: none !important;
+}
+
+.rolling-v48-rail > .v798-target-card summary::-webkit-details-marker {
+  display: none !important;
+}
+
+.rolling-v48-rail .v798-target-summary {
+  cursor: pointer !important;
+  padding: 12px !important;
+  display: grid !important;
+  gap: 8px !important;
+  position: relative !important;
+}
+
+.rolling-v48-rail .v798-target-summary::after {
+  content: "Detay" !important;
+  position: absolute !important;
+  right: 10px !important;
+  top: 10px !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(255,255,255,.05) !important;
+  color: #cbd5e1 !important;
+  font-size: .62rem !important;
+  font-weight: 950 !important;
+}
+
+.rolling-v48-rail .v798-target-card[open] .v798-target-summary::after {
+  content: "Kapat" !important;
+}
+
+.rolling-v48-rail .v798-target-summary-main b {
+  display: block !important;
+  color: #f8fafc !important;
+  font-size: .88rem !important;
+  font-weight: 950 !important;
+  line-height: 1.15 !important;
+  padding-right: 54px !important;
+}
+
+.rolling-v48-rail .v798-target-summary-main span {
+  display: block !important;
+  margin-top: 3px !important;
+  color: #94a3b8 !important;
+  font-size: .70rem !important;
+  font-weight: 850 !important;
+}
+
+.rolling-v48-rail .v798-target-summary-values {
+  display: grid !important;
+  gap: 3px !important;
+  padding: 8px 9px !important;
+  border-radius: 12px !important;
+  background: rgba(2,6,23,.44) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  min-width: 0 !important;
+}
+
+.rolling-v48-rail .v798-target-summary-values strong {
+  color: #fbbf24 !important;
+  font-size: .78rem !important;
+  font-weight: 950 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rolling-v48-rail .v798-target-summary-values em {
+  color: #e5e7eb !important;
+  font-size: .68rem !important;
+  font-style: normal !important;
+  font-weight: 850 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rolling-v48-rail .v798-target-summary small {
+  justify-self: start !important;
+  padding: 4px 7px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(255,255,255,.05) !important;
+  color: #cbd5e1 !important;
+  font-size: .62rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.rolling-v48-rail .v798-target-summary small.manual {
+  color: #fde68a !important;
+  border-color: rgba(251,191,36,.28) !important;
+  background: rgba(251,191,36,.09) !important;
+}
+
+.rolling-v48-rail .v798-target-bar {
+  margin: 0 12px 10px !important;
+}
+
+.rolling-v48-rail .v798-target-metrics {
+  padding: 0 12px 12px !important;
+}
+
+.rolling-v48-rail .v798-target-detail {
+  display: none !important;
+  padding: 0 12px 12px !important;
+  gap: 10px !important;
+}
+
+.rolling-v48-rail .v798-target-card[open] .v798-target-detail {
+  display: grid !important;
+}
+
+.rolling-v48-rail .v798-target-card:not([open]) .v796-target-values,
+.rolling-v48-rail .v798-target-card:not([open]) .v796-target-actions,
+.rolling-v48-rail .v798-target-card:not([open]) .v796-target-log {
+  display: none !important;
+}

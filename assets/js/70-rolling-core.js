@@ -12,6 +12,7 @@
   const TARGET_LOG_KEY = "v755_rolling_target_log_v1";
   const SNAPSHOT_KEY = "v756_rolling_report_cards_v1";
   const SNAPSHOT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+  const TARGET_CARD_OPEN_KEY = "v798_rolling_target_card_open";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -1095,6 +1096,14 @@
   }
   function activeMode() { return localStorage.getItem(PAGE_MODE_KEY) === "crypto" ? "crypto" : "bet"; }
   function setActiveMode(mode) { localStorage.setItem(PAGE_MODE_KEY, mode === "crypto" ? "crypto" : "bet"); }
+  function targetCardOpen(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    return localStorage.getItem(TARGET_CARD_OPEN_KEY + "_" + m) === "1";
+  }
+  function setTargetCardOpen(mode, open) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    localStorage.setItem(TARGET_CARD_OPEN_KEY + "_" + m, open ? "1" : "0");
+  }
   function railCollapsed() { return localStorage.getItem(RAIL_KEY) === "1"; }
   function setRailCollapsed(v) { localStorage.setItem(RAIL_KEY, v ? "1" : "0"); }
   function openRolling(mode, days) {
@@ -1160,7 +1169,7 @@
           <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "KOMBİNE KUPON MAÇLARI"}</span></summary>
           <div class="rolling-v47-section-title">
             <div>${renderRowControls(mode, state)}</div>
-            <button type="button" data-clear="${mode}">${isCrypto ? "KRİPTOYU TEMİZLE" : "TÜMÜNÜ TEMİZLE"}</button>
+            <button type="button" data-clear="${mode}">"TÜMÜNÜ TEMİZLE"</button>
           </div>
           ${renderTable(mode, slots, state)}
         </details>
@@ -1177,41 +1186,48 @@
         <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</em>
       </li>`).join("") || `<li class="empty"><span>Kayıt yok</span><b>Hedefi bitirince burada kalır.</b><em>-</em></li>`;
     const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
-    const currentTag = plan.hasManualCurrent ? "Manuel güncel" : "Otomatik güncel";
+    const currentTag = plan.hasManualCurrent ? "Kaynak: Manuel" : "Kaynak: Otomatik";
+    const summaryLine = plan.target ? `${money(plan.start)} → ${money(plan.target)}` : `${money(plan.start)} → hedef gir`;
     return `
-      <div class="v796-target-card ${m}">
-        <div class="v796-target-head">
-          <div>
-            <b>Rolling Hedef Takibi</b>
+      <details class="v796-target-card v798-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
+        <summary class="v798-target-summary">
+          <div class="v798-target-summary-main">
+            <b>Kasa Hedefi</b>
             <span>${modeLabel} · ${plan.stateLabel}</span>
           </div>
+          <div class="v798-target-summary-values">
+            <strong>${summaryLine}</strong>
+            <em>Güncel ${money(plan.current)} · Kalan ${plan.target ? money(plan.remaining) : "-"}</em>
+          </div>
           <small class="${plan.hasManualCurrent ? "manual" : "auto"}">${currentTag}</small>
-        </div>
+        </summary>
 
-        <div class="v796-target-values">
-          <label><span>Başlangıç</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="start" value="${plan.start}"></label>
-          <label><span>Güncel</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="${money(plan.autoCurrent)}"></label>
-          <label><span>Hedef</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
-        </div>
+        <div class="v796-target-bar v798-target-bar"><u style="width:${plan.pct.toFixed(1)}%"></u></div>
 
-        <div class="v796-target-bar"><u style="width:${plan.pct.toFixed(1)}%"></u></div>
-
-        <div class="v796-target-metrics">
+        <div class="v796-target-metrics v798-target-metrics">
           <span>K/Z <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</b></span>
           <span>Büyüme <b class="${plan.growth >= 0 ? "pos" : "neg"}">${pctText(plan.growth)}</b></span>
           <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
         </div>
 
-        <div class="v796-target-actions">
-          <button type="button" data-target-reset data-rolling-target-mode="${m}">Yeni Hedef</button>
-          <button type="button" class="complete" data-target-complete data-rolling-target-mode="${m}" ${plan.done ? "" : "disabled"}>Hedefi Bitir</button>
-        </div>
+        <div class="v798-target-detail">
+          <div class="v796-target-values">
+            <label><span>Başlangıç</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="start" value="${plan.start}"></label>
+            <label><span>Güncel</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="${money(plan.autoCurrent)}"></label>
+            <label><span>Hedef</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
+          </div>
 
-        <details class="v796-target-log">
-          <summary>LOG <span>${rows.length}</span></summary>
-          <ul>${latest}</ul>
-        </details>
-      </div>`;
+          <div class="v796-target-actions">
+            <button type="button" data-target-reset data-rolling-target-mode="${m}">Yeni Hedef</button>
+            <button type="button" class="complete" data-target-complete data-rolling-target-mode="${m}" ${plan.done ? "" : "disabled"}>Hedefi Bitir</button>
+          </div>
+
+          <details class="v796-target-log">
+            <summary>LOG <span>${rows.length}</span></summary>
+            <ul>${latest}</ul>
+          </details>
+        </div>
+      </details>`;
   }
 
   function renderModule() {
@@ -1233,7 +1249,7 @@
     mount.innerHTML = `
       <div class="rolling-v47-page v48-rolling-page v49-rolling-page">
         <div class="rolling-v47-hero v48-rolling-hero">
-          <div><h2><i class="fa-solid fa-layer-group"></i> ROLLING</h2></div>
+          <div><h2><i class="fa-solid fa-layer-group"></i> ROLLING</h2><span class="v798-hero-note">Genel Performans Özeti</span></div>
           <div class="rolling-v47-hero-kpis v753-rolling-kpis v756-rolling-kpis">
             <div><span>Bahis Kar/Zarar</span><b class="${betTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(betTotalPnl)}</b><em>${pctText(betGrowth)} büyüme</em></div>
             <div><span>Kripto Kar/Zarar</span><b class="${cryptoTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(cryptoTotalPnl)}</b><em>${pctText(cryptoGrowth)} büyüme</em></div>
@@ -1463,6 +1479,11 @@
       saveState(state);
       refresh();
     }));
+    mount.querySelectorAll("[data-target-card]").forEach(card => {
+      card.addEventListener("toggle", () => {
+        setTargetCardOpen(card.dataset.targetCard === "crypto" ? "crypto" : "bet", card.open);
+      });
+    });
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = btn.dataset.historyOpen === "crypto" ? "crypto" : "bet";
       LOG_CENTER_OPEN_MODE = null;
