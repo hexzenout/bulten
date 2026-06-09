@@ -385,6 +385,21 @@
   function pendingRowsForMode(mode, state) {
     return activeRowsForMode(mode, state).filter(s => !isFinishedStatus(s.status));
   }
+  function canAutoAttachToCombo(row) {
+    return !!row && !!cleanText(row.name) && !Number(row.stake || 0);
+  }
+  function buildAutoComboRow(base, followers) {
+    const existingExtra = Array.isArray(base.extraMatches) ? base.extraMatches : [];
+    const extraFromFollowers = (followers || []).map(f => ({ name: cleanText(f.name), odds: f.odds, sourceIndex: f.index }));
+    const comboResults = Array.isArray(base.comboResults) ? base.comboResults.slice() : [];
+    return {
+      ...base,
+      autoCombo: !!extraFromFollowers.length,
+      autoComboRows: (followers || []).map(f => f.index),
+      extraMatches: [...existingExtra, ...extraFromFollowers],
+      comboResults
+    };
+  }
   function getSlotMatches(slot) {
     const matches = [];
     if (cleanText(slot?.name)) matches.push({ name: cleanText(slot.name), odds: slot.odds, index: 0, status: slot?.comboResults?.[0] || "" });
@@ -397,12 +412,45 @@
     return matches;
   }
   function getBetCouponGroups(state) {
-    const rows = pendingRowsForMode("bet", state);
-    return {
-      singles: rows.filter(row => getSlotMatches(row).length <= 1),
-      coupons: rows.filter(row => getSlotMatches(row).length > 1).map(row => ({ id: row.index + 1, slotIndex: row.index, row, rows: [row], matches: getSlotMatches(row) })),
-      rows
-    };
+    const rows = pendingRowsForMode("bet", state).sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
+    const singles = [];
+    const coupons = [];
+    const consumed = new Set();
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (consumed.has(row.index)) continue;
+
+      const manualMatchCount = getSlotMatches(row).length;
+      const followers = [];
+      if (cleanText(row.name) && Number(row.stake || 0)) {
+        let lastIndex = Number(row.index || 0);
+        for (let j = i + 1; j < rows.length; j++) {
+          const next = rows[j];
+          if (consumed.has(next.index)) continue;
+          if (Number(next.index || 0) !== lastIndex + 1) break;
+          if (!canAutoAttachToCombo(next)) break;
+          followers.push(next);
+          consumed.add(next.index);
+          lastIndex = Number(next.index || 0);
+        }
+      }
+
+      if (manualMatchCount > 1 || followers.length) {
+        const comboRow = followers.length ? buildAutoComboRow(row, followers) : row;
+        coupons.push({
+          id: row.index + 1,
+          slotIndex: row.index,
+          row: comboRow,
+          rows: [row, ...followers],
+          matches: getSlotMatches(comboRow)
+        });
+      } else {
+        singles.push(row);
+      }
+    }
+
+    return { singles, coupons, rows };
   }
   function rowBetTotals(row) {
     const matches = getSlotMatches(row);
@@ -426,18 +474,40 @@
   }
 
   function v781RowsForPhoto(mode, state) {
-    return activeRowsForMode(mode, state).map(row => {
-      const matches = mode === "bet" ? getSlotMatches(row) : [];
-      const totals = mode === "bet" ? rowBetTotals(row) : { stake: Number(row.stake || 0), odds: Number(row.odds || 0), possibleWin: Number(row.pnl || 0) };
-      return {
-        index: row.index + 1,
-        type: mode === "crypto" ? "Kripto" : (matches.length > 1 ? "Kombine" : "Bahis"),
-        name: mode === "crypto" ? cleanText(row.name) : (matches.map(m => cleanText(m.name)).filter(Boolean).join(" + ") || cleanText(row.name)),
-        stake: Number(row.stake || 0),
-        odds: mode === "crypto" ? Number(row.odds || 0) : Number(totals.odds || 0),
-        possible: mode === "crypto" ? Number(row.pnl || 0) : Number(totals.possibleWin || 0)
-      };
-    });
+    if (mode === "bet") {
+      const grouped = getBetCouponGroups(state);
+      const singles = grouped.singles.map(row => {
+        const totals = rowBetTotals(row);
+        return {
+          index: row.index + 1,
+          type: "Bahis",
+          name: cleanText(row.name),
+          stake: Number(row.stake || 0),
+          odds: Number(totals.odds || 0),
+          possible: Number(totals.possibleWin || 0)
+        };
+      });
+      const coupons = grouped.coupons.map(coupon => {
+        const totals = rowBetTotals(coupon.row);
+        return {
+          index: coupon.slotIndex + 1,
+          type: "Kombine",
+          name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
+          stake: Number(coupon.row.stake || 0),
+          odds: Number(totals.odds || 0),
+          possible: Number(totals.possibleWin || 0)
+        };
+      });
+      return [...singles, ...coupons].sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
+    }
+    return activeRowsForMode(mode, state).map(row => ({
+      index: row.index + 1,
+      type: "Kripto",
+      name: cleanText(row.name),
+      stake: Number(row.stake || 0),
+      odds: Number(row.odds || 0),
+      possible: Number(row.pnl || 0)
+    }));
   }
   function v781BuildTablePhotoSvg(mode, state) {
     const rows = v781RowsForPhoto(mode, state);
@@ -616,12 +686,15 @@
     };
     h.bet.unshift(rec);
     saveHistory(h);
-    const slot = state.modeSlots.bet[row.index];
-    if (!slot) return;
-    slot.status = finalStatus;
-    slot.pnl = rec.pnl;
-    slot.historyId = rec.id;
-    slot.historyStatus = finalStatus;
+    const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
+    sourceRows.forEach((src, idx) => {
+      const slot = state.modeSlots.bet[Number(src.index || 0)];
+      if (!slot) return;
+      slot.status = finalStatus;
+      slot.pnl = idx === 0 ? rec.pnl : 0;
+      slot.historyId = rec.id;
+      slot.historyStatus = finalStatus;
+    });
   }
   function renderPendingBoard(mode, state) {
     const isCrypto = mode === "crypto";
@@ -909,7 +982,7 @@
     const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
     const pnlHead = isCrypto ? "PNL" : "K/Z";
-    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th>${isCrypto ? "" : `<button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Bahis tablo fotoğrafı"><i class="fa-solid fa-camera"></i></button>`}</th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
+    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th>${isCrypto ? "" : `<button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`}</th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
       const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
       return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
@@ -1162,7 +1235,7 @@
         saveState(state);
       };
       input.addEventListener("input", saveInput);
-      input.addEventListener("change", () => { saveInput(); refresh(); });
+      input.addEventListener("change", saveInput);
     });
     mount.querySelectorAll("[data-clear-row]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, slotRaw] = String(btn.dataset.clearRow || "bet:0").split(":");
@@ -1302,15 +1375,17 @@
         }
       } else if (action.type === "comboMatch") {
         const fresh = loadState();
-        const slot = fresh.modeSlots.bet[Number(action.slot || 0)];
+        const baseIndex = Number(action.slot || 0);
+        const slot = fresh.modeSlots.bet[baseIndex];
         if (slot) {
           if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
           slot.comboResults[Number(action.match || 0)] = action.status === "loss" ? "loss" : "win";
-          const matches = getSlotMatches({ ...slot, index: Number(action.slot || 0) });
+          const updatedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === baseIndex);
+          const matches = updatedCoupon ? updatedCoupon.matches : getSlotMatches({ ...slot, index: baseIndex });
           const allDone = matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
           if (allDone) {
             const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
-            addCouponHistoryRecord(fresh, { row: { ...slot, index: Number(action.slot || 0) }, matches }, finalStatus);
+            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
           }
           saveState(fresh);
         }

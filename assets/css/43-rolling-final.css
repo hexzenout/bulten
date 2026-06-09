@@ -4244,3 +4244,63 @@ html.rolling-hash-boot::before {
 .v758-pending-modal > .v512-history-head span {
   display: none !important;
 }
+
+
+/* V782: İlerleme / hedef özet kutularında sayıların kutuya tam oturması */
+.v759-target-edit label,
+.rolling-v495-quick-plan label {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+.v759-target-edit input,
+.rolling-v495-quick-plan input,
+.rolling-v495-quick-plan b {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  line-height: 36px !important;
+  padding: 0 10px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.v759-target-flow {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+}
+.v759-target-flow span {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+.v759-target-flow b {
+  min-width: 0 !important;
+  font-size: clamp(.82rem, 1.15vw, 1rem) !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.v757-target-summary {
+  grid-template-columns: minmax(0, auto) 10px minmax(0, auto) 10px minmax(0, auto) minmax(0, auto) !important;
+  overflow: hidden !important;
+}
+.v757-target-summary b,
+.v757-target-summary strong {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  font-size: clamp(.78rem, 1.05vw, 1rem) !important;
+  line-height: 1.12 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+@media (max-width: 860px) {
+  .v759-target-flow {
+    grid-template-columns: 1fr !important;
+  }
+}
