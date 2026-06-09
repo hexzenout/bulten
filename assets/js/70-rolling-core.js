@@ -227,8 +227,20 @@
       img.src = card.dataUrl;
     } catch { fallback(); }
   }
-  function getPlanNumbers(state, totalPnl) {
-    const plan = state.quickPlan || {};
+  function ensureQuickPlans(state) {
+    if (!state.quickPlans || typeof state.quickPlans !== "object") state.quickPlans = {};
+    if (!state.quickPlans.bet) state.quickPlans.bet = { ...(state.quickPlan || {}), start: state.quickPlan?.start ?? 100, target: state.quickPlan?.target ?? "", currentOverride: state.quickPlan?.currentOverride ?? "" };
+    if (!state.quickPlans.crypto) state.quickPlans.crypto = { start: state.quickPlan?.start ?? 100, target: "", currentOverride: "" };
+    return state.quickPlans;
+  }
+  function getModeQuickPlan(state, mode) {
+    const plans = ensureQuickPlans(state);
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (!plans[m] || typeof plans[m] !== "object") plans[m] = { start: 100, target: "", currentOverride: "" };
+    return plans[m];
+  }
+  function getPlanNumbers(state, totalPnl, mode = "bet") {
+    const plan = getModeQuickPlan(state, mode);
     const start = Number.isFinite(Number(plan.start)) ? Number(plan.start) : 100;
     const target = plan.target === "" || plan.target === null || plan.target === undefined ? 0 : Number(plan.target || 0);
     const autoCurrent = start + Number(totalPnl || 0);
@@ -238,15 +250,19 @@
     const growth = growthPct(pnl, start);
     const pct = target > start ? Math.max(0, Math.min(100, ((current - start) / (target - start)) * 100)) : progressPct(current, target || start);
     const done = target > 0 && current >= target;
-    return { start, target, current, autoCurrent, pnl, growth, pct, done, hasManualCurrent };
+    const remaining = target > 0 ? Math.max(0, target - current) : 0;
+    const stateLabel = done ? "Hedefe Ulaşıldı" : target > 0 ? (pnl >= 0 ? "Devam Ediyor" : "Geride") : "Hedef Bekliyor";
+    return { start, target, current, autoCurrent, pnl, growth, pct, done, hasManualCurrent, remaining, stateLabel, mode: mode === "crypto" ? "crypto" : "bet" };
   }
-  function addTargetLogRecord(state, totalPnl) {
-    const plan = getPlanNumbers(state, totalPnl);
+  function addTargetLogRecord(state, totalPnl, mode = "bet") {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const plan = getPlanNumbers(state, totalPnl, m);
     if (!plan.target) return { ok: false, message: "Önce hedef tutarı gir." };
     if (!plan.done) return { ok: false, message: "Güncel bakiye hedefe ulaşmadan yeşil onay verilemez." };
     const rows = loadTargetLog();
     rows.unshift({
       id: "rt_" + Date.now() + "_" + Math.random().toString(36).slice(2),
+      mode: m,
       ts: Date.now(),
       start: plan.start,
       target: plan.target,
@@ -255,7 +271,10 @@
       growth: plan.growth
     });
     saveTargetLog(rows);
-    state.quickPlan = { start: Number(plan.current.toFixed(2)), target: "", currentOverride: "" };
+    const quick = getModeQuickPlan(state, m);
+    quick.start = Number(plan.current.toFixed(2));
+    quick.target = "";
+    quick.currentOverride = "";
     return { ok: true, plan };
   }
   function addHistoryRecord(mode, slot, index) {
@@ -1147,41 +1166,50 @@
         </details>
       </section>`;
   }
-  function renderPlanControl(state, totalPnl) {
-    const plan = getPlanNumbers(state, totalPnl);
-    const rows = loadTargetLog();
+  function renderPlanControl(state, mode = "bet", modePnl = 0) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const plan = getPlanNumbers(state, modePnl, m);
+    const rows = loadTargetLog().filter(r => (r.mode || "bet") === m);
     const latest = rows.slice(0, 4).map(r => `
       <li>
         <span>${escapeHtml(formatDateTime(r.ts))}</span>
         <b>${money(r.start)} → ${money(r.target)}</b>
         <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</em>
       </li>`).join("") || `<li class="empty"><span>Kayıt yok</span><b>Hedefi bitirince burada kalır.</b><em>-</em></li>`;
+    const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
+    const currentTag = plan.hasManualCurrent ? "Manuel güncel" : "Otomatik güncel";
     return `
-      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan v757-target-plan v759-target-plan">
-        <div class="v756-target-title v757-target-title v758-target-title v759-target-title">
-          <b>Rolling Hedef Takibi</b>
-        </div>
-        <div class="v759-target-layout">
-          <div class="v759-target-edit">
-            <h4>Hedef Ayarları</h4>
-            <label><span>Başlangıç $</span><input type="number" step="1" data-rolling-quick="start" value="${plan.start}"></label>
-            <label><span>Hedef $</span><input type="number" step="1" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
-            <label><span>Manuel Güncel $</span><input type="number" step="1" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="Otomatik kullan"></label>
+      <div class="rolling-v495-quick-plan v755-target-plan v756-target-plan v757-target-plan v759-target-plan v796-target-card ${m}">
+        <div class="v796-target-head">
+          <div>
+            <b>Rolling Hedef Takibi</b>
+            <span>${modeLabel} · ${plan.stateLabel}</span>
           </div>
-          <div class="v759-target-status">
-            <h4>İlerleme Özeti</h4>
-            <div class="v759-target-flow"><span>Başlangıç <b>${money(plan.start)}</b></span><i>→</i><span>Güncel <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${money(plan.current)}</b></span><i>→</i><span>Hedef <b>${plan.target ? money(plan.target) : "Bekliyor"}</b></span></div>
-            <div class="v759-target-pnl"><strong class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</strong><em>${pctText(plan.growth)} büyüme</em><small>Otomatik güncel: ${money(plan.autoCurrent)}</small></div>
-            <div class="v759-target-bar"><u style="width:${plan.pct.toFixed(1)}%"></u></div>
-            <div class="v755-target-actions v756-target-actions v757-target-actions v759-target-actions">
-              <button type="button" class="v755-target-complete" data-target-complete ${plan.done ? "" : "disabled"}><i class="fa-solid fa-check"></i> HEDEFİ BİTİR</button>
-              <button type="button" class="v755-target-reset" data-target-reset>YENİ HEDEF</button>
-            </div>
-          </div>
+          <small class="${plan.hasManualCurrent ? "manual" : "auto"}">${currentTag}</small>
         </div>
-        <details class="v756-target-log-fold v757-target-log-fold v759-target-log-fold">
-          <summary>Hedef Geçmişi <span>${rows.length} kayıt</span></summary>
-          <ul class="v755-target-log v756-target-log">${latest}</ul>
+
+        <div class="v796-target-values">
+          <label><span>Başlangıç</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="start" value="${plan.start}"></label>
+          <label><span>Güncel</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="${money(plan.autoCurrent)}"></label>
+          <label><span>Hedef</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="target" value="${plan.target || ""}" placeholder="Hedef gir"></label>
+        </div>
+
+        <div class="v796-target-bar"><u style="width:${plan.pct.toFixed(1)}%"></u></div>
+
+        <div class="v796-target-metrics">
+          <span>K/Z <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</b></span>
+          <span>Büyüme <b class="${plan.growth >= 0 ? "pos" : "neg"}">${pctText(plan.growth)}</b></span>
+          <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
+        </div>
+
+        <div class="v796-target-actions">
+          <button type="button" data-target-reset data-rolling-target-mode="${m}">Yeni Hedef</button>
+          <button type="button" class="complete" data-target-complete data-rolling-target-mode="${m}" ${plan.done ? "" : "disabled"}>Hedefi Bitir</button>
+        </div>
+
+        <details class="v796-target-log">
+          <summary>LOG <span>${rows.length}</span></summary>
+          <ul>${latest}</ul>
         </details>
       </div>`;
   }
@@ -1213,13 +1241,12 @@
           </div>
         </div>
 
-        ${renderPlanControl(state, totalPnl)}
-
         <div class="rolling-v48-layout v49-rolling-layout">
           <aside class="rolling-v48-rail v49-rolling-rail">
             <div class="rolling-v48-rail-toggle v49-rolling-rail-title"><i class="fa-solid fa-bars"></i><span>ROLLING MENÜSÜ</span></div>
             <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span><span class="rolling-v493-rail-label">BAHİS</span></button>
             <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span><span class="rolling-v493-rail-label">KRİPTO</span></button>
+            ${renderPlanControl(state, mode, mode === "crypto" ? cryptoTotalPnl : betTotalPnl)}
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
         </div>
@@ -1405,32 +1432,34 @@
     }));
     mount.querySelectorAll("[data-rolling-quick]").forEach(input => {
       input.addEventListener("input", () => {
-        state.quickPlan = state.quickPlan || { start: 100, target: 1000, currentOverride: "" };
+        const mode = input.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
+        const quick = getModeQuickPlan(state, mode);
         const key = input.dataset.rollingQuick;
-        state.quickPlan[key] = input.value === "" ? "" : Number(input.value || 0);
+        quick[key] = input.value === "" ? "" : Number(input.value || 0);
         saveState(state);
       });
       input.addEventListener("change", () => refresh());
     });
     mount.querySelectorAll("[data-target-complete]").forEach(btn => btn.addEventListener("click", () => {
-      const betSum = slotSummary(state.modeSlots.bet);
-      const cryptoSum = slotSummary(state.modeSlots.crypto);
-      const betRollSum = rollingSummary("bet");
-      const cryptoRollSum = rollingSummary("crypto");
-      const totalPnl = Number(betSum.pnl || 0) + Number(cryptoSum.pnl || 0) + Number(betRollSum.pnlTotal || 0) + Number(cryptoRollSum.pnlTotal || 0);
-      const result = addTargetLogRecord(state, totalPnl);
+      const mode = btn.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
+      const modeSum = slotSummary(state.modeSlots[mode]);
+      const rollSum = rollingSummary(mode);
+      const modePnl = Number(modeSum.pnl || 0) + Number(rollSum.pnlTotal || 0);
+      const result = addTargetLogRecord(state, modePnl, mode);
       if (!result.ok) { alert(result.message); return; }
       saveState(state);
       refresh();
     }));
     mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
-      const betSum = slotSummary(state.modeSlots.bet);
-      const cryptoSum = slotSummary(state.modeSlots.crypto);
-      const betRollSum = rollingSummary("bet");
-      const cryptoRollSum = rollingSummary("crypto");
-      const totalPnl = Number(betSum.pnl || 0) + Number(cryptoSum.pnl || 0) + Number(betRollSum.pnlTotal || 0) + Number(cryptoRollSum.pnlTotal || 0);
-      const plan = getPlanNumbers(state, totalPnl);
-      state.quickPlan = { start: Number(plan.current.toFixed(2)), target: "", currentOverride: "" };
+      const mode = btn.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
+      const modeSum = slotSummary(state.modeSlots[mode]);
+      const rollSum = rollingSummary(mode);
+      const modePnl = Number(modeSum.pnl || 0) + Number(rollSum.pnlTotal || 0);
+      const plan = getPlanNumbers(state, modePnl, mode);
+      const quick = getModeQuickPlan(state, mode);
+      quick.start = Number(plan.current.toFixed(2));
+      quick.target = "";
+      quick.currentOverride = "";
       saveState(state);
       refresh();
     }));
