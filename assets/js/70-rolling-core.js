@@ -510,6 +510,7 @@
           type: "Bahis",
           name: cleanText(row.name),
           matchLines: [cleanText(row.name)],
+          matchOdds: [Number(row.odds || 0)],
           stake: Number(row.stake || 0),
           odds: Number(totals.odds || 0),
           possible: Number(totals.possibleWin || 0)
@@ -522,6 +523,7 @@
           type: "Kombine",
           name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
           matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
+          matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
           stake: Number(coupon.row.stake || 0),
           odds: Number(totals.odds || 0),
           possible: Number(totals.possibleWin || 0)
@@ -534,12 +536,13 @@
       type: "Kripto",
       name: cleanText(row.name),
       matchLines: [cleanText(row.name)],
+      matchOdds: [Number(row.odds || 0)],
       stake: Number(row.stake || 0),
       odds: Number(row.odds || 0),
       possible: Number(row.pnl || 0)
     }));
   }
-  function v785WrapPhotoText(text, limit = 34) {
+  function v785WrapPhotoText(text, limit = 54) {
     const raw = String(text || "").trim();
     if (!raw) return [""];
     const words = raw.split(/\s+/);
@@ -553,65 +556,68 @@
         if (word.length > limit) {
           for (let i = 0; i < word.length; i += limit) lines.push(word.slice(i, i + limit));
           current = "";
-        } else {
-          current = word;
-        }
+        } else current = word;
       }
     });
     if (current) lines.push(current);
     return lines.length ? lines : [raw];
   }
-  function v785BuildPhotoRows(rows) {
-    return (rows || []).map(row => {
-      const rawLines = Array.isArray(row.matchLines) && row.matchLines.length ? row.matchLines : [row.name || ""];
-      const prefixed = rawLines.map((line, idx) => row.type === "Kombine" ? `${idx + 1}. ${line}` : line);
-      const wrapped = prefixed.flatMap(line => v785WrapPhotoText(line, row.type === "Kombine" ? 44 : 52));
-      return { ...row, photoLines: wrapped.filter(Boolean).slice(0, 8) };
+  function v786MatchRowsForPhoto(row) {
+    const lines = [];
+    const rawLines = Array.isArray(row.matchLines) && row.matchLines.length ? row.matchLines : [row.name || ""];
+    const oddsList = Array.isArray(row.matchOdds) && row.matchOdds.length ? row.matchOdds : [];
+    rawLines.forEach((name, idx) => {
+      const odds = Number(oddsList[idx] || 0);
+      const wrapped = v785WrapPhotoText(`${idx + 1}. ${name}`, 56).slice(0, 3);
+      wrapped.forEach((line, part) => {
+        lines.push({ text: line, odds: part === 0 ? odds : 0 });
+      });
     });
+    return lines.length ? lines : [{ text: row.name || "Maç", odds: Number(row.odds || 0) }];
   }
   function v785BuildBetPhotoSvg(rows, titleText) {
-    const data = v785BuildPhotoRows(rows);
+    const data = (rows || []).filter(Boolean);
     if (!data.length) return null;
     const width = 1280;
-    const startY = 208;
-    const gapY = 18;
+    const startY = 106;
+    const gapY = 16;
     const lineH = 25;
     const rowCards = [];
     let cursorY = startY;
     data.forEach(row => {
-      const lines = row.photoLines && row.photoLines.length ? row.photoLines : [row.name || "Maç"];
-      const rowHeight = Math.max(64, 28 + lines.length * lineH + 14);
+      const isCombo = row.type === "Kombine";
+      const matchRows = v786MatchRowsForPhoto(row);
+      const matchAreaHeight = Math.max(34, matchRows.length * lineH + 10);
+      const rowHeight = Math.max(74, matchAreaHeight + 30);
       const top = cursorY;
-      const valueY = top + 36;
+      const typeY = top + 36;
       rowCards.push(`
-        <rect x="70" y="${top}" width="1140" height="${rowHeight}" rx="18" fill="#111827" stroke="#334155"/>
-        <text x="94" y="${valueY}" fill="#94a3b8" font-size="16" font-family="Arial" font-weight="900">#${row.index}</text>
-        <text x="152" y="${valueY}" fill="#c084fc" font-size="17" font-family="Arial" font-weight="900">${escapeHtml(row.type)}</text>
-        ${lines.map((line, idx) => `<text x="300" y="${top + 32 + idx * lineH}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">${escapeHtml(line)}</text>`).join('')}
-        <text x="835" y="${valueY}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="950">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>
-        <text x="1000" y="${valueY}" text-anchor="end" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">${money(row.stake)}</text>
-        <text x="1185" y="${valueY}" text-anchor="end" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${row.possible ? money(row.possible) : '-'}</text>`);
+        <rect x="54" y="${top}" width="1172" height="${rowHeight}" rx="18" fill="#111827" stroke="#334155"/>
+        <text x="78" y="${typeY}" fill="#94a3b8" font-size="16" font-family="Arial" font-weight="900">#${row.index}</text>
+        <text x="135" y="${typeY}" fill="#c084fc" font-size="17" font-family="Arial" font-weight="900">${escapeHtml(row.type || "Bahis")}</text>
+        ${matchRows.map((line, idx) => `<text x="280" y="${top + 31 + idx * lineH}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">${escapeHtml(line.text)}</text>${line.odds ? `<text x="1004" y="${top + 31 + idx * lineH}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="950">${Number(line.odds).toFixed(2)}</text>` : ""}`).join('')}
+        <text x="1010" y="${typeY}" text-anchor="end" fill="${isCombo ? '#64748b' : '#fbbf24'}" font-size="18" font-family="Arial" font-weight="950">${isCombo ? (row.odds ? 'Toplam ' + Number(row.odds).toFixed(2) : '-') : (row.odds ? Number(row.odds).toFixed(2) : '-')}</text>
+        <text x="1106" y="${typeY}" text-anchor="end" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">${money(row.stake)}</text>
+        <text x="1200" y="${typeY}" text-anchor="end" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${row.possible ? money(row.possible) : '-'}</text>`);
       cursorY += rowHeight + gapY;
     });
     const totalStake = data.reduce((sum, row) => sum + Number(row.stake || 0), 0);
     const totalPossible = data.reduce((sum, row) => sum + Number(row.possible || 0), 0);
-    const footerY = cursorY + 20;
-    const height = footerY + 96;
+    const footerY = cursorY + 10;
+    const height = footerY + 88;
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <rect width="${width}" height="${height}" fill="#020617"/>
-      <rect x="34" y="28" width="1212" height="${height - 56}" rx="30" fill="#0b1120" stroke="#334155" stroke-width="2"/>
-      <text x="70" y="96" fill="#fbbf24" font-size="34" font-family="Arial" font-weight="900">BULTEN · ${escapeHtml(titleText || 'BAHİS FOTOĞRAFI')}</text>
-      <text x="70" y="142" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${data.length} kayıt</text>
-      <text x="94" y="176" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text>
-      <text x="152" y="176" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text>
-      <text x="300" y="176" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text>
-      <text x="835" y="176" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text>
-      <text x="1000" y="176" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text>
-      <text x="1185" y="176" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>
+      <text x="54" y="52" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")}</text>
+      <text x="78" y="86" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text>
+      <text x="135" y="86" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text>
+      <text x="280" y="86" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text>
+      <text x="1004" y="86" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text>
+      <text x="1106" y="86" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text>
+      <text x="1200" y="86" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">KAZANÇ</text>
       ${rowCards.join('')}
-      <rect x="70" y="${footerY}" width="1140" height="56" rx="16" fill="#111827" stroke="#374151"/>
-      <text x="94" y="${footerY + 36}" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text>
-      <text x="1185" y="${footerY + 36}" text-anchor="end" fill="#22c55e" font-size="21" font-family="Arial" font-weight="950">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text>
+      <rect x="54" y="${footerY}" width="1172" height="56" rx="16" fill="#111827" stroke="#374151"/>
+      <text x="78" y="${footerY + 36}" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text>
+      <text x="1200" y="${footerY + 36}" text-anchor="end" fill="#22c55e" font-size="21" font-family="Arial" font-weight="950">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text>
     </svg>`;
   }
   function v781BuildTablePhotoSvg(mode, state) {
@@ -1204,6 +1210,7 @@
         type: "Kombine",
         name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
         matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
+        matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
         stake: Number(coupon.row.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
@@ -1215,6 +1222,7 @@
         type: "Bahis",
         name: cleanText(single.name),
         matchLines: [cleanText(single.name)],
+        matchOdds: [Number(single.odds || 0)],
         stake: Number(single.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
