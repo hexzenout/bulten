@@ -19,6 +19,7 @@
   let HISTORY_FILTER = "today";
   let CONFIRM_DIALOG = null;
   let CONFIRM_RETURN_PANEL_MODE = null;
+  let ACTIVE_COMBO_DETAIL_SLOT = null;
 
   function restoreActivePanelAfterConfirm(mode) {
     const panelMode = mode === "crypto" ? "crypto" : "bet";
@@ -744,7 +745,7 @@
     const cardId = `v763-bet-card-${row.index}`;
     const matches = coupon.matches;
     const done = matches.filter(m => m.status === "win" || m.status === "loss").length;
-    const keepOpen = done > 0 && done < matches.length;
+    const keepOpen = ACTIVE_COMBO_DETAIL_SLOT === row.index || (done > 0 && done < matches.length);
     const matchRows = matches.map((m, idx) => `<li class="${m.status || "pending"}">
       <span>${idx + 1}. ${escapeHtml(m.name)}</span>
       <b>${Number(m.odds || 0) ? Number(m.odds).toFixed(2) : "Oran eksik"}</b>
@@ -1467,12 +1468,14 @@
     mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = null;
       CONFIRM_RETURN_PANEL_MODE = null;
+      ACTIVE_COMBO_DETAIL_SLOT = null;
       refresh();
     }));
     mount.querySelectorAll(".v758-pending-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
       PENDING_BOARD_OPEN_MODE = null;
       CONFIRM_RETURN_PANEL_MODE = null;
+      ACTIVE_COMBO_DETAIL_SLOT = null;
       refresh();
     }));
     mount.querySelectorAll("[data-log-center-close]").forEach(btn => btn.addEventListener("click", () => {
@@ -1531,12 +1534,14 @@
       } else if (action.type === "comboMatch") {
         const fresh = loadState();
         const baseIndex = Number(action.slot || 0);
+        ACTIVE_COMBO_DETAIL_SLOT = baseIndex;
         const slot = fresh.modeSlots.bet[baseIndex];
         if (slot) {
           if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
           const matchIndex = Number(action.match || 0);
-          if (action.status === "pending") slot.comboResults[matchIndex] = "";
+          if (action.status === "pending") delete slot.comboResults[matchIndex];
           else slot.comboResults[matchIndex] = action.status === "loss" ? "loss" : "win";
+          slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
           const updatedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === baseIndex);
           const matches = updatedCoupon ? updatedCoupon.matches : getSlotMatches({ ...slot, index: baseIndex });
           const allDone = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
@@ -1550,7 +1555,10 @@
         deleteHistoryRecord(action.mode, action.id);
       }
       const keepPanel = action.keepActivePanel || CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
-      if (keepPanel) restoreActivePanelAfterConfirm(keepPanel);
+      if (keepPanel) {
+        restoreActivePanelAfterConfirm(keepPanel);
+        return;
+      }
       refresh();
     }));
     mount.querySelectorAll(".v512-history-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
@@ -1573,6 +1581,7 @@
       const matches = groupedCoupon ? groupedCoupon.matches : getSlotMatches(list[i]);
       const currentStatus = matches[mi]?.status || "";
       const nextStatus = currentStatus === status ? "pending" : status;
+      ACTIVE_COMBO_DETAIL_SLOT = i;
       const matchName = matches[mi]?.name || `Maç ${mi + 1}`;
       const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || "bet") : (PENDING_BOARD_OPEN_MODE || null);
       if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
