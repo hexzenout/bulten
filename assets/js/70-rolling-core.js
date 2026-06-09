@@ -14,6 +14,7 @@
   const SNAPSHOT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
   const TARGET_CARD_OPEN_KEY = "v798_rolling_target_card_open";
   const TARGET_LOG_OPEN_KEY = "v802_rolling_target_log_open";
+  const TARGET_ITEMS_KEY = "v810_rolling_target_items_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -565,104 +566,129 @@
     const t = rowBetTotals(row || {});
     return { stake: t.stake, odds: t.odds, possibleReturn: t.possibleWin, netProfit: t.possibleWin ? t.possibleWin - t.stake : 0 };
   }
-  function v809ShortLabel(value, limit = 30) {
+  function v810ShortLabel(value, limit = 30) {
     const raw = cleanText(value);
     if (!raw) return "-";
     return raw.length > limit ? raw.slice(0, limit - 1) + "…" : raw;
   }
-  function v809CryptoManualProfit(row) {
-    const tps = Array.isArray(row?.takeProfits) ? row.takeProfits : [];
-    let sum = 0;
-    let count = 0;
-    tps.forEach(tp => {
-      if (!tp || tp.profitAmount === "" || tp.profitAmount === undefined || tp.profitAmount === null) return;
-      if (!Number.isFinite(Number(tp.profitAmount))) return;
-      let value = Number(tp.profitAmount || 0);
-      if (tp.result === "stop") value = -Math.abs(value || Number(row?.stake || 0));
-      sum += value;
-      count++;
-    });
-    return { sum, count };
+  function loadTargetItems() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(TARGET_ITEMS_KEY) || "{}");
+      return {
+        bet: Array.isArray(raw.bet) ? raw.bet : [],
+        crypto: Array.isArray(raw.crypto) ? raw.crypto : []
+      };
+    } catch {
+      return { bet: [], crypto: [] };
+    }
   }
-  function v809TargetActiveData(state, mode) {
+  function saveTargetItems(data) {
+    const clean = {
+      bet: Array.isArray(data?.bet) ? data.bet.slice(-80) : [],
+      crypto: Array.isArray(data?.crypto) ? data.crypto.slice(-80) : []
+    };
+    localStorage.setItem(TARGET_ITEMS_KEY, JSON.stringify(clean));
+  }
+  function v810TargetItemId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+  function v810NumberOrBlank(value) {
+    if (value === "" || value === undefined || value === null) return "";
+    const n = Number(value);
+    return Number.isFinite(n) ? n : "";
+  }
+  function v810TargetItemProfit(item, mode) {
+    const manual = v810NumberOrBlank(item?.profit);
+    if (manual !== "") return { value: Number(manual), source: "manual" };
+    if (mode === "bet") {
+      const stake = Number(item?.stake || 0);
+      const odds = Number(item?.odds || 0);
+      if (stake > 0 && odds > 0) return { value: stake * odds - stake, source: "auto" };
+    }
+    return { value: 0, source: "none" };
+  }
+  function v810TargetSelfData(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
+    const store = loadTargetItems();
+    const rows = (store[m] || []).filter(Boolean);
     if (m === "crypto") {
-      const rows = pendingRowsForMode("crypto", state);
-      const margin = rows.reduce((sum, row) => sum + Number(row.stake || 0), 0);
-      let tpTotal = 0, tpDone = 0, stopDone = 0, manualTotal = 0, manualCount = 0;
-      rows.forEach(row => {
-        const tps = Array.isArray(row.takeProfits) ? row.takeProfits : [];
-        tpTotal += tps.length;
-        tpDone += tps.filter(tp => tp?.result === "tp").length;
-        stopDone += tps.filter(tp => tp?.result === "stop").length;
-        const manual = v809CryptoManualProfit(row);
-        manualTotal += manual.sum;
-        manualCount += manual.count;
-      });
-      const details = rows.slice(0, 5).map(row => {
-        const manual = v809CryptoManualProfit(row);
-        const lev = Number(row.leverage || 0) > 1 ? ` · ${Number(row.leverage || 0)}x` : "";
-        return `<li><span>${escapeHtml(v809ShortLabel(row.name || `İşlem ${row.index + 1}`, 28))}</span><b>${money(row.stake || 0)}${lev}</b><em>${manual.count ? signedMoney(manual.sum) : "Kâr girilmedi"}</em></li>`;
+      const margin = rows.reduce((sum, item) => sum + Number(item.stake || 0), 0);
+      const profitRows = rows.map(item => v810TargetItemProfit(item, m)).filter(p => p.source === "manual");
+      const manualProfit = profitRows.reduce((sum, p) => sum + Number(p.value || 0), 0);
+      const details = rows.slice(-5).reverse().map(item => {
+        const profit = v810TargetItemProfit(item, m);
+        return `<li data-target-self-row="${escapeHtml(item.id || "")}"><span>${escapeHtml(v810ShortLabel(item.name || "İşlem", 28))}</span><b>${Number(item.stake || 0) ? money(item.stake) : "Marjin -"}</b><em>${profit.source === "manual" ? signedMoney(profit.value) : "Kâr manuel"}</em><button type="button" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></li>`;
       }).join("");
       return {
         mode: m,
-        count: rows.length,
-        headline: rows.length ? `${rows.length} işlem` : "Aktif işlem yok",
-        meta: `${rows.length ? `Marjin ${money(margin)}` : "Marjin -"}`,
-        sub: `${tpTotal ? `TP ${tpDone}/${tpTotal}` : "TP -"}${stopDone ? ` · Stop ${stopDone}` : ""} · Manuel Kâr ${manualCount ? signedMoney(manualTotal) : "-"}`,
-        details: details || `<li class="empty"><span>Aktif kripto işlemi yok</span><b>Aktif panelden işlem ekle.</b><em>-</em></li>`
+        headline: rows.length ? `${rows.length} işlem` : "Kayıt yok",
+        meta: rows.length ? `Marjin ${money(margin)}` : "Kasa Hedefi içi bağımsız",
+        sub: profitRows.length ? `Manuel Kâr ${signedMoney(manualProfit)}` : "Kâr manuel girilir",
+        details: details || `<li class="empty"><span>Kayıt yok</span><b>Buraya yazılanlar aktif panel/geçmişten bağımsızdır.</b><em>-</em></li>`
       };
     }
-    const grouped = getBetCouponGroups(state);
-    const items = [];
-    grouped.singles.forEach(row => {
-      const t = rowBetTotals(row);
-      items.push({ index: row.index, type: "Maç", name: cleanText(row.name), count: 1, stake: t.stake, odds: t.odds, possible: t.possibleWin });
+    const matchCount = rows.filter(item => item.kind !== "combo").length;
+    const comboCount = rows.filter(item => item.kind === "combo").length;
+    const stake = rows.reduce((sum, item) => sum + Number(item.stake || 0), 0);
+    let autoPossible = 0;
+    let autoCount = 0;
+    let profitTotal = 0;
+    let profitCount = 0;
+    rows.forEach(item => {
+      const s = Number(item.stake || 0);
+      const o = Number(item.odds || 0);
+      if (s > 0 && o > 0) { autoPossible += s * o; autoCount++; }
+      const p = v810TargetItemProfit(item, m);
+      if (p.source !== "none") { profitTotal += Number(p.value || 0); profitCount++; }
     });
-    grouped.coupons.forEach(coupon => {
-      const t = rowBetTotals(coupon.row);
-      items.push({ index: coupon.slotIndex, type: "Kombine", name: `Kombine ${coupon.id}`, count: coupon.matches.length, stake: t.stake, odds: t.odds, possible: t.possibleWin });
-    });
-    items.sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
-    const matchCount = grouped.singles.length + grouped.coupons.reduce((sum, c) => sum + Number(c.matches?.length || 0), 0);
-    const stake = items.reduce((sum, item) => sum + Number(item.stake || 0), 0);
-    const possible = items.reduce((sum, item) => sum + Number(item.possible || 0), 0);
-    const completeCount = items.filter(item => Number(item.possible || 0) > 0).length;
-    const details = items.slice(0, 5).map(item => {
-      const label = item.type === "Kombine" ? `${item.name} · ${item.count} maç` : v809ShortLabel(item.name || "Maç", 30);
-      return `<li><span>${escapeHtml(label)}</span><b>${item.odds ? item.odds.toFixed(2) : "Oran -"}</b><em>${item.stake ? money(item.stake) : "Tutar -"}</em></li>`;
+    const details = rows.slice(-5).reverse().map(item => {
+      const label = item.kind === "combo" ? "Kombine" : "Maç";
+      const p = v810TargetItemProfit(item, m);
+      const oddsText = Number(item.odds || 0) ? Number(item.odds || 0).toFixed(2) : "Oran -";
+      const profitText = p.source === "none" ? "Net -" : `${p.source === "manual" ? "Manuel " : "Oto "}${signedMoney(p.value)}`;
+      return `<li data-target-self-row="${escapeHtml(item.id || "")}"><span>${escapeHtml(label + " · " + v810ShortLabel(item.name || label, 24))}</span><b>${oddsText}</b><em>${Number(item.stake || 0) ? money(item.stake) : "Tutar -"} · ${profitText}</em><button type="button" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></li>`;
     }).join("");
     return {
       mode: m,
-      count: items.length,
-      headline: items.length ? `${matchCount} maç · ${grouped.coupons.length} kombine` : "Aktif maç / kombine yok",
-      meta: `Açık ${items.length ? money(stake) : "-"}`,
-      sub: `Olası Dönüş ${completeCount ? money(possible) : "-"}${completeCount ? ` · Net ${signedMoney(possible - stake)}` : ""}`,
-      details: details || `<li class="empty"><span>Aktif bahis yok</span><b>Ana tablodan maç veya kombine ekle.</b><em>-</em></li>`
+      headline: rows.length ? `${matchCount} maç · ${comboCount} kombine` : "Kayıt yok",
+      meta: rows.length ? `Açık ${money(stake)}` : "Kasa Hedefi içi bağımsız",
+      sub: profitCount ? `Net ${signedMoney(profitTotal)}${autoCount ? ` · Dönüş ${money(autoPossible)}` : ""}` : "Net manuel veya oran+tutar",
+      details: details || `<li class="empty"><span>Kayıt yok</span><b>Buraya yazılanlar kupon/aktif/geçmişten bağımsızdır.</b><em>-</em></li>`
     };
   }
   function renderTargetActiveBox(state, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const data = v809TargetActiveData(state, m);
+    const data = v810TargetSelfData(m);
     const label = m === "crypto" ? "İşlemler" : "Maç / Kombine";
-    return `<div class="v809-target-active ${m}">
-      <div class="v809-target-active-top">
+    const kindField = m === "bet" ? `<select data-target-self-field="${m}:kind"><option value="match">Maç</option><option value="combo">Kombine</option></select>` : "";
+    const oddsField = m === "bet" ? `<input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:odds" placeholder="Oran">` : "";
+    const namePlaceholder = m === "crypto" ? "İşlem adı" : "Maç / Kombine adı";
+    const stakePlaceholder = m === "crypto" ? "Marjin" : "Tutar";
+    const profitPlaceholder = m === "crypto" ? "Manuel Kâr" : "Net Kâr ops.";
+    return `<div class="v810-target-self ${m}">
+      <div class="v810-target-self-top">
         <span>${label}</span>
         <b>${escapeHtml(data.headline)}</b>
       </div>
-      <div class="v809-target-active-meta">
+      <div class="v810-target-self-meta">
         <span>${escapeHtml(data.meta)}</span>
         <em>${escapeHtml(data.sub)}</em>
       </div>
-      <div class="v809-target-active-actions">
-        <button type="button" data-target-active-open="${m}">Aktifleri Aç</button>
-        <details>
-          <summary>Detay</summary>
-          <ul>${data.details}</ul>
-        </details>
+      <div class="v810-target-self-form ${m}">
+        ${kindField}
+        <input type="text" data-target-self-field="${m}:name" placeholder="${namePlaceholder}">
+        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="${stakePlaceholder}">
+        ${oddsField}
+        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:profit" placeholder="${profitPlaceholder}">
+        <button type="button" data-target-self-add="${m}">+ Ekle</button>
       </div>
+      <details class="v810-target-self-details">
+        <summary>Detay</summary>
+        <ul>${data.details}</ul>
+      </details>
     </div>`;
   }
+
   function renderCardShotButton(id) {
     return `<button type="button" class="v763-shot-btn" data-card-screenshot="${escapeHtml(id)}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i> Screenshot</button>`;
   }
@@ -1868,6 +1894,33 @@
       saveState(state);
       refresh();
     }));
+    mount.querySelectorAll("[data-target-self-add]").forEach(btn => btn.addEventListener("click", () => {
+      const mode = btn.dataset.targetSelfAdd === "crypto" ? "crypto" : "bet";
+      const pick = key => mount.querySelector(`[data-target-self-field="${mode}:${key}"]`);
+      const name = cleanText(pick("name")?.value || "");
+      const stake = v810NumberOrBlank(pick("stake")?.value || "");
+      const odds = v810NumberOrBlank(pick("odds")?.value || "");
+      const profit = v810NumberOrBlank(pick("profit")?.value || "");
+      const kind = mode === "bet" && pick("kind")?.value === "combo" ? "combo" : "match";
+      if (!name && stake === "" && odds === "" && profit === "") {
+        alert(mode === "crypto" ? "Önce işlem adı, marjin veya manuel kâr gir." : "Önce maç/kombine adı, tutar, oran veya net kâr gir.");
+        return;
+      }
+      const store = loadTargetItems();
+      store[mode] = Array.isArray(store[mode]) ? store[mode] : [];
+      store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind, name, stake, odds, profit });
+      saveTargetItems(store);
+      refresh();
+    }));
+    mount.querySelectorAll("[data-target-self-delete]").forEach(btn => btn.addEventListener("click", () => {
+      const [modeRaw, id] = String(btn.dataset.targetSelfDelete || "bet:").split(":");
+      const mode = modeRaw === "crypto" ? "crypto" : "bet";
+      if (!id) return;
+      const store = loadTargetItems();
+      store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
+      saveTargetItems(store);
+      refresh();
+    }));
     mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
       const modeSum = slotSummary(state.modeSlots[mode]);
@@ -1954,14 +2007,6 @@
     }));
     mount.querySelectorAll("[data-pending-open]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = btn.dataset.pendingOpen === "crypto" ? "crypto" : "bet";
-      CONFIRM_RETURN_PANEL_MODE = PENDING_BOARD_OPEN_MODE;
-      LOG_CENTER_OPEN_MODE = null;
-      REPORT_CENTER_OPEN_MODE = null;
-      HISTORY_OPEN_MODE = null;
-      refresh();
-    }));
-    mount.querySelectorAll("[data-target-active-open]").forEach(btn => btn.addEventListener("click", () => {
-      PENDING_BOARD_OPEN_MODE = btn.dataset.targetActiveOpen === "crypto" ? "crypto" : "bet";
       CONFIRM_RETURN_PANEL_MODE = PENDING_BOARD_OPEN_MODE;
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;
