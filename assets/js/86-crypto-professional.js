@@ -597,6 +597,26 @@
     }
   }
 
+  window.omega_RollingClearSlot = function(day, slot) {
+    const kapsul = document.querySelector(`[data-v765-kapsul="${day}:${slot}"]`);
+    if (!kapsul) return false;
+    const plan = ensureRollingPlan();
+    if (plan.ops?.[day]?.[slot]) return false;
+    const note = document.getElementById(`e-n-${day}-${slot}`);
+    const stake = document.getElementById(`e-a-${day}-${slot}`);
+    const odds = document.getElementById(`e-o-${day}-${slot}`);
+    const fee = document.getElementById(`e-f-${day}-${slot}`);
+    if (note) note.value = "";
+    if (stake) stake.value = "";
+    if (odds) odds.value = "";
+    if (fee) fee.value = "";
+    kapsul.querySelectorAll(".v765-extra-match-row, .v768-extra-match-row").forEach(row => row.remove());
+    v774ClearPendingSlot(day, slot);
+    v768UpdateBetCalc(day, slot);
+    omega_SaveRollingDB();
+    return false;
+  };
+
   function v774SavePendingSlot(day, slot) {
     const plan = ensureRollingPlan();
     if (plan.ops?.[day]?.[slot]) {
@@ -1014,6 +1034,7 @@
                         <button type="button" data-v768-combo="${day}:${slot}:plus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'plus')" title="Maç + oran ekle">+</button>
                         <button type="button" data-v768-combo="${day}:${slot}:minus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'minus')" title="Son ek maçı sil">−</button>
                       </div>
+                      <button type="button" class="v778-slot-clear" onclick="return omega_RollingClearSlot(${day}, ${slot})" title="Kutuyu boşalt">×</button>
                       <button type="button" class="v776-slot-camera" onclick="return omega_RollingSlotPhoto(${day}, ${slot})" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>
                     </div>
                     <input type="text" id="e-n-${day}-${slot}" placeholder="Maç" value="${pNoteV774}">
@@ -1110,6 +1131,21 @@
       history.replaceState(null, "", `#${baseHash}/rolling/${days}`);
     }
     return result;
+  };
+
+  const oldCloseRollingV778 = window.omega_CloseRollingExcel;
+  window.omega_CloseRollingExcel = function(force = false) {
+    const hash = String(location.hash || "");
+    const closeTarget = hash.startsWith("#rolling/rolling/") ? "#rolling" : hash.startsWith("#finance/rolling/") ? "#finance" : "";
+    const overlay = document.getElementById("rolling-excel-overlay");
+    if (overlay) {
+      overlay.classList.remove("show-modal");
+      setTimeout(() => { overlay.style.display = "none"; }, 220);
+    }
+    document.body.classList.remove("rolling-active");
+    document.documentElement.classList.remove("rolling-hash-boot");
+    if (closeTarget) history.replaceState(null, "", closeTarget);
+    else if (typeof oldCloseRollingV778 === "function") oldCloseRollingV778(force);
   };
 
   
