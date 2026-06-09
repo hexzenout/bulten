@@ -386,13 +386,58 @@
     if (!plan.targetBal) plan.targetBal = ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS];
     if (!plan.ops) plan.ops = {};
     if (!plan.pending) plan.pending = {};
+    if (!plan.slotCounts) plan.slotCounts = {};
     return plan;
+  }
+
+  function v780DefaultSlotCount(day) {
+    return Number(day) === 1 ? 4 : 1;
+  }
+
+  function v780HasPendingData(plan, day) {
+    const rows = plan?.pending?.[day] || {};
+    return Object.values(rows).some(row => {
+      if (!row) return false;
+      if (String(row.note || '').trim()) return true;
+      if (String(row.amt || '').trim()) return true;
+      if (String(row.odds || '').trim()) return true;
+      return Array.isArray(row.combo) && row.combo.some(x => String(x?.note || '').trim() || Number(x?.odds || 0));
+    });
+  }
+
+  function v780HasResolvedData(plan, day) {
+    return (plan?.ops?.[day] || []).some(Boolean);
+  }
+
+  function v780DesiredSlotCount(plan, day) {
+    const custom = Number(plan?.slotCounts?.[day] || 0);
+    if (custom > 0) return Math.max(1, Math.min(20, custom));
+    return v780DefaultSlotCount(day);
+  }
+
+  function v780EnsureDaySlots(plan, day) {
+    if (!plan.ops[day]) plan.ops[day] = [];
+    const desired = v780DesiredSlotCount(plan, day);
+    const hasData = v780HasResolvedData(plan, day) || v780HasPendingData(plan, day);
+    const hasCustom = Number(plan?.slotCounts?.[day] || 0) > 0;
+    if (!hasCustom && !hasData && plan.ops[day].length !== desired) {
+      plan.ops[day] = new Array(desired).fill(null);
+      return;
+    }
+    if (plan.ops[day].length < desired) {
+      while (plan.ops[day].length < desired) plan.ops[day].push(null);
+    }
+    if (!hasCustom && hasData && plan.ops[day].length < desired) {
+      while (plan.ops[day].length < desired) plan.ops[day].push(null);
+    }
+    if (plan.ops[day].length < 1) plan.ops[day] = new Array(desired).fill(null);
   }
 
   function setDayCount(day, count) {
     const plan = ensureRollingPlan();
     if (!plan.ops[day]) plan.ops[day] = [];
     const nextLength = Math.max(count, plan.ops[day].filter(Boolean).length);
+    plan.slotCounts[day] = Math.max(1, Math.min(20, nextLength));
     plan.ops[day].length = nextLength;
     if (plan.pending?.[day]) {
       Object.keys(plan.pending[day]).forEach(slot => {
@@ -406,7 +451,9 @@
   window.omega_RollingAddSlot = function(day) {
     const plan = ensureRollingPlan();
     if (!plan.ops[day]) plan.ops[day] = [];
+    v780EnsureDaySlots(plan, day);
     plan.ops[day].push(null);
+    plan.slotCounts[day] = Math.max(1, Math.min(20, plan.ops[day].length));
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
@@ -418,6 +465,7 @@
       const removedSlot = plan.ops[day].length - 1;
       plan.ops[day].pop();
       if (plan.pending?.[day]) delete plan.pending[day][removedSlot];
+      plan.slotCounts[day] = Math.max(1, plan.ops[day].length);
     }
     omega_SaveRollingDB();
     omega_RenderExcelTable();
@@ -430,6 +478,7 @@
     for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
       if (!plan.ops[day]) plan.ops[day] = [];
       const nextLength = Math.max(count, plan.ops[day].filter(Boolean).length);
+      plan.slotCounts[day] = Math.max(1, Math.min(20, nextLength));
       plan.ops[day].length = nextLength;
       if (plan.pending?.[day]) {
         Object.keys(plan.pending[day]).forEach(slot => {
@@ -443,8 +492,9 @@
 
   window.omega_RollingClearDay = function(day) {
     const plan = ensureRollingPlan();
-    plan.ops[day] = [];
+    plan.ops[day] = new Array(v780DefaultSlotCount(day)).fill(null);
     if (plan.pending) delete plan.pending[day];
+    if (plan.slotCounts) delete plan.slotCounts[day];
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
@@ -978,8 +1028,7 @@
     let htmlBuffer = "";
 
     for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
-      if (!currentPlan.ops[day]) currentPlan.ops[day] = new Array(10).fill(null);
-      if (currentPlan.ops[day].length < 1) currentPlan.ops[day] = new Array(1).fill(null);
+      v780EnsureDaySlots(currentPlan, day);
       const dayOps = currentPlan.ops[day];
       const dayStart = runningBalance;
       let dayProfit = 0;
