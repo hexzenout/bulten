@@ -1309,8 +1309,8 @@
     renderFloatingPanel();
   };
 
-  if (!window.__omegaV771ExcelRollingBridgeBound) {
-    window.__omegaV771ExcelRollingBridgeBound = true;
+  if (!window.__omegaV772ExcelRollingBridgeBound) {
+    window.__omegaV772ExcelRollingBridgeBound = true;
     const openFromExcelButton = function(event) {
       const target = event.target;
       const overlay = target && target.closest ? target.closest("#rolling-excel-overlay") : null;
@@ -1326,10 +1326,16 @@
       const rawMode = pendingBtn ? pendingBtn.dataset.pendingOpen : historyBtn ? historyBtn.dataset.logCenter : reportBtn.dataset.reportOpen;
       const mode = rawMode === "crypto" ? "crypto" : "bet";
       const kind = pendingBtn ? "active" : historyBtn ? "history" : "report";
-      window.omega_RollingOpenFloatingPanel(kind, mode);
+      const stamp = `${mode}:${kind}`;
+      window.__omegaV772ExcelOpenStamp = stamp;
+      // Panel pointerdown aşamasında açılırsa aynı tıklama overlay'e denk gelip anında kapatabiliyor.
+      // Bu yüzden sadece click bittikten sonra, bir sonraki macrotask içinde açıyoruz.
+      setTimeout(() => {
+        if (window.__omegaV772ExcelOpenStamp !== stamp) return;
+        window.omega_RollingOpenFloatingPanel(kind, mode);
+      }, 0);
       return false;
     };
-    document.addEventListener("pointerdown", openFromExcelButton, true);
     document.addEventListener("click", openFromExcelButton, true);
   }
 
