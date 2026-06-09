@@ -4179,3 +4179,68 @@ html.rolling-hash-boot::before {
   display: none !important;
   content: none !important;
 }
+
+
+/* V781: Ana ROLLING aktif tablo kamera butonu ve sadeleştirme */
+.rolling-v47-table th:first-child {
+  width: 48px !important;
+}
+.v781-table-photo-btn {
+  width: 28px !important;
+  height: 28px !important;
+  border: 1px solid rgba(251,191,36,.72) !important;
+  border-radius: 9px !important;
+  background: rgba(251,191,36,.12) !important;
+  color: #fbbf24 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  font-size: .88rem !important;
+  box-shadow: none !important;
+}
+.v781-table-photo-btn:hover {
+  background: rgba(251,191,36,.20) !important;
+  transform: translateY(-1px) !important;
+}
+.v781-table-photo-btn::before,
+.v781-table-photo-btn::after {
+  display: none !important;
+  content: none !important;
+}
+.v781-photo-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1001008 !important;
+  background: rgba(2,6,23,.78) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  backdrop-filter: blur(4px) !important;
+}
+.v781-photo-modal {
+  width: min(1080px, 96vw) !important;
+  max-height: 88vh !important;
+  overflow: auto !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background: linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.98)) !important;
+  box-shadow: 0 28px 80px rgba(0,0,0,.45) !important;
+}
+.v781-photo-modal img {
+  display: block !important;
+  width: calc(100% - 32px) !important;
+  max-height: 68vh !important;
+  object-fit: contain !important;
+  margin: 0 16px 16px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: #020617 !important;
+}
+.v763-pending-board .v757-pending-head span,
+.v758-pending-modal > .v512-history-head span {
+  display: none !important;
+}

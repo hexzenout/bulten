@@ -164,7 +164,7 @@
   function renderReportGallery(mode) {
     const rows = loadReportCards().filter(x => x.mode === mode).slice(0, 6);
     if (!rows.length) {
-      return `<div class="v756-report-gallery empty"><span>Henüz rapor resmi yok.</span><b>İstediğin anda “Rapor Resmi Oluştur” butonuna bas.</b></div>`;
+      return `<div class="v756-report-gallery empty"><span>Henüz rapor resmi yok.</span><b>Kayıtlı rapor görseli oluştuğunda burada görünür.</b></div>`;
     }
     return `<div class="v756-report-gallery">${rows.map(r => `
       <article class="v756-report-card" data-report-id="${escapeHtml(r.id)}">
@@ -424,6 +424,110 @@
   function renderCardShotButton(id) {
     return `<button type="button" class="v763-shot-btn" data-card-screenshot="${escapeHtml(id)}" title="Bahis ekran resmi indir"><i class="fa-solid fa-camera"></i> Screenshot</button>`;
   }
+
+  function v781RowsForPhoto(mode, state) {
+    return activeRowsForMode(mode, state).map(row => {
+      const matches = mode === "bet" ? getSlotMatches(row) : [];
+      const totals = mode === "bet" ? rowBetTotals(row) : { stake: Number(row.stake || 0), odds: Number(row.odds || 0), possibleWin: Number(row.pnl || 0) };
+      return {
+        index: row.index + 1,
+        type: mode === "crypto" ? "Kripto" : (matches.length > 1 ? "Kombine" : "Bahis"),
+        name: mode === "crypto" ? cleanText(row.name) : (matches.map(m => cleanText(m.name)).filter(Boolean).join(" + ") || cleanText(row.name)),
+        stake: Number(row.stake || 0),
+        odds: mode === "crypto" ? Number(row.odds || 0) : Number(totals.odds || 0),
+        possible: mode === "crypto" ? Number(row.pnl || 0) : Number(totals.possibleWin || 0)
+      };
+    });
+  }
+  function v781BuildTablePhotoSvg(mode, state) {
+    const rows = v781RowsForPhoto(mode, state);
+    if (!rows.length) return null;
+    const title = mode === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR";
+    const height = Math.max(420, 210 + rows.length * 52 + 110);
+    const rowSvg = rows.map((r, idx) => {
+      const y = 178 + idx * 52;
+      const clippedName = String(r.name || (mode === "crypto" ? "İşlem" : "Maç")).slice(0, 74);
+      return `
+        <rect x="46" y="${y - 30}" width="988" height="42" rx="12" fill="#0f172a" stroke="#334155"/>
+        <text x="70" y="${y - 4}" fill="#94a3b8" font-size="17" font-family="Arial" font-weight="800">#${r.index}</text>
+        <text x="122" y="${y - 4}" fill="#c084fc" font-size="17" font-family="Arial" font-weight="900">${escapeHtml(r.type)}</text>
+        <text x="235" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="800">${escapeHtml(clippedName)}</text>
+        <text x="735" y="${y - 4}" text-anchor="end" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="800">${money(r.stake)}</text>
+        <text x="860" y="${y - 4}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${r.odds ? Number(r.odds).toFixed(2) : '-'}</text>
+        <text x="1010" y="${y - 4}" text-anchor="end" fill="#22c55e" font-size="17" font-family="Arial" font-weight="900">${r.possible ? money(r.possible) : '-'}</text>`;
+    }).join("");
+    const totalStake = rows.reduce((sum, r) => sum + Number(r.stake || 0), 0);
+    const totalPossible = rows.reduce((sum, r) => sum + Number(r.possible || 0), 0);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="${height}" viewBox="0 0 1080 ${height}">
+      <rect width="1080" height="${height}" fill="#020617"/>
+      <rect x="24" y="24" width="1032" height="${height - 48}" rx="28" fill="#0b1120" stroke="#334155" stroke-width="2"/>
+      <text x="46" y="82" fill="#fbbf24" font-size="32" font-family="Arial" font-weight="900">BULTEN · ${escapeHtml(title)}</text>
+      <text x="46" y="122" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${rows.length} kayıt</text>
+      <text x="70" y="150" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text>
+      <text x="122" y="150" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text>
+      <text x="235" y="150" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ / İŞLEM</text>
+      <text x="735" y="150" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text>
+      <text x="860" y="150" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text>
+      <text x="1010" y="150" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>
+      ${rowSvg}
+      <rect x="46" y="${height - 92}" width="988" height="50" rx="14" fill="#111827" stroke="#374151"/>
+      <text x="70" y="${height - 60}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text>
+      <text x="1010" y="${height - 60}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text>
+    </svg>`;
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+  function v781DownloadPngFromSvg(svgUri, filename) {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth || 1080;
+      canvas.height = img.naturalHeight || 720;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob(blob => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+      }, "image/png");
+    };
+    img.onerror = () => alert("Resim hazırlanamadı.");
+    img.src = svgUri;
+  }
+  function openTablePhoto(mode, state) {
+    const dataUrl = v781BuildTablePhotoSvg(mode, state);
+    if (!dataUrl) {
+      alert(mode === "crypto" ? "Fotoğraf için önce işlem yaz." : "Fotoğraf için önce maç yaz.");
+      return;
+    }
+    let host = document.getElementById("omega-rolling-feature-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-rolling-feature-host";
+      document.body.appendChild(host);
+    }
+    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${mode === "crypto" ? "Kripto Fotoğrafı" : "Bahis Fotoğrafı"}</b><span>Ana ROLLING aktif tablo özeti</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-show>Resmi Göster</button><button type="button" data-v781-photo-download>Resmi İndir PNG</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
+    host.style.display = "block";
+    host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
+      host.innerHTML = "";
+      host.style.display = "none";
+    }));
+    host.querySelector("[data-v781-photo-show]")?.addEventListener("click", () => {
+      const w = window.open("", "_blank");
+      if (w) w.document.write(`<img src="${dataUrl}" style="max-width:100%;height:auto;background:#020617;display:block;margin:0 auto;">`);
+    });
+    host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
+      v781DownloadPngFromSvg(dataUrl, `bulten-${mode}-aktif-rolling-${new Date().toISOString().slice(0,10)}.png`);
+    });
+  }
   function renderBetInfoBar(row) {
     const t = rowBetTotals(row);
     const matches = getSlotMatches(row);
@@ -644,8 +748,7 @@
             <button type="button" data-report-center-close>×</button>
           </div>
           <div class="v756-report-actions v758-report-actions v763-report-actions">
-            <span>Rapor görselleri sitede görünür, indirilebilir, manuel silinebilir ve 7 gün sonra otomatik temizlenir.</span>
-            <button type="button" data-report-create="${mode}"><i class="fa-solid fa-image"></i> Rapor Resmi Oluştur</button>
+            <span>Kayıtlı rapor görselleri burada görünür, indirilebilir ve manuel silinebilir.</span>
           </div>
           ${renderReportGallery(mode)}
         </section>
@@ -806,7 +909,7 @@
     const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
     const pnlHead = isCrypto ? "PNL" : "K/Z";
-    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
+    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th>${isCrypto ? "" : `<button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Bahis tablo fotoğrafı"><i class="fa-solid fa-camera"></i></button>`}</th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
       const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
       return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
@@ -841,7 +944,7 @@
           <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "KOMBİNE KUPON MAÇLARI"}</span></summary>
           <div class="rolling-v47-section-title">
             <div>${renderRowControls(mode, state)}</div>
-            <button type="button" data-clear="${mode}">${isCrypto ? "KRİPTOYU TEMİZLE" : "BAHİSİ TEMİZLE"}</button>
+            <button type="button" data-clear="${mode}">${isCrypto ? "KRİPTOYU TEMİZLE" : "TÜMÜNÜ TEMİZLE"}</button>
           </div>
           ${renderTable(mode, slots, state)}
         </details>
@@ -1068,6 +1171,9 @@
       list[i] = createSlot(mode, i);
       saveState(state);
       refresh();
+    }));
+    mount.querySelectorAll("[data-main-table-photo]").forEach(btn => btn.addEventListener("click", () => {
+      openTablePhoto(btn.dataset.mainTablePhoto === "crypto" ? "crypto" : "bet", state);
     }));
     mount.querySelectorAll("[data-rolling-quick]").forEach(input => {
       input.addEventListener("input", () => {
