@@ -385,13 +385,20 @@
     plan.days = _ACTIVE_EXCEL_DAYS;
     if (!plan.targetBal) plan.targetBal = ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS];
     if (!plan.ops) plan.ops = {};
+    if (!plan.pending) plan.pending = {};
     return plan;
   }
 
   function setDayCount(day, count) {
     const plan = ensureRollingPlan();
     if (!plan.ops[day]) plan.ops[day] = [];
-    plan.ops[day].length = Math.max(count, plan.ops[day].filter(Boolean).length);
+    const nextLength = Math.max(count, plan.ops[day].filter(Boolean).length);
+    plan.ops[day].length = nextLength;
+    if (plan.pending?.[day]) {
+      Object.keys(plan.pending[day]).forEach(slot => {
+        if (Number(slot) >= nextLength) delete plan.pending[day][slot];
+      });
+    }
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   }
@@ -407,7 +414,11 @@
   window.omega_RollingRemoveSlot = function(day) {
     const plan = ensureRollingPlan();
     if (!plan.ops[day]) plan.ops[day] = [];
-    if (plan.ops[day].length > 1) plan.ops[day].pop();
+    if (plan.ops[day].length > 1) {
+      const removedSlot = plan.ops[day].length - 1;
+      plan.ops[day].pop();
+      if (plan.pending?.[day]) delete plan.pending[day][removedSlot];
+    }
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
@@ -418,7 +429,13 @@
     const plan = ensureRollingPlan();
     for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
       if (!plan.ops[day]) plan.ops[day] = [];
-      plan.ops[day].length = Math.max(count, plan.ops[day].filter(Boolean).length);
+      const nextLength = Math.max(count, plan.ops[day].filter(Boolean).length);
+      plan.ops[day].length = nextLength;
+      if (plan.pending?.[day]) {
+        Object.keys(plan.pending[day]).forEach(slot => {
+          if (Number(slot) >= nextLength) delete plan.pending[day][slot];
+        });
+      }
     }
     omega_SaveRollingDB();
     omega_RenderExcelTable();
@@ -427,6 +444,7 @@
   window.omega_RollingClearDay = function(day) {
     const plan = ensureRollingPlan();
     plan.ops[day] = [];
+    if (plan.pending) delete plan.pending[day];
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
@@ -451,6 +469,7 @@
       const rows = list.querySelectorAll(".v765-extra-match-row");
       rows[rows.length - 1]?.remove();
       v768UpdateBetCalc(day, slot);
+      v774SavePendingSlot(day, slot);
       return false;
     }
     const row = document.createElement("div");
@@ -460,6 +479,7 @@
     list.appendChild(row);
     v768BindBetCalc(kapsul);
     v768UpdateBetCalc(day, slot);
+    v774SavePendingSlot(day, slot);
     row.querySelector("input")?.focus();
     return false;
   };
@@ -508,22 +528,125 @@
     });
   }
 
+  function v774SmartMemoryEnabled() {
+    const mode = localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
+    return mode === "bet" && (_ACTIVE_EXCEL_DAYS === 7 || _ACTIVE_EXCEL_DAYS === 15);
+  }
+
+  function v774EnsurePending(plan) {
+    if (!plan.pending) plan.pending = {};
+    return plan.pending;
+  }
+
+  function v774NormalizePendingEntry(entry) {
+    if (!entry || typeof entry !== "object") return null;
+    const note = String(entry.note || "").trim();
+    const stake = entry.amt === "" || entry.amt == null ? "" : Number(entry.amt || 0);
+    const odds = entry.odds === "" || entry.odds == null ? "" : Number(entry.odds || 0);
+    const combo = Array.isArray(entry.combo) ? entry.combo.map(row => ({
+      note: String(row?.note || "").trim(),
+      odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0)
+    })).filter(row => row.note || Number(row.odds || 0)) : [];
+    if (!note && stake === "" && odds === "" && !combo.length) return null;
+    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
+  }
+
+  function v774PendingFromDom(day, slot) {
+    if (!v774SmartMemoryEnabled()) return null;
+    const kapsul = document.querySelector(`[data-v765-kapsul="${day}:${slot}"]`);
+    if (!kapsul) return null;
+    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
+    const stakeText = document.getElementById(`e-a-${day}-${slot}`)?.value || "";
+    const oddsText = document.getElementById(`e-o-${day}-${slot}`)?.value || "";
+    const stake = stakeText === "" ? "" : Number(stakeText || 0);
+    const odds = oddsText === "" ? "" : Number(oddsText || 0);
+    const combo = v763ComboRows(day, slot).map(row => ({ note: row.note, odds: row.odds || "" }));
+    const hasAny = Boolean(note || stakeText !== "" || oddsText !== "" || combo.length);
+    if (!hasAny) return null;
+    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Date.now() };
+  }
+
+  function v774SetPendingSlot(day, slot, entry) {
+    if (!v774SmartMemoryEnabled()) return;
+    const plan = ensureRollingPlan();
+    const pending = v774EnsurePending(plan);
+    if (!pending[day]) pending[day] = {};
+    const normalized = v774NormalizePendingEntry(entry);
+    // Maç adı olmayan satırları aktif/bekliyor sayma; eski tutar/oran kalıntısını temizle.
+    if (!normalized || !normalized.note) {
+      delete pending[day][slot];
+      if (Object.keys(pending[day]).length === 0) delete pending[day];
+      omega_SaveRollingDB();
+      return;
+    }
+    pending[day][slot] = normalized;
+    omega_SaveRollingDB();
+  }
+
+  function v774GetPendingSlot(day, slot) {
+    const plan = ensureRollingPlan();
+    return v774NormalizePendingEntry(plan.pending?.[day]?.[slot]);
+  }
+
+  function v774ClearPendingSlot(day, slot) {
+    const plan = ensureRollingPlan();
+    if (plan.pending?.[day]) {
+      delete plan.pending[day][slot];
+      if (Object.keys(plan.pending[day]).length === 0) delete plan.pending[day];
+      omega_SaveRollingDB();
+    }
+  }
+
+  function v774SavePendingSlot(day, slot) {
+    const plan = ensureRollingPlan();
+    if (plan.ops?.[day]?.[slot]) {
+      v774ClearPendingSlot(day, slot);
+      return;
+    }
+    v774SetPendingSlot(day, slot, v774PendingFromDom(day, slot));
+  }
+
+  function v774FlushAllPendingFromDom() {
+    if (!v774SmartMemoryEnabled()) return;
+    document.querySelectorAll('#rolling-excel-overlay [data-v765-kapsul]').forEach(kapsul => {
+      const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
+      if (day && Number.isInteger(slot)) v774SavePendingSlot(day, slot);
+    });
+  }
+
   function v768LiveRows(mode) {
     const plan = ensureRollingPlan();
     const isCrypto = mode === "crypto";
+    const smartBet = !isCrypto && v774SmartMemoryEnabled();
     const rows = [];
     for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
       const dayOps = plan.ops?.[day] || [];
-      for (let slot = 0; slot < dayOps.length; slot++) {
+      const dayPending = smartBet ? (plan.pending?.[day] || {}) : {};
+      const domSlots = Array.from(document.querySelectorAll(`#rolling-excel-overlay [data-v765-kapsul^="${day}:"]`)).map(el => Number(String(el.dataset.v765Kapsul || "0:0").split(":")[1] || 0));
+      const maxSlots = Math.max(dayOps.length || 0, ...Object.keys(dayPending).map(Number).map(n => n + 1), ...domSlots.map(n => n + 1), 0);
+      for (let slot = 0; slot < maxSlots; slot++) {
         const saved = dayOps[slot];
         if (saved) continue;
-        const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-        const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
-        const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
-        const combo = isCrypto ? [] : v763ComboRows(day, slot);
-        if (!note && !stake && !odds && !combo.length) continue;
-        const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
-        rows.push({ day, slot, note, stake, odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0 });
+        if (!smartBet) {
+          const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
+          const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
+          const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+          const combo = isCrypto ? [] : v763ComboRows(day, slot);
+          if (!note && !stake && !odds && !combo.length) continue;
+          const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
+          rows.push({ day, slot, note, stake, odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0 });
+          continue;
+        }
+        const pending = v774GetPendingSlot(day, slot);
+        const hasDom = Boolean(document.getElementById(`e-n-${day}-${slot}`));
+        const domPending = hasDom ? v774PendingFromDom(day, slot) : null;
+        const src = v774NormalizePendingEntry(domPending) || pending;
+        if (!src || !src.note) continue;
+        const stake = Number(src.amt || 0);
+        const odds = Number(src.odds || 0);
+        const combo = Array.isArray(src.combo) ? src.combo : [];
+        const totalOdds = v763BetTotalOdds(odds, combo);
+        rows.push({ day, slot, note: src.note, stake, odds, combo, totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true });
       }
     }
     return rows;
@@ -561,6 +684,7 @@
   }
 
   function v768OpenFeaturePanel(mode = "bet", kind = "active") {
+    v774FlushAllPendingFromDom();
     const m = mode === "crypto" ? "crypto" : "bet";
     const k = kind === "history" ? "history" : kind === "report" ? "report" : "active";
     let host = document.getElementById("omega-rolling-feature-host");
@@ -590,9 +714,9 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const activeLabel = m === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
     return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v770-excel-feature-controls v771-excel-feature-controls" data-v771-feature-controls="${m}">
-      <button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${m}">${activeLabel}</button>
-      <button type="button" class="v758-row-tool v759-row-tool history" data-log-center="${m}">Geçmiş</button>
-      <button type="button" class="v758-row-tool v759-row-tool report" data-report-open="${m}">Rapor</button>
+      <button type="button" class="v758-row-tool v759-row-tool active" data-v768-feature-open="${m}:active">${activeLabel}</button>
+      <button type="button" class="v758-row-tool v759-row-tool history" data-v768-feature-open="${m}:history">Geçmiş</button>
+      <button type="button" class="v758-row-tool v759-row-tool report" data-v768-feature-open="${m}:report">Rapor</button>
     </div>`;
   }
 
@@ -608,11 +732,7 @@
     window.__omegaV770ExcelPanelStamp = stamp;
     window.__omegaV770ExcelPanelTime = now;
     try { document.getElementById("omega-rolling-feature-host")?.remove(); } catch(e) {}
-    if (typeof window.omega_RollingOpenFloatingPanel === "function") {
-      window.omega_RollingOpenFloatingPanel(k, m);
-    } else {
-      v768OpenFeaturePanel(m, k);
-    }
+    v768OpenFeaturePanel(m, k);
     return false;
   };
 
@@ -665,6 +785,10 @@
       if (reportBtn) {
         event.preventDefault();
         v768DownloadReport(reportBtn.dataset.v768ReportDownload === "crypto" ? "crypto" : "bet");
+        return;
+      }
+      if (event.target?.closest && document.getElementById("rolling-excel-overlay")?.contains(event.target)) {
+        if (!event.target.closest("[data-v765-kapsul]") && !event.target.closest("[data-v768-feature-open]")) v774FlushAllPendingFromDom();
       }
     }, true);
     document.addEventListener("input", function(event) {
@@ -672,6 +796,13 @@
       if (!kapsul) return;
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
       v768UpdateBetCalc(day, slot);
+      v774SavePendingSlot(day, slot);
+    }, true);
+    document.addEventListener("focusout", function(event) {
+      const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
+      if (!kapsul) return;
+      const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
+      v774SavePendingSlot(day, slot);
     }, true);
   }
 
@@ -753,6 +884,12 @@
             </div>
           `);
         } else {
+          const pendingV774 = !isCryptoV491 ? v774GetPendingSlot(day, slot) : null;
+          const pNoteV774 = v763EscapeHtml(pendingV774?.note || "");
+          const pOddsV774 = pendingV774?.odds === "" || pendingV774?.odds == null ? "" : v763EscapeHtml(pendingV774.odds);
+          const pStakeV774 = pendingV774?.amt === "" || pendingV774?.amt == null ? "" : v763EscapeHtml(pendingV774.amt);
+          const pComboV774 = Array.isArray(pendingV774?.combo) ? pendingV774.combo : [];
+          const pComboHtmlV774 = pComboV774.map(row => `<div class="v765-extra-match-row v768-extra-match-row" data-v763-extra-row="${day}:${slot}"><input type="text" data-v763-extra-note placeholder="Maç" value="${v763EscapeHtml(row.note || "")}"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01" value="${row.odds === "" || row.odds == null ? "" : v763EscapeHtml(row.odds)}"></div>`).join("");
           cards.push(`
             <div class="kapsul v32 ${isCryptoV491 ? "" : "v765-bet-kapsul"}" data-v765-kapsul="${day}:${slot}">
               ${isCryptoV491 ? `
@@ -766,11 +903,11 @@
                       <button type="button" data-v768-combo="${day}:${slot}:plus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'plus')" title="Maç + oran ekle">+</button>
                       <button type="button" data-v768-combo="${day}:${slot}:minus" onclick="return omega_RollingToggleComboRow(${day}, ${slot}, 'minus')" title="Son ek maçı sil">−</button>
                     </div>
-                    <input type="text" id="e-n-${day}-${slot}" placeholder="Maç">
+                    <input type="text" id="e-n-${day}-${slot}" placeholder="Maç" value="${pNoteV774}">
                   </div>
-                  <input type="number" id="e-o-${day}-${slot}" placeholder="Oran" step="0.01">
-                  <div class="v765-extra-match-list"></div>
-                  <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01">
+                  <input type="number" id="e-o-${day}-${slot}" placeholder="Oran" step="0.01" value="${pOddsV774}">
+                  <div class="v765-extra-match-list">${pComboHtmlV774}</div>
+                  <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
                   <div class="v768-bet-calc" data-v768-calc="${day}:${slot}"><span>Toplam Oran: <b>-</b></span><span>Tahmini Kazanç: <b>-</b></span></div>
                 </div>
               `}
@@ -842,6 +979,10 @@
     const currentPlan = ensureRollingPlan();
     if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
     currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, res: result, netMode: isCrypto ? "amount" : "odds" };
+    if (currentPlan.pending?.[day]) {
+      delete currentPlan.pending[day][slot];
+      if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];
+    }
     omega_SaveRollingDB();
     omega_RenderExcelTable();
   };
