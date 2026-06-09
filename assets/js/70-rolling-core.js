@@ -13,6 +13,7 @@
   const SNAPSHOT_KEY = "v756_rolling_report_cards_v1";
   const SNAPSHOT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
   const TARGET_CARD_OPEN_KEY = "v798_rolling_target_card_open";
+  const TARGET_LOG_OPEN_KEY = "v802_rolling_target_log_open";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -829,16 +830,23 @@
     const price = Number(tp?.price || 0);
     const stake = Number(row?.stake || 0);
     const lev = Math.max(1, Number(row?.leverage || 1));
+    const manualProfit = tp?.profitAmount !== "" && tp?.profitAmount !== undefined && tp?.profitAmount !== null && Number.isFinite(Number(tp.profitAmount));
+    if (manualProfit) {
+      let usd = Number(tp.profitAmount || 0);
+      if (tp?.result === "stop") usd = -Math.abs(usd || stake);
+      const pct = stake ? (usd / stake) * 100 : 0;
+      return { pct, usd, ok: true };
+    }
     if (!entry || !price || !stake) return { pct: 0, usd: 0, ok: false };
     const pct = ((price - entry) / entry) * 100;
     let usd = stake * lev * (pct / 100);
     if (tp?.result === "stop") usd = -Math.abs(usd || stake);
     return { pct, usd, ok: true };
   }
-  function cryptoTpProfitLabel(row, tp) {
+  function cryptoTpPercentLabel(row, tp) {
     const p = cryptoTpProfit(row, tp);
-    if (!p.ok) return "Hesapla";
-    return `KAR ${p.pct >= 0 ? "+" : ""}${p.pct.toFixed(1)}% ${signedMoney(p.usd)}`;
+    if (!p.ok) return "+0.0%";
+    return `${p.pct >= 0 ? "+" : ""}${p.pct.toFixed(1)}%`;
   }
   function cryptoRealizedProfit(row) {
     const tps = Array.isArray(row?.takeProfits) ? row.takeProfits : [];
@@ -855,28 +863,29 @@
   function renderCryptoCard(row) {
     const cardId = `v763-crypto-card-${row.index}`;
     const missing = !cleanText(row.name) || !Number(row.stake || 0);
-    const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [{ price: "", note: "TP1", result: "" }];
+    const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [{ price: "", profitAmount: "", note: "TP1", result: "" }];
     const realized = cryptoRealizedProfit(row);
     const tpRows = tps.map((tp, idx) => {
       const label = tp?.note || `TP${idx + 1}`;
       const result = tp?.result || (tp?.done ? "tp" : "");
       return `
-      <div class="v800-crypto-tp-row v801-crypto-tp-row ${result ? "done " + result : ""}">
+      <div class="v800-crypto-tp-row v801-crypto-tp-row v802-crypto-tp-row ${result ? "done " + result : ""}">
         <span class="tp-label">${escapeHtml(label)}</span>
         <input class="tp-price" type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:price" value="${escapeHtml(tp?.price ?? "")}" placeholder="Kar alma">
-        <button type="button" class="profit-pill" data-crypto-profit-focus="${row.index}:${idx}">${cryptoTpProfitLabel(row, tp)}</button>
+        <input class="tp-profit" type="number" step="0.01" data-crypto-tp="${row.index}:${idx}:profitAmount" value="${escapeHtml(tp?.profitAmount ?? "")}" placeholder="Kar $">
+        <span class="tp-percent ${Number(cryptoTpProfit(row, tp).usd || 0) >= 0 ? "pos" : "neg"}">${cryptoTpPercentLabel(row, tp)}</span>
         <div class="tp-result-actions">
           <button type="button" class="stop ${result === "stop" ? "selected" : ""}" data-crypto-tp-result="${row.index}:${idx}:stop">${result === "stop" ? "Zarar" : "STOP"}</button>
           <button type="button" class="tp ${result === "tp" ? "selected" : ""}" data-crypto-tp-result="${row.index}:${idx}:tp">${result === "tp" ? "Kar alındı" : "TP ✓"}</button>
         </div>
       </div>`;
     }).join("");
-    return `<article class="v763-active-card crypto v799-crypto-card v800-crypto-card v801-crypto-card" id="${cardId}">
+    return `<article class="v763-active-card crypto v799-crypto-card v800-crypto-card v801-crypto-card v802-crypto-card" id="${cardId}">
       <div class="v763-card-top">
         <div><b>${escapeHtml(cleanText(row.name) || "Kripto işlem")}</b></div>
         ${renderCardShotButton(cardId)}
       </div>
-      <div class="v763-card-info v799-crypto-info v800-crypto-info">
+      <div class="v763-card-info v799-crypto-info v800-crypto-info v802-crypto-info">
         <span>Tutar <b>${Number(row.stake || 0) ? money(row.stake) : "-"}</b></span>
         <span>Kaldıraç <b>${Number(row.leverage || 1)}x</b></span>
         <span>Giriş <b>${cryptoFormatPrice(row.entryPrice)}</b></span>
@@ -884,13 +893,13 @@
         <span>TP Kar <b class="${realized >= 0 ? "pos" : "neg"}">${signedMoney(realized)}</b></span>
         ${missing ? `<em>Eksik bilgi</em>` : ""}
       </div>
-      <div class="v799-crypto-detail-grid v800-crypto-detail-grid v801-crypto-detail-grid">
-        <label><span>Tutar</span><input type="number" step="0.01" data-crypto-detail="${row.index}:stake" value="${escapeHtml(row.stake || "")}" placeholder="Örn. 300"></label>
-        <label><span>Kaldıraç</span><input type="number" step="1" data-crypto-detail="${row.index}:leverage" value="${escapeHtml(row.leverage || 1)}" placeholder="Örn. 10"></label>
-        <label><span>Giriş Fiyatı</span><input type="number" step="0.01" data-crypto-detail="${row.index}:entryPrice" value="${escapeHtml(row.entryPrice || "")}" placeholder="Örn. 68000"></label>
-        <label><span>Likidasyon</span><input type="number" step="0.01" data-crypto-detail="${row.index}:liquidationPrice" value="${escapeHtml(row.liquidationPrice || "")}" placeholder="Örn. 62000"></label>
+      <div class="v799-crypto-detail-grid v800-crypto-detail-grid v801-crypto-detail-grid v802-crypto-detail-grid">
+        <label><span>Tutar</span><input type="number" step="0.01" data-crypto-detail="${row.index}:stake" value="${escapeHtml(row.stake || "")}" placeholder="300"></label>
+        <label><span>Kaldıraç</span><input type="number" step="1" data-crypto-detail="${row.index}:leverage" value="${escapeHtml(row.leverage || 1)}" placeholder="10"></label>
+        <label><span>Giriş Fiyatı</span><input type="number" step="0.01" data-crypto-detail="${row.index}:entryPrice" value="${escapeHtml(row.entryPrice || "")}" placeholder="68000"></label>
+        <label><span>Likidasyon</span><input type="number" step="0.01" data-crypto-detail="${row.index}:liquidationPrice" value="${escapeHtml(row.liquidationPrice || "")}" placeholder="62000"></label>
       </div>
-      <div class="v799-crypto-tp-box v800-crypto-tp-box v801-crypto-tp-box">
+      <div class="v799-crypto-tp-box v800-crypto-tp-box v801-crypto-tp-box v802-crypto-tp-box">
         <div class="v799-crypto-tp-head v800-crypto-tp-head">
           <b>Kar Alma Noktaları</b>
           <div>
@@ -1157,7 +1166,7 @@
       if (s.liquidationPrice === undefined || s.liquidationPrice === null) s.liquidationPrice = "";
       if (s.leverage === undefined || s.leverage === null || s.leverage === "") s.leverage = 1;
       if (!Array.isArray(s.takeProfits)) s.takeProfits = [];
-      if (!s.takeProfits.length) s.takeProfits = [{ price: "", note: "TP1" }];
+      if (!s.takeProfits.length) s.takeProfits = [{ price: "", profitAmount: "", note: "TP1", result: "" }];
       sanitizeEmptyPendingSlot(s, "crypto");
     });
   }
@@ -1234,6 +1243,14 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     localStorage.setItem(TARGET_CARD_OPEN_KEY + "_" + m, open ? "1" : "0");
   }
+  function targetLogOpen(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    return localStorage.getItem(TARGET_LOG_OPEN_KEY + "_" + m) === "1";
+  }
+  function setTargetLogOpen(mode, open) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    localStorage.setItem(TARGET_LOG_OPEN_KEY + "_" + m, open ? "1" : "0");
+  }
   function railCollapsed() { return localStorage.getItem(RAIL_KEY) === "1"; }
   function setRailCollapsed(v) { localStorage.setItem(RAIL_KEY, v ? "1" : "0"); }
   function openRolling(mode, days) {
@@ -1309,7 +1326,7 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const plan = getPlanNumbers(state, modePnl, m);
     const rows = loadTargetLog().filter(r => (r.mode || "bet") === m);
-    const latest = rows.slice(0, 4).map(r => `
+    const latest = rows.slice(0, 6).map(r => `
       <li>
         <span>${escapeHtml(formatDateTime(r.ts))}</span>
         <b>${money(r.start)} → ${money(r.target)}</b>
@@ -1317,17 +1334,19 @@
       </li>`).join("") || `<li class="empty"><span>Kayıt yok</span><b>Hedefi bitirince burada kalır.</b><em>-</em></li>`;
     const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
     const currentTag = plan.hasManualCurrent ? "Kaynak: Manuel" : "Kaynak: Otomatik";
-    const summaryLine = plan.target ? `${money(plan.start)} → ${money(plan.target)}` : `${money(plan.start)} → hedef gir`;
+    const logOpen = targetLogOpen(m);
     return `
-      <details class="v796-target-card v798-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
-        <summary class="v798-target-summary">
+      <details class="v796-target-card v798-target-card v802-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
+        <summary class="v798-target-summary v802-target-summary">
           <div class="v798-target-summary-main">
             <b>Kasa Hedefi</b>
             <span>${modeLabel} · ${plan.stateLabel}</span>
           </div>
-          <div class="v798-target-summary-values">
-            <strong>${summaryLine}</strong>
-            <em>Güncel ${money(plan.current)} · Kalan ${plan.target ? money(plan.remaining) : "-"}</em>
+          <div class="v802-target-mini-grid">
+            <span>Başlangıç <b>${money(plan.start)}</b></span>
+            <span>Hedef <b>${plan.target ? money(plan.target) : "Hedef gir"}</b></span>
+            <span>Güncel <b>${money(plan.current)}</b></span>
+            <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
           </div>
           <small class="${plan.hasManualCurrent ? "manual" : "auto"}">${currentTag}</small>
         </summary>
@@ -1340,7 +1359,7 @@
           <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
         </div>
 
-        <div class="v798-target-detail">
+        <div class="v798-target-detail v802-target-detail">
           <div class="v796-target-values">
             <label><span>Başlangıç</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="start" value="${plan.start}"></label>
             <label><span>Güncel</span><input type="number" step="1" data-rolling-target-mode="${m}" data-rolling-quick="currentOverride" value="${plan.hasManualCurrent ? plan.current : ""}" placeholder="${money(plan.autoCurrent)}"></label>
@@ -1352,10 +1371,10 @@
             <button type="button" class="complete" data-target-complete data-rolling-target-mode="${m}" ${plan.done ? "" : "disabled"}>Hedefi Bitir</button>
           </div>
 
-          <details class="v796-target-log">
-            <summary>LOG <span>${rows.length}</span></summary>
-            <ul>${latest}</ul>
-          </details>
+          <div class="v802-target-log-wrap ${logOpen ? "open" : ""}">
+            <button type="button" class="v802-target-log-btn" data-target-log-toggle="${m}">LOG <span>${rows.length}</span></button>
+            <div class="v802-target-log-panel"><ul>${latest}</ul></div>
+          </div>
         </div>
       </details>`;
   }
@@ -1467,9 +1486,10 @@
     const tps = Array.isArray(row.takeProfits) && row.takeProfits.length ? row.takeProfits : [];
     const tpLines = tps.slice(0, 8).map((tp, idx) => {
       const y = 255 + idx * 42;
-      const profit = cryptoTpProfitLabel(row, tp);
-      const status = tp?.done ? "ALINDI" : "BEKLİYOR";
-      return `<rect x="42" y="${y - 27}" width="816" height="34" rx="10" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">TP${idx + 1}</text><text x="160" y="${y - 4}" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${tp?.price ? safe(tp.price) : "-"}</text><text x="430" y="${y - 4}" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${safe(profit)}</text><text x="830" y="${y - 4}" text-anchor="end" fill="${tp?.done ? "#22c55e" : "#94a3b8"}" font-size="16" font-family="Arial" font-weight="950">${status}</text>`;
+      const p = cryptoTpProfit(row, tp);
+      const profit = p.ok ? `${p.usd >= 0 ? "+" : ""}${p.usd.toFixed(2)} $ · ${p.pct >= 0 ? "+" : ""}${p.pct.toFixed(1)}%` : "-";
+      const status = tp?.result === "stop" ? "ZARAR" : (tp?.result === "tp" || tp?.done) ? "ALINDI" : "BEKLİYOR";
+      return `<rect x="42" y="${y - 27}" width="816" height="34" rx="10" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">TP${idx + 1}</text><text x="160" y="${y - 4}" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${tp?.price ? safe(tp.price) : "-"}</text><text x="430" y="${y - 4}" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${safe(profit)}</text><text x="830" y="${y - 4}" text-anchor="end" fill="${tp?.result === "stop" ? "#ef4444" : (tp?.result === "tp" || tp?.done) ? "#22c55e" : "#94a3b8"}" font-size="16" font-family="Arial" font-weight="950">${status}</text>`;
     }).join("");
     const footerY = 280 + Math.max(1, tps.length) * 42;
     const height = footerY + 130;
@@ -1534,7 +1554,7 @@
       slot.leverage = rec.leverage || slot.leverage || 1;
       slot.takeProfits = Array.isArray(rec.takeProfits) && rec.takeProfits.length
         ? rec.takeProfits.map((tp, i) => ({ price: tp.price || "", note: tp.note || `TP${i + 1}`, done: !!tp.done }))
-        : [{ price: "", note: "TP1", result: "" }];
+        : [{ price: "", profitAmount: "", note: "TP1", result: "" }];
     }
     list[index] = slot;
     state.modeSlots[m] = list;
@@ -1668,14 +1688,16 @@
         if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
         const slot = state.modeSlots.crypto[i];
         if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
-        while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
+        while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", profitAmount: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
         slot.takeProfits[ti][key] = input.value;
         if (!slot.takeProfits[ti].note) slot.takeProfits[ti].note = `TP${ti + 1}`;
+        slot.odds = Number(cryptoRealizedProfit(slot).toFixed(2));
+        recalcSlot(slot);
         saveState(state);
       };
       input.addEventListener("input", saveTp);
-      input.addEventListener("change", () => { saveTp(); refresh(); });
-      input.addEventListener("blur", () => { saveTp(); refresh(); });
+      input.addEventListener("change", saveTp);
+      input.addEventListener("blur", saveTp);
     });
     mount.querySelectorAll("[data-crypto-tp-op]").forEach(btn => btn.addEventListener("click", () => {
       const [slotRaw, tpRaw, op] = String(btn.dataset.cryptoTpOp || "0:0:plus").split(":");
@@ -1683,16 +1705,11 @@
       if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
       const slot = state.modeSlots.crypto[i];
       if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
-      if (op === "plus") slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
+      if (op === "plus") slot.takeProfits.push({ price: "", profitAmount: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
       else slot.takeProfits.pop();
-      if (!slot.takeProfits.length) slot.takeProfits.push({ price: "", note: "TP1", result: "" });
+      if (!slot.takeProfits.length) slot.takeProfits.push({ price: "", profitAmount: "", note: "TP1", result: "" });
       saveState(state);
       refresh();
-    }));
-    mount.querySelectorAll("[data-crypto-profit-focus]").forEach(btn => btn.addEventListener("click", () => {
-      const [slotRaw, tpRaw] = String(btn.dataset.cryptoProfitFocus || "0:0").split(":");
-      const input = mount.querySelector(`[data-crypto-tp="${slotRaw}:${tpRaw}:price"]`);
-      if (input) input.focus();
     }));
     mount.querySelectorAll("[data-crypto-tp-result]").forEach(btn => btn.addEventListener("click", () => {
       const [slotRaw, tpRaw, resultRaw] = String(btn.dataset.cryptoTpResult || "0:0:tp").split(":");
@@ -1702,7 +1719,7 @@
       if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
       const slot = state.modeSlots.crypto[i];
       if (!Array.isArray(slot.takeProfits)) slot.takeProfits = [];
-      while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
+      while (slot.takeProfits.length <= ti) slot.takeProfits.push({ price: "", profitAmount: "", note: `TP${slot.takeProfits.length + 1}`, result: "" });
       slot.takeProfits[ti].result = slot.takeProfits[ti].result === result ? "" : result;
       slot.takeProfits[ti].done = slot.takeProfits[ti].result === "tp";
       slot.odds = Number(cryptoRealizedProfit(slot).toFixed(2));
@@ -1773,16 +1790,15 @@
         requestAnimationFrame(() => window.scrollTo({ top: y, left: 0, behavior: "auto" }));
       });
     });
-    mount.querySelectorAll(".v796-target-log > summary").forEach(summary => {
-      summary.addEventListener("click", () => {
-        const y = window.scrollY || document.documentElement.scrollTop || 0;
-        const keep = () => window.scrollTo({ top: y, left: 0, behavior: "auto" });
-        requestAnimationFrame(keep);
-        setTimeout(keep, 0);
-        setTimeout(keep, 60);
-        setTimeout(keep, 180);
-      });
-    });
+    mount.querySelectorAll("[data-target-log-toggle]").forEach(btn => btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const mode = btn.dataset.targetLogToggle === "crypto" ? "crypto" : "bet";
+      const wrap = btn.closest(".v802-target-log-wrap");
+      const next = !(wrap && wrap.classList.contains("open"));
+      setTargetLogOpen(mode, next);
+      if (wrap) wrap.classList.toggle("open", next);
+    }));
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = btn.dataset.historyOpen === "crypto" ? "crypto" : "bet";
       LOG_CENTER_OPEN_MODE = null;
