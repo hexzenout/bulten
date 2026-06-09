@@ -5819,9 +5819,9 @@ html.rolling-hash-boot::before {
 }
 
 .rolling-v48-rail .v802-target-mini-grid span:nth-child(4) {
-  color: #fecdd3 !important;
-  border-color: rgba(244,63,94,.26) !important;
-  background: linear-gradient(135deg, rgba(244,63,94,.14), rgba(15,23,42,.74)) !important;
+  color: #e9d5ff !important;
+  border-color: rgba(168,85,247,.30) !important;
+  background: linear-gradient(135deg, rgba(168,85,247,.16), rgba(15,23,42,.74)) !important;
 }
 
 .rolling-v48-rail .v802-target-mini-grid b {
@@ -5836,11 +5836,48 @@ html.rolling-hash-boot::before {
 .rolling-v48-rail .v802-target-mini-grid span:nth-child(1) b { color: #93c5fd !important; }
 .rolling-v48-rail .v802-target-mini-grid span:nth-child(2) b { color: #fbbf24 !important; }
 .rolling-v48-rail .v802-target-mini-grid span:nth-child(3) b { color: #22c55e !important; }
-.rolling-v48-rail .v802-target-mini-grid span:nth-child(4) b { color: #fb7185 !important; }
+.rolling-v48-rail .v802-target-mini-grid span:nth-child(4) b { color: #c084fc !important; }
 
 .rolling-v48-rail .v802-target-card.crypto .v802-target-mini-grid span:nth-child(1) {
   border-color: rgba(56,189,248,.30) !important;
 }
 .rolling-v48-rail .v802-target-card.crypto .v802-target-mini-grid span:nth-child(1) b {
   color: #38bdf8 !important;
+}
+
+
+/* V806: Kasa Hedefi KALAN kartı net mor/lila - kırmızı etki tamamen kaldırıldı */
+.rolling-v48-rail .v802-target-mini-grid span:nth-child(4),
+.rolling-v48-rail .v802-target-card .v802-target-mini-grid span:nth-child(4),
+.rolling-v48-rail .v798-target-card .v802-target-mini-grid span:nth-child(4),
+.rolling-v48-rail .v796-target-card .v802-target-mini-grid span:nth-child(4) {
+  color: #f3e8ff !important;
+  border-color: rgba(168,85,247,.52) !important;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(216,180,254,.22), transparent 42%),
+    linear-gradient(135deg, rgba(126,34,206,.32), rgba(88,28,135,.18) 48%, rgba(15,23,42,.82)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 0 0 1px rgba(168,85,247,.10),
+    0 8px 20px rgba(88,28,135,.18) !important;
+}
+
+.rolling-v48-rail .v802-target-mini-grid span:nth-child(4)::before {
+  color: #e9d5ff !important;
+}
+
+.rolling-v48-rail .v802-target-mini-grid span:nth-child(4) b,
+.rolling-v48-rail .v802-target-card .v802-target-mini-grid span:nth-child(4) b,
+.rolling-v48-rail .v798-target-card .v802-target-mini-grid span:nth-child(4) b,
+.rolling-v48-rail .v796-target-card .v802-target-mini-grid span:nth-child(4) b {
+  color: #e9d5ff !important;
+  background: rgba(88,28,135,.36) !important;
+  border-color: rgba(216,180,254,.28) !important;
+  text-shadow: 0 0 12px rgba(216,180,254,.22) !important;
+}
+
+/* eski kırmızı/pembe Kalan selector'ları varsa en sonda bastır */
+.rolling-v48-rail .v802-target-mini-grid span:nth-child(4) .neg,
+.rolling-v48-rail .v802-target-mini-grid span:nth-child(4) b.neg {
+  color: #e9d5ff !important;
 }
