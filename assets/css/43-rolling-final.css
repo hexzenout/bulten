@@ -4304,3 +4304,16 @@ html.rolling-hash-boot::before {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* V783: fotoğraf modalı tek indirme butonu ve görsel boşluk düzeltmesi */
+.v781-photo-modal .v776-photo-actions {
+  justify-content: flex-start !important;
+  padding-top: 0 !important;
+}
+.v781-photo-modal .v776-photo-actions button {
+  min-width: 132px !important;
+}
+.v781-photo-modal img {
+  margin-top: 12px !important;
+}

@@ -388,16 +388,18 @@
   function canAutoAttachToCombo(row) {
     return !!row && !!cleanText(row.name) && !Number(row.stake || 0);
   }
-  function buildAutoComboRow(base, followers) {
-    const existingExtra = Array.isArray(base.extraMatches) ? base.extraMatches : [];
-    const extraFromFollowers = (followers || []).map(f => ({ name: cleanText(f.name), odds: f.odds, sourceIndex: f.index }));
-    const comboResults = Array.isArray(base.comboResults) ? base.comboResults.slice() : [];
+  function buildAutoComboRow(base, preRows = [], postRows = []) {
+    const ordered = [...(preRows || []), base, ...(postRows || [])].filter(Boolean);
+    const first = ordered[0] || base;
+    const rest = ordered.slice(1).map(row => ({ name: cleanText(row.name), odds: row.odds, sourceIndex: row.index }));
     return {
       ...base,
-      autoCombo: !!extraFromFollowers.length,
-      autoComboRows: (followers || []).map(f => f.index),
-      extraMatches: [...existingExtra, ...extraFromFollowers],
-      comboResults
+      name: cleanText(first.name),
+      odds: first.odds,
+      autoCombo: true,
+      autoComboRows: ordered.map(row => row.index),
+      extraMatches: rest,
+      comboResults: Array.isArray(base.comboResults) ? base.comboResults.slice() : []
     };
   }
   function getSlotMatches(slot) {
@@ -416,39 +418,64 @@
     const singles = [];
     const coupons = [];
     const consumed = new Set();
+    const noStakeBuffer = [];
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (consumed.has(row.index)) continue;
+      if (!row || consumed.has(row.index)) continue;
 
-      const manualMatchCount = getSlotMatches(row).length;
-      const followers = [];
-      if (cleanText(row.name) && Number(row.stake || 0)) {
+      if (canAutoAttachToCombo(row)) {
+        noStakeBuffer.push(row);
+        continue;
+      }
+
+      if (!cleanText(row.name)) continue;
+
+      const preRows = [];
+      if (Number(row.stake || 0) && noStakeBuffer.length) {
+        let expected = Number(row.index || 0) - 1;
+        for (let b = noStakeBuffer.length - 1; b >= 0; b--) {
+          const candidate = noStakeBuffer[b];
+          if (Number(candidate.index || 0) !== expected) break;
+          preRows.unshift(candidate);
+          expected--;
+        }
+        preRows.forEach(pre => consumed.add(pre.index));
+        if (preRows.length) noStakeBuffer.splice(noStakeBuffer.length - preRows.length, preRows.length);
+      }
+
+      const postRows = [];
+      if (Number(row.stake || 0)) {
         let lastIndex = Number(row.index || 0);
         for (let j = i + 1; j < rows.length; j++) {
           const next = rows[j];
-          if (consumed.has(next.index)) continue;
+          if (!next || consumed.has(next.index)) continue;
           if (Number(next.index || 0) !== lastIndex + 1) break;
           if (!canAutoAttachToCombo(next)) break;
-          followers.push(next);
+          postRows.push(next);
           consumed.add(next.index);
           lastIndex = Number(next.index || 0);
         }
       }
 
-      if (manualMatchCount > 1 || followers.length) {
-        const comboRow = followers.length ? buildAutoComboRow(row, followers) : row;
+      const manualMatchCount = getSlotMatches(row).length;
+      if (manualMatchCount > 1 || preRows.length || postRows.length) {
+        const comboRow = (preRows.length || postRows.length) ? buildAutoComboRow(row, preRows, postRows) : row;
         coupons.push({
-          id: row.index + 1,
+          id: (preRows[0]?.index ?? row.index) + 1,
           slotIndex: row.index,
           row: comboRow,
-          rows: [row, ...followers],
+          rows: [...preRows, row, ...postRows],
           matches: getSlotMatches(comboRow)
         });
       } else {
         singles.push(row);
       }
     }
+
+    noStakeBuffer.forEach(row => {
+      if (!consumed.has(row.index)) singles.push(row);
+    });
 
     return { singles, coupons, rows };
   }
@@ -470,7 +497,7 @@
     return { stake: t.stake, odds: t.odds, possibleReturn: t.possibleWin, netProfit: t.possibleWin ? t.possibleWin - t.stake : 0 };
   }
   function renderCardShotButton(id) {
-    return `<button type="button" class="v763-shot-btn" data-card-screenshot="${escapeHtml(id)}" title="Bahis ekran resmi indir"><i class="fa-solid fa-camera"></i> Screenshot</button>`;
+    return `<button type="button" class="v763-shot-btn" data-card-screenshot="${escapeHtml(id)}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i> Screenshot</button>`;
   }
 
   function v781RowsForPhoto(mode, state) {
@@ -513,36 +540,37 @@
     const rows = v781RowsForPhoto(mode, state);
     if (!rows.length) return null;
     const title = mode === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR";
-    const height = Math.max(420, 210 + rows.length * 52 + 110);
+    const width = 1280;
+    const height = Math.max(470, 225 + rows.length * 54 + 118);
     const rowSvg = rows.map((r, idx) => {
-      const y = 178 + idx * 52;
-      const clippedName = String(r.name || (mode === "crypto" ? "İşlem" : "Maç")).slice(0, 74);
+      const y = 184 + idx * 54;
+      const clippedName = String(r.name || (mode === "crypto" ? "İşlem" : "Maç")).slice(0, 58);
       return `
-        <rect x="46" y="${y - 30}" width="988" height="42" rx="12" fill="#0f172a" stroke="#334155"/>
-        <text x="70" y="${y - 4}" fill="#94a3b8" font-size="17" font-family="Arial" font-weight="800">#${r.index}</text>
-        <text x="122" y="${y - 4}" fill="#c084fc" font-size="17" font-family="Arial" font-weight="900">${escapeHtml(r.type)}</text>
-        <text x="235" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="800">${escapeHtml(clippedName)}</text>
-        <text x="735" y="${y - 4}" text-anchor="end" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="800">${money(r.stake)}</text>
-        <text x="860" y="${y - 4}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${r.odds ? Number(r.odds).toFixed(2) : '-'}</text>
-        <text x="1010" y="${y - 4}" text-anchor="end" fill="#22c55e" font-size="17" font-family="Arial" font-weight="900">${r.possible ? money(r.possible) : '-'}</text>`;
+        <rect x="70" y="${y - 31}" width="1140" height="44" rx="14" fill="#111827" stroke="#334155"/>
+        <text x="94" y="${y - 4}" fill="#94a3b8" font-size="16" font-family="Arial" font-weight="900">#${r.index}</text>
+        <text x="152" y="${y - 4}" fill="#c084fc" font-size="17" font-family="Arial" font-weight="900">${escapeHtml(r.type)}</text>
+        <text x="285" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">${escapeHtml(clippedName)}</text>
+        <text x="815" y="${y - 4}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="950">${r.odds ? Number(r.odds).toFixed(2) : '-'}</text>
+        <text x="980" y="${y - 4}" text-anchor="end" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">${money(r.stake)}</text>
+        <text x="1185" y="${y - 4}" text-anchor="end" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${r.possible ? money(r.possible) : '-'}</text>`;
     }).join("");
     const totalStake = rows.reduce((sum, r) => sum + Number(r.stake || 0), 0);
     const totalPossible = rows.reduce((sum, r) => sum + Number(r.possible || 0), 0);
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="${height}" viewBox="0 0 1080 ${height}">
-      <rect width="1080" height="${height}" fill="#020617"/>
-      <rect x="24" y="24" width="1032" height="${height - 48}" rx="28" fill="#0b1120" stroke="#334155" stroke-width="2"/>
-      <text x="46" y="82" fill="#fbbf24" font-size="32" font-family="Arial" font-weight="900">BULTEN · ${escapeHtml(title)}</text>
-      <text x="46" y="122" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${rows.length} kayıt</text>
-      <text x="70" y="150" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text>
-      <text x="122" y="150" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text>
-      <text x="235" y="150" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ / İŞLEM</text>
-      <text x="735" y="150" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text>
-      <text x="860" y="150" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text>
-      <text x="1010" y="150" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <rect width="${width}" height="${height}" fill="#020617"/>
+      <rect x="34" y="28" width="1212" height="${height - 56}" rx="30" fill="#0b1120" stroke="#334155" stroke-width="2"/>
+      <text x="70" y="88" fill="#fbbf24" font-size="34" font-family="Arial" font-weight="900">BULTEN · ${escapeHtml(title)}</text>
+      <text x="70" y="126" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${rows.length} kayıt</text>
+      <text x="94" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text>
+      <text x="152" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text>
+      <text x="285" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text>
+      <text x="815" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text>
+      <text x="980" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text>
+      <text x="1185" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>
       ${rowSvg}
-      <rect x="46" y="${height - 92}" width="988" height="50" rx="14" fill="#111827" stroke="#374151"/>
-      <text x="70" y="${height - 60}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text>
-      <text x="1010" y="${height - 60}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text>
+      <rect x="70" y="${height - 96}" width="1140" height="56" rx="16" fill="#111827" stroke="#374151"/>
+      <text x="94" y="${height - 60}" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text>
+      <text x="1185" y="${height - 60}" text-anchor="end" fill="#22c55e" font-size="21" font-family="Arial" font-weight="950">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text>
     </svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
@@ -583,17 +611,13 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${mode === "crypto" ? "Kripto Fotoğrafı" : "Bahis Fotoğrafı"}</b><span>Ana ROLLING aktif tablo özeti</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-show>Resmi Göster</button><button type="button" data-v781-photo-download>Resmi İndir PNG</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${mode === "crypto" ? "Kripto Fotoğrafı" : "Bahis Fotoğrafı"}</b><span>Ana ROLLING aktif tablo özeti</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
       host.innerHTML = "";
       host.style.display = "none";
     }));
-    host.querySelector("[data-v781-photo-show]")?.addEventListener("click", () => {
-      const w = window.open("", "_blank");
-      if (w) w.document.write(`<img src="${dataUrl}" style="max-width:100%;height:auto;background:#020617;display:block;margin:0 auto;">`);
-    });
     host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
       v781DownloadPngFromSvg(dataUrl, `bulten-${mode}-aktif-rolling-${new Date().toISOString().slice(0,10)}.png`);
     });
@@ -603,8 +627,8 @@
     const matches = getSlotMatches(row);
     const oddsLabel = matches.length > 1 ? "Toplam Oran" : "Oran";
     return `<div class="v763-card-info">
-      <span>Tutar <b>${t.stake ? money(t.stake) : "-"}</b></span>
       <span>${oddsLabel} <b>${t.odds ? t.odds.toFixed(2) : "-"}</b></span>
+      <span>Tutar <b>${t.stake ? money(t.stake) : "-"}</b></span>
       <span>Olası Kazanç <b>${t.possibleWin ? money(t.possibleWin) : "-"}</b></span>
       ${t.missing ? `<em>Eksik bilgi</em>` : ""}
     </div>`;
@@ -982,10 +1006,10 @@
     const winText = isCrypto ? "KAZANÇ" : "KAZANDI";
     const lossText = isCrypto ? "KAYIP" : "KAYBETTİ";
     const pnlHead = isCrypto ? "PNL" : "K/Z";
-    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th>${isCrypto ? "" : `<button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`}</th><th>#</th><th>Tür</th><th>${noteHead}</th><th>Tutar</th><th>${valHead}</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
+    return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th>${isCrypto ? "" : `<button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`}</th><th>#</th><th>Tür</th><th>${noteHead}</th><th>${valHead}</th><th>Tutar</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
       const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">${isCrypto ? "Kripto" : "Bahis"}</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="${isCrypto ? "Net K/Z $" : "Oran"}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModePanel(mode, state) {
@@ -1119,19 +1143,54 @@
     }
   }
   function downloadActiveCardScreenshot(cardId) {
-    const card = cardId ? document.getElementById(cardId) : null;
-    if (!card) return;
-    const lines = Array.from(card.querySelectorAll("b, span, em")).map(el => cleanText(el.textContent)).filter(Boolean).slice(0, 16);
-    const width = 920;
-    const height = 150 + lines.length * 30;
-    const esc = text => String(text || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-    const textRows = lines.map((line, idx) => `<text x="52" y="${118 + idx * 30}" font-size="18" font-family="Inter, Arial" font-weight="800" fill="${idx < 2 ? "#ffffff" : "#cbd5e1"}">${esc(line).slice(0, 82)}</text>`).join("");
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs><linearGradient id="b" x1="0" x2="1"><stop offset="0" stop-color="#020617"/><stop offset="1" stop-color="#1e1b4b"/></linearGradient></defs><rect width="${width}" height="${height}" rx="28" fill="url(#b)"/><rect x="24" y="24" width="${width-48}" height="${height-48}" rx="22" fill="none" stroke="rgba(251,191,36,.35)" stroke-width="2"/><text x="52" y="70" font-size="22" font-family="Inter, Arial" font-weight="950" fill="#fbbf24">BULTEN · BAHİS SCREENSHOT</text>${textRows}</svg>`;
-    const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `bulten-bahis-screenshot-${new Date().toISOString().slice(0,10)}.svg`;
-    document.body.appendChild(a); a.click(); a.remove();
+    const match = String(cardId || "").match(/v763-bet-card-(\d+)/);
+    const slotIndex = match ? Number(match[1]) : -1;
+    const state = loadState();
+    const grouped = getBetCouponGroups(state);
+    const coupon = grouped.coupons.find(c => Number(c.slotIndex) === slotIndex);
+    const single = grouped.singles.find(r => Number(r.index) === slotIndex);
+    let rows = [];
+    if (coupon) {
+      const totals = rowBetTotals(coupon.row);
+      rows = [{
+        index: coupon.slotIndex + 1,
+        type: "Kombine",
+        name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
+        stake: Number(coupon.row.stake || 0),
+        odds: Number(totals.odds || 0),
+        possible: Number(totals.possibleWin || 0)
+      }];
+    } else if (single) {
+      const totals = rowBetTotals(single);
+      rows = [{
+        index: single.index + 1,
+        type: "Bahis",
+        name: cleanText(single.name),
+        stake: Number(single.stake || 0),
+        odds: Number(totals.odds || 0),
+        possible: Number(totals.possibleWin || 0)
+      }];
+    }
+    if (!rows.length) return;
+    const tmpState = { ...state, modeSlots: { ...state.modeSlots, bet: [] }, rowCounts: { ...state.rowCounts, bet: rows.length } };
+    const original = v781RowsForPhoto;
+    let dataUrl = "";
+    try {
+      dataUrl = (function() {
+        const width = 1280;
+        const height = 470;
+        const rowSvg = rows.map((r, idx) => {
+          const y = 184 + idx * 54;
+          const clippedName = String(r.name || "Maç").slice(0, 58);
+          return `<rect x="70" y="${y - 31}" width="1140" height="44" rx="14" fill="#111827" stroke="#334155"/><text x="94" y="${y - 4}" fill="#94a3b8" font-size="16" font-family="Arial" font-weight="900">#${r.index}</text><text x="152" y="${y - 4}" fill="#c084fc" font-size="17" font-family="Arial" font-weight="900">${escapeHtml(r.type)}</text><text x="285" y="${y - 4}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="850">${escapeHtml(clippedName)}</text><text x="815" y="${y - 4}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="950">${r.odds ? Number(r.odds).toFixed(2) : '-'}</text><text x="980" y="${y - 4}" text-anchor="end" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="850">${money(r.stake)}</text><text x="1185" y="${y - 4}" text-anchor="end" fill="#22c55e" font-size="18" font-family="Arial" font-weight="950">${r.possible ? money(r.possible) : '-'}</text>`;
+        }).join("");
+        const totalStake = rows.reduce((sum, r) => sum + Number(r.stake || 0), 0);
+        const totalPossible = rows.reduce((sum, r) => sum + Number(r.possible || 0), 0);
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="34" y="28" width="1212" height="${height - 56}" rx="30" fill="#0b1120" stroke="#334155" stroke-width="2"/><text x="70" y="88" fill="#fbbf24" font-size="34" font-family="Arial" font-weight="900">BULTEN · BAHİS FOTOĞRAFI</text><text x="70" y="126" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">${new Date().toLocaleString("tr-TR")} · ${rows.length} kayıt</text><text x="94" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">#</text><text x="152" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TÜR</text><text x="285" y="152" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">MAÇ</text><text x="815" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">ORAN</text><text x="980" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">TUTAR</text><text x="1185" y="152" text-anchor="end" fill="#64748b" font-size="14" font-family="Arial" font-weight="900">OLASI KAZANÇ</text>${rowSvg}<rect x="70" y="${height - 96}" width="1140" height="56" rx="16" fill="#111827" stroke="#374151"/><text x="94" y="${height - 60}" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">Toplam Tutar: ${money(totalStake)}</text><text x="1185" y="${height - 60}" text-anchor="end" fill="#22c55e" font-size="21" font-family="Arial" font-weight="950">Toplam Olası Kazanç: ${totalPossible ? money(totalPossible) : '-'}</text></svg>`;
+        return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      })();
+    } catch { return; }
+    v781DownloadPngFromSvg(dataUrl, `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`);
   }
 
   function deleteHistoryRecord(mode, id) {
