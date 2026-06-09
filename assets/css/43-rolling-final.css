@@ -3778,3 +3778,89 @@ html.rolling-hash-boot::before {
   pointer-events: none !important;
   background: #050505 !important;
 }
+
+/* ===============================
+   V773 — 7 Günlük Rolling: panel host z-index kök düzeltme + tüm kutularda +/− dış boşluğu
+   Not: İş mantığına dokunmaz. Sadece panelin modalın üstüne çıkmasını ve +/− boşluğunu düzeltir.
+================================ */
+#omega-rolling-feature-host,
+#omega-rolling-feature-host .v758-pending-overlay,
+#omega-rolling-feature-host .v757-log-center-overlay,
+#omega-rolling-feature-host .v757-confirm-overlay,
+#omega-rolling-feature-host .v763-report-modal,
+#omega-rolling-feature-host .v768-feature-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1001005 !important;
+  pointer-events: auto !important;
+}
+#omega-rolling-feature-host .v758-pending-modal,
+#omega-rolling-feature-host .v757-log-center-modal,
+#omega-rolling-feature-host .v758-log-center-modal,
+#omega-rolling-feature-host .v768-feature-modal {
+  z-index: 1001006 !important;
+  pointer-events: auto !important;
+}
+
+#rolling-excel-overlay .capsule-container.v32 {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+  column-gap: 58px !important;
+  row-gap: 14px !important;
+  overflow: visible !important;
+  padding: 2px 8px 14px 46px !important;
+  width: 100% !important;
+  flex-wrap: initial !important;
+}
+#rolling-excel-overlay .kapsul.v32.v765-bet-kapsul {
+  position: relative !important;
+  overflow: visible !important;
+  min-width: 0 !important;
+  width: auto !important;
+}
+#rolling-excel-overlay .v765-match-line {
+  position: relative !important;
+  width: 100% !important;
+  display: block !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls {
+  position: absolute !important;
+  left: -42px !important;
+  top: 0 !important;
+  width: 28px !important;
+  display: grid !important;
+  grid-template-rows: 18px 18px !important;
+  gap: 5px !important;
+  z-index: 25 !important;
+  pointer-events: auto !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls button {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  max-height: 18px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(251,191,36,.60) !important;
+  background: #070707 !important;
+  color: #fbbf24 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+#rolling-excel-overlay .v765-inline-combo-controls button::before,
+#rolling-excel-overlay .v765-inline-combo-controls button::after {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 900px) {
+  #rolling-excel-overlay .capsule-container.v32 {
+    grid-template-columns: 1fr !important;
+    column-gap: 0 !important;
+    padding-left: 46px !important;
+  }
+}
