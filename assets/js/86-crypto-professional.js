@@ -10,6 +10,278 @@
   function qs(sel) { return document.querySelector(sel); }
   function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
 
+
+  // V896: Eski bahis çıktı/kart ekranı için izole stil. Sadece Rolling bahis kutularını hedefler.
+  (function v896EnsureBetResultCardCss(){
+    if (document.getElementById("v896-bet-result-card-css")) return;
+    const style = document.createElement("style");
+    style.id = "v896-bet-result-card-css";
+    style.textContent = `
+      #rolling-excel-overlay .kapsul.v32.v847-shot-result {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        padding: 14px !important;
+        border-radius: 18px !important;
+        border: 1px solid rgba(16,185,129,.62) !important;
+        background: linear-gradient(180deg, rgba(15,23,42,.96), rgba(2,6,23,.96)) !important;
+        box-shadow: 0 0 0 1px rgba(15,23,42,.75), 0 12px 28px rgba(0,0,0,.28) !important;
+        min-height: auto !important;
+      }
+      #rolling-excel-overlay .kapsul.v32.v847-shot-result.loss {
+        border-color: rgba(248,113,113,.58) !important;
+      }
+      #rolling-excel-overlay .v850-shot-toolbar {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+      }
+      #rolling-excel-overlay .v850-shot-toolbar button {
+        appearance: none !important;
+        border: 1px solid rgba(148,163,184,.30) !important;
+        background: rgba(15,23,42,.88) !important;
+        color: #fff !important;
+        border-radius: 999px !important;
+        min-height: 30px !important;
+        padding: 0 10px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        font-size: .72rem !important;
+        font-weight: 950 !important;
+        cursor: pointer !important;
+      }
+      #rolling-excel-overlay .v850-shot-toolbar .v850-shot-close {
+        width: 30px !important;
+        min-width: 30px !important;
+        padding: 0 !important;
+        border-radius: 10px !important;
+        background: rgba(127,29,29,.70) !important;
+        border-color: rgba(248,113,113,.50) !important;
+      }
+      #rolling-excel-overlay .v847-shot-head {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+      }
+      #rolling-excel-overlay .v847-shot-head > b {
+        color: #fbbf24 !important;
+        font-size: .95rem !important;
+        font-weight: 1000 !important;
+        letter-spacing: .02em !important;
+      }
+      #rolling-excel-overlay .v847-shot-head-tools {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+      #rolling-excel-overlay .v847-shot-head-tools > span {
+        border-radius: 999px !important;
+        padding: 7px 10px !important;
+        font-size: .68rem !important;
+        font-weight: 1000 !important;
+        color: #fff !important;
+        border: 1px solid rgba(148,163,184,.25) !important;
+      }
+      #rolling-excel-overlay .v847-shot-head-tools > span.win {
+        background: rgba(6,78,59,.85) !important;
+        border-color: rgba(52,211,153,.55) !important;
+      }
+      #rolling-excel-overlay .v847-shot-head-tools > span.loss {
+        background: rgba(127,29,29,.85) !important;
+        border-color: rgba(248,113,113,.55) !important;
+      }
+      #rolling-excel-overlay .v847-shot-camera {
+        appearance: none !important;
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        border-radius: 11px !important;
+        border: 1px solid rgba(251,191,36,.58) !important;
+        background: rgba(120,53,15,.70) !important;
+        color: #fbbf24 !important;
+        display: inline-grid !important;
+        place-items: center !important;
+        cursor: pointer !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: grid !important;
+        gap: 8px !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines li {
+        display: grid !important;
+        gap: 7px !important;
+        border-radius: 14px !important;
+        padding: 10px !important;
+        background: rgba(15,23,42,.86) !important;
+        border: 1px solid rgba(51,65,85,.85) !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines li.win { border-color: rgba(34,197,94,.62) !important; background: rgba(6,78,59,.25) !important; }
+      #rolling-excel-overlay .v847-shot-lines li.loss { border-color: rgba(248,113,113,.62) !important; background: rgba(127,29,29,.24) !important; }
+      #rolling-excel-overlay .v847-shot-lines span {
+        color: #f8fafc !important;
+        font-size: .82rem !important;
+        line-height: 1.25 !important;
+        font-weight: 950 !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta b {
+        color: #fbbf24 !important;
+        font-size: .72rem !important;
+        font-weight: 1000 !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em {
+        color: #94a3b8 !important;
+        font-style: normal !important;
+        font-size: .68rem !important;
+        font-weight: 1000 !important;
+        text-align: right !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em { color: #4ade80 !important; }
+      #rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em { color: #f87171 !important; }
+      #rolling-excel-overlay .v847-shot-footer {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 7px !important;
+      }
+      #rolling-excel-overlay .v847-shot-footer span {
+        border-radius: 12px !important;
+        background: rgba(15,23,42,.84) !important;
+        border: 1px solid rgba(51,65,85,.70) !important;
+        padding: 8px 10px !important;
+        color: #e5e7eb !important;
+        font-size: .70rem !important;
+        font-weight: 950 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+      }
+      #rolling-excel-overlay .v847-shot-footer .v851-result-total {
+        grid-column: 1 / -1 !important;
+      }
+      #rolling-excel-overlay .v847-shot-footer b { color: #f8fafc !important; }
+      #rolling-excel-overlay .v847-shot-footer b.pos { color: #22c55e !important; }
+      #rolling-excel-overlay .v847-shot-footer b.neg { color: #ef4444 !important; }
+      #rolling-excel-overlay .v847-bet-leg-result-panel:empty { display: none !important; }
+      #rolling-excel-overlay .v847-leg-panel-inner {
+        margin-top: 10px !important;
+        padding: 11px !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(251,191,36,.50) !important;
+        background: rgba(15,23,42,.84) !important;
+        display: grid !important;
+        gap: 8px !important;
+      }
+      #rolling-excel-overlay .v847-leg-panel-head {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+      }
+      #rolling-excel-overlay .v847-leg-panel-head b {
+        color: #fbbf24 !important;
+        font-size: .78rem !important;
+        font-weight: 1000 !important;
+      }
+      #rolling-excel-overlay .v847-leg-panel-head span {
+        color: #bfdbfe !important;
+        font-size: .72rem !important;
+        font-weight: 950 !important;
+      }
+      #rolling-excel-overlay .v847-leg-result-row {
+        border-radius: 12px !important;
+        padding: 10px !important;
+        background: rgba(15,23,42,.92) !important;
+        border: 1px solid rgba(51,65,85,.92) !important;
+        display: grid !important;
+        gap: 9px !important;
+      }
+      #rolling-excel-overlay .v847-leg-result-row.win { border-color: rgba(16,185,129,.70) !important; background: rgba(6,78,59,.40) !important; }
+      #rolling-excel-overlay .v847-leg-result-row.loss { border-color: rgba(248,113,113,.70) !important; background: rgba(127,29,29,.34) !important; }
+      #rolling-excel-overlay .v847-leg-result-row > span {
+        color: #f8fafc !important;
+        font-size: .76rem !important;
+        font-weight: 950 !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-meta {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        width: 100% !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-meta b {
+        color: #fbbf24 !important;
+        font-size: .72rem !important;
+        font-weight: 950 !important;
+        text-align: left !important;
+        min-width: max-content !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 5px !important;
+        flex: 0 0 auto !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button {
+        appearance: none !important;
+        width: 27px !important;
+        height: 27px !important;
+        min-width: 27px !important;
+        border-radius: 8px !important;
+        padding: 0 !important;
+        display: inline-grid !important;
+        place-items: center !important;
+        font-size: 14px !important;
+        font-weight: 950 !important;
+        cursor: pointer !important;
+        border: 1px solid transparent !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button.win {
+        background: rgba(6,78,59,.72) !important;
+        border-color: rgba(52,211,153,.46) !important;
+        color: #bbf7d0 !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button.loss {
+        background: rgba(127,29,29,.72) !important;
+        border-color: rgba(248,113,113,.46) !important;
+        color: #fecaca !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button.win.selected {
+        background: linear-gradient(145deg, #16a34a, #047857) !important;
+        border-color: rgba(220,252,231,.82) !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 1px rgba(34,197,94,.38), 0 0 13px rgba(34,197,94,.20) !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button.loss.selected {
+        background: linear-gradient(145deg, #dc2626, #991b1b) !important;
+        border-color: rgba(254,226,226,.82) !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 1px rgba(239,68,68,.38), 0 0 13px rgba(239,68,68,.20) !important;
+      }
+    `;
+    document.head.appendChild(style);
+  })();
+
   function getSoundSettings() {
     try {
       return {
@@ -549,6 +821,117 @@
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+
+  function v847BetLegStatusLabel(status) {
+    return status === "loss" ? "KAYBETTİ" : status === "win" ? "KAZANDI" : "BEKLİYOR";
+  }
+
+  function v847BetLegStatusClass(status) {
+    return status === "loss" ? "loss" : status === "win" ? "win" : "pending";
+  }
+
+  function v847BetLegsFromDom(day, slot) {
+    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
+    const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+    return [{ note, odds }, ...v763ComboRows(day, slot)].filter(row => row.note || Number(row.odds || 0));
+  }
+
+  function v847RenderBetLegResultPanel(day, slot) {
+    const rows = v847BetLegsFromDom(day, slot);
+    if (rows.length <= 1) return "";
+    const pending = v774GetPendingSlot(day, slot);
+    const results = Array.isArray(pending?.comboResults) ? pending.comboResults : [];
+    const done = rows.filter((_, idx) => results[idx] === "win" || results[idx] === "loss").length;
+    return `<div class="v847-leg-panel-inner">
+      <div class="v847-leg-panel-head"><b>Maç Sonuçları</b><span>${done}/${rows.length} sonuçlandı</span></div>
+      ${rows.map((row, idx) => {
+        const status = results[idx] === "loss" ? "loss" : results[idx] === "win" ? "win" : "";
+        const name = row.note || `Maç ${idx + 1}`;
+        const odds = Number(row.odds || 0) ? Number(row.odds).toFixed(2) : "-";
+        const safeName = v763EscapeHtml(name);
+        return `<div class="v847-leg-result-row ${status || "pending"}">
+          <span>${idx + 1}. ${safeName}</span>
+          <div class="v854-leg-result-meta">
+            <b>Oran: ${odds}</b>
+            <div class="v854-leg-result-actions">
+              <button type="button" class="win ${status === "win" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:win" onclick="return omega_SetBetLegResult(event, ${day}, ${slot}, ${idx}, 'win')" title="Bu maç kazandı">✓</button>
+              <button type="button" class="loss ${status === "loss" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:loss" onclick="return omega_SetBetLegResult(event, ${day}, ${slot}, ${idx}, 'loss')" title="Bu maç kaybetti">×</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`;
+  }
+
+  function v847RenderBetResultCard(day, slot, op, amt, baseOdds, comboRows, totalOdds, effect) {
+    const legs = [{ note: op.note || "Maç", odds: baseOdds }, ...comboRows.map(row => ({ note: row.note || "Maç", odds: Number(row.odds || 0) }))];
+    const rawResults = Array.isArray(op.comboResults) ? op.comboResults : [];
+    const isCombo = legs.length > 1;
+    const finalStatus = op.res === "loss" ? "loss" : "win";
+    const finalLabel = finalStatus === "loss" ? "KAYBETTİ" : "KAZANDI";
+    const totalLabel = finalStatus === "loss" ? "Kayıp" : "Kazanç";
+    const title = isCombo ? `KOMBİNE ${legs.length} MAÇ` : "TEKLİ BAHİS";
+    const displayValue = finalStatus === "win"
+      ? (Number(amt || 0) && Number(totalOdds || 0) ? Number(amt || 0) * Number(totalOdds || 0) : Math.max(0, Number(effect || 0)))
+      : -Math.abs(Number(amt || 0));
+    const netText = `${displayValue >= 0 ? "" : "-"}$${Math.abs(displayValue).toFixed(2)}`;
+    const rowsHtml = legs.map((leg, idx) => {
+      let status = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
+      if (!status && !isCombo) status = finalStatus;
+      const name = leg.note || `Maç ${idx + 1}`;
+      const odds = Number(leg.odds || 0) ? Number(leg.odds).toFixed(2) : "-";
+      const safeName = v763EscapeHtml(name);
+      return `<li class="${v847BetLegStatusClass(status)}">
+        <span>${idx + 1}. ${safeName}</span>
+        <div class="v851-shot-line-meta">
+          <b>Oran: ${odds}</b>
+          <em>${v847BetLegStatusLabel(status)}</em>
+        </div>
+      </li>`;
+    }).join("");
+    return `<div class="kapsul v32 v847-shot-result ${finalStatus}">
+      <div class="v850-shot-toolbar">
+        <button type="button" class="v847-shot-back v850-shot-return" onclick="return omega_ReturnExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
+        <button type="button" class="v850-shot-close" onclick="return omega_CloseExcelOp(event, ${day}, ${slot})" title="Kapat"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="v847-shot-head">
+        <b>${title}</b>
+        <div class="v847-shot-head-tools">
+          <span class="${finalStatus}">${finalLabel}</span>
+          <button type="button" class="v847-shot-camera" onclick="return omega_RollingResultPhoto(event, ${day}, ${slot})" title="Sonuç fotoğrafını göster"><i class="fa-solid fa-camera"></i></button>
+        </div>
+      </div>
+      <ul class="v847-shot-lines">${rowsHtml}</ul>
+      <div class="v847-shot-footer v851-shot-footer">
+        <span>Toplam Oran <b>${Number(totalOdds || 0) ? Number(totalOdds).toFixed(2) : "-"}</b></span>
+        <span>Tutar <b>${v768Money(amt)}</b></span>
+        <span class="v851-result-total ${finalStatus}">${totalLabel} <b class="${displayValue >= 0 ? "pos" : "neg"}">${netText}</b></span>
+      </div>
+    </div>`;
+  }
+
+  function v847SetBetLegResult(day, slot, index, status) {
+    if (!Number.isFinite(day) || !Number.isFinite(slot) || !Number.isFinite(index)) return false;
+    const domEntry = v774PendingFromDom(day, slot);
+    const savedEntry = v774GetPendingSlot(day, slot);
+    const pending = domEntry || savedEntry;
+    if (!pending || !pending.note) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Önce maç ve oran alanlarını doldur.");
+      return false;
+    }
+    const legs = [{ note: pending.note, odds: pending.odds }, ...(Array.isArray(pending.combo) ? pending.combo : [])].filter(row => row.note || Number(row.odds || 0));
+    if (legs.length <= 1) return false;
+    const results = Array.from({ length: legs.length }, (_, i) => {
+      const v = Array.isArray(pending.comboResults) ? pending.comboResults[i] : "";
+      return v === "loss" ? "loss" : v === "win" ? "win" : "";
+    });
+    const next = status === "loss" ? "loss" : "win";
+    results[index] = results[index] === next ? "" : next;
+    v774SetPendingSlot(day, slot, { ...pending, comboResults: results, updatedAt: Date.now() });
+    omega_RenderExcelTable();
+    return false;
+  }
+
   function v768SlotOdds(day, slot) {
     const mainOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
     const extras = v763ComboRows(day, slot);
@@ -562,6 +945,10 @@
     const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
     const possible = totalOdds && stake ? stake * totalOdds : 0;
     box.innerHTML = `<span>Toplam Oran: <b>${totalOdds ? totalOdds.toFixed(2) : "-"}</b></span><span>Tahmini Kazanç: <b>${possible ? v768Money(possible) : "-"}</b></span>`;
+    const legPanel = document.querySelector(`[data-v847-leg-panel="${day}:${slot}"]`);
+    if (legPanel) legPanel.innerHTML = v847RenderBetLegResultPanel(day, slot);
+    const actions = document.querySelector(`[data-v847-main-actions="${day}:${slot}"]`);
+    if (actions) actions.classList.remove("v847-hide-main-actions");
   }
 
   function v768BindBetCalc(root) {
@@ -598,7 +985,8 @@
       odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0)
     })).filter(row => row.note || Number(row.odds || 0)) : [];
     if (!note && stake === "" && odds === "" && !combo.length) return null;
-    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
+    const comboResults = Array.isArray(entry.comboResults) ? entry.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1) : [];
+    return { note, amt: stake, odds, combo, comboResults, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
   }
 
   function v774PendingFromDom(day, slot) {
@@ -611,9 +999,11 @@
     const stake = stakeText === "" ? "" : Number(stakeText || 0);
     const odds = oddsText === "" ? "" : Number(oddsText || 0);
     const combo = v763ComboRows(day, slot).map(row => ({ note: row.note, odds: row.odds || "" }));
+    const previous = v774GetPendingSlot(day, slot);
+    const comboResults = Array.isArray(previous?.comboResults) ? previous.comboResults : [];
     const hasAny = Boolean(note || stakeText !== "" || oddsText !== "" || combo.length);
     if (!hasAny) return null;
-    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Date.now() };
+    return { note, amt: stake, odds, combo, comboResults, status: "pending", updatedAt: Date.now() };
   }
 
   function v774SetPendingSlot(day, slot, entry) {
@@ -1140,24 +1530,22 @@
           const pnl = isCryptoV491 ? Math.abs(baseOdds) : (op.res === "win" ? (amt * totalOdds) - amt : amt);
           const effect = op.res === "win" ? pnl : -pnl;
           runningBalance += effect; totalProfit += effect; dayProfit += effect;
-          const title = isCryptoV491
-            ? (op.note || "İşlem")
-            : (comboRows.length ? "Kombine" : (op.note || "Maç"));
-          const detail = isCryptoV491
-            ? `$${amt} · Net $${Number(baseOdds || 0).toFixed(2)}`
-            : (comboRows.length ? `${comboRows.length + 1} maç · $${amt} x ${Number(totalOdds || 0).toFixed(2)}` : `$${amt} x ${baseOdds}`);
-          const comboHtml = (!isCryptoV491 && comboRows.length) ? `<ul class="v763-result-combo-list"><li>${v763EscapeHtml(op.note || "Maç")} <b>${Number(baseOdds || 0).toFixed(2)}</b></li>${comboRows.map(row => `<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`).join("")}</ul>` : "";
-          cards.push(`
-            <div class="kapsul v32 ${op.res}">
-              <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
-              <div class="k-result">
-                <div class="k-note-show">${v763EscapeHtml(title)}</div>
-                <b>${detail}</b>
-                <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
-                ${comboHtml}
+          if (!isCryptoV491) {
+            cards.push(v847RenderBetResultCard(day, slot, op, amt, baseOdds, comboRows, totalOdds, effect));
+          } else {
+            const title = op.note || "İşlem";
+            const detail = `$${amt} · Net $${Number(baseOdds || 0).toFixed(2)}`;
+            cards.push(`
+              <div class="kapsul v32 ${op.res}">
+                <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
+                <div class="k-result">
+                  <div class="k-note-show">${v763EscapeHtml(title)}</div>
+                  <b>${detail}</b>
+                  <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
+                </div>
               </div>
-            </div>
-          `);
+            `);
+          }
         } else {
           const pendingV774 = !isCryptoV491 ? v774GetPendingSlot(day, slot) : null;
           const pNoteV774 = v763EscapeHtml(pendingV774?.note || "");
@@ -1188,9 +1576,10 @@
                   <div class="v765-extra-match-list">${pComboHtmlV774}</div>
                   <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
                   <div class="v768-bet-calc" data-v768-calc="${day}:${slot}"><span>Toplam Oran: <b>-</b></span><span>Tahmini Kazanç: <b>-</b></span></div>
+                  <div class="v847-bet-leg-result-panel" data-v847-leg-panel="${day}:${slot}"></div>
                 </div>
               `}
-              <div class="k-actions v32">
+              <div class="k-actions v32" data-v847-main-actions="${day}:${slot}">
                 <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
                 <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>
               </div>
@@ -1240,12 +1629,106 @@
     omega_SaveRollingDB();
   };
 
-  window.omega_ResolveExcelOp = function(day, slot, result) {
+  window.omega_SetBetLegResult = function(event, day, slot, index, status) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    return v847SetBetLegResult(Number(day), Number(slot), Number(index), status === "loss" ? "loss" : "win");
+  };
+
+  window.omega_CloseExcelOp = function(event, day, slot) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    const currentPlan = ensureRollingPlan();
+    if (currentPlan.ops?.[day]) currentPlan.ops[day][slot] = null;
+    if (currentPlan.pending?.[day]) currentPlan.pending[day][slot] = null;
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+    return false;
+  };
+
+  window.omega_ReturnExcelOp = function(event, day, slot) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    const currentPlan = ensureRollingPlan();
+    const op = currentPlan.ops?.[day]?.[slot];
+    if (!op) return false;
+    const combo = Array.isArray(op.combo)
+      ? op.combo.map(row => ({ note: String(row?.note || "").trim(), odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0) }))
+      : [];
+    const comboResults = Array.isArray(op.comboResults)
+      ? op.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1)
+      : [];
+    const pendingEntry = v774NormalizePendingEntry({
+      note: op.note || "",
+      amt: op.amt === "" || op.amt == null ? "" : Number(op.amt || 0),
+      odds: op.odds === "" || op.odds == null ? "" : Number(op.odds || 0),
+      combo,
+      comboResults,
+      status: "pending",
+      updatedAt: Date.now()
+    });
+    if (!currentPlan.pending) currentPlan.pending = {};
+    if (pendingEntry && pendingEntry.note) {
+      if (!currentPlan.pending[day]) currentPlan.pending[day] = {};
+      currentPlan.pending[day][slot] = pendingEntry;
+    }
+    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    currentPlan.ops[day][slot] = null;
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+    return false;
+  };
+
+  window.omega_RollingResultPhoto = function(event, day, slot) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    const uri = v776BuildSlotPhotoSvg(day, slot);
+    if (!uri) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Sonuç fotoğrafı hazırlanamadı.");
+      else alert("Sonuç fotoğrafı hazırlanamadı.");
+      return false;
+    }
+    let host = document.getElementById("omega-rolling-feature-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-rolling-feature-host";
+      document.body.appendChild(host);
+    }
+    host.innerHTML = `<div class="v776-photo-overlay v850-result-photo-overlay" data-v776-photo-close>
+      <section class="v776-photo-modal v850-result-photo-modal">
+        <div class="v776-photo-head v850-result-photo-head">
+          <div><b>${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</b><span>GÜN ${day} · BAHİS ${slot + 1}</span></div>
+          <button type="button" data-v776-photo-close>×</button>
+        </div>
+        <div class="v776-photo-actions v850-result-photo-actions">
+          <button type="button" data-v777-photo-download><i class="fa-solid fa-download"></i> Resmi İndir</button>
+        </div>
+        <img src="${uri}" alt="${_ACTIVE_EXCEL_DAYS} Günlük Rolling bahis sonucu">
+      </section>
+    </div>`;
+    host.style.display = "block";
+    host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
+      host.innerHTML = "";
+      host.style.display = "none";
+    }));
+    host.querySelector("[data-v777-photo-download]")?.addEventListener("click", () => {
+      v777DownloadPhotoPng(uri, `${_ACTIVE_EXCEL_DAYS}-gunluk-rolling-gun-${day}-bahis-${slot + 1}.png`);
+    });
+    return false;
+  };
+
+  window.omega_ResolveExcelOp = function(day, slot, result, meta = {}) {
     const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
     const isCrypto = localStorage.getItem("finance_rolling_mode") === "crypto";
     const amt = parseFloat(document.getElementById(`e-a-${day}-${slot}`)?.value);
     const odds = parseFloat(document.getElementById(`e-o-${day}-${slot}`)?.value);
     const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
+    const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
     const hasComboGap = comboRows.some(row => !row.note || !Number(row.odds || 0));
     if (isNaN(amt) || isNaN(odds) || (!isCrypto && hasComboGap)) {
       if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Tutar ve Net K/Z $ alanını doldur." : "Maç, oran, tutar ve ek maç oranlarını doldur.");
@@ -1257,7 +1740,12 @@
     }
     const currentPlan = ensureRollingPlan();
     if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
-    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, res: result, netMode: isCrypto ? "amount" : "odds" };
+    const comboResults = !isCrypto
+      ? (Array.isArray(meta.comboResults) ? meta.comboResults : Array.isArray(pendingBeforeResolve?.comboResults) ? pendingBeforeResolve.comboResults : [])
+          .map(v => v === "loss" ? "loss" : v === "win" ? "win" : "")
+          .slice(0, comboRows.length + 1)
+      : [];
+    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, comboResults, res: result, netMode: isCrypto ? "amount" : "odds" };
     if (currentPlan.pending?.[day]) {
       delete currentPlan.pending[day][slot];
       if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];
