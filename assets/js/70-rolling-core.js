@@ -871,29 +871,27 @@
     if (m === "crypto") {
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
-        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v814-crypto-detail-head v819-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+        const safeId = escapeHtml(item.id || "");
+        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${safeId}">
+          <div class="v814-crypto-detail-head v819-crypto-detail-head v866-target-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><div class="v866-target-head-actions"><button type="button" class="photo" data-target-self-photo="${m}:${safeId}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete v865-clear-x" data-target-self-delete="${m}:${safeId}" title="İşlemi sil"><i class="fa-solid fa-xmark"></i></button></div></div>
           <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
           <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
-          <div class="v819-target-card-footer crypto"><button type="button" class="delete v865-clear-x" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="İşlemi kapat"><i class="fa-solid fa-xmark"></i></button></div>
         </li>`;
       }).join("");
       return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
     }
     const details = rows.slice(-8).reverse().map(item => {
       const result = cleanText(item.result || "");
-      const odds = v812BetOddsProduct(item);
-      const possibleReturn = v812BetPotential(item);
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+      const safeId = escapeHtml(item.id || "");
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${safeId}">
+        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v866-target-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><div class="v866-target-head-actions"><button type="button" class="photo" data-target-self-photo="${m}:${safeId}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete v865-clear-x" data-target-self-delete="${m}:${safeId}" title="Tüm maçları sil"><i class="fa-solid fa-xmark"></i></button></div></div>
         <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list">${v813BetLegRowsHtml(item)}</div>
         ${v864BetDetailSummaryHtml(item)}
-        <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet v865-target-bet-footer">
-          <div class="v865-target-final-actions">
-            <button type="button" class="win" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win">Kupon Kazandı</button>
-            <button type="button" class="loss" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss">Kupon Kaybetti</button>
+        <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet v865-target-bet-footer v866-target-bet-footer">
+          <div class="v865-target-final-actions v866-target-final-actions">
+            <button type="button" class="win" data-target-self-result="${m}:${safeId}:win">Kupon Kazandı</button>
+            <button type="button" class="loss" data-target-self-result="${m}:${safeId}:loss">Kupon Kaybetti</button>
           </div>
-          <button type="button" class="delete v865-clear-x" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Bahisi kapat"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </li>`;
     }).join("");
@@ -1344,7 +1342,7 @@
       <details ${keepOpen ? "open" : ""}>
         <summary class="v864-active-card-top">
           <div><b>Kombine</b><span>${matches.length} maç · ${done}/${matches.length} sonuçlandı</span></div>
-          <div class="v864-card-top-actions">${renderCardShotButton(cardId)}<button type="button" class="v864-card-clear-btn" data-active-card-clear="bet:${row.index}" title="Bahisi temizle"><i class="fa-solid fa-xmark"></i></button></div>
+          <div class="v864-card-top-actions">${renderCardShotButton(cardId)}<button type="button" class="v864-card-clear-btn" data-active-card-clear="bet:${row.index}" title="Tüm maçları sil"><i class="fa-solid fa-xmark"></i></button></div>
         </summary>
         ${renderBetInfoBar(row)}
         <ul class="v763-combo-match-list">${matchRows}</ul>
@@ -2640,10 +2638,29 @@
       const [modeRaw, id] = String(btn.dataset.targetSelfDelete || "bet:").split(":");
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       if (!id) return;
-      const store = loadTargetItems();
-      store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
-      saveTargetItems(store);
-      refresh();
+      const apply = () => {
+        const store = loadTargetItems();
+        store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
+        saveTargetItems(store);
+        refresh();
+      };
+      if (mode === "bet") {
+        openTargetResultConfirm({
+          title: "Tüm maçlar silinsin mi?",
+          message: "Tüm maçları silmek istediğinizden emin misiniz?",
+          okText: "Tüm maçları sil",
+          cancelText: "Vazgeç",
+          tone: "danger"
+        }, apply);
+      } else {
+        openTargetResultConfirm({
+          title: "İşlem silinsin mi?",
+          message: "Bu kripto işlemini silmek istediğinizden emin misiniz?",
+          okText: "İşlemi sil",
+          cancelText: "Vazgeç",
+          tone: "danger"
+        }, apply);
+      }
     }));
     mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
@@ -2934,10 +2951,13 @@
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       const slotIndex = Number(slotRaw || 0);
       if (mode !== "bet") return;
+      const confirmFresh = loadState();
+      const confirmCoupon = getBetCouponGroups(confirmFresh).coupons.find(c => Number(c.slotIndex || 0) === slotIndex);
+      const isComboClear = !!(confirmCoupon && Array.isArray(confirmCoupon.matches) && confirmCoupon.matches.length > 1);
       openTargetResultConfirm({
-        title: "Bahis temizlensin mi?",
-        message: "Bahisi temizlemek istediğinizden emin misiniz? Bu işlem aktif detay ve ana tablodaki ilgili bahis alanını temizler.",
-        okText: "Evet, temizle",
+        title: isComboClear ? "Tüm maçlar silinsin mi?" : "Bahis temizlensin mi?",
+        message: isComboClear ? "Tüm maçları silmek istediğinizden emin misiniz?" : "Bahisi temizlemek istediğinizden emin misiniz? Bu işlem aktif detay ve ana tablodaki ilgili bahis alanını temizler.",
+        okText: isComboClear ? "Tüm maçları sil" : "Evet, temizle",
         cancelText: "Vazgeç",
         tone: "danger"
       }, () => {
@@ -3020,8 +3040,8 @@
           ACTIVE_COMBO_DETAIL_SLOT = comboRef.slotIndex;
           applyComboLegVisualResult(fresh, comboRef.slotIndex, comboRef.matchIndex, finalStatus);
           saveState(fresh);
-          PENDING_BOARD_OPEN_MODE = "bet";
-          renderFloatingPanel();
+          const keepActiveBetPanel = PENDING_BOARD_OPEN_MODE === "bet";
+          if (keepActiveBetPanel) renderFloatingPanel();
           renderModule();
           return;
         }
