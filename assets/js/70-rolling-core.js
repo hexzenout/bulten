@@ -422,7 +422,7 @@
             ${CONFIRM_DIALOG.detail ? `<span>${escapeHtml(CONFIRM_DIALOG.detail)}</span>` : ""}
           </div>
           <div class="v757-confirm-actions">
-            <button type="button" class="ghost" data-confirm-no>İptal</button>
+            <button type="button" class="ghost" data-confirm-no>${escapeHtml(CONFIRM_DIALOG.cancelText || "İptal")}</button>
             <button type="button" class="ok" data-confirm-yes>${escapeHtml(CONFIRM_DIALOG.confirmText || "Onayla")}</button>
           </div>
         </section>
@@ -1358,14 +1358,39 @@
     </article>`;
   }
 
-  function addCouponHistoryRecord(state, coupon, status) {
-    const row = coupon.row || coupon.rows?.[0];
+  function closeCouponActiveState(state, coupon, status, record = null) {
+    const row = coupon?.row || coupon?.rows?.[0];
     if (!row) return;
     const totals = rowBetTotals(row);
+    const finalStatus = status === "loss" ? "loss" : "win";
+    const pnl = record ? Number(record.pnl || 0) : (finalStatus === "win" ? Math.max(0, totals.possibleWin - totals.stake) : -totals.stake);
+    const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
+    sourceRows.forEach((src, idx) => {
+      const slot = state.modeSlots.bet[Number(src.index || 0)];
+      if (!slot) return;
+      slot.status = finalStatus;
+      slot.pnl = idx === 0 ? pnl : 0;
+      if (record?.id) slot.historyId = record.id;
+      slot.historyStatus = finalStatus;
+    });
+  }
+  function addCouponHistoryRecord(state, coupon, status, options = {}) {
+    const row = coupon.row || coupon.rows?.[0];
+    if (!row) return null;
+    const totals = rowBetTotals(row);
     const h = loadHistory();
-    const now = Date.now();
     const names = getSlotMatches(row).map(m => m.name).filter(Boolean);
     const finalStatus = status === "loss" ? "loss" : "win";
+    const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
+    const existingId = sourceRows
+      .map(src => state.modeSlots.bet[Number(src.index || 0)]?.historyStatus === finalStatus ? state.modeSlots.bet[Number(src.index || 0)]?.historyId : "")
+      .find(Boolean);
+    const existing = existingId ? (h.bet || []).find(rec => String(rec.id || "") === String(existingId)) : null;
+    if (existing) {
+      if (options.closeActive !== false) closeCouponActiveState(state, coupon, finalStatus, existing);
+      return existing;
+    }
+    const now = Date.now();
     const rec = {
       id: "rh_" + now + "_coupon_" + Math.random().toString(36).slice(2),
       mode: "bet",
@@ -1379,15 +1404,18 @@
     };
     h.bet.unshift(rec);
     saveHistory(h);
-    const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
-    sourceRows.forEach((src, idx) => {
+    sourceRows.forEach(src => {
       const slot = state.modeSlots.bet[Number(src.index || 0)];
       if (!slot) return;
-      slot.status = finalStatus;
-      slot.pnl = idx === 0 ? rec.pnl : 0;
       slot.historyId = rec.id;
       slot.historyStatus = finalStatus;
+      if (options.closeActive === false) {
+        slot.status = "pending";
+        slot.pnl = 0;
+      }
     });
+    if (options.closeActive !== false) closeCouponActiveState(state, coupon, finalStatus, rec);
+    return rec;
   }
   function renderPendingBoard(mode, state) {
     const isCrypto = mode === "crypto";
@@ -2744,7 +2772,28 @@
         const coupons = getBetCouponGroups(fresh).coupons;
         const coupon = coupons.find(c => Number(c.slotIndex) === Number(action.slotIndex)) || coupons.find(c => c.id === Number(action.couponId || 1));
         if (coupon) {
-          addCouponHistoryRecord(fresh, coupon, action.status === "loss" ? "loss" : "win");
+          const finalStatus = action.status === "loss" ? "loss" : "win";
+          addCouponHistoryRecord(fresh, coupon, finalStatus, { closeActive: false });
+          saveState(fresh);
+          CONFIRM_DIALOG = {
+            type: "cleanupCoupon",
+            slotIndex: coupon.slotIndex,
+            status: finalStatus,
+            keepActivePanel: action.keepActivePanel || "bet",
+            tone: finalStatus === "loss" ? "danger" : "success",
+            title: "Detay temizlensin mi?",
+            message: "Sonuç işlendi. Bu kombine kupon detaydan kaldırılsın mı?",
+            detail: "Hayır dersen kupon aktif bahis detayında kalır; geçmiş kaydı silinmez.",
+            cancelText: "Hayır, kalsın",
+            confirmText: "Evet, temizle"
+          };
+        }
+      } else if (action.type === "cleanupCoupon") {
+        const fresh = loadState();
+        const coupons = getBetCouponGroups(fresh).coupons;
+        const coupon = coupons.find(c => Number(c.slotIndex) === Number(action.slotIndex));
+        if (coupon) {
+          closeCouponActiveState(fresh, coupon, action.status === "loss" ? "loss" : "win");
           saveState(fresh);
         }
       } else if (action.type === "comboMatch") {
@@ -2764,7 +2813,19 @@
           const allWin = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win");
           if (anyLoss || allWin) {
             const finalStatus = anyLoss ? "loss" : "win";
-            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
+            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus, { closeActive: false });
+            CONFIRM_DIALOG = {
+              type: "cleanupCoupon",
+              slotIndex: baseIndex,
+              status: finalStatus,
+              keepActivePanel: action.keepActivePanel || "bet",
+              tone: finalStatus === "loss" ? "danger" : "success",
+              title: "Detay temizlensin mi?",
+              message: "Sonuç işlendi. Bu kombine kupon detaydan kaldırılsın mı?",
+              detail: "Hayır dersen kupon aktif bahis detayında kalır; geçmiş kaydı silinmez.",
+              cancelText: "Hayır, kalsın",
+              confirmText: "Evet, temizle"
+            };
           }
           saveState(fresh);
         }
@@ -2772,6 +2833,10 @@
         deleteHistoryRecord(action.mode, action.id);
       } else if (action.type === "restoreHistory") {
         restoreHistoryRecord(action.mode, action.id);
+      }
+      if (CONFIRM_DIALOG) {
+        refresh();
+        return;
       }
       const keepPanel = action.keepActivePanel || CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
       if (keepPanel) {
@@ -2817,7 +2882,7 @@
           : `${matchName} için ${nextStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
         detail: nextStatus === "pending"
           ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur."
-          : (nextStatus === "loss" ? "Tek maç kaybı kombine kuponu direkt kaybettirir ve Geçmiş/Rapor merkezine işler." : "Tüm maçlar kazanırsa kombine kupon kazanmış sayılır."),
+          : (nextStatus === "loss" ? "Tek maç kaybı kombine kuponu kaybettirir; detay temizliği ikinci uyarıya bağlıdır." : "Tüm maçlar kazanırsa kombine kupon kazanır; detay temizliği ikinci uyarıya bağlıdır."),
         confirmText: nextStatus === "pending" ? "BEKLİYOR olarak işaretle" : (nextStatus === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle")
       };
       refresh();
@@ -2876,7 +2941,7 @@
           tone: finalStatus === "loss" ? "danger" : "success",
           title: finalStatus === "pending" ? "Tekrar bekliyor durumuna al" : "Sonucu kaydetmeden önce onayla",
           message: finalStatus === "pending" ? `${name} tekrar BEKLİYOR durumuna alınacak.` : `${name} için sonuç: ${resultLabel}.`,
-          detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : (coupon ? "Kombine kupon Geçmiş/Rapor merkezine tek kayıt olarak işlenecek." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et."),
+          detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : (coupon ? "Kombine kupon tek kayıt olarak işlenecek; detay temizliği ikinci uyarıya bağlıdır." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et."),
           confirmText: finalStatus === "pending" ? "BEKLİYOR olarak kaydet" : `${resultLabel} olarak kaydet`
         };
         refresh();
