@@ -15,6 +15,7 @@
   const TARGET_CARD_OPEN_KEY = "v798_rolling_target_card_open";
   const TARGET_LOG_OPEN_KEY = "v802_rolling_target_log_open";
   const TARGET_ITEMS_KEY = "v810_rolling_target_items_v1";
+  const TARGET_CLOSED_PNL_KEY = "v829_rolling_target_closed_pnl_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -592,6 +593,29 @@
     };
     localStorage.setItem(TARGET_ITEMS_KEY, JSON.stringify(clean));
   }
+  function loadTargetClosedPnl() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(TARGET_CLOSED_PNL_KEY) || "{}");
+      return {
+        bet: Number(raw.bet || 0),
+        crypto: Number(raw.crypto || 0)
+      };
+    } catch {
+      return { bet: 0, crypto: 0 };
+    }
+  }
+  function saveTargetClosedPnl(data) {
+    localStorage.setItem(TARGET_CLOSED_PNL_KEY, JSON.stringify({
+      bet: Number(data?.bet || 0),
+      crypto: Number(data?.crypto || 0)
+    }));
+  }
+  function addTargetClosedPnl(mode, amount) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const data = loadTargetClosedPnl();
+    data[m] = Number(data[m] || 0) + Number(amount || 0);
+    saveTargetClosedPnl(data);
+  }
   function v810TargetItemId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   }
@@ -686,7 +710,9 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const store = loadTargetItems();
     const rows = (store[m] || []).filter(Boolean);
-    return rows.reduce((sum, item) => sum + Number(v810TargetItemProfit(item, m).value || 0), 0);
+    const openPnl = rows.reduce((sum, item) => sum + Number(v810TargetItemProfit(item, m).value || 0), 0);
+    const closed = loadTargetClosedPnl();
+    return Number(closed[m] || 0) + openPnl;
   }
   function v812ResultBadge(item, mode) {
     const result = cleanText(item?.result || "");
@@ -971,14 +997,15 @@
       lineRows.forEach(line => {
         const wrapped = v785WrapPhotoText(line.text, 40).slice(0, 4);
         const hasResult = !!line.result;
-        const rowH = Math.max(hasResult ? 58 : 40, 16 + wrapped.length * lineH + (hasResult ? 8 : 0));
+        const rowH = Math.max(40, 16 + wrapped.length * lineH);
         const statusText = line.result === "loss" ? "KAYBETTİ" : "KAZANDI";
         const statusColor = line.result === "loss" ? "#ef4444" : "#22c55e";
+        const statusX = oddsX - 76;
         rowHtml.push(`
           <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="${rowH}" rx="12" fill="#0f172a" stroke="#334155"/>
           ${wrapped.map((txt, idx) => `<text x="${textX}" y="${cursorY - 3 + idx * lineH}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(txt)}</text>`).join("")}
-          ${line.odds ? `<text x="${oddsX}" y="${hasResult ? cursorY - 10 : cursorY - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${Number(line.odds).toFixed(2)}</text>` : ""}
-          ${hasResult ? `<text x="${oddsX}" y="${cursorY + 14}" text-anchor="end" fill="${statusColor}" font-size="15" font-family="Arial" font-weight="900">${statusText}</text>` : ""}`);
+          ${hasResult ? `<text x="${statusX}" y="${cursorY - 3}" text-anchor="end" fill="${statusColor}" font-size="19" font-family="Arial" font-weight="900">${statusText}</text>` : ""}
+          ${line.odds ? `<text x="${oddsX}" y="${cursorY - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${Number(line.odds).toFixed(2)}</text>` : ""}`);
         cursorY += rowH + rowGap;
       });
       if (isMultiEntry) cursorY += 8;
@@ -2193,6 +2220,9 @@
       const targetItems = loadTargetItems();
       targetItems[mode] = [];
       saveTargetItems(targetItems);
+      const closedPnl = loadTargetClosedPnl();
+      closedPnl[mode] = 0;
+      saveTargetClosedPnl(closedPnl);
       saveState(state);
       refresh();
     }));
@@ -2219,6 +2249,29 @@
       }
       row.remove();
     });
+    const handleCryptoEntryRemove = btn => {
+      const entry = btn.closest('[data-target-crypto-entry="1"]');
+      const list = entry?.parentElement;
+      if (!entry || !list) return;
+      if (list.querySelectorAll('[data-target-crypto-entry="1"]').length <= 1) {
+        entry.querySelectorAll('input').forEach(input => { input.value = ''; });
+        entry.querySelectorAll('[data-target-self-tp="crypto"]').forEach((row, idx) => {
+          if (idx === 0) row.querySelectorAll('input').forEach(input => { input.value = ''; });
+          else row.remove();
+        });
+        return;
+      }
+      entry.remove();
+    };
+    mount.addEventListener('click', event => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const remove = target.closest('[data-target-crypto-entry-remove]');
+      if (!remove || !mount.contains(remove)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      handleCryptoEntryRemove(remove);
+    }, true);
     mount.querySelectorAll("[data-target-bet-leg-remove]").forEach(bindTargetBetLegRemove);
     mount.querySelectorAll('[data-target-crypto-entry-add],[data-target-crypto-entry-remove],[data-target-tp-add],[data-target-tp-remove-last],[data-target-bet-leg-add],[data-target-bet-leg-remove]').forEach(btn => {
       btn.addEventListener('pointerdown', () => {
@@ -2247,20 +2300,6 @@
       if (!list) return;
       if (list.querySelectorAll("[data-target-self-tp]").length >= 6) return;
       list.insertAdjacentHTML("beforeend", v811CryptoTpRow());
-    }));
-    mount.querySelectorAll("[data-target-crypto-entry-remove]").forEach(btn => btn.addEventListener("click", () => {
-      const entry = btn.closest('[data-target-crypto-entry="1"]');
-      const list = entry?.parentElement;
-      if (!entry || !list) return;
-      if (list.querySelectorAll('[data-target-crypto-entry="1"]').length <= 1) {
-        entry.querySelectorAll('input').forEach(input => { input.value = ''; });
-        entry.querySelectorAll('[data-target-self-tp="crypto"]').forEach((row, idx) => {
-          if (idx === 0) row.querySelectorAll('input').forEach(input => { input.value = ''; });
-          else row.remove();
-        });
-        return;
-      }
-      entry.remove();
     }));
     mount.querySelectorAll("[data-target-crypto-entry-add]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.targetCryptoEntryAdd === "crypto" ? "crypto" : "bet";
@@ -2344,22 +2383,34 @@
         dirty = false;
         if (saved) refresh();
       });
-      form.addEventListener('focusout', event => {
-        const next = event.relatedTarget;
-        if (next && form.contains(next)) return;
-        setTimeout(() => {
-          if (form.contains(document.activeElement) || !dirty) return;
-          if (form.dataset.skipAutosaveOnce === '1') {
-            delete form.dataset.skipAutosaveOnce;
-            dirty = false;
-            return;
-          }
-          const saved = saveTargetSelfFromForm(autosaveMode);
+      form.addEventListener('focusout', () => {
+        if (form.dataset.skipAutosaveOnce === '1') {
+          delete form.dataset.skipAutosaveOnce;
           dirty = false;
-          if (saved) refresh();
-        }, 220);
+        }
       });
     });
+    const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
+      const mode = modeRaw === "crypto" ? "crypto" : "bet";
+      const latest = loadTargetItems();
+      latest[mode] = Array.isArray(latest[mode]) ? latest[mode] : [];
+      const row = rowSnapshot || latest[mode].find(item => String(item.id || "") === String(id));
+      if (row) addTargetClosedPnl(mode, Number(v810TargetItemProfit(row, mode).value || 0));
+      latest[mode] = latest[mode].filter(item => String(item.id || "") !== String(id));
+      saveTargetItems(latest);
+      refresh();
+    };
+    const askTargetCleanup = (modeRaw, id, rowSnapshot, tone = "success") => {
+      const mode = modeRaw === "crypto" ? "crypto" : "bet";
+      const label = mode === "crypto" ? "işlemi" : "bahisi";
+      openTargetResultConfirm({
+        title: "Detay temizlensin mi?",
+        message: `Sonuç işlendi. Bu ${label} detaydan kaldırılsın mı?`,
+        okText: "Evet, temizle",
+        cancelText: "Hayır, kalsın",
+        tone
+      }, () => removeTargetItemAfterResult(mode, id, rowSnapshot));
+    };
     mount.querySelectorAll("[data-target-self-tp-done]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw] = String(btn.dataset.targetSelfTpDone || "crypto::0").split(":");
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
@@ -2372,33 +2423,25 @@
       row.tps = Array.isArray(row.tps) ? row.tps : [];
       if (!row.tps[index]) return;
       const nextDone = !row.tps[index].done;
-      const isAllDoneAfter = () => row.tps.length > 0 && row.tps.every((tp, idx) => idx === index ? nextDone : !!tp.done);
-      const apply = closeTrade => {
+      const allDoneAfter = row.tps.length > 0 && row.tps.every((tp, idx) => idx === index ? nextDone : !!tp.done);
+      const apply = () => {
         row.tps[index].done = nextDone;
         if (row.tps[index].done && row.result === "stop") row.result = "";
         const allDone = row.tps.length > 0 && row.tps.every(tp => !!tp.done);
-        row.result = closeTrade || allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
+        row.result = allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
         saveTargetItems(store);
         refresh();
+        if (nextDone && allDone) askTargetCleanup("crypto", id, row, "success");
       };
-      if (!nextDone) { apply(false); return; }
+      if (!nextDone) { apply(); return; }
       const label = cleanText(row.tps[index].target || '') || `TP ${index + 1}`;
       const profit = v810NumberOrBlank(row.tps[index].profit) !== "" ? ` · ${signedMoney(Number(row.tps[index].profit || 0))}` : "";
-      const allDoneAfter = isAllDoneAfter();
       openTargetResultConfirm({
         title: "TP kazancı onayı",
         message: `"${label}" hedefini kazanç olarak işlemek istiyor musun?${profit}`,
         okText: "Kazanç yaz",
         tone: "success"
-      }, () => {
-        if (!allDoneAfter) { apply(false); return; }
-        openTargetResultConfirm({
-          title: "İşlem kapatma onayı",
-          message: "Tüm TP hedefleri işaretlendi. Bu işlemi kapatmak istediğinden emin misin?",
-          okText: "İşlemi kapat",
-          tone: "success"
-        }, () => apply(true));
-      });
+      }, apply);
     }));
     mount.querySelectorAll("[data-target-bet-leg-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw, resultRaw] = String(btn.dataset.targetBetLegResult || "bet:::").split(":");
@@ -2423,6 +2466,7 @@
         if (allMarked) row.result = filled.some(leg => cleanText(leg.result || "") === "loss") ? "loss" : "win";
         saveTargetItems(store);
         refresh();
+        if (allMarked && row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
       };
       if (!next) { apply(); return; }
       const tmpLegs = row.legs.map((leg, idx) => idx === index ? { ...leg, result: next } : { ...leg });
@@ -2460,6 +2504,9 @@
         if (mode === "crypto" && row.result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
         saveTargetItems(store);
         refresh();
+        if (mode === "crypto" && row.result === "stop") askTargetCleanup("crypto", id, row, "danger");
+        if (mode === "crypto" && row.result === "tp") askTargetCleanup("crypto", id, row, "success");
+        if (mode === "bet" && row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
       };
       const willActivate = row.result !== result;
       if (!willActivate) { apply(); return; }
@@ -2473,8 +2520,8 @@
           ? `Bu kombine kuponu "${result === 'loss' ? 'Kaybetti' : 'Kazandı'}" olarak işaretlemek istiyor musun?`
           : `Bu bahisi "${result === 'loss' ? 'Kaybetti' : 'Kazandı'}" olarak işaretlemek istiyor musun?`;
       } else {
-        title = 'STOP onayı';
-        message = 'Bu işlemi STOP / zarar olarak işlemek istiyor musun?';
+        title = result === 'stop' ? 'Zarar onayı' : 'Kazanç onayı';
+        message = result === 'stop' ? 'Bu işlemi zarar olarak işlemek istiyor musun?' : 'Bu işlemi kazanç olarak işlemek istiyor musun?';
       }
       openTargetResultConfirm({ title, message, okText: 'Onayla', tone }, apply);
     }));
@@ -2506,6 +2553,9 @@
       const targetItems = loadTargetItems();
       targetItems[mode] = [];
       saveTargetItems(targetItems);
+      const closedPnl = loadTargetClosedPnl();
+      closedPnl[mode] = 0;
+      saveTargetClosedPnl(closedPnl);
       saveState(state);
       refresh();
     }));
