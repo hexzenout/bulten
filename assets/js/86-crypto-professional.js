@@ -10,6 +10,315 @@
   function qs(sel) { return document.querySelector(sel); }
   function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
 
+
+  function v863EnsureRolling7CriticalCss() {
+    if (document.getElementById("v863-rolling7-critical-css")) return;
+    const style = document.createElement("style");
+    style.id = "v863-rolling7-critical-css";
+    style.textContent = `
+      #rolling-excel-overlay .kapsul.v32.v847-shot-result {
+        width: auto !important;
+        max-width: 360px !important;
+        min-width: 300px !important;
+        min-height: 0 !important;
+        padding: 12px !important;
+        border-radius: 16px !important;
+        background: linear-gradient(145deg, #07111f, #020617) !important;
+        border: 1px solid rgba(16,185,129,.62) !important;
+        box-shadow: 0 12px 28px rgba(0,0,0,.34) !important;
+        display: grid !important;
+        gap: 9px !important;
+        position: relative !important;
+        overflow: visible !important;
+        color: #f8fafc !important;
+        list-style: none !important;
+      }
+      #rolling-excel-overlay .kapsul.v32.v847-shot-result.loss {
+        border-color: rgba(239,68,68,.62) !important;
+      }
+      #rolling-excel-overlay .v850-shot-toolbar {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        margin: -2px 0 7px 0 !important;
+        min-height: 27px !important;
+      }
+      #rolling-excel-overlay .v850-shot-toolbar button {
+        appearance: none !important;
+        border-radius: 999px !important;
+        min-height: 27px !important;
+        border: 1px solid rgba(148,163,184,.34) !important;
+        background: rgba(15,23,42,.94) !important;
+        color: #e5e7eb !important;
+        font-size: .63rem !important;
+        font-weight: 950 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        padding: 0 9px !important;
+        cursor: pointer !important;
+      }
+      #rolling-excel-overlay .v850-shot-toolbar .v850-shot-close {
+        width: 27px !important;
+        min-width: 27px !important;
+        padding: 0 !important;
+        border-color: rgba(248,113,113,.38) !important;
+        background: rgba(127,29,29,.78) !important;
+        color: #fee2e2 !important;
+      }
+      #rolling-excel-overlay .v847-shot-head {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        padding-right: 0 !important;
+      }
+      #rolling-excel-overlay .v847-shot-head > b {
+        color: #fbbf24 !important;
+        font-size: .88rem !important;
+        font-weight: 950 !important;
+        letter-spacing: .03em !important;
+      }
+      #rolling-excel-overlay .v847-shot-head-tools {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 6px !important;
+        min-width: max-content !important;
+      }
+      #rolling-excel-overlay .v847-shot-head-tools > span {
+        border-radius: 999px !important;
+        padding: 5px 8px !important;
+        font-size: .66rem !important;
+        font-weight: 950 !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
+      }
+      #rolling-excel-overlay .v847-shot-head-tools > span.win {
+        color: #dcfce7 !important;
+        background: rgba(22,163,74,.22) !important;
+        border: 1px solid rgba(74,222,128,.42) !important;
+      }
+      #rolling-excel-overlay .v847-shot-head-tools > span.loss {
+        color: #fee2e2 !important;
+        background: rgba(220,38,38,.22) !important;
+        border: 1px solid rgba(248,113,113,.44) !important;
+      }
+      #rolling-excel-overlay .v847-shot-camera {
+        width: 25px !important;
+        height: 25px !important;
+        min-width: 25px !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(251,191,36,.52) !important;
+        background: linear-gradient(145deg, rgba(251,191,36,.92), rgba(245,158,11,.76)) !important;
+        color: #111827 !important;
+        display: inline-grid !important;
+        place-items: center !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        box-shadow: 0 5px 14px rgba(245,158,11,.22) !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines {
+        display: grid !important;
+        gap: 6px !important;
+        list-style: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines li {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+        align-items: start !important;
+        padding: 8px 9px !important;
+        border-radius: 10px !important;
+        background: rgba(15,23,42,.76) !important;
+        border: 1px solid rgba(51,65,85,.90) !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines li.win {
+        border-color: rgba(34,197,94,.42) !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines li.loss {
+        border-color: rgba(239,68,68,.44) !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines span {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        color: #f8fafc !important;
+        font-size: .74rem !important;
+        font-weight: 900 !important;
+        line-height: 1.25 !important;
+        cursor: default !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        width: 100% !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta b {
+        color: #fbbf24 !important;
+        font-size: .72rem !important;
+        font-weight: 950 !important;
+        text-align: left !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em {
+        font-style: normal !important;
+        text-align: right !important;
+        font-size: .64rem !important;
+        font-weight: 950 !important;
+        min-width: max-content !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em { color: #4ade80 !important; }
+      #rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em { color: #f87171 !important; }
+      #rolling-excel-overlay .v847-shot-footer {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 6px !important;
+        padding-top: 2px !important;
+      }
+      #rolling-excel-overlay .v847-shot-footer span {
+        display: flex !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        border: 1px solid rgba(255,255,255,.08) !important;
+        border-radius: 9px !important;
+        background: rgba(0,0,0,.22) !important;
+        padding: 6px 7px !important;
+        color: #bfdbfe !important;
+        font-size: .66rem !important;
+        font-weight: 900 !important;
+      }
+      #rolling-excel-overlay .v847-shot-footer .v851-result-total {
+        grid-column: 1 / -1 !important;
+      }
+      #rolling-excel-overlay .v847-shot-footer b { color: #f8fafc !important; }
+      #rolling-excel-overlay .v847-shot-footer b.pos { color: #22c55e !important; }
+      #rolling-excel-overlay .v847-shot-footer b.neg { color: #ef4444 !important; }
+
+      #rolling-excel-overlay .v847-bet-leg-result-panel:empty { display: none !important; }
+      #rolling-excel-overlay .v847-leg-panel-inner {
+        display: grid !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+        padding: 9px !important;
+        border: 1px solid rgba(251,191,36,.24) !important;
+        border-radius: 12px !important;
+        background: rgba(2,6,23,.42) !important;
+        color: #f8fafc !important;
+      }
+      #rolling-excel-overlay .v847-leg-panel-head {
+        display: flex !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        align-items: center !important;
+        padding-bottom: 2px !important;
+        font-size: .70rem !important;
+      }
+      #rolling-excel-overlay .v847-leg-panel-head b {
+        color: #fde68a !important;
+        font-weight: 950 !important;
+      }
+      #rolling-excel-overlay .v847-leg-panel-head span {
+        color: #bfdbfe !important;
+        font-weight: 900 !important;
+      }
+      #rolling-excel-overlay .v847-leg-result-row {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+        align-items: stretch !important;
+        padding: 8px 9px !important;
+        border-radius: 10px !important;
+        background: rgba(15,23,42,.70) !important;
+        border: 1px solid rgba(148,163,184,.16) !important;
+      }
+      #rolling-excel-overlay .v847-leg-result-row.win {
+        border-color: rgba(16,185,129,.40) !important;
+        background: rgba(6,78,59,.34) !important;
+      }
+      #rolling-excel-overlay .v847-leg-result-row.loss {
+        border-color: rgba(239,68,68,.42) !important;
+        background: rgba(127,29,29,.34) !important;
+      }
+      #rolling-excel-overlay .v847-leg-result-row > span {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        line-height: 1.25 !important;
+        color: #e5e7eb !important;
+        font-size: .74rem !important;
+        font-weight: 900 !important;
+        cursor: default !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-meta {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        width: 100% !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-meta b {
+        color: #fbbf24 !important;
+        font-size: .72rem !important;
+        font-weight: 950 !important;
+        text-align: left !important;
+        min-width: max-content !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 5px !important;
+        flex: 0 0 auto !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button {
+        appearance: none !important;
+        width: 27px !important;
+        height: 27px !important;
+        min-width: 27px !important;
+        border-radius: 8px !important;
+        padding: 0 !important;
+        display: inline-grid !important;
+        place-items: center !important;
+        font-size: 14px !important;
+        font-weight: 950 !important;
+        cursor: pointer !important;
+        border: 1px solid transparent !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button.win {
+        background: rgba(6,78,59,.72) !important;
+        border-color: rgba(52,211,153,.46) !important;
+        color: #bbf7d0 !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button.loss {
+        background: rgba(127,29,29,.72) !important;
+        border-color: rgba(248,113,113,.46) !important;
+        color: #fecaca !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button.win.selected {
+        background: linear-gradient(145deg, #16a34a, #047857) !important;
+        border-color: rgba(220,252,231,.82) !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 1px rgba(34,197,94,.38), 0 0 13px rgba(34,197,94,.20) !important;
+      }
+      #rolling-excel-overlay .v854-leg-result-actions button.loss.selected {
+        background: linear-gradient(145deg, #dc2626, #991b1b) !important;
+        border-color: rgba(254,226,226,.82) !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 1px rgba(239,68,68,.38), 0 0 13px rgba(239,68,68,.20) !important;
+      }
+      #rolling-excel-overlay .k-actions.v32.v847-hide-main-actions {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function getSoundSettings() {
     try {
       return {
@@ -1477,6 +1786,7 @@
 
   const oldOpenRolling = window.omega_OpenRollingExcel;
   window.omega_OpenRollingExcel = function(days, skipHash = false) {
+    v863EnsureRolling7CriticalCss();
     const result = typeof oldOpenRolling === "function" ? oldOpenRolling(days, skipHash) : undefined;
     document.documentElement.classList.remove("rolling-hash-boot");
     document.body.classList.add("rolling-active");
@@ -1546,6 +1856,7 @@
   }
 
 function boot() {
+    v863EnsureRolling7CriticalCss();
     omega_RemoveOldRollingLaunchCardV46A2();
     prepareCryptoForm();
     renderSoundPanel();

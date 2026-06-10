@@ -8520,247 +8520,1770 @@ html.rolling-hash-boot::before {
   color: #fff1f2 !important;
 }
 
-/* V869: Kasa Hedefi bahis/kripto detay onarımı */
-.rolling-v48-rail .v869-target-detail-row,
-.rolling-v48-rail .v811-target-self-details li.v869-target-detail-row {
-  position: relative !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) !important;
-  gap: 10px !important;
-  padding: 12px !important;
-  border-radius: 16px !important;
-  background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(2,6,23,.70)) !important;
-  border: 1px solid rgba(250,204,21,.18) !important;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03) !important;
-  overflow: hidden !important;
-}
 
-.rolling-v48-rail .v869-detail-head,
-.rolling-v48-rail .v814-bet-detail-head.v869-detail-head,
-.rolling-v48-rail .v819-crypto-detail-head.v869-detail-head {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-
-.rolling-v48-rail .v869-detail-head > span {
-  min-width: 0 !important;
-  color: #fff !important;
-  font-size: .80rem !important;
-  font-weight: 950 !important;
-  line-height: 1.22 !important;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-}
-
-.rolling-v48-rail .v869-card-actions {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 7px !important;
-}
-
-.rolling-v48-rail .v869-card-actions button {
-  width: 32px !important;
-  min-width: 32px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  border-radius: 11px !important;
-  padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: .78rem !important;
-}
-
-.rolling-v48-rail .v869-card-actions .photo {
-  color: #fde68a !important;
-  border: 1px solid rgba(250,204,21,.46) !important;
-  background: linear-gradient(135deg, rgba(120,53,15,.38), rgba(15,23,42,.90)) !important;
-  box-shadow: 0 0 10px rgba(250,204,21,.12) !important;
-}
-
-.rolling-v48-rail .v869-card-actions .delete {
-  color: #fecaca !important;
-  border: 1px solid rgba(248,113,113,.46) !important;
-  background: linear-gradient(135deg, rgba(127,29,29,.46), rgba(15,23,42,.90)) !important;
-  box-shadow: 0 0 10px rgba(239,68,68,.10) !important;
-}
-
-.rolling-v48-rail .v869-bet-match-list {
-  display: grid !important;
-  gap: 8px !important;
-}
-
-.rolling-v48-rail .v869-bet-match-line,
-.rolling-v48-rail .v822-bet-match-line.v869-bet-match-line,
-.rolling-v48-rail .v819-bet-match-line.v869-bet-match-line {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  grid-template-areas:
-    "name name"
-    "odds actions" !important;
-  align-items: center !important;
-  gap: 7px 8px !important;
-  padding: 9px 10px !important;
-  border-radius: 13px !important;
-  background: rgba(2,6,23,.52) !important;
-  border: 1px solid rgba(148,163,184,.13) !important;
-}
-
-.rolling-v48-rail .v869-bet-match-line.done.win {
-  border-color: rgba(34,197,94,.30) !important;
-  background: linear-gradient(180deg, rgba(6,78,59,.22), rgba(2,6,23,.56)) !important;
-}
-
-.rolling-v48-rail .v869-bet-match-line.done.loss {
-  border-color: rgba(239,68,68,.32) !important;
-  background: linear-gradient(180deg, rgba(127,29,29,.24), rgba(2,6,23,.56)) !important;
-}
-
-.rolling-v48-rail .v869-bet-match-line > span {
-  grid-area: name !important;
-  min-width: 0 !important;
+/* V835: Bahis Detay eski okunur düzen + draft stabilitesi */
+.rolling-v48-rail .v835-target-self-details {
   display: block !important;
-  color: #f8fafc !important;
-  font-size: .73rem !important;
-  font-weight: 950 !important;
-  line-height: 1.22 !important;
-  white-space: normal !important;
-  overflow: hidden !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
-  max-height: 2.6em !important;
 }
 
-.rolling-v48-rail .v869-bet-match-line > b {
-  grid-area: odds !important;
-  justify-self: start !important;
-  min-width: 0 !important;
-  color: #facc15 !important;
-  font-size: .72rem !important;
-  font-weight: 950 !important;
-  text-align: left !important;
-  white-space: nowrap !important;
-  border-radius: 999px !important;
-  padding: 4px 8px !important;
-  background: rgba(250,204,21,.13) !important;
-  border: 1px solid rgba(250,204,21,.20) !important;
+.rolling-v48-rail .v835-target-self-details > summary {
+  cursor: pointer !important;
+  user-select: none !important;
 }
 
-.rolling-v48-rail .v869-bet-match-line .v869-leg-actions,
-.rolling-v48-rail .v869-bet-match-line .v819-leg-actions {
-  grid-area: actions !important;
-  justify-self: end !important;
-  display: inline-flex !important;
-  gap: 7px !important;
+.rolling-v48-rail .v835-bet-detail-row {
+  padding: 10px !important;
 }
 
-.rolling-v48-rail .v869-leg-actions button,
-.rolling-v48-rail .v819-leg-actions.v869-leg-actions button {
-  width: 32px !important;
-  min-width: 32px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  border-radius: 11px !important;
-  padding: 0 !important;
-  font-size: .78rem !important;
-}
-
-.rolling-v48-rail .v869-leg-actions .leg-win.active {
-  color: #f0fdf4 !important;
-  border-color: rgba(74,222,128,.90) !important;
-  background: linear-gradient(135deg, rgba(34,197,94,.74), rgba(6,95,70,.92)) !important;
-  box-shadow: 0 0 14px rgba(34,197,94,.35), inset 0 0 0 1px rgba(255,255,255,.20) !important;
-}
-
-.rolling-v48-rail .v869-leg-actions .leg-loss.active {
-  color: #fff1f2 !important;
-  border-color: rgba(248,113,113,.90) !important;
-  background: linear-gradient(135deg, rgba(239,68,68,.78), rgba(127,29,29,.94)) !important;
-  box-shadow: 0 0 14px rgba(239,68,68,.36), inset 0 0 0 1px rgba(255,255,255,.20) !important;
-}
-
-.rolling-v48-rail .v869-bet-summary-mini {
+.rolling-v48-rail .v835-bet-detail-head {
   display: grid !important;
-  gap: 5px !important;
-  padding: 9px 10px !important;
-  border-radius: 13px !important;
-  background: rgba(15,23,42,.68) !important;
-  border: 1px solid rgba(250,204,21,.25) !important;
-}
-
-.rolling-v48-rail .v869-bet-summary-mini div {
-  display: flex !important;
+  grid-template-columns: minmax(0, 1fr) 36px !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  gap: 10px !important;
-  font-size: .73rem !important;
-  font-weight: 950 !important;
-}
-
-.rolling-v48-rail .v869-bet-summary-mini span {
-  color: #f8fafc !important;
-}
-
-.rolling-v48-rail .v869-bet-summary-mini b {
-  color: #facc15 !important;
-}
-
-.rolling-v48-rail .v869-bet-summary-mini b.pos {
-  color: #22c55e !important;
-  text-shadow: 0 0 10px rgba(34,197,94,.22) !important;
-}
-
-.rolling-v48-rail .v869-bet-summary-mini b.neg {
-  color: #ef4444 !important;
-  text-shadow: 0 0 10px rgba(239,68,68,.24) !important;
-}
-
-.rolling-v48-rail .v869-target-final-actions.bet {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
   gap: 8px !important;
-  margin-top: 2px !important;
+  margin-bottom: 8px !important;
 }
 
-.rolling-v48-rail .v869-target-final-actions.bet button {
-  height: 38px !important;
-  border-radius: 9px !important;
-  padding: 0 10px !important;
-  font-size: .72rem !important;
+.rolling-v48-rail .v835-bet-detail-head span {
   font-weight: 950 !important;
+  color: #f8fafc !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
 
-.rolling-v48-rail .v869-target-final-actions.bet .win {
-  color: #f0fdf4 !important;
-  border: 1px solid rgba(52,211,153,.45) !important;
-  background: linear-gradient(135deg, rgba(16,185,129,.86), rgba(5,150,105,.92)) !important;
+.rolling-v48-rail .v835-bet-detail-meta {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  margin-bottom: 8px !important;
 }
 
-.rolling-v48-rail .v869-target-final-actions.bet .loss {
-  color: #fff1f2 !important;
-  border: 1px solid rgba(248,113,113,.45) !important;
-  background: linear-gradient(135deg, rgba(239,68,68,.86), rgba(220,38,38,.92)) !important;
+.rolling-v48-rail .v835-bet-detail-meta span {
+  min-width: 0 !important;
+  padding: 6px 7px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.72) !important;
+  border: 1px solid rgba(148,163,184,.14) !important;
+  color: #94a3b8 !important;
+  font-size: .66rem !important;
+  font-weight: 850 !important;
 }
 
-.rolling-v48-rail .v869-target-detail-row .v819-target-card-footer,
-.rolling-v48-rail .v869-target-detail-row .v821-target-card-footer,
-.rolling-v48-rail .v869-target-detail-row .v822-target-card-footer {
+.rolling-v48-rail .v835-bet-detail-meta b {
+  display: block !important;
+  margin-top: 2px !important;
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list {
+  display: grid !important;
+  gap: 7px !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line {
+  grid-template-columns: minmax(0, 1fr) 54px 78px !important;
+  grid-template-areas: "name odds actions" !important;
+  min-height: 44px !important;
+  padding: 7px 8px !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line span,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line span {
+  grid-area: name !important;
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.15 !important;
+  max-height: none !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line b,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line b {
+  grid-area: odds !important;
+  justify-self: start !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions {
+  grid-area: actions !important;
+  justify-self: end !important;
+}
+
+
+/* V836: Bahis Detay maç satırı iki katmanlı şema */
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  grid-template-areas:
+    "name name"
+    "odds actions" !important;
+  row-gap: 8px !important;
+  column-gap: 10px !important;
+  align-items: center !important;
+  min-height: 68px !important;
+  padding: 9px 10px !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line span,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line span {
+  grid-area: name !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  line-height: 1.25 !important;
+  max-height: none !important;
+  font-size: .8rem !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line b,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line b {
+  grid-area: odds !important;
+  justify-self: start !important;
+  align-self: center !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions {
+  grid-area: actions !important;
+  justify-self: end !important;
+  align-self: center !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+
+/* V837: Bahis Detay kazandı/kaybetti butonlarını koyu ve belirgin yap */
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  font-weight: 950 !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win {
+  background: linear-gradient(135deg, #14532d, #052e16) !important;
+  border: 1px solid rgba(34,197,94,.62) !important;
+  color: #dcfce7 !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss {
+  background: linear-gradient(135deg, #7f1d1d, #450a0a) !important;
+  border: 1px solid rgba(248,113,113,.62) !important;
+  color: #fee2e2 !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win:hover,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win:hover,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active {
+  background: linear-gradient(135deg, #16a34a, #166534) !important;
+  border-color: rgba(134,239,172,.95) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(34,197,94,.34), 0 0 16px rgba(34,197,94,.32) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss:hover,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss:hover,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active {
+  background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+  border-color: rgba(252,165,165,.95) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(239,68,68,.34), 0 0 16px rgba(239,68,68,.32) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win i,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss i {
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+
+/* V838: Bahis/Kripto başlık renkleri + seçili buton kontrastı */
+.rolling-v48-rail .v835-bet-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.bet .v835-bet-detail-head span {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(251,191,36,.20), rgba(147,51,234,.18)) !important;
+  border: 1px solid rgba(251,191,36,.36) !important;
+  color: #fde68a !important;
+  text-shadow: 0 0 14px rgba(251,191,36,.24) !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.bet.done.win .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(22,101,52,.68), rgba(20,83,45,.34)) !important;
+  border-color: rgba(74,222,128,.78) !important;
+  color: #dcfce7 !important;
+  text-shadow: 0 0 14px rgba(34,197,94,.40) !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.bet.done.loss .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(127,29,29,.72), rgba(69,10,10,.46)) !important;
+  border-color: rgba(248,113,113,.82) !important;
+  color: #fee2e2 !important;
+  text-shadow: 0 0 14px rgba(239,68,68,.42) !important;
+}
+
+.rolling-v48-rail .v824-target-crypto-entry-title span,
+.rolling-v48-rail .v812-target-self.crypto .v812-target-self-title b,
+.rolling-v48-rail .v812-target-self.crypto .v814-target-self-title b {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(56,189,248,.18), rgba(59,130,246,.18)) !important;
+  border: 1px solid rgba(125,211,252,.38) !important;
+  color: #bae6fd !important;
+  text-shadow: 0 0 14px rgba(56,189,248,.30) !important;
+}
+
+.rolling-v48-rail .v814-crypto-detail-head span,
+.rolling-v48-rail .v819-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto .v814-crypto-detail-head span {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(56,189,248,.22), rgba(14,165,233,.12)) !important;
+  border: 1px solid rgba(125,211,252,.44) !important;
+  color: #e0f2fe !important;
+  text-shadow: 0 0 14px rgba(56,189,248,.34) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.crypto.done.tp .v814-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto.done.win .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(22,101,52,.64), rgba(20,83,45,.28)) !important;
+  border-color: rgba(74,222,128,.76) !important;
+  color: #dcfce7 !important;
+  text-shadow: 0 0 14px rgba(34,197,94,.40) !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.crypto.done.stop .v814-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto.done.loss .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(127,29,29,.70), rgba(69,10,10,.42)) !important;
+  border-color: rgba(248,113,113,.82) !important;
+  color: #fee2e2 !important;
+  text-shadow: 0 0 14px rgba(239,68,68,.42) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win {
+  background: linear-gradient(135deg, #064e3b, #022c22) !important;
+  border: 1px solid rgba(16,185,129,.74) !important;
+  color: #d1fae5 !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss {
+  background: linear-gradient(135deg, #7f1d1d, #3f0707) !important;
+  border: 1px solid rgba(239,68,68,.78) !important;
+  color: #fee2e2 !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active {
+  background: linear-gradient(135deg, #22c55e, #15803d) !important;
+  border-color: #bbf7d0 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.07) !important;
+  box-shadow: 0 0 0 3px rgba(34,197,94,.42), 0 0 22px rgba(34,197,94,.52), inset 0 0 0 1px rgba(255,255,255,.24) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active {
+  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+  border-color: #fecaca !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.07) !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.54), inset 0 0 0 1px rgba(255,255,255,.24) !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: translateZ(0) !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check {
+  background: linear-gradient(135deg, #064e3b, #022c22) !important;
+  border: 1px solid rgba(16,185,129,.74) !important;
+  color: #d1fae5 !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x {
+  background: linear-gradient(135deg, #7f1d1d, #3f0707) !important;
+  border: 1px solid rgba(239,68,68,.78) !important;
+  color: #fee2e2 !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check.active,
+.rolling-v48-rail .v813-crypto-detail-line.tp.done .v815-result-btn.tp-check {
+  background: linear-gradient(135deg, #22c55e, #15803d) !important;
+  border-color: #bbf7d0 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.07) !important;
+  box-shadow: 0 0 0 3px rgba(34,197,94,.42), 0 0 22px rgba(34,197,94,.52), inset 0 0 0 1px rgba(255,255,255,.24) !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x.active,
+.rolling-v48-rail .v813-crypto-detail-line.stop.done .v815-result-btn.stop-x {
+  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+  border-color: #fecaca !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.07) !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.54), inset 0 0 0 1px rgba(255,255,255,.24) !important;
+}
+
+
+/* V839: Bahis ve Kripto onay/çarpı butonlarını hafif küçült */
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  border-radius: 10px !important;
+  transform: none !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active {
+  transform: translateY(-1px) scale(1.03) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win i,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss i {
+  font-size: 14px !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  border-radius: 10px !important;
+  transform: none !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check.active,
+.rolling-v48-rail .v813-crypto-detail-line.tp.done .v815-result-btn.tp-check,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x.active,
+.rolling-v48-rail .v813-crypto-detail-line.stop.done .v815-result-btn.stop-x {
+  transform: translateY(-1px) scale(1.03) !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check i,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x i {
+  font-size: 14px !important;
+}
+
+
+/* V840: Tekli/Kombine tema ayrımı + Kripto işlem ismi/çıktı renk ayrımı */
+.rolling-v48-rail .v812-target-self.bet .v812-target-self-title b,
+.rolling-v48-rail .v812-target-self.bet .v814-target-self-title b {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 6px 11px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(251,191,36,.22), rgba(245,158,11,.10), rgba(220,38,38,.12)) !important;
+  border: 1px solid rgba(251,191,36,.44) !important;
+  color: #fde68a !important;
+  text-shadow: 0 0 14px rgba(251,191,36,.30) !important;
+  letter-spacing: .02em !important;
+}
+
+/* Kombine aynı altın/mor havada kalsın */
+.rolling-v48-rail .v835-bet-detail-row.combo .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(251,191,36,.22), rgba(147,51,234,.22), rgba(88,28,135,.18)) !important;
+  border-color: rgba(251,191,36,.44) !important;
+  color: #fde68a !important;
+  text-shadow: 0 0 14px rgba(251,191,36,.28) !important;
+}
+
+/* Tekli Bahis ayrı tema: mavi/turkuaz */
+.rolling-v48-rail .v835-bet-detail-row.single .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(14,165,233,.24), rgba(34,211,238,.16), rgba(30,64,175,.16)) !important;
+  border-color: rgba(125,211,252,.58) !important;
+  color: #bae6fd !important;
+  text-shadow: 0 0 14px rgba(56,189,248,.34) !important;
+}
+
+/* Sonuçtan sonra Tekli tema sonucu da net göstersin */
+.rolling-v48-rail .v835-bet-detail-row.single.done.win .v835-bet-detail-head span,
+.rolling-v48-rail .v835-bet-detail-row.combo.done.win .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(22,163,74,.78), rgba(20,83,45,.42)) !important;
+  border-color: rgba(134,239,172,.92) !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 16px rgba(34,197,94,.48) !important;
+}
+
+.rolling-v48-rail .v835-bet-detail-row.single.done.loss .v835-bet-detail-head span,
+.rolling-v48-rail .v835-bet-detail-row.combo.done.loss .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(220,38,38,.80), rgba(127,29,29,.50)) !important;
+  border-color: rgba(252,165,165,.94) !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 16px rgba(239,68,68,.50) !important;
+}
+
+/* Kripto: formdaki İşlem başlığı farklı, yazdığın işlem adı farklı dursun */
+.rolling-v48-rail .v824-target-crypto-entry-title span,
+.rolling-v48-rail .v812-target-self.crypto .v812-target-self-title b,
+.rolling-v48-rail .v812-target-self.crypto .v814-target-self-title b {
+  background: linear-gradient(135deg, rgba(79,70,229,.24), rgba(14,165,233,.18), rgba(56,189,248,.12)) !important;
+  border-color: rgba(129,140,248,.54) !important;
+  color: #c7d2fe !important;
+  text-shadow: 0 0 14px rgba(99,102,241,.34) !important;
+}
+
+/* Kripto detay çıktısı: örn. BTC long daha özel turkuaz/yeşil pill */
+.rolling-v48-rail .v814-crypto-detail-head span,
+.rolling-v48-rail .v819-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(45,212,191,.24), rgba(34,197,94,.16), rgba(8,47,73,.20)) !important;
+  border-color: rgba(94,234,212,.58) !important;
+  color: #ccfbf1 !important;
+  text-shadow: 0 0 15px rgba(45,212,191,.36) !important;
+}
+
+/* Kripto sonuç durumunda çıktı adı daha da ayırt edilsin */
+.rolling-v48-rail .v812-target-detail-row.crypto.done.tp .v814-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto.done.win .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(34,197,94,.76), rgba(20,83,45,.40)) !important;
+  border-color: rgba(134,239,172,.92) !important;
+  color: #ffffff !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.crypto.done.stop .v814-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto.done.loss .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(239,68,68,.78), rgba(127,29,29,.46)) !important;
+  border-color: rgba(252,165,165,.94) !important;
+  color: #ffffff !important;
+}
+
+/* V840: Seçili buton farkı biraz daha net, ama boyut V839 gibi kompakt */
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check.active,
+.rolling-v48-rail .v813-crypto-detail-line.tp.done .v815-result-btn.tp-check {
+  background: linear-gradient(135deg, #4ade80, #16a34a, #14532d) !important;
+  border-color: #dcfce7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(187,247,208,.54), 0 0 19px rgba(34,197,94,.58), inset 0 0 0 1px rgba(255,255,255,.30) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x.active,
+.rolling-v48-rail .v813-crypto-detail-line.stop.done .v815-result-btn.stop-x {
+  background: linear-gradient(135deg, #f87171, #ef4444, #991b1b) !important;
+  border-color: #fee2e2 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(254,202,202,.56), 0 0 19px rgba(239,68,68,.62), inset 0 0 0 1px rgba(255,255,255,.30) !important;
+}
+
+
+/* V842: Bahis + Kripto seçili onay/çarpı butonlarını daha şık ve dengeli yap */
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check {
+  background: linear-gradient(145deg, #052e16, #064e3b) !important;
+  border: 1px solid rgba(52,211,153,.58) !important;
+  color: #bbf7d0 !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x {
+  background: linear-gradient(145deg, #450a0a, #7f1d1d) !important;
+  border: 1px solid rgba(248,113,113,.58) !important;
+  color: #fecaca !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check.active,
+.rolling-v48-rail .v813-crypto-detail-line.tp.done .v815-result-btn.tp-check {
+  background: linear-gradient(145deg, #047857, #10b981) !important;
+  border-color: rgba(167,243,208,.90) !important;
+  color: #ecfdf5 !important;
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow:
+    0 0 0 1px rgba(167,243,208,.55),
+    0 5px 14px rgba(16,185,129,.28),
+    inset 0 1px 0 rgba(255,255,255,.28) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x.active,
+.rolling-v48-rail .v813-crypto-detail-line.stop.done .v815-result-btn.stop-x {
+  background: linear-gradient(145deg, #991b1b, #ef4444) !important;
+  border-color: rgba(254,202,202,.90) !important;
+  color: #fff7f7 !important;
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow:
+    0 0 0 1px rgba(254,202,202,.55),
+    0 5px 14px rgba(239,68,68,.28),
+    inset 0 1px 0 rgba(255,255,255,.28) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win i,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss i,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check i,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x i {
+  font-size: 13px !important;
+  line-height: 1 !important;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)) !important;
+}
+
+
+/* V844: Seçili onay/çarpı butonlarını temiz, küçük ve şık hale getir */
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  border-radius: 10px !important;
+  background: rgba(6,78,59,.62) !important;
+  border: 1px solid rgba(52,211,153,.42) !important;
+  color: #a7f3d0 !important;
+  transform: none !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  border-radius: 10px !important;
+  background: rgba(127,29,29,.62) !important;
+  border: 1px solid rgba(248,113,113,.42) !important;
+  color: #fecaca !important;
+  transform: none !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check.active,
+.rolling-v48-rail .v813-crypto-detail-line.tp.done .v815-result-btn.tp-check {
+  background: linear-gradient(145deg, #16a34a, #047857) !important;
+  border-color: rgba(220,252,231,.78) !important;
+  color: #ffffff !important;
+  transform: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    inset 0 -10px 18px rgba(4,120,87,.26),
+    0 0 0 1px rgba(34,197,94,.22) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x.active,
+.rolling-v48-rail .v813-crypto-detail-line.stop.done .v815-result-btn.stop-x {
+  background: linear-gradient(145deg, #dc2626, #991b1b) !important;
+  border-color: rgba(254,226,226,.78) !important;
+  color: #ffffff !important;
+  transform: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    inset 0 -10px 18px rgba(153,27,27,.26),
+    0 0 0 1px rgba(239,68,68,.22) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win i,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss i,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check i,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x i {
+  font-size: 13px !important;
+  line-height: 1 !important;
+  filter: none !important;
+}
+
+
+/* V847: BAHİS 7 GÜNLÜK ROLLING - maç bazlı sonuç ve screenshot görünümlü final kart */
+#rolling-excel-overlay .v847-bet-leg-result-panel:empty {
   display: none !important;
 }
 
-@media (max-width: 520px) {
-  .rolling-v48-rail .v869-target-final-actions.bet {
-    grid-template-columns: 1fr !important;
-  }
-  .rolling-v48-rail .v869-bet-match-line,
-  .rolling-v48-rail .v822-bet-match-line.v869-bet-match-line,
-  .rolling-v48-rail .v819-bet-match-line.v869-bet-match-line {
-    grid-template-columns: 1fr auto !important;
-  }
+#rolling-excel-overlay .v847-leg-panel-inner {
+  display: grid !important;
+  gap: 7px !important;
+  margin-top: 2px !important;
+  padding: 8px !important;
+  border: 1px solid rgba(251,191,36,.22) !important;
+  border-radius: 10px !important;
+  background: rgba(2,6,23,.42) !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  align-items: center !important;
+  font-size: .68rem !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head b {
+  color: #fde68a !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head span {
+  color: #bfdbfe !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 44px auto !important;
+  gap: 7px !important;
+  align-items: center !important;
+  padding: 6px 7px !important;
+  border-radius: 9px !important;
+  background: rgba(15,23,42,.62) !important;
+  border: 1px solid rgba(148,163,184,.16) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.win {
+  border-color: rgba(16,185,129,.38) !important;
+  background: rgba(6,78,59,.34) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.loss {
+  border-color: rgba(239,68,68,.42) !important;
+  background: rgba(127,29,29,.34) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: #e5e7eb !important;
+  font-size: .72rem !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row b {
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  text-align: right !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row div {
+  display: inline-flex !important;
+  gap: 5px !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button.win {
+  background: rgba(6,78,59,.72) !important;
+  border-color: rgba(52,211,153,.46) !important;
+  color: #bbf7d0 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button.loss {
+  background: rgba(127,29,29,.72) !important;
+  border-color: rgba(248,113,113,.46) !important;
+  color: #fecaca !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button.win.selected {
+  background: linear-gradient(145deg, #16a34a, #047857) !important;
+  border-color: rgba(220,252,231,.82) !important;
+  color: #fff !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button.loss.selected {
+  background: linear-gradient(145deg, #dc2626, #991b1b) !important;
+  border-color: rgba(254,226,226,.82) !important;
+  color: #fff !important;
+}
+
+#rolling-excel-overlay .k-actions.v32.v847-hide-main-actions {
+  display: none !important;
+}
+
+#rolling-excel-overlay .kapsul.v32.v847-shot-result {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 260px !important;
+  min-height: 0 !important;
+  padding: 12px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, #07111f, #020617) !important;
+  border: 1px solid rgba(251,191,36,.38) !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.34) !important;
+  display: grid !important;
+  gap: 9px !important;
+}
+
+#rolling-excel-overlay .kapsul.v32.v847-shot-result.win {
+  border-color: rgba(16,185,129,.54) !important;
+}
+
+#rolling-excel-overlay .kapsul.v32.v847-shot-result.loss {
+  border-color: rgba(239,68,68,.56) !important;
+}
+
+#rolling-excel-overlay .v847-shot-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding-right: 22px !important;
+}
+
+#rolling-excel-overlay .v847-shot-head b {
+  color: #fbbf24 !important;
+  font-size: .86rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .03em !important;
+}
+
+#rolling-excel-overlay .v847-shot-head span {
+  border-radius: 999px !important;
+  padding: 5px 8px !important;
+  font-size: .66rem !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-shot-head span.win {
+  color: #dcfce7 !important;
+  background: rgba(22,163,74,.22) !important;
+  border: 1px solid rgba(74,222,128,.42) !important;
+}
+
+#rolling-excel-overlay .v847-shot-head span.loss {
+  color: #fee2e2 !important;
+  background: rgba(220,38,38,.22) !important;
+  border: 1px solid rgba(248,113,113,.44) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines {
+  display: grid !important;
+  gap: 6px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 46px 72px !important;
+  gap: 7px !important;
+  align-items: center !important;
+  padding: 7px 8px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.76) !important;
+  border: 1px solid rgba(51,65,85,.9) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.win {
+  border-color: rgba(34,197,94,.36) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.loss {
+  border-color: rgba(239,68,68,.40) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.pending {
+  opacity: .82 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: #f8fafc !important;
+  font-size: .74rem !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines b {
+  color: #fbbf24 !important;
+  text-align: right !important;
+  font-size: .74rem !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines em {
+  font-style: normal !important;
+  text-align: right !important;
+  font-size: .62rem !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.win em {
+  color: #4ade80 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.loss em {
+  color: #f87171 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.pending em {
+  color: #94a3b8 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+  padding-top: 2px !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer span {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 9px !important;
+  background: rgba(0,0,0,.22) !important;
+  padding: 6px 7px !important;
+  color: #bfdbfe !important;
+  font-size: .66rem !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer b {
+  color: #f8fafc !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer b.pos {
+  color: #22c55e !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer b.neg {
+  color: #ef4444 !important;
+}
+
+
+/* V848: Global autofill koyu tema koruması */
+html input:-webkit-autofill,
+html input:-webkit-autofill:hover,
+html input:-webkit-autofill:focus,
+html textarea:-webkit-autofill,
+html textarea:-webkit-autofill:hover,
+html textarea:-webkit-autofill:focus,
+html select:-webkit-autofill,
+html select:-webkit-autofill:hover,
+html select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #020617 inset !important;
+  box-shadow: 0 0 0 1000px #020617 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+  border-color: rgba(251,191,36,.42) !important;
+  color: #f8fafc !important;
+  transition: background-color 999999s ease-out 0s, color 999999s ease-out 0s !important;
+}
+
+html input:-webkit-autofill::first-line,
+html textarea:-webkit-autofill::first-line {
+  color: #f8fafc !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+}
+
+/* V848: 7 Günlük Rolling sonuç kartı geri al + kamera + uzun yazı hover */
+#rolling-excel-overlay .v847-shot-result {
+  position: relative !important;
+}
+
+#rolling-excel-overlay .v847-shot-back.k-undo.v32 {
+  position: absolute !important;
+  right: 10px !important;
+  top: 10px !important;
+  width: auto !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  padding: 0 8px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: rgba(15,23,42,.88) !important;
+  border: 1px solid rgba(148,163,184,.28) !important;
+  color: #e5e7eb !important;
+  font-size: .63rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  z-index: 3 !important;
+  cursor: pointer !important;
+}
+
+#rolling-excel-overlay .v847-shot-back.k-undo.v32 i {
+  font-size: 11px !important;
+}
+
+#rolling-excel-overlay .v847-shot-back.k-undo.v32:hover {
+  color: #fff !important;
+  border-color: rgba(251,191,36,.55) !important;
+  background: rgba(30,41,59,.95) !important;
+}
+
+#rolling-excel-overlay .v847-shot-head {
+  padding-right: 96px !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  justify-content: flex-end !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera {
+  width: 27px !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  border-radius: 9px !important;
+  border: 1px solid rgba(251,191,36,.52) !important;
+  background: linear-gradient(145deg, rgba(251,191,36,.92), rgba(245,158,11,.76)) !important;
+  color: #111827 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 5px 14px rgba(245,158,11,.22) !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera i {
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera:hover {
+  filter: brightness(1.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span[title] {
+  cursor: help !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span[title]:hover {
+  color: #ffffff !important;
+  text-decoration: underline dotted rgba(251,191,36,.55) !important;
+  text-underline-offset: 3px !important;
+}
+
+
+/* V849: Sonuç kartı kamera/status hizası + Geri Dön gerçek dönüş butonu */
+#rolling-excel-overlay .kapsul.v32.v847-shot-result {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+#rolling-excel-overlay .v847-shot-head {
+  padding-right: 0 !important;
+  position: relative !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools {
+  position: static !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  justify-content: flex-end !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools > span {
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera {
+  width: 25px !important;
+  height: 25px !important;
+  min-width: 25px !important;
+  border-radius: 8px !important;
+  margin-left: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+#rolling-excel-overlay .v847-shot-back {
+  position: absolute !important;
+  top: -11px !important;
+  right: -8px !important;
+  z-index: 7 !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(148,163,184,.32) !important;
+  background: rgba(15,23,42,.96) !important;
+  color: #e5e7eb !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  font-size: .63rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,.38) !important;
+}
+
+#rolling-excel-overlay .v847-shot-back i {
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+#rolling-excel-overlay .v847-shot-back:hover {
+  color: #ffffff !important;
+  border-color: rgba(251,191,36,.58) !important;
+  background: rgba(30,41,59,.98) !important;
+}
+
+
+/* V850: 7 Günlük Rolling sonuç kartı - sol üst Geri Dön, sağ üst Kapat, status+kamera sabit */
+#rolling-excel-overlay .kapsul.v32.v847-shot-result {
+  position: relative !important;
+  overflow: visible !important;
+  padding-top: 10px !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin: -2px 0 7px 0 !important;
+  min-height: 27px !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar .v847-shot-back.v850-shot-return {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  width: auto !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(148,163,184,.34) !important;
+  background: rgba(15,23,42,.94) !important;
+  color: #e5e7eb !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  font-size: .63rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  z-index: 2 !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar .v847-shot-back.v850-shot-return i {
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar .v847-shot-back.v850-shot-return:hover {
+  color: #fff !important;
+  border-color: rgba(251,191,36,.56) !important;
+  background: rgba(30,41,59,.98) !important;
+}
+
+#rolling-excel-overlay .v850-shot-close {
+  width: 27px !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(248,113,113,.38) !important;
+  background: rgba(127,29,29,.78) !important;
+  color: #fee2e2 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v850-shot-close:hover {
+  background: rgba(185,28,28,.90) !important;
+  border-color: rgba(254,202,202,.70) !important;
+  color: #fff !important;
+}
+
+#rolling-excel-overlay .v847-shot-head {
+  padding-right: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools {
+  position: static !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  justify-content: flex-end !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools > span {
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera {
+  width: 25px !important;
+  height: 25px !important;
+  min-width: 25px !important;
+  border-radius: 8px !important;
+  margin-left: 0 !important;
+  flex: 0 0 auto !important;
+  border: 1px solid rgba(251,191,36,.52) !important;
+  background: linear-gradient(145deg, rgba(251,191,36,.92), rgba(245,158,11,.76)) !important;
+  color: #111827 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 5px 14px rgba(245,158,11,.22) !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera i {
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+/* V850: Sonuç fotoğrafı ön izleme modalı */
+#omega-rolling-feature-host .v850-result-photo-modal {
+  max-width: min(94vw, 980px) !important;
+}
+
+#omega-rolling-feature-host .v850-result-photo-head b {
+  color: #fbbf24 !important;
+  font-size: 1rem !important;
+  letter-spacing: .03em !important;
+}
+
+#omega-rolling-feature-host .v850-result-photo-head span {
+  color: #bfdbfe !important;
+  font-weight: 900 !important;
+}
+
+#omega-rolling-feature-host .v850-result-photo-actions {
+  justify-content: flex-start !important;
+}
+
+#omega-rolling-feature-host .v850-result-photo-actions button {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+}
+
+
+/* V851: 7 Günlük Rolling sonuç kartı - tam görünen maç adı + K/Z kaldırma */
+#rolling-excel-overlay .v847-shot-lines li {
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  align-items: start !important;
+  padding: 8px 9px !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.25 !important;
+  cursor: default !important;
+  text-decoration: none !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span[title],
+#rolling-excel-overlay .v847-shot-lines span[title]:hover {
+  cursor: default !important;
+  text-decoration: none !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta b {
+  color: #fbbf24 !important;
+  text-align: left !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em {
+  text-align: right !important;
+  font-size: .64rem !important;
+  font-weight: 950 !important;
+  font-style: normal !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em {
+  color: #4ade80 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em {
+  color: #f87171 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.pending .v851-shot-line-meta em {
+  color: #94a3b8 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer {
+  grid-template-columns: 1fr 1fr !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total {
+  grid-column: 1 / -1 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total.win,
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total .pos {
+  color: #22c55e !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total.loss,
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total .neg {
+  color: #ef4444 !important;
+}
+
+
+/* V854: Maç Sonuçları paneli - uzun yazılar tam görünsün */
+#rolling-excel-overlay .v847-leg-panel-inner {
+  gap: 8px !important;
+  padding: 9px !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head {
+  align-items: center !important;
+  padding-bottom: 2px !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row {
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  align-items: stretch !important;
+  padding: 8px 9px !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.25 !important;
+  font-size: .73rem !important;
+  cursor: default !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-meta b {
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  text-align: left !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 5px !important;
+  flex: 0 0 auto !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions button {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.win .v854-leg-result-meta b {
+  color: #86efac !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.loss .v854-leg-result-meta b {
+  color: #fca5a5 !important;
+}
+
+
+/* V855: 7 Günlük Rolling - tüm kutularda maç sonuç butonları stabil + kombinede ana butonları gizle */
+#rolling-excel-overlay .v765-bet-kapsul:has(.v847-leg-panel-inner) > .k-actions.v32[data-v847-main-actions] {
+  display: none !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row,
+#rolling-excel-overlay .v854-leg-result-actions {
+  pointer-events: auto !important;
+}
+
+
+/* V856: Tutar boşsa sonuç işlenmesin, Tutar kutusunda net uyarı ver */
+#rolling-excel-overlay input.v856-stake-warning {
+  border-color: rgba(248,113,113,.92) !important;
+  background: rgba(127,29,29,.24) !important;
+  color: #fee2e2 !important;
+  box-shadow: 0 0 0 2px rgba(239,68,68,.22), 0 0 18px rgba(239,68,68,.24) !important;
+}
+
+#rolling-excel-overlay input.v856-stake-warning::placeholder {
+  color: #fecaca !important;
+  opacity: 1 !important;
+  font-weight: 950 !important;
+}
+
+
+/* V862: Ana tablo + Aktif Bahisler seçili KAZANDI/KAYBETTİ görünümü */
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win,
+#rolling-excel-overlay .v763-combo-match-list button.win {
+  background: rgba(6,78,59,.72) !important;
+  border: 1px solid rgba(52,211,153,.50) !important;
+  color: #bbf7d0 !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss,
+#rolling-excel-overlay .v763-combo-match-list button.loss {
+  background: rgba(127,29,29,.72) !important;
+  border: 1px solid rgba(248,113,113,.50) !important;
+  color: #fecaca !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win.selected,
+#rolling-excel-overlay .v763-combo-match-list button.win.selected {
+  background: linear-gradient(145deg, #16a34a, #047857) !important;
+  border-color: rgba(220,252,231,.90) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 0 0 1px rgba(34,197,94,.45),
+    0 0 14px rgba(34,197,94,.22),
+    inset 0 1px 0 rgba(255,255,255,.24) !important;
+  transform: none !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss.selected,
+#rolling-excel-overlay .v763-combo-match-list button.loss.selected {
+  background: linear-gradient(145deg, #dc2626, #991b1b) !important;
+  border-color: rgba(254,226,226,.90) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 0 0 1px rgba(239,68,68,.45),
+    0 0 14px rgba(239,68,68,.22),
+    inset 0 1px 0 rgba(255,255,255,.24) !important;
+  transform: none !important;
+}
+
+
+/* V863: 7 Günlük Rolling kritik görünüm koruması.
+   CSS cache/öncelik sorunu olsa bile sonuç kartı ve maç sonuçları raw görünmesin. */
+#rolling-excel-overlay .kapsul.v32.v847-shot-result {
+  width: auto !important;
+  max-width: 360px !important;
+  min-width: 300px !important;
+  min-height: 0 !important;
+  padding: 12px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, #07111f, #020617) !important;
+  border: 1px solid rgba(16,185,129,.62) !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.34) !important;
+  display: grid !important;
+  gap: 9px !important;
+  position: relative !important;
+  overflow: visible !important;
+  color: #f8fafc !important;
+  list-style: none !important;
+}
+
+#rolling-excel-overlay .kapsul.v32.v847-shot-result.loss {
+  border-color: rgba(239,68,68,.62) !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin: -2px 0 7px 0 !important;
+  min-height: 27px !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar button {
+  appearance: none !important;
+  border-radius: 999px !important;
+  min-height: 27px !important;
+  border: 1px solid rgba(148,163,184,.34) !important;
+  background: rgba(15,23,42,.94) !important;
+  color: #e5e7eb !important;
+  font-size: .63rem !important;
+  font-weight: 950 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  padding: 0 9px !important;
+  cursor: pointer !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar .v850-shot-close {
+  width: 27px !important;
+  min-width: 27px !important;
+  padding: 0 !important;
+  border-color: rgba(248,113,113,.38) !important;
+  background: rgba(127,29,29,.78) !important;
+  color: #fee2e2 !important;
+}
+
+#rolling-excel-overlay .v847-shot-head,
+#rolling-excel-overlay .v847-shot-head-tools,
+#rolling-excel-overlay .v854-leg-result-meta,
+#rolling-excel-overlay .v854-leg-result-actions {
+  display: flex !important;
+  align-items: center !important;
+}
+
+#rolling-excel-overlay .v847-shot-head {
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding-right: 0 !important;
+}
+
+#rolling-excel-overlay .v847-shot-head > b {
+  color: #fbbf24 !important;
+  font-size: .88rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .03em !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools {
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools > span {
+  border-radius: 999px !important;
+  padding: 5px 8px !important;
+  font-size: .66rem !important;
+  font-weight: 950 !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools > span.win {
+  color: #dcfce7 !important;
+  background: rgba(22,163,74,.22) !important;
+  border: 1px solid rgba(74,222,128,.42) !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools > span.loss {
+  color: #fee2e2 !important;
+  background: rgba(220,38,38,.22) !important;
+  border: 1px solid rgba(248,113,113,.44) !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera {
+  width: 25px !important;
+  height: 25px !important;
+  min-width: 25px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(251,191,36,.52) !important;
+  background: linear-gradient(145deg, rgba(251,191,36,.92), rgba(245,158,11,.76)) !important;
+  color: #111827 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  box-shadow: 0 5px 14px rgba(245,158,11,.22) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines {
+  display: grid !important;
+  gap: 6px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  align-items: start !important;
+  padding: 8px 9px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.76) !important;
+  border: 1px solid rgba(51,65,85,.90) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.win { border-color: rgba(34,197,94,.42) !important; }
+#rolling-excel-overlay .v847-shot-lines li.loss { border-color: rgba(239,68,68,.44) !important; }
+
+#rolling-excel-overlay .v847-shot-lines span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  color: #f8fafc !important;
+  font-size: .74rem !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+  cursor: default !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta b {
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  text-align: left !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em {
+  font-style: normal !important;
+  text-align: right !important;
+  font-size: .64rem !important;
+  font-weight: 950 !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em { color: #4ade80 !important; }
+#rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em { color: #f87171 !important; }
+
+#rolling-excel-overlay .v847-shot-footer {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+  padding-top: 2px !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer span {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 9px !important;
+  background: rgba(0,0,0,.22) !important;
+  padding: 6px 7px !important;
+  color: #bfdbfe !important;
+  font-size: .66rem !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer .v851-result-total {
+  grid-column: 1 / -1 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer b { color: #f8fafc !important; }
+#rolling-excel-overlay .v847-shot-footer b.pos { color: #22c55e !important; }
+#rolling-excel-overlay .v847-shot-footer b.neg { color: #ef4444 !important; }
+
+#rolling-excel-overlay .v847-bet-leg-result-panel:empty { display: none !important; }
+
+#rolling-excel-overlay .v847-leg-panel-inner {
+  display: grid !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+  padding: 9px !important;
+  border: 1px solid rgba(251,191,36,.24) !important;
+  border-radius: 12px !important;
+  background: rgba(2,6,23,.42) !important;
+  color: #f8fafc !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  align-items: center !important;
+  padding-bottom: 2px !important;
+  font-size: .70rem !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head b {
+  color: #fde68a !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head span {
+  color: #bfdbfe !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  align-items: stretch !important;
+  padding: 8px 9px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.70) !important;
+  border: 1px solid rgba(148,163,184,.16) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.win {
+  border-color: rgba(16,185,129,.40) !important;
+  background: rgba(6,78,59,.34) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.loss {
+  border-color: rgba(239,68,68,.42) !important;
+  background: rgba(127,29,29,.34) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row > span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.25 !important;
+  color: #e5e7eb !important;
+  font-size: .74rem !important;
+  font-weight: 900 !important;
+  cursor: default !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-meta {
+  justify-content: space-between !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-meta b {
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  text-align: left !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions {
+  justify-content: flex-end !important;
+  gap: 5px !important;
+  flex: 0 0 auto !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions button {
+  appearance: none !important;
+  width: 27px !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+  border: 1px solid transparent !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions button.win {
+  background: rgba(6,78,59,.72) !important;
+  border-color: rgba(52,211,153,.46) !important;
+  color: #bbf7d0 !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions button.loss {
+  background: rgba(127,29,29,.72) !important;
+  border-color: rgba(248,113,113,.46) !important;
+  color: #fecaca !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions button.win.selected {
+  background: linear-gradient(145deg, #16a34a, #047857) !important;
+  border-color: rgba(220,252,231,.82) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 1px rgba(34,197,94,.38), 0 0 13px rgba(34,197,94,.20) !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions button.loss.selected {
+  background: linear-gradient(145deg, #dc2626, #991b1b) !important;
+  border-color: rgba(254,226,226,.82) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 1px rgba(239,68,68,.38), 0 0 13px rgba(239,68,68,.20) !important;
+}
+
+#rolling-excel-overlay .k-actions.v32.v847-hide-main-actions {
+  display: none !important;
 }
