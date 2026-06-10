@@ -575,12 +575,15 @@
         const status = results[idx] === "loss" ? "loss" : results[idx] === "win" ? "win" : "";
         const name = row.note || `Maç ${idx + 1}`;
         const odds = Number(row.odds || 0) ? Number(row.odds).toFixed(2) : "-";
+        const safeName = v763EscapeHtml(name);
         return `<div class="v847-leg-result-row ${status || "pending"}">
-          <span title="${v763EscapeHtml(name)}">${idx + 1}. ${v763EscapeHtml(name)}</span>
-          <b>${odds}</b>
-          <div>
-            <button type="button" class="win ${status === "win" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:win" title="Bu maç kazandı">✓</button>
-            <button type="button" class="loss ${status === "loss" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:loss" title="Bu maç kaybetti">×</button>
+          <span>${idx + 1}. ${safeName}</span>
+          <div class="v854-leg-result-meta">
+            <b>Oran: ${odds}</b>
+            <div class="v854-leg-result-actions">
+              <button type="button" class="win ${status === "win" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:win" title="Bu maç kazandı">✓</button>
+              <button type="button" class="loss ${status === "loss" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:loss" title="Bu maç kaybetti">×</button>
+            </div>
           </div>
         </div>`;
       }).join("")}

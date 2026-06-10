@@ -9808,3 +9808,69 @@ html textarea:-webkit-autofill::first-line {
 #rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total .neg {
   color: #ef4444 !important;
 }
+
+
+/* V854: Maç Sonuçları paneli - uzun yazılar tam görünsün */
+#rolling-excel-overlay .v847-leg-panel-inner {
+  gap: 8px !important;
+  padding: 9px !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head {
+  align-items: center !important;
+  padding-bottom: 2px !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row {
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  align-items: stretch !important;
+  padding: 8px 9px !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.25 !important;
+  font-size: .73rem !important;
+  cursor: default !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-meta b {
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  text-align: left !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 5px !important;
+  flex: 0 0 auto !important;
+}
+
+#rolling-excel-overlay .v854-leg-result-actions button {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.win .v854-leg-result-meta b {
+  color: #86efac !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.loss .v854-leg-result-meta b {
+  color: #fca5a5 !important;
+}
