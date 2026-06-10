@@ -596,7 +596,10 @@
     const totalLabel = finalStatus === "loss" ? "Kayıp" : "Kazanç";
     const title = isCombo ? `KOMBİNE ${legs.length} MAÇ` : "TEKLİ BAHİS";
     const netValue = Number(effect || 0);
-    const netText = `${netValue >= 0 ? "+" : "-"}$${Math.abs(netValue).toFixed(2)}`;
+    const displayValue = finalStatus === "win"
+      ? (Number(amt || 0) && Number(totalOdds || 0) ? Number(amt || 0) * Number(totalOdds || 0) : Math.max(0, netValue))
+      : -Math.abs(Number(amt || 0));
+    const netText = `${displayValue >= 0 ? "" : "-"}$${Math.abs(displayValue).toFixed(2)}`;
     const rowsHtml = legs.map((leg, idx) => {
       let status = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
       if (!status && !isCombo) status = finalStatus;
@@ -946,10 +949,10 @@
     const height = Math.max(520, footerY + footerH + 46);
     const totalOddsLabel = data.totalOdds ? data.totalOdds.toFixed(2) : "-";
     const hasFinalResult = data.result === "loss" || data.result === "win";
-    const resultNet = hasFinalResult ? (data.result === "loss" ? -Number(data.stake || 0) : Number(data.possible || 0) - Number(data.stake || 0)) : 0;
+    const resultDisplay = hasFinalResult ? (data.result === "loss" ? -Number(data.stake || 0) : Number(data.possible || 0)) : 0;
     const resultLabel = hasFinalResult ? (data.result === "loss" ? "Kayıp:" : "Kazanç:") : "Tahmini Kazanç:";
-    const resultColor = hasFinalResult ? (resultNet >= 0 ? "#22c55e" : "#ef4444") : "#22c55e";
-    const possibleLabel = hasFinalResult ? `${resultNet >= 0 ? "+" : "-"}$${Math.abs(resultNet).toFixed(2)}` : (data.possible ? v768Money(data.possible) : "-");
+    const resultColor = hasFinalResult ? (resultDisplay >= 0 ? "#22c55e" : "#ef4444") : "#22c55e";
+    const possibleLabel = hasFinalResult ? `${resultDisplay >= 0 ? "" : "-"}$${Math.abs(resultDisplay).toFixed(2)}` : (data.possible ? v768Money(data.possible) : "-");
     const rowHtml = data.rows.map((row, idx) => {
       const y = 150 + idx * 48;
       const result = row.result === "loss" ? "loss" : row.result === "win" ? "win" : "";
