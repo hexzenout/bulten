@@ -743,14 +743,22 @@
   function v768FeatureRowsHtml(mode, kind) {
     const isCrypto = mode === "crypto";
     const rows = kind === "active" ? v768LiveRows(mode) : v768HistoryRows(mode);
-    if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif kutu yok. Maç/işlem yazınca burada görünür." : "Geçmiş kayıt yok."}</div>`;
+    if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif bahis yok. Maç/işlem yazınca burada görünür." : "Geçmiş kayıt yok."}</div>`;
     return rows.map(row => {
-      const comboHtml = (!isCrypto && row.combo?.length) ? `<ul class="v892-active-match-list">${[`<li><span>${v763EscapeHtml(row.note || "Maç")}</span><b>${Number(row.odds || 0).toFixed(2)}</b></li>`, ...row.combo.map(x => `<li><span>${v763EscapeHtml(x.note || "Maç")}</span><b>${Number(x.odds || 0).toFixed(2)}</b></li>`)].join("")}</ul>` : "";
-      const title = isCrypto ? (row.note || "İşlem") : (row.combo?.length ? "Kombine" : (row.note || "Maç"));
+      const comboRows = Array.isArray(row.combo) ? row.combo : [];
+      const isActiveBet = !isCrypto && kind === "active";
+      const matchItems = isActiveBet
+        ? [{ note: row.note || "Maç", odds: Number(row.odds || 0) }, ...comboRows.map(x => ({ note: x.note || "Maç", odds: Number(x.odds || 0) }))]
+        : [];
+      const matchHtml = isActiveBet ? `<ul class="v892-active-match-list">${matchItems.map((x, idx) => `<li><span>${idx + 1}. ${v763EscapeHtml(x.note || "Maç")}</span><b>${Number(x.odds || 0) ? Number(x.odds || 0).toFixed(2) : "-"}</b></li>`).join("")}</ul>` : ((!isCrypto && comboRows.length) ? `<ul>${[`<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`, ...comboRows.map(x => `<li>${v763EscapeHtml(x.note || "Maç")} <b>${Number(x.odds || 0).toFixed(2)}</b></li>`)].join("")}</ul>` : "");
+      const title = isCrypto ? (row.note || "İşlem") : (comboRows.length ? "Kombine" : "Tekli Bahis");
       const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
       const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Tahmini Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
-      const cardClass = !isCrypto && kind === "active" ? "v768-feature-card v892-bet-active-card" : "v768-feature-card";
-      return `<article class="${cardClass}"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
+      const summaryHtml = isActiveBet
+        ? `<div class="v893-active-summary"><span><small>Tutar</small><b>${v768Money(row.stake)}</b></span><span><small>Toplam Oran</small><b>${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</b></span><span><small>Tahmini Kazanç</small><b>${row.possible ? v768Money(row.possible) : "-"}</b></span></div>`
+        : `<p>${metric}</p>`;
+      const cardClass = isActiveBet ? "v768-feature-card v892-bet-active-card" : "v768-feature-card";
+      return `<article class="${cardClass}"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}</article>`;
     }).join("");
   }
 
@@ -891,7 +899,7 @@
       const y = 150 + idx * 48;
       return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text><text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
     }).join('');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · KUTU ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 

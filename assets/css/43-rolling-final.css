@@ -11020,3 +11020,79 @@ select:-webkit-autofill {
     width: min(420px, 94vw) !important;
   }
 }
+
+
+/* V893: Rolling Aktif Bahisleri Görüntüle panel düzeni — ana butona dokunmaz */
+#omega-rolling-feature-host .v768-feature-modal.bet.active {
+  width: min(880px, 96vw) !important;
+  max-height: 88vh !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v768-feature-body {
+  gap: 14px !important;
+  padding: 18px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v892-bet-active-card {
+  padding: 16px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v893-active-summary {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin: 12px 0 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v893-active-summary span {
+  display: block !important;
+  min-width: 0 !important;
+  padding: 10px 12px !important;
+  border-radius: 13px !important;
+  border: 1px solid rgba(251, 191, 36, .22) !important;
+  background: rgba(2, 6, 23, .44) !important;
+  color: #f8fafc !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v893-active-summary small {
+  display: block !important;
+  margin-bottom: 5px !important;
+  color: #93c5fd !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .01em !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v893-active-summary b {
+  display: block !important;
+  color: #fbbf24 !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  white-space: nowrap !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v892-active-match-list {
+  margin-top: 12px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v892-active-match-list li {
+  padding: 10px 12px !important;
+  min-height: 42px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v892-active-match-list li span {
+  font-size: 13px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v892-active-match-list li b {
+  font-size: 13px !important;
+}
+.v763-shot-btn {
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+@media (max-width: 720px) {
+  #omega-rolling-feature-host .v768-feature-modal.bet.active {
+    width: min(620px, 96vw) !important;
+  }
+  #omega-rolling-feature-host .v768-feature-modal.bet.active .v893-active-summary {
+    grid-template-columns: 1fr !important;
+  }
+}
