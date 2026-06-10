@@ -1317,8 +1317,8 @@
       <span>${idx + 1}. ${escapeHtml(m.name)}</span>
       <b>${Number(m.odds || 0) ? Number(m.odds).toFixed(2) : "Oran eksik"}</b>
       <div>
-        <button type="button" class="win ${m.status === "win" ? "selected" : ""}" data-combo-match-status="${row.index}:${idx}:win">KÂR</button>
-        <button type="button" class="loss ${m.status === "loss" ? "selected" : ""}" data-combo-match-status="${row.index}:${idx}:loss">ZARAR</button>
+        <button type="button" class="win ${m.status === "win" ? "selected" : ""}" data-combo-match-status="${row.index}:${idx}:win">KAZANDI</button>
+        <button type="button" class="loss ${m.status === "loss" ? "selected" : ""}" data-combo-match-status="${row.index}:${idx}:loss">KAYBETTİ</button>
       </div>
     </li>`).join("");
     return `<article class="v763-active-card bet combo v801-bet-card" id="${cardId}">
