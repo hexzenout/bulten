@@ -7615,3 +7615,93 @@ html.rolling-hash-boot::before {
     grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
   }
 }
+
+
+/* V817: Kasa hedefi TP kolonları ve detay altı kamera hizası */
+.rolling-v48-rail .v813-target-tp-box,
+.rolling-v48-rail .v814-target-tp-box {
+  padding-right: 0 !important;
+}
+.rolling-v48-rail .v814-target-tp-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) 44px !important;
+  gap: 8px !important;
+  align-items: start !important;
+}
+.rolling-v48-rail .v814-target-tp-actions {
+  position: static !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 44px !important;
+  align-self: stretch !important;
+}
+.rolling-v48-rail .v814-target-tp-actions button {
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  border-radius: 12px !important;
+}
+.rolling-v48-rail .v814-target-tp-row,
+.rolling-v48-rail .v811-target-tp-row {
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
+  gap: 8px !important;
+}
+.rolling-v48-rail .v814-target-tp-row input,
+.rolling-v48-rail .v811-target-tp-row input {
+  height: 42px !important;
+  min-height: 42px !important;
+  font-size: .83rem !important;
+  border-radius: 12px !important;
+}
+.rolling-v48-rail .v815-target-self-form > input,
+.rolling-v48-rail .v812-target-stop-row input,
+.rolling-v48-rail .v812-target-bet-leg input {
+  height: 42px !important;
+  min-height: 42px !important;
+  border-radius: 12px !important;
+}
+.rolling-v48-rail .v817-target-detail-actions {
+  grid-template-columns: repeat(3, 36px) !important;
+  justify-content: start !important;
+  gap: 8px !important;
+}
+.rolling-v48-rail .v817-target-card-footer {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+.rolling-v48-rail .v817-target-card-footer .photo,
+.rolling-v48-rail .v817-target-card-footer .delete {
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  border-radius: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+.rolling-v48-rail .v817-target-card-footer .photo {
+  color: #fde68a !important;
+  border: 1px solid rgba(250,204,21,.34) !important;
+  background: linear-gradient(135deg, rgba(120,53,15,.34), rgba(15,23,42,.84)) !important;
+}
+.rolling-v48-rail .v817-target-card-footer .delete {
+  color: #fecaca !important;
+  border: 1px solid rgba(248,113,113,.30) !important;
+  background: linear-gradient(135deg, rgba(127,29,29,.28), rgba(15,23,42,.82)) !important;
+}
+.rolling-v48-rail .v816-target-item-tools,
+.rolling-v48-rail .v816-target-detail-actions {
+  display: none !important;
+}
+@media (max-width: 900px) {
+  .rolling-v48-rail .v814-target-tp-grid {
+    grid-template-columns: minmax(0,1fr) 44px !important;
+  }
+}
