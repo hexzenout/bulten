@@ -510,6 +510,24 @@
     return Number.isFinite(parsed) ? parsed : 0;
   }
 
+  function v856RequireStake(day, slot) {
+    const input = document.getElementById(`e-a-${day}-${slot}`);
+    const value = input ? v855ParseNumber(input.value) : 0;
+    if (value > 0) {
+      if (input) input.classList.remove("v856-stake-warning");
+      return true;
+    }
+    if (input) {
+      input.value = "";
+      input.placeholder = "Tutar gir";
+      input.classList.add("v856-stake-warning");
+      input.focus({ preventScroll: false });
+      setTimeout(() => input.classList.remove("v856-stake-warning"), 2200);
+    }
+    if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Tutar gir");
+    return false;
+  }
+
   function v763ComboRows(day, slot) {
     return Array.from(document.querySelectorAll(`[data-v763-extra-row="${day}:${slot}"]`)).map(row => ({
       note: (row.querySelector(`[data-v763-extra-note]`)?.value || "").trim(),
@@ -649,6 +667,7 @@
 
   function v847SetBetLegResult(day, slot, index, status) {
     if (!Number.isFinite(day) || !Number.isFinite(slot) || !Number.isFinite(index)) return false;
+    if (!v856RequireStake(day, slot)) return false;
     const domEntry = v774PendingFromDom(day, slot);
     const savedEntry = v774GetPendingSlot(day, slot);
     const pending = domEntry || savedEntry;
@@ -1179,6 +1198,9 @@
       const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
       if (!kapsul) return;
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
+      if (event.target && event.target.id === `e-a-${day}-${slot}` && v855ParseNumber(event.target.value) > 0) {
+        event.target.classList.remove("v856-stake-warning");
+      }
       v768UpdateBetCalc(day, slot);
       v774SavePendingSlot(day, slot);
     }, true);
@@ -1416,6 +1438,19 @@
     const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
     const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
     const hasComboGap = comboRows.some(row => !row.note || !Number(row.odds || 0));
+    if (!isCrypto && !v856RequireStake(day, slot)) return;
+    if (isCrypto && !(amt > 0)) {
+      const stakeInput = document.getElementById(`e-a-${day}-${slot}`);
+      if (stakeInput) {
+        stakeInput.value = "";
+        stakeInput.placeholder = "Tutar gir";
+        stakeInput.classList.add("v856-stake-warning");
+        stakeInput.focus({ preventScroll: false });
+        setTimeout(() => stakeInput.classList.remove("v856-stake-warning"), 2200);
+      }
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Tutar gir");
+      return;
+    }
     if (isNaN(amt) || isNaN(odds) || (!isCrypto && hasComboGap)) {
       if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Tutar ve Net K/Z $ alanını doldur." : "Maç, oran, tutar ve ek maç oranlarını doldur.");
       return;

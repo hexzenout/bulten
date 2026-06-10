@@ -9891,3 +9891,18 @@ html textarea:-webkit-autofill::first-line {
 #rolling-excel-overlay .v854-leg-result-actions {
   pointer-events: auto !important;
 }
+
+
+/* V856: Tutar boşsa sonuç işlenmesin, Tutar kutusunda net uyarı ver */
+#rolling-excel-overlay input.v856-stake-warning {
+  border-color: rgba(248,113,113,.92) !important;
+  background: rgba(127,29,29,.24) !important;
+  color: #fee2e2 !important;
+  box-shadow: 0 0 0 2px rgba(239,68,68,.22), 0 0 18px rgba(239,68,68,.24) !important;
+}
+
+#rolling-excel-overlay input.v856-stake-warning::placeholder {
+  color: #fecaca !important;
+  opacity: 1 !important;
+  font-weight: 950 !important;
+}
