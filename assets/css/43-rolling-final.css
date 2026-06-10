@@ -8610,3 +8610,50 @@ html.rolling-hash-boot::before {
   grid-area: actions !important;
   justify-self: end !important;
 }
+
+
+/* V836: Bahis Detay maç satırı iki katmanlı şema */
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  grid-template-areas:
+    "name name"
+    "odds actions" !important;
+  row-gap: 8px !important;
+  column-gap: 10px !important;
+  align-items: center !important;
+  min-height: 68px !important;
+  padding: 9px 10px !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line span,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line span {
+  grid-area: name !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  line-height: 1.25 !important;
+  max-height: none !important;
+  font-size: .8rem !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v822-bet-match-line b,
+.rolling-v48-rail .v835-bet-match-list .v819-bet-match-line b {
+  grid-area: odds !important;
+  justify-self: start !important;
+  align-self: center !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions {
+  grid-area: actions !important;
+  justify-self: end !important;
+  align-self: center !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button {
+  width: 34px !important;
+  height: 34px !important;
+}

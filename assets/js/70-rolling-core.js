@@ -2397,7 +2397,11 @@
       const removeBtn = last?.querySelector("[data-target-bet-leg-remove]");
       if (removeBtn) bindTargetBetLegRemove(removeBtn);
       const form = list.closest('[data-target-bet-autosave="1"]');
-      if (form) saveTargetBetDraft(readTargetBetDraftFromForm(form));
+      if (form) {
+        delete form.dataset.skipAutosaveOnce;
+        form.dataset.targetDirty = "1";
+        saveTargetBetDraft(readTargetBetDraftFromForm(form));
+      }
     }));
     const saveTargetSelfFromForm = (modeRaw, formEl = null) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
@@ -2432,8 +2436,8 @@
           name: cleanText(row.querySelector('[data-target-bet-leg-field="name"]')?.value || ""),
           odds: v810NumberOrBlank(row.querySelector('[data-target-bet-leg-field="odds"]')?.value || "")
         })).filter(leg => leg.name || leg.odds !== "");
-        if (!legs.length && stake === "") return false;
-        const cleanLegs = legs.length ? legs : [{ name: "", odds: "" }];
+        if (!legs.length) return false;
+        const cleanLegs = legs;
         store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: cleanLegs.length > 1 ? "combo" : "match", legs: cleanLegs, name: cleanLegs[0]?.name || "", odds: cleanLegs[0]?.odds || "", stake, result: "" });
       }
       saveTargetItems(store);
@@ -2452,11 +2456,29 @@
         if (form) delete form.dataset.skipAutosaveOnce;
       });
     });
+    const hasTargetBetDraftValues = form => {
+      const draft = readTargetBetDraftFromForm(form);
+      return draft.legs.length > 0;
+    };
+    const commitTargetBetForm = (form, force = false) => {
+      if (!form) return false;
+      if (!force && form.dataset.targetDirty !== "1") return false;
+      if (!hasTargetBetDraftValues(form)) {
+        form.dataset.targetDirty = "0";
+        clearTargetBetDraft();
+        return false;
+      }
+      const saved = saveTargetSelfFromForm("bet", form);
+      form.dataset.targetDirty = "0";
+      if (saved) refresh();
+      return saved;
+    };
     mount.querySelectorAll('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]').forEach(form => {
       const autosaveMode = form.matches('[data-target-crypto-autosave="1"]') ? "crypto" : "bet";
       let dirty = false;
-      const commit = () => {
-        if (!dirty) return false;
+      const commit = (force = false) => {
+        if (autosaveMode === "bet") return commitTargetBetForm(form, force || dirty || hasTargetBetDraftValues(form));
+        if (!dirty && !force) return false;
         if (form.dataset.skipAutosaveOnce === '1') {
           delete form.dataset.skipAutosaveOnce;
           dirty = false;
@@ -2469,23 +2491,40 @@
       };
       form.addEventListener('input', () => {
         dirty = true;
-        if (autosaveMode === "bet") saveTargetBetDraft(readTargetBetDraftFromForm(form));
+        form.dataset.targetDirty = "1";
+        if (autosaveMode === "bet") {
+          delete form.dataset.skipAutosaveOnce;
+          saveTargetBetDraft(readTargetBetDraftFromForm(form));
+        }
       }, true);
       form.addEventListener('keydown', event => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
-        commit();
+        commit(true);
       });
       form.addEventListener('focusout', event => {
         const next = event.relatedTarget;
         if (next && form.contains(next)) return;
-        setTimeout(commit, 180);
+        setTimeout(() => commit(true), 180);
       });
       const detailSummary = form.parentElement?.querySelector('[data-target-bet-detail-commit="1"]');
       if (detailSummary && autosaveMode === "bet") {
-        detailSummary.addEventListener('pointerdown', () => setTimeout(commit, 0));
+        detailSummary.addEventListener('pointerdown', () => setTimeout(() => commit(true), 0));
       }
     });
+    mount.addEventListener('pointerdown', event => {
+      const form = mount.querySelector('[data-target-bet-autosave="1"]');
+      if (!form) return;
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (form.contains(target)) return;
+      const isDetailCommit = !!target.closest('[data-target-bet-detail-commit="1"]');
+      const isTargetBlank = !!target.closest('.v810-target-self.bet, .v835-target-self-details');
+      const isControl = !!target.closest('button,a,input,select,textarea,[data-target-self-row],[data-target-bet-leg-result],[data-target-self-photo]');
+      if (!isDetailCommit && (!isTargetBlank || isControl)) return;
+      if (!hasTargetBetDraftValues(form)) return;
+      setTimeout(() => commitTargetBetForm(form, true), 0);
+    }, true);
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       const latest = loadTargetItems();
