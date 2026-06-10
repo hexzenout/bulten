@@ -9135,3 +9135,275 @@ html.rolling-hash-boot::before {
   line-height: 1 !important;
   filter: none !important;
 }
+
+
+/* V847: BAHİS 7 GÜNLÜK ROLLING - maç bazlı sonuç ve screenshot görünümlü final kart */
+#rolling-excel-overlay .v847-bet-leg-result-panel:empty {
+  display: none !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-inner {
+  display: grid !important;
+  gap: 7px !important;
+  margin-top: 2px !important;
+  padding: 8px !important;
+  border: 1px solid rgba(251,191,36,.22) !important;
+  border-radius: 10px !important;
+  background: rgba(2,6,23,.42) !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  align-items: center !important;
+  font-size: .68rem !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head b {
+  color: #fde68a !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-leg-panel-head span {
+  color: #bfdbfe !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 44px auto !important;
+  gap: 7px !important;
+  align-items: center !important;
+  padding: 6px 7px !important;
+  border-radius: 9px !important;
+  background: rgba(15,23,42,.62) !important;
+  border: 1px solid rgba(148,163,184,.16) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.win {
+  border-color: rgba(16,185,129,.38) !important;
+  background: rgba(6,78,59,.34) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row.loss {
+  border-color: rgba(239,68,68,.42) !important;
+  background: rgba(127,29,29,.34) !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: #e5e7eb !important;
+  font-size: .72rem !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row b {
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  text-align: right !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row div {
+  display: inline-flex !important;
+  gap: 5px !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button.win {
+  background: rgba(6,78,59,.72) !important;
+  border-color: rgba(52,211,153,.46) !important;
+  color: #bbf7d0 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button.loss {
+  background: rgba(127,29,29,.72) !important;
+  border-color: rgba(248,113,113,.46) !important;
+  color: #fecaca !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button.win.selected {
+  background: linear-gradient(145deg, #16a34a, #047857) !important;
+  border-color: rgba(220,252,231,.82) !important;
+  color: #fff !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button.loss.selected {
+  background: linear-gradient(145deg, #dc2626, #991b1b) !important;
+  border-color: rgba(254,226,226,.82) !important;
+  color: #fff !important;
+}
+
+#rolling-excel-overlay .k-actions.v32.v847-hide-main-actions {
+  display: none !important;
+}
+
+#rolling-excel-overlay .kapsul.v32.v847-shot-result {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 260px !important;
+  min-height: 0 !important;
+  padding: 12px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, #07111f, #020617) !important;
+  border: 1px solid rgba(251,191,36,.38) !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.34) !important;
+  display: grid !important;
+  gap: 9px !important;
+}
+
+#rolling-excel-overlay .kapsul.v32.v847-shot-result.win {
+  border-color: rgba(16,185,129,.54) !important;
+}
+
+#rolling-excel-overlay .kapsul.v32.v847-shot-result.loss {
+  border-color: rgba(239,68,68,.56) !important;
+}
+
+#rolling-excel-overlay .v847-shot-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding-right: 22px !important;
+}
+
+#rolling-excel-overlay .v847-shot-head b {
+  color: #fbbf24 !important;
+  font-size: .86rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .03em !important;
+}
+
+#rolling-excel-overlay .v847-shot-head span {
+  border-radius: 999px !important;
+  padding: 5px 8px !important;
+  font-size: .66rem !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-shot-head span.win {
+  color: #dcfce7 !important;
+  background: rgba(22,163,74,.22) !important;
+  border: 1px solid rgba(74,222,128,.42) !important;
+}
+
+#rolling-excel-overlay .v847-shot-head span.loss {
+  color: #fee2e2 !important;
+  background: rgba(220,38,38,.22) !important;
+  border: 1px solid rgba(248,113,113,.44) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines {
+  display: grid !important;
+  gap: 6px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 46px 72px !important;
+  gap: 7px !important;
+  align-items: center !important;
+  padding: 7px 8px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.76) !important;
+  border: 1px solid rgba(51,65,85,.9) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.win {
+  border-color: rgba(34,197,94,.36) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.loss {
+  border-color: rgba(239,68,68,.40) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.pending {
+  opacity: .82 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: #f8fafc !important;
+  font-size: .74rem !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines b {
+  color: #fbbf24 !important;
+  text-align: right !important;
+  font-size: .74rem !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines em {
+  font-style: normal !important;
+  text-align: right !important;
+  font-size: .62rem !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.win em {
+  color: #4ade80 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.loss em {
+  color: #f87171 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.pending em {
+  color: #94a3b8 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+  padding-top: 2px !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer span {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 9px !important;
+  background: rgba(0,0,0,.22) !important;
+  padding: 6px 7px !important;
+  color: #bfdbfe !important;
+  font-size: .66rem !important;
+  font-weight: 900 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer b {
+  color: #f8fafc !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer b.pos {
+  color: #22c55e !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer b.neg {
+  color: #ef4444 !important;
+}
