@@ -1630,6 +1630,22 @@
     ensureStateShape(state);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
+
+  let V833_STATE_SAVE_TIMER = null;
+  function saveStateDebounced(state, delay = 260) {
+    if (V833_STATE_SAVE_TIMER) clearTimeout(V833_STATE_SAVE_TIMER);
+    V833_STATE_SAVE_TIMER = setTimeout(() => {
+      V833_STATE_SAVE_TIMER = null;
+      saveState(state);
+    }, delay);
+  }
+  function flushStateSave(state) {
+    if (V833_STATE_SAVE_TIMER) {
+      clearTimeout(V833_STATE_SAVE_TIMER);
+      V833_STATE_SAVE_TIMER = null;
+    }
+    saveState(state);
+  }
   function recalcSlot(slot) {
     const stake = Number(slot.stake || 0);
     const val = Number(slot.odds || 0);
@@ -2089,7 +2105,7 @@
       refresh();
     }));
     mount.querySelectorAll("input[data-mode]").forEach(input => {
-      const saveInput = () => {
+      const saveInput = (immediate = false) => {
         const mode = input.dataset.mode, i = Number(input.dataset.slot), key = input.dataset.key;
         const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
         if (!list[i]) list[i] = createSlot(mode, i);
@@ -2100,10 +2116,12 @@
         }
         if (mode === "crypto" && key === "odds") list[i].cryptoPnlMode = "amount";
         recalcSlot(list[i]);
-        saveState(state);
+        if (immediate) flushStateSave(state);
+        else saveStateDebounced(state);
       };
-      input.addEventListener("input", saveInput);
-      input.addEventListener("change", saveInput);
+      input.addEventListener("input", () => saveInput(false));
+      input.addEventListener("change", () => saveInput(true));
+      input.addEventListener("blur", () => saveInput(true));
     });
     mount.querySelectorAll("[data-clear-row]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, slotRaw] = String(btn.dataset.clearRow || "bet:0").split(":");
@@ -2117,21 +2135,22 @@
       openTablePhoto(btn.dataset.mainTablePhoto === "crypto" ? "crypto" : "bet", state);
     }));
     mount.querySelectorAll("[data-crypto-detail]").forEach(input => {
-      const saveCryptoDetail = () => {
+      const saveCryptoDetail = (immediate = false) => {
         const [slotRaw, key] = String(input.dataset.cryptoDetail || "0:entryPrice").split(":");
         const i = Number(slotRaw || 0);
         if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
         state.modeSlots.crypto[i][key] = input.value;
         state.modeSlots.crypto[i].status = state.modeSlots.crypto[i].status === "win" || state.modeSlots.crypto[i].status === "loss" ? state.modeSlots.crypto[i].status : "pending";
         if (key === "stake" || key === "odds") recalcSlot(state.modeSlots.crypto[i]);
-        saveState(state);
+        if (immediate) flushStateSave(state);
+        else saveStateDebounced(state);
       };
-      input.addEventListener("input", saveCryptoDetail);
-      input.addEventListener("change", () => { saveCryptoDetail(); refresh(); });
-      input.addEventListener("blur", () => { saveCryptoDetail(); refresh(); });
+      input.addEventListener("input", () => saveCryptoDetail(false));
+      input.addEventListener("change", () => { saveCryptoDetail(true); refresh(); });
+      input.addEventListener("blur", () => { saveCryptoDetail(true); refresh(); });
     });
     mount.querySelectorAll("[data-crypto-tp]").forEach(input => {
-      const saveTp = () => {
+      const saveTp = (immediate = false) => {
         const [slotRaw, tpRaw, key] = String(input.dataset.cryptoTp || "0:0:price").split(":");
         const i = Number(slotRaw || 0);
         const ti = Number(tpRaw || 0);
@@ -2143,11 +2162,12 @@
         if (!slot.takeProfits[ti].note) slot.takeProfits[ti].note = `TP${ti + 1}`;
         slot.odds = Number(cryptoRealizedProfit(slot).toFixed(2));
         recalcSlot(slot);
-        saveState(state);
+        if (immediate) flushStateSave(state);
+        else saveStateDebounced(state);
       };
-      input.addEventListener("input", saveTp);
-      input.addEventListener("change", saveTp);
-      input.addEventListener("blur", saveTp);
+      input.addEventListener("input", () => saveTp(false));
+      input.addEventListener("change", () => saveTp(true));
+      input.addEventListener("blur", () => saveTp(true));
     });
     mount.querySelectorAll("[data-crypto-tp-op]").forEach(btn => btn.addEventListener("click", () => {
       const [slotRaw, tpRaw, op] = String(btn.dataset.cryptoTpOp || "0:0:plus").split(":");
@@ -2721,7 +2741,8 @@
         saveState(fresh);
       } else if (action.type === "settleCoupon") {
         const fresh = loadState();
-        const coupon = getBetCouponGroups(fresh).coupons.find(c => c.id === Number(action.couponId || 1));
+        const coupons = getBetCouponGroups(fresh).coupons;
+        const coupon = coupons.find(c => Number(c.slotIndex) === Number(action.slotIndex)) || coupons.find(c => c.id === Number(action.couponId || 1));
         if (coupon) {
           addCouponHistoryRecord(fresh, coupon, action.status === "loss" ? "loss" : "win");
           saveState(fresh);
@@ -2739,9 +2760,10 @@
           slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
           const updatedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === baseIndex);
           const matches = updatedCoupon ? updatedCoupon.matches : getSlotMatches({ ...slot, index: baseIndex });
-          const allDone = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
-          if (allDone) {
-            const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
+          const anyLoss = action.status !== "pending" && matches.length > 1 && matches.some(m => m.status === "loss");
+          const allWin = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win");
+          if (anyLoss || allWin) {
+            const finalStatus = anyLoss ? "loss" : "win";
             addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
           }
           saveState(fresh);
@@ -2793,7 +2815,9 @@
         message: nextStatus === "pending"
           ? `${matchName} tekrar BEKLİYOR durumuna alınacak.`
           : `${matchName} için ${nextStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
-        detail: nextStatus === "pending" ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur." : "Kombine tüm maçlar sonuçlanana kadar aktif listede kalır.",
+        detail: nextStatus === "pending"
+          ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur."
+          : (nextStatus === "loss" ? "Tek maç kaybı kombine kuponu direkt kaybettirir ve Geçmiş/Rapor merkezine işler." : "Tüm maçlar kazanırsa kombine kupon kazanmış sayılır."),
         confirmText: nextStatus === "pending" ? "BEKLİYOR olarak işaretle" : (nextStatus === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle")
       };
       refresh();
@@ -2840,16 +2864,19 @@
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
         const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
         if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
+        const coupon = mode === "bet" ? getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === i) : null;
         CONFIRM_DIALOG = {
-          type: "settle",
+          type: coupon && finalStatus !== "pending" ? "settleCoupon" : "settle",
           mode,
           slot: i,
+          slotIndex: i,
+          couponId: coupon?.id,
           status: finalStatus,
           keepActivePanel: keepPanel,
           tone: finalStatus === "loss" ? "danger" : "success",
           title: finalStatus === "pending" ? "Tekrar bekliyor durumuna al" : "Sonucu kaydetmeden önce onayla",
           message: finalStatus === "pending" ? `${name} tekrar BEKLİYOR durumuna alınacak.` : `${name} için sonuç: ${resultLabel}.`,
-          detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et.",
+          detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : (coupon ? "Kombine kupon Geçmiş/Rapor merkezine tek kayıt olarak işlenecek." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et."),
           confirmText: finalStatus === "pending" ? "BEKLİYOR olarak kaydet" : `${resultLabel} olarak kaydet`
         };
         refresh();

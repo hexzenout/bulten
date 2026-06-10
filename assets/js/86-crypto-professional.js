@@ -676,6 +676,26 @@
     v774SetPendingSlot(day, slot, v774PendingFromDom(day, slot));
   }
 
+  const V833_PENDING_SAVE_TIMERS = new Map();
+  function v833PendingSaveKey(day, slot) { return `${Number(day || 0)}:${Number(slot || 0)}`; }
+  function v833SchedulePendingSlotSave(day, slot, delay = 360) {
+    if (!v774SmartMemoryEnabled()) return;
+    const key = v833PendingSaveKey(day, slot);
+    if (V833_PENDING_SAVE_TIMERS.has(key)) clearTimeout(V833_PENDING_SAVE_TIMERS.get(key));
+    V833_PENDING_SAVE_TIMERS.set(key, setTimeout(() => {
+      V833_PENDING_SAVE_TIMERS.delete(key);
+      v774SavePendingSlot(day, slot);
+    }, delay));
+  }
+  function v833FlushPendingSlotSave(day, slot) {
+    const key = v833PendingSaveKey(day, slot);
+    if (V833_PENDING_SAVE_TIMERS.has(key)) {
+      clearTimeout(V833_PENDING_SAVE_TIMERS.get(key));
+      V833_PENDING_SAVE_TIMERS.delete(key);
+    }
+    v774SavePendingSlot(day, slot);
+  }
+
   function v774FlushAllPendingFromDom() {
     if (!v774SmartMemoryEnabled()) return;
     document.querySelectorAll('#rolling-excel-overlay [data-v765-kapsul]').forEach(kapsul => {
@@ -980,13 +1000,13 @@
       if (!kapsul) return;
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
       v768UpdateBetCalc(day, slot);
-      v774SavePendingSlot(day, slot);
+      v833SchedulePendingSlotSave(day, slot);
     }, true);
     document.addEventListener("focusout", function(event) {
       const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
       if (!kapsul) return;
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
-      v774SavePendingSlot(day, slot);
+      v833FlushPendingSlotSave(day, slot);
     }, true);
   }
 
