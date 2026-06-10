@@ -866,6 +866,7 @@
           name: cleanText(row.name),
           matchLines: [cleanText(row.name)],
           matchOdds: [Number(row.odds || 0)],
+          matchResults: [cleanText(row.status || "")],
           stake: Number(row.stake || 0),
           odds: Number(totals.odds || 0),
           possible: Number(totals.possibleWin || 0)
@@ -921,6 +922,7 @@
   function v788PhotoEntryLines(entry) {
     const names = Array.isArray(entry.matchLines) && entry.matchLines.length ? entry.matchLines : [entry.name || "Maç"];
     const odds = Array.isArray(entry.matchOdds) && entry.matchOdds.length ? entry.matchOdds : [entry.odds || 0];
+    const results = Array.isArray(entry.matchResults) ? entry.matchResults : [];
     const rows = [];
     names.forEach((name, idx) => {
       const prefix = names.length > 1 ? `${idx + 1}. ` : "";
@@ -928,11 +930,12 @@
       wrapped.forEach((line, partIndex) => {
         rows.push({
           text: line,
-          odds: partIndex === 0 ? Number(odds[idx] || 0) : 0
+          odds: partIndex === 0 ? Number(odds[idx] || 0) : 0,
+          result: partIndex === 0 ? cleanText(results[idx] || "") : ""
         });
       });
     });
-    return rows.length ? rows : [{ text: "Maç", odds: Number(entry.odds || 0) }];
+    return rows.length ? rows : [{ text: "Maç", odds: Number(entry.odds || 0), result: cleanText(entry.status || "") }];
   }
 
   function v788PhotoTitle(rows, titleText) {
@@ -971,6 +974,7 @@
         rowHtml.push(`
           <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="${rowH}" rx="12" fill="#0f172a" stroke="#334155"/>
           ${wrapped.map((txt, idx) => `<text x="${textX}" y="${cursorY - 3 + idx * lineH}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(txt)}</text>`).join("")}
+          ${line.result ? `<rect x="672" y="${cursorY - 26}" width="106" height="28" rx="14" fill="${line.result === "loss" ? "#7f1d1d" : "#064e3b"}" stroke="${line.result === "loss" ? "#ef4444" : "#22c55e"}"/><text x="725" y="${cursorY - 7}" text-anchor="middle" fill="${line.result === "loss" ? "#fecaca" : "#bbf7d0"}" font-size="14" font-family="Arial" font-weight="900">${line.result === "loss" ? "KAYBETTİ" : "KAZANDI"}</text>` : ""}
           ${line.odds ? `<text x="${oddsX}" y="${cursorY - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${Number(line.odds).toFixed(2)}</text>` : ""}`);
         cursorY += rowH + rowGap;
       });
@@ -1027,10 +1031,12 @@
     tps.forEach((tp, idx) => {
       const target = cleanText(tp.target || '') || '-';
       const profit = tp.profit !== '' ? signedMoney(Number(tp.profit || 0)) : '+$0.00';
-      pushRow(`TP ${idx + 1} · ${target}`, profit, '#22c55e');
+      const status = tp.done || cleanText(item?.result || '') === 'tp' ? ' · KAZANDI' : '';
+      pushRow(`TP ${idx + 1} · ${target}`, `${profit}${status}`, '#22c55e');
     });
     if (stopRaw || stopLoss) {
-      pushRow(`STOP · ${stopRaw || '-'}`, stopLoss ? '-' + money(stopLoss) : '-$0.00', '#dc2626');
+      const status = cleanText(item?.result || '') === 'stop' ? ' · KAYBETTİ' : '';
+      pushRow(`STOP · ${stopRaw || '-'}`, `${stopLoss ? '-' + money(stopLoss) : '-$0.00'}${status}`, '#dc2626');
     }
     const footerY = cursorY + 20;
     const footerH = 88;
@@ -1059,6 +1065,7 @@
         type: v812BetLegs(row).length > 1 ? 'Kombine' : 'Bahis',
         matchLines: v812BetLegs(row).map(leg => cleanText(leg.name || '') || 'Maç'),
         matchOdds: v812BetLegs(row).map(leg => Number(leg.odds || 0)),
+        matchResults: v812BetLegs(row).map(leg => cleanText(leg.result || row.result || '')),
         stake: Number(row.stake || 0),
         odds: Number(v812BetOddsProduct(row) || 0),
         possible: Number(v812BetPotential(row) || 0)
