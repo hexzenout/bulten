@@ -853,7 +853,7 @@
       const possibleReturn = v812BetPotential(item);
       const legCount = v812BetLegs(item).length;
       const detailTitle = legCount > 1 ? `Kombine ${legCount} maç` : "Tekli Bahis";
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet v835-bet-detail-row ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet v835-bet-detail-row ${legCount > 1 ? "combo" : "single"} ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
         <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v835-bet-detail-head"><span title="${escapeHtml(detailTitle)}">${escapeHtml(detailTitle)}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
         <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list v835-bet-match-list">${v813BetLegRowsHtml(item)}</div>
         <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>

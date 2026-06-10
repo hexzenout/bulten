@@ -8905,3 +8905,109 @@ html.rolling-hash-boot::before {
 .rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x i {
   font-size: 14px !important;
 }
+
+
+/* V840: Tekli/Kombine tema ayrımı + Kripto işlem ismi/çıktı renk ayrımı */
+.rolling-v48-rail .v812-target-self.bet .v812-target-self-title b,
+.rolling-v48-rail .v812-target-self.bet .v814-target-self-title b {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 6px 11px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(251,191,36,.22), rgba(245,158,11,.10), rgba(220,38,38,.12)) !important;
+  border: 1px solid rgba(251,191,36,.44) !important;
+  color: #fde68a !important;
+  text-shadow: 0 0 14px rgba(251,191,36,.30) !important;
+  letter-spacing: .02em !important;
+}
+
+/* Kombine aynı altın/mor havada kalsın */
+.rolling-v48-rail .v835-bet-detail-row.combo .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(251,191,36,.22), rgba(147,51,234,.22), rgba(88,28,135,.18)) !important;
+  border-color: rgba(251,191,36,.44) !important;
+  color: #fde68a !important;
+  text-shadow: 0 0 14px rgba(251,191,36,.28) !important;
+}
+
+/* Tekli Bahis ayrı tema: mavi/turkuaz */
+.rolling-v48-rail .v835-bet-detail-row.single .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(14,165,233,.24), rgba(34,211,238,.16), rgba(30,64,175,.16)) !important;
+  border-color: rgba(125,211,252,.58) !important;
+  color: #bae6fd !important;
+  text-shadow: 0 0 14px rgba(56,189,248,.34) !important;
+}
+
+/* Sonuçtan sonra Tekli tema sonucu da net göstersin */
+.rolling-v48-rail .v835-bet-detail-row.single.done.win .v835-bet-detail-head span,
+.rolling-v48-rail .v835-bet-detail-row.combo.done.win .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(22,163,74,.78), rgba(20,83,45,.42)) !important;
+  border-color: rgba(134,239,172,.92) !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 16px rgba(34,197,94,.48) !important;
+}
+
+.rolling-v48-rail .v835-bet-detail-row.single.done.loss .v835-bet-detail-head span,
+.rolling-v48-rail .v835-bet-detail-row.combo.done.loss .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(220,38,38,.80), rgba(127,29,29,.50)) !important;
+  border-color: rgba(252,165,165,.94) !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 16px rgba(239,68,68,.50) !important;
+}
+
+/* Kripto: formdaki İşlem başlığı farklı, yazdığın işlem adı farklı dursun */
+.rolling-v48-rail .v824-target-crypto-entry-title span,
+.rolling-v48-rail .v812-target-self.crypto .v812-target-self-title b,
+.rolling-v48-rail .v812-target-self.crypto .v814-target-self-title b {
+  background: linear-gradient(135deg, rgba(79,70,229,.24), rgba(14,165,233,.18), rgba(56,189,248,.12)) !important;
+  border-color: rgba(129,140,248,.54) !important;
+  color: #c7d2fe !important;
+  text-shadow: 0 0 14px rgba(99,102,241,.34) !important;
+}
+
+/* Kripto detay çıktısı: örn. BTC long daha özel turkuaz/yeşil pill */
+.rolling-v48-rail .v814-crypto-detail-head span,
+.rolling-v48-rail .v819-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(45,212,191,.24), rgba(34,197,94,.16), rgba(8,47,73,.20)) !important;
+  border-color: rgba(94,234,212,.58) !important;
+  color: #ccfbf1 !important;
+  text-shadow: 0 0 15px rgba(45,212,191,.36) !important;
+}
+
+/* Kripto sonuç durumunda çıktı adı daha da ayırt edilsin */
+.rolling-v48-rail .v812-target-detail-row.crypto.done.tp .v814-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto.done.win .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(34,197,94,.76), rgba(20,83,45,.40)) !important;
+  border-color: rgba(134,239,172,.92) !important;
+  color: #ffffff !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.crypto.done.stop .v814-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto.done.loss .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(239,68,68,.78), rgba(127,29,29,.46)) !important;
+  border-color: rgba(252,165,165,.94) !important;
+  color: #ffffff !important;
+}
+
+/* V840: Seçili buton farkı biraz daha net, ama boyut V839 gibi kompakt */
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check.active,
+.rolling-v48-rail .v813-crypto-detail-line.tp.done .v815-result-btn.tp-check {
+  background: linear-gradient(135deg, #4ade80, #16a34a, #14532d) !important;
+  border-color: #dcfce7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(187,247,208,.54), 0 0 19px rgba(34,197,94,.58), inset 0 0 0 1px rgba(255,255,255,.30) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x.active,
+.rolling-v48-rail .v813-crypto-detail-line.stop.done .v815-result-btn.stop-x {
+  background: linear-gradient(135deg, #f87171, #ef4444, #991b1b) !important;
+  border-color: #fee2e2 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(254,202,202,.56), 0 0 19px rgba(239,68,68,.62), inset 0 0 0 1px rgba(255,255,255,.30) !important;
+}
