@@ -25,8 +25,19 @@
   let CONFIRM_DIALOG = null;
   let CONFIRM_RETURN_PANEL_MODE = null;
   let ACTIVE_COMBO_DETAIL_SLOT = null;
+  let SUPPRESS_PANEL_RESTORE_UNTIL = 0;
+
+  function closePendingPanelNow() {
+    SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 750;
+    PENDING_BOARD_OPEN_MODE = null;
+    CONFIRM_RETURN_PANEL_MODE = null;
+    ACTIVE_COMBO_DETAIL_SLOT = null;
+    CONFIRM_DIALOG = null;
+    renderFloatingPanel();
+  }
 
   function restoreActivePanelAfterConfirm(mode) {
+    if (Date.now() < SUPPRESS_PANEL_RESTORE_UNTIL) return;
     const panelMode = mode === "crypto" ? "crypto" : "bet";
     PENDING_BOARD_OPEN_MODE = panelMode;
     LOG_CENTER_OPEN_MODE = null;
@@ -34,6 +45,7 @@
     HISTORY_OPEN_MODE = null;
     CONFIRM_RETURN_PANEL_MODE = panelMode;
     setTimeout(() => {
+      if (Date.now() < SUPPRESS_PANEL_RESTORE_UNTIL) return;
       PENDING_BOARD_OPEN_MODE = panelMode;
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;
@@ -1380,6 +1392,24 @@
       </details>
     </article>`;
   }
+  function addSingleBetHistoryKeepActive(state, slotIndex, status) {
+    const slot = state?.modeSlots?.bet?.[Number(slotIndex || 0)];
+    if (!slot) return;
+    const finalStatus = status === "loss" ? "loss" : "win";
+    const previousStatus = slot.status;
+    const previousPnl = slot.pnl;
+    slot.status = finalStatus;
+    recalcSlot(slot);
+    addHistoryRecord("bet", slot, Number(slotIndex || 0));
+    slot.status = "pending";
+    slot.pnl = 0;
+    if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
+    slot.comboResults[0] = finalStatus;
+    slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
+    slot.historyStatus = finalStatus;
+    if (previousStatus === "pending" && !previousPnl) return;
+  }
+
   function cryptoTpProfit(row, tp) {
     const stake = Number(row?.stake || 0);
     const manualProfit = tp?.profitAmount !== "" && tp?.profitAmount !== undefined && tp?.profitAmount !== null && Number.isFinite(Number(tp.profitAmount));
@@ -1463,7 +1493,8 @@
     </article>`;
   }
 
-  function addCouponHistoryRecord(state, coupon, status) {
+  function addCouponHistoryRecord(state, coupon, status, options = {}) {
+    const keepActive = !!options.keepActive;
     const row = coupon.row || coupon.rows?.[0];
     if (!row) return;
     const totals = rowBetTotals(row);
@@ -1488,8 +1519,13 @@
     sourceRows.forEach((src, idx) => {
       const slot = state.modeSlots.bet[Number(src.index || 0)];
       if (!slot) return;
-      slot.status = finalStatus;
-      slot.pnl = idx === 0 ? rec.pnl : 0;
+      if (keepActive) {
+        slot.status = "pending";
+        slot.pnl = 0;
+      } else {
+        slot.status = finalStatus;
+        slot.pnl = idx === 0 ? rec.pnl : 0;
+      }
       slot.historyId = rec.id;
       slot.historyStatus = finalStatus;
     });
@@ -2821,18 +2857,14 @@
       REPORT_CENTER_OPEN_MODE = null;
       refresh();
     }));
-    mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", () => {
-      PENDING_BOARD_OPEN_MODE = null;
-      CONFIRM_RETURN_PANEL_MODE = null;
-      ACTIVE_COMBO_DETAIL_SLOT = null;
-      refresh();
+    mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      closePendingPanelNow();
     }));
     mount.querySelectorAll(".v758-pending-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
-      PENDING_BOARD_OPEN_MODE = null;
-      CONFIRM_RETURN_PANEL_MODE = null;
-      ACTIVE_COMBO_DETAIL_SLOT = null;
-      refresh();
+      closePendingPanelNow();
     }));
     mount.querySelectorAll("[data-log-center-close]").forEach(btn => btn.addEventListener("click", () => {
       LOG_CENTER_OPEN_MODE = null;
@@ -2892,7 +2924,15 @@
       const action = CONFIRM_DIALOG;
       CONFIRM_DIALOG = null;
       if (!action) return refresh();
-      if (action.type === "settle") {
+      if (action.type === "settleBetCouponFinal") {
+        const fresh = loadState();
+        const slotIndex = Number(action.slot || 0);
+        const finalStatus = action.status === "loss" ? "loss" : "win";
+        const coupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === slotIndex);
+        if (coupon) addCouponHistoryRecord(fresh, coupon, finalStatus, { keepActive: true });
+        else addSingleBetHistoryKeepActive(fresh, slotIndex, finalStatus);
+        saveState(fresh);
+      } else if (action.type === "settle") {
         const fresh = loadState();
         applySlotResult(fresh, action.mode, Number(action.slot || 0), action.status);
         saveState(fresh);
@@ -2957,7 +2997,7 @@
       ACTIVE_COMBO_DETAIL_SLOT = i;
       markBetMatchStatus(state, i, mi, nextStatus);
       saveState(state);
-      restoreActivePanelAfterConfirm("bet");
+      refresh();
     }));
     mount.querySelectorAll("[data-card-screenshot]").forEach(btn => btn.addEventListener("click", () => {
       const cardId = btn.dataset.cardScreenshot || "";
@@ -2992,7 +3032,8 @@
         return;
       }
       if (nextStatus === "win" || nextStatus === "loss") {
-        const isBetMarkButton = mode === "bet" && !btn.closest(".v801-bet-close-actions");
+        const isBetCouponFinalButton = mode === "bet" && !!btn.closest(".v801-bet-close-actions");
+        const isBetMarkButton = mode === "bet" && !isBetCouponFinalButton;
         if (isBetMarkButton) {
           const currentStatus = Array.isArray(list[i].comboResults) && (list[i].comboResults[0] === "win" || list[i].comboResults[0] === "loss") ? list[i].comboResults[0] : "";
           const finalStatus = currentStatus === nextStatus ? "" : nextStatus;
@@ -3009,13 +3050,14 @@
           : (finalStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ"));
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
         const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
-        if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
+        const keepAfterConfirm = isBetCouponFinalButton ? (keepPanel || "bet") : keepPanel;
+        if (keepAfterConfirm) CONFIRM_RETURN_PANEL_MODE = keepAfterConfirm;
         CONFIRM_DIALOG = {
-          type: "settle",
+          type: isBetCouponFinalButton ? "settleBetCouponFinal" : "settle",
           mode,
           slot: i,
           status: finalStatus,
-          keepActivePanel: keepPanel,
+          keepActivePanel: keepAfterConfirm,
           tone: finalStatus === "loss" ? "danger" : "success",
           title: finalStatus === "pending" ? "Tekrar bekliyor durumuna al" : "Sonucu kaydetmeden önce onayla",
           message: finalStatus === "pending" ? `${name} tekrar BEKLİYOR durumuna alınacak.` : `${name} için sonuç: ${resultLabel}.`,
