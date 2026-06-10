@@ -7705,3 +7705,82 @@ html.rolling-hash-boot::before {
     grid-template-columns: minmax(0,1fr) 44px !important;
   }
 }
+
+
+/* V818: Kasa hedefi detay kamera/çöp yerleşimi ve TP eylem sütunu */
+.rolling-v48-rail .v814-target-tp-box,
+.rolling-v48-rail .v813-target-tp-box {
+  position: relative !important;
+  padding-right: 54px !important;
+}
+.rolling-v48-rail .v814-target-tp-grid {
+  display: block !important;
+}
+.rolling-v48-rail .v814-target-tp-actions {
+  position: absolute !important;
+  top: 8px !important;
+  right: 0 !important;
+  width: 46px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+}
+.rolling-v48-rail .v814-target-tp-actions button {
+  width: 46px !important;
+  min-width: 46px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  border-radius: 12px !important;
+}
+.rolling-v48-rail .v814-target-tp-row,
+.rolling-v48-rail .v811-target-tp-row {
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
+  gap: 10px !important;
+}
+.rolling-v48-rail .v814-target-tp-row input,
+.rolling-v48-rail .v811-target-tp-row input,
+.rolling-v48-rail .v812-target-stop-row input,
+.rolling-v48-rail .v815-target-self-form > input {
+  height: 44px !important;
+  min-height: 44px !important;
+  border-radius: 12px !important;
+}
+.rolling-v48-rail .v818-target-detail-actions {
+  grid-template-columns: repeat(4, 36px) !important;
+  justify-content: start !important;
+  gap: 8px !important;
+}
+.rolling-v48-rail .v817-target-card-footer.bet {
+  display: none !important;
+}
+.rolling-v48-rail .v814-crypto-detail-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+.rolling-v48-rail .v814-crypto-detail-head .photo {
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  border-radius: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fde68a !important;
+  border: 1px solid rgba(250,204,21,.34) !important;
+  background: linear-gradient(135deg, rgba(120,53,15,.34), rgba(15,23,42,.84)) !important;
+}
+.rolling-v48-rail .v817-target-card-footer.crypto {
+  justify-content: flex-end !important;
+}
+.rolling-v48-rail .v817-target-card-footer.crypto .delete {
+  margin-left: auto !important;
+}
+@media (max-width: 900px) {
+  .rolling-v48-rail .v814-target-tp-actions {
+    right: 0 !important;
+  }
+}

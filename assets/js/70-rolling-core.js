@@ -764,10 +764,10 @@
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
         return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v814-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span></div>
+          <div class="v814-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
           <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
           <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
-          <div class="v817-target-card-footer crypto"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+          <div class="v817-target-card-footer crypto"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
         </li>`;
       }).join("");
       return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -780,8 +780,7 @@
         <div class="v813-detail-head v814-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span></div>
         <div class="v813-bet-match-list v814-bet-match-list">${v813BetLegRowsHtml(item)}</div>
         <div class="v813-bet-total-line v814-bet-total-line"><span><small>Tutar</small><b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span><small>Oran</small><b>${odds ? odds.toFixed(2) : "-"}</b></span><span class="gain"><small>Kazanç</small><b>${possibleReturn ? money(possibleReturn) : "-"}</b></span></div>
-        <div class="v812-target-detail-actions v813-target-detail-actions v814-target-detail-actions v817-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win" title="Kazandı"><i class="fa-solid fa-check"></i></button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss" title="Kaybetti"><i class="fa-solid fa-xmark"></i></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
-        <div class="v817-target-card-footer bet"><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+        <div class="v812-target-detail-actions v813-target-detail-actions v814-target-detail-actions v818-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win" title="Kazandı"><i class="fa-solid fa-check"></i></button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss" title="Kaybetti"><i class="fa-solid fa-xmark"></i></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
       </li>`;
     }).join("");
     return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -2263,7 +2262,12 @@
       if (!row) return;
       row.tps = Array.isArray(row.tps) ? row.tps : [];
       if (!row.tps[index]) return;
-      row.tps[index].done = !row.tps[index].done;
+      const nextDone = !row.tps[index].done;
+      if (nextDone) {
+        const label = cleanText(row.tps[index].target || '') || `TP ${index + 1}`;
+        if (!window.confirm(`"${label}" hedefinin gerçekleştiğini onaylıyor musun?`)) return;
+      }
+      row.tps[index].done = nextDone;
       if (row.tps[index].done && row.result === "stop") row.result = "";
       const allDone = row.tps.length > 0 && row.tps.every(tp => !!tp.done);
       row.result = allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
@@ -2279,6 +2283,19 @@
       const row = store[mode].find(item => String(item.id || "") === String(id));
       if (!row) return;
       const result = mode === "crypto" ? (resultRaw === "stop" ? "stop" : "tp") : (resultRaw === "loss" ? "loss" : "win");
+      const willActivate = row.result !== result;
+      if (willActivate) {
+        let message = 'Sonucu onaylıyor musun?';
+        if (mode === 'bet') {
+          const combo = v812BetLegs(row).length > 1;
+          message = combo
+            ? `Bu kombine kuponu "${result === 'loss' ? 'Kaybetti' : 'Kazandı'}" olarak işaretlemeyi onaylıyor musun?`
+            : `Bu bahisi "${result === 'loss' ? 'Kaybetti' : 'Kazandı'}" olarak işaretlemeyi onaylıyor musun?`;
+        } else {
+          message = 'Bu işlemi STOP olarak işaretlemeyi onaylıyor musun?';
+        }
+        if (!window.confirm(message)) return;
+      }
       row.result = row.result === result ? "" : result;
       if (mode === "crypto" && row.result === "stop" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: false }));
       if (mode === "crypto" && row.result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
