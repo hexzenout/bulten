@@ -549,6 +549,118 @@
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  function v847BetLegStatusLabel(status) {
+    return status === "loss" ? "KAYBETTİ" : status === "win" ? "KAZANDI" : "BEKLİYOR";
+  }
+
+  function v847BetLegStatusClass(status) {
+    return status === "loss" ? "loss" : status === "win" ? "win" : "pending";
+  }
+
+  function v847BetLegsFromDom(day, slot) {
+    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
+    const odds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+    return [{ note, odds }, ...v763ComboRows(day, slot)].filter(row => row.note || Number(row.odds || 0));
+  }
+
+  function v847RenderBetLegResultPanel(day, slot) {
+    const rows = v847BetLegsFromDom(day, slot);
+    if (rows.length <= 1) return "";
+    const pending = v774GetPendingSlot(day, slot);
+    const results = Array.isArray(pending?.comboResults) ? pending.comboResults : [];
+    const done = rows.filter((_, idx) => results[idx] === "win" || results[idx] === "loss").length;
+    return `<div class="v847-leg-panel-inner">
+      <div class="v847-leg-panel-head"><b>Maç Sonuçları</b><span>${done}/${rows.length} sonuçlandı</span></div>
+      ${rows.map((row, idx) => {
+        const status = results[idx] === "loss" ? "loss" : results[idx] === "win" ? "win" : "";
+        const name = row.note || `Maç ${idx + 1}`;
+        const odds = Number(row.odds || 0) ? Number(row.odds).toFixed(2) : "-";
+        const safeName = v763EscapeHtml(name);
+        return `<div class="v847-leg-result-row ${status || "pending"}">
+          <span>${idx + 1}. ${safeName}</span>
+          <div class="v854-leg-result-meta">
+            <b>Oran: ${odds}</b>
+            <div class="v854-leg-result-actions">
+              <button type="button" class="win ${status === "win" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:win" onclick="return omega_SetBetLegResult(event, ${day}, ${slot}, ${idx}, 'win')" title="Bu maç kazandı">✓</button>
+              <button type="button" class="loss ${status === "loss" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:loss" onclick="return omega_SetBetLegResult(event, ${day}, ${slot}, ${idx}, 'loss')" title="Bu maç kaybetti">×</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`;
+  }
+
+  function v847SetBetLegResult(day, slot, index, status) {
+    if (!Number.isFinite(day) || !Number.isFinite(slot) || !Number.isFinite(index)) return false;
+    const domEntry = v774PendingFromDom(day, slot);
+    const savedEntry = v774GetPendingSlot(day, slot);
+    const pending = domEntry || savedEntry;
+    if (!pending || !pending.note) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Önce maç ve oran alanlarını doldur.");
+      return false;
+    }
+    const legs = [{ note: pending.note, odds: pending.odds }, ...(Array.isArray(pending.combo) ? pending.combo : [])].filter(row => row.note || Number(row.odds || 0));
+    if (legs.length <= 1) return false;
+    const results = Array.from({ length: legs.length }, (_, i) => {
+      const v = Array.isArray(pending.comboResults) ? pending.comboResults[i] : "";
+      return v === "loss" ? "loss" : v === "win" ? "win" : "";
+    });
+    const next = status === "loss" ? "loss" : "win";
+    results[index] = results[index] === next ? "" : next;
+    v774SetPendingSlot(day, slot, { ...pending, comboResults: results, updatedAt: Date.now() });
+    omega_RenderExcelTable();
+    return false;
+  }
+
+  function v847RenderBetResultCard(day, slot, op, amt, baseOdds, comboRows, totalOdds, effect) {
+    const legs = [{ note: op.note || "Maç", odds: baseOdds }, ...comboRows.map(row => ({ note: row.note || "Maç", odds: Number(row.odds || 0) }))];
+    const rawResults = Array.isArray(op.comboResults) ? op.comboResults : [];
+    const isCombo = legs.length > 1;
+    const finalStatus = op.res === "loss" ? "loss" : "win";
+    const finalLabel = finalStatus === "loss" ? "KAYBETTİ" : "KAZANDI";
+    const totalLabel = finalStatus === "loss" ? "Kayıp" : "Kazanç";
+    const title = isCombo ? `KOMBİNE ${legs.length} MAÇ` : "TEKLİ BAHİS";
+    const netValue = Number(effect || 0);
+    const displayValue = finalStatus === "win"
+      ? (Number(amt || 0) && Number(totalOdds || 0) ? Number(amt || 0) * Number(totalOdds || 0) : Math.max(0, netValue))
+      : -Math.abs(Number(amt || 0));
+    const netText = `${displayValue >= 0 ? "" : "-"}$${Math.abs(displayValue).toFixed(2)}`;
+    const rowsHtml = legs.map((leg, idx) => {
+      let status = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
+      if (!status && !isCombo) status = finalStatus;
+      const name = leg.note || `Maç ${idx + 1}`;
+      const odds = Number(leg.odds || 0) ? Number(leg.odds).toFixed(2) : "-";
+      const safeName = v763EscapeHtml(name);
+      return `<li class="${v847BetLegStatusClass(status)}">
+        <span>${idx + 1}. ${safeName}</span>
+        <div class="v851-shot-line-meta">
+          <b>Oran: ${odds}</b>
+          <em>${v847BetLegStatusLabel(status)}</em>
+        </div>
+      </li>`;
+    }).join("");
+    return `<div class="kapsul v32 v847-shot-result ${finalStatus}">
+      <div class="v850-shot-toolbar">
+        <button type="button" class="v847-shot-back v850-shot-return" onclick="return omega_ReturnExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
+      </div>
+      <div class="v873-shot-context">GÜN ${day} BAHİS ${slot + 1}</div>
+      <div class="v847-shot-head">
+        <b>${title}</b>
+        <div class="v847-shot-head-tools">
+          <span class="${finalStatus}">${finalLabel}</span>
+          <button type="button" class="v847-shot-camera" onclick="return omega_RollingResultPhoto(event, ${day}, ${slot})" title="Sonuç fotoğrafını göster"><i class="fa-solid fa-camera"></i></button>
+        </div>
+      </div>
+      <ul class="v847-shot-lines">${rowsHtml}</ul>
+      <div class="v847-shot-footer v851-shot-footer">
+        <span>Toplam Oran <b>${Number(totalOdds || 0) ? Number(totalOdds).toFixed(2) : "-"}</b></span>
+        <span>Tutar <b>${v768Money(amt)}</b></span>
+        <span class="v851-result-total ${finalStatus}">${totalLabel} <b class="${netValue >= 0 ? "pos" : "neg"}">${netText}</b></span>
+      </div>
+    </div>`;
+  }
+
+
   function v768SlotOdds(day, slot) {
     const mainOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
     const extras = v763ComboRows(day, slot);
@@ -562,6 +674,10 @@
     const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
     const possible = totalOdds && stake ? stake * totalOdds : 0;
     box.innerHTML = `<span>Toplam Oran: <b>${totalOdds ? totalOdds.toFixed(2) : "-"}</b></span><span>Tahmini Kazanç: <b>${possible ? v768Money(possible) : "-"}</b></span>`;
+    const legPanel = document.querySelector(`[data-v847-leg-panel="${day}:${slot}"]`);
+    if (legPanel) legPanel.innerHTML = v847RenderBetLegResultPanel(day, slot);
+    const actions = document.querySelector(`[data-v847-main-actions="${day}:${slot}"]`);
+    if (actions) actions.classList.remove("v847-hide-main-actions");
   }
 
   function v768BindBetCalc(root) {
@@ -597,8 +713,11 @@
       note: String(row?.note || "").trim(),
       odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0)
     })).filter(row => row.note || Number(row.odds || 0)) : [];
+    const comboResults = Array.isArray(entry.comboResults)
+      ? entry.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "")
+      : [];
     if (!note && stake === "" && odds === "" && !combo.length) return null;
-    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
+    return { note, amt: stake, odds, combo, comboResults, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
   }
 
   function v774PendingFromDom(day, slot) {
@@ -611,9 +730,11 @@
     const stake = stakeText === "" ? "" : Number(stakeText || 0);
     const odds = oddsText === "" ? "" : Number(oddsText || 0);
     const combo = v763ComboRows(day, slot).map(row => ({ note: row.note, odds: row.odds || "" }));
+    const old = v774GetPendingSlot(day, slot);
+    const comboResults = Array.isArray(old?.comboResults) ? old.comboResults : [];
     const hasAny = Boolean(note || stakeText !== "" || oddsText !== "" || combo.length);
     if (!hasAny) return null;
-    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Date.now() };
+    return { note, amt: stake, odds, combo, comboResults, status: "pending", updatedAt: Date.now() };
   }
 
   function v774SetPendingSlot(day, slot, entry) {
@@ -716,7 +837,7 @@
         const odds = Number(src.odds || 0);
         const combo = Array.isArray(src.combo) ? src.combo : [];
         const totalOdds = v763BetTotalOdds(odds, combo);
-        rows.push({ day, slot, note: src.note, stake, odds, combo, totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true });
+        rows.push({ day, slot, note: src.note, stake, odds, combo, comboResults: Array.isArray(src.comboResults) ? src.comboResults : [], totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true });
       }
     }
     return rows;
@@ -866,6 +987,21 @@
 
 
   function v776SlotPhotoRows(day, slot) {
+    const plan = ensureRollingPlan();
+    const resolved = plan.ops?.[day]?.[slot] || null;
+    if (resolved) {
+      const combo = Array.isArray(resolved.combo) ? resolved.combo : [];
+      const rawResults = Array.isArray(resolved.comboResults) ? resolved.comboResults : [];
+      const rows = [{ note: resolved.note || "Maç", odds: Number(resolved.odds || 0) }, ...combo.map(row => ({ note: row.note || "Maç", odds: Number(row.odds || 0) }))].map((row, idx) => {
+        let result = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
+        if (!result && combo.length === 0) result = resolved.res === "loss" ? "loss" : resolved.res === "win" ? "win" : "";
+        return { ...row, result };
+      });
+      const stake = Number(resolved.amt || 0);
+      const totalOdds = v763BetTotalOdds(Number(resolved.odds || 0), combo);
+      const possible = stake && totalOdds ? stake * totalOdds : 0;
+      return { rows, stake, totalOdds, possible, result: resolved.res === "loss" ? "loss" : "win" };
+    }
     const pending = v774GetPendingSlot(day, slot);
     const baseNote = (document.getElementById(`e-n-${day}-${slot}`)?.value || pending?.note || "").trim();
     const baseOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || pending?.odds || 0);
@@ -894,14 +1030,22 @@
     const footerH = 130;
     const height = Math.max(520, footerY + footerH + 46);
     const totalOddsLabel = data.totalOdds ? data.totalOdds.toFixed(2) : "-";
-    const possibleLabel = data.possible ? v768Money(data.possible) : "-";
+    const hasFinalResult = data.result === "loss" || data.result === "win";
+    const resultDisplay = hasFinalResult ? (data.result === "loss" ? -Number(data.stake || 0) : Number(data.possible || 0)) : 0;
+    const resultLabel = hasFinalResult ? (data.result === "loss" ? "Kayıp:" : "Kazanç:") : "Tahmini Kazanç:";
+    const resultColor = hasFinalResult ? (resultDisplay >= 0 ? "#22c55e" : "#ef4444") : "#22c55e";
+    const possibleLabel = hasFinalResult ? `${resultDisplay >= 0 ? "" : "-"}$${Math.abs(resultDisplay).toFixed(2)}` : (data.possible ? v768Money(data.possible) : "-");
     const rowHtml = data.rows.map((row, idx) => {
       const y = 150 + idx * 48;
-      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text><text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
+      const result = row.result === "loss" ? "loss" : row.result === "win" ? "win" : "";
+      const statusText = result === "loss" ? "KAYBETTİ" : result === "win" ? "KAZANDI" : "";
+      const statusColor = result === "loss" ? "#ef4444" : "#22c55e";
+      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text>${statusText ? `<text x="720" y="${y - 3}" text-anchor="end" fill="${statusColor}" font-size="17" font-family="Arial" font-weight="900">${statusText}</text>` : ""}<text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
     }).join('');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="${resultColor}" font-size="19" font-family="Arial" font-weight="900">${resultLabel}</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="${resultColor}" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
+
 
   function v777DownloadPhotoPng(svgUri, filename) {
     const img = new Image();
@@ -962,7 +1106,7 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Bahis ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><button type="button" data-v777-photo-download>Resmi İndir PNG</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Bahis ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v777-photo-download>Resmi İndir</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
@@ -1140,24 +1284,22 @@
           const pnl = isCryptoV491 ? Math.abs(baseOdds) : (op.res === "win" ? (amt * totalOdds) - amt : amt);
           const effect = op.res === "win" ? pnl : -pnl;
           runningBalance += effect; totalProfit += effect; dayProfit += effect;
-          const title = isCryptoV491
-            ? (op.note || "İşlem")
-            : (comboRows.length ? "Kombine" : (op.note || "Maç"));
-          const detail = isCryptoV491
-            ? `$${amt} · Net $${Number(baseOdds || 0).toFixed(2)}`
-            : (comboRows.length ? `${comboRows.length + 1} maç · $${amt} x ${Number(totalOdds || 0).toFixed(2)}` : `$${amt} x ${baseOdds}`);
-          const comboHtml = (!isCryptoV491 && comboRows.length) ? `<ul class="v763-result-combo-list"><li>${v763EscapeHtml(op.note || "Maç")} <b>${Number(baseOdds || 0).toFixed(2)}</b></li>${comboRows.map(row => `<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`).join("")}</ul>` : "";
-          cards.push(`
-            <div class="kapsul v32 ${op.res}">
-              <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
-              <div class="k-result">
-                <div class="k-note-show">${v763EscapeHtml(title)}</div>
-                <b>${detail}</b>
-                <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
-                ${comboHtml}
+          if (!isCryptoV491) {
+            cards.push(v847RenderBetResultCard(day, slot, op, amt, baseOdds, comboRows, totalOdds, effect));
+          } else {
+            const title = op.note || "İşlem";
+            const detail = `$${amt} · Net $${Number(baseOdds || 0).toFixed(2)}`;
+            cards.push(`
+              <div class="kapsul v32 ${op.res}">
+                <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
+                <div class="k-result">
+                  <div class="k-note-show">${v763EscapeHtml(title)}</div>
+                  <b>${detail}</b>
+                  <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
+                </div>
               </div>
-            </div>
-          `);
+            `);
+          }
         } else {
           const pendingV774 = !isCryptoV491 ? v774GetPendingSlot(day, slot) : null;
           const pNoteV774 = v763EscapeHtml(pendingV774?.note || "");
@@ -1188,9 +1330,10 @@
                   <div class="v765-extra-match-list">${pComboHtmlV774}</div>
                   <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
                   <div class="v768-bet-calc" data-v768-calc="${day}:${slot}"><span>Toplam Oran: <b>-</b></span><span>Tahmini Kazanç: <b>-</b></span></div>
+                  <div class="v847-bet-leg-result-panel" data-v847-leg-panel="${day}:${slot}">${v847RenderBetLegResultPanel(day, slot)}</div>
                 </div>
               `}
-              <div class="k-actions v32">
+              <div class="k-actions v32" data-v847-main-actions="${day}:${slot}">
                 <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
                 <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>
               </div>
@@ -1240,6 +1383,54 @@
     omega_SaveRollingDB();
   };
 
+
+  window.omega_SetBetLegResult = function(event, day, slot, index, status) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    return v847SetBetLegResult(Number(day), Number(slot), Number(index), status === "loss" ? "loss" : "win");
+  };
+
+  window.omega_ReturnExcelOp = function(event, day, slot) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+
+    const currentPlan = ensureRollingPlan();
+    const op = currentPlan.ops?.[day]?.[slot];
+    if (!op) return false;
+
+    const combo = Array.isArray(op.combo)
+      ? op.combo.map(row => ({ note: String(row?.note || "").trim(), odds: row?.odds === "" || row?.odds == null ? "" : v855ParseNumber(row.odds || 0) }))
+      : [];
+    const comboResults = Array.isArray(op.comboResults)
+      ? op.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1)
+      : [];
+
+    const pendingEntry = v774NormalizePendingEntry({
+      note: op.note || "",
+      amt: op.amt === "" || op.amt == null ? "" : Number(op.amt || 0),
+      odds: op.odds === "" || op.odds == null ? "" : Number(op.odds || 0),
+      combo,
+      comboResults,
+      status: "pending",
+      updatedAt: Date.now()
+    });
+
+    if (!currentPlan.pending) currentPlan.pending = {};
+    if (pendingEntry && pendingEntry.note) {
+      if (!currentPlan.pending[day]) currentPlan.pending[day] = {};
+      currentPlan.pending[day][slot] = pendingEntry;
+    }
+
+    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    currentPlan.ops[day][slot] = null;
+
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+    return false;
+  };
+
   window.omega_ResolveExcelOp = function(day, slot, result) {
     const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
     const isCrypto = localStorage.getItem("finance_rolling_mode") === "crypto";
@@ -1257,7 +1448,9 @@
     }
     const currentPlan = ensureRollingPlan();
     if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
-    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, res: result, netMode: isCrypto ? "amount" : "odds" };
+    const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
+    const comboResults = Array.isArray(pendingBeforeResolve?.comboResults) ? pendingBeforeResolve.comboResults : [];
+    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, comboResults, res: result, netMode: isCrypto ? "amount" : "odds" };
     if (currentPlan.pending?.[day]) {
       delete currentPlan.pending[day][slot];
       if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];

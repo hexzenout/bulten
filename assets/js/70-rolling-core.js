@@ -1035,7 +1035,7 @@
           name: cleanText(row.name),
           matchLines: [cleanText(row.name)],
           matchOdds: [Number(row.odds || 0)],
-          matchResults: [cleanText(row.status || "")],
+          matchResults: [Array.isArray(row.comboResults) && (row.comboResults[0] === "win" || row.comboResults[0] === "loss") ? row.comboResults[0] : ""],
           stake: Number(row.stake || 0),
           odds: Number(totals.odds || 0),
           possible: Number(totals.possibleWin || 0)
@@ -1063,7 +1063,7 @@
       name: cleanText(row.name),
       matchLines: [cleanText(row.name)],
       matchOdds: [Number(row.odds || 0)],
-      matchResults: [cleanText(row.status || "")],
+      matchResults: [Array.isArray(row.comboResults) && (row.comboResults[0] === "win" || row.comboResults[0] === "loss") ? row.comboResults[0] : ""],
       stake: Number(row.stake || 0),
       odds: Number(row.odds || 0),
       possible: Number(row.pnl || 0)
@@ -1394,12 +1394,25 @@
   }
   function renderBetSingleCard(row) {
     const cardId = `v763-bet-card-${row.index}`;
+    const singleStatus = Array.isArray(row.comboResults) && (row.comboResults[0] === "win" || row.comboResults[0] === "loss") ? row.comboResults[0] : "";
+    const safeName = escapeHtml(cleanText(row.name) || "Bahis");
+    const oddsLabel = Number(row.odds || 0) ? Number(row.odds || 0).toFixed(2) : "Oran eksik";
     return `<article class="v763-active-card bet single v801-bet-card" id="${cardId}">
       <div class="v763-card-top">
-        <div><b>${escapeHtml(cleanText(row.name) || "Bahis")}</b><span>Bahis</span></div>
+        <div><b>${safeName}</b><span>Bahis</span></div>
         ${renderCardShotButton(cardId)}
       </div>
       ${renderBetInfoBar(row)}
+      <ul class="v763-combo-match-list v894-single-match-list">
+        <li class="${singleStatus || "pending"}">
+          <span>1. ${safeName}</span>
+          <b>${oddsLabel}</b>
+          <div>
+            <button type="button" class="win ${singleStatus === "win" ? "selected" : ""}" data-mode="bet" data-slot="${row.index}" data-status="win">KAZANDI</button>
+            <button type="button" class="loss ${singleStatus === "loss" ? "selected" : ""}" data-mode="bet" data-slot="${row.index}" data-status="loss">KAYBETTİ</button>
+          </div>
+        </li>
+      </ul>
       <div class="v763-card-actions v801-bet-close-actions">
         <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-status="win">Kupon Kazandı</button>
         <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-status="loss">Kupon Kaybetti</button>
@@ -2110,7 +2123,7 @@
         name: cleanText(single.name),
         matchLines: [cleanText(single.name)],
         matchOdds: [Number(single.odds || 0)],
-        matchResults: [cleanText(single.status || "")],
+        matchResults: [Array.isArray(single.comboResults) && (single.comboResults[0] === "win" || single.comboResults[0] === "loss") ? single.comboResults[0] : ""],
         stake: Number(single.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
