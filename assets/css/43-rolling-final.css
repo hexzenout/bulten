@@ -10576,3 +10576,75 @@ select:-webkit-autofill {
   color: #fee2e2 !important;
   box-shadow: 0 0 0 1px rgba(239,68,68,.28) !important;
 }
+
+
+/* V876: Aktif Bahisler/Kombine Kupon Maçları seçili buton parlama + modal kapanma koruması */
+#omega-rolling-feature-host .v758-pending-overlay {
+  cursor: pointer !important;
+}
+#omega-rolling-feature-host .v758-pending-modal {
+  cursor: default !important;
+}
+#omega-rolling-feature-host [data-pending-close] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 5 !important;
+}
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win,
+#rolling-excel-overlay .v763-combo-match-list button.win,
+#omega-rolling-feature-host .v763-combo-match-list button.win {
+  background: rgba(6,78,59,.72) !important;
+  border: 1px solid rgba(52,211,153,.50) !important;
+  color: #bbf7d0 !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss,
+#rolling-excel-overlay .v763-combo-match-list button.loss,
+#omega-rolling-feature-host .v763-combo-match-list button.loss {
+  background: rgba(127,29,29,.72) !important;
+  border: 1px solid rgba(248,113,113,.50) !important;
+  color: #fecaca !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win.selected,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win.selected,
+#rolling-excel-overlay .v763-combo-match-list button.win.selected,
+#omega-rolling-feature-host .v763-combo-match-list button.win.selected,
+#rolling-excel-overlay .v763-combo-match-list button.win.active,
+#omega-rolling-feature-host .v763-combo-match-list button.win.active {
+  background: linear-gradient(145deg, #16a34a, #047857) !important;
+  border-color: rgba(220,252,231,.90) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 0 0 1px rgba(34,197,94,.48),
+    0 0 15px rgba(34,197,94,.28),
+    inset 0 1px 0 rgba(255,255,255,.25) !important;
+  transform: none !important;
+}
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss.selected,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss.selected,
+#rolling-excel-overlay .v763-combo-match-list button.loss.selected,
+#omega-rolling-feature-host .v763-combo-match-list button.loss.selected,
+#rolling-excel-overlay .v763-combo-match-list button.loss.active,
+#omega-rolling-feature-host .v763-combo-match-list button.loss.active {
+  background: linear-gradient(145deg, #dc2626, #991b1b) !important;
+  border-color: rgba(254,226,226,.90) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 0 0 1px rgba(239,68,68,.48),
+    0 0 15px rgba(239,68,68,.28),
+    inset 0 1px 0 rgba(255,255,255,.25) !important;
+  transform: none !important;
+}
+#omega-rolling-feature-host .v763-combo-match-list li.win,
+#rolling-excel-overlay .v763-combo-match-list li.win {
+  background: linear-gradient(90deg, rgba(6,95,70,.52), rgba(6,95,70,.20)) !important;
+  border-color: rgba(34,197,94,.42) !important;
+}
+#omega-rolling-feature-host .v763-combo-match-list li.loss,
+#rolling-excel-overlay .v763-combo-match-list li.loss {
+  background: linear-gradient(90deg, rgba(127,29,29,.50), rgba(127,29,29,.18)) !important;
+  border-color: rgba(248,113,113,.42) !important;
+}

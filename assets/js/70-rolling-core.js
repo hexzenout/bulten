@@ -28,11 +28,13 @@
   let SUPPRESS_PANEL_RESTORE_UNTIL = 0;
 
   function closePendingPanelNow() {
-    SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 750;
+    SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 1200;
     PENDING_BOARD_OPEN_MODE = null;
     CONFIRM_RETURN_PANEL_MODE = null;
     ACTIVE_COMBO_DETAIL_SLOT = null;
     CONFIRM_DIALOG = null;
+    const host = document.getElementById("omega-rolling-feature-host");
+    if (host) host.remove();
     renderFloatingPanel();
   }
 
@@ -53,6 +55,27 @@
       CONFIRM_DIALOG = null;
       renderFloatingPanel();
     }, 0);
+  }
+
+
+  if (!window.__omegaV876PendingCloseGuardBound) {
+    window.__omegaV876PendingCloseGuardBound = true;
+    document.addEventListener("click", function(event) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const closeBtn = target.closest("[data-pending-close]");
+      const overlayBlank = target.classList && target.classList.contains("v758-pending-overlay");
+      if (!closeBtn && !overlayBlank) return;
+      event.preventDefault();
+      event.stopPropagation();
+      closePendingPanelNow();
+    }, true);
+    document.addEventListener("keydown", function(event) {
+      if (event.key !== "Escape") return;
+      if (!PENDING_BOARD_OPEN_MODE) return;
+      event.preventDefault();
+      closePendingPanelNow();
+    }, true);
   }
 
   const DEFAULT_STATE = {
