@@ -1315,7 +1315,7 @@
     return `<article class="v763-active-card bet single v801-bet-card" id="${cardId}">
       <div class="v763-card-top v864-active-card-top">
         <div><b>${escapeHtml(cleanText(row.name) || "Bahis")}</b><span>Bahis</span></div>
-        <div class="v864-card-top-actions">${renderCardShotButton(cardId)}<button type="button" class="v864-card-clear-btn" data-active-card-clear="bet:${row.index}" title="Bahisi temizle"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="v864-card-top-actions">${renderCardShotButton(cardId)}</div>
       </div>
       ${renderBetInfoBar(row)}
       <div class="v763-card-actions v801-bet-close-actions">
@@ -1342,7 +1342,7 @@
       <details ${keepOpen ? "open" : ""}>
         <summary class="v864-active-card-top">
           <div><b>Kombine</b><span>${matches.length} maç · ${done}/${matches.length} sonuçlandı</span></div>
-          <div class="v864-card-top-actions">${renderCardShotButton(cardId)}<button type="button" class="v864-card-clear-btn" data-active-card-clear="bet:${row.index}" title="Tüm maçları sil"><i class="fa-solid fa-xmark"></i></button></div>
+          <div class="v864-card-top-actions">${renderCardShotButton(cardId)}</div>
         </summary>
         ${renderBetInfoBar(row)}
         <ul class="v763-combo-match-list">${matchRows}</ul>
@@ -2513,6 +2513,19 @@
         const saved = saveTargetSelfFromForm(autosaveMode);
         if (saved) refresh();
       });
+      form.addEventListener('focusout', () => {
+        window.setTimeout(() => {
+          if (!form.isConnected) return;
+          if (form.dataset.skipAutosaveOnce === '1') {
+            delete form.dataset.skipAutosaveOnce;
+            return;
+          }
+          const active = document.activeElement;
+          if (active && form.contains(active)) return;
+          const saved = saveTargetSelfFromForm(autosaveMode);
+          if (saved) refresh();
+        }, 120);
+      });
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
@@ -2771,11 +2784,15 @@
       REPORT_CENTER_OPEN_MODE = null;
       refresh();
     }));
-    mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", () => {
+    mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
       PENDING_BOARD_OPEN_MODE = null;
       CONFIRM_RETURN_PANEL_MODE = null;
       ACTIVE_COMBO_DETAIL_SLOT = null;
-      refresh();
+      renderFloatingPanel();
+      if (mount?.dataset?.rollingFloating !== "1") renderModule();
     }));
     mount.querySelectorAll(".v758-pending-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
@@ -2937,12 +2954,12 @@
       const matches = groupedCoupon ? groupedCoupon.matches : getSlotMatches(list[i]);
       const currentStatus = matches[mi]?.status || "";
       const nextStatus = currentStatus === status ? "pending" : status;
-      ACTIVE_COMBO_DETAIL_SLOT = i;
+      const keepActivePanelOpen = PENDING_BOARD_OPEN_MODE === "bet" || (mount?.dataset?.rollingFloating === "1");
+      ACTIVE_COMBO_DETAIL_SLOT = keepActivePanelOpen ? i : null;
       applyComboLegVisualResult(fresh, i, mi, nextStatus);
       saveState(fresh);
-      PENDING_BOARD_OPEN_MODE = "bet";
-      renderFloatingPanel();
-      renderModule();
+      if (keepActivePanelOpen) PENDING_BOARD_OPEN_MODE = "bet";
+      refresh();
     }));
     mount.querySelectorAll("[data-active-card-clear]").forEach(btn => btn.addEventListener("click", (event) => {
       event.preventDefault();
@@ -3104,6 +3121,21 @@
       return false;
     };
     document.addEventListener("click", openFromExcelButton, true);
+  }
+
+  if (!window.__omegaV867PendingModalCloseBound) {
+    window.__omegaV867PendingModalCloseBound = true;
+    document.addEventListener("click", event => {
+      const btn = event.target && event.target.closest ? event.target.closest("[data-pending-close]") : null;
+      if (!btn || !btn.closest("#omega-rolling-feature-host")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+      PENDING_BOARD_OPEN_MODE = null;
+      CONFIRM_RETURN_PANEL_MODE = null;
+      ACTIVE_COMBO_DETAIL_SLOT = null;
+      renderFloatingPanel();
+    }, true);
   }
 
   window.omega_RenderRollingModule = renderModule;
