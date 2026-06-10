@@ -804,7 +804,7 @@
   function v824CryptoEntryRow(index = 0) {
     const label = index > 0 ? `İşlem ${index + 1}` : "İşlem";
     return `<div class="v824-target-crypto-entry" data-target-crypto-entry="1">
-      <div class="v824-target-crypto-entry-title">${escapeHtml(label)}</div>
+      <div class="v824-target-crypto-entry-title"><span>${escapeHtml(label)}</span><button type="button" data-target-crypto-entry-remove title="Bu işlem kutusunu kapat"><i class="fa-solid fa-xmark"></i></button></div>
       <input type="text" data-target-self-field="crypto:name" placeholder="İşlem adı">
       <input type="number" step="0.01" inputmode="decimal" data-target-self-field="crypto:stake" placeholder="Tutar">
       <input type="text" data-target-self-field="crypto:entry" placeholder="Giriş fiyatı">
@@ -969,13 +969,16 @@
         rowHtml.push(`<text x="${textX}" y="${cursorY - 12}" fill="#c084fc" font-size="16" font-family="Arial" font-weight="900">${escapeHtml(groupTitle)}</text>`);
       }
       lineRows.forEach(line => {
-        const wrapped = v785WrapPhotoText(line.text, 44).slice(0, 4);
-        const rowH = Math.max(40, 16 + wrapped.length * lineH);
+        const wrapped = v785WrapPhotoText(line.text, 40).slice(0, 4);
+        const hasResult = !!line.result;
+        const rowH = Math.max(hasResult ? 58 : 40, 16 + wrapped.length * lineH + (hasResult ? 8 : 0));
+        const statusText = line.result === "loss" ? "KAYBETTİ" : "KAZANDI";
+        const statusColor = line.result === "loss" ? "#ef4444" : "#22c55e";
         rowHtml.push(`
           <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="${rowH}" rx="12" fill="#0f172a" stroke="#334155"/>
           ${wrapped.map((txt, idx) => `<text x="${textX}" y="${cursorY - 3 + idx * lineH}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(txt)}</text>`).join("")}
-          ${line.result ? `<rect x="672" y="${cursorY - 26}" width="106" height="28" rx="14" fill="${line.result === "loss" ? "#7f1d1d" : "#064e3b"}" stroke="${line.result === "loss" ? "#ef4444" : "#22c55e"}"/><text x="725" y="${cursorY - 7}" text-anchor="middle" fill="${line.result === "loss" ? "#fecaca" : "#bbf7d0"}" font-size="14" font-family="Arial" font-weight="900">${line.result === "loss" ? "KAYBETTİ" : "KAZANDI"}</text>` : ""}
-          ${line.odds ? `<text x="${oddsX}" y="${cursorY - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${Number(line.odds).toFixed(2)}</text>` : ""}`);
+          ${line.odds ? `<text x="${oddsX}" y="${hasResult ? cursorY - 10 : cursorY - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${Number(line.odds).toFixed(2)}</text>` : ""}
+          ${hasResult ? `<text x="${oddsX}" y="${cursorY + 14}" text-anchor="end" fill="${statusColor}" font-size="15" font-family="Arial" font-weight="900">${statusText}</text>` : ""}`);
         cursorY += rowH + rowGap;
       });
       if (isMultiEntry) cursorY += 8;
@@ -2217,7 +2220,7 @@
       row.remove();
     });
     mount.querySelectorAll("[data-target-bet-leg-remove]").forEach(bindTargetBetLegRemove);
-    mount.querySelectorAll('[data-target-crypto-entry-add],[data-target-tp-add],[data-target-tp-remove-last],[data-target-bet-leg-add],[data-target-bet-leg-remove]').forEach(btn => {
+    mount.querySelectorAll('[data-target-crypto-entry-add],[data-target-crypto-entry-remove],[data-target-tp-add],[data-target-tp-remove-last],[data-target-bet-leg-add],[data-target-bet-leg-remove]').forEach(btn => {
       btn.addEventListener('pointerdown', () => {
         const form = btn.closest('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]');
         if (form) form.dataset.skipAutosaveOnce = '1';
@@ -2244,6 +2247,20 @@
       if (!list) return;
       if (list.querySelectorAll("[data-target-self-tp]").length >= 6) return;
       list.insertAdjacentHTML("beforeend", v811CryptoTpRow());
+    }));
+    mount.querySelectorAll("[data-target-crypto-entry-remove]").forEach(btn => btn.addEventListener("click", () => {
+      const entry = btn.closest('[data-target-crypto-entry="1"]');
+      const list = entry?.parentElement;
+      if (!entry || !list) return;
+      if (list.querySelectorAll('[data-target-crypto-entry="1"]').length <= 1) {
+        entry.querySelectorAll('input').forEach(input => { input.value = ''; });
+        entry.querySelectorAll('[data-target-self-tp="crypto"]').forEach((row, idx) => {
+          if (idx === 0) row.querySelectorAll('input').forEach(input => { input.value = ''; });
+          else row.remove();
+        });
+        return;
+      }
+      entry.remove();
     }));
     mount.querySelectorAll("[data-target-crypto-entry-add]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.targetCryptoEntryAdd === "crypto" ? "crypto" : "bet";
@@ -2334,6 +2351,7 @@
           if (form.contains(document.activeElement) || !dirty) return;
           if (form.dataset.skipAutosaveOnce === '1') {
             delete form.dataset.skipAutosaveOnce;
+            dirty = false;
             return;
           }
           const saved = saveTargetSelfFromForm(autosaveMode);
