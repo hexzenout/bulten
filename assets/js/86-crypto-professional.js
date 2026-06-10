@@ -593,8 +593,10 @@
     const isCombo = legs.length > 1;
     const finalStatus = op.res === "loss" ? "loss" : "win";
     const finalLabel = finalStatus === "loss" ? "KAYBETTİ" : "KAZANDI";
+    const totalLabel = finalStatus === "loss" ? "Kayıp" : "Kazanç";
     const title = isCombo ? `KOMBİNE ${legs.length} MAÇ` : "TEKLİ BAHİS";
-    const possible = Number(amt || 0) && Number(totalOdds || 0) ? Number(amt || 0) * Number(totalOdds || 0) : 0;
+    const netValue = Number(effect || 0);
+    const netText = `${netValue >= 0 ? "+" : "-"}$${Math.abs(netValue).toFixed(2)}`;
     const rowsHtml = legs.map((leg, idx) => {
       let status = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
       if (!status && !isCombo) status = finalStatus;
@@ -604,9 +606,11 @@
       const odds = Number(leg.odds || 0) ? Number(leg.odds).toFixed(2) : "-";
       const safeName = v763EscapeHtml(name);
       return `<li class="${v847BetLegStatusClass(status)}">
-        <span title="${safeName}">${idx + 1}. ${safeName}</span>
-        <b>${odds}</b>
-        <em>${v847BetLegStatusLabel(status)}</em>
+        <span>${idx + 1}. ${safeName}</span>
+        <div class="v851-shot-line-meta">
+          <b>Oran: ${odds}</b>
+          <em>${v847BetLegStatusLabel(status)}</em>
+        </div>
       </li>`;
     }).join("");
     return `<div class="kapsul v32 v847-shot-result ${finalStatus}">
@@ -622,11 +626,10 @@
         </div>
       </div>
       <ul class="v847-shot-lines">${rowsHtml}</ul>
-      <div class="v847-shot-footer">
+      <div class="v847-shot-footer v851-shot-footer">
         <span>Toplam Oran <b>${Number(totalOdds || 0) ? Number(totalOdds).toFixed(2) : "-"}</b></span>
         <span>Tutar <b>${v768Money(amt)}</b></span>
-        <span>Tahmini Kazanç <b>${possible ? v768Money(possible) : "-"}</b></span>
-        <span>K/Z <b class="${Number(effect || 0) >= 0 ? "pos" : "neg"}">${effect >= 0 ? "+" : "-"}$${Math.abs(effect || 0).toFixed(2)}</b></span>
+        <span class="v851-result-total ${finalStatus}">${totalLabel} <b class="${netValue >= 0 ? "pos" : "neg"}">${netText}</b></span>
       </div>
     </div>`;
   }
@@ -942,7 +945,11 @@
     const footerH = 130;
     const height = Math.max(520, footerY + footerH + 46);
     const totalOddsLabel = data.totalOdds ? data.totalOdds.toFixed(2) : "-";
-    const possibleLabel = data.possible ? v768Money(data.possible) : "-";
+    const hasFinalResult = data.result === "loss" || data.result === "win";
+    const resultNet = hasFinalResult ? (data.result === "loss" ? -Number(data.stake || 0) : Number(data.possible || 0) - Number(data.stake || 0)) : 0;
+    const resultLabel = hasFinalResult ? (data.result === "loss" ? "Kayıp:" : "Kazanç:") : "Tahmini Kazanç:";
+    const resultColor = hasFinalResult ? (resultNet >= 0 ? "#22c55e" : "#ef4444") : "#22c55e";
+    const possibleLabel = hasFinalResult ? `${resultNet >= 0 ? "+" : "-"}$${Math.abs(resultNet).toFixed(2)}` : (data.possible ? v768Money(data.possible) : "-");
     const rowHtml = data.rows.map((row, idx) => {
       const y = 150 + idx * 48;
       const result = row.result === "loss" ? "loss" : row.result === "win" ? "win" : "";
@@ -950,7 +957,7 @@
       const statusColor = result === "loss" ? "#ef4444" : "#22c55e";
       return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text>${statusText ? `<text x="720" y="${y - 3}" text-anchor="end" fill="${statusColor}" font-size="17" font-family="Arial" font-weight="900">${statusText}</text>` : ""}<text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
     }).join('');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · KUTU ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · KUTU ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="${resultColor}" font-size="19" font-family="Arial" font-weight="900">${resultLabel}</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="${resultColor}" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
@@ -1013,7 +1020,7 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Kutu ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><button type="button" data-v777-photo-download>Resmi İndir PNG</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Kutu ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><button type="button" data-v777-photo-download>Resmi İndir</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
@@ -1053,7 +1060,7 @@
           <button type="button" data-v776-photo-close>×</button>
         </div>
         <div class="v776-photo-actions v850-result-photo-actions">
-          <button type="button" data-v777-photo-download><i class="fa-solid fa-download"></i> Resmi İndir PNG</button>
+          <button type="button" data-v777-photo-download><i class="fa-solid fa-download"></i> Resmi İndir</button>
         </div>
         <img src="${uri}" alt="7 Günlük Rolling bahis sonucu">
       </section>

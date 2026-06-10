@@ -9731,3 +9731,80 @@ html textarea:-webkit-autofill::first-line {
   align-items: center !important;
   gap: 7px !important;
 }
+
+
+/* V851: 7 Günlük Rolling sonuç kartı - tam görünen maç adı + K/Z kaldırma */
+#rolling-excel-overlay .v847-shot-lines li {
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  align-items: start !important;
+  padding: 8px 9px !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.25 !important;
+  cursor: default !important;
+  text-decoration: none !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span[title],
+#rolling-excel-overlay .v847-shot-lines span[title]:hover {
+  cursor: default !important;
+  text-decoration: none !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta b {
+  color: #fbbf24 !important;
+  text-align: left !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em {
+  text-align: right !important;
+  font-size: .64rem !important;
+  font-weight: 950 !important;
+  font-style: normal !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em {
+  color: #4ade80 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em {
+  color: #f87171 !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines li.pending .v851-shot-line-meta em {
+  color: #94a3b8 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer {
+  grid-template-columns: 1fr 1fr !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total {
+  grid-column: 1 / -1 !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total.win,
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total .pos {
+  color: #22c55e !important;
+}
+
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total.loss,
+#rolling-excel-overlay .v847-shot-footer.v851-shot-footer .v851-result-total .neg {
+  color: #ef4444 !important;
+}
