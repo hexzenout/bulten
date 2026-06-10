@@ -2210,6 +2210,12 @@
       row.remove();
     });
     mount.querySelectorAll("[data-target-bet-leg-remove]").forEach(bindTargetBetLegRemove);
+    mount.querySelectorAll('[data-target-crypto-entry-add],[data-target-tp-add],[data-target-tp-remove-last],[data-target-bet-leg-add],[data-target-bet-leg-remove]').forEach(btn => {
+      btn.addEventListener('pointerdown', () => {
+        const form = btn.closest('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]');
+        if (form) form.dataset.skipAutosaveOnce = '1';
+      });
+    });
     mount.querySelectorAll("[data-target-tp-remove-last]").forEach(btn => btn.addEventListener("click", () => {
       const entry = btn.closest('[data-target-crypto-entry="1"]');
       const list = entry?.querySelector('[data-target-tp-list="crypto"]');
@@ -2240,8 +2246,6 @@
       const count = list.querySelectorAll('[data-target-crypto-entry="1"]').length;
       if (count >= 8) return;
       list.insertAdjacentHTML("beforeend", v824CryptoEntryRow(count));
-      const last = list.lastElementChild;
-      last?.querySelector('[data-target-self-field="crypto:name"]')?.focus();
     }));
     mount.querySelectorAll("[data-target-bet-leg-add]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.targetBetLegAdd === "crypto" ? "crypto" : "bet";
@@ -2316,23 +2320,19 @@
         dirty = false;
         if (saved) refresh();
       });
-      form.addEventListener('focusout', () => {
+      form.addEventListener('focusout', event => {
+        const next = event.relatedTarget;
+        if (next && form.contains(next)) return;
         setTimeout(() => {
           if (form.contains(document.activeElement) || !dirty) return;
           if (form.dataset.skipAutosaveOnce === '1') {
             delete form.dataset.skipAutosaveOnce;
-            dirty = false;
             return;
           }
           const saved = saveTargetSelfFromForm(autosaveMode);
           dirty = false;
           if (saved) refresh();
-        }, 120);
-      });
-      form.addEventListener('pointerdown', event => {
-        const target = event.target;
-        if (!(target instanceof HTMLElement)) return;
-        if (target.closest('[data-target-bet-leg-add],[data-target-tp-add],[data-target-tp-remove-last],[data-target-bet-leg-remove],[data-target-self-add],[data-target-crypto-entry-add]')) return;
+        }, 220);
       });
     });
     mount.querySelectorAll("[data-target-self-tp-done]").forEach(btn => btn.addEventListener("click", () => {
@@ -2347,23 +2347,33 @@
       row.tps = Array.isArray(row.tps) ? row.tps : [];
       if (!row.tps[index]) return;
       const nextDone = !row.tps[index].done;
-      const apply = () => {
+      const isAllDoneAfter = () => row.tps.length > 0 && row.tps.every((tp, idx) => idx === index ? nextDone : !!tp.done);
+      const apply = closeTrade => {
         row.tps[index].done = nextDone;
         if (row.tps[index].done && row.result === "stop") row.result = "";
         const allDone = row.tps.length > 0 && row.tps.every(tp => !!tp.done);
-        row.result = allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
+        row.result = closeTrade || allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
         saveTargetItems(store);
         refresh();
       };
-      if (!nextDone) { apply(); return; }
+      if (!nextDone) { apply(false); return; }
       const label = cleanText(row.tps[index].target || '') || `TP ${index + 1}`;
       const profit = v810NumberOrBlank(row.tps[index].profit) !== "" ? ` · ${signedMoney(Number(row.tps[index].profit || 0))}` : "";
+      const allDoneAfter = isAllDoneAfter();
       openTargetResultConfirm({
         title: "TP kazancı onayı",
         message: `"${label}" hedefini kazanç olarak işlemek istiyor musun?${profit}`,
         okText: "Kazanç yaz",
         tone: "success"
-      }, apply);
+      }, () => {
+        if (!allDoneAfter) { apply(false); return; }
+        openTargetResultConfirm({
+          title: "İşlem kapatma onayı",
+          message: "Tüm TP hedefleri işaretlendi. Bu işlemi kapatmak istediğinden emin misin?",
+          okText: "İşlemi kapat",
+          tone: "success"
+        }, () => apply(true));
+      });
     }));
     mount.querySelectorAll("[data-target-bet-leg-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw, resultRaw] = String(btn.dataset.targetBetLegResult || "bet:::").split(":");

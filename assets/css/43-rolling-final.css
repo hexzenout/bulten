@@ -8343,3 +8343,27 @@ html.rolling-hash-boot::before {
   color: #fed7aa !important;
   font-weight: 950 !important;
 }
+
+/* V825: Kasa Hedefi form performans iyileştirmesi */
+.rolling-v48-rail .v810-target-self,
+.rolling-v48-rail .v824-target-crypto-entry,
+.rolling-v48-rail .v812-target-bet-leg,
+.rolling-v48-rail .v811-target-tp-row,
+.rolling-v48-rail .v812-target-stop-row {
+  contain: layout paint !important;
+}
+
+.rolling-v48-rail .v810-target-self input,
+.rolling-v48-rail .v824-target-crypto-entry input,
+.rolling-v48-rail .v812-target-bet-leg input,
+.rolling-v48-rail .v811-target-tp-row input,
+.rolling-v48-rail .v812-target-stop-row input {
+  transition: border-color .08s ease !important;
+  box-shadow: none !important;
+  will-change: auto !important;
+}
+
+.rolling-v48-rail .v810-target-self input:focus,
+.rolling-v48-rail .v824-target-crypto-entry input:focus {
+  box-shadow: none !important;
+}
