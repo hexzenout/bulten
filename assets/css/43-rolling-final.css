@@ -8859,3 +8859,49 @@ html.rolling-hash-boot::before {
   transform: translateY(-1px) scale(1.07) !important;
   box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.54), inset 0 0 0 1px rgba(255,255,255,.24) !important;
 }
+
+
+/* V839: Bahis ve Kripto onay/çarpı butonlarını hafif küçült */
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  border-radius: 10px !important;
+  transform: none !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active {
+  transform: translateY(-1px) scale(1.03) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win i,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss i {
+  font-size: 14px !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  border-radius: 10px !important;
+  transform: none !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check.active,
+.rolling-v48-rail .v813-crypto-detail-line.tp.done .v815-result-btn.tp-check,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x.active,
+.rolling-v48-rail .v813-crypto-detail-line.stop.done .v815-result-btn.stop-x {
+  transform: translateY(-1px) scale(1.03) !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check i,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x i {
+  font-size: 14px !important;
+}
