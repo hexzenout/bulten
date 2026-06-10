@@ -801,6 +801,25 @@
       <input type="number" step="0.01" inputmode="decimal" data-target-self-tp-field="profit" placeholder="Kâr">
     </div>`;
   }
+  function v824CryptoEntryRow(index = 0) {
+    const label = index > 0 ? `İşlem ${index + 1}` : "İşlem";
+    return `<div class="v824-target-crypto-entry" data-target-crypto-entry="1">
+      <div class="v824-target-crypto-entry-title">${escapeHtml(label)}</div>
+      <input type="text" data-target-self-field="crypto:name" placeholder="İşlem adı">
+      <input type="number" step="0.01" inputmode="decimal" data-target-self-field="crypto:stake" placeholder="Tutar">
+      <input type="text" data-target-self-field="crypto:entry" placeholder="Giriş fiyatı">
+      <div class="v811-target-tp-box v812-target-tp-box v813-target-tp-box v814-target-tp-box">
+        <div class="v814-target-tp-grid">
+          <div class="v811-target-tp-list v813-target-tp-list v814-target-tp-list" data-target-tp-list="crypto">${v811CryptoTpRow()}</div>
+          <div class="v814-target-tp-actions"><button type="button" data-target-tp-add="crypto">+ TP</button><button type="button" data-target-tp-remove-last="crypto" title="Son TP kaldır">−</button></div>
+        </div>
+      </div>
+      <div class="v812-target-stop-row v813-target-stop-row v814-target-stop-row">
+        <input type="text" data-target-self-field="crypto:stop" placeholder="Stop">
+        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="crypto:stopLoss" placeholder="Olası zarar">
+      </div>
+    </div>`;
+  }
   function v812BetLegRow() {
     return `<div class="v812-target-bet-leg v813-target-bet-leg v814-target-bet-leg" data-target-bet-leg="bet">
       <input type="text" data-target-bet-leg-field="name" placeholder="Maç">
@@ -815,20 +834,8 @@
       return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self v814-target-self crypto">
         <div class="v812-target-self-title v814-target-self-title"><b>İşlem</b></div>
         <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form v814-target-self-form v815-target-self-form crypto" data-target-crypto-autosave="1">
-          <input type="text" data-target-self-field="${m}:name" placeholder="İşlem adı">
-          <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
-          <input type="text" data-target-self-field="${m}:entry" placeholder="Giriş fiyatı">
-          <div class="v811-target-tp-box v812-target-tp-box v813-target-tp-box v814-target-tp-box">
-            <div class="v814-target-tp-grid">
-              <div class="v811-target-tp-list v813-target-tp-list v814-target-tp-list" data-target-tp-list="${m}">${v811CryptoTpRow()}</div>
-              <div class="v814-target-tp-actions"><button type="button" data-target-tp-add="${m}">+ TP</button><button type="button" data-target-tp-remove-last="${m}" title="Son TP kaldır">−</button></div>
-            </div>
-          </div>
-          <div class="v812-target-stop-row v813-target-stop-row v814-target-stop-row">
-            <input type="text" data-target-self-field="${m}:stop" placeholder="Stop">
-            <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stopLoss" placeholder="Olası zarar">
-          </div>
-          <button type="button" class="v811-target-main-add v814-target-main-add" data-target-self-add="${m}">+ İşlem Ekle</button>
+          <div class="v824-target-crypto-entry-list" data-target-crypto-entry-list>${v824CryptoEntryRow(0)}</div>
+          <button type="button" class="v811-target-main-add v814-target-main-add v824-target-add-entry" data-target-crypto-entry-add="${m}">+ İşlem</button>
         </div>
         ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
       </div>`;
@@ -2203,14 +2210,38 @@
       row.remove();
     });
     mount.querySelectorAll("[data-target-bet-leg-remove]").forEach(bindTargetBetLegRemove);
-    mount.querySelectorAll("[data-target-tp-remove-last]").forEach(btn => btn.addEventListener("click", () => removeLastTargetTp(btn.dataset.targetTpRemoveLast)));
+    mount.querySelectorAll("[data-target-tp-remove-last]").forEach(btn => btn.addEventListener("click", () => {
+      const entry = btn.closest('[data-target-crypto-entry="1"]');
+      const list = entry?.querySelector('[data-target-tp-list="crypto"]');
+      if (!list) return removeLastTargetTp(btn.dataset.targetTpRemoveLast);
+      const rows = Array.from(list.querySelectorAll("[data-target-self-tp]"));
+      const last = rows[rows.length - 1];
+      if (!last) return;
+      if (rows.length <= 1) {
+        last.querySelectorAll("input").forEach(input => { input.value = ""; });
+        return;
+      }
+      last.remove();
+    }));
     mount.querySelectorAll("[data-target-tp-add]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.targetTpAdd === "crypto" ? "crypto" : "bet";
       if (mode !== "crypto") return;
-      const list = mount.querySelector(`[data-target-tp-list="${mode}"]`);
+      const entry = btn.closest('[data-target-crypto-entry="1"]');
+      const list = entry?.querySelector('[data-target-tp-list="crypto"]') || mount.querySelector(`[data-target-tp-list="${mode}"]`);
       if (!list) return;
       if (list.querySelectorAll("[data-target-self-tp]").length >= 6) return;
       list.insertAdjacentHTML("beforeend", v811CryptoTpRow());
+    }));
+    mount.querySelectorAll("[data-target-crypto-entry-add]").forEach(btn => btn.addEventListener("click", () => {
+      const mode = btn.dataset.targetCryptoEntryAdd === "crypto" ? "crypto" : "bet";
+      if (mode !== "crypto") return;
+      const list = btn.closest('[data-target-crypto-autosave="1"]')?.querySelector("[data-target-crypto-entry-list]");
+      if (!list) return;
+      const count = list.querySelectorAll('[data-target-crypto-entry="1"]').length;
+      if (count >= 8) return;
+      list.insertAdjacentHTML("beforeend", v824CryptoEntryRow(count));
+      const last = list.lastElementChild;
+      last?.querySelector('[data-target-self-field="crypto:name"]')?.focus();
     }));
     mount.querySelectorAll("[data-target-bet-leg-add]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.targetBetLegAdd === "crypto" ? "crypto" : "bet";
@@ -2231,16 +2262,25 @@
       const store = loadTargetItems();
       store[mode] = Array.isArray(store[mode]) ? store[mode] : [];
       if (mode === "crypto") {
-        const tps = Array.from(mount.querySelectorAll(`[data-target-self-tp="${mode}"]`)).map(row => ({
-          target: cleanText(row.querySelector('[data-target-self-tp-field="target"]')?.value || ""),
-          profit: v810NumberOrBlank(row.querySelector('[data-target-self-tp-field="profit"]')?.value || "")
-        })).filter(tp => tp.target || tp.profit !== "");
-        const stop = cleanText(pick("stop")?.value || "");
-        const stopLoss = v810NumberOrBlank(pick("stopLoss")?.value || "");
-        const entry = cleanText(pick("entry")?.value || "");
-        const profit = tps.reduce((sum, tp) => tp.profit !== "" ? sum + Number(tp.profit || 0) : sum, 0);
-        if (!name && stake === "" && !entry && !tps.length && !stop && stopLoss === "") return false;
-        store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: "crypto", name, stake, entry, entryPrice: entry, stop, stopLoss, tps, profit, result: "" });
+        const entries = Array.from(mount.querySelectorAll('[data-target-crypto-entry="1"]'));
+        let added = false;
+        entries.forEach(entryBox => {
+          const entryPick = key => entryBox.querySelector(`[data-target-self-field="crypto:${key}"]`);
+          const rowName = cleanText(entryPick("name")?.value || "");
+          const rowStake = v810NumberOrBlank(entryPick("stake")?.value || "");
+          const rowEntry = cleanText(entryPick("entry")?.value || "");
+          const tps = Array.from(entryBox.querySelectorAll('[data-target-self-tp="crypto"]')).map(row => ({
+            target: cleanText(row.querySelector('[data-target-self-tp-field="target"]')?.value || ""),
+            profit: v810NumberOrBlank(row.querySelector('[data-target-self-tp-field="profit"]')?.value || "")
+          })).filter(tp => tp.target || tp.profit !== "");
+          const stop = cleanText(entryPick("stop")?.value || "");
+          const stopLoss = v810NumberOrBlank(entryPick("stopLoss")?.value || "");
+          const profit = tps.reduce((sum, tp) => tp.profit !== "" ? sum + Number(tp.profit || 0) : sum, 0);
+          if (!rowName && rowStake === "" && !rowEntry && !tps.length && !stop && stopLoss === "") return;
+          store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: "crypto", name: rowName, stake: rowStake, entry: rowEntry, entryPrice: rowEntry, stop, stopLoss, tps, profit, result: "" });
+          added = true;
+        });
+        if (!added) return false;
       } else {
         const legs = Array.from(mount.querySelectorAll(`[data-target-bet-leg="${mode}"]`)).map(row => ({
           name: cleanText(row.querySelector('[data-target-bet-leg-field="name"]')?.value || ""),
@@ -2292,7 +2332,7 @@
       form.addEventListener('pointerdown', event => {
         const target = event.target;
         if (!(target instanceof HTMLElement)) return;
-        if (target.closest('[data-target-bet-leg-add],[data-target-tp-add],[data-target-tp-remove-last],[data-target-bet-leg-remove],[data-target-self-add]')) return;
+        if (target.closest('[data-target-bet-leg-add],[data-target-tp-add],[data-target-tp-remove-last],[data-target-bet-leg-remove],[data-target-self-add],[data-target-crypto-entry-add]')) return;
       });
     });
     mount.querySelectorAll("[data-target-self-tp-done]").forEach(btn => btn.addEventListener("click", () => {
