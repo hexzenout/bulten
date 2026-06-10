@@ -8063,3 +8063,62 @@ html.rolling-hash-boot::before {
 .rolling-v48-rail .v815-target-self-form.crypto {
   overflow: visible !important;
 }
+
+
+/* V821: Bahis detayında ikon yerleşimi kripto ile aynı mantığa alındı */
+.rolling-v48-rail .v821-bet-detail-head {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 34px !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.rolling-v48-rail .v821-bet-detail-head span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.rolling-v48-rail .v821-bet-detail-head .photo {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  border-radius: 11px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fde68a !important;
+  border: 1px solid rgba(250,204,21,.34) !important;
+  background: linear-gradient(135deg, rgba(120,53,15,.34), rgba(15,23,42,.84)) !important;
+}
+
+.rolling-v48-rail .v821-target-card-footer.bet {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+
+.rolling-v48-rail .v821-target-card-footer.bet .delete {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  border-radius: 11px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fecaca !important;
+  border: 1px solid rgba(248,113,113,.30) !important;
+  background: linear-gradient(135deg, rgba(127,29,29,.28), rgba(15,23,42,.82)) !important;
+}
+
+/* eski bet footer kamera kuralı kalırsa bastır */
+.rolling-v48-rail .v821-target-card-footer.bet .photo {
+  display: none !important;
+}
