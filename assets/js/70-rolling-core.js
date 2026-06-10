@@ -1731,15 +1731,19 @@
     if (!PENDING_BOARD_OPEN_MODE) return "";
     const mode = PENDING_BOARD_OPEN_MODE === "crypto" ? "crypto" : "bet";
     const isCrypto = mode === "crypto";
+    const photoButton = isCrypto ? "" : `<button type="button" class="v889-pending-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`;
     return `
       <div class="v758-pending-overlay">
         <section class="v758-pending-modal ${mode}">
-          <div class="v512-history-head">
+          <div class="v512-history-head v889-pending-modal-head">
             <div>
               <b>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR"}</b>
               <span>Kutulara yazdığın satırlar otomatik aktif olarak burada toplanır; sonuç verince Geçmiş'e gider.</span>
             </div>
-            <button type="button" data-pending-close>×</button>
+            <div class="v889-pending-head-actions">
+              ${photoButton}
+              <button type="button" data-pending-close aria-label="Kapat">×</button>
+            </div>
           </div>
           ${renderPendingBoard(mode, state)}
         </section>
