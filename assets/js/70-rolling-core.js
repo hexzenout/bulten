@@ -1096,10 +1096,10 @@
     const rowGap = 10;
     let cursorY = 150;
     const rowHtml = [];
-    const pushRow = (label, value, accent = '#fbbf24') => {
+    const pushRow = (label, value, accent = '#fbbf24', labelAccent = '#f8fafc') => {
       rowHtml.push(`
         <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="40" rx="12" fill="#0f172a" stroke="#334155"/>
-        <text x="${textX}" y="${cursorY - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(label)}</text>
+        <text x="${textX}" y="${cursorY - 3}" fill="${labelAccent}" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(label)}</text>
         <text x="${valueX}" y="${cursorY - 3}" text-anchor="end" fill="${accent}" font-size="19" font-family="Arial" font-weight="900">${escapeHtml(value)}</text>`);
       cursorY += 50;
     };
@@ -1113,7 +1113,7 @@
     });
     if (stopRaw || stopLoss) {
       const status = cleanText(item?.result || '') === 'stop' ? ' · KAYBETTİ' : '';
-      pushRow(`STOP · ${stopRaw || '-'}`, `${stopLoss ? '-' + money(stopLoss) : '-$0.00'}${status}`, '#dc2626');
+      pushRow(`STOP · ${stopRaw || '-'}`, `${stopLoss ? '-' + money(stopLoss) : '-$0.00'}${status}`, '#dc2626', '#ef4444');
     }
     const footerY = cursorY + 20;
     const footerH = 88;
