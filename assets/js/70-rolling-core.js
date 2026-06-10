@@ -16,7 +16,6 @@
   const TARGET_LOG_OPEN_KEY = "v802_rolling_target_log_open";
   const TARGET_ITEMS_KEY = "v810_rolling_target_items_v1";
   const TARGET_CLOSED_PNL_KEY = "v829_rolling_target_closed_pnl_v1";
-  const TARGET_BET_DRAFT_KEY = "v835_rolling_target_bet_draft_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -466,36 +465,85 @@
   function buildAutoComboRow(base, preRows = [], postRows = []) {
     const ordered = [...(preRows || []), base, ...(postRows || [])].filter(Boolean);
     const first = ordered[0] || base;
-    const sourceIndices = ordered.map(row => row.index);
     const rest = ordered.slice(1).map(row => ({ name: cleanText(row.name), odds: row.odds, sourceIndex: row.index }));
-    const sourceResults = ordered.map(row => {
-      const ownCombo = Array.isArray(row.comboResults) ? cleanText(row.comboResults[0] || "") : "";
-      const ownStatus = (row.status === "win" || row.status === "loss") ? row.status : "";
-      return ownCombo || ownStatus || "";
-    });
     return {
       ...base,
       name: cleanText(first.name),
       odds: first.odds,
       autoCombo: true,
-      autoComboRows: sourceIndices,
-      comboSourceIndices: sourceIndices,
+      autoComboRows: ordered.map(row => row.index),
       extraMatches: rest,
-      comboResults: sourceResults
+      comboResults: Array.isArray(base.comboResults) ? base.comboResults.slice() : []
     };
   }
   function getSlotMatches(slot) {
     const matches = [];
-    const sourceIndices = Array.isArray(slot?.comboSourceIndices) ? slot.comboSourceIndices : [];
-    const baseStatus = slot?.comboResults?.[0] || "";
-    if (cleanText(slot?.name)) matches.push({ name: cleanText(slot.name), odds: slot.odds, index: 0, sourceIndex: Number.isInteger(sourceIndices[0]) ? sourceIndices[0] : undefined, status: baseStatus });
+    if (cleanText(slot?.name)) matches.push({ name: cleanText(slot.name), odds: slot.odds, index: 0, status: slot?.comboResults?.[0] || "" });
     if (Array.isArray(slot?.extraMatches)) {
       slot.extraMatches.forEach((m, idx) => {
         if (!cleanText(m?.name)) return;
-        matches.push({ name: cleanText(m.name), odds: m.odds, index: idx + 1, sourceIndex: Number.isInteger(m.sourceIndex) ? m.sourceIndex : (Number.isInteger(sourceIndices[idx + 1]) ? sourceIndices[idx + 1] : undefined), status: slot?.comboResults?.[idx + 1] || "" });
+        matches.push({ name: cleanText(m.name), odds: m.odds, index: idx + 1, status: slot?.comboResults?.[idx + 1] || "" });
       });
     }
     return matches;
+  }
+  function comboLegRefForSlot(state, slotIndex) {
+    const idx = Number(slotIndex || 0);
+    const coupons = getBetCouponGroups(state).coupons || [];
+    for (const coupon of coupons) {
+      const realRows = Array.isArray(coupon.rows) ? coupon.rows : [];
+      const realPos = realRows.findIndex(row => Number(row?.index || 0) === idx);
+      if (realPos >= 0) {
+        return {
+          coupon,
+          slotIndex: Number(coupon.slotIndex || 0),
+          matchIndex: realPos,
+          status: cleanText(coupon.matches?.[realPos]?.status || ""),
+          matches: coupon.matches || []
+        };
+      }
+      if (Number(coupon.slotIndex || 0) === idx && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
+        return {
+          coupon,
+          slotIndex: Number(coupon.slotIndex || 0),
+          matchIndex: 0,
+          status: cleanText(coupon.matches?.[0]?.status || ""),
+          matches: coupon.matches || []
+        };
+      }
+    }
+    return null;
+  }
+  function resetBetSlot(state, slotIndex) {
+    const i = Number(slotIndex || 0);
+    if (!state.modeSlots || !Array.isArray(state.modeSlots.bet)) return;
+    state.modeSlots.bet[i] = createSlot("bet", i);
+  }
+  function clearBetCouponSlots(state, coupon) {
+    if (!coupon) return;
+    const rows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [{ index: coupon.slotIndex }];
+    const indexes = new Set(rows.map(row => Number(row?.index || 0)));
+    indexes.add(Number(coupon.slotIndex || 0));
+    indexes.forEach(index => resetBetSlot(state, index));
+  }
+  function askActiveBetCleanup(slotIndex, label = "Bahis") {
+    openTargetResultConfirm({
+      title: "Detay temizlensin mi?",
+      message: `${label} detaydan kaldırılacak. Bahisi temizlemek istediğinizden emin misiniz?`,
+      okText: "Evet, temizle",
+      cancelText: "Hayır, kalsın",
+      tone: "danger"
+    }, () => {
+      const fresh = loadState();
+      const combo = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex || 0) === Number(slotIndex || 0));
+      if (combo) clearBetCouponSlots(fresh, combo);
+      else resetBetSlot(fresh, Number(slotIndex || 0));
+      PENDING_BOARD_OPEN_MODE = "bet";
+      ACTIVE_COMBO_DETAIL_SLOT = null;
+      saveState(fresh);
+      renderFloatingPanel();
+      renderModule();
+    });
   }
   function getBetCouponGroups(state) {
     const rows = pendingRowsForMode("bet", state).sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
@@ -563,37 +611,6 @@
 
     return { singles, coupons, rows };
   }
-
-  function markBetMatchStatus(state, baseIndex, matchIndex, status) {
-    const freshStatus = status === "loss" ? "loss" : status === "win" ? "win" : "";
-    const list = state?.modeSlots?.bet || [];
-    const coupon = getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === Number(baseIndex));
-    const slot = list[baseIndex];
-    const matches = coupon ? coupon.matches : getSlotMatches(slot || {});
-    const match = matches[matchIndex] || {};
-    const isAutoCombo = !!(coupon?.row?.autoCombo || Array.isArray(coupon?.row?.comboSourceIndices));
-    const sourceIndex = Number.isInteger(match.sourceIndex) ? match.sourceIndex : null;
-
-    if (isAutoCombo && sourceIndex !== null && list[sourceIndex]) {
-      if (!Array.isArray(list[sourceIndex].comboResults)) list[sourceIndex].comboResults = [];
-      if (freshStatus) list[sourceIndex].comboResults[0] = freshStatus;
-      else delete list[sourceIndex].comboResults[0];
-      list[sourceIndex].comboResults = list[sourceIndex].comboResults.map(v => (v === "win" || v === "loss") ? v : "");
-      list[sourceIndex].status = "pending";
-      list[sourceIndex].pnl = 0;
-      return;
-    }
-
-    if (slot) {
-      if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
-      if (freshStatus) slot.comboResults[matchIndex] = freshStatus;
-      else delete slot.comboResults[matchIndex];
-      slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
-      slot.status = "pending";
-      slot.pnl = 0;
-    }
-  }
-
   function rowBetTotals(row) {
     const matches = getSlotMatches(row);
     const stake = Number(row?.stake || 0);
@@ -656,44 +673,6 @@
     const data = loadTargetClosedPnl();
     data[m] = Number(data[m] || 0) + Number(amount || 0);
     saveTargetClosedPnl(data);
-  }
-  function loadTargetBetDraft() {
-    try {
-      const raw = JSON.parse(localStorage.getItem(TARGET_BET_DRAFT_KEY) || "{}");
-      const legs = Array.isArray(raw.legs) ? raw.legs.map(leg => ({
-        name: cleanText(leg?.name || ""),
-        odds: v810NumberOrBlank(leg?.odds)
-      })).filter(leg => leg.name || leg.odds !== "") : [];
-      return { legs, stake: v810NumberOrBlank(raw.stake) };
-    } catch {
-      return { legs: [], stake: "" };
-    }
-  }
-  function saveTargetBetDraft(draft) {
-    const clean = {
-      legs: Array.isArray(draft?.legs) ? draft.legs.map(leg => ({
-        name: cleanText(leg?.name || ""),
-        odds: v810NumberOrBlank(leg?.odds)
-      })).filter(leg => leg.name || leg.odds !== "") : [],
-      stake: v810NumberOrBlank(draft?.stake)
-    };
-    if (!clean.legs.length && clean.stake === "") {
-      localStorage.removeItem(TARGET_BET_DRAFT_KEY);
-      return;
-    }
-    localStorage.setItem(TARGET_BET_DRAFT_KEY, JSON.stringify(clean));
-  }
-  function clearTargetBetDraft() {
-    localStorage.removeItem(TARGET_BET_DRAFT_KEY);
-  }
-  function readTargetBetDraftFromForm(form) {
-    const root = form || document;
-    const legs = Array.from(root.querySelectorAll('[data-target-bet-leg="bet"]')).map(row => ({
-      name: cleanText(row.querySelector('[data-target-bet-leg-field="name"]')?.value || ""),
-      odds: v810NumberOrBlank(row.querySelector('[data-target-bet-leg-field="odds"]')?.value || "")
-    })).filter(leg => leg.name || leg.odds !== "");
-    const stake = v810NumberOrBlank(root.querySelector('[data-target-self-field="bet:stake"]')?.value || "");
-    return { legs, stake };
   }
   function v810TargetItemId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -842,6 +821,20 @@
       </div>`;
     }).join("");
   }
+  function v864BetDetailSummaryHtml(item) {
+    const totalOdds = Number(v812BetOddsProduct(item) || 0);
+    const stake = Number(item?.stake || 0);
+    const result = cleanText(item?.result || "");
+    let gain = 0;
+    if (result === "loss") gain = -Math.abs(stake || 0);
+    else gain = stake && totalOdds ? stake * totalOdds : 0;
+    const gainLabel = result === "loss" ? "-" + money(Math.abs(gain)) : (gain ? money(gain) : "-");
+    return `<div class="v864-bet-detail-summary">
+      <span>Toplam Oran: <b>${totalOdds ? totalOdds.toFixed(2) : "-"}</b></span>
+      <span>Bahis Tutarı: <b>${stake ? money(stake) : "-"}</b></span>
+      <span class="${result === "loss" ? "neg" : "pos"}">Kazanç: <b>${gainLabel}</b></span>
+    </div>`;
+  }
   function v813CryptoTpRowsHtml(item) {
     const tps = v813CryptoTps(item);
     if (!tps.length) return "";
@@ -891,11 +884,10 @@
       const result = cleanText(item.result || "");
       const odds = v812BetOddsProduct(item);
       const possibleReturn = v812BetPotential(item);
-      const legCount = v812BetLegs(item).length;
-      const detailTitle = legCount > 1 ? `Kombine ${legCount} maç` : "Tekli Bahis";
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet v835-bet-detail-row ${legCount > 1 ? "combo" : "single"} ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v835-bet-detail-head"><span title="${escapeHtml(detailTitle)}">${escapeHtml(detailTitle)}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
-        <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list v835-bet-match-list">${v813BetLegRowsHtml(item)}</div>
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+        <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list">${v813BetLegRowsHtml(item)}</div>
+        ${v864BetDetailSummaryHtml(item)}
         <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
       </li>`;
     }).join("");
@@ -927,10 +919,10 @@
       </div>
     </div>`;
   }
-  function v812BetLegRow(leg = {}) {
+  function v812BetLegRow() {
     return `<div class="v812-target-bet-leg v813-target-bet-leg v814-target-bet-leg" data-target-bet-leg="bet">
-      <input type="text" data-target-bet-leg-field="name" placeholder="Maç" value="${escapeHtml(cleanText(leg?.name || ""))}">
-      <input type="number" step="0.01" inputmode="decimal" data-target-bet-leg-field="odds" placeholder="Oran" value="${escapeHtml(leg?.odds !== "" && leg?.odds !== undefined && leg?.odds !== null ? String(leg.odds) : "")}">
+      <input type="text" data-target-bet-leg-field="name" placeholder="Maç">
+      <input type="number" step="0.01" inputmode="decimal" data-target-bet-leg-field="odds" placeholder="Oran">
       <button type="button" data-target-bet-leg-remove title="Maç sil">×</button>
     </div>`;
   }
@@ -947,17 +939,14 @@
         ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
       </div>`;
     }
-    const betDraft = loadTargetBetDraft();
-    const betDraftLegs = betDraft.legs.length ? betDraft.legs : [{}];
-    const betLegHtml = betDraftLegs.map(leg => v812BetLegRow(leg)).join("");
     return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self v814-target-self bet">
       <div class="v812-target-self-title v814-target-self-title"><b>Bahis</b></div>
       <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form v814-target-self-form v815-target-self-form bet" data-target-bet-autosave="1">
-        <div class="v812-target-bet-leg-list v813-target-bet-leg-list v814-target-bet-leg-list" data-target-bet-leg-list="${m}">${betLegHtml}</div>
-        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar" value="${escapeHtml(betDraft.stake !== "" ? String(betDraft.stake) : "")}">
+        <div class="v812-target-bet-leg-list v813-target-bet-leg-list v814-target-bet-leg-list" data-target-bet-leg-list="${m}">${v812BetLegRow()}</div>
+        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
         <div class="v812-target-form-actions v814-target-form-actions"><button type="button" data-target-bet-leg-add="${m}">+ Maç</button></div>
       </div>
-      <details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details v835-target-self-details"><summary data-target-bet-detail-commit="1">Detay</summary><ul>${data.details}</ul></details>
+      ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
     </div>`;
   }
 
@@ -990,7 +979,6 @@
           name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
           matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
           matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
-          matchResults: coupon.matches.map(m => cleanText(m.status || "")),
           stake: Number(coupon.row.stake || 0),
           odds: Number(totals.odds || 0),
           possible: Number(totals.possibleWin || 0)
@@ -1004,7 +992,6 @@
       name: cleanText(row.name),
       matchLines: [cleanText(row.name)],
       matchOdds: [Number(row.odds || 0)],
-      matchResults: [cleanText(row.status || "")],
       stake: Number(row.stake || 0),
       odds: Number(row.odds || 0),
       possible: Number(row.pnl || 0)
@@ -1043,12 +1030,11 @@
         rows.push({
           text: line,
           odds: partIndex === 0 ? Number(odds[idx] || 0) : 0,
-          result: partIndex === 0 ? cleanText(results[idx] || "") : "",
-          type: cleanText(entry.type || "")
+          result: partIndex === 0 ? cleanText(results[idx] || "") : ""
         });
       });
     });
-    return rows.length ? rows : [{ text: "Maç", odds: Number(entry.odds || 0), result: cleanText(entry.status || ""), type: cleanText(entry.type || "") }];
+    return rows.length ? rows : [{ text: "Maç", odds: Number(entry.odds || 0), result: cleanText(entry.status || "") }];
   }
 
   function v788PhotoTitle(rows, titleText) {
@@ -1085,10 +1071,8 @@
         const wrapped = v785WrapPhotoText(line.text, 40).slice(0, 4);
         const hasResult = !!line.result;
         const rowH = Math.max(40, 16 + wrapped.length * lineH);
-        const statusLoss = line.result === "loss" || line.result === "stop";
-        const isCryptoPhotoLine = line.type === "Kripto" && titleText === "AKTİF KRİPTO İŞLEMLERİ";
-        const statusText = isCryptoPhotoLine ? (statusLoss ? "ZARAR" : "KÂR") : (statusLoss ? "KAYBETTİ" : "KAZANDI");
-        const statusColor = statusLoss ? "#ef4444" : "#22c55e";
+        const statusText = line.result === "loss" ? "KAYBETTİ" : "KAZANDI";
+        const statusColor = line.result === "loss" ? "#ef4444" : "#22c55e";
         const statusX = oddsX - 76;
         rowHtml.push(`
           <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="${rowH}" rx="12" fill="#0f172a" stroke="#334155"/>
@@ -1138,10 +1122,10 @@
     const rowGap = 10;
     let cursorY = 150;
     const rowHtml = [];
-    const pushRow = (label, value, accent = '#fbbf24', labelAccent = '#f8fafc') => {
+    const pushRow = (label, value, accent = '#fbbf24') => {
       rowHtml.push(`
         <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="40" rx="12" fill="#0f172a" stroke="#334155"/>
-        <text x="${textX}" y="${cursorY - 3}" fill="${labelAccent}" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(label)}</text>
+        <text x="${textX}" y="${cursorY - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(label)}</text>
         <text x="${valueX}" y="${cursorY - 3}" text-anchor="end" fill="${accent}" font-size="19" font-family="Arial" font-weight="900">${escapeHtml(value)}</text>`);
       cursorY += 50;
     };
@@ -1150,12 +1134,12 @@
     tps.forEach((tp, idx) => {
       const target = cleanText(tp.target || '') || '-';
       const profit = tp.profit !== '' ? signedMoney(Number(tp.profit || 0)) : '+$0.00';
-      const status = tp.done || cleanText(item?.result || '') === 'tp' ? ' · KÂR' : '';
+      const status = tp.done || cleanText(item?.result || '') === 'tp' ? ' · KAZANDI' : '';
       pushRow(`TP ${idx + 1} · ${target}`, `${profit}${status}`, '#22c55e');
     });
     if (stopRaw || stopLoss) {
-      const status = cleanText(item?.result || '') === 'stop' ? ' · ZARAR' : '';
-      pushRow(`STOP · ${stopRaw || '-'}`, `${stopLoss ? '-' + money(stopLoss) : '-$0.00'}${status}`, '#dc2626', '#ef4444');
+      const status = cleanText(item?.result || '') === 'stop' ? ' · KAYBETTİ' : '';
+      pushRow(`STOP · ${stopRaw || '-'}`, `${stopLoss ? '-' + money(stopLoss) : '-$0.00'}${status}`, '#dc2626');
     }
     const footerY = cursorY + 20;
     const footerH = 88;
@@ -1163,7 +1147,7 @@
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <rect width="${width}" height="${height}" fill="#020617"/>
       <rect x="22" y="22" width="856" height="${height - 44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/>
-      <text x="${padX}" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">KRİPTO AKTİF İŞLEM</text>
+      <text x="${padX}" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">KRİPTO İŞLEM FOTOĞRAFI</text>
       <text x="${padX}" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">${new Date().toLocaleString('tr-TR')}</text>
       ${rowHtml.join('')}
       <rect x="${rowX}" y="${footerY}" width="${rowW}" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/>
@@ -1184,7 +1168,7 @@
         type: v812BetLegs(row).length > 1 ? 'Kombine' : 'Bahis',
         matchLines: v812BetLegs(row).map(leg => cleanText(leg.name || '') || 'Maç'),
         matchOdds: v812BetLegs(row).map(leg => Number(leg.odds || 0)),
-        matchResults: v812BetLegs(row).map(leg => cleanText(leg.result || '')),
+        matchResults: v812BetLegs(row).map(leg => cleanText(leg.result || row.result || '')),
         stake: Number(row.stake || 0),
         odds: Number(v812BetOddsProduct(row) || 0),
         possible: Number(v812BetPotential(row) || 0)
@@ -1287,18 +1271,19 @@
     img.onerror = () => alert("Resim hazırlanamadı.");
     img.src = svgUri;
   }
-  function openRollingPhotoPreview(payload) {
-    if (!payload || !payload.dataUrl) return;
+  function openTablePhoto(mode, state) {
+    const dataUrl = v781BuildTablePhotoSvg(mode, state);
+    if (!dataUrl) {
+      alert(mode === "crypto" ? "Fotoğraf için önce işlem yaz." : "Fotoğraf için önce maç yaz.");
+      return;
+    }
     let host = document.getElementById("omega-rolling-feature-host");
     if (!host) {
       host = document.createElement("div");
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    const label = escapeHtml(payload.label || "Fotoğraf");
-    const sub = escapeHtml(payload.sub || "BULTEN");
-    const file = payload.file || `bulten-fotograf-${new Date().toISOString().slice(0,10)}.png`;
-    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${label}</b><span>${sub}</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${payload.dataUrl}" alt="${label}"></section></div>`;
+    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Ana ROLLING</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
@@ -1306,20 +1291,7 @@
       host.style.display = "none";
     }));
     host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
-      v781DownloadPngFromSvg(payload.dataUrl, file);
-    });
-  }
-  function openTablePhoto(mode, state) {
-    const dataUrl = v781BuildTablePhotoSvg(mode, state);
-    if (!dataUrl) {
-      alert(mode === "crypto" ? "Fotoğraf için önce işlem yaz." : "Fotoğraf için önce maç yaz.");
-      return;
-    }
-    openRollingPhotoPreview({
-      dataUrl,
-      label: mode === "crypto" ? "Kripto Fotoğrafı" : "Kupon Fotoğrafı",
-      sub: mode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar",
-      file: `bulten-${mode}-aktif-rolling-${new Date().toISOString().slice(0,10)}.png`
+      v781DownloadPngFromSvg(dataUrl, `bulten-${mode}-aktif-rolling-${new Date().toISOString().slice(0,10)}.png`);
     });
   }
   function renderBetInfoBar(row) {
@@ -1336,9 +1308,9 @@
   function renderBetSingleCard(row) {
     const cardId = `v763-bet-card-${row.index}`;
     return `<article class="v763-active-card bet single v801-bet-card" id="${cardId}">
-      <div class="v763-card-top">
+      <div class="v763-card-top v864-active-card-top">
         <div><b>${escapeHtml(cleanText(row.name) || "Bahis")}</b><span>Bahis</span></div>
-        ${renderCardShotButton(cardId)}
+        <div class="v864-card-top-actions">${renderCardShotButton(cardId)}<button type="button" class="v864-card-clear-btn" data-active-card-clear="bet:${row.index}" title="Bahisi temizle"><i class="fa-solid fa-xmark"></i></button></div>
       </div>
       ${renderBetInfoBar(row)}
       <div class="v763-card-actions v801-bet-close-actions">
@@ -1363,9 +1335,9 @@
     </li>`).join("");
     return `<article class="v763-active-card bet combo v801-bet-card" id="${cardId}">
       <details ${keepOpen ? "open" : ""}>
-        <summary>
+        <summary class="v864-active-card-top">
           <div><b>Kombine</b><span>${matches.length} maç · ${done}/${matches.length} sonuçlandı</span></div>
-          ${renderCardShotButton(cardId)}
+          <div class="v864-card-top-actions">${renderCardShotButton(cardId)}<button type="button" class="v864-card-clear-btn" data-active-card-clear="bet:${row.index}" title="Bahisi temizle"><i class="fa-solid fa-xmark"></i></button></div>
         </summary>
         ${renderBetInfoBar(row)}
         <ul class="v763-combo-match-list">${matchRows}</ul>
@@ -1459,14 +1431,21 @@
     </article>`;
   }
 
-  function addCouponHistoryRecord(state, coupon, status) {
+  function addCouponHistoryRecord(state, coupon, status, options = {}) {
     const row = coupon.row || coupon.rows?.[0];
-    if (!row) return;
+    if (!row) return null;
+    const finalStatus = status === "loss" ? "loss" : "win";
+    const closeActive = options.closeActive !== false;
+    const baseIndex = Number(coupon.slotIndex ?? row.index ?? 0);
+    const baseSlot = state.modeSlots?.bet?.[baseIndex];
+    if (!closeActive && baseSlot?.comboHistoryId && baseSlot?.comboHistoryStatus === finalStatus) {
+      baseSlot.comboFinalStatus = finalStatus;
+      return baseSlot.comboHistoryId;
+    }
     const totals = rowBetTotals(row);
     const h = loadHistory();
     const now = Date.now();
     const names = getSlotMatches(row).map(m => m.name).filter(Boolean);
-    const finalStatus = status === "loss" ? "loss" : "win";
     const rec = {
       id: "rh_" + now + "_coupon_" + Math.random().toString(36).slice(2),
       mode: "bet",
@@ -1480,6 +1459,14 @@
     };
     h.bet.unshift(rec);
     saveHistory(h);
+    if (!closeActive) {
+      if (baseSlot) {
+        baseSlot.comboFinalStatus = finalStatus;
+        baseSlot.comboHistoryId = rec.id;
+        baseSlot.comboHistoryStatus = finalStatus;
+      }
+      return rec.id;
+    }
     const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
     sourceRows.forEach((src, idx) => {
       const slot = state.modeSlots.bet[Number(src.index || 0)];
@@ -1489,6 +1476,7 @@
       slot.historyId = rec.id;
       slot.historyStatus = finalStatus;
     });
+    return rec.id;
   }
   function renderPendingBoard(mode, state) {
     const isCrypto = mode === "crypto";
@@ -1831,10 +1819,13 @@
     const lossText = "KAYBETTİ";
     const pnlHead = "K/Z";
     return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th><button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>${valHead}</th><th>Tutar</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
-      const rowStatusRaw = mode === "bet" ? (Array.isArray(s.comboResults) && (s.comboResults[0] === "win" || s.comboResults[0] === "loss") ? s.comboResults[0] : s.status) : s.status;
-      const status = rowStatusRaw === "win" ? winText : rowStatusRaw === "loss" ? lossText : "BEKLİYOR";
+      const comboRef = comboLegRefForSlot(state, i);
+      const visualStatus = comboRef?.status || s.status || "pending";
+      const status = visualStatus === "win" ? winText : visualStatus === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${rowStatusRaw === "win" || rowStatusRaw === "loss" ? rowStatusRaw : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win ${rowStatusRaw === "win" ? "selected" : ""}" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss ${rowStatusRaw === "loss" ? "selected" : ""}" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
+      const winSelected = visualStatus === "win" ? " selected" : "";
+      const lossSelected = visualStatus === "loss" ? " selected" : "";
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${visualStatus === "win" || visualStatus === "loss" ? visualStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win${winSelected}" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss${lossSelected}" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModePanel(mode, state) {
@@ -2009,7 +2000,6 @@
         name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
         matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
         matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
-        matchResults: coupon.matches.map(m => cleanText(m.status || "")),
         stake: Number(coupon.row.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
@@ -2022,7 +2012,6 @@
         name: cleanText(single.name),
         matchLines: [cleanText(single.name)],
         matchOdds: [Number(single.odds || 0)],
-        matchResults: [cleanText(single.status || "")],
         stake: Number(single.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
@@ -2032,12 +2021,7 @@
     const svg = v785BuildBetPhotoSvg(rows, 'BAHİS FOTOĞRAFI');
     if (!svg) return;
     const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    openRollingPhotoPreview({
-      dataUrl,
-      label: rows[0]?.type === "Kombine" ? "Kombine Kupon Fotoğrafı" : "Bahis Fotoğrafı",
-      sub: "Aktif Bahisler / Kuponlar",
-      file: `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`
-    });
+    v781DownloadPngFromSvg(dataUrl, `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`);
   }
 
   function buildCryptoCardPhotoSvg(row) {
@@ -2063,12 +2047,7 @@
     const row = { ...(state.modeSlots.crypto[Number(slotIndex || 0)] || {}), index: Number(slotIndex || 0) };
     if (!slotHasUserEntry(row, "crypto")) return;
     const dataUrl = buildCryptoCardPhotoSvg(row);
-    openRollingPhotoPreview({
-      dataUrl,
-      label: "Kripto İşlem Fotoğrafı",
-      sub: "Aktif Kripto İşlemleri",
-      file: `bulten-kripto-islem-${new Date().toISOString().slice(0,10)}.png`
-    });
+    v781DownloadPngFromSvg(dataUrl, `bulten-kripto-islem-${new Date().toISOString().slice(0,10)}.png`);
   }
 
   function deleteHistoryRecord(mode, id) {
@@ -2359,13 +2338,9 @@
       if (!row || !list) return;
       if (list.querySelectorAll("[data-target-bet-leg]").length <= 1) {
         row.querySelectorAll("input").forEach(input => { input.value = ""; });
-        const form = list.closest('[data-target-bet-autosave="1"]');
-        if (form) saveTargetBetDraft(readTargetBetDraftFromForm(form));
         return;
       }
       row.remove();
-      const form = list.closest('[data-target-bet-autosave="1"]');
-      if (form) saveTargetBetDraft(readTargetBetDraftFromForm(form));
     });
     const handleCryptoEntryRemove = btn => {
       const entry = btn.closest('[data-target-crypto-entry="1"]');
@@ -2438,23 +2413,16 @@
       const last = list.lastElementChild;
       const removeBtn = last?.querySelector("[data-target-bet-leg-remove]");
       if (removeBtn) bindTargetBetLegRemove(removeBtn);
-      const form = list.closest('[data-target-bet-autosave="1"]');
-      if (form) {
-        delete form.dataset.skipAutosaveOnce;
-        form.dataset.targetDirty = "1";
-        saveTargetBetDraft(readTargetBetDraftFromForm(form));
-      }
     }));
-    const saveTargetSelfFromForm = (modeRaw, formEl = null) => {
+    const saveTargetSelfFromForm = modeRaw => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
-      const scope = formEl || mount.querySelector(mode === "crypto" ? '[data-target-crypto-autosave="1"]' : '[data-target-bet-autosave="1"]') || mount;
-      const pick = key => scope.querySelector(`[data-target-self-field="${mode}:${key}"]`);
+      const pick = key => mount.querySelector(`[data-target-self-field="${mode}:${key}"]`);
       const name = cleanText(pick("name")?.value || "");
       const stake = v810NumberOrBlank(pick("stake")?.value || "");
       const store = loadTargetItems();
       store[mode] = Array.isArray(store[mode]) ? store[mode] : [];
       if (mode === "crypto") {
-        const entries = Array.from(scope.querySelectorAll('[data-target-crypto-entry="1"]'));
+        const entries = Array.from(mount.querySelectorAll('[data-target-crypto-entry="1"]'));
         let added = false;
         entries.forEach(entryBox => {
           const entryPick = key => entryBox.querySelector(`[data-target-self-field="crypto:${key}"]`);
@@ -2474,16 +2442,15 @@
         });
         if (!added) return false;
       } else {
-        const legs = Array.from(scope.querySelectorAll(`[data-target-bet-leg="${mode}"]`)).map(row => ({
+        const legs = Array.from(mount.querySelectorAll(`[data-target-bet-leg="${mode}"]`)).map(row => ({
           name: cleanText(row.querySelector('[data-target-bet-leg-field="name"]')?.value || ""),
           odds: v810NumberOrBlank(row.querySelector('[data-target-bet-leg-field="odds"]')?.value || "")
         })).filter(leg => leg.name || leg.odds !== "");
-        if (!legs.length) return false;
-        const cleanLegs = legs;
+        if (!legs.length && stake === "") return false;
+        const cleanLegs = legs.length ? legs : [{ name: "", odds: "" }];
         store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: cleanLegs.length > 1 ? "combo" : "match", legs: cleanLegs, name: cleanLegs[0]?.name || "", odds: cleanLegs[0]?.odds || "", stake, result: "" });
       }
       saveTargetItems(store);
-      if (mode === "bet") clearTargetBetDraft();
       return true;
     };
     mount.querySelectorAll("[data-target-self-add]").forEach(btn => {
@@ -2498,75 +2465,15 @@
         if (form) delete form.dataset.skipAutosaveOnce;
       });
     });
-    const hasTargetBetDraftValues = form => {
-      const draft = readTargetBetDraftFromForm(form);
-      return draft.legs.length > 0;
-    };
-    const commitTargetBetForm = (form, force = false) => {
-      if (!form) return false;
-      if (!force && form.dataset.targetDirty !== "1") return false;
-      if (!hasTargetBetDraftValues(form)) {
-        form.dataset.targetDirty = "0";
-        clearTargetBetDraft();
-        return false;
-      }
-      const saved = saveTargetSelfFromForm("bet", form);
-      form.dataset.targetDirty = "0";
-      if (saved) refresh();
-      return saved;
-    };
     mount.querySelectorAll('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]').forEach(form => {
       const autosaveMode = form.matches('[data-target-crypto-autosave="1"]') ? "crypto" : "bet";
-      let dirty = false;
-      const commit = (force = false) => {
-        if (autosaveMode === "bet") return commitTargetBetForm(form, force || dirty || hasTargetBetDraftValues(form));
-        if (!dirty && !force) return false;
-        if (form.dataset.skipAutosaveOnce === '1') {
-          delete form.dataset.skipAutosaveOnce;
-          dirty = false;
-          return false;
-        }
-        const saved = saveTargetSelfFromForm(autosaveMode, form);
-        dirty = false;
-        if (saved) refresh();
-        return saved;
-      };
-      form.addEventListener('input', () => {
-        dirty = true;
-        form.dataset.targetDirty = "1";
-        if (autosaveMode === "bet") {
-          delete form.dataset.skipAutosaveOnce;
-          saveTargetBetDraft(readTargetBetDraftFromForm(form));
-        }
-      }, true);
       form.addEventListener('keydown', event => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
-        commit(true);
+        const saved = saveTargetSelfFromForm(autosaveMode);
+        if (saved) refresh();
       });
-      form.addEventListener('focusout', event => {
-        const next = event.relatedTarget;
-        if (next && form.contains(next)) return;
-        setTimeout(() => commit(true), 180);
-      });
-      const detailSummary = form.parentElement?.querySelector('[data-target-bet-detail-commit="1"]');
-      if (detailSummary && autosaveMode === "bet") {
-        detailSummary.addEventListener('pointerdown', () => setTimeout(() => commit(true), 0));
-      }
     });
-    mount.addEventListener('pointerdown', event => {
-      const form = mount.querySelector('[data-target-bet-autosave="1"]');
-      if (!form) return;
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      if (form.contains(target)) return;
-      const isDetailCommit = !!target.closest('[data-target-bet-detail-commit="1"]');
-      const isTargetBlank = !!target.closest('.v810-target-self.bet, .v835-target-self-details');
-      const isControl = !!target.closest('button,a,input,select,textarea,[data-target-self-row],[data-target-bet-leg-result],[data-target-self-photo]');
-      if (!isDetailCommit && (!isTargetBlank || isControl)) return;
-      if (!hasTargetBetDraftValues(form)) return;
-      setTimeout(() => commitTargetBetForm(form, true), 0);
-    }, true);
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       const latest = loadTargetItems();
@@ -2645,8 +2552,30 @@
         else if (allWin) row.result = "win";
         saveTargetItems(store);
         refresh();
+        if (row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
       };
-      apply();
+      if (!next) { apply(); return; }
+
+      const tmpLegs = row.legs.map((leg, idx) => idx === index ? { ...leg, result: next } : { ...leg });
+      const filled = tmpLegs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
+      const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
+      const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
+      const finalResult = anyLoss ? "loss" : (allWin ? "win" : "");
+      const label = result === "win" ? "Kazandı" : "Kaybetti";
+      const title = result === "win" ? "Maç kazandı onayı" : "Maç kaybetti onayı";
+      let msg = `Bu maçı "${label}" olarak işlemek istiyor musun?`;
+      if (finalResult) {
+        const finalLabel = finalResult === "win" ? "Kazandı" : "Kaybetti";
+        msg = filled.length > 1
+          ? `Bu seçimle kombine kupon "${finalLabel}" olacak. Onaylıyor musun?`
+          : `Bu bahisi "${finalLabel}" olarak onaylıyor musun?`;
+      }
+      openTargetResultConfirm({
+        title,
+        message: msg,
+        okText: "Onayla",
+        tone: result === "loss" ? "danger" : "success"
+      }, apply);
     }));
     mount.querySelectorAll("[data-target-self-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, resultRaw] = String(btn.dataset.targetSelfResult || "bet::").split(":");
@@ -2895,6 +2824,7 @@
         const baseIndex = Number(action.slot || 0);
         ACTIVE_COMBO_DETAIL_SLOT = baseIndex;
         const slot = fresh.modeSlots.bet[baseIndex];
+        let cleanupAfter = null;
         if (slot) {
           if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
           const matchIndex = Number(action.match || 0);
@@ -2903,13 +2833,19 @@
           slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
           const updatedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === baseIndex);
           const matches = updatedCoupon ? updatedCoupon.matches : getSlotMatches({ ...slot, index: baseIndex });
-          const allDone = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
-          if (allDone) {
-            const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
-            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
+          const anyLoss = action.status !== "pending" && matches.length > 1 && matches.some(m => m.status === "loss");
+          const allWin = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win");
+          if (anyLoss || allWin) {
+            const finalStatus = anyLoss ? "loss" : "win";
+            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus, { closeActive: false });
+            cleanupAfter = { slotIndex: baseIndex, label: finalStatus === "loss" ? "Kaybeden kombine kupon" : "Kazanan kombine kupon" };
+          } else {
+            slot.comboFinalStatus = "";
+            slot.comboHistoryStatus = "";
           }
           saveState(fresh);
         }
+        if (cleanupAfter) setTimeout(() => askActiveBetCleanup(cleanupAfter.slotIndex, cleanupAfter.label), 60);
       } else if (action.type === "deleteHistory") {
         deleteHistoryRecord(action.mode, action.id);
       } else if (action.type === "restoreHistory") {
@@ -2936,15 +2872,56 @@
       const i = Number(slotRaw || 0);
       const mi = Number(matchRaw || 0);
       const status = statusRaw === "loss" ? "loss" : "win";
-      if (!state.modeSlots.bet[i]) return;
+      const list = state.modeSlots.bet;
+      if (!list[i]) return;
       const groupedCoupon = getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === i);
-      const matches = groupedCoupon ? groupedCoupon.matches : getSlotMatches(state.modeSlots.bet[i]);
+      const matches = groupedCoupon ? groupedCoupon.matches : getSlotMatches(list[i]);
       const currentStatus = matches[mi]?.status || "";
-      const nextStatus = currentStatus === status ? "" : status;
+      const nextStatus = currentStatus === status ? "pending" : status;
       ACTIVE_COMBO_DETAIL_SLOT = i;
-      markBetMatchStatus(state, i, mi, nextStatus);
-      saveState(state);
-      restoreActivePanelAfterConfirm("bet");
+      const matchName = matches[mi]?.name || `Maç ${mi + 1}`;
+      const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || "bet") : (PENDING_BOARD_OPEN_MODE || null);
+      if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
+      CONFIRM_DIALOG = {
+        type: "comboMatch",
+        slot: i,
+        match: mi,
+        status: nextStatus,
+        keepActivePanel: keepPanel,
+        tone: nextStatus === "loss" ? "danger" : "success",
+        title: nextStatus === "pending" ? "Maçı bekliyor durumuna al" : "Kombine maç sonucunu onayla",
+        message: nextStatus === "pending"
+          ? `${matchName} tekrar BEKLİYOR durumuna alınacak.`
+          : `${matchName} için ${nextStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
+        detail: nextStatus === "pending" ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur." : "Bu seçim ana tablo ile aktif kartta birlikte senkron işlenecek. Kupon biterse detay temizleme ayrıca sorulur.",
+        confirmText: nextStatus === "pending" ? "BEKLİYOR olarak işaretle" : (nextStatus === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle")
+      };
+      refresh();
+    }));
+    mount.querySelectorAll("[data-active-card-clear]").forEach(btn => btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const [modeRaw, slotRaw] = String(btn.dataset.activeCardClear || "bet:0").split(":");
+      const mode = modeRaw === "crypto" ? "crypto" : "bet";
+      const slotIndex = Number(slotRaw || 0);
+      if (mode !== "bet") return;
+      openTargetResultConfirm({
+        title: "Bahis temizlensin mi?",
+        message: "Bahisi temizlemek istediğinizden emin misiniz? Bu işlem aktif detay ve ana tablodaki ilgili bahis alanını temizler.",
+        okText: "Evet, temizle",
+        cancelText: "Vazgeç",
+        tone: "danger"
+      }, () => {
+        const fresh = loadState();
+        const coupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex || 0) === slotIndex);
+        if (coupon) clearBetCouponSlots(fresh, coupon);
+        else resetBetSlot(fresh, slotIndex);
+        PENDING_BOARD_OPEN_MODE = "bet";
+        ACTIVE_COMBO_DETAIL_SLOT = null;
+        saveState(fresh);
+        renderFloatingPanel();
+        renderModule();
+      });
     }));
     mount.querySelectorAll("[data-card-screenshot]").forEach(btn => btn.addEventListener("click", () => {
       const cardId = btn.dataset.cardScreenshot || "";
@@ -2978,16 +2955,33 @@
         alert(mode === "crypto" ? "Önce işlem adını yaz." : "Önce maç adını yaz.");
         return;
       }
-      if (nextStatus === "win" || nextStatus === "loss") {
-        const isBetMarkButton = mode === "bet" && !btn.closest(".v801-bet-close-actions");
-        if (isBetMarkButton) {
-          const currentStatus = Array.isArray(list[i].comboResults) && (list[i].comboResults[0] === "win" || list[i].comboResults[0] === "loss") ? list[i].comboResults[0] : "";
-          const finalStatus = currentStatus === nextStatus ? "" : nextStatus;
-          markBetMatchStatus(state, i, 0, finalStatus);
-          saveState(state);
+      if (mode === "bet" && (nextStatus === "win" || nextStatus === "loss")) {
+        const comboRef = comboLegRefForSlot(state, i);
+        if (comboRef && Array.isArray(comboRef.matches) && comboRef.matches.length > 1) {
+          const currentStatus = comboRef.status || "";
+          const finalStatus = currentStatus === nextStatus ? "pending" : nextStatus;
+          const matchName = comboRef.matches?.[comboRef.matchIndex]?.name || `Maç ${comboRef.matchIndex + 1}`;
+          const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || "bet") : (PENDING_BOARD_OPEN_MODE || null);
+          if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
+          CONFIRM_DIALOG = {
+            type: "comboMatch",
+            slot: comboRef.slotIndex,
+            match: comboRef.matchIndex,
+            status: finalStatus,
+            keepActivePanel: keepPanel,
+            tone: finalStatus === "loss" ? "danger" : "success",
+            title: finalStatus === "pending" ? "Maçı bekliyor durumuna al" : "Kombine maç sonucunu onayla",
+            message: finalStatus === "pending"
+              ? `${matchName} tekrar BEKLİYOR durumuna alınacak.`
+              : `${matchName} için ${finalStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
+            detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu maç yeniden bekliyor olur." : "Bu seçim diğer ekrandaki kombine kartıyla birlikte senkron işlenecek.",
+            confirmText: finalStatus === "pending" ? "BEKLİYOR olarak işaretle" : (finalStatus === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle")
+          };
           refresh();
           return;
         }
+      }
+      if (nextStatus === "win" || nextStatus === "loss") {
         const currentStatus = list[i]?.status || "";
         const finalStatus = currentStatus === nextStatus ? "pending" : nextStatus;
         const label = mode === "crypto" ? "kripto işlem" : "bahis / maç";
