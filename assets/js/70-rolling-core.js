@@ -1198,19 +1198,18 @@
     img.onerror = () => alert("Resim hazırlanamadı.");
     img.src = svgUri;
   }
-  function openTablePhoto(mode, state) {
-    const dataUrl = v781BuildTablePhotoSvg(mode, state);
-    if (!dataUrl) {
-      alert(mode === "crypto" ? "Fotoğraf için önce işlem yaz." : "Fotoğraf için önce maç yaz.");
-      return;
-    }
+  function openRollingPhotoPreview(payload) {
+    if (!payload || !payload.dataUrl) return;
     let host = document.getElementById("omega-rolling-feature-host");
     if (!host) {
       host = document.createElement("div");
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Ana ROLLING</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
+    const label = escapeHtml(payload.label || "Fotoğraf");
+    const sub = escapeHtml(payload.sub || "BULTEN");
+    const file = payload.file || `bulten-fotograf-${new Date().toISOString().slice(0,10)}.png`;
+    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${label}</b><span>${sub}</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${payload.dataUrl}" alt="${label}"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
@@ -1218,7 +1217,20 @@
       host.style.display = "none";
     }));
     host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
-      v781DownloadPngFromSvg(dataUrl, `bulten-${mode}-aktif-rolling-${new Date().toISOString().slice(0,10)}.png`);
+      v781DownloadPngFromSvg(payload.dataUrl, file);
+    });
+  }
+  function openTablePhoto(mode, state) {
+    const dataUrl = v781BuildTablePhotoSvg(mode, state);
+    if (!dataUrl) {
+      alert(mode === "crypto" ? "Fotoğraf için önce işlem yaz." : "Fotoğraf için önce maç yaz.");
+      return;
+    }
+    openRollingPhotoPreview({
+      dataUrl,
+      label: mode === "crypto" ? "Kripto Fotoğrafı" : "Kupon Fotoğrafı",
+      sub: mode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar",
+      file: `bulten-${mode}-aktif-rolling-${new Date().toISOString().slice(0,10)}.png`
     });
   }
   function renderBetInfoBar(row) {
@@ -1928,7 +1940,12 @@
     const svg = v785BuildBetPhotoSvg(rows, 'BAHİS FOTOĞRAFI');
     if (!svg) return;
     const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    v781DownloadPngFromSvg(dataUrl, `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`);
+    openRollingPhotoPreview({
+      dataUrl,
+      label: rows[0]?.type === "Kombine" ? "Kombine Kupon Fotoğrafı" : "Bahis Fotoğrafı",
+      sub: "Aktif Bahisler / Kuponlar",
+      file: `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`
+    });
   }
 
   function buildCryptoCardPhotoSvg(row) {
@@ -1954,7 +1971,12 @@
     const row = { ...(state.modeSlots.crypto[Number(slotIndex || 0)] || {}), index: Number(slotIndex || 0) };
     if (!slotHasUserEntry(row, "crypto")) return;
     const dataUrl = buildCryptoCardPhotoSvg(row);
-    v781DownloadPngFromSvg(dataUrl, `bulten-kripto-islem-${new Date().toISOString().slice(0,10)}.png`);
+    openRollingPhotoPreview({
+      dataUrl,
+      label: "Kripto İşlem Fotoğrafı",
+      sub: "Aktif Kripto İşlemleri",
+      file: `bulten-kripto-islem-${new Date().toISOString().slice(0,10)}.png`
+    });
   }
 
   function deleteHistoryRecord(mode, id) {
@@ -2375,9 +2397,7 @@
     mount.querySelectorAll('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]').forEach(form => {
       const autosaveMode = form.matches('[data-target-crypto-autosave="1"]') ? "crypto" : "bet";
       let dirty = false;
-      if (autosaveMode === "bet") {
-        form.addEventListener('input', () => { dirty = true; }, true);
-      }
+      form.addEventListener('input', () => { dirty = true; }, true);
       form.addEventListener('keydown', event => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
@@ -2385,23 +2405,21 @@
         dirty = false;
         if (saved) refresh();
       });
-      if (autosaveMode === "bet") {
-        form.addEventListener('focusout', event => {
-          const next = event.relatedTarget;
-          if (next && form.contains(next)) return;
-          setTimeout(() => {
-            if (form.contains(document.activeElement) || !dirty) return;
-            if (form.dataset.skipAutosaveOnce === '1') {
-              delete form.dataset.skipAutosaveOnce;
-              dirty = false;
-              return;
-            }
-            const saved = saveTargetSelfFromForm("bet");
+      form.addEventListener('focusout', event => {
+        const next = event.relatedTarget;
+        if (next && form.contains(next)) return;
+        setTimeout(() => {
+          if (form.contains(document.activeElement) || !dirty) return;
+          if (form.dataset.skipAutosaveOnce === '1') {
+            delete form.dataset.skipAutosaveOnce;
             dirty = false;
-            if (saved) refresh();
-          }, 140);
-        });
-      }
+            return;
+          }
+          const saved = saveTargetSelfFromForm(autosaveMode);
+          dirty = false;
+          if (saved) refresh();
+        }, 220);
+      });
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
