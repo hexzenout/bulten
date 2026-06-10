@@ -10523,3 +10523,56 @@ select:-webkit-autofill {
     width: 100% !important;
   }
 }
+
+
+/* V874: Kasa Hedefi Bahis final butonları — Aktif Bahisler/Kuponlar düzenine göre temiz iki kolon */
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 7px !important;
+  width: 100% !important;
+  margin: 12px 0 0 !important;
+  padding: 0 !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions button {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-width: none !important;
+  padding: 0 6px !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  font-size: .64rem !important;
+  line-height: 1 !important;
+  letter-spacing: -.02em !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .win {
+  background: rgba(34,197,94,.18) !important;
+  color: #bbf7d0 !important;
+}
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .loss {
+  background: rgba(239,68,68,.18) !important;
+  color: #fecaca !important;
+}
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .win.active {
+  background: rgba(16,185,129,.32) !important;
+  color: #dcfce7 !important;
+  box-shadow: 0 0 0 1px rgba(16,185,129,.28) !important;
+}
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .loss.active {
+  background: rgba(239,68,68,.30) !important;
+  color: #fee2e2 !important;
+  box-shadow: 0 0 0 1px rgba(239,68,68,.28) !important;
+}
