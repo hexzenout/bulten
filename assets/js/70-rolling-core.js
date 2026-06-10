@@ -633,12 +633,13 @@
     const list = Array.isArray(item?.legs) ? item.legs : [];
     const cleaned = list.map(leg => ({
       name: cleanText(leg?.name || ""),
-      odds: v810NumberOrBlank(leg?.odds)
-    })).filter(leg => leg.name || leg.odds !== "");
+      odds: v810NumberOrBlank(leg?.odds),
+      result: cleanText(leg?.result || "")
+    })).filter(leg => leg.name || leg.odds !== "" || leg.result);
     if (!cleaned.length && (cleanText(item?.name || "") || v810NumberOrBlank(item?.odds) !== "")) {
-      cleaned.push({ name: cleanText(item?.name || ""), odds: v810NumberOrBlank(item?.odds) });
+      cleaned.push({ name: cleanText(item?.name || ""), odds: v810NumberOrBlank(item?.odds), result: cleanText(item?.result || "") });
     }
-    return cleaned.length ? cleaned : [{ name: "", odds: "" }];
+    return cleaned.length ? cleaned : [{ name: "", odds: "", result: "" }];
   }
   function v812BetOddsProduct(item) {
     const legs = v812BetLegs(item).filter(leg => Number(leg.odds || 0) > 0);
@@ -724,7 +725,16 @@
     return v812BetLegs(item).map((leg, i) => {
       const name = cleanText(leg.name || "") || `Maç ${i + 1}`;
       const odds = Number(leg.odds || 0) ? Number(leg.odds || 0).toFixed(2) : "-";
-      return `<div class="v813-bet-match-line"><span title="${escapeHtml(name)}">${escapeHtml(name)}</span><b>${escapeHtml(odds)}</b></div>`;
+      const result = cleanText(leg.result || "");
+      const id = escapeHtml(item?.id || "");
+      return `<div class="v813-bet-match-line v819-bet-match-line ${result ? "done " + result : ""}">
+        <span title="${escapeHtml(name)}">${escapeHtml(name)}</span>
+        <b>${escapeHtml(odds)}</b>
+        <div class="v819-leg-actions">
+          <button type="button" class="leg-win ${result === "win" ? "active" : ""}" data-target-bet-leg-result="bet:${id}:${i}:win" title="Maç kazandı"><i class="fa-solid fa-check"></i></button>
+          <button type="button" class="leg-loss ${result === "loss" ? "active" : ""}" data-target-bet-leg-result="bet:${id}:${i}:loss" title="Maç kaybetti"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>`;
     }).join("");
   }
   function v813CryptoTpRowsHtml(item) {
@@ -764,10 +774,10 @@
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
         return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v814-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+          <div class="v814-crypto-detail-head v819-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
           <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
           <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
-          <div class="v817-target-card-footer crypto"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="v819-target-card-footer crypto"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
         </li>`;
       }).join("");
       return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -780,7 +790,7 @@
         <div class="v813-detail-head v814-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span></div>
         <div class="v813-bet-match-list v814-bet-match-list">${v813BetLegRowsHtml(item)}</div>
         <div class="v813-bet-total-line v814-bet-total-line"><span><small>Tutar</small><b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span><small>Oran</small><b>${odds ? odds.toFixed(2) : "-"}</b></span><span class="gain"><small>Kazanç</small><b>${possibleReturn ? money(possibleReturn) : "-"}</b></span></div>
-        <div class="v812-target-detail-actions v813-target-detail-actions v814-target-detail-actions v818-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win" title="Kazandı"><i class="fa-solid fa-check"></i></button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss" title="Kaybetti"><i class="fa-solid fa-xmark"></i></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+        <div class="v819-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
       </li>`;
     }).join("");
     return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -2271,6 +2281,41 @@
       if (row.tps[index].done && row.result === "stop") row.result = "";
       const allDone = row.tps.length > 0 && row.tps.every(tp => !!tp.done);
       row.result = allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
+      saveTargetItems(store);
+      refresh();
+    }));
+    mount.querySelectorAll("[data-target-bet-leg-result]").forEach(btn => btn.addEventListener("click", () => {
+      const [modeRaw, id, indexRaw, resultRaw] = String(btn.dataset.targetBetLegResult || "bet:::").split(":");
+      const mode = modeRaw === "crypto" ? "crypto" : "bet";
+      if (mode !== "bet" || !id) return;
+      const index = Math.max(0, Number(indexRaw || 0));
+      const result = resultRaw === "loss" ? "loss" : "win";
+      const store = loadTargetItems();
+      store.bet = Array.isArray(store.bet) ? store.bet : [];
+      const row = store.bet.find(item => String(item.id || "") === String(id));
+      if (!row) return;
+      row.legs = Array.isArray(row.legs) ? row.legs : [];
+      if (!row.legs[index]) return;
+      const previous = cleanText(row.legs[index].result || "");
+      const next = previous === result ? "" : result;
+      row.legs[index].result = next;
+      row.result = "";
+      const legs = v812BetLegs(row);
+      const filled = legs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
+      const allMarked = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win" || cleanText(leg.result || "") === "loss");
+      if (allMarked) {
+        const finalResult = filled.some(leg => cleanText(leg.result || "") === "loss") ? "loss" : "win";
+        const label = finalResult === "win" ? "Kazandı" : "Kaybetti";
+        const isCombo = filled.length > 1;
+        const msg = isCombo
+          ? `Bu kombine kuponu "${label}" olarak onaylıyor musun?`
+          : `Bu bahisi "${label}" olarak onaylıyor musun?`;
+        if (!window.confirm(msg)) {
+          row.legs[index].result = previous;
+          return;
+        }
+        row.result = finalResult;
+      }
       saveTargetItems(store);
       refresh();
     }));
