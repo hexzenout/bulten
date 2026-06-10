@@ -487,64 +487,6 @@
     }
     return matches;
   }
-  function comboLegRefForSlot(state, slotIndex) {
-    const idx = Number(slotIndex || 0);
-    const coupons = getBetCouponGroups(state).coupons || [];
-    for (const coupon of coupons) {
-      const realRows = Array.isArray(coupon.rows) ? coupon.rows : [];
-      const realPos = realRows.findIndex(row => Number(row?.index || 0) === idx);
-      if (realPos >= 0) {
-        return {
-          coupon,
-          slotIndex: Number(coupon.slotIndex || 0),
-          matchIndex: realPos,
-          status: cleanText(coupon.matches?.[realPos]?.status || ""),
-          matches: coupon.matches || []
-        };
-      }
-      if (Number(coupon.slotIndex || 0) === idx && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
-        return {
-          coupon,
-          slotIndex: Number(coupon.slotIndex || 0),
-          matchIndex: 0,
-          status: cleanText(coupon.matches?.[0]?.status || ""),
-          matches: coupon.matches || []
-        };
-      }
-    }
-    return null;
-  }
-  function resetBetSlot(state, slotIndex) {
-    const i = Number(slotIndex || 0);
-    if (!state.modeSlots || !Array.isArray(state.modeSlots.bet)) return;
-    state.modeSlots.bet[i] = createSlot("bet", i);
-  }
-  function clearBetCouponSlots(state, coupon) {
-    if (!coupon) return;
-    const rows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [{ index: coupon.slotIndex }];
-    const indexes = new Set(rows.map(row => Number(row?.index || 0)));
-    indexes.add(Number(coupon.slotIndex || 0));
-    indexes.forEach(index => resetBetSlot(state, index));
-  }
-  function askActiveBetCleanup(slotIndex, label = "Bahis") {
-    openTargetResultConfirm({
-      title: "Detay temizlensin mi?",
-      message: `${label} detaydan kaldırılacak. Bahisi temizlemek istediğinizden emin misiniz?`,
-      okText: "Evet, temizle",
-      cancelText: "Hayır, kalsın",
-      tone: "danger"
-    }, () => {
-      const fresh = loadState();
-      const combo = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex || 0) === Number(slotIndex || 0));
-      if (combo) clearBetCouponSlots(fresh, combo);
-      else resetBetSlot(fresh, Number(slotIndex || 0));
-      PENDING_BOARD_OPEN_MODE = "bet";
-      ACTIVE_COMBO_DETAIL_SLOT = null;
-      saveState(fresh);
-      renderFloatingPanel();
-      renderModule();
-    });
-  }
   function getBetCouponGroups(state) {
     const rows = pendingRowsForMode("bet", state).sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
     const singles = [];
@@ -821,20 +763,6 @@
       </div>`;
     }).join("");
   }
-  function v864BetDetailSummaryHtml(item) {
-    const totalOdds = Number(v812BetOddsProduct(item) || 0);
-    const stake = Number(item?.stake || 0);
-    const result = cleanText(item?.result || "");
-    let gain = 0;
-    if (result === "loss") gain = -Math.abs(stake || 0);
-    else gain = stake && totalOdds ? stake * totalOdds : 0;
-    const gainLabel = result === "loss" ? "-" + money(Math.abs(gain)) : (gain ? money(gain) : "-");
-    return `<div class="v864-bet-detail-summary">
-      <span>Toplam Oran: <b>${totalOdds ? totalOdds.toFixed(2) : "-"}</b></span>
-      <span>Bahis Tutarı: <b>${stake ? money(stake) : "-"}</b></span>
-      <span class="${result === "loss" ? "neg" : "pos"}">Kazanç: <b>${gainLabel}</b></span>
-    </div>`;
-  }
   function v813CryptoTpRowsHtml(item) {
     const tps = v813CryptoTps(item);
     if (!tps.length) return "";
@@ -871,28 +799,23 @@
     if (m === "crypto") {
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
-        const safeId = escapeHtml(item.id || "");
-        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${safeId}">
-          <div class="v814-crypto-detail-head v819-crypto-detail-head v866-target-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><div class="v866-target-head-actions"><button type="button" class="photo" data-target-self-photo="${m}:${safeId}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete v865-clear-x" data-target-self-delete="${m}:${safeId}" title="İşlemi sil"><i class="fa-solid fa-xmark"></i></button></div></div>
+        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+          <div class="v814-crypto-detail-head v819-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
           <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
           <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
+          <div class="v819-target-card-footer crypto"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
         </li>`;
       }).join("");
       return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
     }
     const details = rows.slice(-8).reverse().map(item => {
       const result = cleanText(item.result || "");
-      const safeId = escapeHtml(item.id || "");
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${safeId}">
-        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v866-target-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><div class="v866-target-head-actions"><button type="button" class="photo" data-target-self-photo="${m}:${safeId}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete v865-clear-x" data-target-self-delete="${m}:${safeId}" title="Tüm maçları sil"><i class="fa-solid fa-xmark"></i></button></div></div>
+      const odds = v812BetOddsProduct(item);
+      const possibleReturn = v812BetPotential(item);
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
         <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list">${v813BetLegRowsHtml(item)}</div>
-        ${v864BetDetailSummaryHtml(item)}
-        <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet v865-target-bet-footer v866-target-bet-footer">
-          <div class="v865-target-final-actions v866-target-final-actions">
-            <button type="button" class="win" data-target-self-result="${m}:${safeId}:win">Kupon Kazandı</button>
-            <button type="button" class="loss" data-target-self-result="${m}:${safeId}:loss">Kupon Kaybetti</button>
-          </div>
-        </div>
+        <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
       </li>`;
     }).join("");
     return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -983,7 +906,6 @@
           name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
           matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
           matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
-          matchResults: coupon.matches.map(m => cleanText(m.status || "")),
           stake: Number(coupon.row.stake || 0),
           odds: Number(totals.odds || 0),
           possible: Number(totals.possibleWin || 0)
@@ -1313,14 +1235,14 @@
   function renderBetSingleCard(row) {
     const cardId = `v763-bet-card-${row.index}`;
     return `<article class="v763-active-card bet single v801-bet-card" id="${cardId}">
-      <div class="v763-card-top v864-active-card-top">
+      <div class="v763-card-top">
         <div><b>${escapeHtml(cleanText(row.name) || "Bahis")}</b><span>Bahis</span></div>
-        <div class="v864-card-top-actions">${renderCardShotButton(cardId)}</div>
+        ${renderCardShotButton(cardId)}
       </div>
       ${renderBetInfoBar(row)}
       <div class="v763-card-actions v801-bet-close-actions">
-        <button type="button" class="win" data-coupon-final="bet:${row.index}:win">Kupon Kazandı</button>
-        <button type="button" class="loss" data-coupon-final="bet:${row.index}:loss">Kupon Kaybetti</button>
+        <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-status="win">Kupon Kazandı</button>
+        <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-status="loss">Kupon Kaybetti</button>
       </div>
     </article>`;
   }
@@ -1340,15 +1262,15 @@
     </li>`).join("");
     return `<article class="v763-active-card bet combo v801-bet-card" id="${cardId}">
       <details ${keepOpen ? "open" : ""}>
-        <summary class="v864-active-card-top">
+        <summary>
           <div><b>Kombine</b><span>${matches.length} maç · ${done}/${matches.length} sonuçlandı</span></div>
-          <div class="v864-card-top-actions">${renderCardShotButton(cardId)}</div>
+          ${renderCardShotButton(cardId)}
         </summary>
         ${renderBetInfoBar(row)}
         <ul class="v763-combo-match-list">${matchRows}</ul>
         <div class="v763-card-actions v801-bet-close-actions">
-          <button type="button" class="win" data-coupon-final="bet:${row.index}:win">Kupon Kazandı</button>
-          <button type="button" class="loss" data-coupon-final="bet:${row.index}:loss">Kupon Kaybetti</button>
+          <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-status="win">Kupon Kazandı</button>
+          <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-status="loss">Kupon Kaybetti</button>
         </div>
       </details>
     </article>`;
@@ -1436,21 +1358,14 @@
     </article>`;
   }
 
-  function addCouponHistoryRecord(state, coupon, status, options = {}) {
+  function addCouponHistoryRecord(state, coupon, status) {
     const row = coupon.row || coupon.rows?.[0];
-    if (!row) return null;
-    const finalStatus = status === "loss" ? "loss" : "win";
-    const closeActive = options.closeActive !== false;
-    const baseIndex = Number(coupon.slotIndex ?? row.index ?? 0);
-    const baseSlot = state.modeSlots?.bet?.[baseIndex];
-    if (!closeActive && baseSlot?.comboHistoryId && baseSlot?.comboHistoryStatus === finalStatus) {
-      baseSlot.comboFinalStatus = finalStatus;
-      return baseSlot.comboHistoryId;
-    }
+    if (!row) return;
     const totals = rowBetTotals(row);
     const h = loadHistory();
     const now = Date.now();
     const names = getSlotMatches(row).map(m => m.name).filter(Boolean);
+    const finalStatus = status === "loss" ? "loss" : "win";
     const rec = {
       id: "rh_" + now + "_coupon_" + Math.random().toString(36).slice(2),
       mode: "bet",
@@ -1464,14 +1379,6 @@
     };
     h.bet.unshift(rec);
     saveHistory(h);
-    if (!closeActive) {
-      if (baseSlot) {
-        baseSlot.comboFinalStatus = finalStatus;
-        baseSlot.comboHistoryId = rec.id;
-        baseSlot.comboHistoryStatus = finalStatus;
-      }
-      return rec.id;
-    }
     const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
     sourceRows.forEach((src, idx) => {
       const slot = state.modeSlots.bet[Number(src.index || 0)];
@@ -1481,7 +1388,6 @@
       slot.historyId = rec.id;
       slot.historyStatus = finalStatus;
     });
-    return rec.id;
   }
   function renderPendingBoard(mode, state) {
     const isCrypto = mode === "crypto";
@@ -1824,13 +1730,9 @@
     const lossText = "KAYBETTİ";
     const pnlHead = "K/Z";
     return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th><button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>${valHead}</th><th>Tutar</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
-      const comboRef = comboLegRefForSlot(state, i);
-      const visualStatus = comboRef?.status || s.status || "pending";
-      const status = visualStatus === "win" ? winText : visualStatus === "loss" ? lossText : "BEKLİYOR";
+      const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      const winSelected = visualStatus === "win" ? " selected" : "";
-      const lossSelected = visualStatus === "loss" ? " selected" : "";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${visualStatus === "win" || visualStatus === "loss" ? visualStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win${winSelected}" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss${lossSelected}" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModePanel(mode, state) {
@@ -1989,23 +1891,6 @@
       addHistoryRecord(mode, list[i], i);
     }
   }
-
-  function applyComboLegVisualResult(state, slotIndex, matchIndex, status) {
-    const baseIndex = Number(slotIndex || 0);
-    const legIndex = Math.max(0, Number(matchIndex || 0));
-    const list = state.modeSlots?.bet || [];
-    const slot = list[baseIndex];
-    if (!slot) return false;
-    if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
-    const nextStatus = status === "loss" ? "loss" : status === "win" ? "win" : "pending";
-    if (nextStatus === "pending") delete slot.comboResults[legIndex];
-    else slot.comboResults[legIndex] = nextStatus;
-    slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
-    slot.comboFinalStatus = "";
-    slot.comboHistoryStatus = "";
-    return true;
-  }
-
   function downloadActiveCardScreenshot(cardId) {
     const match = String(cardId || "").match(/v763-bet-card-(\d+)/);
     const slotIndex = match ? Number(match[1]) : -1;
@@ -2022,7 +1907,6 @@
         name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
         matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
         matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
-        matchResults: coupon.matches.map(m => cleanText(m.status || "")),
         stake: Number(coupon.row.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
@@ -2035,7 +1919,6 @@
         name: cleanText(single.name),
         matchLines: [cleanText(single.name)],
         matchOdds: [Number(single.odds || 0)],
-        matchResults: [cleanText(single.status || "")],
         stake: Number(single.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
@@ -2045,23 +1928,7 @@
     const svg = v785BuildBetPhotoSvg(rows, 'BAHİS FOTOĞRAFI');
     if (!svg) return;
     const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    let host = document.getElementById("omega-rolling-feature-host");
-    if (!host) {
-      host = document.createElement("div");
-      host.id = "omega-rolling-feature-host";
-      document.body.appendChild(host);
-    }
-    const fileName = `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`;
-    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Aktif Bahisler / Kuponlar</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${dataUrl}" alt="Kupon fotoğrafı"></section></div>`;
-    host.style.display = "block";
-    host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
-      if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
-      host.innerHTML = "";
-      host.style.display = "none";
-    }));
-    host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
-      v781DownloadPngFromSvg(dataUrl, fileName);
-    });
+    v781DownloadPngFromSvg(dataUrl, `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`);
   }
 
   function buildCryptoCardPhotoSvg(row) {
@@ -2513,19 +2380,6 @@
         const saved = saveTargetSelfFromForm(autosaveMode);
         if (saved) refresh();
       });
-      form.addEventListener('focusout', () => {
-        window.setTimeout(() => {
-          if (!form.isConnected) return;
-          if (form.dataset.skipAutosaveOnce === '1') {
-            delete form.dataset.skipAutosaveOnce;
-            return;
-          }
-          const active = document.activeElement;
-          if (active && form.contains(active)) return;
-          const saved = saveTargetSelfFromForm(autosaveMode);
-          if (saved) refresh();
-        }, 120);
-      });
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
@@ -2594,16 +2448,41 @@
       if (!row.legs[index]) return;
       const previous = cleanText(row.legs[index].result || "");
       const next = previous === result ? "" : result;
-      row.legs[index].result = next;
-      row.result = "";
-      const legs = v812BetLegs(row);
-      const filled = legs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
+      const apply = () => {
+        row.legs[index].result = next;
+        row.result = "";
+        const legs = v812BetLegs(row);
+        const filled = legs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
+        const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
+        const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
+        if (anyLoss) row.result = "loss";
+        else if (allWin) row.result = "win";
+        saveTargetItems(store);
+        refresh();
+        if (row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
+      };
+      if (!next) { apply(); return; }
+
+      const tmpLegs = row.legs.map((leg, idx) => idx === index ? { ...leg, result: next } : { ...leg });
+      const filled = tmpLegs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
       const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
       const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
-      if (anyLoss) row.result = "loss";
-      else if (allWin) row.result = "win";
-      saveTargetItems(store);
-      refresh();
+      const finalResult = anyLoss ? "loss" : (allWin ? "win" : "");
+      const label = result === "win" ? "Kazandı" : "Kaybetti";
+      const title = result === "win" ? "Maç kazandı onayı" : "Maç kaybetti onayı";
+      let msg = `Bu maçı "${label}" olarak işlemek istiyor musun?`;
+      if (finalResult) {
+        const finalLabel = finalResult === "win" ? "Kazandı" : "Kaybetti";
+        msg = filled.length > 1
+          ? `Bu seçimle kombine kupon "${finalLabel}" olacak. Onaylıyor musun?`
+          : `Bu bahisi "${finalLabel}" olarak onaylıyor musun?`;
+      }
+      openTargetResultConfirm({
+        title,
+        message: msg,
+        okText: "Onayla",
+        tone: result === "loss" ? "danger" : "success"
+      }, apply);
     }));
     mount.querySelectorAll("[data-target-self-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, resultRaw] = String(btn.dataset.targetSelfResult || "bet::").split(":");
@@ -2651,29 +2530,10 @@
       const [modeRaw, id] = String(btn.dataset.targetSelfDelete || "bet:").split(":");
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       if (!id) return;
-      const apply = () => {
-        const store = loadTargetItems();
-        store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
-        saveTargetItems(store);
-        refresh();
-      };
-      if (mode === "bet") {
-        openTargetResultConfirm({
-          title: "Tüm maçlar silinsin mi?",
-          message: "Tüm maçları silmek istediğinizden emin misiniz?",
-          okText: "Tüm maçları sil",
-          cancelText: "Vazgeç",
-          tone: "danger"
-        }, apply);
-      } else {
-        openTargetResultConfirm({
-          title: "İşlem silinsin mi?",
-          message: "Bu kripto işlemini silmek istediğinizden emin misiniz?",
-          okText: "İşlemi sil",
-          cancelText: "Vazgeç",
-          tone: "danger"
-        }, apply);
-      }
+      const store = loadTargetItems();
+      store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
+      saveTargetItems(store);
+      refresh();
     }));
     mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
@@ -2784,15 +2644,11 @@
       REPORT_CENTER_OPEN_MODE = null;
       refresh();
     }));
-    mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    mount.querySelectorAll("[data-pending-close]").forEach(btn => btn.addEventListener("click", () => {
       PENDING_BOARD_OPEN_MODE = null;
       CONFIRM_RETURN_PANEL_MODE = null;
       ACTIVE_COMBO_DETAIL_SLOT = null;
-      renderFloatingPanel();
-      if (mount?.dataset?.rollingFloating !== "1") renderModule();
+      refresh();
     }));
     mount.querySelectorAll(".v758-pending-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
@@ -2875,7 +2731,6 @@
         const baseIndex = Number(action.slot || 0);
         ACTIVE_COMBO_DETAIL_SLOT = baseIndex;
         const slot = fresh.modeSlots.bet[baseIndex];
-        let cleanupAfter = null;
         if (slot) {
           if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
           const matchIndex = Number(action.match || 0);
@@ -2884,43 +2739,13 @@
           slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
           const updatedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === baseIndex);
           const matches = updatedCoupon ? updatedCoupon.matches : getSlotMatches({ ...slot, index: baseIndex });
-          const anyLoss = action.status !== "pending" && matches.length > 1 && matches.some(m => m.status === "loss");
-          const allWin = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win");
-          if (anyLoss || allWin) {
-            const finalStatus = anyLoss ? "loss" : "win";
-            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus, { closeActive: false });
-            cleanupAfter = { slotIndex: baseIndex, label: finalStatus === "loss" ? "Kaybeden kombine kupon" : "Kazanan kombine kupon" };
-          } else {
-            slot.comboFinalStatus = "";
-            slot.comboHistoryStatus = "";
+          const allDone = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
+          if (allDone) {
+            const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
+            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
           }
           saveState(fresh);
         }
-        if (cleanupAfter) setTimeout(() => askActiveBetCleanup(cleanupAfter.slotIndex, cleanupAfter.label), 60);
-      } else if (action.type === "couponFinal") {
-        const fresh = loadState();
-        const mode = action.mode === "crypto" ? "crypto" : "bet";
-        const slotIndex = Number(action.slot || 0);
-        const finalStatus = action.status === "loss" ? "loss" : "win";
-        let cleanupAfter = null;
-        if (mode === "bet") {
-          const coupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex || 0) === slotIndex);
-          if (coupon && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
-            const baseSlot = fresh.modeSlots?.bet?.[slotIndex];
-            if (baseSlot) {
-              if (!Array.isArray(baseSlot.comboResults)) baseSlot.comboResults = [];
-              if (finalStatus === "win") coupon.matches.forEach((_, idx) => { baseSlot.comboResults[idx] = "win"; });
-              if (finalStatus === "loss" && !coupon.matches.some(m => m.status === "loss")) baseSlot.comboFinalStatus = "loss";
-            }
-            addCouponHistoryRecord(fresh, coupon, finalStatus, { closeActive: false });
-            cleanupAfter = { slotIndex, label: finalStatus === "loss" ? "Kaybeden kombine kupon" : "Kazanan kombine kupon" };
-          } else {
-            applySlotResult(fresh, mode, slotIndex, finalStatus);
-            cleanupAfter = { slotIndex, label: finalStatus === "loss" ? "Kaybeden bahis" : "Kazanan bahis" };
-          }
-        }
-        saveState(fresh);
-        if (cleanupAfter) setTimeout(() => askActiveBetCleanup(cleanupAfter.slotIndex, cleanupAfter.label), 60);
       } else if (action.type === "deleteHistory") {
         deleteHistoryRecord(action.mode, action.id);
       } else if (action.type === "restoreHistory") {
@@ -2947,72 +2772,29 @@
       const i = Number(slotRaw || 0);
       const mi = Number(matchRaw || 0);
       const status = statusRaw === "loss" ? "loss" : "win";
-      const fresh = loadState();
-      const list = fresh.modeSlots.bet;
+      const list = state.modeSlots.bet;
       if (!list[i]) return;
-      const groupedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === i);
+      const groupedCoupon = getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === i);
       const matches = groupedCoupon ? groupedCoupon.matches : getSlotMatches(list[i]);
       const currentStatus = matches[mi]?.status || "";
       const nextStatus = currentStatus === status ? "pending" : status;
-      const keepActivePanelOpen = PENDING_BOARD_OPEN_MODE === "bet" || (mount?.dataset?.rollingFloating === "1");
-      ACTIVE_COMBO_DETAIL_SLOT = keepActivePanelOpen ? i : null;
-      applyComboLegVisualResult(fresh, i, mi, nextStatus);
-      saveState(fresh);
-      if (keepActivePanelOpen) PENDING_BOARD_OPEN_MODE = "bet";
-      refresh();
-    }));
-    mount.querySelectorAll("[data-active-card-clear]").forEach(btn => btn.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      const [modeRaw, slotRaw] = String(btn.dataset.activeCardClear || "bet:0").split(":");
-      const mode = modeRaw === "crypto" ? "crypto" : "bet";
-      const slotIndex = Number(slotRaw || 0);
-      if (mode !== "bet") return;
-      const confirmFresh = loadState();
-      const confirmCoupon = getBetCouponGroups(confirmFresh).coupons.find(c => Number(c.slotIndex || 0) === slotIndex);
-      const isComboClear = !!(confirmCoupon && Array.isArray(confirmCoupon.matches) && confirmCoupon.matches.length > 1);
-      openTargetResultConfirm({
-        title: isComboClear ? "Tüm maçlar silinsin mi?" : "Bahis temizlensin mi?",
-        message: isComboClear ? "Tüm maçları silmek istediğinizden emin misiniz?" : "Bahisi temizlemek istediğinizden emin misiniz? Bu işlem aktif detay ve ana tablodaki ilgili bahis alanını temizler.",
-        okText: isComboClear ? "Tüm maçları sil" : "Evet, temizle",
-        cancelText: "Vazgeç",
-        tone: "danger"
-      }, () => {
-        const fresh = loadState();
-        const coupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex || 0) === slotIndex);
-        if (coupon) clearBetCouponSlots(fresh, coupon);
-        else resetBetSlot(fresh, slotIndex);
-        PENDING_BOARD_OPEN_MODE = "bet";
-        ACTIVE_COMBO_DETAIL_SLOT = null;
-        saveState(fresh);
-        renderFloatingPanel();
-        renderModule();
-      });
-    }));
-    mount.querySelectorAll("[data-coupon-final]").forEach(btn => btn.addEventListener("click", () => {
-      const [modeRaw, slotRaw, statusRaw] = String(btn.dataset.couponFinal || "bet:0:win").split(":");
-      const mode = modeRaw === "crypto" ? "crypto" : "bet";
-      const slotIndex = Number(slotRaw || 0);
-      const status = statusRaw === "loss" ? "loss" : "win";
-      const fresh = loadState();
-      const slot = fresh.modeSlots?.[mode]?.[slotIndex];
-      if (!slot || !slotHasUserEntry(slot, mode)) {
-        alert(mode === "crypto" ? "Önce işlem adını yaz." : "Önce maç adını yaz.");
-        return;
-      }
-      const label = status === "loss" ? "KAYBETTİ" : "KAZANDI";
-      CONFIRM_RETURN_PANEL_MODE = mode;
+      ACTIVE_COMBO_DETAIL_SLOT = i;
+      const matchName = matches[mi]?.name || `Maç ${mi + 1}`;
+      const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || "bet") : (PENDING_BOARD_OPEN_MODE || null);
+      if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
       CONFIRM_DIALOG = {
-        type: "couponFinal",
-        mode,
-        slot: slotIndex,
-        status,
-        keepActivePanel: mode,
-        tone: status === "loss" ? "danger" : "success",
-        title: status === "loss" ? "Kupon kaybetti onayı" : "Kupon kazandı onayı",
-        message: `Bu kuponu ${label} olarak sonuçlandırmak istiyor musun?`,
-        detail: "Maç satırındaki küçük Kazandı/Kaybetti seçimleri artık uyarı vermez; bu buton kupon sonucunu Geçmiş/Rapor merkezine işler.",
-        confirmText: status === "loss" ? "Kupon Kaybetti" : "Kupon Kazandı"
+        type: "comboMatch",
+        slot: i,
+        match: mi,
+        status: nextStatus,
+        keepActivePanel: keepPanel,
+        tone: nextStatus === "loss" ? "danger" : "success",
+        title: nextStatus === "pending" ? "Maçı bekliyor durumuna al" : "Kombine maç sonucunu onayla",
+        message: nextStatus === "pending"
+          ? `${matchName} tekrar BEKLİYOR durumuna alınacak.`
+          : `${matchName} için ${nextStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
+        detail: nextStatus === "pending" ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur." : "Kombine tüm maçlar sonuçlanana kadar aktif listede kalır.",
+        confirmText: nextStatus === "pending" ? "BEKLİYOR olarak işaretle" : (nextStatus === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle")
       };
       refresh();
     }));
@@ -3041,38 +2823,40 @@
     }));
     mount.querySelectorAll("button[data-status]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.mode, i = Number(btn.dataset.slot);
-      const fresh = loadState();
-      const list = mode === "crypto" ? fresh.modeSlots.crypto : fresh.modeSlots.bet;
+      const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
       if (!list[i]) list[i] = createSlot(mode, i);
       const nextStatus = btn.dataset.status;
       if (!slotHasUserEntry(list[i], mode)) {
         alert(mode === "crypto" ? "Önce işlem adını yaz." : "Önce maç adını yaz.");
         return;
       }
-      if (mode === "bet" && (nextStatus === "win" || nextStatus === "loss")) {
-        const comboRef = comboLegRefForSlot(fresh, i);
-        if (comboRef && Array.isArray(comboRef.matches) && comboRef.matches.length > 1) {
-          const currentStatus = comboRef.status || "";
-          const finalStatus = currentStatus === nextStatus ? "pending" : nextStatus;
-          ACTIVE_COMBO_DETAIL_SLOT = comboRef.slotIndex;
-          applyComboLegVisualResult(fresh, comboRef.slotIndex, comboRef.matchIndex, finalStatus);
-          saveState(fresh);
-          const keepActiveBetPanel = PENDING_BOARD_OPEN_MODE === "bet";
-          if (keepActiveBetPanel) renderFloatingPanel();
-          renderModule();
-          return;
-        }
-      }
       if (nextStatus === "win" || nextStatus === "loss") {
         const currentStatus = list[i]?.status || "";
         const finalStatus = currentStatus === nextStatus ? "pending" : nextStatus;
-        applySlotResult(fresh, mode, i, finalStatus);
-        saveState(fresh);
+        const label = mode === "crypto" ? "kripto işlem" : "bahis / maç";
+        const resultLabel = finalStatus === "pending"
+          ? "BEKLİYOR"
+          : (finalStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ"));
+        const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
+        const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
+        if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
+        CONFIRM_DIALOG = {
+          type: "settle",
+          mode,
+          slot: i,
+          status: finalStatus,
+          keepActivePanel: keepPanel,
+          tone: finalStatus === "loss" ? "danger" : "success",
+          title: finalStatus === "pending" ? "Tekrar bekliyor durumuna al" : "Sonucu kaydetmeden önce onayla",
+          message: finalStatus === "pending" ? `${name} tekrar BEKLİYOR durumuna alınacak.` : `${name} için sonuç: ${resultLabel}.`,
+          detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et.",
+          confirmText: finalStatus === "pending" ? "BEKLİYOR olarak kaydet" : `${resultLabel} olarak kaydet`
+        };
         refresh();
         return;
       }
-      applySlotResult(fresh, mode, i, nextStatus);
-      saveState(fresh);
+      applySlotResult(state, mode, i, nextStatus);
+      saveState(state);
       refresh();
     }));
     mount.querySelectorAll("button[data-clear]").forEach(btn => btn.addEventListener("click", () => {
@@ -3121,21 +2905,6 @@
       return false;
     };
     document.addEventListener("click", openFromExcelButton, true);
-  }
-
-  if (!window.__omegaV867PendingModalCloseBound) {
-    window.__omegaV867PendingModalCloseBound = true;
-    document.addEventListener("click", event => {
-      const btn = event.target && event.target.closest ? event.target.closest("[data-pending-close]") : null;
-      if (!btn || !btn.closest("#omega-rolling-feature-host")) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-      PENDING_BOARD_OPEN_MODE = null;
-      CONFIRM_RETURN_PANEL_MODE = null;
-      ACTIVE_COMBO_DETAIL_SLOT = null;
-      renderFloatingPanel();
-    }, true);
   }
 
   window.omega_RenderRollingModule = renderModule;
