@@ -8711,3 +8711,151 @@ html.rolling-hash-boot::before {
   font-size: 16px !important;
   font-weight: 950 !important;
 }
+
+
+/* V838: Bahis/Kripto başlık renkleri + seçili buton kontrastı */
+.rolling-v48-rail .v835-bet-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.bet .v835-bet-detail-head span {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(251,191,36,.20), rgba(147,51,234,.18)) !important;
+  border: 1px solid rgba(251,191,36,.36) !important;
+  color: #fde68a !important;
+  text-shadow: 0 0 14px rgba(251,191,36,.24) !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.bet.done.win .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(22,101,52,.68), rgba(20,83,45,.34)) !important;
+  border-color: rgba(74,222,128,.78) !important;
+  color: #dcfce7 !important;
+  text-shadow: 0 0 14px rgba(34,197,94,.40) !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.bet.done.loss .v835-bet-detail-head span {
+  background: linear-gradient(135deg, rgba(127,29,29,.72), rgba(69,10,10,.46)) !important;
+  border-color: rgba(248,113,113,.82) !important;
+  color: #fee2e2 !important;
+  text-shadow: 0 0 14px rgba(239,68,68,.42) !important;
+}
+
+.rolling-v48-rail .v824-target-crypto-entry-title span,
+.rolling-v48-rail .v812-target-self.crypto .v812-target-self-title b,
+.rolling-v48-rail .v812-target-self.crypto .v814-target-self-title b {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(56,189,248,.18), rgba(59,130,246,.18)) !important;
+  border: 1px solid rgba(125,211,252,.38) !important;
+  color: #bae6fd !important;
+  text-shadow: 0 0 14px rgba(56,189,248,.30) !important;
+}
+
+.rolling-v48-rail .v814-crypto-detail-head span,
+.rolling-v48-rail .v819-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto .v814-crypto-detail-head span {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(56,189,248,.22), rgba(14,165,233,.12)) !important;
+  border: 1px solid rgba(125,211,252,.44) !important;
+  color: #e0f2fe !important;
+  text-shadow: 0 0 14px rgba(56,189,248,.34) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.crypto.done.tp .v814-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto.done.win .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(22,101,52,.64), rgba(20,83,45,.28)) !important;
+  border-color: rgba(74,222,128,.76) !important;
+  color: #dcfce7 !important;
+  text-shadow: 0 0 14px rgba(34,197,94,.40) !important;
+}
+
+.rolling-v48-rail .v812-target-detail-row.crypto.done.stop .v814-crypto-detail-head span,
+.rolling-v48-rail .v812-target-detail-row.crypto.done.loss .v814-crypto-detail-head span {
+  background: linear-gradient(135deg, rgba(127,29,29,.70), rgba(69,10,10,.42)) !important;
+  border-color: rgba(248,113,113,.82) !important;
+  color: #fee2e2 !important;
+  text-shadow: 0 0 14px rgba(239,68,68,.42) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win {
+  background: linear-gradient(135deg, #064e3b, #022c22) !important;
+  border: 1px solid rgba(16,185,129,.74) !important;
+  color: #d1fae5 !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss {
+  background: linear-gradient(135deg, #7f1d1d, #3f0707) !important;
+  border: 1px solid rgba(239,68,68,.78) !important;
+  color: #fee2e2 !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active {
+  background: linear-gradient(135deg, #22c55e, #15803d) !important;
+  border-color: #bbf7d0 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.07) !important;
+  box-shadow: 0 0 0 3px rgba(34,197,94,.42), 0 0 22px rgba(34,197,94,.52), inset 0 0 0 1px rgba(255,255,255,.24) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active {
+  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+  border-color: #fecaca !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.07) !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.54), inset 0 0 0 1px rgba(255,255,255,.24) !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: translateZ(0) !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check {
+  background: linear-gradient(135deg, #064e3b, #022c22) !important;
+  border: 1px solid rgba(16,185,129,.74) !important;
+  color: #d1fae5 !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x {
+  background: linear-gradient(135deg, #7f1d1d, #3f0707) !important;
+  border: 1px solid rgba(239,68,68,.78) !important;
+  color: #fee2e2 !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.tp-check.active,
+.rolling-v48-rail .v813-crypto-detail-line.tp.done .v815-result-btn.tp-check {
+  background: linear-gradient(135deg, #22c55e, #15803d) !important;
+  border-color: #bbf7d0 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.07) !important;
+  box-shadow: 0 0 0 3px rgba(34,197,94,.42), 0 0 22px rgba(34,197,94,.52), inset 0 0 0 1px rgba(255,255,255,.24) !important;
+}
+
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn.stop-x.active,
+.rolling-v48-rail .v813-crypto-detail-line.stop.done .v815-result-btn.stop-x {
+  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+  border-color: #fecaca !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.07) !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.54), inset 0 0 0 1px rgba(255,255,255,.24) !important;
+}
