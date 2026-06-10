@@ -745,11 +745,12 @@
     const rows = kind === "active" ? v768LiveRows(mode) : v768HistoryRows(mode);
     if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif kutu yok. Maç/işlem yazınca burada görünür." : "Geçmiş kayıt yok."}</div>`;
     return rows.map(row => {
-      const comboHtml = (!isCrypto && row.combo?.length) ? `<ul>${[`<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`, ...row.combo.map(x => `<li>${v763EscapeHtml(x.note || "Maç")} <b>${Number(x.odds || 0).toFixed(2)}</b></li>`)].join("")}</ul>` : "";
+      const comboHtml = (!isCrypto && row.combo?.length) ? `<ul class="v892-active-match-list">${[`<li><span>${v763EscapeHtml(row.note || "Maç")}</span><b>${Number(row.odds || 0).toFixed(2)}</b></li>`, ...row.combo.map(x => `<li><span>${v763EscapeHtml(x.note || "Maç")}</span><b>${Number(x.odds || 0).toFixed(2)}</b></li>`)].join("")}</ul>` : "";
       const title = isCrypto ? (row.note || "İşlem") : (row.combo?.length ? "Kombine" : (row.note || "Maç"));
       const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
       const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Tahmini Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
-      return `<article class="v768-feature-card"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Kutu ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
+      const cardClass = !isCrypto && kind === "active" ? "v768-feature-card v892-bet-active-card" : "v768-feature-card";
+      return `<article class="${cardClass}"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
     }).join("");
   }
 
@@ -841,7 +842,7 @@
     const reportRows = v768HistoryRows(m);
     const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>Toplam K/Z</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
     const activePhotoBtn = k === "active" && m === "bet" ? `<button type="button" class="v891-feature-photo-btn" data-v891-active-photo title="Aktif bahisler fotoğrafı" aria-label="Aktif bahisler fotoğrafı"><i class="fa-solid fa-camera"></i></button>` : "";
-    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük modal</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
+    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
     host.style.display = "block";
   }
 
@@ -953,7 +954,7 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Kutu ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><button type="button" data-v777-photo-download>Resmi İndir PNG</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Bahis ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><button type="button" data-v777-photo-download>Resmi İndir PNG</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
@@ -965,7 +966,7 @@
       if (w) w.document.write(`<img src="${uri}" style="max-width:100%;height:auto;background:#020617;display:block;margin:0 auto;">`);
     });
     host.querySelector("[data-v777-photo-download]")?.addEventListener("click", () => {
-      v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-kutu-${slot + 1}.png`);
+      v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-bahis-${slot + 1}.png`);
     });
     return false;
   };
