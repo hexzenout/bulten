@@ -602,17 +602,21 @@
       if (!status && finalStatus === "loss" && rawResults.some(Boolean) === false) status = "loss";
       const name = leg.note || `Maç ${idx + 1}`;
       const odds = Number(leg.odds || 0) ? Number(leg.odds).toFixed(2) : "-";
+      const safeName = v763EscapeHtml(name);
       return `<li class="${v847BetLegStatusClass(status)}">
-        <span>${idx + 1}. ${v763EscapeHtml(name)}</span>
+        <span title="${safeName}">${idx + 1}. ${safeName}</span>
         <b>${odds}</b>
         <em>${v847BetLegStatusLabel(status)}</em>
       </li>`;
     }).join("");
     return `<div class="kapsul v32 v847-shot-result ${finalStatus}">
-      <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
+      <button class="k-undo v32 v847-shot-back" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al"><i class="fa-solid fa-arrow-rotate-left"></i><span>Geri Al</span></button>
       <div class="v847-shot-head">
         <b>${title}</b>
-        <span class="${finalStatus}">${finalLabel}</span>
+        <div class="v847-shot-head-tools">
+          <span class="${finalStatus}">${finalLabel}</span>
+          <button type="button" class="v847-shot-camera" onclick="return omega_RollingResultPhoto(event, ${day}, ${slot})" title="Sonuç fotoğrafı indir"><i class="fa-solid fa-camera"></i></button>
+        </div>
       </div>
       <ul class="v847-shot-lines">${rowsHtml}</ul>
       <div class="v847-shot-footer">
@@ -891,6 +895,22 @@
 
 
   function v776SlotPhotoRows(day, slot) {
+    const plan = ensureRollingPlan();
+    const resolved = plan.ops?.[day]?.[slot] || null;
+    if (resolved) {
+      const combo = Array.isArray(resolved.combo) ? resolved.combo : [];
+      const rawResults = Array.isArray(resolved.comboResults) ? resolved.comboResults : [];
+      const rows = [{ note: resolved.note || "Maç", odds: Number(resolved.odds || 0) }, ...combo.map(row => ({ note: row.note || "Maç", odds: Number(row.odds || 0) }))].map((row, idx) => {
+        let result = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
+        if (!result && resolved.res === "win") result = "win";
+        if (!result && resolved.res === "loss" && !rawResults.some(Boolean)) result = "loss";
+        return { ...row, result };
+      });
+      const stake = Number(resolved.amt || 0);
+      const totalOdds = v763BetTotalOdds(Number(resolved.odds || 0), combo);
+      const possible = stake && totalOdds ? stake * totalOdds : 0;
+      return { rows, stake, totalOdds, possible, result: resolved.res === "loss" ? "loss" : "win" };
+    }
     const pending = v774GetPendingSlot(day, slot);
     const baseNote = (document.getElementById(`e-n-${day}-${slot}`)?.value || pending?.note || "").trim();
     const baseOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || pending?.odds || 0);
@@ -922,7 +942,10 @@
     const possibleLabel = data.possible ? v768Money(data.possible) : "-";
     const rowHtml = data.rows.map((row, idx) => {
       const y = 150 + idx * 48;
-      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text><text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
+      const result = row.result === "loss" ? "loss" : row.result === "win" ? "win" : "";
+      const statusText = result === "loss" ? "KAYBETTİ" : result === "win" ? "KAZANDI" : "";
+      const statusColor = result === "loss" ? "#ef4444" : "#22c55e";
+      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text>${statusText ? `<text x="720" y="${y - 3}" text-anchor="end" fill="${statusColor}" font-size="17" font-family="Arial" font-weight="900">${statusText}</text>` : ""}<text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
     }).join('');
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · KUTU ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
@@ -1001,6 +1024,21 @@
     host.querySelector("[data-v777-photo-download]")?.addEventListener("click", () => {
       v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-kutu-${slot + 1}.png`);
     });
+    return false;
+  };
+
+  window.omega_RollingResultPhoto = function(event, day, slot) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    const uri = v776BuildSlotPhotoSvg(day, slot);
+    if (!uri) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Sonuç fotoğrafı hazırlanamadı.");
+      else alert("Sonuç fotoğrafı hazırlanamadı.");
+      return false;
+    }
+    const ok = confirm("Bu sonuç ekran görüntüsünü PNG olarak indirmek istiyor musun?");
+    if (ok) v777DownloadPhotoPng(uri, `bahis-sonuc-${_ACTIVE_EXCEL_DAYS}-gun-${day}-kutu-${slot + 1}.png`);
     return false;
   };
 

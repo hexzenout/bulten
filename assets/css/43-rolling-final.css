@@ -9407,3 +9407,113 @@ html.rolling-hash-boot::before {
 #rolling-excel-overlay .v847-shot-footer b.neg {
   color: #ef4444 !important;
 }
+
+
+/* V848: Global autofill koyu tema koruması */
+html input:-webkit-autofill,
+html input:-webkit-autofill:hover,
+html input:-webkit-autofill:focus,
+html textarea:-webkit-autofill,
+html textarea:-webkit-autofill:hover,
+html textarea:-webkit-autofill:focus,
+html select:-webkit-autofill,
+html select:-webkit-autofill:hover,
+html select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #020617 inset !important;
+  box-shadow: 0 0 0 1000px #020617 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+  border-color: rgba(251,191,36,.42) !important;
+  color: #f8fafc !important;
+  transition: background-color 999999s ease-out 0s, color 999999s ease-out 0s !important;
+}
+
+html input:-webkit-autofill::first-line,
+html textarea:-webkit-autofill::first-line {
+  color: #f8fafc !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+}
+
+/* V848: 7 Günlük Rolling sonuç kartı geri al + kamera + uzun yazı hover */
+#rolling-excel-overlay .v847-shot-result {
+  position: relative !important;
+}
+
+#rolling-excel-overlay .v847-shot-back.k-undo.v32 {
+  position: absolute !important;
+  right: 10px !important;
+  top: 10px !important;
+  width: auto !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  padding: 0 8px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: rgba(15,23,42,.88) !important;
+  border: 1px solid rgba(148,163,184,.28) !important;
+  color: #e5e7eb !important;
+  font-size: .63rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  z-index: 3 !important;
+  cursor: pointer !important;
+}
+
+#rolling-excel-overlay .v847-shot-back.k-undo.v32 i {
+  font-size: 11px !important;
+}
+
+#rolling-excel-overlay .v847-shot-back.k-undo.v32:hover {
+  color: #fff !important;
+  border-color: rgba(251,191,36,.55) !important;
+  background: rgba(30,41,59,.95) !important;
+}
+
+#rolling-excel-overlay .v847-shot-head {
+  padding-right: 96px !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  justify-content: flex-end !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera {
+  width: 27px !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  border-radius: 9px !important;
+  border: 1px solid rgba(251,191,36,.52) !important;
+  background: linear-gradient(145deg, rgba(251,191,36,.92), rgba(245,158,11,.76)) !important;
+  color: #111827 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 5px 14px rgba(245,158,11,.22) !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera i {
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera:hover {
+  filter: brightness(1.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span[title] {
+  cursor: help !important;
+}
+
+#rolling-excel-overlay .v847-shot-lines span[title]:hover {
+  color: #ffffff !important;
+  text-decoration: underline dotted rgba(251,191,36,.55) !important;
+  text-underline-offset: 3px !important;
+}
