@@ -468,11 +468,10 @@
     const first = ordered[0] || base;
     const sourceIndices = ordered.map(row => row.index);
     const rest = ordered.slice(1).map(row => ({ name: cleanText(row.name), odds: row.odds, sourceIndex: row.index }));
-    const sourceResults = ordered.map((row, idx) => {
-      const firstCombo = Array.isArray(row.comboResults) ? cleanText(row.comboResults[0] || "") : "";
+    const sourceResults = ordered.map(row => {
+      const ownCombo = Array.isArray(row.comboResults) ? cleanText(row.comboResults[0] || "") : "";
       const ownStatus = (row.status === "win" || row.status === "loss") ? row.status : "";
-      const baseCombo = Array.isArray(base.comboResults) ? cleanText(base.comboResults[idx] || "") : "";
-      return firstCombo || ownStatus || baseCombo || "";
+      return ownCombo || ownStatus || "";
     });
     return {
       ...base,
@@ -488,8 +487,8 @@
   function getSlotMatches(slot) {
     const matches = [];
     const sourceIndices = Array.isArray(slot?.comboSourceIndices) ? slot.comboSourceIndices : [];
-    const baseStatus = slot?.comboResults?.[0] || ((slot?.status === "win" || slot?.status === "loss") ? slot.status : "");
-    if (cleanText(slot?.name)) matches.push({ name: cleanText(slot.name), odds: slot.odds, index: 0, sourceIndex: Number.isInteger(sourceIndices[0]) ? sourceIndices[0] : (Number.isInteger(slot?.index) ? slot.index : 0), status: baseStatus });
+    const baseStatus = slot?.comboResults?.[0] || "";
+    if (cleanText(slot?.name)) matches.push({ name: cleanText(slot.name), odds: slot.odds, index: 0, sourceIndex: Number.isInteger(sourceIndices[0]) ? sourceIndices[0] : undefined, status: baseStatus });
     if (Array.isArray(slot?.extraMatches)) {
       slot.extraMatches.forEach((m, idx) => {
         if (!cleanText(m?.name)) return;
@@ -569,24 +568,29 @@
     const freshStatus = status === "loss" ? "loss" : status === "win" ? "win" : "";
     const list = state?.modeSlots?.bet || [];
     const coupon = getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === Number(baseIndex));
-    const matches = coupon ? coupon.matches : getSlotMatches(list[baseIndex] || {});
+    const slot = list[baseIndex];
+    const matches = coupon ? coupon.matches : getSlotMatches(slot || {});
     const match = matches[matchIndex] || {};
-    const sourceIndex = Number.isInteger(match.sourceIndex) ? match.sourceIndex : Number(baseIndex);
-    if (list[sourceIndex]) {
-      list[sourceIndex].status = "pending";
-      list[sourceIndex].pnl = 0;
+    const isAutoCombo = !!(coupon?.row?.autoCombo || Array.isArray(coupon?.row?.comboSourceIndices));
+    const sourceIndex = Number.isInteger(match.sourceIndex) ? match.sourceIndex : null;
+
+    if (isAutoCombo && sourceIndex !== null && list[sourceIndex]) {
       if (!Array.isArray(list[sourceIndex].comboResults)) list[sourceIndex].comboResults = [];
       if (freshStatus) list[sourceIndex].comboResults[0] = freshStatus;
       else delete list[sourceIndex].comboResults[0];
       list[sourceIndex].comboResults = list[sourceIndex].comboResults.map(v => (v === "win" || v === "loss") ? v : "");
+      list[sourceIndex].status = "pending";
+      list[sourceIndex].pnl = 0;
+      return;
     }
-    if (list[baseIndex]) {
-      list[baseIndex].status = "pending";
-      list[baseIndex].pnl = 0;
-      if (!Array.isArray(list[baseIndex].comboResults)) list[baseIndex].comboResults = [];
-      if (freshStatus) list[baseIndex].comboResults[matchIndex] = freshStatus;
-      else delete list[baseIndex].comboResults[matchIndex];
-      list[baseIndex].comboResults = list[baseIndex].comboResults.map(v => (v === "win" || v === "loss") ? v : "");
+
+    if (slot) {
+      if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
+      if (freshStatus) slot.comboResults[matchIndex] = freshStatus;
+      else delete slot.comboResults[matchIndex];
+      slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
+      slot.status = "pending";
+      slot.pnl = 0;
     }
   }
 
@@ -986,7 +990,7 @@
           name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
           matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
           matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
-          matchResults: coupon.matches.map(m => cleanText(m.status || coupon.row.status || "")),
+          matchResults: coupon.matches.map(m => cleanText(m.status || "")),
           stake: Number(coupon.row.stake || 0),
           odds: Number(totals.odds || 0),
           possible: Number(totals.possibleWin || 0)
@@ -1180,7 +1184,7 @@
         type: v812BetLegs(row).length > 1 ? 'Kombine' : 'Bahis',
         matchLines: v812BetLegs(row).map(leg => cleanText(leg.name || '') || 'Maç'),
         matchOdds: v812BetLegs(row).map(leg => Number(leg.odds || 0)),
-        matchResults: v812BetLegs(row).map(leg => cleanText(leg.result || row.result || '')),
+        matchResults: v812BetLegs(row).map(leg => cleanText(leg.result || '')),
         stake: Number(row.stake || 0),
         odds: Number(v812BetOddsProduct(row) || 0),
         possible: Number(v812BetPotential(row) || 0)
@@ -2005,7 +2009,7 @@
         name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
         matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
         matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
-        matchResults: coupon.matches.map(m => cleanText(m.status || coupon.row.status || "")),
+        matchResults: coupon.matches.map(m => cleanText(m.status || "")),
         stake: Number(coupon.row.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
@@ -2890,9 +2894,20 @@
         const fresh = loadState();
         const baseIndex = Number(action.slot || 0);
         ACTIVE_COMBO_DETAIL_SLOT = baseIndex;
-        if (fresh.modeSlots.bet[baseIndex]) {
+        const slot = fresh.modeSlots.bet[baseIndex];
+        if (slot) {
+          if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
           const matchIndex = Number(action.match || 0);
-          markBetMatchStatus(fresh, baseIndex, matchIndex, action.status === "pending" ? "" : action.status);
+          if (action.status === "pending") delete slot.comboResults[matchIndex];
+          else slot.comboResults[matchIndex] = action.status === "loss" ? "loss" : "win";
+          slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
+          const updatedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === baseIndex);
+          const matches = updatedCoupon ? updatedCoupon.matches : getSlotMatches({ ...slot, index: baseIndex });
+          const allDone = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
+          if (allDone) {
+            const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
+            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
+          }
           saveState(fresh);
         }
       } else if (action.type === "deleteHistory") {
