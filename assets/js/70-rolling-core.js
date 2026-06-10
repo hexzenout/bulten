@@ -58,22 +58,35 @@
   }
 
 
-  if (!window.__omegaV876PendingCloseGuardBound) {
-    window.__omegaV876PendingCloseGuardBound = true;
-    document.addEventListener("click", function(event) {
+  if (!window.__omegaV877PendingCloseGuardBound) {
+    window.__omegaV877PendingCloseGuardBound = true;
+    const pendingCloseGuard = function(event) {
       const target = event.target;
       if (!(target instanceof Element)) return;
+      if (!PENDING_BOARD_OPEN_MODE) return;
+
       const closeBtn = target.closest("[data-pending-close]");
-      const overlayBlank = target.classList && target.classList.contains("v758-pending-overlay");
-      if (!closeBtn && !overlayBlank) return;
+      const overlay = target.closest(".v758-pending-overlay");
+      const pendingModal = target.closest(".v758-pending-modal");
+      const featureHost = target.closest("#omega-rolling-feature-host");
+      const confirmLayer = target.closest(".v757-confirm-overlay");
+
+      const clickedOverlayBlank = !!overlay && !pendingModal && !confirmLayer;
+      const clickedHostBlank = !!featureHost && !pendingModal && !confirmLayer;
+
+      if (!closeBtn && !clickedOverlayBlank && !clickedHostBlank) return;
       event.preventDefault();
       event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
       closePendingPanelNow();
-    }, true);
+    };
+    document.addEventListener("pointerdown", pendingCloseGuard, true);
+    document.addEventListener("click", pendingCloseGuard, true);
     document.addEventListener("keydown", function(event) {
       if (event.key !== "Escape") return;
       if (!PENDING_BOARD_OPEN_MODE) return;
       event.preventDefault();
+      event.stopPropagation();
       closePendingPanelNow();
     }, true);
   }

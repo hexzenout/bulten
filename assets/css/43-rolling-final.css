@@ -10648,3 +10648,168 @@ select:-webkit-autofill {
   background: linear-gradient(90deg, rgba(127,29,29,.50), rgba(127,29,29,.18)) !important;
   border-color: rgba(248,113,113,.42) !important;
 }
+
+
+/* V877: Kullanıcının beğendiği eski neon KAZANDI/KAYBETTİ efekti + sabit ölçü + Kasa Hedefi final butonları */
+#rolling-excel-overlay .rolling-v47-actions.v757-actions,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions {
+  display: inline-grid !important;
+  grid-template-columns: 64px 64px !important;
+  gap: 6px !important;
+  align-items: center !important;
+  justify-content: start !important;
+  min-width: 134px !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button {
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  padding: 0 6px !important;
+  border-width: 1px !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+  line-height: 1 !important;
+  backface-visibility: hidden !important;
+}
+
+#rolling-excel-overlay .v757-status-pill,
+#omega-rolling-feature-host .v757-status-pill {
+  min-width: 76px !important;
+  width: 76px !important;
+  max-width: 76px !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+
+#rolling-excel-overlay .rolling-v47-table th:nth-child(7),
+#rolling-excel-overlay .rolling-v47-table td:nth-child(7) {
+  min-width: 92px !important;
+}
+
+#rolling-excel-overlay .rolling-v47-table th:nth-child(9),
+#rolling-excel-overlay .rolling-v47-table td:nth-child(9) {
+  min-width: 148px !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win,
+#rolling-excel-overlay .v763-combo-match-list button.win,
+#omega-rolling-feature-host .v763-combo-match-list button.win,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .win,
+.rolling-v48-rail .v871-target-final-actions .win {
+  background: rgba(6, 78, 59, .72) !important;
+  border: 1px solid rgba(52, 211, 153, .50) !important;
+  color: #bbf7d0 !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+  outline: 0 solid transparent !important;
+  transform: none !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss,
+#rolling-excel-overlay .v763-combo-match-list button.loss,
+#omega-rolling-feature-host .v763-combo-match-list button.loss,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .loss,
+.rolling-v48-rail .v871-target-final-actions .loss {
+  background: rgba(127, 29, 29, .72) !important;
+  border: 1px solid rgba(248, 113, 113, .50) !important;
+  color: #fecaca !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+  outline: 0 solid transparent !important;
+  transform: none !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win.selected,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win.selected,
+#rolling-excel-overlay .v763-combo-match-list button.win.selected,
+#omega-rolling-feature-host .v763-combo-match-list button.win.selected,
+#rolling-excel-overlay .v763-combo-match-list button.win.active,
+#omega-rolling-feature-host .v763-combo-match-list button.win.active,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .win.active,
+.rolling-v48-rail .v871-target-final-actions .win.active {
+  color: #052e16 !important;
+  background: linear-gradient(135deg, #22c55e, #86efac) !important;
+  border-color: rgba(134, 239, 172, .86) !important;
+  box-shadow:
+    0 0 18px rgba(34,197,94,.58),
+    0 0 0 1px rgba(134,239,172,.30) inset,
+    inset 0 1px 0 rgba(255,255,255,.32) !important;
+  outline: 1px solid rgba(134,239,172,.45) !important;
+  outline-offset: 0 !important;
+  transform: none !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss.selected,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss.selected,
+#rolling-excel-overlay .v763-combo-match-list button.loss.selected,
+#omega-rolling-feature-host .v763-combo-match-list button.loss.selected,
+#rolling-excel-overlay .v763-combo-match-list button.loss.active,
+#omega-rolling-feature-host .v763-combo-match-list button.loss.active,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .loss.active,
+.rolling-v48-rail .v871-target-final-actions .loss.active {
+  color: #fee2e2 !important;
+  background: linear-gradient(135deg, #991b1b, #ef4444) !important;
+  border-color: rgba(248, 113, 113, .84) !important;
+  box-shadow:
+    0 0 18px rgba(239,68,68,.58),
+    0 0 0 1px rgba(248,113,113,.28) inset,
+    inset 0 1px 0 rgba(255,255,255,.24) !important;
+  outline: 1px solid rgba(248,113,113,.42) !important;
+  outline-offset: 0 !important;
+  transform: none !important;
+}
+
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions,
+.rolling-v48-rail .v871-target-final-actions {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 7px !important;
+  width: 100% !important;
+  align-items: stretch !important;
+}
+
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions button,
+.rolling-v48-rail .v871-target-final-actions button {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 6px !important;
+  border-width: 1px !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+  font-size: .64rem !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  transform: none !important;
+}
+
+#omega-rolling-feature-host .v758-pending-overlay {
+  cursor: pointer !important;
+}
+#omega-rolling-feature-host .v758-pending-modal {
+  cursor: default !important;
+}
+#omega-rolling-feature-host [data-pending-close] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 50 !important;
+}
