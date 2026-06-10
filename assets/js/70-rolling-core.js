@@ -1003,11 +1003,12 @@
         rows.push({
           text: line,
           odds: partIndex === 0 ? Number(odds[idx] || 0) : 0,
-          result: partIndex === 0 ? cleanText(results[idx] || "") : ""
+          result: partIndex === 0 ? cleanText(results[idx] || "") : "",
+          type: cleanText(entry.type || "")
         });
       });
     });
-    return rows.length ? rows : [{ text: "Maç", odds: Number(entry.odds || 0), result: cleanText(entry.status || "") }];
+    return rows.length ? rows : [{ text: "Maç", odds: Number(entry.odds || 0), result: cleanText(entry.status || ""), type: cleanText(entry.type || "") }];
   }
 
   function v788PhotoTitle(rows, titleText) {
@@ -1045,7 +1046,8 @@
         const hasResult = !!line.result;
         const rowH = Math.max(40, 16 + wrapped.length * lineH);
         const statusLoss = line.result === "loss" || line.result === "stop";
-        const statusText = statusLoss ? "KAYBETTİ" : "KAZANDI";
+        const isCryptoPhotoLine = line.type === "Kripto";
+        const statusText = isCryptoPhotoLine ? (statusLoss ? "ZARAR" : "KÂR") : (statusLoss ? "KAYBETTİ" : "KAZANDI");
         const statusColor = statusLoss ? "#ef4444" : "#22c55e";
         const statusX = oddsX - 76;
         rowHtml.push(`
@@ -1108,11 +1110,11 @@
     tps.forEach((tp, idx) => {
       const target = cleanText(tp.target || '') || '-';
       const profit = tp.profit !== '' ? signedMoney(Number(tp.profit || 0)) : '+$0.00';
-      const status = tp.done || cleanText(item?.result || '') === 'tp' ? ' · KAZANDI' : '';
+      const status = tp.done || cleanText(item?.result || '') === 'tp' ? ' · KÂR' : '';
       pushRow(`TP ${idx + 1} · ${target}`, `${profit}${status}`, '#22c55e');
     });
     if (stopRaw || stopLoss) {
-      const status = cleanText(item?.result || '') === 'stop' ? ' · KAYBETTİ' : '';
+      const status = cleanText(item?.result || '') === 'stop' ? ' · ZARAR' : '';
       pushRow(`STOP · ${stopRaw || '-'}`, `${stopLoss ? '-' + money(stopLoss) : '-$0.00'}${status}`, '#dc2626', '#ef4444');
     }
     const footerY = cursorY + 20;
