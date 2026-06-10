@@ -2374,20 +2374,11 @@
     });
     mount.querySelectorAll('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]').forEach(form => {
       const autosaveMode = form.matches('[data-target-crypto-autosave="1"]') ? "crypto" : "bet";
-      let dirty = false;
-      form.addEventListener('input', () => { dirty = true; }, true);
       form.addEventListener('keydown', event => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
         const saved = saveTargetSelfFromForm(autosaveMode);
-        dirty = false;
         if (saved) refresh();
-      });
-      form.addEventListener('focusout', () => {
-        if (form.dataset.skipAutosaveOnce === '1') {
-          delete form.dataset.skipAutosaveOnce;
-          dirty = false;
-        }
       });
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
@@ -2462,21 +2453,25 @@
         row.result = "";
         const legs = v812BetLegs(row);
         const filled = legs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
-        const allMarked = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win" || cleanText(leg.result || "") === "loss");
-        if (allMarked) row.result = filled.some(leg => cleanText(leg.result || "") === "loss") ? "loss" : "win";
+        const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
+        const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
+        if (anyLoss) row.result = "loss";
+        else if (allWin) row.result = "win";
         saveTargetItems(store);
         refresh();
-        if (allMarked && row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
+        if (row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
       };
       if (!next) { apply(); return; }
+
       const tmpLegs = row.legs.map((leg, idx) => idx === index ? { ...leg, result: next } : { ...leg });
       const filled = tmpLegs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
-      const allMarked = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win" || cleanText(leg.result || "") === "loss");
-      const finalResult = allMarked ? (filled.some(leg => cleanText(leg.result || "") === "loss") ? "loss" : "win") : "";
+      const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
+      const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
+      const finalResult = anyLoss ? "loss" : (allWin ? "win" : "");
       const label = result === "win" ? "Kazandı" : "Kaybetti";
       const title = result === "win" ? "Maç kazandı onayı" : "Maç kaybetti onayı";
       let msg = `Bu maçı "${label}" olarak işlemek istiyor musun?`;
-      if (allMarked) {
+      if (finalResult) {
         const finalLabel = finalResult === "win" ? "Kazandı" : "Kaybetti";
         msg = filled.length > 1
           ? `Bu seçimle kombine kupon "${finalLabel}" olacak. Onaylıyor musun?`

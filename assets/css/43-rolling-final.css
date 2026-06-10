@@ -8432,3 +8432,71 @@ html.rolling-hash-boot::before {
 }
 
 /* Screenshot bahis sonucu: kripto gibi yazı olarak gösterilir, kutu/badge yok */
+
+
+/* V829: Kasa Hedefi performans sert düzeltme */
+.rolling-v48-rail .v796-target-card,
+.rolling-v48-rail .v798-target-card,
+.rolling-v48-rail .v802-target-card,
+.rolling-v48-rail .v810-target-self,
+.rolling-v48-rail .v810-target-self-form,
+.rolling-v48-rail .v824-target-crypto-entry,
+.rolling-v48-rail .v812-target-bet-leg,
+.rolling-v48-rail .v811-target-tp-row,
+.rolling-v48-rail .v812-target-stop-row {
+  contain: layout paint style !important;
+  will-change: auto !important;
+}
+
+.rolling-v48-rail .v810-target-self-form,
+.rolling-v48-rail .v824-target-crypto-entry,
+.rolling-v48-rail .v810-target-self-details {
+  transform: translateZ(0) !important;
+}
+
+.rolling-v48-rail .v810-target-self-form *,
+.rolling-v48-rail .v824-target-crypto-entry *,
+.rolling-v48-rail .v810-target-self-details * {
+  transition: none !important;
+  animation: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.rolling-v48-rail .v810-target-self-form input,
+.rolling-v48-rail .v810-target-self-form button,
+.rolling-v48-rail .v824-target-crypto-entry input,
+.rolling-v48-rail .v824-target-crypto-entry button {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+
+/* V831: Kasa Hedefi formu yazı yazarken hafif mod */
+.rolling-v48-rail .v810-target-self-form,
+.rolling-v48-rail .v824-target-crypto-entry,
+.rolling-v48-rail .v812-target-bet-leg,
+.rolling-v48-rail .v811-target-tp-row,
+.rolling-v48-rail .v812-target-stop-row {
+  contain: layout paint style !important;
+}
+
+.rolling-v48-rail .v810-target-self-form input,
+.rolling-v48-rail .v810-target-self-form button,
+.rolling-v48-rail .v824-target-crypto-entry input,
+.rolling-v48-rail .v824-target-crypto-entry button,
+.rolling-v48-rail .v812-target-bet-leg input,
+.rolling-v48-rail .v811-target-tp-row input,
+.rolling-v48-rail .v812-target-stop-row input {
+  transition: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.rolling-v48-rail .v810-target-self-form input:focus,
+.rolling-v48-rail .v824-target-crypto-entry input:focus {
+  box-shadow: 0 0 0 1px rgba(251,191,36,.16) !important;
+}
