@@ -8122,3 +8122,62 @@ html.rolling-hash-boot::before {
 .rolling-v48-rail .v821-target-card-footer.bet .photo {
   display: none !important;
 }
+
+
+/* V822: Bahis detayında özet satırı kaldırıldı, maç isimleri daha okunur yapıldı */
+.rolling-v48-rail .v813-bet-total-line.v814-bet-total-line {
+  display: none !important;
+}
+
+.rolling-v48-rail .v822-bet-match-list {
+  gap: 8px !important;
+}
+
+.rolling-v48-rail .v822-bet-match-line {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 58px 76px !important;
+  grid-template-areas:
+    "name odds actions" !important;
+  gap: 8px !important;
+  align-items: center !important;
+  padding: 8px 9px !important;
+}
+
+.rolling-v48-rail .v822-bet-match-line span {
+  grid-area: name !important;
+  min-width: 0 !important;
+  display: block !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  line-height: 1.18 !important;
+  max-height: 2.4em !important;
+  text-overflow: clip !important;
+}
+
+.rolling-v48-rail .v822-bet-match-line b {
+  grid-area: odds !important;
+  justify-self: end !important;
+  white-space: nowrap !important;
+}
+
+.rolling-v48-rail .v822-bet-match-line .v819-leg-actions {
+  grid-area: actions !important;
+}
+
+.rolling-v48-rail .v822-target-card-footer.bet {
+  margin-top: 8px !important;
+}
+
+@media (max-width: 900px) {
+  .rolling-v48-rail .v822-bet-match-line {
+    grid-template-columns: minmax(0, 1fr) 50px 70px !important;
+    gap: 7px !important;
+  }
+
+  .rolling-v48-rail .v822-bet-match-line span {
+    font-size: .68rem !important;
+    max-height: 2.35em !important;
+  }
+}
