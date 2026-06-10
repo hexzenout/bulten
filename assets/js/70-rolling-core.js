@@ -16,6 +16,7 @@
   const TARGET_LOG_OPEN_KEY = "v802_rolling_target_log_open";
   const TARGET_ITEMS_KEY = "v810_rolling_target_items_v1";
   const TARGET_CLOSED_PNL_KEY = "v829_rolling_target_closed_pnl_v1";
+  const TARGET_BET_DRAFT_KEY = "v835_rolling_target_bet_draft_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -616,6 +617,44 @@
     data[m] = Number(data[m] || 0) + Number(amount || 0);
     saveTargetClosedPnl(data);
   }
+  function loadTargetBetDraft() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(TARGET_BET_DRAFT_KEY) || "{}");
+      const legs = Array.isArray(raw.legs) ? raw.legs.map(leg => ({
+        name: cleanText(leg?.name || ""),
+        odds: v810NumberOrBlank(leg?.odds)
+      })).filter(leg => leg.name || leg.odds !== "") : [];
+      return { legs, stake: v810NumberOrBlank(raw.stake) };
+    } catch {
+      return { legs: [], stake: "" };
+    }
+  }
+  function saveTargetBetDraft(draft) {
+    const clean = {
+      legs: Array.isArray(draft?.legs) ? draft.legs.map(leg => ({
+        name: cleanText(leg?.name || ""),
+        odds: v810NumberOrBlank(leg?.odds)
+      })).filter(leg => leg.name || leg.odds !== "") : [],
+      stake: v810NumberOrBlank(draft?.stake)
+    };
+    if (!clean.legs.length && clean.stake === "") {
+      localStorage.removeItem(TARGET_BET_DRAFT_KEY);
+      return;
+    }
+    localStorage.setItem(TARGET_BET_DRAFT_KEY, JSON.stringify(clean));
+  }
+  function clearTargetBetDraft() {
+    localStorage.removeItem(TARGET_BET_DRAFT_KEY);
+  }
+  function readTargetBetDraftFromForm(form) {
+    const root = form || document;
+    const legs = Array.from(root.querySelectorAll('[data-target-bet-leg="bet"]')).map(row => ({
+      name: cleanText(row.querySelector('[data-target-bet-leg-field="name"]')?.value || ""),
+      odds: v810NumberOrBlank(row.querySelector('[data-target-bet-leg-field="odds"]')?.value || "")
+    })).filter(leg => leg.name || leg.odds !== "");
+    const stake = v810NumberOrBlank(root.querySelector('[data-target-self-field="bet:stake"]')?.value || "");
+    return { legs, stake };
+  }
   function v810TargetItemId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   }
@@ -812,9 +851,12 @@
       const result = cleanText(item.result || "");
       const odds = v812BetOddsProduct(item);
       const possibleReturn = v812BetPotential(item);
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
-        <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list">${v813BetLegRowsHtml(item)}</div>
+      const legCount = v812BetLegs(item).length;
+      const detailTitle = legCount > 1 ? `Kombine ${legCount} maç` : "Tekli Bahis";
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet v835-bet-detail-row ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v835-bet-detail-head"><span title="${escapeHtml(detailTitle)}">${escapeHtml(detailTitle)}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+        <div class="v835-bet-detail-meta"><span>Oran <b>${odds ? odds.toFixed(2) : "-"}</b></span><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Kazanç <b>${possibleReturn ? money(possibleReturn) : "-"}</b></span></div>
+        <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list v835-bet-match-list">${v813BetLegRowsHtml(item)}</div>
         <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
       </li>`;
     }).join("");
@@ -846,10 +888,10 @@
       </div>
     </div>`;
   }
-  function v812BetLegRow() {
+  function v812BetLegRow(leg = {}) {
     return `<div class="v812-target-bet-leg v813-target-bet-leg v814-target-bet-leg" data-target-bet-leg="bet">
-      <input type="text" data-target-bet-leg-field="name" placeholder="Maç">
-      <input type="number" step="0.01" inputmode="decimal" data-target-bet-leg-field="odds" placeholder="Oran">
+      <input type="text" data-target-bet-leg-field="name" placeholder="Maç" value="${escapeHtml(cleanText(leg?.name || ""))}">
+      <input type="number" step="0.01" inputmode="decimal" data-target-bet-leg-field="odds" placeholder="Oran" value="${escapeHtml(leg?.odds !== "" && leg?.odds !== undefined && leg?.odds !== null ? String(leg.odds) : "")}">
       <button type="button" data-target-bet-leg-remove title="Maç sil">×</button>
     </div>`;
   }
@@ -866,14 +908,17 @@
         ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
       </div>`;
     }
+    const betDraft = loadTargetBetDraft();
+    const betDraftLegs = betDraft.legs.length ? betDraft.legs : [{}];
+    const betLegHtml = betDraftLegs.map(leg => v812BetLegRow(leg)).join("");
     return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self v814-target-self bet">
       <div class="v812-target-self-title v814-target-self-title"><b>Bahis</b></div>
       <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form v814-target-self-form v815-target-self-form bet" data-target-bet-autosave="1">
-        <div class="v812-target-bet-leg-list v813-target-bet-leg-list v814-target-bet-leg-list" data-target-bet-leg-list="${m}">${v812BetLegRow()}</div>
-        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
+        <div class="v812-target-bet-leg-list v813-target-bet-leg-list v814-target-bet-leg-list" data-target-bet-leg-list="${m}">${betLegHtml}</div>
+        <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar" value="${escapeHtml(betDraft.stake !== "" ? String(betDraft.stake) : "")}">
         <div class="v812-target-form-actions v814-target-form-actions"><button type="button" data-target-bet-leg-add="${m}">+ Maç</button></div>
       </div>
-      ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
+      <details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details v835-target-self-details"><summary data-target-bet-detail-commit="1">Detay</summary><ul>${data.details}</ul></details>
     </div>`;
   }
 
@@ -906,6 +951,7 @@
           name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
           matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
           matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
+          matchResults: coupon.matches.map(m => cleanText(m.status || coupon.row.status || "")),
           stake: Number(coupon.row.stake || 0),
           odds: Number(totals.odds || 0),
           possible: Number(totals.possibleWin || 0)
@@ -919,6 +965,7 @@
       name: cleanText(row.name),
       matchLines: [cleanText(row.name)],
       matchOdds: [Number(row.odds || 0)],
+      matchResults: [cleanText(row.status || "")],
       stake: Number(row.stake || 0),
       odds: Number(row.odds || 0),
       possible: Number(row.pnl || 0)
@@ -998,8 +1045,9 @@
         const wrapped = v785WrapPhotoText(line.text, 40).slice(0, 4);
         const hasResult = !!line.result;
         const rowH = Math.max(40, 16 + wrapped.length * lineH);
-        const statusText = line.result === "loss" ? "KAYBETTİ" : "KAZANDI";
-        const statusColor = line.result === "loss" ? "#ef4444" : "#22c55e";
+        const statusLoss = line.result === "loss" || line.result === "stop";
+        const statusText = statusLoss ? "KAYBETTİ" : "KAZANDI";
+        const statusColor = statusLoss ? "#ef4444" : "#22c55e";
         const statusX = oddsX - 76;
         rowHtml.push(`
           <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="${rowH}" rx="12" fill="#0f172a" stroke="#334155"/>
@@ -1919,6 +1967,7 @@
         name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
         matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
         matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
+        matchResults: coupon.matches.map(m => cleanText(m.status || coupon.row.status || "")),
         stake: Number(coupon.row.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
@@ -1931,6 +1980,7 @@
         name: cleanText(single.name),
         matchLines: [cleanText(single.name)],
         matchOdds: [Number(single.odds || 0)],
+        matchResults: [cleanText(single.status || "")],
         stake: Number(single.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)
@@ -2267,9 +2317,13 @@
       if (!row || !list) return;
       if (list.querySelectorAll("[data-target-bet-leg]").length <= 1) {
         row.querySelectorAll("input").forEach(input => { input.value = ""; });
+        const form = list.closest('[data-target-bet-autosave="1"]');
+        if (form) saveTargetBetDraft(readTargetBetDraftFromForm(form));
         return;
       }
       row.remove();
+      const form = list.closest('[data-target-bet-autosave="1"]');
+      if (form) saveTargetBetDraft(readTargetBetDraftFromForm(form));
     });
     const handleCryptoEntryRemove = btn => {
       const entry = btn.closest('[data-target-crypto-entry="1"]');
@@ -2342,16 +2396,19 @@
       const last = list.lastElementChild;
       const removeBtn = last?.querySelector("[data-target-bet-leg-remove]");
       if (removeBtn) bindTargetBetLegRemove(removeBtn);
+      const form = list.closest('[data-target-bet-autosave="1"]');
+      if (form) saveTargetBetDraft(readTargetBetDraftFromForm(form));
     }));
-    const saveTargetSelfFromForm = modeRaw => {
+    const saveTargetSelfFromForm = (modeRaw, formEl = null) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
-      const pick = key => mount.querySelector(`[data-target-self-field="${mode}:${key}"]`);
+      const scope = formEl || mount.querySelector(mode === "crypto" ? '[data-target-crypto-autosave="1"]' : '[data-target-bet-autosave="1"]') || mount;
+      const pick = key => scope.querySelector(`[data-target-self-field="${mode}:${key}"]`);
       const name = cleanText(pick("name")?.value || "");
       const stake = v810NumberOrBlank(pick("stake")?.value || "");
       const store = loadTargetItems();
       store[mode] = Array.isArray(store[mode]) ? store[mode] : [];
       if (mode === "crypto") {
-        const entries = Array.from(mount.querySelectorAll('[data-target-crypto-entry="1"]'));
+        const entries = Array.from(scope.querySelectorAll('[data-target-crypto-entry="1"]'));
         let added = false;
         entries.forEach(entryBox => {
           const entryPick = key => entryBox.querySelector(`[data-target-self-field="crypto:${key}"]`);
@@ -2371,7 +2428,7 @@
         });
         if (!added) return false;
       } else {
-        const legs = Array.from(mount.querySelectorAll(`[data-target-bet-leg="${mode}"]`)).map(row => ({
+        const legs = Array.from(scope.querySelectorAll(`[data-target-bet-leg="${mode}"]`)).map(row => ({
           name: cleanText(row.querySelector('[data-target-bet-leg-field="name"]')?.value || ""),
           odds: v810NumberOrBlank(row.querySelector('[data-target-bet-leg-field="odds"]')?.value || "")
         })).filter(leg => leg.name || leg.odds !== "");
@@ -2380,6 +2437,7 @@
         store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: cleanLegs.length > 1 ? "combo" : "match", legs: cleanLegs, name: cleanLegs[0]?.name || "", odds: cleanLegs[0]?.odds || "", stake, result: "" });
       }
       saveTargetItems(store);
+      if (mode === "bet") clearTargetBetDraft();
       return true;
     };
     mount.querySelectorAll("[data-target-self-add]").forEach(btn => {
@@ -2397,29 +2455,36 @@
     mount.querySelectorAll('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]').forEach(form => {
       const autosaveMode = form.matches('[data-target-crypto-autosave="1"]') ? "crypto" : "bet";
       let dirty = false;
-      form.addEventListener('input', () => { dirty = true; }, true);
+      const commit = () => {
+        if (!dirty) return false;
+        if (form.dataset.skipAutosaveOnce === '1') {
+          delete form.dataset.skipAutosaveOnce;
+          dirty = false;
+          return false;
+        }
+        const saved = saveTargetSelfFromForm(autosaveMode, form);
+        dirty = false;
+        if (saved) refresh();
+        return saved;
+      };
+      form.addEventListener('input', () => {
+        dirty = true;
+        if (autosaveMode === "bet") saveTargetBetDraft(readTargetBetDraftFromForm(form));
+      }, true);
       form.addEventListener('keydown', event => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
-        const saved = saveTargetSelfFromForm(autosaveMode);
-        dirty = false;
-        if (saved) refresh();
+        commit();
       });
       form.addEventListener('focusout', event => {
         const next = event.relatedTarget;
         if (next && form.contains(next)) return;
-        setTimeout(() => {
-          if (form.contains(document.activeElement) || !dirty) return;
-          if (form.dataset.skipAutosaveOnce === '1') {
-            delete form.dataset.skipAutosaveOnce;
-            dirty = false;
-            return;
-          }
-          const saved = saveTargetSelfFromForm(autosaveMode);
-          dirty = false;
-          if (saved) refresh();
-        }, 220);
+        setTimeout(commit, 180);
       });
+      const detailSummary = form.parentElement?.querySelector('[data-target-bet-detail-commit="1"]');
+      if (detailSummary && autosaveMode === "bet") {
+        detailSummary.addEventListener('pointerdown', () => setTimeout(commit, 0));
+      }
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
