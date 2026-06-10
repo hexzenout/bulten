@@ -598,16 +598,34 @@
     const n = Number(value);
     return Number.isFinite(n) ? n : "";
   }
-  function v811CryptoTps(item) {
+  function v813NumberText(value, empty = "-") {
+    const n = v810NumberOrBlank(value);
+    return n === "" ? empty : String(n);
+  }
+  function v813MoneyOrDash(value, prefix = "") {
+    const n = v810NumberOrBlank(value);
+    if (n === "") return "-";
+    return prefix + money(Math.abs(Number(n || 0)));
+  }
+  function v813CryptoTps(item) {
     const list = Array.isArray(item?.tps) ? item.tps : [];
-    const cleaned = list.map(tp => ({
+    const cleaned = list.map((tp, idx) => ({
       target: cleanText(tp?.target || ""),
-      profit: v810NumberOrBlank(tp?.profit)
-    })).filter(tp => tp.target || tp.profit !== "");
+      profit: v810NumberOrBlank(tp?.profit),
+      done: !!tp?.done,
+      idx
+    })).filter(tp => tp.target || tp.profit !== "" || tp.done);
     if (!cleaned.length && v810NumberOrBlank(item?.profit) !== "") {
-      cleaned.push({ target: cleanText(item?.target || ""), profit: v810NumberOrBlank(item?.profit) });
+      cleaned.push({ target: cleanText(item?.target || ""), profit: v810NumberOrBlank(item?.profit), done: cleanText(item?.result || "") === "tp", idx: 0 });
     }
     return cleaned;
+  }
+  function v811CryptoTps(item) { return v813CryptoTps(item); }
+  function v813CryptoTpProfitTotal(item) {
+    return v813CryptoTps(item).reduce((sum, tp) => tp.profit !== "" ? sum + Number(tp.profit || 0) : sum, 0);
+  }
+  function v813CryptoTpDoneProfit(item) {
+    return v813CryptoTps(item).reduce((sum, tp) => tp.done && tp.profit !== "" ? sum + Number(tp.profit || 0) : sum, 0);
   }
   function v812BetLegs(item) {
     const list = Array.isArray(item?.legs) ? item.legs : [];
@@ -642,7 +660,7 @@
     return 0;
   }
   function v811CryptoTpProfit(item) {
-    const tps = v811CryptoTps(item);
+    const tps = v813CryptoTps(item);
     const values = tps.map(tp => v810NumberOrBlank(tp.profit)).filter(v => v !== "");
     if (!values.length) return { value: 0, source: "none", count: tps.length, profitCount: 0 };
     return { value: values.reduce((sum, v) => sum + Number(v || 0), 0), source: "manual", count: tps.length, profitCount: values.length };
@@ -654,38 +672,41 @@
   function v812CryptoNet(item) {
     const result = cleanText(item?.result || "");
     if (result === "stop") return -v812CryptoStopLoss(item);
-    if (result === "tp" || result === "win") return Number(v811CryptoTpProfit(item).value || 0);
-    return 0;
+    if (result === "tp" || result === "win") return Number(v813CryptoTpProfitTotal(item) || 0);
+    return Number(v813CryptoTpDoneProfit(item) || 0);
   }
   function v810TargetItemProfit(item, mode) {
-    if (mode === "crypto") return { value: v812CryptoNet(item), source: item?.result ? "result" : "none" };
+    if (mode === "crypto") return { value: v812CryptoNet(item), source: item?.result || v813CryptoTpDoneProfit(item) ? "result" : "none" };
     return { value: v812BetNet(item), source: item?.result ? "result" : "none" };
   }
   function v812TargetRealizedPnl(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const store = loadTargetItems();
     const rows = (store[m] || []).filter(Boolean);
-    return rows.reduce((sum, item) => {
-      if (!item?.result) return sum;
-      return sum + Number(v810TargetItemProfit(item, m).value || 0);
-    }, 0);
+    return rows.reduce((sum, item) => sum + Number(v810TargetItemProfit(item, m).value || 0), 0);
   }
   function v812ResultBadge(item, mode) {
     const result = cleanText(item?.result || "");
+    if (mode === "crypto") {
+      if (result === "stop") return "STOP";
+      if (result === "tp" || result === "win") return "Kâr";
+      const tps = v813CryptoTps(item);
+      const done = tps.filter(tp => tp.done).length;
+      return done ? `TP ${done}/${tps.length || done}` : "Bekliyor";
+    }
     if (!result) return "Bekliyor";
-    if (mode === "crypto") return result === "stop" ? "STOP" : "Kâr Aldı";
     return result === "loss" ? "Kaybetti" : "Kazandı";
   }
   function v812BetTitle(item) {
     const legs = v812BetLegs(item);
-    if (legs.length <= 1) return v810ShortLabel(legs[0]?.name || "Maç", 28);
+    if (legs.length <= 1) return cleanText(legs[0]?.name || "") || "Tekli Bahis";
     return `Kombine ${legs.length} maç`;
   }
   function v812BetInfo(item) {
     const legs = v812BetLegs(item);
     const odds = v812BetOddsProduct(item);
     const stake = Number(item?.stake || 0);
-    const oddsText = odds ? odds.toFixed(2) : "Oran -";
+    const oddsText = odds ? odds.toFixed(2) : "-";
     const stakeText = stake ? money(stake) : "Tutar -";
     if (legs.length <= 1) return `${oddsText} · ${stakeText}`;
     return `${legs.length} maç · ${oddsText} · ${stakeText}`;
@@ -697,32 +718,63 @@
       return `${name} (${odds})`;
     }).join(" · ");
   }
+  function v813BetLegRowsHtml(item) {
+    return v812BetLegs(item).map((leg, i) => {
+      const name = cleanText(leg.name || "") || `Maç ${i + 1}`;
+      const odds = Number(leg.odds || 0) ? Number(leg.odds || 0).toFixed(2) : "-";
+      return `<div class="v813-bet-match-line"><span>${escapeHtml(name)}</span><b>${escapeHtml(odds)}</b></div>`;
+    }).join("");
+  }
+  function v813CryptoTpRowsHtml(item) {
+    const tps = v813CryptoTps(item);
+    if (!tps.length) return `<div class="v813-crypto-detail-line empty"><span>TP</span><b>-</b><em>-</em></div>`;
+    return tps.map((tp, i) => {
+      const isDone = cleanText(item?.result || "") === "tp" || !!tp.done;
+      const profit = tp.profit !== "" ? signedMoney(Number(tp.profit || 0)) : "+$0.00";
+      return `<div class="v813-crypto-detail-line tp ${isDone ? "done" : ""}">
+        <span>TP ${i + 1}</span>
+        <b>${escapeHtml(tp.target || "-")}</b>
+        <em>${escapeHtml(profit)}</em>
+        <button type="button" class="tp-check ${isDone ? "active" : ""}" data-target-self-tp-done="crypto:${escapeHtml(item.id || "")}:${i}" title="Kazanç"><i class="fa-solid fa-check"></i></button>
+      </div>`;
+    }).join("");
+  }
+  function v813CryptoStopRowHtml(item) {
+    const stop = cleanText(item?.stop || "") || "-";
+    const loss = v812CryptoStopLoss(item);
+    const active = cleanText(item?.result || "") === "stop";
+    return `<div class="v813-crypto-detail-line stop ${active ? "done" : ""}">
+      <span>STOP</span>
+      <b>${escapeHtml(stop)}</b>
+      <em>${loss ? "-" + money(loss) : "-$0.00"}</em>
+      <button type="button" class="stop-x ${active ? "active" : ""}" data-target-self-result="crypto:${escapeHtml(item.id || "")}:stop" title="Kaybetti"><i class="fa-solid fa-xmark"></i></button>
+    </div>`;
+  }
   function v810TargetSelfData(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const store = loadTargetItems();
     const rows = (store[m] || []).filter(Boolean);
     if (m === "crypto") {
       const stake = rows.reduce((sum, item) => sum + Number(item.stake || 0), 0);
-      const tpCount = rows.reduce((sum, item) => sum + v811CryptoTps(item).length, 0);
-      const targetProfit = rows.reduce((sum, item) => sum + Number(v811CryptoTpProfit(item).value || 0), 0);
+      const tpCount = rows.reduce((sum, item) => sum + v813CryptoTps(item).length, 0);
+      const doneTpCount = rows.reduce((sum, item) => sum + v813CryptoTps(item).filter(tp => tp.done || cleanText(item?.result || "") === "tp").length, 0);
+      const targetProfit = rows.reduce((sum, item) => sum + Number(v813CryptoTpProfitTotal(item) || 0), 0);
       const stopRisk = rows.reduce((sum, item) => sum + v812CryptoStopLoss(item), 0);
-      const realized = rows.reduce((sum, item) => item.result ? sum + Number(v812CryptoNet(item) || 0) : sum, 0);
+      const realized = rows.reduce((sum, item) => sum + Number(v812CryptoNet(item) || 0), 0);
       const details = rows.slice(-8).reverse().map(item => {
-        const tps = v811CryptoTps(item);
-        const targetProfitText = v811CryptoTpProfit(item).value ? `Hedef ${signedMoney(v811CryptoTpProfit(item).value)}` : "Hedef -";
-        const stopText = v812CryptoStopLoss(item) ? `Stop -${money(v812CryptoStopLoss(item))}` : "Stop -";
         const result = cleanText(item.result || "");
-        const resultText = item.result ? signedMoney(v812CryptoNet(item)) : v812ResultBadge(item, m);
-        return `<li class="v812-target-detail-row ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v812-target-detail-main"><span>${escapeHtml(v810ShortLabel(item.name || "İşlem", 28))}</span><b>${Number(item.stake || 0) ? money(item.stake) : "Tutar -"}</b><em>${tps.length ? `TP ${tps.length}` : "TP -"} · ${targetProfitText} · ${stopText} · ${resultText}</em></div>
-          <div class="v812-target-detail-actions"><button type="button" class="win ${result === "tp" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:tp">Kâr Aldı</button><button type="button" class="loss ${result === "stop" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:stop">STOP</button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+        const resultText = signedMoney(v812CryptoNet(item));
+        return `<li class="v812-target-detail-row v813-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+          <div class="v813-detail-head"><span>${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><b>${Number(item.stake || 0) ? money(item.stake) : "Tutar -"}</b></div>
+          <div class="v813-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
+          <div class="v813-detail-foot"><em>Kesin: ${escapeHtml(resultText)}</em><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
         </li>`;
       }).join("");
       return {
         mode: m,
         hasRows: rows.length > 0,
         summary: rows.length ? `${rows.length} işlem · Tutar ${money(stake)}` : "",
-        sub: rows.length ? `TP ${tpCount} · Hedef ${signedMoney(targetProfit)} · Stop -${money(stopRisk)} · Kesin ${signedMoney(realized)}` : "",
+        sub: rows.length ? `TP ${doneTpCount}/${tpCount || 0} · Olası ${signedMoney(targetProfit)} · Stop -${money(stopRisk)} · Kesin ${signedMoney(realized)}` : "",
         details
       };
     }
@@ -732,10 +784,14 @@
     const openCount = rows.filter(item => !item.result).length;
     const details = rows.slice(-8).reverse().map(item => {
       const result = cleanText(item.result || "");
-      const resultText = item.result ? signedMoney(v812BetNet(item)) : v812ResultBadge(item, m);
-      return `<li class="v812-target-detail-row ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v812-target-detail-main"><span>${escapeHtml(v812BetTitle(item))}</span><b>${escapeHtml(v812BetInfo(item))}</b><em>${escapeHtml(v812BetLegText(item))} · ${resultText}</em></div>
-        <div class="v812-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win">Kazandı</button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss">Kaybetti</button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+      const odds = v812BetOddsProduct(item);
+      const possibleReturn = v812BetPotential(item);
+      const net = possibleReturn ? possibleReturn - Number(item.stake || 0) : 0;
+      return `<li class="v812-target-detail-row v813-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+        <div class="v813-detail-head"><span>${escapeHtml(v812BetTitle(item))}</span><b>${item.result ? signedMoney(v812BetNet(item)) : "Bekliyor"}</b></div>
+        <div class="v813-bet-match-list">${v813BetLegRowsHtml(item)}</div>
+        <div class="v813-bet-total-line"><span>Tutar ${Number(item.stake || 0) ? money(item.stake) : "-"}</span><b>Oran ${odds ? odds.toFixed(2) : "-"}</b><em>Dönüş ${possibleReturn ? money(possibleReturn) : "-"} · Net ${possibleReturn ? signedMoney(net) : "+$0.00"}</em></div>
+        <div class="v812-target-detail-actions v813-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win">Kazandı</button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss">Kaybetti</button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
       </li>`;
     }).join("");
     return {
@@ -747,14 +803,13 @@
     };
   }
   function v811CryptoTpRow() {
-    return `<div class="v811-target-tp-row" data-target-self-tp="crypto">
+    return `<div class="v811-target-tp-row v813-target-tp-row" data-target-self-tp="crypto">
       <input type="text" data-target-self-tp-field="target" placeholder="Hedef TP">
-      <input type="number" step="0.01" inputmode="decimal" data-target-self-tp-field="profit" placeholder="Hedeflenen kâr">
-      <button type="button" data-target-tp-remove title="TP sil">×</button>
+      <input type="number" step="0.01" inputmode="decimal" data-target-self-tp-field="profit" placeholder="Kâr">
     </div>`;
   }
   function v812BetLegRow() {
-    return `<div class="v812-target-bet-leg" data-target-bet-leg="bet">
+    return `<div class="v812-target-bet-leg v813-target-bet-leg" data-target-bet-leg="bet">
       <input type="text" data-target-bet-leg-field="name" placeholder="Maç">
       <input type="number" step="0.01" inputmode="decimal" data-target-bet-leg-field="odds" placeholder="Oran">
       <button type="button" data-target-bet-leg-remove title="Maç sil">×</button>
@@ -764,34 +819,34 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const data = v810TargetSelfData(m);
     if (m === "crypto") {
-      return `<div class="v810-target-self v811-target-self v812-target-self crypto">
+      return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self crypto">
         <div class="v812-target-self-title"><b>İşlem</b>${data.summary ? `<span>${escapeHtml(data.summary)}</span>` : ""}</div>
         ${data.sub ? `<div class="v812-target-self-summary">${escapeHtml(data.sub)}</div>` : ""}
-        <div class="v810-target-self-form v811-target-self-form v812-target-self-form crypto">
+        <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form crypto">
           <input type="text" data-target-self-field="${m}:name" placeholder="İşlem adı">
           <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
-          <div class="v812-target-stop-row">
+          <div class="v811-target-tp-box v812-target-tp-box v813-target-tp-box">
+            <div class="v813-target-tp-list-head"><button type="button" data-target-tp-add="${m}">+ TP</button><button type="button" data-target-tp-remove-last="${m}" title="Son TP kaldır">−</button></div>
+            <div class="v811-target-tp-list v813-target-tp-list" data-target-tp-list="${m}">${v811CryptoTpRow()}</div>
+          </div>
+          <div class="v812-target-stop-row v813-target-stop-row">
             <input type="text" data-target-self-field="${m}:stop" placeholder="Stop">
             <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stopLoss" placeholder="Olası zarar">
           </div>
-          <div class="v811-target-tp-box v812-target-tp-box">
-            <div class="v811-target-tp-head"><span>TP hedefleri</span><button type="button" data-target-tp-add="${m}">+ TP</button></div>
-            <div class="v811-target-tp-list" data-target-tp-list="${m}">${v811CryptoTpRow()}</div>
-          </div>
           <button type="button" class="v811-target-main-add" data-target-self-add="${m}">+ İşlem Ekle</button>
         </div>
-        ${data.hasRows ? `<details class="v810-target-self-details v811-target-self-details v812-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
+        ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
       </div>`;
     }
-    return `<div class="v810-target-self v811-target-self v812-target-self bet">
+    return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self bet">
       <div class="v812-target-self-title"><b>Bahis</b>${data.summary ? `<span>${escapeHtml(data.summary)}</span>` : ""}</div>
       ${data.sub ? `<div class="v812-target-self-summary">${escapeHtml(data.sub)}</div>` : ""}
-      <div class="v810-target-self-form v811-target-self-form v812-target-self-form bet">
-        <div class="v812-target-bet-leg-list" data-target-bet-leg-list="${m}">${v812BetLegRow()}</div>
+      <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form bet">
+        <div class="v812-target-bet-leg-list v813-target-bet-leg-list" data-target-bet-leg-list="${m}">${v812BetLegRow()}</div>
         <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
         <div class="v812-target-form-actions"><button type="button" data-target-bet-leg-add="${m}">+ Maç</button><button type="button" class="v811-target-main-add" data-target-self-add="${m}">Kaydet</button></div>
       </div>
-      ${data.hasRows ? `<details class="v810-target-self-details v811-target-self-details v812-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
+      ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
     </div>`;
   }
 
@@ -2003,16 +2058,19 @@
       saveState(state);
       refresh();
     }));
-    const bindTargetTpRemove = btn => btn.addEventListener("click", () => {
-      const row = btn.closest("[data-target-self-tp]");
-      const list = row?.parentElement;
-      if (!row || !list) return;
-      if (list.querySelectorAll("[data-target-self-tp]").length <= 1) {
-        row.querySelectorAll("input").forEach(input => { input.value = ""; });
+    const removeLastTargetTp = mode => {
+      const m = mode === "crypto" ? "crypto" : "bet";
+      const list = mount.querySelector(`[data-target-tp-list="${m}"]`);
+      if (!list) return;
+      const rows = Array.from(list.querySelectorAll("[data-target-self-tp]"));
+      const last = rows[rows.length - 1];
+      if (!last) return;
+      if (rows.length <= 1) {
+        last.querySelectorAll("input").forEach(input => { input.value = ""; });
         return;
       }
-      row.remove();
-    });
+      last.remove();
+    };
     const bindTargetBetLegRemove = btn => btn.addEventListener("click", () => {
       const row = btn.closest("[data-target-bet-leg]");
       const list = row?.parentElement;
@@ -2023,8 +2081,8 @@
       }
       row.remove();
     });
-    mount.querySelectorAll("[data-target-tp-remove]").forEach(bindTargetTpRemove);
     mount.querySelectorAll("[data-target-bet-leg-remove]").forEach(bindTargetBetLegRemove);
+    mount.querySelectorAll("[data-target-tp-remove-last]").forEach(btn => btn.addEventListener("click", () => removeLastTargetTp(btn.dataset.targetTpRemoveLast)));
     mount.querySelectorAll("[data-target-tp-add]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.targetTpAdd === "crypto" ? "crypto" : "bet";
       if (mode !== "crypto") return;
@@ -2032,9 +2090,6 @@
       if (!list) return;
       if (list.querySelectorAll("[data-target-self-tp]").length >= 6) return;
       list.insertAdjacentHTML("beforeend", v811CryptoTpRow());
-      const last = list.lastElementChild;
-      const removeBtn = last?.querySelector("[data-target-tp-remove]");
-      if (removeBtn) bindTargetTpRemove(removeBtn);
     }));
     mount.querySelectorAll("[data-target-bet-leg-add]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.targetBetLegAdd === "crypto" ? "crypto" : "bet";
@@ -2074,6 +2129,24 @@
       saveTargetItems(store);
       refresh();
     }));
+    mount.querySelectorAll("[data-target-self-tp-done]").forEach(btn => btn.addEventListener("click", () => {
+      const [modeRaw, id, indexRaw] = String(btn.dataset.targetSelfTpDone || "crypto::0").split(":");
+      const mode = modeRaw === "crypto" ? "crypto" : "bet";
+      if (mode !== "crypto" || !id) return;
+      const index = Math.max(0, Number(indexRaw || 0));
+      const store = loadTargetItems();
+      store.crypto = Array.isArray(store.crypto) ? store.crypto : [];
+      const row = store.crypto.find(item => String(item.id || "") === String(id));
+      if (!row) return;
+      row.tps = Array.isArray(row.tps) ? row.tps : [];
+      if (!row.tps[index]) return;
+      row.tps[index].done = !row.tps[index].done;
+      if (row.tps[index].done && row.result === "stop") row.result = "";
+      const allDone = row.tps.length > 0 && row.tps.every(tp => !!tp.done);
+      row.result = allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
+      saveTargetItems(store);
+      refresh();
+    }));
     mount.querySelectorAll("[data-target-self-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, resultRaw] = String(btn.dataset.targetSelfResult || "bet::").split(":");
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
@@ -2084,6 +2157,8 @@
       if (!row) return;
       const result = mode === "crypto" ? (resultRaw === "stop" ? "stop" : "tp") : (resultRaw === "loss" ? "loss" : "win");
       row.result = row.result === result ? "" : result;
+      if (mode === "crypto" && row.result === "stop" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: false }));
+      if (mode === "crypto" && row.result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
       saveTargetItems(store);
       refresh();
     }));
