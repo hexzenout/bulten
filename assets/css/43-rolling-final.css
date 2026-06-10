@@ -10837,3 +10837,43 @@ select:-webkit-autofill {
   text-overflow: clip !important;
   font-size: .68rem !important;
 }
+
+
+/* V886 Aşama 1B: Kasa Hedefi > Bahis final butonları için V864 neonunu birebir zorunlu kıl
+   - Sadece Kupon Kazandı / Kupon Kaybetti aktif görünümünü düzeltir.
+   - Ana tablo / Aktif Bahisler / JS davranışına dokunmaz. */
+.rolling-v48-rail .v871-target-final-actions .win.active,
+.rolling-v48-rail .v871-target-final-actions button.win.active,
+.rolling-v48-rail .v871-target-final-actions .win.selected,
+.rolling-v48-rail .v871-target-final-actions button.win.selected,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .win.active,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions button.win.active,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .win.selected,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions button.win.selected {
+  color: #052e16 !important;
+  background: linear-gradient(135deg, #22c55e, #86efac) !important;
+  border-color: rgba(134,239,172,.78) !important;
+  box-shadow: 0 0 15px rgba(34,197,94,.45), inset 0 1px 0 rgba(255,255,255,.28) !important;
+  outline: 2px solid rgba(134,239,172,.34) !important;
+  outline-offset: 0 !important;
+  transform: none !important;
+  translate: none !important;
+}
+
+.rolling-v48-rail .v871-target-final-actions .loss.active,
+.rolling-v48-rail .v871-target-final-actions button.loss.active,
+.rolling-v48-rail .v871-target-final-actions .loss.selected,
+.rolling-v48-rail .v871-target-final-actions button.loss.selected,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .loss.active,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions button.loss.active,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .loss.selected,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions button.loss.selected {
+  color: #fee2e2 !important;
+  background: linear-gradient(135deg, #991b1b, #ef4444) !important;
+  border-color: rgba(248,113,113,.75) !important;
+  box-shadow: 0 0 15px rgba(239,68,68,.45), inset 0 1px 0 rgba(255,255,255,.20) !important;
+  outline: 2px solid rgba(248,113,113,.30) !important;
+  outline-offset: 0 !important;
+  transform: none !important;
+  translate: none !important;
+}
