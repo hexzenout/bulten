@@ -28,13 +28,16 @@
   let SUPPRESS_PANEL_RESTORE_UNTIL = 0;
 
   function closePendingPanelNow() {
-    SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 1200;
+    SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 1600;
     PENDING_BOARD_OPEN_MODE = null;
     CONFIRM_RETURN_PANEL_MODE = null;
     ACTIVE_COMBO_DETAIL_SLOT = null;
     CONFIRM_DIALOG = null;
     const host = document.getElementById("omega-rolling-feature-host");
-    if (host) host.remove();
+    if (host) {
+      host.innerHTML = "";
+      host.remove();
+    }
     renderFloatingPanel();
   }
 
@@ -58,19 +61,19 @@
   }
 
 
-  if (!window.__omegaV877PendingCloseGuardBound) {
-    window.__omegaV877PendingCloseGuardBound = true;
+  if (!window.__omegaV878PendingCloseGuardBound) {
+    window.__omegaV878PendingCloseGuardBound = true;
     const pendingCloseGuard = function(event) {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      if (!PENDING_BOARD_OPEN_MODE) return;
 
+      const featureHost = target.closest("#omega-rolling-feature-host");
       const closeBtn = target.closest("[data-pending-close]");
       const overlay = target.closest(".v758-pending-overlay");
       const pendingModal = target.closest(".v758-pending-modal");
-      const featureHost = target.closest("#omega-rolling-feature-host");
       const confirmLayer = target.closest(".v757-confirm-overlay");
 
+      if (!featureHost && !overlay && !closeBtn) return;
       const clickedOverlayBlank = !!overlay && !pendingModal && !confirmLayer;
       const clickedHostBlank = !!featureHost && !pendingModal && !confirmLayer;
 
@@ -84,7 +87,8 @@
     document.addEventListener("click", pendingCloseGuard, true);
     document.addEventListener("keydown", function(event) {
       if (event.key !== "Escape") return;
-      if (!PENDING_BOARD_OPEN_MODE) return;
+      const host = document.getElementById("omega-rolling-feature-host");
+      if (!host && !PENDING_BOARD_OPEN_MODE) return;
       event.preventDefault();
       event.stopPropagation();
       closePendingPanelNow();

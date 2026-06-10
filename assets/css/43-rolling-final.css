@@ -10813,3 +10813,168 @@ select:-webkit-autofill {
   position: relative !important;
   z-index: 50 !important;
 }
+
+
+/* V878: Son ZIP gerçek düzeltme — eski neon KAZANDI/KAYBETTİ efekti + kaymayan sabit ölçü + Aktif panel kapanma */
+#rolling-excel-overlay .rolling-v47-actions.v757-actions,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions {
+  display: inline-grid !important;
+  grid-template-columns: 64px 64px !important;
+  gap: 6px !important;
+  min-width: 134px !important;
+  width: 134px !important;
+  align-items: center !important;
+  justify-content: start !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win,
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss,
+#rolling-excel-overlay .v763-combo-match-list button.win,
+#rolling-excel-overlay .v763-combo-match-list button.loss,
+#omega-rolling-feature-host .v763-combo-match-list button.win,
+#omega-rolling-feature-host .v763-combo-match-list button.loss {
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  padding: 0 6px !important;
+  border-width: 1px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  transform: none !important;
+  transition: background .14s ease, color .14s ease, box-shadow .14s ease, border-color .14s ease !important;
+  will-change: box-shadow, background !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win,
+#rolling-excel-overlay .v763-combo-match-list button.win,
+#omega-rolling-feature-host .v763-combo-match-list button.win {
+  color: #d1fae5 !important;
+  background: linear-gradient(135deg, #064e3b, #022c22) !important;
+  border-color: rgba(16,185,129,.70) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss,
+#rolling-excel-overlay .v763-combo-match-list button.loss,
+#omega-rolling-feature-host .v763-combo-match-list button.loss {
+  color: #fee2e2 !important;
+  background: linear-gradient(135deg, #7f1d1d, #3f0707) !important;
+  border-color: rgba(239,68,68,.74) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win.selected,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win.selected,
+#rolling-excel-overlay .v763-combo-match-list button.win.selected,
+#omega-rolling-feature-host .v763-combo-match-list button.win.selected,
+#rolling-excel-overlay .v763-combo-match-list button.win.active,
+#omega-rolling-feature-host .v763-combo-match-list button.win.active {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #4ade80, #16a34a, #14532d) !important;
+  border-color: #dcfce7 !important;
+  box-shadow: 0 0 0 3px rgba(34,197,94,.42), 0 0 22px rgba(34,197,94,.56), inset 0 0 0 1px rgba(255,255,255,.30) !important;
+  outline: 0 !important;
+  transform: none !important;
+}
+
+#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss.selected,
+#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss.selected,
+#rolling-excel-overlay .v763-combo-match-list button.loss.selected,
+#omega-rolling-feature-host .v763-combo-match-list button.loss.selected,
+#rolling-excel-overlay .v763-combo-match-list button.loss.active,
+#omega-rolling-feature-host .v763-combo-match-list button.loss.active {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #f87171, #ef4444, #991b1b) !important;
+  border-color: #fee2e2 !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.58), inset 0 0 0 1px rgba(255,255,255,.30) !important;
+  outline: 0 !important;
+  transform: none !important;
+}
+
+.rolling-v48-rail .v871-target-final-actions {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 7px !important;
+  width: 100% !important;
+  margin-top: 10px !important;
+}
+
+.rolling-v48-rail .v871-target-final-actions button {
+  min-width: 0 !important;
+  width: 100% !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 5px !important;
+  border-width: 1px !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  transform: none !important;
+  transition: background .14s ease, color .14s ease, box-shadow .14s ease, border-color .14s ease !important;
+}
+
+.rolling-v48-rail .v871-target-final-actions .win {
+  color: #d1fae5 !important;
+  background: linear-gradient(135deg, #064e3b, #022c22) !important;
+  border-color: rgba(16,185,129,.70) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+.rolling-v48-rail .v871-target-final-actions .loss {
+  color: #fee2e2 !important;
+  background: linear-gradient(135deg, #7f1d1d, #3f0707) !important;
+  border-color: rgba(239,68,68,.74) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+}
+.rolling-v48-rail .v871-target-final-actions .win.active,
+.rolling-v48-rail .v871-target-final-actions .win:active {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #4ade80, #16a34a, #14532d) !important;
+  border-color: #dcfce7 !important;
+  box-shadow: 0 0 0 3px rgba(34,197,94,.42), 0 0 22px rgba(34,197,94,.56), inset 0 0 0 1px rgba(255,255,255,.30) !important;
+  transform: none !important;
+}
+.rolling-v48-rail .v871-target-final-actions .loss.active,
+.rolling-v48-rail .v871-target-final-actions .loss:active {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #f87171, #ef4444, #991b1b) !important;
+  border-color: #fee2e2 !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.58), inset 0 0 0 1px rgba(255,255,255,.30) !important;
+  transform: none !important;
+}
+
+#omega-rolling-feature-host .v758-pending-overlay {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+#omega-rolling-feature-host .v758-pending-modal {
+  pointer-events: auto !important;
+  cursor: default !important;
+}
+#omega-rolling-feature-host [data-pending-close] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 1001008 !important;
+}
