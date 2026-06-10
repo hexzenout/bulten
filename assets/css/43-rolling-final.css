@@ -8181,3 +8181,132 @@ html.rolling-hash-boot::before {
     max-height: 2.35em !important;
   }
 }
+
+
+/* V823: Bahis detay maç isimleri iki satırlı mini kart + özel onay modalı */
+.rolling-v48-rail .v822-bet-match-line,
+.rolling-v48-rail .v823-bet-match-line,
+.rolling-v48-rail .v819-bet-match-line {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  grid-template-areas:
+    "name name"
+    "odds actions" !important;
+  gap: 7px 8px !important;
+  align-items: center !important;
+  padding: 9px 10px !important;
+}
+.rolling-v48-rail .v822-bet-match-line span,
+.rolling-v48-rail .v819-bet-match-line span {
+  grid-area: name !important;
+  min-width: 0 !important;
+  display: block !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  line-height: 1.22 !important;
+  max-height: 2.55em !important;
+  text-overflow: clip !important;
+  font-size: .72rem !important;
+}
+.rolling-v48-rail .v822-bet-match-line b,
+.rolling-v48-rail .v819-bet-match-line b {
+  grid-area: odds !important;
+  justify-self: start !important;
+  min-width: 58px !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+.rolling-v48-rail .v822-bet-match-line .v819-leg-actions,
+.rolling-v48-rail .v819-bet-match-line .v819-leg-actions {
+  grid-area: actions !important;
+  justify-self: end !important;
+}
+#omega-target-confirm-host {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  display: none;
+}
+.v823-confirm-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 18px !important;
+  background: rgba(2,6,23,.72) !important;
+  backdrop-filter: blur(10px) !important;
+}
+.v823-confirm-modal {
+  width: min(380px, 92vw) !important;
+  border-radius: 20px !important;
+  padding: 18px !important;
+  background: linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.96)) !important;
+  border: 1px solid rgba(148,163,184,.22) !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07) !important;
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) !important;
+  gap: 13px !important;
+  color: #f8fafc !important;
+}
+.v823-confirm-modal.success { border-color: rgba(34,197,94,.38) !important; }
+.v823-confirm-modal.danger { border-color: rgba(220,38,38,.40) !important; }
+.v823-confirm-icon {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 15px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(34,197,94,.14) !important;
+  border: 1px solid rgba(34,197,94,.32) !important;
+  color: #86efac !important;
+}
+.v823-confirm-modal.danger .v823-confirm-icon {
+  background: rgba(127,29,29,.22) !important;
+  border-color: rgba(248,113,113,.34) !important;
+  color: #fecaca !important;
+}
+.v823-confirm-copy b {
+  display: block !important;
+  font-size: .98rem !important;
+  font-weight: 950 !important;
+  margin-bottom: 5px !important;
+}
+.v823-confirm-copy p {
+  margin: 0 !important;
+  color: #cbd5e1 !important;
+  font-size: .82rem !important;
+  font-weight: 750 !important;
+  line-height: 1.35 !important;
+}
+.v823-confirm-actions {
+  grid-column: 1 / -1 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-top: 4px !important;
+}
+.v823-confirm-actions button {
+  height: 40px !important;
+  border-radius: 13px !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+.v823-confirm-actions .cancel {
+  color: #cbd5e1 !important;
+  background: rgba(15,23,42,.80) !important;
+  border: 1px solid rgba(148,163,184,.20) !important;
+}
+.v823-confirm-actions .ok {
+  color: #052e16 !important;
+  background: linear-gradient(135deg, #22c55e, #86efac) !important;
+  border: 1px solid rgba(134,239,172,.75) !important;
+}
+.v823-confirm-modal.danger .v823-confirm-actions .ok {
+  color: #fee2e2 !important;
+  background: linear-gradient(135deg, rgba(220,38,38,.92), rgba(127,29,29,.92)) !important;
+  border-color: rgba(248,113,113,.60) !important;
+}

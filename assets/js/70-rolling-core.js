@@ -1064,6 +1064,41 @@
     if (!svg) return null;
     return { dataUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), label: 'Kripto Fotoğrafı', file: `bulten-kripto-${new Date().toISOString().slice(0,10)}.png` };
   }
+  function openTargetResultConfirm(options, onConfirm) {
+    const opts = options || {};
+    const tone = opts.tone === "loss" || opts.tone === "danger" || opts.tone === "stop" ? "danger" : "success";
+    let host = document.getElementById("omega-target-confirm-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-target-confirm-host";
+      document.body.appendChild(host);
+    }
+    const title = escapeHtml(opts.title || "Onay gerekiyor");
+    const message = escapeHtml(opts.message || "Bu işlemi onaylıyor musun?");
+    const okText = escapeHtml(opts.okText || "Onayla");
+    const cancelText = escapeHtml(opts.cancelText || "Vazgeç");
+    const icon = tone === "danger" ? "fa-xmark" : "fa-check";
+    host.innerHTML = `<div class="v823-confirm-overlay" data-v823-confirm-cancel>
+      <section class="v823-confirm-modal ${tone}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+        <div class="v823-confirm-icon"><i class="fa-solid ${icon}"></i></div>
+        <div class="v823-confirm-copy"><b>${title}</b><p>${message}</p></div>
+        <div class="v823-confirm-actions">
+          <button type="button" class="cancel" data-v823-confirm-cancel>${cancelText}</button>
+          <button type="button" class="ok" data-v823-confirm-ok>${okText}</button>
+        </div>
+      </section>
+    </div>`;
+    host.style.display = "block";
+    const close = () => { host.innerHTML = ""; host.style.display = "none"; };
+    host.querySelectorAll("[data-v823-confirm-cancel]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !el.hasAttribute("data-v823-confirm-cancel")) return;
+      close();
+    }));
+    host.querySelector("[data-v823-confirm-ok]")?.addEventListener("click", () => {
+      close();
+      if (typeof onConfirm === "function") onConfirm();
+    });
+  }
   function openTargetItemPhoto(mode, id) {
     const payload = v816BuildTargetItemPhotoData(mode, id);
     if (!payload) {
@@ -2272,16 +2307,23 @@
       row.tps = Array.isArray(row.tps) ? row.tps : [];
       if (!row.tps[index]) return;
       const nextDone = !row.tps[index].done;
-      if (nextDone) {
-        const label = cleanText(row.tps[index].target || '') || `TP ${index + 1}`;
-        if (!window.confirm(`"${label}" hedefinin gerçekleştiğini onaylıyor musun?`)) return;
-      }
-      row.tps[index].done = nextDone;
-      if (row.tps[index].done && row.result === "stop") row.result = "";
-      const allDone = row.tps.length > 0 && row.tps.every(tp => !!tp.done);
-      row.result = allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
-      saveTargetItems(store);
-      refresh();
+      const apply = () => {
+        row.tps[index].done = nextDone;
+        if (row.tps[index].done && row.result === "stop") row.result = "";
+        const allDone = row.tps.length > 0 && row.tps.every(tp => !!tp.done);
+        row.result = allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
+        saveTargetItems(store);
+        refresh();
+      };
+      if (!nextDone) { apply(); return; }
+      const label = cleanText(row.tps[index].target || '') || `TP ${index + 1}`;
+      const profit = v810NumberOrBlank(row.tps[index].profit) !== "" ? ` · ${signedMoney(Number(row.tps[index].profit || 0))}` : "";
+      openTargetResultConfirm({
+        title: "TP kazancı onayı",
+        message: `"${label}" hedefini kazanç olarak işlemek istiyor musun?${profit}`,
+        okText: "Kazanç yaz",
+        tone: "success"
+      }, apply);
     }));
     mount.querySelectorAll("[data-target-bet-leg-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw, resultRaw] = String(btn.dataset.targetBetLegResult || "bet:::").split(":");
@@ -2297,26 +2339,36 @@
       if (!row.legs[index]) return;
       const previous = cleanText(row.legs[index].result || "");
       const next = previous === result ? "" : result;
-      row.legs[index].result = next;
-      row.result = "";
-      const legs = v812BetLegs(row);
-      const filled = legs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
+      const apply = () => {
+        row.legs[index].result = next;
+        row.result = "";
+        const legs = v812BetLegs(row);
+        const filled = legs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
+        const allMarked = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win" || cleanText(leg.result || "") === "loss");
+        if (allMarked) row.result = filled.some(leg => cleanText(leg.result || "") === "loss") ? "loss" : "win";
+        saveTargetItems(store);
+        refresh();
+      };
+      if (!next) { apply(); return; }
+      const tmpLegs = row.legs.map((leg, idx) => idx === index ? { ...leg, result: next } : { ...leg });
+      const filled = tmpLegs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
       const allMarked = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win" || cleanText(leg.result || "") === "loss");
+      const finalResult = allMarked ? (filled.some(leg => cleanText(leg.result || "") === "loss") ? "loss" : "win") : "";
+      const label = result === "win" ? "Kazandı" : "Kaybetti";
+      const title = result === "win" ? "Maç kazandı onayı" : "Maç kaybetti onayı";
+      let msg = `Bu maçı "${label}" olarak işlemek istiyor musun?`;
       if (allMarked) {
-        const finalResult = filled.some(leg => cleanText(leg.result || "") === "loss") ? "loss" : "win";
-        const label = finalResult === "win" ? "Kazandı" : "Kaybetti";
-        const isCombo = filled.length > 1;
-        const msg = isCombo
-          ? `Bu kombine kuponu "${label}" olarak onaylıyor musun?`
-          : `Bu bahisi "${label}" olarak onaylıyor musun?`;
-        if (!window.confirm(msg)) {
-          row.legs[index].result = previous;
-          return;
-        }
-        row.result = finalResult;
+        const finalLabel = finalResult === "win" ? "Kazandı" : "Kaybetti";
+        msg = filled.length > 1
+          ? `Bu seçimle kombine kupon "${finalLabel}" olacak. Onaylıyor musun?`
+          : `Bu bahisi "${finalLabel}" olarak onaylıyor musun?`;
       }
-      saveTargetItems(store);
-      refresh();
+      openTargetResultConfirm({
+        title,
+        message: msg,
+        okText: "Onayla",
+        tone: result === "loss" ? "danger" : "success"
+      }, apply);
     }));
     mount.querySelectorAll("[data-target-self-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, resultRaw] = String(btn.dataset.targetSelfResult || "bet::").split(":");
@@ -2327,24 +2379,29 @@
       const row = store[mode].find(item => String(item.id || "") === String(id));
       if (!row) return;
       const result = mode === "crypto" ? (resultRaw === "stop" ? "stop" : "tp") : (resultRaw === "loss" ? "loss" : "win");
+      const apply = () => {
+        row.result = row.result === result ? "" : result;
+        if (mode === "crypto" && row.result === "stop" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: false }));
+        if (mode === "crypto" && row.result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
+        saveTargetItems(store);
+        refresh();
+      };
       const willActivate = row.result !== result;
-      if (willActivate) {
-        let message = 'Sonucu onaylıyor musun?';
-        if (mode === 'bet') {
-          const combo = v812BetLegs(row).length > 1;
-          message = combo
-            ? `Bu kombine kuponu "${result === 'loss' ? 'Kaybetti' : 'Kazandı'}" olarak işaretlemeyi onaylıyor musun?`
-            : `Bu bahisi "${result === 'loss' ? 'Kaybetti' : 'Kazandı'}" olarak işaretlemeyi onaylıyor musun?`;
-        } else {
-          message = 'Bu işlemi STOP olarak işaretlemeyi onaylıyor musun?';
-        }
-        if (!window.confirm(message)) return;
+      if (!willActivate) { apply(); return; }
+      let message = 'Sonucu onaylıyor musun?';
+      let title = 'Sonuç onayı';
+      let tone = result === 'loss' || result === 'stop' ? 'danger' : 'success';
+      if (mode === 'bet') {
+        const combo = v812BetLegs(row).length > 1;
+        title = result === 'loss' ? 'Bahis kaybetti onayı' : 'Bahis kazandı onayı';
+        message = combo
+          ? `Bu kombine kuponu "${result === 'loss' ? 'Kaybetti' : 'Kazandı'}" olarak işaretlemek istiyor musun?`
+          : `Bu bahisi "${result === 'loss' ? 'Kaybetti' : 'Kazandı'}" olarak işaretlemek istiyor musun?`;
+      } else {
+        title = 'STOP onayı';
+        message = 'Bu işlemi STOP / zarar olarak işlemek istiyor musun?';
       }
-      row.result = row.result === result ? "" : result;
-      if (mode === "crypto" && row.result === "stop" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: false }));
-      if (mode === "crypto" && row.result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
-      saveTargetItems(store);
-      refresh();
+      openTargetResultConfirm({ title, message, okText: 'Onayla', tone }, apply);
     }));
     mount.querySelectorAll("[data-target-self-photo]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id] = String(btn.dataset.targetSelfPhoto || "bet:").split(":");
