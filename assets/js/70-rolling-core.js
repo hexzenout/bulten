@@ -1046,8 +1046,7 @@
         const hasResult = !!line.result;
         const rowH = Math.max(40, 16 + wrapped.length * lineH);
         const statusLoss = line.result === "loss" || line.result === "stop";
-        const isBetPhotoLine = line.type === "Bahis" || line.type === "Kombine" || titleText === "AKTİF BAHİSLER / KUPONLAR" || titleText === "KOMBİNE KUPON" || titleText === "BAHİS FOTOĞRAFI";
-        const isCryptoPhotoLine = line.type === "Kripto" && !isBetPhotoLine;
+        const isCryptoPhotoLine = line.type === "Kripto" && titleText === "AKTİF KRİPTO İŞLEMLERİ";
         const statusText = isCryptoPhotoLine ? (statusLoss ? "ZARAR" : "KÂR") : (statusLoss ? "KAYBETTİ" : "KAZANDI");
         const statusColor = statusLoss ? "#ef4444" : "#22c55e";
         const statusX = oddsX - 76;
@@ -2605,36 +2604,8 @@
         else if (allWin) row.result = "win";
         saveTargetItems(store);
         refresh();
-        if (row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
       };
-      if (!next) { apply(); return; }
-
-      const tmpLegs = row.legs.map((leg, idx) => idx === index ? { ...leg, result: next } : { ...leg });
-      const filled = tmpLegs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
-      const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
-      const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
-      const finalResult = anyLoss ? "loss" : (allWin ? "win" : "");
-      if (result === "win" && !finalResult) { apply(); return; }
-      const label = result === "win" ? "Kazandı" : "Kaybetti";
-      const title = result === "win" ? "Maç kazandı onayı" : "Maç kaybetti onayı";
-      let msg = `Bu maçı "${label}" olarak işlemek istiyor musun?`;
-      if (finalResult === "loss") {
-        const finalLabel = "Kaybetti";
-        msg = filled.length > 1
-          ? `Bu seçimle kombine kupon "${finalLabel}" olacak. Onaylıyor musun?`
-          : `Bu bahisi "${finalLabel}" olarak onaylıyor musun?`;
-      }
-      if (finalResult === "win") {
-        msg = filled.length > 1
-          ? `Bu seçimle kombine kupondaki tüm maçlar kazanmış olacak. Onaylıyor musun?`
-          : `Bu bahisi "Kazandı" olarak onaylıyor musun?`;
-      }
-      openTargetResultConfirm({
-        title: finalResult === "win" ? "Kupon kazandı onayı" : title,
-        message: msg,
-        okText: "Onayla",
-        tone: result === "loss" ? "danger" : "success"
-      }, apply);
+      apply();
     }));
     mount.querySelectorAll("[data-target-self-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, resultRaw] = String(btn.dataset.targetSelfResult || "bet::").split(":");
