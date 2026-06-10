@@ -10878,36 +10878,31 @@ select:-webkit-autofill {
   translate: none !important;
 }
 
-
-/* V890: Aktif Bahisler / Kuponlar modal kamera butonu - sadece aktif panel başlığı */
-.v758-pending-modal .v890-pending-modal-head {
-  align-items: flex-start !important;
+/* V891: Rolling aktif bahis penceresi kamera aksiyonu */
+.v891-feature-head-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
 }
-.v758-pending-modal .v890-pending-head-actions {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 8px !important;
-  flex: 0 0 auto !important;
+.v891-feature-photo-btn {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(251, 191, 36, .48);
+  background: rgba(251, 191, 36, .10);
+  color: #fbbf24;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
 }
-.v758-pending-modal .v890-pending-head-actions button {
-  width: 38px !important;
-  height: 38px !important;
-  min-width: 38px !important;
-  min-height: 38px !important;
-  border-radius: 12px !important;
-  box-sizing: border-box !important;
+.v891-feature-photo-btn:hover {
+  background: rgba(251, 191, 36, .18);
+  box-shadow: 0 0 14px rgba(251, 191, 36, .28), inset 0 1px 0 rgba(255,255,255,.12);
 }
-.v758-pending-modal .v890-pending-photo-btn {
-  border: 1px solid rgba(251,191,36,.48) !important;
-  background: rgba(251,191,36,.12) !important;
-  color: #fbbf24 !important;
-  box-shadow: 0 0 14px rgba(251,191,36,.16) !important;
-}
-.v758-pending-modal .v890-pending-photo-btn:hover {
-  background: rgba(251,191,36,.20) !important;
-  color: #fde68a !important;
-}
-.v758-pending-modal .v890-pending-photo-btn i {
-  pointer-events: none !important;
+.v768-feature-head .v891-feature-head-actions [data-v768-feature-close] {
+  position: static !important;
+  flex: 0 0 auto;
 }

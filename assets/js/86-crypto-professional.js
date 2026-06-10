@@ -10,315 +10,6 @@
   function qs(sel) { return document.querySelector(sel); }
   function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
 
-
-  function v863EnsureRolling7CriticalCss() {
-    if (document.getElementById("v863-rolling7-critical-css")) return;
-    const style = document.createElement("style");
-    style.id = "v863-rolling7-critical-css";
-    style.textContent = `
-      #rolling-excel-overlay .kapsul.v32.v847-shot-result {
-        width: auto !important;
-        max-width: 360px !important;
-        min-width: 300px !important;
-        min-height: 0 !important;
-        padding: 12px !important;
-        border-radius: 16px !important;
-        background: linear-gradient(145deg, #07111f, #020617) !important;
-        border: 1px solid rgba(16,185,129,.62) !important;
-        box-shadow: 0 12px 28px rgba(0,0,0,.34) !important;
-        display: grid !important;
-        gap: 9px !important;
-        position: relative !important;
-        overflow: visible !important;
-        color: #f8fafc !important;
-        list-style: none !important;
-      }
-      #rolling-excel-overlay .kapsul.v32.v847-shot-result.loss {
-        border-color: rgba(239,68,68,.62) !important;
-      }
-      #rolling-excel-overlay .v850-shot-toolbar {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 8px !important;
-        margin: -2px 0 7px 0 !important;
-        min-height: 27px !important;
-      }
-      #rolling-excel-overlay .v850-shot-toolbar button {
-        appearance: none !important;
-        border-radius: 999px !important;
-        min-height: 27px !important;
-        border: 1px solid rgba(148,163,184,.34) !important;
-        background: rgba(15,23,42,.94) !important;
-        color: #e5e7eb !important;
-        font-size: .63rem !important;
-        font-weight: 950 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 5px !important;
-        padding: 0 9px !important;
-        cursor: pointer !important;
-      }
-      #rolling-excel-overlay .v850-shot-toolbar .v850-shot-close {
-        width: 27px !important;
-        min-width: 27px !important;
-        padding: 0 !important;
-        border-color: rgba(248,113,113,.38) !important;
-        background: rgba(127,29,29,.78) !important;
-        color: #fee2e2 !important;
-      }
-      #rolling-excel-overlay .v847-shot-head {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 10px !important;
-        padding-right: 0 !important;
-      }
-      #rolling-excel-overlay .v847-shot-head > b {
-        color: #fbbf24 !important;
-        font-size: .88rem !important;
-        font-weight: 950 !important;
-        letter-spacing: .03em !important;
-      }
-      #rolling-excel-overlay .v847-shot-head-tools {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: flex-end !important;
-        gap: 6px !important;
-        min-width: max-content !important;
-      }
-      #rolling-excel-overlay .v847-shot-head-tools > span {
-        border-radius: 999px !important;
-        padding: 5px 8px !important;
-        font-size: .66rem !important;
-        font-weight: 950 !important;
-        white-space: nowrap !important;
-        margin: 0 !important;
-      }
-      #rolling-excel-overlay .v847-shot-head-tools > span.win {
-        color: #dcfce7 !important;
-        background: rgba(22,163,74,.22) !important;
-        border: 1px solid rgba(74,222,128,.42) !important;
-      }
-      #rolling-excel-overlay .v847-shot-head-tools > span.loss {
-        color: #fee2e2 !important;
-        background: rgba(220,38,38,.22) !important;
-        border: 1px solid rgba(248,113,113,.44) !important;
-      }
-      #rolling-excel-overlay .v847-shot-camera {
-        width: 25px !important;
-        height: 25px !important;
-        min-width: 25px !important;
-        border-radius: 8px !important;
-        border: 1px solid rgba(251,191,36,.52) !important;
-        background: linear-gradient(145deg, rgba(251,191,36,.92), rgba(245,158,11,.76)) !important;
-        color: #111827 !important;
-        display: inline-grid !important;
-        place-items: center !important;
-        cursor: pointer !important;
-        padding: 0 !important;
-        box-shadow: 0 5px 14px rgba(245,158,11,.22) !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines {
-        display: grid !important;
-        gap: 6px !important;
-        list-style: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines li {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        gap: 6px !important;
-        align-items: start !important;
-        padding: 8px 9px !important;
-        border-radius: 10px !important;
-        background: rgba(15,23,42,.76) !important;
-        border: 1px solid rgba(51,65,85,.90) !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines li.win {
-        border-color: rgba(34,197,94,.42) !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines li.loss {
-        border-color: rgba(239,68,68,.44) !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines span {
-        white-space: normal !important;
-        overflow: visible !important;
-        text-overflow: clip !important;
-        color: #f8fafc !important;
-        font-size: .74rem !important;
-        font-weight: 900 !important;
-        line-height: 1.25 !important;
-        cursor: default !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 10px !important;
-        width: 100% !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta b {
-        color: #fbbf24 !important;
-        font-size: .72rem !important;
-        font-weight: 950 !important;
-        text-align: left !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em {
-        font-style: normal !important;
-        text-align: right !important;
-        font-size: .64rem !important;
-        font-weight: 950 !important;
-        min-width: max-content !important;
-      }
-      #rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em { color: #4ade80 !important; }
-      #rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em { color: #f87171 !important; }
-      #rolling-excel-overlay .v847-shot-footer {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 6px !important;
-        padding-top: 2px !important;
-      }
-      #rolling-excel-overlay .v847-shot-footer span {
-        display: flex !important;
-        justify-content: space-between !important;
-        gap: 8px !important;
-        border: 1px solid rgba(255,255,255,.08) !important;
-        border-radius: 9px !important;
-        background: rgba(0,0,0,.22) !important;
-        padding: 6px 7px !important;
-        color: #bfdbfe !important;
-        font-size: .66rem !important;
-        font-weight: 900 !important;
-      }
-      #rolling-excel-overlay .v847-shot-footer .v851-result-total {
-        grid-column: 1 / -1 !important;
-      }
-      #rolling-excel-overlay .v847-shot-footer b { color: #f8fafc !important; }
-      #rolling-excel-overlay .v847-shot-footer b.pos { color: #22c55e !important; }
-      #rolling-excel-overlay .v847-shot-footer b.neg { color: #ef4444 !important; }
-
-      #rolling-excel-overlay .v847-bet-leg-result-panel:empty { display: none !important; }
-      #rolling-excel-overlay .v847-leg-panel-inner {
-        display: grid !important;
-        gap: 8px !important;
-        margin-top: 8px !important;
-        padding: 9px !important;
-        border: 1px solid rgba(251,191,36,.24) !important;
-        border-radius: 12px !important;
-        background: rgba(2,6,23,.42) !important;
-        color: #f8fafc !important;
-      }
-      #rolling-excel-overlay .v847-leg-panel-head {
-        display: flex !important;
-        justify-content: space-between !important;
-        gap: 8px !important;
-        align-items: center !important;
-        padding-bottom: 2px !important;
-        font-size: .70rem !important;
-      }
-      #rolling-excel-overlay .v847-leg-panel-head b {
-        color: #fde68a !important;
-        font-weight: 950 !important;
-      }
-      #rolling-excel-overlay .v847-leg-panel-head span {
-        color: #bfdbfe !important;
-        font-weight: 900 !important;
-      }
-      #rolling-excel-overlay .v847-leg-result-row {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        gap: 6px !important;
-        align-items: stretch !important;
-        padding: 8px 9px !important;
-        border-radius: 10px !important;
-        background: rgba(15,23,42,.70) !important;
-        border: 1px solid rgba(148,163,184,.16) !important;
-      }
-      #rolling-excel-overlay .v847-leg-result-row.win {
-        border-color: rgba(16,185,129,.40) !important;
-        background: rgba(6,78,59,.34) !important;
-      }
-      #rolling-excel-overlay .v847-leg-result-row.loss {
-        border-color: rgba(239,68,68,.42) !important;
-        background: rgba(127,29,29,.34) !important;
-      }
-      #rolling-excel-overlay .v847-leg-result-row > span {
-        white-space: normal !important;
-        overflow: visible !important;
-        text-overflow: clip !important;
-        line-height: 1.25 !important;
-        color: #e5e7eb !important;
-        font-size: .74rem !important;
-        font-weight: 900 !important;
-        cursor: default !important;
-      }
-      #rolling-excel-overlay .v854-leg-result-meta {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 10px !important;
-        width: 100% !important;
-      }
-      #rolling-excel-overlay .v854-leg-result-meta b {
-        color: #fbbf24 !important;
-        font-size: .72rem !important;
-        font-weight: 950 !important;
-        text-align: left !important;
-        min-width: max-content !important;
-      }
-      #rolling-excel-overlay .v854-leg-result-actions {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: flex-end !important;
-        gap: 5px !important;
-        flex: 0 0 auto !important;
-      }
-      #rolling-excel-overlay .v854-leg-result-actions button {
-        appearance: none !important;
-        width: 27px !important;
-        height: 27px !important;
-        min-width: 27px !important;
-        border-radius: 8px !important;
-        padding: 0 !important;
-        display: inline-grid !important;
-        place-items: center !important;
-        font-size: 14px !important;
-        font-weight: 950 !important;
-        cursor: pointer !important;
-        border: 1px solid transparent !important;
-      }
-      #rolling-excel-overlay .v854-leg-result-actions button.win {
-        background: rgba(6,78,59,.72) !important;
-        border-color: rgba(52,211,153,.46) !important;
-        color: #bbf7d0 !important;
-      }
-      #rolling-excel-overlay .v854-leg-result-actions button.loss {
-        background: rgba(127,29,29,.72) !important;
-        border-color: rgba(248,113,113,.46) !important;
-        color: #fecaca !important;
-      }
-      #rolling-excel-overlay .v854-leg-result-actions button.win.selected {
-        background: linear-gradient(145deg, #16a34a, #047857) !important;
-        border-color: rgba(220,252,231,.82) !important;
-        color: #fff !important;
-        box-shadow: 0 0 0 1px rgba(34,197,94,.38), 0 0 13px rgba(34,197,94,.20) !important;
-      }
-      #rolling-excel-overlay .v854-leg-result-actions button.loss.selected {
-        background: linear-gradient(145deg, #dc2626, #991b1b) !important;
-        border-color: rgba(254,226,226,.82) !important;
-        color: #fff !important;
-        box-shadow: 0 0 0 1px rgba(239,68,68,.38), 0 0 13px rgba(239,68,68,.20) !important;
-      }
-      #rolling-excel-overlay .k-actions.v32.v847-hide-main-actions {
-        display: flex !important;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
   function getSoundSettings() {
     try {
       return {
@@ -812,35 +503,10 @@
     return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
   }
 
-  function v855ParseNumber(value) {
-    if (value === "" || value == null) return 0;
-    const raw = String(value).trim().replace(/\s+/g, "").replace(",", ".");
-    const parsed = Number.parseFloat(raw);
-    return Number.isFinite(parsed) ? parsed : 0;
-  }
-
-  function v856RequireStake(day, slot) {
-    const input = document.getElementById(`e-a-${day}-${slot}`);
-    const value = input ? v855ParseNumber(input.value) : 0;
-    if (value > 0) {
-      if (input) input.classList.remove("v856-stake-warning");
-      return true;
-    }
-    if (input) {
-      input.value = "";
-      input.placeholder = "Tutar gir";
-      input.classList.add("v856-stake-warning");
-      input.focus({ preventScroll: false });
-      setTimeout(() => input.classList.remove("v856-stake-warning"), 2200);
-    }
-    if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Tutar gir");
-    return false;
-  }
-
   function v763ComboRows(day, slot) {
     return Array.from(document.querySelectorAll(`[data-v763-extra-row="${day}:${slot}"]`)).map(row => ({
       note: (row.querySelector(`[data-v763-extra-note]`)?.value || "").trim(),
-      odds: v855ParseNumber(row.querySelector(`[data-v763-extra-odds]`)?.value || 0)
+      odds: Number(row.querySelector(`[data-v763-extra-odds]`)?.value || 0)
     })).filter(x => x.note || x.odds);
   }
 
@@ -869,10 +535,10 @@
   };
 
   function v763BetTotalOdds(primary, comboRows) {
-    let total = v855ParseNumber(primary || 0);
+    let total = Number(primary || 0);
     if (!total) return 0;
     comboRows.forEach(row => {
-      const o = v855ParseNumber(row.odds || 0);
+      const o = Number(row.odds || 0);
       if (o) total *= o;
     });
     return total;
@@ -883,119 +549,8 @@
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
-  function v847BetLegStatusLabel(status) {
-    return status === "loss" ? "KAYBETTİ" : status === "win" ? "KAZANDI" : "BEKLİYOR";
-  }
-
-  function v847BetLegStatusClass(status) {
-    return status === "loss" ? "loss" : status === "win" ? "win" : "pending";
-  }
-
-  function v847BetLegsFromDom(day, slot) {
-    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-    const odds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
-    return [{ note, odds }, ...v763ComboRows(day, slot)].filter(row => row.note || Number(row.odds || 0));
-  }
-
-  function v847RenderBetLegResultPanel(day, slot) {
-    const rows = v847BetLegsFromDom(day, slot);
-    if (rows.length <= 1) return "";
-    const pending = v774GetPendingSlot(day, slot);
-    const results = Array.isArray(pending?.comboResults) ? pending.comboResults : [];
-    const done = rows.filter((_, idx) => results[idx] === "win" || results[idx] === "loss").length;
-    return `<div class="v847-leg-panel-inner">
-      <div class="v847-leg-panel-head"><b>Maç Sonuçları</b><span>${done}/${rows.length} sonuçlandı</span></div>
-      ${rows.map((row, idx) => {
-        const status = results[idx] === "loss" ? "loss" : results[idx] === "win" ? "win" : "";
-        const name = row.note || `Maç ${idx + 1}`;
-        const odds = Number(row.odds || 0) ? Number(row.odds).toFixed(2) : "-";
-        const safeName = v763EscapeHtml(name);
-        return `<div class="v847-leg-result-row ${status || "pending"}">
-          <span>${idx + 1}. ${safeName}</span>
-          <div class="v854-leg-result-meta">
-            <b>Oran: ${odds}</b>
-            <div class="v854-leg-result-actions">
-              <button type="button" class="win ${status === "win" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:win" onclick="return omega_SetBetLegResult(event, ${day}, ${slot}, ${idx}, 'win')" title="Bu maç kazandı">✓</button>
-              <button type="button" class="loss ${status === "loss" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:loss" onclick="return omega_SetBetLegResult(event, ${day}, ${slot}, ${idx}, 'loss')" title="Bu maç kaybetti">×</button>
-            </div>
-          </div>
-        </div>`;
-      }).join("")}
-    </div>`;
-  }
-
-  function v847RenderBetResultCard(day, slot, op, amt, baseOdds, comboRows, totalOdds, effect) {
-    const legs = [{ note: op.note || "Maç", odds: baseOdds }, ...comboRows.map(row => ({ note: row.note || "Maç", odds: Number(row.odds || 0) }))];
-    const rawResults = Array.isArray(op.comboResults) ? op.comboResults : [];
-    const isCombo = legs.length > 1;
-    const finalStatus = op.res === "loss" ? "loss" : "win";
-    const finalLabel = finalStatus === "loss" ? "KAYBETTİ" : "KAZANDI";
-    const totalLabel = finalStatus === "loss" ? "Kayıp" : "Kazanç";
-    const title = isCombo ? `KOMBİNE ${legs.length} MAÇ` : "TEKLİ BAHİS";
-    const netValue = Number(effect || 0);
-    const displayValue = finalStatus === "win"
-      ? (Number(amt || 0) && Number(totalOdds || 0) ? Number(amt || 0) * Number(totalOdds || 0) : Math.max(0, netValue))
-      : -Math.abs(Number(amt || 0));
-    const netText = `${displayValue >= 0 ? "" : "-"}$${Math.abs(displayValue).toFixed(2)}`;
-    const rowsHtml = legs.map((leg, idx) => {
-      let status = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
-      if (!status && !isCombo) status = finalStatus;
-      const name = leg.note || `Maç ${idx + 1}`;
-      const odds = Number(leg.odds || 0) ? Number(leg.odds).toFixed(2) : "-";
-      const safeName = v763EscapeHtml(name);
-      return `<li class="${v847BetLegStatusClass(status)}">
-        <span>${idx + 1}. ${safeName}</span>
-        <div class="v851-shot-line-meta">
-          <b>Oran: ${odds}</b>
-          <em>${v847BetLegStatusLabel(status)}</em>
-        </div>
-      </li>`;
-    }).join("");
-    return `<div class="kapsul v32 v847-shot-result ${finalStatus}">
-      <div class="v850-shot-toolbar">
-        <button type="button" class="v847-shot-back v850-shot-return" onclick="return omega_ReturnExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
-      </div>
-      <div class="v873-shot-context">GÜN ${day} BAHİS ${slot + 1}</div>
-      <div class="v847-shot-head">
-        <b>${title}</b>
-        <div class="v847-shot-head-tools">
-          <span class="${finalStatus}">${finalLabel}</span>
-          <button type="button" class="v847-shot-camera" onclick="return omega_RollingResultPhoto(event, ${day}, ${slot})" title="Sonuç fotoğrafını göster"><i class="fa-solid fa-camera"></i></button>
-        </div>
-      </div>
-      <ul class="v847-shot-lines">${rowsHtml}</ul>
-      <div class="v847-shot-footer v851-shot-footer">
-        <span>Toplam Oran <b>${Number(totalOdds || 0) ? Number(totalOdds).toFixed(2) : "-"}</b></span>
-        <span>Tutar <b>${v768Money(amt)}</b></span>
-        <span class="v851-result-total ${finalStatus}">${totalLabel} <b class="${netValue >= 0 ? "pos" : "neg"}">${netText}</b></span>
-      </div>
-    </div>`;
-  }
-
-  function v847SetBetLegResult(day, slot, index, status) {
-    if (!Number.isFinite(day) || !Number.isFinite(slot) || !Number.isFinite(index)) return false;
-    const domEntry = v774PendingFromDom(day, slot);
-    const savedEntry = v774GetPendingSlot(day, slot);
-    const pending = domEntry || savedEntry;
-    if (!pending || !pending.note) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Önce maç ve oran alanlarını doldur.");
-      return false;
-    }
-    const legs = [{ note: pending.note, odds: pending.odds }, ...(Array.isArray(pending.combo) ? pending.combo : [])].filter(row => row.note || Number(row.odds || 0));
-    if (legs.length <= 1) return false;
-    const results = Array.from({ length: legs.length }, (_, i) => {
-      const v = Array.isArray(pending.comboResults) ? pending.comboResults[i] : "";
-      return v === "loss" ? "loss" : v === "win" ? "win" : "";
-    });
-    const next = status === "loss" ? "loss" : "win";
-    results[index] = results[index] === next ? "" : next;
-    v774SetPendingSlot(day, slot, { ...pending, comboResults: results, updatedAt: Date.now() });
-    omega_RenderExcelTable();
-    return false;
-  }
-
   function v768SlotOdds(day, slot) {
-    const mainOdds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+    const mainOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
     const extras = v763ComboRows(day, slot);
     return v763BetTotalOdds(mainOdds, extras);
   }
@@ -1004,13 +559,9 @@
     const box = document.querySelector(`[data-v768-calc="${day}:${slot}"]`);
     if (!box) return;
     const totalOdds = v768SlotOdds(day, slot);
-    const stake = v855ParseNumber(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
+    const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
     const possible = totalOdds && stake ? stake * totalOdds : 0;
     box.innerHTML = `<span>Toplam Oran: <b>${totalOdds ? totalOdds.toFixed(2) : "-"}</b></span><span>Tahmini Kazanç: <b>${possible ? v768Money(possible) : "-"}</b></span>`;
-    const legPanel = document.querySelector(`[data-v847-leg-panel="${day}:${slot}"]`);
-    if (legPanel) legPanel.innerHTML = v847RenderBetLegResultPanel(day, slot);
-    const actions = document.querySelector(`[data-v847-main-actions="${day}:${slot}"]`);
-    if (actions) actions.classList.remove("v847-hide-main-actions");
   }
 
   function v768BindBetCalc(root) {
@@ -1040,15 +591,14 @@
   function v774NormalizePendingEntry(entry) {
     if (!entry || typeof entry !== "object") return null;
     const note = String(entry.note || "").trim();
-    const stake = entry.amt === "" || entry.amt == null ? "" : v855ParseNumber(entry.amt || 0);
-    const odds = entry.odds === "" || entry.odds == null ? "" : v855ParseNumber(entry.odds || 0);
+    const stake = entry.amt === "" || entry.amt == null ? "" : Number(entry.amt || 0);
+    const odds = entry.odds === "" || entry.odds == null ? "" : Number(entry.odds || 0);
     const combo = Array.isArray(entry.combo) ? entry.combo.map(row => ({
       note: String(row?.note || "").trim(),
-      odds: row?.odds === "" || row?.odds == null ? "" : v855ParseNumber(row.odds || 0)
+      odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0)
     })).filter(row => row.note || Number(row.odds || 0)) : [];
     if (!note && stake === "" && odds === "" && !combo.length) return null;
-    const comboResults = Array.isArray(entry.comboResults) ? entry.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1) : [];
-    return { note, amt: stake, odds, combo, comboResults, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
+    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
   }
 
   function v774PendingFromDom(day, slot) {
@@ -1058,14 +608,12 @@
     const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
     const stakeText = document.getElementById(`e-a-${day}-${slot}`)?.value || "";
     const oddsText = document.getElementById(`e-o-${day}-${slot}`)?.value || "";
-    const stake = stakeText === "" ? "" : v855ParseNumber(stakeText || 0);
-    const odds = oddsText === "" ? "" : v855ParseNumber(oddsText || 0);
+    const stake = stakeText === "" ? "" : Number(stakeText || 0);
+    const odds = oddsText === "" ? "" : Number(oddsText || 0);
     const combo = v763ComboRows(day, slot).map(row => ({ note: row.note, odds: row.odds || "" }));
-    const previous = v774GetPendingSlot(day, slot);
-    const comboResults = Array.isArray(previous?.comboResults) ? previous.comboResults : [];
     const hasAny = Boolean(note || stakeText !== "" || oddsText !== "" || combo.length);
     if (!hasAny) return null;
-    return { note, amt: stake, odds, combo, comboResults, status: "pending", updatedAt: Date.now() };
+    return { note, amt: stake, odds, combo, status: "pending", updatedAt: Date.now() };
   }
 
   function v774SetPendingSlot(day, slot, entry) {
@@ -1151,8 +699,8 @@
         if (saved) continue;
         if (!smartBet) {
           const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-          const stake = v855ParseNumber(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
-          const odds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+          const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
+          const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
           const combo = isCrypto ? [] : v763ComboRows(day, slot);
           if (!note && !stake && !odds && !combo.length) continue;
           const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
@@ -1168,7 +716,7 @@
         const odds = Number(src.odds || 0);
         const combo = Array.isArray(src.combo) ? src.combo : [];
         const totalOdds = v763BetTotalOdds(odds, combo);
-        rows.push({ day, slot, note: src.note, stake, odds, combo, comboResults: Array.isArray(src.comboResults) ? src.comboResults : [], totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true });
+        rows.push({ day, slot, note: src.note, stake, odds, combo, totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true });
       }
     }
     return rows;
@@ -1201,8 +749,82 @@
       const title = isCrypto ? (row.note || "İşlem") : (row.combo?.length ? "Kombine" : (row.note || "Maç"));
       const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
       const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Tahmini Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
-      return `<article class="v768-feature-card"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
+      return `<article class="v768-feature-card"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Kutu ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
     }).join("");
+  }
+
+  function v891ActiveBetPhotoSvg() {
+    v774FlushAllPendingFromDom();
+    const rows = v768LiveRows("bet");
+    if (!rows.length) return null;
+    const safe = v763EscapeHtml;
+    const moneyLabel = v768Money;
+    const lineRows = [];
+    rows.forEach(row => {
+      const combo = Array.isArray(row.combo) ? row.combo : [];
+      const matchRows = [{ note: row.note || "Maç", odds: Number(row.odds || 0) }, ...combo.map(x => ({ note: x.note || "Maç", odds: Number(x.odds || 0) }))];
+      lineRows.push({ kind: "head", day: row.day, slot: row.slot, stake: Number(row.stake || 0), totalOdds: Number(row.totalOdds || 0), possible: Number(row.possible || 0), count: matchRows.length });
+      matchRows.forEach((m, idx) => lineRows.push({ kind: "match", idx, note: m.note || "Maç", odds: Number(m.odds || 0) }));
+      lineRows.push({ kind: "summary", stake: Number(row.stake || 0), totalOdds: Number(row.totalOdds || 0), possible: Number(row.possible || 0) });
+      lineRows.push({ kind: "gap" });
+    });
+    const height = Math.max(520, 140 + lineRows.length * 38 + 80);
+    let y = 126;
+    const parts = [`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}">`,
+      `<rect width="900" height="${height}" fill="#020617"/>`,
+      `<rect x="22" y="22" width="856" height="${height - 44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/>`,
+      `<text x="42" y="72" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">AKTİF BAHİSLER / KUPONLAR</text>`,
+      `<text x="42" y="104" fill="#e5e7eb" font-size="18" font-family="Arial" font-weight="800">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text>`];
+    lineRows.forEach(row => {
+      if (row.kind === "head") {
+        parts.push(`<rect x="42" y="${y}" width="816" height="38" rx="13" fill="#1e293b" stroke="#475569"/>`);
+        parts.push(`<text x="64" y="${y + 25}" fill="#f8fafc" font-size="20" font-family="Arial" font-weight="900">GÜN ${row.day} BAHİS ${row.slot + 1}</text>`);
+        parts.push(`<text x="836" y="${y + 25}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${row.count > 1 ? `KOMBİNE ${row.count} MAÇ` : "TEKLİ BAHİS"}</text>`);
+        y += 48;
+      } else if (row.kind === "match") {
+        const note = String(row.note || "Maç");
+        const shortNote = note.length > 72 ? note.slice(0, 69) + "..." : note;
+        parts.push(`<text x="66" y="${y + 18}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="800">${row.idx + 1}. ${safe(shortNote)}</text>`);
+        parts.push(`<text x="836" y="${y + 18}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">Oran: ${row.odds ? row.odds.toFixed(2) : "-"}</text>`);
+        y += 34;
+      } else if (row.kind === "summary") {
+        parts.push(`<rect x="56" y="${y}" width="788" height="76" rx="14" fill="#111827" stroke="#334155"/>`);
+        parts.push(`<text x="76" y="${y + 25}" fill="#cbd5e1" font-size="16" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="826" y="${y + 25}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</text>`);
+        parts.push(`<text x="76" y="${y + 48}" fill="#cbd5e1" font-size="16" font-family="Arial" font-weight="800">Bahis Tutarı:</text><text x="826" y="${y + 48}" text-anchor="end" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="900">${moneyLabel(row.stake)}</text>`);
+        parts.push(`<text x="76" y="${y + 70}" fill="#22c55e" font-size="16" font-family="Arial" font-weight="900">Kazanç:</text><text x="826" y="${y + 70}" text-anchor="end" fill="#22c55e" font-size="17" font-family="Arial" font-weight="900">${row.possible ? moneyLabel(row.possible) : "-"}</text>`);
+        y += 88;
+      } else {
+        y += 10;
+      }
+    });
+    parts.push(`</svg>`);
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(parts.join(""));
+  }
+
+  function v891OpenActiveBetPhotoPreview() {
+    const uri = v891ActiveBetPhotoSvg();
+    if (!uri) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Aktif bahis bulunamadı.");
+      else alert("Aktif bahis bulunamadı.");
+      return false;
+    }
+    let host = document.getElementById("omega-rolling-feature-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-rolling-feature-host";
+      document.body.appendChild(host);
+    }
+    host.innerHTML = `<div class="v776-photo-overlay" data-v891-active-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Aktif Bahisler Fotoğrafı</b><span>BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</span></div><button type="button" data-v891-active-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v891-active-photo-download>Resmi İndir</button></div><img src="${uri}" alt="Aktif bahisler fotoğrafı"></section></div>`;
+    host.style.display = "block";
+    host.querySelectorAll("[data-v891-active-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v891-active-photo-close")) return;
+      host.innerHTML = "";
+      host.style.display = "none";
+    }));
+    host.querySelector("[data-v891-active-photo-download]")?.addEventListener("click", () => {
+      v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-aktif-bahisler-${new Date().toISOString().slice(0,10)}.png`);
+    });
+    return false;
   }
 
   function v768OpenFeaturePanel(mode = "bet", kind = "active") {
@@ -1218,7 +840,8 @@
     const title = k === "active" ? (m === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR") : k === "history" ? "Geçmiş" : "Rapor";
     const reportRows = v768HistoryRows(m);
     const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>Toplam K/Z</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
-    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük modal</span></div><button type="button" data-v768-feature-close>×</button></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
+    const activePhotoBtn = k === "active" && m === "bet" ? `<button type="button" class="v891-feature-photo-btn" data-v891-active-photo title="Aktif bahisler fotoğrafı" aria-label="Aktif bahisler fotoğrafı"><i class="fa-solid fa-camera"></i></button>` : "";
+    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük modal</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
     host.style.display = "block";
   }
 
@@ -1234,21 +857,6 @@
 
 
   function v776SlotPhotoRows(day, slot) {
-    const plan = ensureRollingPlan();
-    const resolved = plan.ops?.[day]?.[slot] || null;
-    if (resolved) {
-      const combo = Array.isArray(resolved.combo) ? resolved.combo : [];
-      const rawResults = Array.isArray(resolved.comboResults) ? resolved.comboResults : [];
-      const rows = [{ note: resolved.note || "Maç", odds: Number(resolved.odds || 0) }, ...combo.map(row => ({ note: row.note || "Maç", odds: Number(row.odds || 0) }))].map((row, idx) => {
-        let result = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
-        if (!result && combo.length === 0) result = resolved.res === "loss" ? "loss" : resolved.res === "win" ? "win" : "";
-        return { ...row, result };
-      });
-      const stake = Number(resolved.amt || 0);
-      const totalOdds = v763BetTotalOdds(Number(resolved.odds || 0), combo);
-      const possible = stake && totalOdds ? stake * totalOdds : 0;
-      return { rows, stake, totalOdds, possible, result: resolved.res === "loss" ? "loss" : "win" };
-    }
     const pending = v774GetPendingSlot(day, slot);
     const baseNote = (document.getElementById(`e-n-${day}-${slot}`)?.value || pending?.note || "").trim();
     const baseOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || pending?.odds || 0);
@@ -1277,19 +885,12 @@
     const footerH = 130;
     const height = Math.max(520, footerY + footerH + 46);
     const totalOddsLabel = data.totalOdds ? data.totalOdds.toFixed(2) : "-";
-    const hasFinalResult = data.result === "loss" || data.result === "win";
-    const resultDisplay = hasFinalResult ? (data.result === "loss" ? -Number(data.stake || 0) : Number(data.possible || 0)) : 0;
-    const resultLabel = hasFinalResult ? (data.result === "loss" ? "Kayıp:" : "Kazanç:") : "Tahmini Kazanç:";
-    const resultColor = hasFinalResult ? (resultDisplay >= 0 ? "#22c55e" : "#ef4444") : "#22c55e";
-    const possibleLabel = hasFinalResult ? `${resultDisplay >= 0 ? "" : "-"}$${Math.abs(resultDisplay).toFixed(2)}` : (data.possible ? v768Money(data.possible) : "-");
+    const possibleLabel = data.possible ? v768Money(data.possible) : "-";
     const rowHtml = data.rows.map((row, idx) => {
       const y = 150 + idx * 48;
-      const result = row.result === "loss" ? "loss" : row.result === "win" ? "win" : "";
-      const statusText = result === "loss" ? "KAYBETTİ" : result === "win" ? "KAZANDI" : "";
-      const statusColor = result === "loss" ? "#ef4444" : "#22c55e";
-      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text>${statusText ? `<text x="720" y="${y - 3}" text-anchor="end" fill="${statusColor}" font-size="17" font-family="Arial" font-weight="900">${statusText}</text>` : ""}<text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
+      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text><text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
     }).join('');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="${resultColor}" font-size="19" font-family="Arial" font-weight="900">${resultLabel}</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="${resultColor}" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · KUTU ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
@@ -1352,7 +953,7 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} Bahis ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v777-photo-download>Resmi İndir</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Kutu ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><button type="button" data-v777-photo-download>Resmi İndir PNG</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
@@ -1364,54 +965,14 @@
       if (w) w.document.write(`<img src="${uri}" style="max-width:100%;height:auto;background:#020617;display:block;margin:0 auto;">`);
     });
     host.querySelector("[data-v777-photo-download]")?.addEventListener("click", () => {
-      v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-bahis-${slot + 1}.png`);
-    });
-    return false;
-  };
-
-  window.omega_RollingResultPhoto = function(event, day, slot) {
-    if (event && typeof event.preventDefault === "function") event.preventDefault();
-    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
-    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-    const uri = v776BuildSlotPhotoSvg(day, slot);
-    if (!uri) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Sonuç fotoğrafı hazırlanamadı.");
-      else alert("Sonuç fotoğrafı hazırlanamadı.");
-      return false;
-    }
-    let host = document.getElementById("omega-rolling-feature-host");
-    if (!host) {
-      host = document.createElement("div");
-      host.id = "omega-rolling-feature-host";
-      document.body.appendChild(host);
-    }
-    host.innerHTML = `<div class="v776-photo-overlay v850-result-photo-overlay" data-v776-photo-close>
-      <section class="v776-photo-modal v850-result-photo-modal">
-        <div class="v776-photo-head v850-result-photo-head">
-          <div><b>7 GÜNLÜK ROLLING</b><span>GÜN ${day} BAHİS ${slot + 1}</span></div>
-          <button type="button" data-v776-photo-close>×</button>
-        </div>
-        <div class="v776-photo-actions v850-result-photo-actions">
-          <button type="button" data-v777-photo-download><i class="fa-solid fa-download"></i> Resmi İndir</button>
-        </div>
-        <img src="${uri}" alt="7 Günlük Rolling bahis sonucu">
-      </section>
-    </div>`;
-    host.style.display = "block";
-    host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
-      if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
-      host.innerHTML = "";
-      host.style.display = "none";
-    }));
-    host.querySelector("[data-v777-photo-download]")?.addEventListener("click", () => {
-      v777DownloadPhotoPng(uri, `7-gunluk-rolling-gun-${day}-bahis-${slot + 1}.png`);
+      v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-kutu-${slot + 1}.png`);
     });
     return false;
   };
 
   function v763DayToolButtons(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const activeLabel = m === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
+    const activeLabel = m === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisleri Görüntüle";
     return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls v770-excel-feature-controls v771-excel-feature-controls" data-v771-feature-controls="${m}">
       <button type="button" class="v758-row-tool v759-row-tool active" data-v768-feature-open="${m}:active">${activeLabel}</button>
       <button type="button" class="v758-row-tool v759-row-tool history" data-v768-feature-open="${m}:history">Geçmiş</button>
@@ -1460,10 +1021,6 @@
         window.omega_RollingExcelOpenFeature(event, modeRaw, kindRaw);
         return;
       }
-      const legResultBtn = event.target.closest && event.target.closest("[data-v847-leg-result]");
-      if (legResultBtn) {
-        return;
-      }
       const comboBtn = event.target.closest && event.target.closest("[data-v768-combo]");
       if (comboBtn) {
         event.preventDefault();
@@ -1471,6 +1028,14 @@
         if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
         const [dayRaw, slotRaw, dirRaw] = String(comboBtn.dataset.v768Combo || "0:0:plus").split(":");
         window.omega_RollingToggleComboRow(Number(dayRaw), Number(slotRaw), dirRaw === "minus" ? "minus" : "plus");
+        return;
+      }
+      const activePhotoBtn = event.target.closest && event.target.closest("[data-v891-active-photo]");
+      if (activePhotoBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        v891OpenActiveBetPhotoPreview();
         return;
       }
       const closeBtn = event.target.closest && event.target.closest("[data-v768-feature-close]");
@@ -1497,9 +1062,6 @@
       const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
       if (!kapsul) return;
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
-      if (event.target && event.target.id === `e-a-${day}-${slot}` && v855ParseNumber(event.target.value) > 0) {
-        event.target.classList.remove("v856-stake-warning");
-      }
       v768UpdateBetCalc(day, slot);
       v774SavePendingSlot(day, slot);
     }, true);
@@ -1569,22 +1131,24 @@
           const pnl = isCryptoV491 ? Math.abs(baseOdds) : (op.res === "win" ? (amt * totalOdds) - amt : amt);
           const effect = op.res === "win" ? pnl : -pnl;
           runningBalance += effect; totalProfit += effect; dayProfit += effect;
-          if (!isCryptoV491) {
-            cards.push(v847RenderBetResultCard(day, slot, op, amt, baseOdds, comboRows, totalOdds, effect));
-          } else {
-            const title = op.note || "İşlem";
-            const detail = `$${amt} · Net $${Number(baseOdds || 0).toFixed(2)}`;
-            cards.push(`
-              <div class="kapsul v32 ${op.res}">
-                <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
-                <div class="k-result">
-                  <div class="k-note-show">${v763EscapeHtml(title)}</div>
-                  <b>${detail}</b>
-                  <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
-                </div>
+          const title = isCryptoV491
+            ? (op.note || "İşlem")
+            : (comboRows.length ? "Kombine" : (op.note || "Maç"));
+          const detail = isCryptoV491
+            ? `$${amt} · Net $${Number(baseOdds || 0).toFixed(2)}`
+            : (comboRows.length ? `${comboRows.length + 1} maç · $${amt} x ${Number(totalOdds || 0).toFixed(2)}` : `$${amt} x ${baseOdds}`);
+          const comboHtml = (!isCryptoV491 && comboRows.length) ? `<ul class="v763-result-combo-list"><li>${v763EscapeHtml(op.note || "Maç")} <b>${Number(baseOdds || 0).toFixed(2)}</b></li>${comboRows.map(row => `<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`).join("")}</ul>` : "";
+          cards.push(`
+            <div class="kapsul v32 ${op.res}">
+              <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
+              <div class="k-result">
+                <div class="k-note-show">${v763EscapeHtml(title)}</div>
+                <b>${detail}</b>
+                <span>${effect >= 0 ? '+' : '-'}$${Math.abs(effect).toFixed(2)}</span>
+                ${comboHtml}
               </div>
-            `);
-          }
+            </div>
+          `);
         } else {
           const pendingV774 = !isCryptoV491 ? v774GetPendingSlot(day, slot) : null;
           const pNoteV774 = v763EscapeHtml(pendingV774?.note || "");
@@ -1615,10 +1179,9 @@
                   <div class="v765-extra-match-list">${pComboHtmlV774}</div>
                   <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
                   <div class="v768-bet-calc" data-v768-calc="${day}:${slot}"><span>Toplam Oran: <b>-</b></span><span>Tahmini Kazanç: <b>-</b></span></div>
-                  <div class="v847-bet-leg-result-panel" data-v847-leg-panel="${day}:${slot}"></div>
                 </div>
               `}
-              <div class="k-actions v32" data-v847-main-actions="${day}:${slot}">
+              <div class="k-actions v32">
                 <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
                 <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>
               </div>
@@ -1668,88 +1231,13 @@
     omega_SaveRollingDB();
   };
 
-  window.omega_SetBetLegResult = function(event, day, slot, index, status) {
-    if (event && typeof event.preventDefault === "function") event.preventDefault();
-    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
-    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-    return v847SetBetLegResult(Number(day), Number(slot), Number(index), status === "loss" ? "loss" : "win");
-  };
-
-  window.omega_CloseExcelOp = function(event, day, slot) {
-    if (event && typeof event.preventDefault === "function") event.preventDefault();
-    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
-    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-
-    const currentPlan = ensureRollingPlan();
-    if (currentPlan.ops?.[day]) currentPlan.ops[day][slot] = null;
-    if (currentPlan.pending?.[day]) currentPlan.pending[day][slot] = null;
-
-    omega_SaveRollingDB();
-    omega_RenderExcelTable();
-    return false;
-  };
-
-  window.omega_ReturnExcelOp = function(event, day, slot) {
-    if (event && typeof event.preventDefault === "function") event.preventDefault();
-    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
-    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-
-    const currentPlan = ensureRollingPlan();
-    const op = currentPlan.ops?.[day]?.[slot];
-    if (!op) return false;
-
-    const combo = Array.isArray(op.combo)
-      ? op.combo.map(row => ({ note: String(row?.note || "").trim(), odds: row?.odds === "" || row?.odds == null ? "" : v855ParseNumber(row.odds || 0) }))
-      : [];
-    const comboResults = Array.isArray(op.comboResults)
-      ? op.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1)
-      : [];
-
-    const pendingEntry = v774NormalizePendingEntry({
-      note: op.note || "",
-      amt: op.amt === "" || op.amt == null ? "" : Number(op.amt || 0),
-      odds: op.odds === "" || op.odds == null ? "" : Number(op.odds || 0),
-      combo,
-      comboResults,
-      status: "pending",
-      updatedAt: Date.now()
-    });
-
-    if (!currentPlan.pending) currentPlan.pending = {};
-    if (pendingEntry && pendingEntry.note) {
-      if (!currentPlan.pending[day]) currentPlan.pending[day] = {};
-      currentPlan.pending[day][slot] = pendingEntry;
-    }
-
-    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
-    currentPlan.ops[day][slot] = null;
-
-    omega_SaveRollingDB();
-    omega_RenderExcelTable();
-    return false;
-  };
-
-  window.omega_ResolveExcelOp = function(day, slot, result, meta = {}) {
+  window.omega_ResolveExcelOp = function(day, slot, result) {
     const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
     const isCrypto = localStorage.getItem("finance_rolling_mode") === "crypto";
-    const amt = v855ParseNumber(document.getElementById(`e-a-${day}-${slot}`)?.value);
-    const odds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value);
+    const amt = parseFloat(document.getElementById(`e-a-${day}-${slot}`)?.value);
+    const odds = parseFloat(document.getElementById(`e-o-${day}-${slot}`)?.value);
     const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
-    const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
     const hasComboGap = comboRows.some(row => !row.note || !Number(row.odds || 0));
-    if (!isCrypto && !v856RequireStake(day, slot)) return;
-    if (isCrypto && !(amt > 0)) {
-      const stakeInput = document.getElementById(`e-a-${day}-${slot}`);
-      if (stakeInput) {
-        stakeInput.value = "";
-        stakeInput.placeholder = "Tutar gir";
-        stakeInput.classList.add("v856-stake-warning");
-        stakeInput.focus({ preventScroll: false });
-        setTimeout(() => stakeInput.classList.remove("v856-stake-warning"), 2200);
-      }
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Tutar gir");
-      return;
-    }
     if (isNaN(amt) || isNaN(odds) || (!isCrypto && hasComboGap)) {
       if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Tutar ve Net K/Z $ alanını doldur." : "Maç, oran, tutar ve ek maç oranlarını doldur.");
       return;
@@ -1760,12 +1248,7 @@
     }
     const currentPlan = ensureRollingPlan();
     if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
-    const comboResults = !isCrypto
-      ? (Array.isArray(meta.comboResults) ? meta.comboResults : Array.isArray(pendingBeforeResolve?.comboResults) ? pendingBeforeResolve.comboResults : [])
-          .map(v => v === "loss" ? "loss" : v === "win" ? "win" : "")
-          .slice(0, comboRows.length + 1)
-      : [];
-    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, comboResults, res: result, netMode: isCrypto ? "amount" : "odds" };
+    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, res: result, netMode: isCrypto ? "amount" : "odds" };
     if (currentPlan.pending?.[day]) {
       delete currentPlan.pending[day][slot];
       if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];
@@ -1776,7 +1259,6 @@
 
   const oldOpenRolling = window.omega_OpenRollingExcel;
   window.omega_OpenRollingExcel = function(days, skipHash = false) {
-    v863EnsureRolling7CriticalCss();
     const result = typeof oldOpenRolling === "function" ? oldOpenRolling(days, skipHash) : undefined;
     document.documentElement.classList.remove("rolling-hash-boot");
     document.body.classList.add("rolling-active");
@@ -1846,7 +1328,6 @@
   }
 
 function boot() {
-    v863EnsureRolling7CriticalCss();
     omega_RemoveOldRollingLaunchCardV46A2();
     prepareCryptoForm();
     renderSoundPanel();
