@@ -610,7 +610,7 @@
       </li>`;
     }).join("");
     return `<div class="kapsul v32 v847-shot-result ${finalStatus}">
-      <button class="k-undo v32 v847-shot-back" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al"><i class="fa-solid fa-arrow-rotate-left"></i><span>Geri Al</span></button>
+      <button type="button" class="v847-shot-back" onclick="return omega_ReturnExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
       <div class="v847-shot-head">
         <b>${title}</b>
         <div class="v847-shot-head-tools">
@@ -1301,6 +1301,46 @@
     if (progressBar) progressBar.style.width = progressPercentage + "%";
 
     omega_SaveRollingDB();
+  };
+
+  window.omega_ReturnExcelOp = function(event, day, slot) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+
+    const currentPlan = ensureRollingPlan();
+    const op = currentPlan.ops?.[day]?.[slot];
+    if (!op) return false;
+
+    const combo = Array.isArray(op.combo)
+      ? op.combo.map(row => ({ note: String(row?.note || "").trim(), odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0) }))
+      : [];
+    const comboResults = Array.isArray(op.comboResults)
+      ? op.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1)
+      : [];
+
+    const pendingEntry = v774NormalizePendingEntry({
+      note: op.note || "",
+      amt: op.amt === "" || op.amt == null ? "" : Number(op.amt || 0),
+      odds: op.odds === "" || op.odds == null ? "" : Number(op.odds || 0),
+      combo,
+      comboResults,
+      status: "pending",
+      updatedAt: Date.now()
+    });
+
+    if (!currentPlan.pending) currentPlan.pending = {};
+    if (pendingEntry && pendingEntry.note) {
+      if (!currentPlan.pending[day]) currentPlan.pending[day] = {};
+      currentPlan.pending[day][slot] = pendingEntry;
+    }
+
+    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    currentPlan.ops[day][slot] = null;
+
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+    return false;
   };
 
   window.omega_ResolveExcelOp = function(day, slot, result, meta = {}) {
