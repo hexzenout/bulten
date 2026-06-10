@@ -1046,7 +1046,8 @@
         const hasResult = !!line.result;
         const rowH = Math.max(40, 16 + wrapped.length * lineH);
         const statusLoss = line.result === "loss" || line.result === "stop";
-        const isCryptoPhotoLine = line.type === "Kripto";
+        const isBetPhotoLine = line.type === "Bahis" || line.type === "Kombine" || titleText === "AKTİF BAHİSLER / KUPONLAR" || titleText === "KOMBİNE KUPON" || titleText === "BAHİS FOTOĞRAFI";
+        const isCryptoPhotoLine = line.type === "Kripto" && !isBetPhotoLine;
         const statusText = isCryptoPhotoLine ? (statusLoss ? "ZARAR" : "KÂR") : (statusLoss ? "KAYBETTİ" : "KAZANDI");
         const statusColor = statusLoss ? "#ef4444" : "#22c55e";
         const statusX = oddsX - 76;
@@ -2613,17 +2614,23 @@
       const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
       const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
       const finalResult = anyLoss ? "loss" : (allWin ? "win" : "");
+      if (result === "win" && !finalResult) { apply(); return; }
       const label = result === "win" ? "Kazandı" : "Kaybetti";
       const title = result === "win" ? "Maç kazandı onayı" : "Maç kaybetti onayı";
       let msg = `Bu maçı "${label}" olarak işlemek istiyor musun?`;
-      if (finalResult) {
-        const finalLabel = finalResult === "win" ? "Kazandı" : "Kaybetti";
+      if (finalResult === "loss") {
+        const finalLabel = "Kaybetti";
         msg = filled.length > 1
           ? `Bu seçimle kombine kupon "${finalLabel}" olacak. Onaylıyor musun?`
           : `Bu bahisi "${finalLabel}" olarak onaylıyor musun?`;
       }
+      if (finalResult === "win") {
+        msg = filled.length > 1
+          ? `Bu seçimle kombine kupondaki tüm maçlar kazanmış olacak. Onaylıyor musun?`
+          : `Bu bahisi "Kazandı" olarak onaylıyor musun?`;
+      }
       openTargetResultConfirm({
-        title,
+        title: finalResult === "win" ? "Kupon kazandı onayı" : title,
         message: msg,
         okText: "Onayla",
         tone: result === "loss" ? "danger" : "success"
