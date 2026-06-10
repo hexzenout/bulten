@@ -676,6 +676,24 @@
     if (!stake || !odds) return 0;
     return stake * odds;
   }
+  function v869BetReturn(item) {
+    const stake = Number(item?.stake || 0);
+    const result = cleanText(item?.result || "");
+    if (result === "loss") return -Math.abs(stake || 0);
+    const possible = v812BetPotential(item);
+    return possible ? possible : 0;
+  }
+  function v869BetSummaryHtml(item) {
+    const odds = v812BetOddsProduct(item);
+    const stake = Number(item?.stake || 0);
+    const gain = v869BetReturn(item);
+    const gainClass = gain < 0 ? "neg" : gain > 0 ? "pos" : "";
+    return `<div class="v869-bet-summary-mini">
+      <div><span>Toplam Oran:</span><b>${odds ? odds.toFixed(2) : "-"}</b></div>
+      <div><span>Bahis Tutarı:</span><b>${stake ? money(stake) : "-"}</b></div>
+      <div><span>Kazanç:</span><b class="${gainClass}">${gain ? (gain < 0 ? "-" + money(Math.abs(gain)) : money(gain)) : "-"}</b></div>
+    </div>`;
+  }
   function v812BetNet(item) {
     const stake = Number(item?.stake || 0);
     const result = cleanText(item?.result || "");
@@ -753,10 +771,10 @@
       const odds = Number(leg.odds || 0) ? Number(leg.odds || 0).toFixed(2) : "-";
       const result = cleanText(leg.result || "");
       const id = escapeHtml(item?.id || "");
-      return `<div class="v813-bet-match-line v819-bet-match-line v822-bet-match-line ${result ? "done " + result : ""}">
+      return `<div class="v813-bet-match-line v819-bet-match-line v822-bet-match-line v869-bet-match-line ${result ? "done " + result : ""}">
         <span title="${escapeHtml(name)}">${escapeHtml(name)}</span>
-        <b>${escapeHtml(odds)}</b>
-        <div class="v819-leg-actions">
+        <b>Oran: ${escapeHtml(odds)}</b>
+        <div class="v819-leg-actions v869-leg-actions">
           <button type="button" class="leg-win ${result === "win" ? "active" : ""}" data-target-bet-leg-result="bet:${id}:${i}:win" title="Maç kazandı"><i class="fa-solid fa-check"></i></button>
           <button type="button" class="leg-loss ${result === "loss" ? "active" : ""}" data-target-bet-leg-result="bet:${id}:${i}:loss" title="Maç kaybetti"><i class="fa-solid fa-xmark"></i></button>
         </div>
@@ -799,11 +817,10 @@
     if (m === "crypto") {
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
-        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v814-crypto-detail-head v819-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row v869-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+          <div class="v814-crypto-detail-head v819-crypto-detail-head v869-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><div class="v869-card-actions"><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="İşlemi sil"><i class="fa-solid fa-xmark"></i></button></div></div>
           <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
           <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
-          <div class="v819-target-card-footer crypto"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
         </li>`;
       }).join("");
       return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -812,10 +829,11 @@
       const result = cleanText(item.result || "");
       const odds = v812BetOddsProduct(item);
       const possibleReturn = v812BetPotential(item);
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
-        <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list">${v813BetLegRowsHtml(item)}</div>
-        <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row v869-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v869-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><div class="v869-card-actions"><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Tüm maçları sil"><i class="fa-solid fa-xmark"></i></button></div></div>
+        <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list v869-bet-match-list">${v813BetLegRowsHtml(item)}</div>
+        ${v869BetSummaryHtml(item)}
+        <div class="v869-target-final-actions bet"><button type="button" class="win" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win">Kupon Kazandı</button><button type="button" class="loss" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss">Kupon Kaybetti</button></div>
       </li>`;
     }).join("");
     return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -1084,6 +1102,58 @@
       <text x="836" y="${footerY + 68}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${signedMoney(Number(v813CryptoTpProfitTotal(item) || 0))}</text>
     </svg>`;
   }
+  function v869BuildTargetBetPhotoSvg(item) {
+    const legs = v812BetLegs(item).filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "" || cleanText(leg.result || ""));
+    const safeLegs = legs.length ? legs : [{ name: "Maç", odds: "", result: "" }];
+    const width = 720;
+    const rowX = 42;
+    const rowW = 636;
+    const leftX = 62;
+    const rightX = 646;
+    let y = 128;
+    const finalResult = cleanText(item?.result || "");
+    const status = finalResult === "loss" ? "KAYBETTİ" : finalResult === "win" ? "KAZANDI" : "BEKLİYOR";
+    const statusColor = finalResult === "loss" ? "#ef4444" : finalResult === "win" ? "#22c55e" : "#fbbf24";
+    const title = safeLegs.length > 1 ? `KOMBİNE ${safeLegs.length} MAÇ` : "TEKLİ BAHİS";
+    const lineParts = [];
+    safeLegs.forEach((leg, idx) => {
+      const nameLines = v785WrapPhotoText(`${idx + 1}. ${cleanText(leg.name || "Maç")}`, 42).slice(0, 3);
+      const result = cleanText(leg.result || finalResult || "");
+      const resultText = result === "loss" ? "KAYBETTİ" : result === "win" ? "KAZANDI" : "";
+      const resultColor = result === "loss" ? "#ef4444" : "#22c55e";
+      nameLines.forEach((txt, lineIdx) => {
+        lineParts.push(`<text x="${leftX}" y="${y}" fill="#f8fafc" font-size="17" font-family="Arial" font-weight="900">${escapeXml(txt)}</text>`);
+        if (lineIdx === 0 && resultText) lineParts.push(`<text x="${rightX}" y="${y}" text-anchor="end" fill="${resultColor}" font-size="16" font-family="Arial" font-weight="900">${resultText}</text>`);
+        y += 23;
+      });
+      const odds = Number(leg.odds || 0) ? Number(leg.odds || 0).toFixed(2) : "-";
+      lineParts.push(`<text x="${leftX + 18}" y="${y}" fill="#fbbf24" font-size="16" font-family="Arial" font-weight="900">Oran: ${escapeXml(odds)}</text>`);
+      y += 36;
+    });
+    const odds = v812BetOddsProduct(item);
+    const stake = Number(item?.stake || 0);
+    const gain = v869BetReturn(item);
+    const gainColor = gain < 0 ? "#ef4444" : "#22c55e";
+    const footerY = y + 14;
+    const height = Math.max(430, footerY + 130);
+    const gainLabel = gain ? (gain < 0 ? "-" + money(Math.abs(gain)) : money(gain)) : "-";
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <rect width="${width}" height="${height}" fill="#020617"/>
+      <rect x="22" y="22" width="${width - 44}" height="${height - 44}" rx="24" fill="#111827" stroke="#e5e7eb" stroke-width="2"/>
+      <text x="${leftX}" y="72" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="900">↩ GERİ DÖN</text>
+      <text x="${width - 70}" y="72" text-anchor="end" fill="#f8fafc" font-size="24" font-family="Arial" font-weight="900">×</text>
+      <text x="${leftX}" y="108" fill="#ffffff" font-size="18" font-family="Arial" font-weight="900">${escapeXml(title)}</text>
+      <text x="${rightX}" y="108" text-anchor="end" fill="${statusColor}" font-size="17" font-family="Arial" font-weight="900">${escapeXml(status)}</text>
+      ${lineParts.join("")}
+      <rect x="${rowX}" y="${footerY - 20}" width="${rowW}" height="104" rx="14" fill="#0b1120" stroke="#334155"/>
+      <text x="${leftX}" y="${footerY + 5}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="900">Toplam Oran:</text>
+      <text x="${rightX}" y="${footerY + 5}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${odds ? odds.toFixed(2) : "-"}</text>
+      <text x="${leftX}" y="${footerY + 35}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="900">Bahis Tutarı:</text>
+      <text x="${rightX}" y="${footerY + 35}" text-anchor="end" fill="#f8fafc" font-size="17" font-family="Arial" font-weight="900">${stake ? money(stake) : "-"}</text>
+      <text x="${leftX}" y="${footerY + 65}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="900">Kazanç:</text>
+      <text x="${rightX}" y="${footerY + 65}" text-anchor="end" fill="${gainColor}" font-size="17" font-family="Arial" font-weight="900">${escapeXml(gainLabel)}</text>
+    </svg>`;
+  }
   function v816BuildTargetItemPhotoData(mode, id) {
     const m = mode === 'crypto' ? 'crypto' : 'bet';
     const store = loadTargetItems();
@@ -1100,7 +1170,7 @@
         odds: Number(v812BetOddsProduct(row) || 0),
         possible: Number(v812BetPotential(row) || 0)
       };
-      const svg = v785BuildBetPhotoSvg([entry], entry.type === 'Kombine' ? 'KOMBİNE KUPON' : 'BAHİS FOTOĞRAFI');
+      const svg = v869BuildTargetBetPhotoSvg(row);
       if (!svg) return null;
       return { dataUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), label: 'Bahis Fotoğrafı', file: `bulten-bahis-${new Date().toISOString().slice(0,10)}.png` };
     }
@@ -2374,11 +2444,25 @@
     });
     mount.querySelectorAll('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]').forEach(form => {
       const autosaveMode = form.matches('[data-target-crypto-autosave="1"]') ? "crypto" : "bet";
+      const formSignature = () => Array.from(form.querySelectorAll('input')).map(input => `${input.getAttribute('data-target-self-field') || input.getAttribute('data-target-bet-leg-field') || input.getAttribute('data-target-self-tp-field') || ''}=${input.value || ''}`).join('|');
+      const saveOnce = () => {
+        if (form.dataset.skipAutosaveOnce === '1') { delete form.dataset.skipAutosaveOnce; return; }
+        const sig = formSignature();
+        if (!sig.replace(/[|=]/g, '').trim()) return;
+        if (form.dataset.lastSavedSig === sig) return;
+        const saved = saveTargetSelfFromForm(autosaveMode);
+        if (saved) { form.dataset.lastSavedSig = sig; refresh(); }
+      };
       form.addEventListener('keydown', event => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
-        const saved = saveTargetSelfFromForm(autosaveMode);
-        if (saved) refresh();
+        saveOnce();
+      });
+      form.addEventListener('focusout', () => {
+        setTimeout(() => {
+          if (form.contains(document.activeElement)) return;
+          saveOnce();
+        }, 0);
       });
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
@@ -2448,41 +2532,15 @@
       if (!row.legs[index]) return;
       const previous = cleanText(row.legs[index].result || "");
       const next = previous === result ? "" : result;
-      const apply = () => {
-        row.legs[index].result = next;
-        row.result = "";
-        const legs = v812BetLegs(row);
-        const filled = legs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
-        const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
-        const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
-        if (anyLoss) row.result = "loss";
-        else if (allWin) row.result = "win";
-        saveTargetItems(store);
-        refresh();
-        if (row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
-      };
-      if (!next) { apply(); return; }
-
-      const tmpLegs = row.legs.map((leg, idx) => idx === index ? { ...leg, result: next } : { ...leg });
-      const filled = tmpLegs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
+      row.legs[index].result = next;
+      row.result = "";
+      const filled = row.legs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
       const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
       const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
-      const finalResult = anyLoss ? "loss" : (allWin ? "win" : "");
-      const label = result === "win" ? "Kazandı" : "Kaybetti";
-      const title = result === "win" ? "Maç kazandı onayı" : "Maç kaybetti onayı";
-      let msg = `Bu maçı "${label}" olarak işlemek istiyor musun?`;
-      if (finalResult) {
-        const finalLabel = finalResult === "win" ? "Kazandı" : "Kaybetti";
-        msg = filled.length > 1
-          ? `Bu seçimle kombine kupon "${finalLabel}" olacak. Onaylıyor musun?`
-          : `Bu bahisi "${finalLabel}" olarak onaylıyor musun?`;
-      }
-      openTargetResultConfirm({
-        title,
-        message: msg,
-        okText: "Onayla",
-        tone: result === "loss" ? "danger" : "success"
-      }, apply);
+      if (anyLoss) row.result = "loss";
+      else if (allWin) row.result = "win";
+      saveTargetItems(store);
+      refresh();
     }));
     mount.querySelectorAll("[data-target-self-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, resultRaw] = String(btn.dataset.targetSelfResult || "bet::").split(":");
@@ -2530,10 +2588,14 @@
       const [modeRaw, id] = String(btn.dataset.targetSelfDelete || "bet:").split(":");
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       if (!id) return;
-      const store = loadTargetItems();
-      store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
-      saveTargetItems(store);
-      refresh();
+      const title = mode === "bet" ? "Tüm maçları sil" : "İşlemi sil";
+      const message = mode === "bet" ? "Tüm maçları silmek istediğinizden emin misiniz?" : "Bu işlemi silmek istediğinizden emin misiniz?";
+      openTargetResultConfirm({ title, message, okText: "Sil", cancelText: "Vazgeç", tone: "danger" }, () => {
+        const store = loadTargetItems();
+        store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
+        saveTargetItems(store);
+        refresh();
+      });
     }));
     mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
