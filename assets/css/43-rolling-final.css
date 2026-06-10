@@ -9586,3 +9586,148 @@ html textarea:-webkit-autofill::first-line {
   border-color: rgba(251,191,36,.58) !important;
   background: rgba(30,41,59,.98) !important;
 }
+
+
+/* V850: 7 Günlük Rolling sonuç kartı - sol üst Geri Dön, sağ üst Kapat, status+kamera sabit */
+#rolling-excel-overlay .kapsul.v32.v847-shot-result {
+  position: relative !important;
+  overflow: visible !important;
+  padding-top: 10px !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin: -2px 0 7px 0 !important;
+  min-height: 27px !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar .v847-shot-back.v850-shot-return {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  width: auto !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(148,163,184,.34) !important;
+  background: rgba(15,23,42,.94) !important;
+  color: #e5e7eb !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  font-size: .63rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  z-index: 2 !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar .v847-shot-back.v850-shot-return i {
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+#rolling-excel-overlay .v850-shot-toolbar .v847-shot-back.v850-shot-return:hover {
+  color: #fff !important;
+  border-color: rgba(251,191,36,.56) !important;
+  background: rgba(30,41,59,.98) !important;
+}
+
+#rolling-excel-overlay .v850-shot-close {
+  width: 27px !important;
+  height: 27px !important;
+  min-width: 27px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(248,113,113,.38) !important;
+  background: rgba(127,29,29,.78) !important;
+  color: #fee2e2 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+#rolling-excel-overlay .v850-shot-close:hover {
+  background: rgba(185,28,28,.90) !important;
+  border-color: rgba(254,202,202,.70) !important;
+  color: #fff !important;
+}
+
+#rolling-excel-overlay .v847-shot-head {
+  padding-right: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools {
+  position: static !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  justify-content: flex-end !important;
+  min-width: max-content !important;
+}
+
+#rolling-excel-overlay .v847-shot-head-tools > span {
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera {
+  width: 25px !important;
+  height: 25px !important;
+  min-width: 25px !important;
+  border-radius: 8px !important;
+  margin-left: 0 !important;
+  flex: 0 0 auto !important;
+  border: 1px solid rgba(251,191,36,.52) !important;
+  background: linear-gradient(145deg, rgba(251,191,36,.92), rgba(245,158,11,.76)) !important;
+  color: #111827 !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 5px 14px rgba(245,158,11,.22) !important;
+}
+
+#rolling-excel-overlay .v847-shot-camera i {
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+/* V850: Sonuç fotoğrafı ön izleme modalı */
+#omega-rolling-feature-host .v850-result-photo-modal {
+  max-width: min(94vw, 980px) !important;
+}
+
+#omega-rolling-feature-host .v850-result-photo-head b {
+  color: #fbbf24 !important;
+  font-size: 1rem !important;
+  letter-spacing: .03em !important;
+}
+
+#omega-rolling-feature-host .v850-result-photo-head span {
+  color: #bfdbfe !important;
+  font-weight: 900 !important;
+}
+
+#omega-rolling-feature-host .v850-result-photo-actions {
+  justify-content: flex-start !important;
+}
+
+#omega-rolling-feature-host .v850-result-photo-actions button {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+}

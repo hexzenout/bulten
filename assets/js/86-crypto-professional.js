@@ -610,12 +610,15 @@
       </li>`;
     }).join("");
     return `<div class="kapsul v32 v847-shot-result ${finalStatus}">
-      <button type="button" class="v847-shot-back" onclick="return omega_ReturnExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
+      <div class="v850-shot-toolbar">
+        <button type="button" class="v847-shot-back v850-shot-return" onclick="return omega_ReturnExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
+        <button type="button" class="v850-shot-close" onclick="return omega_CloseExcelOp(event, ${day}, ${slot})" title="Kapat"><i class="fa-solid fa-xmark"></i></button>
+      </div>
       <div class="v847-shot-head">
         <b>${title}</b>
         <div class="v847-shot-head-tools">
           <span class="${finalStatus}">${finalLabel}</span>
-          <button type="button" class="v847-shot-camera" onclick="return omega_RollingResultPhoto(event, ${day}, ${slot})" title="Sonuç fotoğrafı indir"><i class="fa-solid fa-camera"></i></button>
+          <button type="button" class="v847-shot-camera" onclick="return omega_RollingResultPhoto(event, ${day}, ${slot})" title="Sonuç fotoğrafını göster"><i class="fa-solid fa-camera"></i></button>
         </div>
       </div>
       <ul class="v847-shot-lines">${rowsHtml}</ul>
@@ -1037,8 +1040,33 @@
       else alert("Sonuç fotoğrafı hazırlanamadı.");
       return false;
     }
-    const ok = confirm("Bu sonuç ekran görüntüsünü PNG olarak indirmek istiyor musun?");
-    if (ok) v777DownloadPhotoPng(uri, `bahis-sonuc-${_ACTIVE_EXCEL_DAYS}-gun-${day}-kutu-${slot + 1}.png`);
+    let host = document.getElementById("omega-rolling-feature-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-rolling-feature-host";
+      document.body.appendChild(host);
+    }
+    host.innerHTML = `<div class="v776-photo-overlay v850-result-photo-overlay" data-v776-photo-close>
+      <section class="v776-photo-modal v850-result-photo-modal">
+        <div class="v776-photo-head v850-result-photo-head">
+          <div><b>7 GÜNLÜK ROLLING</b><span>GÜN ${day} · BAHİS ${slot + 1}</span></div>
+          <button type="button" data-v776-photo-close>×</button>
+        </div>
+        <div class="v776-photo-actions v850-result-photo-actions">
+          <button type="button" data-v777-photo-download><i class="fa-solid fa-download"></i> Resmi İndir PNG</button>
+        </div>
+        <img src="${uri}" alt="7 Günlük Rolling bahis sonucu">
+      </section>
+    </div>`;
+    host.style.display = "block";
+    host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
+      host.innerHTML = "";
+      host.style.display = "none";
+    }));
+    host.querySelector("[data-v777-photo-download]")?.addEventListener("click", () => {
+      v777DownloadPhotoPng(uri, `7-gunluk-rolling-gun-${day}-bahis-${slot + 1}.png`);
+    });
     return false;
   };
 
@@ -1301,6 +1329,20 @@
     if (progressBar) progressBar.style.width = progressPercentage + "%";
 
     omega_SaveRollingDB();
+  };
+
+  window.omega_CloseExcelOp = function(event, day, slot) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+
+    const currentPlan = ensureRollingPlan();
+    if (currentPlan.ops?.[day]) currentPlan.ops[day][slot] = null;
+    if (currentPlan.pending?.[day]) currentPlan.pending[day][slot] = null;
+
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+    return false;
   };
 
   window.omega_ReturnExcelOp = function(event, day, slot) {
