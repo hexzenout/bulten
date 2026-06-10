@@ -10815,166 +10815,147 @@ select:-webkit-autofill {
 }
 
 
-/* V878: Son ZIP gerçek düzeltme — eski neon KAZANDI/KAYBETTİ efekti + kaymayan sabit ölçü + Aktif panel kapanma */
-#rolling-excel-overlay .rolling-v47-actions.v757-actions,
-#omega-rolling-feature-host .rolling-v47-actions.v757-actions {
-  display: inline-grid !important;
-  grid-template-columns: 64px 64px !important;
-  gap: 6px !important;
-  min-width: 134px !important;
-  width: 134px !important;
+/* V879: gerçek Rolling butonları için eski neon KAZANDI/KAYBETTİ görünümü.
+   Kural: ölçü değişmez; sadece renk ve ışık değişir. */
+.rolling-v47-actions.v757-actions {
+  display: inline-flex !important;
   align-items: center !important;
-  justify-content: start !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+  min-width: 132px !important;
 }
-
-#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win,
-#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss,
-#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win,
-#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss,
-#rolling-excel-overlay .v763-combo-match-list button.win,
-#rolling-excel-overlay .v763-combo-match-list button.loss,
-#omega-rolling-feature-host .v763-combo-match-list button.win,
-#omega-rolling-feature-host .v763-combo-match-list button.loss {
-  width: 64px !important;
-  min-width: 64px !important;
-  max-width: 64px !important;
-  height: 30px !important;
-  min-height: 30px !important;
-  max-height: 30px !important;
-  padding: 0 6px !important;
-  border-width: 1px !important;
+.rolling-v47-actions.v757-actions button {
+  inline-size: 64px !important;
+  min-inline-size: 64px !important;
+  max-inline-size: 64px !important;
+  block-size: 30px !important;
+  min-block-size: 30px !important;
   box-sizing: border-box !important;
+  padding: 0 7px !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 8px !important;
+  transform: none !important;
+  translate: none !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  line-height: 1 !important;
-  font-size: 11px !important;
-  font-weight: 950 !important;
-  transform: none !important;
-  transition: background .14s ease, color .14s ease, box-shadow .14s ease, border-color .14s ease !important;
-  will-change: box-shadow, background !important;
+  transition: background-color .16s ease, border-color .16s ease, box-shadow .16s ease, color .16s ease, filter .16s ease !important;
 }
-
-#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win,
-#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win,
-#rolling-excel-overlay .v763-combo-match-list button.win,
-#omega-rolling-feature-host .v763-combo-match-list button.win {
-  color: #d1fae5 !important;
-  background: linear-gradient(135deg, #064e3b, #022c22) !important;
-  border-color: rgba(16,185,129,.70) !important;
+.rolling-v47-actions.v757-actions button:hover,
+.rolling-v47-actions.v757-actions button:active,
+.rolling-v47-actions.v757-actions button:focus {
+  transform: none !important;
+  translate: none !important;
+}
+.rolling-v47-actions.v757-actions button.win,
+.v763-combo-match-list button.win {
+  background: linear-gradient(180deg, rgba(5,150,105,.36), rgba(4,120,87,.26)) !important;
+  border-color: rgba(16,185,129,.76) !important;
+  color: #f0fdf4 !important;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
 }
-
-#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss,
-#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss,
-#rolling-excel-overlay .v763-combo-match-list button.loss,
-#omega-rolling-feature-host .v763-combo-match-list button.loss {
-  color: #fee2e2 !important;
-  background: linear-gradient(135deg, #7f1d1d, #3f0707) !important;
+.rolling-v47-actions.v757-actions button.loss,
+.v763-combo-match-list button.loss {
+  background: linear-gradient(180deg, rgba(127,29,29,.48), rgba(69,10,10,.34)) !important;
   border-color: rgba(239,68,68,.74) !important;
+  color: #fff1f2 !important;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
 }
-
-#rolling-excel-overlay .rolling-v47-actions.v757-actions button.win.selected,
-#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.win.selected,
-#rolling-excel-overlay .v763-combo-match-list button.win.selected,
-#omega-rolling-feature-host .v763-combo-match-list button.win.selected,
-#rolling-excel-overlay .v763-combo-match-list button.win.active,
-#omega-rolling-feature-host .v763-combo-match-list button.win.active {
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #4ade80, #16a34a, #14532d) !important;
-  border-color: #dcfce7 !important;
-  box-shadow: 0 0 0 3px rgba(34,197,94,.42), 0 0 22px rgba(34,197,94,.56), inset 0 0 0 1px rgba(255,255,255,.30) !important;
-  outline: 0 !important;
-  transform: none !important;
+.rolling-v47-actions.v757-actions button.win.selected,
+.v763-combo-match-list button.win.selected {
+  background: linear-gradient(180deg, #6ee7a8 0%, #22c55e 48%, #047857 100%) !important;
+  border-color: rgba(187,247,208,.96) !important;
+  color: #03210f !important;
+  box-shadow:
+    0 0 0 1px rgba(187,247,208,.70),
+    0 0 8px rgba(34,197,94,.95),
+    0 0 18px rgba(34,197,94,.72),
+    0 0 34px rgba(16,185,129,.38),
+    inset 0 1px 0 rgba(255,255,255,.38) !important;
+  filter: saturate(1.22) brightness(1.08) !important;
 }
-
-#rolling-excel-overlay .rolling-v47-actions.v757-actions button.loss.selected,
-#omega-rolling-feature-host .rolling-v47-actions.v757-actions button.loss.selected,
-#rolling-excel-overlay .v763-combo-match-list button.loss.selected,
-#omega-rolling-feature-host .v763-combo-match-list button.loss.selected,
-#rolling-excel-overlay .v763-combo-match-list button.loss.active,
-#omega-rolling-feature-host .v763-combo-match-list button.loss.active {
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #f87171, #ef4444, #991b1b) !important;
-  border-color: #fee2e2 !important;
-  box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.58), inset 0 0 0 1px rgba(255,255,255,.30) !important;
-  outline: 0 !important;
-  transform: none !important;
+.rolling-v47-actions.v757-actions button.loss.selected,
+.v763-combo-match-list button.loss.selected {
+  background: linear-gradient(180deg, #fb7185 0%, #ef4444 48%, #7f1d1d 100%) !important;
+  border-color: rgba(254,202,202,.98) !important;
+  color: #fff7f7 !important;
+  box-shadow:
+    0 0 0 1px rgba(254,202,202,.72),
+    0 0 8px rgba(239,68,68,.98),
+    0 0 18px rgba(239,68,68,.74),
+    0 0 34px rgba(248,113,113,.38),
+    inset 0 1px 0 rgba(255,255,255,.38) !important;
+  filter: saturate(1.20) brightness(1.08) !important;
 }
-
-.rolling-v48-rail .v871-target-final-actions {
+.v757-status-pill.win {
+  background: rgba(5,150,105,.28) !important;
+  border-color: rgba(16,185,129,.66) !important;
+  color: #bbf7d0 !important;
+  box-shadow: 0 0 10px rgba(16,185,129,.22) !important;
+}
+.v757-status-pill.loss {
+  background: rgba(127,29,29,.34) !important;
+  border-color: rgba(239,68,68,.70) !important;
+  color: #fecaca !important;
+  box-shadow: 0 0 10px rgba(239,68,68,.24) !important;
+}
+.rolling-v48-rail .v871-target-final-actions,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-  gap: 7px !important;
+  gap: 8px !important;
+  align-items: center !important;
   width: 100% !important;
   margin-top: 10px !important;
 }
-
-.rolling-v48-rail .v871-target-final-actions button {
+.rolling-v48-rail .v871-target-final-actions button,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions button {
   min-width: 0 !important;
   width: 100% !important;
-  height: 34px !important;
-  min-height: 34px !important;
-  max-height: 34px !important;
-  padding: 0 5px !important;
-  border-width: 1px !important;
-  border-radius: 10px !important;
+  height: 32px !important;
   box-sizing: border-box !important;
+  padding: 0 7px !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 9px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  font-size: 10px !important;
-  line-height: 1 !important;
-  font-weight: 950 !important;
   transform: none !important;
-  transition: background .14s ease, color .14s ease, box-shadow .14s ease, border-color .14s ease !important;
+  transition: background-color .16s ease, border-color .16s ease, box-shadow .16s ease, color .16s ease, filter .16s ease !important;
 }
-
-.rolling-v48-rail .v871-target-final-actions .win {
-  color: #d1fae5 !important;
-  background: linear-gradient(135deg, #064e3b, #022c22) !important;
-  border-color: rgba(16,185,129,.70) !important;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+.rolling-v48-rail .v871-target-final-actions .win,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .win {
+  background: linear-gradient(180deg, rgba(5,150,105,.34), rgba(4,120,87,.24)) !important;
+  border-color: rgba(16,185,129,.72) !important;
+  color: #f0fdf4 !important;
 }
-.rolling-v48-rail .v871-target-final-actions .loss {
-  color: #fee2e2 !important;
-  background: linear-gradient(135deg, #7f1d1d, #3f0707) !important;
-  border-color: rgba(239,68,68,.74) !important;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+.rolling-v48-rail .v871-target-final-actions .loss,
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .loss {
+  background: linear-gradient(180deg, rgba(127,29,29,.46), rgba(69,10,10,.32)) !important;
+  border-color: rgba(239,68,68,.72) !important;
+  color: #fff1f2 !important;
 }
 .rolling-v48-rail .v871-target-final-actions .win.active,
-.rolling-v48-rail .v871-target-final-actions .win:active {
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #4ade80, #16a34a, #14532d) !important;
-  border-color: #dcfce7 !important;
-  box-shadow: 0 0 0 3px rgba(34,197,94,.42), 0 0 22px rgba(34,197,94,.56), inset 0 0 0 1px rgba(255,255,255,.30) !important;
-  transform: none !important;
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .win.active {
+  background: linear-gradient(180deg, #6ee7a8 0%, #22c55e 48%, #047857 100%) !important;
+  border-color: rgba(187,247,208,.96) !important;
+  color: #03210f !important;
+  box-shadow: 0 0 0 1px rgba(187,247,208,.70), 0 0 8px rgba(34,197,94,.95), 0 0 18px rgba(34,197,94,.72), 0 0 34px rgba(16,185,129,.38), inset 0 1px 0 rgba(255,255,255,.38) !important;
 }
 .rolling-v48-rail .v871-target-final-actions .loss.active,
-.rolling-v48-rail .v871-target-final-actions .loss:active {
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #f87171, #ef4444, #991b1b) !important;
-  border-color: #fee2e2 !important;
-  box-shadow: 0 0 0 3px rgba(239,68,68,.42), 0 0 22px rgba(239,68,68,.58), inset 0 0 0 1px rgba(255,255,255,.30) !important;
-  transform: none !important;
-}
-
-#omega-rolling-feature-host .v758-pending-overlay {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-}
-#omega-rolling-feature-host .v758-pending-modal {
-  pointer-events: auto !important;
-  cursor: default !important;
-}
-#omega-rolling-feature-host [data-pending-close] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  position: relative !important;
-  z-index: 1001008 !important;
+.rolling-v48-rail .v871-target-detail-row.bet .v871-target-final-actions .loss.active {
+  background: linear-gradient(180deg, #fb7185 0%, #ef4444 48%, #7f1d1d 100%) !important;
+  border-color: rgba(254,202,202,.98) !important;
+  color: #fff7f7 !important;
+  box-shadow: 0 0 0 1px rgba(254,202,202,.72), 0 0 8px rgba(239,68,68,.98), 0 0 18px rgba(239,68,68,.74), 0 0 34px rgba(248,113,113,.38), inset 0 1px 0 rgba(255,255,255,.38) !important;
 }

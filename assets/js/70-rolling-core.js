@@ -28,16 +28,13 @@
   let SUPPRESS_PANEL_RESTORE_UNTIL = 0;
 
   function closePendingPanelNow() {
-    SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 1600;
+    SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 1200;
     PENDING_BOARD_OPEN_MODE = null;
     CONFIRM_RETURN_PANEL_MODE = null;
     ACTIVE_COMBO_DETAIL_SLOT = null;
     CONFIRM_DIALOG = null;
     const host = document.getElementById("omega-rolling-feature-host");
-    if (host) {
-      host.innerHTML = "";
-      host.remove();
-    }
+    if (host) host.remove();
     renderFloatingPanel();
   }
 
@@ -61,19 +58,19 @@
   }
 
 
-  if (!window.__omegaV878PendingCloseGuardBound) {
-    window.__omegaV878PendingCloseGuardBound = true;
+  if (!window.__omegaV877PendingCloseGuardBound) {
+    window.__omegaV877PendingCloseGuardBound = true;
     const pendingCloseGuard = function(event) {
       const target = event.target;
       if (!(target instanceof Element)) return;
+      if (!PENDING_BOARD_OPEN_MODE) return;
 
-      const featureHost = target.closest("#omega-rolling-feature-host");
       const closeBtn = target.closest("[data-pending-close]");
       const overlay = target.closest(".v758-pending-overlay");
       const pendingModal = target.closest(".v758-pending-modal");
+      const featureHost = target.closest("#omega-rolling-feature-host");
       const confirmLayer = target.closest(".v757-confirm-overlay");
 
-      if (!featureHost && !overlay && !closeBtn) return;
       const clickedOverlayBlank = !!overlay && !pendingModal && !confirmLayer;
       const clickedHostBlank = !!featureHost && !pendingModal && !confirmLayer;
 
@@ -87,8 +84,41 @@
     document.addEventListener("click", pendingCloseGuard, true);
     document.addEventListener("keydown", function(event) {
       if (event.key !== "Escape") return;
+      if (!PENDING_BOARD_OPEN_MODE) return;
+      event.preventDefault();
+      event.stopPropagation();
+      closePendingPanelNow();
+    }, true);
+  }
+
+
+  // V879: Aktif Bahisler / Kuponlar kapatma koruması
+  // Gerçek modal DOM'u her render'da değiştiği için kapatma event'i document seviyesinde yakalanır.
+  if (!window.__omegaV879PendingCloseGuardBound) {
+    window.__omegaV879PendingCloseGuardBound = true;
+    const closePendingFromEvent = function(event) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
       const host = document.getElementById("omega-rolling-feature-host");
-      if (!host && !PENDING_BOARD_OPEN_MODE) return;
+      if (!host || !host.contains(target)) return;
+      const closeBtn = target.closest("[data-pending-close]");
+      const confirmLayer = target.closest(".v757-confirm-overlay");
+      const modal = target.closest(".v758-pending-modal");
+      const overlay = target.closest(".v758-pending-overlay");
+      const clickedOverlayBlank = !!overlay && !modal && !confirmLayer;
+      const clickedHostBlank = target === host && !modal && !confirmLayer;
+      if (!closeBtn && !clickedOverlayBlank && !clickedHostBlank) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+      closePendingPanelNow();
+    };
+    document.addEventListener("click", closePendingFromEvent, true);
+    document.addEventListener("pointerup", closePendingFromEvent, true);
+    document.addEventListener("keydown", function(event) {
+      if (event.key !== "Escape") return;
+      const host = document.getElementById("omega-rolling-feature-host");
+      if (!host || !host.querySelector(".v758-pending-overlay")) return;
       event.preventDefault();
       event.stopPropagation();
       closePendingPanelNow();
@@ -2020,12 +2050,17 @@
     const betRollSum = rollingSummary("bet");
     const cryptoRollSum = rollingSummary("crypto");
     const rollSum = rollingSummary();
-    const betTotalPnl = betSum.pnl + betRollSum.pnlTotal;
-    const cryptoTotalPnl = cryptoSum.pnl + cryptoRollSum.pnlTotal;
+    // V879: Üst performans kartları aktif/kapalı ana tablo sonuçlarını gösterir.
+    // 7/15/30/60/90 günlük Rolling kazançları ayrı Rolling alanında kalır; üst Bahis/Kripto toplamına karışmaz.
+    void betRollSum;
+    void cryptoRollSum;
+    void rollSum;
+    const betTotalPnl = Number(betSum.pnl || 0);
+    const cryptoTotalPnl = Number(cryptoSum.pnl || 0);
     const totalPnl = betTotalPnl + cryptoTotalPnl;
-    const betGrowth = growthPct(betTotalPnl, betRollSum.startTotal || state.quickPlan?.start || 100);
-    const cryptoGrowth = growthPct(cryptoTotalPnl, cryptoRollSum.startTotal || state.quickPlan?.start || 100);
-    const totalGrowth = growthPct(totalPnl, (betRollSum.startTotal || 0) + (cryptoRollSum.startTotal || 0) || state.quickPlan?.start || 100);
+    const betGrowth = growthPct(betTotalPnl, state.quickPlan?.start || 100);
+    const cryptoGrowth = growthPct(cryptoTotalPnl, state.quickPlan?.start || 100);
+    const totalGrowth = growthPct(totalPnl, state.quickPlan?.start || 100);
     const mode = activeMode();
     mount.innerHTML = `
       <div class="rolling-v47-page v48-rolling-page v49-rolling-page">
