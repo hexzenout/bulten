@@ -878,11 +878,10 @@
     if (m === "crypto") {
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
-        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v814-crypto-detail-head v819-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto v871-target-detail-row ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+          <div class="v814-crypto-detail-head v819-crypto-detail-head v871-target-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><div class="v871-target-head-actions"><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete-x" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="İşlemi sil"><i class="fa-solid fa-xmark"></i></button></div></div>
           <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
           <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
-          <div class="v819-target-card-footer crypto"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
         </li>`;
       }).join("");
       return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -891,12 +890,17 @@
       const result = cleanText(item.result || "");
       const odds = v812BetOddsProduct(item);
       const possibleReturn = v812BetPotential(item);
+      const stake = Number(item?.stake || 0);
       const legCount = v812BetLegs(item).length;
       const detailTitle = legCount > 1 ? `Kombine ${legCount} maç` : "Tekli Bahis";
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet v835-bet-detail-row ${legCount > 1 ? "combo" : "single"} ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v835-bet-detail-head"><span title="${escapeHtml(detailTitle)}">${escapeHtml(detailTitle)}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+      const resultValue = result === "loss" ? -Math.abs(stake || 0) : result === "win" ? possibleReturn : possibleReturn;
+      const resultLabel = result === "loss" ? "Kayıp" : "Kazanç";
+      const resultText = result === "loss" ? `-${money(Math.abs(stake || 0))}` : (resultValue ? money(resultValue) : "-");
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet v835-bet-detail-row v871-target-detail-row ${legCount > 1 ? "combo" : "single"} ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v835-bet-detail-head v871-target-detail-head"><span title="${escapeHtml(detailTitle)}">${escapeHtml(detailTitle)}</span><div class="v871-target-head-actions"><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete-x" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Tüm maçları sil"><i class="fa-solid fa-xmark"></i></button></div></div>
         <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list v835-bet-match-list">${v813BetLegRowsHtml(item)}</div>
-        <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+        <div class="v871-target-bet-summary"><span>Toplam Oran: <b>${odds ? odds.toFixed(2) : "-"}</b></span><span>Bahis Tutarı: <b>${stake ? money(stake) : "-"}</b></span><span>${resultLabel}: <b class="${result === "loss" ? "neg" : "pos"}">${resultText}</b></span></div>
+        <div class="v871-target-final-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win">Kupon Kazandı</button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss">Kupon Kaybetti</button></div>
       </li>`;
     }).join("");
     return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -2694,10 +2698,19 @@
       const [modeRaw, id] = String(btn.dataset.targetSelfDelete || "bet:").split(":");
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       if (!id) return;
-      const store = loadTargetItems();
-      store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
-      saveTargetItems(store);
-      refresh();
+      const remove = () => {
+        const store = loadTargetItems();
+        store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
+        saveTargetItems(store);
+        refresh();
+      };
+      openTargetResultConfirm({
+        title: mode === "bet" ? "Tüm maçları sil" : "İşlemi sil",
+        message: mode === "bet" ? "Tüm maçları silmek istediğinizden emin misiniz?" : "Bu işlemi silmek istediğinizden emin misiniz?",
+        okText: "Sil",
+        cancelText: "Vazgeç",
+        tone: "danger"
+      }, remove);
     }));
     mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";

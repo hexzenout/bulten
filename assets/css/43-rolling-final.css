@@ -10287,3 +10287,122 @@ html textarea:-webkit-autofill::first-line {
 #rolling-excel-overlay .k-actions.v32.v847-hide-main-actions {
   display: none !important;
 }
+
+
+/* V871 temiz onarım: 7 günlük rolling maç sonuçları ve Kasa Hedefi izole düzeltmeleri */
+#rolling-excel-overlay .k-actions.v32.v847-hide-main-actions,
+#rolling-excel-overlay .v765-bet-kapsul:has(.v847-leg-panel-inner) > .k-actions.v32[data-v847-main-actions] {
+  display: flex !important;
+}
+#rolling-excel-overlay .v847-leg-result-row,
+#rolling-excel-overlay .v847-shot-lines li {
+  cursor: default !important;
+}
+#rolling-excel-overlay .v847-leg-result-row > span,
+#rolling-excel-overlay .v847-shot-lines span,
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta b {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: break-word !important;
+}
+#rolling-excel-overlay .v854-leg-result-actions button.win.selected,
+#rolling-excel-overlay .v854-leg-result-actions button.loss.selected {
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 0 10px rgba(255,255,255,.08) !important;
+}
+.rolling-v48-rail .v871-target-detail-row {
+  position: relative !important;
+  padding-top: 12px !important;
+}
+.rolling-v48-rail .v871-target-detail-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+.rolling-v48-rail .v871-target-head-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  flex: 0 0 auto !important;
+}
+.rolling-v48-rail .v871-target-head-actions button {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  border-radius: 10px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+}
+.rolling-v48-rail .v871-target-head-actions .photo {
+  background: rgba(251,191,36,.12) !important;
+  border: 1px solid rgba(251,191,36,.55) !important;
+  color: #fbbf24 !important;
+}
+.rolling-v48-rail .v871-target-head-actions .delete-x {
+  background: rgba(127,29,29,.32) !important;
+  border: 1px solid rgba(248,113,113,.58) !important;
+  color: #fecaca !important;
+}
+.rolling-v48-rail .v871-target-bet-summary {
+  display: grid !important;
+  gap: 5px !important;
+  margin: 10px 0 0 !important;
+  padding: 9px 10px !important;
+  border: 1px solid rgba(251,191,36,.28) !important;
+  border-radius: 12px !important;
+  background: rgba(2,6,23,.40) !important;
+}
+.rolling-v48-rail .v871-target-bet-summary span {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  font-size: .72rem !important;
+  color: #f8fafc !important;
+  font-weight: 850 !important;
+}
+.rolling-v48-rail .v871-target-bet-summary b { color: #fbbf24 !important; }
+.rolling-v48-rail .v871-target-bet-summary b.pos { color: #22c55e !important; }
+.rolling-v48-rail .v871-target-bet-summary b.neg { color: #ef4444 !important; }
+.rolling-v48-rail .v871-target-final-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  margin-top: 10px !important;
+}
+.rolling-v48-rail .v871-target-final-actions button {
+  min-height: 34px !important;
+  border-radius: 10px !important;
+  border: 1px solid transparent !important;
+  color: #fff !important;
+  font-size: .74rem !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+}
+.rolling-v48-rail .v871-target-final-actions .win {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  border-color: rgba(52,211,153,.55) !important;
+}
+.rolling-v48-rail .v871-target-final-actions .loss {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  border-color: rgba(248,113,113,.55) !important;
+}
+.rolling-v48-rail .v871-target-final-actions button.active {
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 0 12px rgba(255,255,255,.12) !important;
+}
+.rolling-v48-rail .v819-target-card-footer,
+.rolling-v48-rail .v821-target-card-footer,
+.rolling-v48-rail .v822-target-card-footer {
+  display: none !important;
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #050505 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+}
