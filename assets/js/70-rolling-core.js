@@ -28,6 +28,8 @@
   let SUPPRESS_PANEL_RESTORE_UNTIL = 0;
 
   function closePendingPanelNow() {
+    // Aşama 2: Aktif Bahisler / Kuponlar ve Aktif Kripto İşlemleri penceresini
+    // Geçmiş/Rapor mantığı gibi tek kaynakla kapat.
     SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 1200;
     PENDING_BOARD_OPEN_MODE = null;
     CONFIRM_RETURN_PANEL_MODE = null;
@@ -58,63 +60,25 @@
   }
 
 
-  if (!window.__omegaV877PendingCloseGuardBound) {
-    window.__omegaV877PendingCloseGuardBound = true;
-    const pendingCloseGuard = function(event) {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      if (!PENDING_BOARD_OPEN_MODE) return;
-
-      const closeBtn = target.closest("[data-pending-close]");
-      const overlay = target.closest(".v758-pending-overlay");
-      const pendingModal = target.closest(".v758-pending-modal");
-      const featureHost = target.closest("#omega-rolling-feature-host");
-      const confirmLayer = target.closest(".v757-confirm-overlay");
-
-      const clickedOverlayBlank = !!overlay && !pendingModal && !confirmLayer;
-      const clickedHostBlank = !!featureHost && !pendingModal && !confirmLayer;
-
-      if (!closeBtn && !clickedOverlayBlank && !clickedHostBlank) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-      closePendingPanelNow();
-    };
-    document.addEventListener("pointerdown", pendingCloseGuard, true);
-    document.addEventListener("click", pendingCloseGuard, true);
-    document.addEventListener("keydown", function(event) {
-      if (event.key !== "Escape") return;
-      if (!PENDING_BOARD_OPEN_MODE) return;
-      event.preventDefault();
-      event.stopPropagation();
-      closePendingPanelNow();
-    }, true);
-  }
-
-
-  // V879: Aktif Bahisler / Kuponlar kapatma koruması
-  // Gerçek modal DOM'u her render'da değiştiği için kapatma event'i document seviyesinde yakalanır.
-  if (!window.__omegaV879PendingCloseGuardBound) {
-    window.__omegaV879PendingCloseGuardBound = true;
-    const closePendingFromEvent = function(event) {
+  // Aşama 2: Aktif Bahisler / Kuponlar + Aktif Kripto İşlemleri ortak kapatma.
+  // Sadece üst X, koyu boş alan ve Esc kapatır; modal içindeki buton/input tıklamalarına dokunmaz.
+  if (!window.__omegaV887PendingPanelCloseBound) {
+    window.__omegaV887PendingPanelCloseBound = true;
+    document.addEventListener("click", function(event) {
       const target = event.target;
       if (!(target instanceof Element)) return;
       const host = document.getElementById("omega-rolling-feature-host");
       if (!host || !host.contains(target)) return;
+      if (!host.querySelector(".v758-pending-overlay")) return;
       const closeBtn = target.closest("[data-pending-close]");
-      const confirmLayer = target.closest(".v757-confirm-overlay");
-      const modal = target.closest(".v758-pending-modal");
-      const overlay = target.closest(".v758-pending-overlay");
-      const clickedOverlayBlank = !!overlay && !modal && !confirmLayer;
-      const clickedHostBlank = target === host && !modal && !confirmLayer;
+      const clickedOverlayBlank = target.classList.contains("v758-pending-overlay");
+      const clickedHostBlank = target === host;
       if (!closeBtn && !clickedOverlayBlank && !clickedHostBlank) return;
       event.preventDefault();
       event.stopPropagation();
       if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
       closePendingPanelNow();
-    };
-    document.addEventListener("click", closePendingFromEvent, true);
-    document.addEventListener("pointerup", closePendingFromEvent, true);
+    }, true);
     document.addEventListener("keydown", function(event) {
       if (event.key !== "Escape") return;
       const host = document.getElementById("omega-rolling-feature-host");
@@ -124,6 +88,7 @@
       closePendingPanelNow();
     }, true);
   }
+
 
   const DEFAULT_STATE = {
     bank: 1000,
@@ -3153,38 +3118,6 @@
     }));
   }
 
-
-  // V884: Aktif Bahisler / Kuponlar penceresi için izole ve basit kapatma.
-  // Geçmiş/Rapor gibi: üst X, koyu boş alan ve Esc direkt kapatır; iç karta tıklama kapanmaz.
-  if (!window.__omegaV884PendingCloseOnlyBound) {
-    window.__omegaV884PendingCloseOnlyBound = true;
-    const v884ClosePendingFromEvent = function(event) {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      const host = document.getElementById("omega-rolling-feature-host");
-      if (!host || !host.contains(target)) return;
-      const closeBtn = target.closest("[data-pending-close]");
-      const overlay = target.closest(".v758-pending-overlay");
-      const modal = target.closest(".v758-pending-modal");
-      const confirmLayer = target.closest(".v757-confirm-overlay");
-      const clickedBlank = !!overlay && !modal && !confirmLayer;
-      if (!closeBtn && !clickedBlank) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-      closePendingPanelNow();
-    };
-    document.addEventListener("click", v884ClosePendingFromEvent, true);
-    document.addEventListener("pointerup", v884ClosePendingFromEvent, true);
-    document.addEventListener("keydown", function(event) {
-      if (event.key !== "Escape") return;
-      const host = document.getElementById("omega-rolling-feature-host");
-      if (!host || !host.querySelector(".v758-pending-overlay")) return;
-      event.preventDefault();
-      event.stopPropagation();
-      closePendingPanelNow();
-    }, true);
-  }
 
   window.omega_RollingOpenFloatingPanel = function(kind = "active", mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
