@@ -8500,3 +8500,22 @@ html.rolling-hash-boot::before {
 .rolling-v48-rail .v824-target-crypto-entry input:focus {
   box-shadow: 0 0 0 1px rgba(251,191,36,.16) !important;
 }
+
+
+/* V832: Bahis + Maç butonu koyu kırmızı */
+.rolling-v48-rail button[data-target-bet-leg-add],
+.rolling-v48-rail .v812-target-form-actions button[data-target-bet-leg-add],
+.rolling-v48-rail .v814-target-form-actions button[data-target-bet-leg-add] {
+  background: linear-gradient(135deg, rgba(127,29,29,.92), rgba(69,10,10,.96)) !important;
+  border-color: rgba(248,113,113,.42) !important;
+  color: #fecaca !important;
+  box-shadow: none !important;
+}
+
+.rolling-v48-rail button[data-target-bet-leg-add]:hover,
+.rolling-v48-rail .v812-target-form-actions button[data-target-bet-leg-add]:hover,
+.rolling-v48-rail .v814-target-form-actions button[data-target-bet-leg-add]:hover {
+  background: linear-gradient(135deg, rgba(153,27,27,.96), rgba(69,10,10,.98)) !important;
+  border-color: rgba(248,113,113,.62) !important;
+  color: #fff1f2 !important;
+}
