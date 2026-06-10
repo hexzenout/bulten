@@ -8657,3 +8657,57 @@ html.rolling-hash-boot::before {
   width: 34px !important;
   height: 34px !important;
 }
+
+
+/* V837: Bahis Detay kazandı/kaybetti butonlarını koyu ve belirgin yap */
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  font-weight: 950 !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win {
+  background: linear-gradient(135deg, #14532d, #052e16) !important;
+  border: 1px solid rgba(34,197,94,.62) !important;
+  color: #dcfce7 !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss {
+  background: linear-gradient(135deg, #7f1d1d, #450a0a) !important;
+  border: 1px solid rgba(248,113,113,.62) !important;
+  color: #fee2e2 !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win:hover,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win:hover,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-win.active {
+  background: linear-gradient(135deg, #16a34a, #166534) !important;
+  border-color: rgba(134,239,172,.95) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(34,197,94,.34), 0 0 16px rgba(34,197,94,.32) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss:hover,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss:hover,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss.active,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions button.leg-loss.active {
+  background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+  border-color: rgba(252,165,165,.95) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(239,68,68,.34), 0 0 16px rgba(239,68,68,.32) !important;
+}
+
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-win i,
+.rolling-v48-rail .v835-bet-match-list .v819-leg-actions .leg-loss i {
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
