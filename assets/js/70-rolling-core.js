@@ -727,14 +727,13 @@
   }
   function v813CryptoTpRowsHtml(item) {
     const tps = v813CryptoTps(item);
-    if (!tps.length) return `<div class="v813-crypto-detail-line empty"><span>TP</span><b>-</b><em>-</em></div>`;
+    if (!tps.length) return `<div class="v813-crypto-detail-line v814-crypto-detail-line empty"><span>TP</span><div class="v814-crypto-values"><b>-</b><em>-</em></div></div>`;
     return tps.map((tp, i) => {
       const isDone = cleanText(item?.result || "") === "tp" || !!tp.done;
       const profit = tp.profit !== "" ? signedMoney(Number(tp.profit || 0)) : "+$0.00";
-      return `<div class="v813-crypto-detail-line tp ${isDone ? "done" : ""}">
+      return `<div class="v813-crypto-detail-line v814-crypto-detail-line tp ${isDone ? "done" : ""}">
         <span>TP ${i + 1}</span>
-        <b>${escapeHtml(tp.target || "-")}</b>
-        <em>${escapeHtml(profit)}</em>
+        <div class="v814-crypto-values"><b>Hedef ${escapeHtml(tp.target || "-")}</b><em>Kâr ${escapeHtml(profit)}</em></div>
         <button type="button" class="tp-check ${isDone ? "active" : ""}" data-target-self-tp-done="crypto:${escapeHtml(item.id || "")}:${i}" title="Kazanç"><i class="fa-solid fa-check"></i></button>
       </div>`;
     }).join("");
@@ -743,73 +742,53 @@
     const stop = cleanText(item?.stop || "") || "-";
     const loss = v812CryptoStopLoss(item);
     const active = cleanText(item?.result || "") === "stop";
-    return `<div class="v813-crypto-detail-line stop ${active ? "done" : ""}">
+    return `<div class="v813-crypto-detail-line v814-crypto-detail-line stop ${active ? "done" : ""}">
       <span>STOP</span>
-      <b>${escapeHtml(stop)}</b>
-      <em>${loss ? "-" + money(loss) : "-$0.00"}</em>
+      <div class="v814-crypto-values"><b>Stop ${escapeHtml(stop)}</b><em>Zarar ${loss ? "-" + money(loss) : "-$0.00"}</em></div>
       <button type="button" class="stop-x ${active ? "active" : ""}" data-target-self-result="crypto:${escapeHtml(item.id || "")}:stop" title="Kaybetti"><i class="fa-solid fa-xmark"></i></button>
     </div>`;
+  }
+  function v814EntryText(item) {
+    const entry = cleanText(item?.entry || item?.entryPrice || "");
+    return entry || "-";
   }
   function v810TargetSelfData(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const store = loadTargetItems();
     const rows = (store[m] || []).filter(Boolean);
     if (m === "crypto") {
-      const stake = rows.reduce((sum, item) => sum + Number(item.stake || 0), 0);
-      const tpCount = rows.reduce((sum, item) => sum + v813CryptoTps(item).length, 0);
-      const doneTpCount = rows.reduce((sum, item) => sum + v813CryptoTps(item).filter(tp => tp.done || cleanText(item?.result || "") === "tp").length, 0);
-      const targetProfit = rows.reduce((sum, item) => sum + Number(v813CryptoTpProfitTotal(item) || 0), 0);
-      const stopRisk = rows.reduce((sum, item) => sum + v812CryptoStopLoss(item), 0);
-      const realized = rows.reduce((sum, item) => sum + Number(v812CryptoNet(item) || 0), 0);
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
-        const resultText = signedMoney(v812CryptoNet(item));
-        return `<li class="v812-target-detail-row v813-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v813-detail-head"><span>${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><b>${Number(item.stake || 0) ? money(item.stake) : "Tutar -"}</b></div>
-          <div class="v813-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
-          <div class="v813-detail-foot"><em>Kesin: ${escapeHtml(resultText)}</em><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+        return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+          <div class="v814-crypto-detail-head"><span>${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
+          <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
         </li>`;
       }).join("");
-      return {
-        mode: m,
-        hasRows: rows.length > 0,
-        summary: rows.length ? `${rows.length} işlem · Tutar ${money(stake)}` : "",
-        sub: rows.length ? `TP ${doneTpCount}/${tpCount || 0} · Olası ${signedMoney(targetProfit)} · Stop -${money(stopRisk)} · Kesin ${signedMoney(realized)}` : "",
-        details
-      };
+      return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
     }
-    const stake = rows.reduce((sum, item) => sum + Number(item.stake || 0), 0);
-    const possible = rows.reduce((sum, item) => sum + v812BetPotential(item), 0);
-    const realized = rows.reduce((sum, item) => item.result ? sum + Number(v812BetNet(item) || 0) : sum, 0);
-    const openCount = rows.filter(item => !item.result).length;
     const details = rows.slice(-8).reverse().map(item => {
       const result = cleanText(item.result || "");
       const odds = v812BetOddsProduct(item);
       const possibleReturn = v812BetPotential(item);
-      const net = possibleReturn ? possibleReturn - Number(item.stake || 0) : 0;
-      return `<li class="v812-target-detail-row v813-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v813-detail-head"><span>${escapeHtml(v812BetTitle(item))}</span><b>${item.result ? signedMoney(v812BetNet(item)) : "Bekliyor"}</b></div>
-        <div class="v813-bet-match-list">${v813BetLegRowsHtml(item)}</div>
-        <div class="v813-bet-total-line"><span>Tutar ${Number(item.stake || 0) ? money(item.stake) : "-"}</span><b>Oran ${odds ? odds.toFixed(2) : "-"}</b><em>Dönüş ${possibleReturn ? money(possibleReturn) : "-"} · Net ${possibleReturn ? signedMoney(net) : "+$0.00"}</em></div>
-        <div class="v812-target-detail-actions v813-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win">Kazandı</button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss">Kaybetti</button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+        <div class="v813-detail-head v814-bet-detail-head"><span>${escapeHtml(v812BetTitle(item))}</span></div>
+        <div class="v813-bet-match-list v814-bet-match-list">${v813BetLegRowsHtml(item)}</div>
+        <div class="v813-bet-total-line v814-bet-total-line"><span><small>Tutar</small><b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span><small>Oran</small><b>${odds ? odds.toFixed(2) : "-"}</b></span><span class="gain"><small>Kazanç</small><b>${possibleReturn ? money(possibleReturn) : "-"}</b></span></div>
+        <div class="v812-target-detail-actions v813-target-detail-actions v814-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win"><i class="fa-solid fa-check"></i><span>Kazandı</span></button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss"><i class="fa-solid fa-xmark"></i><span>Kaybetti</span></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
       </li>`;
     }).join("");
-    return {
-      mode: m,
-      hasRows: rows.length > 0,
-      summary: rows.length ? `${rows.length} bahis · Açık ${openCount} · Tutar ${money(stake)}` : "",
-      sub: rows.length ? `Dönüş ${money(possible)} · Kesin ${signedMoney(realized)}` : "",
-      details
-    };
+    return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
   }
+
   function v811CryptoTpRow() {
-    return `<div class="v811-target-tp-row v813-target-tp-row" data-target-self-tp="crypto">
+    return `<div class="v811-target-tp-row v813-target-tp-row v814-target-tp-row" data-target-self-tp="crypto">
       <input type="text" data-target-self-tp-field="target" placeholder="Hedef TP">
       <input type="number" step="0.01" inputmode="decimal" data-target-self-tp-field="profit" placeholder="Kâr">
     </div>`;
   }
   function v812BetLegRow() {
-    return `<div class="v812-target-bet-leg v813-target-bet-leg" data-target-bet-leg="bet">
+    return `<div class="v812-target-bet-leg v813-target-bet-leg v814-target-bet-leg" data-target-bet-leg="bet">
       <input type="text" data-target-bet-leg-field="name" placeholder="Maç">
       <input type="number" step="0.01" inputmode="decimal" data-target-bet-leg-field="odds" placeholder="Oran">
       <button type="button" data-target-bet-leg-remove title="Maç sil">×</button>
@@ -819,34 +798,35 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const data = v810TargetSelfData(m);
     if (m === "crypto") {
-      return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self crypto">
-        <div class="v812-target-self-title"><b>İşlem</b>${data.summary ? `<span>${escapeHtml(data.summary)}</span>` : ""}</div>
-        ${data.sub ? `<div class="v812-target-self-summary">${escapeHtml(data.sub)}</div>` : ""}
-        <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form crypto">
+      return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self v814-target-self crypto">
+        <div class="v812-target-self-title v814-target-self-title"><b>İşlem</b></div>
+        <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form v814-target-self-form crypto">
           <input type="text" data-target-self-field="${m}:name" placeholder="İşlem adı">
           <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
-          <div class="v811-target-tp-box v812-target-tp-box v813-target-tp-box">
-            <div class="v813-target-tp-list-head"><button type="button" data-target-tp-add="${m}">+ TP</button><button type="button" data-target-tp-remove-last="${m}" title="Son TP kaldır">−</button></div>
-            <div class="v811-target-tp-list v813-target-tp-list" data-target-tp-list="${m}">${v811CryptoTpRow()}</div>
+          <input type="text" data-target-self-field="${m}:entry" placeholder="Giriş fiyatı">
+          <div class="v811-target-tp-box v812-target-tp-box v813-target-tp-box v814-target-tp-box">
+            <div class="v814-target-tp-grid">
+              <div class="v811-target-tp-list v813-target-tp-list v814-target-tp-list" data-target-tp-list="${m}">${v811CryptoTpRow()}</div>
+              <div class="v814-target-tp-actions"><button type="button" data-target-tp-add="${m}">+ TP</button><button type="button" data-target-tp-remove-last="${m}" title="Son TP kaldır">−</button></div>
+            </div>
           </div>
-          <div class="v812-target-stop-row v813-target-stop-row">
+          <div class="v812-target-stop-row v813-target-stop-row v814-target-stop-row">
             <input type="text" data-target-self-field="${m}:stop" placeholder="Stop">
             <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stopLoss" placeholder="Olası zarar">
           </div>
-          <button type="button" class="v811-target-main-add" data-target-self-add="${m}">+ İşlem Ekle</button>
+          <button type="button" class="v811-target-main-add v814-target-main-add" data-target-self-add="${m}">+ İşlem Ekle</button>
         </div>
-        ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
+        ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
       </div>`;
     }
-    return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self bet">
-      <div class="v812-target-self-title"><b>Bahis</b>${data.summary ? `<span>${escapeHtml(data.summary)}</span>` : ""}</div>
-      ${data.sub ? `<div class="v812-target-self-summary">${escapeHtml(data.sub)}</div>` : ""}
-      <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form bet">
-        <div class="v812-target-bet-leg-list v813-target-bet-leg-list" data-target-bet-leg-list="${m}">${v812BetLegRow()}</div>
+    return `<div class="v810-target-self v811-target-self v812-target-self v813-target-self v814-target-self bet">
+      <div class="v812-target-self-title v814-target-self-title"><b>Bahis</b></div>
+      <div class="v810-target-self-form v811-target-self-form v812-target-self-form v813-target-self-form v814-target-self-form bet" data-target-bet-autosave="1">
+        <div class="v812-target-bet-leg-list v813-target-bet-leg-list v814-target-bet-leg-list" data-target-bet-leg-list="${m}">${v812BetLegRow()}</div>
         <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
-        <div class="v812-target-form-actions"><button type="button" data-target-bet-leg-add="${m}">+ Maç</button><button type="button" class="v811-target-main-add" data-target-self-add="${m}">Kaydet</button></div>
+        <div class="v812-target-form-actions v814-target-form-actions"><button type="button" data-target-bet-leg-add="${m}">+ Maç</button></div>
       </div>
-      ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
+      ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
     </div>`;
   }
 
@@ -2102,8 +2082,8 @@
       const removeBtn = last?.querySelector("[data-target-bet-leg-remove]");
       if (removeBtn) bindTargetBetLegRemove(removeBtn);
     }));
-    mount.querySelectorAll("[data-target-self-add]").forEach(btn => btn.addEventListener("click", () => {
-      const mode = btn.dataset.targetSelfAdd === "crypto" ? "crypto" : "bet";
+    const saveTargetSelfFromForm = modeRaw => {
+      const mode = modeRaw === "crypto" ? "crypto" : "bet";
       const pick = key => mount.querySelector(`[data-target-self-field="${mode}:${key}"]`);
       const name = cleanText(pick("name")?.value || "");
       const stake = v810NumberOrBlank(pick("stake")?.value || "");
@@ -2116,19 +2096,39 @@
         })).filter(tp => tp.target || tp.profit !== "");
         const stop = cleanText(pick("stop")?.value || "");
         const stopLoss = v810NumberOrBlank(pick("stopLoss")?.value || "");
+        const entry = cleanText(pick("entry")?.value || "");
         const profit = tps.reduce((sum, tp) => tp.profit !== "" ? sum + Number(tp.profit || 0) : sum, 0);
-        store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: "crypto", name, stake, stop, stopLoss, tps, profit, result: "" });
+        if (!name && stake === "" && !entry && !tps.length && !stop && stopLoss === "") return false;
+        store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: "crypto", name, stake, entry, entryPrice: entry, stop, stopLoss, tps, profit, result: "" });
       } else {
         const legs = Array.from(mount.querySelectorAll(`[data-target-bet-leg="${mode}"]`)).map(row => ({
           name: cleanText(row.querySelector('[data-target-bet-leg-field="name"]')?.value || ""),
           odds: v810NumberOrBlank(row.querySelector('[data-target-bet-leg-field="odds"]')?.value || "")
         })).filter(leg => leg.name || leg.odds !== "");
+        if (!legs.length && stake === "") return false;
         const cleanLegs = legs.length ? legs : [{ name: "", odds: "" }];
         store[mode].push({ id: v810TargetItemId(), ts: Date.now(), mode, kind: cleanLegs.length > 1 ? "combo" : "match", legs: cleanLegs, name: cleanLegs[0]?.name || "", odds: cleanLegs[0]?.odds || "", stake, result: "" });
       }
       saveTargetItems(store);
-      refresh();
+      return true;
+    };
+    mount.querySelectorAll("[data-target-self-add]").forEach(btn => btn.addEventListener("click", () => {
+      const mode = btn.dataset.targetSelfAdd === "crypto" ? "crypto" : "bet";
+      if (saveTargetSelfFromForm(mode)) refresh();
     }));
+    mount.querySelectorAll('[data-target-bet-autosave="1"]').forEach(form => {
+      form.addEventListener("focusout", () => {
+        setTimeout(() => {
+          if (form.contains(document.activeElement)) return;
+          if (saveTargetSelfFromForm("bet")) refresh();
+        }, 90);
+      });
+      form.addEventListener("keydown", event => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        if (saveTargetSelfFromForm("bet")) refresh();
+      });
+    });
     mount.querySelectorAll("[data-target-self-tp-done]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw] = String(btn.dataset.targetSelfTpDone || "crypto::0").split(":");
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
