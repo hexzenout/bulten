@@ -724,7 +724,7 @@
     return v812BetLegs(item).map((leg, i) => {
       const name = cleanText(leg.name || "") || `Maç ${i + 1}`;
       const odds = Number(leg.odds || 0) ? Number(leg.odds || 0).toFixed(2) : "-";
-      return `<div class="v813-bet-match-line"><span>${escapeHtml(name)}</span><b>${escapeHtml(odds)}</b></div>`;
+      return `<div class="v813-bet-match-line"><span title="${escapeHtml(name)}">${escapeHtml(name)}</span><b>${escapeHtml(odds)}</b></div>`;
     }).join("");
   }
   function v813CryptoTpRowsHtml(item) {
@@ -764,9 +764,10 @@
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
         return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v814-crypto-detail-head"><span>${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="v814-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span></div>
           <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
           <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
+          <div class="v816-target-item-tools crypto"><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
         </li>`;
       }).join("");
       return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -776,10 +777,10 @@
       const odds = v812BetOddsProduct(item);
       const possibleReturn = v812BetPotential(item);
       return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v813-detail-head v814-bet-detail-head"><span>${escapeHtml(v812BetTitle(item))}</span></div>
+        <div class="v813-detail-head v814-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span></div>
         <div class="v813-bet-match-list v814-bet-match-list">${v813BetLegRowsHtml(item)}</div>
         <div class="v813-bet-total-line v814-bet-total-line"><span><small>Tutar</small><b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span><small>Oran</small><b>${odds ? odds.toFixed(2) : "-"}</b></span><span class="gain"><small>Kazanç</small><b>${possibleReturn ? money(possibleReturn) : "-"}</b></span></div>
-        <div class="v812-target-detail-actions v813-target-detail-actions v814-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win"><i class="fa-solid fa-check"></i><span>Kazandı</span></button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss"><i class="fa-solid fa-xmark"></i><span>Kaybetti</span></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+        <div class="v812-target-detail-actions v813-target-detail-actions v814-target-detail-actions v816-target-detail-actions"><button type="button" class="win ${result === "win" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:win" title="Kazandı"><i class="fa-solid fa-check"></i></button><button type="button" class="loss ${result === "loss" ? "active" : ""}" data-target-self-result="${m}:${escapeHtml(item.id || "")}:loss" title="Kaybetti"><i class="fa-solid fa-xmark"></i></button><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
       </li>`;
     }).join("");
     return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -984,6 +985,98 @@
       <text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text>
       <text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${totalPossibleLabel}</text>
     </svg>`;
+  }
+  function v816BuildCryptoPhotoSvg(item) {
+    const tps = v813CryptoTps(item);
+    const stopRaw = cleanText(item?.stop || "");
+    const stopLoss = v812CryptoStopLoss(item);
+    const width = 900;
+    const padX = 42;
+    const rowX = 42;
+    const rowW = 816;
+    const textX = 64;
+    const valueX = 830;
+    const rowGap = 10;
+    let cursorY = 150;
+    const rowHtml = [];
+    const pushRow = (label, value, accent = '#fbbf24') => {
+      rowHtml.push(`
+        <rect x="${rowX}" y="${cursorY - 28}" width="${rowW}" height="40" rx="12" fill="#0f172a" stroke="#334155"/>
+        <text x="${textX}" y="${cursorY - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${escapeHtml(label)}</text>
+        <text x="${valueX}" y="${cursorY - 3}" text-anchor="end" fill="${accent}" font-size="19" font-family="Arial" font-weight="900">${escapeHtml(value)}</text>`);
+      cursorY += 50;
+    };
+    pushRow('İşlem', cleanText(item?.name || '') || 'Kripto İşlem', '#e5e7eb');
+    pushRow('Giriş', v814EntryText(item), '#fbbf24');
+    tps.forEach((tp, idx) => {
+      const target = cleanText(tp.target || '') || '-';
+      const profit = tp.profit !== '' ? signedMoney(Number(tp.profit || 0)) : '+$0.00';
+      pushRow(`TP ${idx + 1} · ${target}`, profit, '#22c55e');
+    });
+    if (stopRaw || stopLoss) {
+      pushRow(`STOP · ${stopRaw || '-'}`, stopLoss ? '-' + money(stopLoss) : '-$0.00', '#dc2626');
+    }
+    const footerY = cursorY + 20;
+    const footerH = 88;
+    const height = Math.max(420, footerY + footerH + 46);
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <rect width="${width}" height="${height}" fill="#020617"/>
+      <rect x="22" y="22" width="856" height="${height - 44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/>
+      <text x="${padX}" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">KRİPTO İŞLEM FOTOĞRAFI</text>
+      <text x="${padX}" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">${new Date().toLocaleString('tr-TR')}</text>
+      ${rowHtml.join('')}
+      <rect x="${rowX}" y="${footerY}" width="${rowW}" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/>
+      <text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text>
+      <text x="836" y="${footerY + 34}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${Number(item?.stake || 0) ? money(item.stake) : '-'}</text>
+      <text x="64" y="${footerY + 68}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Toplam TP Kârı:</text>
+      <text x="836" y="${footerY + 68}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${signedMoney(Number(v813CryptoTpProfitTotal(item) || 0))}</text>
+    </svg>`;
+  }
+  function v816BuildTargetItemPhotoData(mode, id) {
+    const m = mode === 'crypto' ? 'crypto' : 'bet';
+    const store = loadTargetItems();
+    const row = (store[m] || []).find(item => String(item.id || '') === String(id || ''));
+    if (!row) return null;
+    if (m === 'bet') {
+      const entry = {
+        index: 1,
+        type: v812BetLegs(row).length > 1 ? 'Kombine' : 'Bahis',
+        matchLines: v812BetLegs(row).map(leg => cleanText(leg.name || '') || 'Maç'),
+        matchOdds: v812BetLegs(row).map(leg => Number(leg.odds || 0)),
+        stake: Number(row.stake || 0),
+        odds: Number(v812BetOddsProduct(row) || 0),
+        possible: Number(v812BetPotential(row) || 0)
+      };
+      const svg = v785BuildBetPhotoSvg([entry], entry.type === 'Kombine' ? 'KOMBİNE KUPON' : 'BAHİS FOTOĞRAFI');
+      if (!svg) return null;
+      return { dataUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), label: 'Bahis Fotoğrafı', file: `bulten-bahis-${new Date().toISOString().slice(0,10)}.png` };
+    }
+    const svg = v816BuildCryptoPhotoSvg(row);
+    if (!svg) return null;
+    return { dataUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), label: 'Kripto Fotoğrafı', file: `bulten-kripto-${new Date().toISOString().slice(0,10)}.png` };
+  }
+  function openTargetItemPhoto(mode, id) {
+    const payload = v816BuildTargetItemPhotoData(mode, id);
+    if (!payload) {
+      alert(mode === 'crypto' ? 'Fotoğraf için önce işlem gir.' : 'Fotoğraf için önce maç bilgisi gir.');
+      return;
+    }
+    let host = document.getElementById('omega-rolling-feature-host');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'omega-rolling-feature-host';
+      document.body.appendChild(host);
+    }
+    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${payload.label}</b><span>Kasa Hedefi</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${payload.dataUrl}" alt="Kasa hedefi fotoğrafı"></section></div>`;
+    host.style.display = 'block';
+    host.querySelectorAll('[data-v781-photo-close]').forEach(el => el.addEventListener('click', event => {
+      if (event.target !== el && !event.target.hasAttribute('data-v781-photo-close')) return;
+      host.innerHTML = '';
+      host.style.display = 'none';
+    }));
+    host.querySelector('[data-v781-photo-download]')?.addEventListener('click', () => {
+      v781DownloadPngFromSvg(payload.dataUrl, payload.file);
+    });
   }
   function v781BuildTablePhotoSvg(mode, state) {
     const rows = v781RowsForPhoto(mode, state);
@@ -2116,22 +2209,46 @@
       saveTargetItems(store);
       return true;
     };
-    mount.querySelectorAll("[data-target-self-add]").forEach(btn => btn.addEventListener("click", () => {
-      const mode = btn.dataset.targetSelfAdd === "crypto" ? "crypto" : "bet";
-      if (saveTargetSelfFromForm(mode)) refresh();
-    }));
+    mount.querySelectorAll("[data-target-self-add]").forEach(btn => {
+      btn.addEventListener('pointerdown', () => {
+        const form = btn.closest('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]');
+        if (form) form.dataset.skipAutosaveOnce = '1';
+      });
+      btn.addEventListener("click", () => {
+        const mode = btn.dataset.targetSelfAdd === "crypto" ? "crypto" : "bet";
+        const form = btn.closest('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]');
+        if (saveTargetSelfFromForm(mode)) refresh();
+        if (form) delete form.dataset.skipAutosaveOnce;
+      });
+    });
     mount.querySelectorAll('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]').forEach(form => {
       const autosaveMode = form.matches('[data-target-crypto-autosave="1"]') ? "crypto" : "bet";
-      form.addEventListener("focusout", () => {
-        setTimeout(() => {
-          if (form.contains(document.activeElement)) return;
-          if (saveTargetSelfFromForm(autosaveMode)) refresh();
-        }, 90);
-      });
-      form.addEventListener("keydown", event => {
-        if (event.key !== "Enter") return;
+      let dirty = false;
+      form.addEventListener('input', () => { dirty = true; }, true);
+      form.addEventListener('keydown', event => {
+        if (event.key !== 'Enter') return;
         event.preventDefault();
-        if (saveTargetSelfFromForm(autosaveMode)) refresh();
+        const saved = saveTargetSelfFromForm(autosaveMode);
+        dirty = false;
+        if (saved) refresh();
+      });
+      form.addEventListener('focusout', () => {
+        setTimeout(() => {
+          if (form.contains(document.activeElement) || !dirty) return;
+          if (form.dataset.skipAutosaveOnce === '1') {
+            delete form.dataset.skipAutosaveOnce;
+            dirty = false;
+            return;
+          }
+          const saved = saveTargetSelfFromForm(autosaveMode);
+          dirty = false;
+          if (saved) refresh();
+        }, 120);
+      });
+      form.addEventListener('pointerdown', event => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (target.closest('[data-target-bet-leg-add],[data-target-tp-add],[data-target-tp-remove-last],[data-target-bet-leg-remove],[data-target-self-add]')) return;
       });
     });
     mount.querySelectorAll("[data-target-self-tp-done]").forEach(btn => btn.addEventListener("click", () => {
@@ -2166,6 +2283,12 @@
       if (mode === "crypto" && row.result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
       saveTargetItems(store);
       refresh();
+    }));
+    mount.querySelectorAll("[data-target-self-photo]").forEach(btn => btn.addEventListener("click", () => {
+      const [modeRaw, id] = String(btn.dataset.targetSelfPhoto || "bet:").split(":");
+      const mode = modeRaw === "crypto" ? "crypto" : "bet";
+      if (!id) return;
+      openTargetItemPhoto(mode, id);
     }));
     mount.querySelectorAll("[data-target-self-delete]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id] = String(btn.dataset.targetSelfDelete || "bet:").split(":");
