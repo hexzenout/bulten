@@ -1381,6 +1381,21 @@
       file: `bulten-${mode}-aktif-rolling-${new Date().toISOString().slice(0,10)}.png`
     });
   }
+
+  function openPendingBoardPhoto(mode, state) {
+    const safeMode = mode === "crypto" ? "crypto" : "bet";
+    const dataUrl = v781BuildTablePhotoSvg(safeMode, state);
+    if (!dataUrl) {
+      alert(safeMode === "crypto" ? "Fotoğraf için önce işlem yaz." : "Fotoğraf için önce aktif bahis / kupon yaz.");
+      return;
+    }
+    openRollingPhotoPreview({
+      dataUrl,
+      label: safeMode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar",
+      sub: safeMode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar",
+      file: `bulten-${safeMode}-aktif-kuponlar-${new Date().toISOString().slice(0,10)}.png`
+    });
+  }
   function renderBetInfoBar(row) {
     const t = rowBetTotals(row);
     const matches = getSlotMatches(row);
@@ -1731,16 +1746,16 @@
     if (!PENDING_BOARD_OPEN_MODE) return "";
     const mode = PENDING_BOARD_OPEN_MODE === "crypto" ? "crypto" : "bet";
     const isCrypto = mode === "crypto";
-    const photoButton = isCrypto ? "" : `<button type="button" class="v889-pending-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`;
+    const photoButton = isCrypto ? "" : `<button type="button" class="v890-pending-photo-btn" data-pending-board-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`;
     return `
       <div class="v758-pending-overlay">
         <section class="v758-pending-modal ${mode}">
-          <div class="v512-history-head v889-pending-modal-head">
+          <div class="v512-history-head v890-pending-modal-head">
             <div>
               <b>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR"}</b>
               <span>Kutulara yazdığın satırlar otomatik aktif olarak burada toplanır; sonuç verince Geçmiş'e gider.</span>
             </div>
-            <div class="v889-pending-head-actions">
+            <div class="v890-pending-head-actions">
               ${photoButton}
               <button type="button" data-pending-close aria-label="Kapat">×</button>
             </div>
@@ -2321,6 +2336,11 @@
     }));
     mount.querySelectorAll("[data-main-table-photo]").forEach(btn => btn.addEventListener("click", () => {
       openTablePhoto(btn.dataset.mainTablePhoto === "crypto" ? "crypto" : "bet", state);
+    }));
+    mount.querySelectorAll("[data-pending-board-photo]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      openPendingBoardPhoto(btn.dataset.pendingBoardPhoto === "crypto" ? "crypto" : "bet", state);
     }));
     mount.querySelectorAll("[data-crypto-detail]").forEach(input => {
       const saveCryptoDetail = () => {

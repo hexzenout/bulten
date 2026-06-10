@@ -10879,18 +10879,18 @@ select:-webkit-autofill {
 }
 
 
-/* V889: Aktif Bahisler / Kuponlar kamera butonu */
-.v758-pending-modal .v889-pending-modal-head {
+/* V890: Aktif Bahisler / Kuponlar modal kamera butonu - sadece aktif panel başlığı */
+.v758-pending-modal .v890-pending-modal-head {
   align-items: flex-start !important;
 }
-.v758-pending-modal .v889-pending-head-actions {
+.v758-pending-modal .v890-pending-head-actions {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
   gap: 8px !important;
   flex: 0 0 auto !important;
 }
-.v758-pending-modal .v889-pending-head-actions button {
+.v758-pending-modal .v890-pending-head-actions button {
   width: 38px !important;
   height: 38px !important;
   min-width: 38px !important;
@@ -10898,16 +10898,16 @@ select:-webkit-autofill {
   border-radius: 12px !important;
   box-sizing: border-box !important;
 }
-.v758-pending-modal .v889-pending-photo-btn {
+.v758-pending-modal .v890-pending-photo-btn {
   border: 1px solid rgba(251,191,36,.48) !important;
   background: rgba(251,191,36,.12) !important;
   color: #fbbf24 !important;
   box-shadow: 0 0 14px rgba(251,191,36,.16) !important;
 }
-.v758-pending-modal .v889-pending-photo-btn:hover {
+.v758-pending-modal .v890-pending-photo-btn:hover {
   background: rgba(251,191,36,.20) !important;
   color: #fde68a !important;
 }
-.v758-pending-modal .v889-pending-photo-btn i {
+.v758-pending-modal .v890-pending-photo-btn i {
   pointer-events: none !important;
 }
