@@ -422,7 +422,7 @@
             ${CONFIRM_DIALOG.detail ? `<span>${escapeHtml(CONFIRM_DIALOG.detail)}</span>` : ""}
           </div>
           <div class="v757-confirm-actions">
-            <button type="button" class="ghost" data-confirm-no>${escapeHtml(CONFIRM_DIALOG.cancelText || "İptal")}</button>
+            <button type="button" class="ghost" data-confirm-no>İptal</button>
             <button type="button" class="ok" data-confirm-yes>${escapeHtml(CONFIRM_DIALOG.confirmText || "Onayla")}</button>
           </div>
         </section>
@@ -1358,39 +1358,14 @@
     </article>`;
   }
 
-  function closeCouponActiveState(state, coupon, status, record = null) {
-    const row = coupon?.row || coupon?.rows?.[0];
+  function addCouponHistoryRecord(state, coupon, status) {
+    const row = coupon.row || coupon.rows?.[0];
     if (!row) return;
     const totals = rowBetTotals(row);
-    const finalStatus = status === "loss" ? "loss" : "win";
-    const pnl = record ? Number(record.pnl || 0) : (finalStatus === "win" ? Math.max(0, totals.possibleWin - totals.stake) : -totals.stake);
-    const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
-    sourceRows.forEach((src, idx) => {
-      const slot = state.modeSlots.bet[Number(src.index || 0)];
-      if (!slot) return;
-      slot.status = finalStatus;
-      slot.pnl = idx === 0 ? pnl : 0;
-      if (record?.id) slot.historyId = record.id;
-      slot.historyStatus = finalStatus;
-    });
-  }
-  function addCouponHistoryRecord(state, coupon, status, options = {}) {
-    const row = coupon.row || coupon.rows?.[0];
-    if (!row) return null;
-    const totals = rowBetTotals(row);
     const h = loadHistory();
+    const now = Date.now();
     const names = getSlotMatches(row).map(m => m.name).filter(Boolean);
     const finalStatus = status === "loss" ? "loss" : "win";
-    const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
-    const existingId = sourceRows
-      .map(src => state.modeSlots.bet[Number(src.index || 0)]?.historyStatus === finalStatus ? state.modeSlots.bet[Number(src.index || 0)]?.historyId : "")
-      .find(Boolean);
-    const existing = existingId ? (h.bet || []).find(rec => String(rec.id || "") === String(existingId)) : null;
-    if (existing) {
-      if (options.closeActive !== false) closeCouponActiveState(state, coupon, finalStatus, existing);
-      return existing;
-    }
-    const now = Date.now();
     const rec = {
       id: "rh_" + now + "_coupon_" + Math.random().toString(36).slice(2),
       mode: "bet",
@@ -1404,18 +1379,15 @@
     };
     h.bet.unshift(rec);
     saveHistory(h);
-    sourceRows.forEach(src => {
+    const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [row];
+    sourceRows.forEach((src, idx) => {
       const slot = state.modeSlots.bet[Number(src.index || 0)];
       if (!slot) return;
+      slot.status = finalStatus;
+      slot.pnl = idx === 0 ? rec.pnl : 0;
       slot.historyId = rec.id;
       slot.historyStatus = finalStatus;
-      if (options.closeActive === false) {
-        slot.status = "pending";
-        slot.pnl = 0;
-      }
     });
-    if (options.closeActive !== false) closeCouponActiveState(state, coupon, finalStatus, rec);
-    return rec;
   }
   function renderPendingBoard(mode, state) {
     const isCrypto = mode === "crypto";
@@ -1657,22 +1629,6 @@
   function saveState(state) {
     ensureStateShape(state);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
-
-  let V833_STATE_SAVE_TIMER = null;
-  function saveStateDebounced(state, delay = 260) {
-    if (V833_STATE_SAVE_TIMER) clearTimeout(V833_STATE_SAVE_TIMER);
-    V833_STATE_SAVE_TIMER = setTimeout(() => {
-      V833_STATE_SAVE_TIMER = null;
-      saveState(state);
-    }, delay);
-  }
-  function flushStateSave(state) {
-    if (V833_STATE_SAVE_TIMER) {
-      clearTimeout(V833_STATE_SAVE_TIMER);
-      V833_STATE_SAVE_TIMER = null;
-    }
-    saveState(state);
   }
   function recalcSlot(slot) {
     const stake = Number(slot.stake || 0);
@@ -2133,7 +2089,7 @@
       refresh();
     }));
     mount.querySelectorAll("input[data-mode]").forEach(input => {
-      const saveInput = (immediate = false) => {
+      const saveInput = () => {
         const mode = input.dataset.mode, i = Number(input.dataset.slot), key = input.dataset.key;
         const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
         if (!list[i]) list[i] = createSlot(mode, i);
@@ -2144,12 +2100,10 @@
         }
         if (mode === "crypto" && key === "odds") list[i].cryptoPnlMode = "amount";
         recalcSlot(list[i]);
-        if (immediate) flushStateSave(state);
-        else saveStateDebounced(state);
+        saveState(state);
       };
-      input.addEventListener("input", () => saveInput(false));
-      input.addEventListener("change", () => saveInput(true));
-      input.addEventListener("blur", () => saveInput(true));
+      input.addEventListener("input", saveInput);
+      input.addEventListener("change", saveInput);
     });
     mount.querySelectorAll("[data-clear-row]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, slotRaw] = String(btn.dataset.clearRow || "bet:0").split(":");
@@ -2163,22 +2117,21 @@
       openTablePhoto(btn.dataset.mainTablePhoto === "crypto" ? "crypto" : "bet", state);
     }));
     mount.querySelectorAll("[data-crypto-detail]").forEach(input => {
-      const saveCryptoDetail = (immediate = false) => {
+      const saveCryptoDetail = () => {
         const [slotRaw, key] = String(input.dataset.cryptoDetail || "0:entryPrice").split(":");
         const i = Number(slotRaw || 0);
         if (!state.modeSlots.crypto[i]) state.modeSlots.crypto[i] = createSlot("crypto", i);
         state.modeSlots.crypto[i][key] = input.value;
         state.modeSlots.crypto[i].status = state.modeSlots.crypto[i].status === "win" || state.modeSlots.crypto[i].status === "loss" ? state.modeSlots.crypto[i].status : "pending";
         if (key === "stake" || key === "odds") recalcSlot(state.modeSlots.crypto[i]);
-        if (immediate) flushStateSave(state);
-        else saveStateDebounced(state);
+        saveState(state);
       };
-      input.addEventListener("input", () => saveCryptoDetail(false));
-      input.addEventListener("change", () => { saveCryptoDetail(true); refresh(); });
-      input.addEventListener("blur", () => { saveCryptoDetail(true); refresh(); });
+      input.addEventListener("input", saveCryptoDetail);
+      input.addEventListener("change", () => { saveCryptoDetail(); refresh(); });
+      input.addEventListener("blur", () => { saveCryptoDetail(); refresh(); });
     });
     mount.querySelectorAll("[data-crypto-tp]").forEach(input => {
-      const saveTp = (immediate = false) => {
+      const saveTp = () => {
         const [slotRaw, tpRaw, key] = String(input.dataset.cryptoTp || "0:0:price").split(":");
         const i = Number(slotRaw || 0);
         const ti = Number(tpRaw || 0);
@@ -2190,12 +2143,11 @@
         if (!slot.takeProfits[ti].note) slot.takeProfits[ti].note = `TP${ti + 1}`;
         slot.odds = Number(cryptoRealizedProfit(slot).toFixed(2));
         recalcSlot(slot);
-        if (immediate) flushStateSave(state);
-        else saveStateDebounced(state);
+        saveState(state);
       };
-      input.addEventListener("input", () => saveTp(false));
-      input.addEventListener("change", () => saveTp(true));
-      input.addEventListener("blur", () => saveTp(true));
+      input.addEventListener("input", saveTp);
+      input.addEventListener("change", saveTp);
+      input.addEventListener("blur", saveTp);
     });
     mount.querySelectorAll("[data-crypto-tp-op]").forEach(btn => btn.addEventListener("click", () => {
       const [slotRaw, tpRaw, op] = String(btn.dataset.cryptoTpOp || "0:0:plus").split(":");
@@ -2422,12 +2374,34 @@
     });
     mount.querySelectorAll('[data-target-bet-autosave="1"], [data-target-crypto-autosave="1"]').forEach(form => {
       const autosaveMode = form.matches('[data-target-crypto-autosave="1"]') ? "crypto" : "bet";
+      let dirty = false;
+      if (autosaveMode === "bet") {
+        form.addEventListener('input', () => { dirty = true; }, true);
+      }
       form.addEventListener('keydown', event => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
         const saved = saveTargetSelfFromForm(autosaveMode);
+        dirty = false;
         if (saved) refresh();
       });
+      if (autosaveMode === "bet") {
+        form.addEventListener('focusout', event => {
+          const next = event.relatedTarget;
+          if (next && form.contains(next)) return;
+          setTimeout(() => {
+            if (form.contains(document.activeElement) || !dirty) return;
+            if (form.dataset.skipAutosaveOnce === '1') {
+              delete form.dataset.skipAutosaveOnce;
+              dirty = false;
+              return;
+            }
+            const saved = saveTargetSelfFromForm("bet");
+            dirty = false;
+            if (saved) refresh();
+          }, 140);
+        });
+      }
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
@@ -2769,31 +2743,9 @@
         saveState(fresh);
       } else if (action.type === "settleCoupon") {
         const fresh = loadState();
-        const coupons = getBetCouponGroups(fresh).coupons;
-        const coupon = coupons.find(c => Number(c.slotIndex) === Number(action.slotIndex)) || coupons.find(c => c.id === Number(action.couponId || 1));
+        const coupon = getBetCouponGroups(fresh).coupons.find(c => c.id === Number(action.couponId || 1));
         if (coupon) {
-          const finalStatus = action.status === "loss" ? "loss" : "win";
-          addCouponHistoryRecord(fresh, coupon, finalStatus, { closeActive: false });
-          saveState(fresh);
-          CONFIRM_DIALOG = {
-            type: "cleanupCoupon",
-            slotIndex: coupon.slotIndex,
-            status: finalStatus,
-            keepActivePanel: action.keepActivePanel || "bet",
-            tone: finalStatus === "loss" ? "danger" : "success",
-            title: "Detay temizlensin mi?",
-            message: "Sonuç işlendi. Bu kombine kupon detaydan kaldırılsın mı?",
-            detail: "Hayır dersen kupon aktif bahis detayında kalır; geçmiş kaydı silinmez.",
-            cancelText: "Hayır, kalsın",
-            confirmText: "Evet, temizle"
-          };
-        }
-      } else if (action.type === "cleanupCoupon") {
-        const fresh = loadState();
-        const coupons = getBetCouponGroups(fresh).coupons;
-        const coupon = coupons.find(c => Number(c.slotIndex) === Number(action.slotIndex));
-        if (coupon) {
-          closeCouponActiveState(fresh, coupon, action.status === "loss" ? "loss" : "win");
+          addCouponHistoryRecord(fresh, coupon, action.status === "loss" ? "loss" : "win");
           saveState(fresh);
         }
       } else if (action.type === "comboMatch") {
@@ -2809,23 +2761,10 @@
           slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
           const updatedCoupon = getBetCouponGroups(fresh).coupons.find(c => Number(c.slotIndex) === baseIndex);
           const matches = updatedCoupon ? updatedCoupon.matches : getSlotMatches({ ...slot, index: baseIndex });
-          const anyLoss = action.status !== "pending" && matches.length > 1 && matches.some(m => m.status === "loss");
-          const allWin = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win");
-          if (anyLoss || allWin) {
-            const finalStatus = anyLoss ? "loss" : "win";
-            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus, { closeActive: false });
-            CONFIRM_DIALOG = {
-              type: "cleanupCoupon",
-              slotIndex: baseIndex,
-              status: finalStatus,
-              keepActivePanel: action.keepActivePanel || "bet",
-              tone: finalStatus === "loss" ? "danger" : "success",
-              title: "Detay temizlensin mi?",
-              message: "Sonuç işlendi. Bu kombine kupon detaydan kaldırılsın mı?",
-              detail: "Hayır dersen kupon aktif bahis detayında kalır; geçmiş kaydı silinmez.",
-              cancelText: "Hayır, kalsın",
-              confirmText: "Evet, temizle"
-            };
+          const allDone = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
+          if (allDone) {
+            const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
+            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
           }
           saveState(fresh);
         }
@@ -2833,10 +2772,6 @@
         deleteHistoryRecord(action.mode, action.id);
       } else if (action.type === "restoreHistory") {
         restoreHistoryRecord(action.mode, action.id);
-      }
-      if (CONFIRM_DIALOG) {
-        refresh();
-        return;
       }
       const keepPanel = action.keepActivePanel || CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
       if (keepPanel) {
@@ -2880,9 +2815,7 @@
         message: nextStatus === "pending"
           ? `${matchName} tekrar BEKLİYOR durumuna alınacak.`
           : `${matchName} için ${nextStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
-        detail: nextStatus === "pending"
-          ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur."
-          : (nextStatus === "loss" ? "Tek maç kaybı kombine kuponu kaybettirir; detay temizliği ikinci uyarıya bağlıdır." : "Tüm maçlar kazanırsa kombine kupon kazanır; detay temizliği ikinci uyarıya bağlıdır."),
+        detail: nextStatus === "pending" ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur." : "Kombine tüm maçlar sonuçlanana kadar aktif listede kalır.",
         confirmText: nextStatus === "pending" ? "BEKLİYOR olarak işaretle" : (nextStatus === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle")
       };
       refresh();
@@ -2929,19 +2862,16 @@
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
         const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
         if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
-        const coupon = mode === "bet" ? getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === i) : null;
         CONFIRM_DIALOG = {
-          type: coupon && finalStatus !== "pending" ? "settleCoupon" : "settle",
+          type: "settle",
           mode,
           slot: i,
-          slotIndex: i,
-          couponId: coupon?.id,
           status: finalStatus,
           keepActivePanel: keepPanel,
           tone: finalStatus === "loss" ? "danger" : "success",
           title: finalStatus === "pending" ? "Tekrar bekliyor durumuna al" : "Sonucu kaydetmeden önce onayla",
           message: finalStatus === "pending" ? `${name} tekrar BEKLİYOR durumuna alınacak.` : `${name} için sonuç: ${resultLabel}.`,
-          detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : (coupon ? "Kombine kupon tek kayıt olarak işlenecek; detay temizliği ikinci uyarıya bağlıdır." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et."),
+          detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et.",
           confirmText: finalStatus === "pending" ? "BEKLİYOR olarak kaydet" : `${resultLabel} olarak kaydet`
         };
         refresh();
