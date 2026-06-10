@@ -954,8 +954,8 @@
     return `<div class="kapsul v32 v847-shot-result ${finalStatus}">
       <div class="v850-shot-toolbar">
         <button type="button" class="v847-shot-back v850-shot-return" onclick="return omega_ReturnExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
-        <button type="button" class="v850-shot-close" onclick="return omega_CloseExcelOp(event, ${day}, ${slot})" title="Kapat"><i class="fa-solid fa-xmark"></i></button>
       </div>
+      <div class="v873-shot-context">GÜN ${day} BAHİS ${slot + 1}</div>
       <div class="v847-shot-head">
         <b>${title}</b>
         <div class="v847-shot-head-tools">
@@ -1201,7 +1201,7 @@
       const title = isCrypto ? (row.note || "İşlem") : (row.combo?.length ? "Kombine" : (row.note || "Maç"));
       const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
       const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Tahmini Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
-      return `<article class="v768-feature-card"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Kutu ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
+      return `<article class="v768-feature-card"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span><p>${metric}</p>${comboHtml}</article>`;
     }).join("");
   }
 
@@ -1289,7 +1289,7 @@
       const statusColor = result === "loss" ? "#ef4444" : "#22c55e";
       return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text>${statusText ? `<text x="720" y="${y - 3}" text-anchor="end" fill="${statusColor}" font-size="17" font-family="Arial" font-weight="900">${statusText}</text>` : ""}<text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
     }).join('');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · KUTU ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="${resultColor}" font-size="19" font-family="Arial" font-weight="900">${resultLabel}</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="${resultColor}" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="${resultColor}" font-size="19" font-family="Arial" font-weight="900">${resultLabel}</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="${resultColor}" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
@@ -1352,7 +1352,7 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Kutu ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v777-photo-download>Resmi İndir</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} Bahis ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v777-photo-download>Resmi İndir</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
@@ -1364,7 +1364,7 @@
       if (w) w.document.write(`<img src="${uri}" style="max-width:100%;height:auto;background:#020617;display:block;margin:0 auto;">`);
     });
     host.querySelector("[data-v777-photo-download]")?.addEventListener("click", () => {
-      v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-kutu-${slot + 1}.png`);
+      v777DownloadPhotoPng(uri, `bahis-rolling-${_ACTIVE_EXCEL_DAYS}-gun-${day}-bahis-${slot + 1}.png`);
     });
     return false;
   };
@@ -1388,7 +1388,7 @@
     host.innerHTML = `<div class="v776-photo-overlay v850-result-photo-overlay" data-v776-photo-close>
       <section class="v776-photo-modal v850-result-photo-modal">
         <div class="v776-photo-head v850-result-photo-head">
-          <div><b>7 GÜNLÜK ROLLING</b><span>GÜN ${day} · BAHİS ${slot + 1}</span></div>
+          <div><b>7 GÜNLÜK ROLLING</b><span>GÜN ${day} BAHİS ${slot + 1}</span></div>
           <button type="button" data-v776-photo-close>×</button>
         </div>
         <div class="v776-photo-actions v850-result-photo-actions">
