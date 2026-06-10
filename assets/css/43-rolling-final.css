@@ -10860,3 +10860,177 @@ select:-webkit-autofill {
   justify-content: center !important;
   white-space: nowrap !important;
 }
+
+/* V883: V864 neon görünümü + stabil buton ölçüsü + Kasa Hedefi final buton eşleştirme */
+.rolling-v47-table td:nth-child(9),
+.rolling-v47-table th:nth-child(9) {
+  width: 150px !important;
+  min-width: 150px !important;
+  max-width: 150px !important;
+  box-sizing: border-box !important;
+}
+
+.rolling-v47-actions.v757-actions {
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  width: 146px !important;
+  min-width: 146px !important;
+  max-width: 146px !important;
+  box-sizing: border-box !important;
+}
+
+.rolling-v47-actions.v757-actions button.win,
+.rolling-v47-actions.v757-actions button.loss {
+  flex: 0 0 70px !important;
+  width: 70px !important;
+  min-width: 70px !important;
+  max-width: 70px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  font-size: .60rem !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  transform: none !important;
+}
+
+.rolling-v47-actions.v757-actions button.win,
+.v763-combo-match-list button.win,
+.v871-target-final-actions button.win {
+  color: #bbf7d0 !important;
+  background: rgba(6,78,59,.70) !important;
+  border-color: rgba(52,211,153,.48) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+  outline: 0 !important;
+  transform: none !important;
+}
+
+.rolling-v47-actions.v757-actions button.loss,
+.v763-combo-match-list button.loss,
+.v871-target-final-actions button.loss {
+  color: #fecaca !important;
+  background: rgba(127,29,29,.70) !important;
+  border-color: rgba(248,113,113,.48) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04) !important;
+  outline: 0 !important;
+  transform: none !important;
+}
+
+.rolling-v47-actions.v757-actions .win.selected,
+.rolling-v47-actions.v757-actions button.win.selected,
+.v763-combo-match-list button.win.selected,
+.v763-combo-match-list .win.selected,
+.v871-target-final-actions .win.active,
+.v871-target-final-actions button.win.active,
+.v871-target-final-actions .win.selected,
+.v871-target-final-actions button.win.selected {
+  color: #052e16 !important;
+  background: linear-gradient(135deg, #22c55e, #86efac) !important;
+  border-color: rgba(134,239,172,.82) !important;
+  box-shadow:
+    0 0 16px rgba(34,197,94,.50),
+    0 0 0 1px rgba(134,239,172,.30) inset,
+    inset 0 1px 0 rgba(255,255,255,.28) !important;
+  outline: 0 !important;
+  transform: none !important;
+}
+
+.rolling-v47-actions.v757-actions .loss.selected,
+.rolling-v47-actions.v757-actions button.loss.selected,
+.v763-combo-match-list button.loss.selected,
+.v763-combo-match-list .loss.selected,
+.v871-target-final-actions .loss.active,
+.v871-target-final-actions button.loss.active,
+.v871-target-final-actions .loss.selected,
+.v871-target-final-actions button.loss.selected {
+  color: #fee2e2 !important;
+  background: linear-gradient(135deg, #991b1b, #ef4444) !important;
+  border-color: rgba(248,113,113,.80) !important;
+  box-shadow:
+    0 0 16px rgba(239,68,68,.50),
+    0 0 0 1px rgba(248,113,113,.26) inset,
+    inset 0 1px 0 rgba(255,255,255,.20) !important;
+  outline: 0 !important;
+  transform: none !important;
+}
+
+.v871-target-bet-summary {
+  display: grid !important;
+  gap: 4px !important;
+  margin-top: 8px !important;
+  padding: 8px 10px !important;
+  border: 1px solid rgba(250,204,21,.20) !important;
+  border-radius: 12px !important;
+  background: rgba(15,23,42,.72) !important;
+  color: #f8fafc !important;
+  font-size: .66rem !important;
+  font-weight: 900 !important;
+}
+.v871-target-bet-summary span {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+.v871-target-bet-summary b { color: #fbbf24 !important; }
+.v871-target-bet-summary b.pos { color: #22c55e !important; }
+.v871-target-bet-summary b.neg { color: #f87171 !important; }
+
+.v871-target-final-actions {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 7px !important;
+  width: 100% !important;
+  margin-top: 8px !important;
+  align-items: stretch !important;
+}
+.v871-target-final-actions button {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 6px !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  font-size: .62rem !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  transform: none !important;
+}
+
+#omega-rolling-feature-host .v758-pending-overlay {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+#omega-rolling-feature-host .v758-pending-modal {
+  cursor: default !important;
+  pointer-events: auto !important;
+}
+#omega-rolling-feature-host [data-pending-close] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 60 !important;
+}
