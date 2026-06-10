@@ -503,10 +503,17 @@
     return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
   }
 
+  function v855ParseNumber(value) {
+    if (value === "" || value == null) return 0;
+    const raw = String(value).trim().replace(/\s+/g, "").replace(",", ".");
+    const parsed = Number.parseFloat(raw);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
   function v763ComboRows(day, slot) {
     return Array.from(document.querySelectorAll(`[data-v763-extra-row="${day}:${slot}"]`)).map(row => ({
       note: (row.querySelector(`[data-v763-extra-note]`)?.value || "").trim(),
-      odds: Number(row.querySelector(`[data-v763-extra-odds]`)?.value || 0)
+      odds: v855ParseNumber(row.querySelector(`[data-v763-extra-odds]`)?.value || 0)
     })).filter(x => x.note || x.odds);
   }
 
@@ -535,10 +542,10 @@
   };
 
   function v763BetTotalOdds(primary, comboRows) {
-    let total = Number(primary || 0);
+    let total = v855ParseNumber(primary || 0);
     if (!total) return 0;
     comboRows.forEach(row => {
-      const o = Number(row.odds || 0);
+      const o = v855ParseNumber(row.odds || 0);
       if (o) total *= o;
     });
     return total;
@@ -559,7 +566,7 @@
 
   function v847BetLegsFromDom(day, slot) {
     const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-    const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+    const odds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
     return [{ note, odds }, ...v763ComboRows(day, slot)].filter(row => row.note || Number(row.odds || 0));
   }
 
@@ -581,8 +588,8 @@
           <div class="v854-leg-result-meta">
             <b>Oran: ${odds}</b>
             <div class="v854-leg-result-actions">
-              <button type="button" class="win ${status === "win" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:win" title="Bu maç kazandı">✓</button>
-              <button type="button" class="loss ${status === "loss" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:loss" title="Bu maç kaybetti">×</button>
+              <button type="button" class="win ${status === "win" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:win" onclick="return omega_SetBetLegResult(event, ${day}, ${slot}, ${idx}, 'win')" title="Bu maç kazandı">✓</button>
+              <button type="button" class="loss ${status === "loss" ? "selected" : ""}" data-v847-leg-result="${day}:${slot}:${idx}:loss" onclick="return omega_SetBetLegResult(event, ${day}, ${slot}, ${idx}, 'loss')" title="Bu maç kaybetti">×</button>
             </div>
           </div>
         </div>`;
@@ -642,8 +649,9 @@
 
   function v847SetBetLegResult(day, slot, index, status) {
     if (!Number.isFinite(day) || !Number.isFinite(slot) || !Number.isFinite(index)) return false;
-    v774SavePendingSlot(day, slot);
-    const pending = v774GetPendingSlot(day, slot) || v774PendingFromDom(day, slot);
+    const domEntry = v774PendingFromDom(day, slot);
+    const savedEntry = v774GetPendingSlot(day, slot);
+    const pending = domEntry || savedEntry;
     if (!pending || !pending.note) {
       if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Önce maç, oran ve tutar alanlarını doldur.");
       return false;
@@ -668,7 +676,7 @@
   }
 
   function v768SlotOdds(day, slot) {
-    const mainOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+    const mainOdds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
     const extras = v763ComboRows(day, slot);
     return v763BetTotalOdds(mainOdds, extras);
   }
@@ -677,7 +685,7 @@
     const box = document.querySelector(`[data-v768-calc="${day}:${slot}"]`);
     if (!box) return;
     const totalOdds = v768SlotOdds(day, slot);
-    const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
+    const stake = v855ParseNumber(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
     const possible = totalOdds && stake ? stake * totalOdds : 0;
     box.innerHTML = `<span>Toplam Oran: <b>${totalOdds ? totalOdds.toFixed(2) : "-"}</b></span><span>Tahmini Kazanç: <b>${possible ? v768Money(possible) : "-"}</b></span>`;
     const legPanel = document.querySelector(`[data-v847-leg-panel="${day}:${slot}"]`);
@@ -713,11 +721,11 @@
   function v774NormalizePendingEntry(entry) {
     if (!entry || typeof entry !== "object") return null;
     const note = String(entry.note || "").trim();
-    const stake = entry.amt === "" || entry.amt == null ? "" : Number(entry.amt || 0);
-    const odds = entry.odds === "" || entry.odds == null ? "" : Number(entry.odds || 0);
+    const stake = entry.amt === "" || entry.amt == null ? "" : v855ParseNumber(entry.amt || 0);
+    const odds = entry.odds === "" || entry.odds == null ? "" : v855ParseNumber(entry.odds || 0);
     const combo = Array.isArray(entry.combo) ? entry.combo.map(row => ({
       note: String(row?.note || "").trim(),
-      odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0)
+      odds: row?.odds === "" || row?.odds == null ? "" : v855ParseNumber(row.odds || 0)
     })).filter(row => row.note || Number(row.odds || 0)) : [];
     if (!note && stake === "" && odds === "" && !combo.length) return null;
     const comboResults = Array.isArray(entry.comboResults) ? entry.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1) : [];
@@ -731,8 +739,8 @@
     const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
     const stakeText = document.getElementById(`e-a-${day}-${slot}`)?.value || "";
     const oddsText = document.getElementById(`e-o-${day}-${slot}`)?.value || "";
-    const stake = stakeText === "" ? "" : Number(stakeText || 0);
-    const odds = oddsText === "" ? "" : Number(oddsText || 0);
+    const stake = stakeText === "" ? "" : v855ParseNumber(stakeText || 0);
+    const odds = oddsText === "" ? "" : v855ParseNumber(oddsText || 0);
     const combo = v763ComboRows(day, slot).map(row => ({ note: row.note, odds: row.odds || "" }));
     const previous = v774GetPendingSlot(day, slot);
     const comboResults = Array.isArray(previous?.comboResults) ? previous.comboResults : [];
@@ -824,8 +832,8 @@
         if (saved) continue;
         if (!smartBet) {
           const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-          const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
-          const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+          const stake = v855ParseNumber(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
+          const odds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
           const combo = isCrypto ? [] : v763ComboRows(day, slot);
           if (!note && !stake && !odds && !combo.length) continue;
           const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
@@ -1136,11 +1144,6 @@
       }
       const legResultBtn = event.target.closest && event.target.closest("[data-v847-leg-result]");
       if (legResultBtn) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-        const [dayRaw, slotRaw, indexRaw, statusRaw] = String(legResultBtn.dataset.v847LegResult || "0:0:0:win").split(":");
-        v847SetBetLegResult(Number(dayRaw), Number(slotRaw), Number(indexRaw), statusRaw === "loss" ? "loss" : "win");
         return;
       }
       const comboBtn = event.target.closest && event.target.closest("[data-v768-combo]");
@@ -1294,7 +1297,7 @@
                   <div class="v847-bet-leg-result-panel" data-v847-leg-panel="${day}:${slot}"></div>
                 </div>
               `}
-              <div class="k-actions v32" data-v847-main-actions="${day}:${slot}">
+              <div class="k-actions v32 ${pComboV774.length ? "v847-hide-main-actions" : ""}" data-v847-main-actions="${day}:${slot}">
                 <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
                 <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>
               </div>
@@ -1344,6 +1347,13 @@
     omega_SaveRollingDB();
   };
 
+  window.omega_SetBetLegResult = function(event, day, slot, index, status) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    return v847SetBetLegResult(Number(day), Number(slot), Number(index), status === "loss" ? "loss" : "win");
+  };
+
   window.omega_CloseExcelOp = function(event, day, slot) {
     if (event && typeof event.preventDefault === "function") event.preventDefault();
     if (event && typeof event.stopPropagation === "function") event.stopPropagation();
@@ -1368,7 +1378,7 @@
     if (!op) return false;
 
     const combo = Array.isArray(op.combo)
-      ? op.combo.map(row => ({ note: String(row?.note || "").trim(), odds: row?.odds === "" || row?.odds == null ? "" : Number(row.odds || 0) }))
+      ? op.combo.map(row => ({ note: String(row?.note || "").trim(), odds: row?.odds === "" || row?.odds == null ? "" : v855ParseNumber(row.odds || 0) }))
       : [];
     const comboResults = Array.isArray(op.comboResults)
       ? op.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1)
@@ -1401,8 +1411,8 @@
   window.omega_ResolveExcelOp = function(day, slot, result, meta = {}) {
     const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
     const isCrypto = localStorage.getItem("finance_rolling_mode") === "crypto";
-    const amt = parseFloat(document.getElementById(`e-a-${day}-${slot}`)?.value);
-    const odds = parseFloat(document.getElementById(`e-o-${day}-${slot}`)?.value);
+    const amt = v855ParseNumber(document.getElementById(`e-a-${day}-${slot}`)?.value);
+    const odds = v855ParseNumber(document.getElementById(`e-o-${day}-${slot}`)?.value);
     const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
     const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
     const hasComboGap = comboRows.some(row => !row.note || !Number(row.odds || 0));

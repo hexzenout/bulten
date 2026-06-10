@@ -9874,3 +9874,20 @@ html textarea:-webkit-autofill::first-line {
 #rolling-excel-overlay .v847-leg-result-row.loss .v854-leg-result-meta b {
   color: #fca5a5 !important;
 }
+
+
+/* V855: 7 Günlük Rolling - tüm kutularda maç sonuç butonları stabil + kombinede ana butonları gizle */
+#rolling-excel-overlay .v765-bet-kapsul:has(.v847-leg-panel-inner) > .k-actions.v32[data-v847-main-actions] {
+  display: none !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row button {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+#rolling-excel-overlay .v847-leg-result-row,
+#rolling-excel-overlay .v854-leg-result-actions {
+  pointer-events: auto !important;
+}
