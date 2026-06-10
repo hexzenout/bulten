@@ -7306,3 +7306,158 @@ html.rolling-hash-boot::before {
     grid-template-columns: minmax(0, 1fr) 46px !important;
   }
 }
+
+
+/* V815: Kasa Hedefi detay kontrollleri - net bakiye etkisi, şık onaylar ve taşmasız kripto detay */
+.rolling-v48-rail .v815-target-self-form input {
+  transition: border-color .12s ease, box-shadow .12s ease !important;
+}
+
+.rolling-v48-rail .v815-target-self-form input:focus {
+  border-color: rgba(56,189,248,.36) !important;
+  box-shadow: 0 0 0 2px rgba(56,189,248,.10) !important;
+}
+
+.rolling-v48-rail .v814-bet-total-line span.gain,
+.rolling-v48-rail .v814-bet-total-line span.gain b {
+  color: #22c55e !important;
+}
+
+.rolling-v48-rail .v814-bet-total-line span.gain {
+  border-color: rgba(34,197,94,.44) !important;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(134,239,172,.18), transparent 42%),
+    linear-gradient(135deg, rgba(22,101,52,.30), rgba(15,23,42,.80)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 0 18px rgba(34,197,94,.10) !important;
+}
+
+.rolling-v48-rail .v814-bet-total-line span.gain b,
+.rolling-v48-rail .v815-crypto-detail-line.tp .v815-crypto-values em,
+.rolling-v48-rail .v815-result-btn.tp-check.active i {
+  color: #22c55e !important;
+  text-shadow: 0 0 14px rgba(34,197,94,.38) !important;
+}
+
+.rolling-v48-rail .v814-target-detail-actions button.win,
+.rolling-v48-rail .v814-target-detail-actions button.loss,
+.rolling-v48-rail .v815-result-btn {
+  position: relative !important;
+  overflow: hidden !important;
+  border-width: 1px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.rolling-v48-rail .v814-target-detail-actions button.win {
+  color: #bbf7d0 !important;
+  border-color: rgba(34,197,94,.42) !important;
+  background: linear-gradient(135deg, rgba(22,101,52,.32), rgba(15,23,42,.82)) !important;
+}
+
+.rolling-v48-rail .v814-target-detail-actions button.win.active {
+  color: #052e16 !important;
+  border-color: rgba(134,239,172,.74) !important;
+  background: linear-gradient(135deg, #22c55e, #86efac) !important;
+  box-shadow: 0 0 16px rgba(34,197,94,.26), inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+
+.rolling-v48-rail .v814-target-detail-actions button.loss {
+  color: #fecaca !important;
+  border-color: rgba(248,113,113,.40) !important;
+  background: linear-gradient(135deg, rgba(127,29,29,.36), rgba(15,23,42,.82)) !important;
+}
+
+.rolling-v48-rail .v814-target-detail-actions button.loss.active {
+  color: #450a0a !important;
+  border-color: rgba(252,165,165,.74) !important;
+  background: linear-gradient(135deg, #ef4444, #fca5a5) !important;
+  box-shadow: 0 0 16px rgba(239,68,68,.22), inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+.rolling-v48-rail .v815-crypto-detail-line {
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) 34px !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.rolling-v48-rail .v815-crypto-detail-line > span {
+  align-self: center !important;
+  white-space: nowrap !important;
+  font-size: .66rem !important;
+  color: #cbd5e1 !important;
+}
+
+.rolling-v48-rail .v815-crypto-values {
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 5px !important;
+}
+
+.rolling-v48-rail .v815-crypto-values b,
+.rolling-v48-rail .v815-crypto-values em {
+  display: block !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: .70rem !important;
+  line-height: 1.15 !important;
+}
+
+.rolling-v48-rail .v815-result-btn,
+.rolling-v48-rail .v813-crypto-detail-line .v815-result-btn {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.rolling-v48-rail .v815-result-btn.tp-check {
+  color: #bbf7d0 !important;
+  border-color: rgba(34,197,94,.42) !important;
+  background: linear-gradient(135deg, rgba(22,101,52,.34), rgba(15,23,42,.86)) !important;
+}
+
+.rolling-v48-rail .v815-result-btn.tp-check.active {
+  color: #052e16 !important;
+  border-color: rgba(134,239,172,.76) !important;
+  background: linear-gradient(135deg, #22c55e, #86efac) !important;
+  box-shadow: 0 0 16px rgba(34,197,94,.24), inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+.rolling-v48-rail .v815-result-btn.stop-x {
+  color: #fecaca !important;
+  border-color: rgba(248,113,113,.40) !important;
+  background: linear-gradient(135deg, rgba(127,29,29,.34), rgba(15,23,42,.86)) !important;
+}
+
+.rolling-v48-rail .v815-result-btn.stop-x.active {
+  color: #450a0a !important;
+  border-color: rgba(252,165,165,.78) !important;
+  background: linear-gradient(135deg, #ef4444, #fca5a5) !important;
+  box-shadow: 0 0 16px rgba(239,68,68,.22), inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+.rolling-v48-rail .v810-target-self-details,
+.rolling-v48-rail .v811-target-self-details,
+.rolling-v48-rail .v812-target-self-details,
+.rolling-v48-rail .v813-target-self-details,
+.rolling-v48-rail .v814-target-self-details {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.rolling-v48-rail .v814-crypto-detail-row,
+.rolling-v48-rail .v814-target-detail-row.crypto {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
