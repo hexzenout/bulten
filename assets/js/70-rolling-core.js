@@ -28,16 +28,26 @@
   let SUPPRESS_PANEL_RESTORE_UNTIL = 0;
 
   function closePendingPanelNow() {
-    // Aşama 2: Aktif Bahisler / Kuponlar ve Aktif Kripto İşlemleri penceresini
-    // Geçmiş/Rapor mantığı gibi tek kaynakla kapat.
+    // V888: Aktif Bahisler / Kuponlar ve Aktif Kripto İşlemleri iki farklı yerde render edilebiliyor:
+    // 1) ana #omega-rolling-render içinde, 2) floating #omega-rolling-feature-host içinde.
+    // Eski kapatma sadece floating host'u yenilediği için ana ekrandaki modal DOM'da kalıyordu;
+    // ardından başka bir butona basınca ana render çalışıp ekran ancak o zaman kapanıyordu.
     SUPPRESS_PANEL_RESTORE_UNTIL = Date.now() + 1200;
     PENDING_BOARD_OPEN_MODE = null;
     CONFIRM_RETURN_PANEL_MODE = null;
     ACTIVE_COMBO_DETAIL_SLOT = null;
     CONFIRM_DIALOG = null;
+
     const host = document.getElementById("omega-rolling-feature-host");
     if (host) host.remove();
-    renderFloatingPanel();
+
+    // Ana modül içinde açılan paneli de anında kaldır.
+    const mainMount = document.getElementById("omega-rolling-render");
+    if (mainMount) {
+      renderModule();
+    } else {
+      renderFloatingPanel();
+    }
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -60,20 +70,19 @@
   }
 
 
-  // Aşama 2: Aktif Bahisler / Kuponlar + Aktif Kripto İşlemleri ortak kapatma.
-  // Sadece üst X, koyu boş alan ve Esc kapatır; modal içindeki buton/input tıklamalarına dokunmaz.
-  if (!window.__omegaV887PendingPanelCloseBound) {
-    window.__omegaV887PendingPanelCloseBound = true;
+  // V888: Aktif Bahisler / Kuponlar + Aktif Kripto İşlemleri ortak kapatma.
+  // Hem ana #omega-rolling-render içindeki paneli hem de floating host panelini yakalar.
+  // Modal içindeki buton/input tıklamalarına dokunmaz.
+  if (!window.__omegaV888PendingPanelCloseBound) {
+    window.__omegaV888PendingPanelCloseBound = true;
     document.addEventListener("click", function(event) {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      const host = document.getElementById("omega-rolling-feature-host");
-      if (!host || !host.contains(target)) return;
-      if (!host.querySelector(".v758-pending-overlay")) return;
+      const overlay = target.closest(".v758-pending-overlay");
+      if (!overlay) return;
       const closeBtn = target.closest("[data-pending-close]");
-      const clickedOverlayBlank = target.classList.contains("v758-pending-overlay");
-      const clickedHostBlank = target === host;
-      if (!closeBtn && !clickedOverlayBlank && !clickedHostBlank) return;
+      const clickedOverlayBlank = target === overlay;
+      if (!closeBtn && !clickedOverlayBlank) return;
       event.preventDefault();
       event.stopPropagation();
       if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
@@ -81,8 +90,7 @@
     }, true);
     document.addEventListener("keydown", function(event) {
       if (event.key !== "Escape") return;
-      const host = document.getElementById("omega-rolling-feature-host");
-      if (!host || !host.querySelector(".v758-pending-overlay")) return;
+      if (!document.querySelector(".v758-pending-overlay")) return;
       event.preventDefault();
       event.stopPropagation();
       closePendingPanelNow();
