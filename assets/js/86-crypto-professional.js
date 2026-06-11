@@ -838,7 +838,7 @@
 
   function v847RenderBetLegResultPanel(day, slot) {
     const rows = v847BetLegsFromDom(day, slot);
-    if (rows.length <= 1) return "";
+    if (!rows.length) return "";
     const pending = v774GetPendingSlot(day, slot);
     const results = Array.isArray(pending?.comboResults) ? pending.comboResults : [];
     const done = rows.filter((_, idx) => results[idx] === "win" || results[idx] === "loss").length;
@@ -920,7 +920,7 @@
       return false;
     }
     const legs = [{ note: pending.note, odds: pending.odds }, ...(Array.isArray(pending.combo) ? pending.combo : [])].filter(row => row.note || Number(row.odds || 0));
-    if (legs.length <= 1) return false;
+    if (!legs.length) return false;
     const results = Array.from({ length: legs.length }, (_, i) => {
       const v = Array.isArray(pending.comboResults) ? pending.comboResults[i] : "";
       return v === "loss" ? "loss" : v === "win" ? "win" : "";
@@ -1136,18 +1136,22 @@
     if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif bahis yok. Maç/işlem yazınca burada görünür." : "Geçmiş kayıt yok."}</div>`;
     return rows.map(row => {
       const comboRows = Array.isArray(row.combo) ? row.combo : [];
-      const isActiveBet = !isCrypto && kind === "active";
-      const matchItems = isActiveBet
+      const isBet = !isCrypto;
+      const isActiveBet = isBet && kind === "active";
+      const isHistoryBet = isBet && kind === "history";
+      const matchItems = isBet
         ? [{ note: row.note || "Maç", odds: Number(row.odds || 0) }, ...comboRows.map(x => ({ note: x.note || "Maç", odds: Number(x.odds || 0) }))]
         : [];
-      const matchHtml = isActiveBet ? `<ul class="v892-active-match-list">${matchItems.map((x, idx) => `<li><span>${idx + 1}. ${v763EscapeHtml(x.note || "Maç")}</span><b>${Number(x.odds || 0) ? Number(x.odds || 0).toFixed(2) : "-"}</b></li>`).join("")}</ul>` : ((!isCrypto && comboRows.length) ? `<ul>${[`<li>${v763EscapeHtml(row.note || "Maç")} <b>${Number(row.odds || 0).toFixed(2)}</b></li>`, ...comboRows.map(x => `<li>${v763EscapeHtml(x.note || "Maç")} <b>${Number(x.odds || 0).toFixed(2)}</b></li>`)].join("")}</ul>` : "");
+      const matchHtml = isBet && matchItems.length
+        ? `<ul class="v892-active-match-list">${matchItems.map((x, idx) => `<li><span>${idx + 1}. ${v763EscapeHtml(x.note || "Maç")}</span><b>${Number(x.odds || 0) ? Number(x.odds || 0).toFixed(2) : "-"}</b></li>`).join("")}</ul>`
+        : "";
       const title = isCrypto ? (row.note || "İşlem") : (comboRows.length ? "Kombine" : "Tekli Bahis");
       const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
-      const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Tahmini Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
-      const summaryHtml = isActiveBet
-        ? `<div class="v893-active-summary"><span><small>Tutar</small><b>${v768Money(row.stake)}</b></span><span><small>Toplam Oran</small><b>${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</b></span><span><small>Tahmini Kazanç</small><b>${row.possible ? v768Money(row.possible) : "-"}</b></span></div>`
+      const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
+      const summaryHtml = isActiveBet || isHistoryBet
+        ? `<div class="v893-active-summary ${isHistoryBet ? "v897-history-summary" : ""}"><span><small>Tutar</small><b>${v768Money(row.stake)}</b></span><span><small>Toplam Oran</small><b>${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</b></span><span><small>Kazanç</small><b>${row.possible ? v768Money(row.possible) : "-"}</b></span></div>`
         : `<p>${metric}</p>`;
-      const cardClass = isActiveBet ? "v768-feature-card v892-bet-active-card" : "v768-feature-card";
+      const cardClass = isActiveBet ? "v768-feature-card v892-bet-active-card" : isHistoryBet ? "v768-feature-card v897-bet-history-card" : "v768-feature-card";
       return `<article class="${cardClass}"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}</article>`;
     }).join("");
   }
@@ -1256,12 +1260,14 @@
 
 
   function v776SlotPhotoRows(day, slot) {
+    const plan = ensureRollingPlan();
+    const savedOp = plan.ops?.[day]?.[slot] || null;
     const pending = v774GetPendingSlot(day, slot);
-    const baseNote = (document.getElementById(`e-n-${day}-${slot}`)?.value || pending?.note || "").trim();
-    const baseOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || pending?.odds || 0);
-    const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || pending?.amt || 0);
+    const baseNote = (document.getElementById(`e-n-${day}-${slot}`)?.value || pending?.note || savedOp?.note || "").trim();
+    const baseOdds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || pending?.odds || savedOp?.odds || 0);
+    const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || pending?.amt || savedOp?.amt || 0);
     const combo = v763ComboRows(day, slot);
-    const savedCombo = Array.isArray(pending?.combo) ? pending.combo : [];
+    const savedCombo = Array.isArray(pending?.combo) ? pending.combo : Array.isArray(savedOp?.combo) ? savedOp.combo : [];
     const rows = [];
     if (baseNote || baseOdds) rows.push({ note: baseNote || "Maç", odds: baseOdds });
     const comboSource = combo.length ? combo : savedCombo;
@@ -1725,12 +1731,16 @@
   window.omega_ResolveExcelOp = function(day, slot, result, meta = {}) {
     const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
     const isCrypto = localStorage.getItem("finance_rolling_mode") === "crypto";
-    const amt = parseFloat(document.getElementById(`e-a-${day}-${slot}`)?.value);
-    const odds = parseFloat(document.getElementById(`e-o-${day}-${slot}`)?.value);
+    const stakeInput = document.getElementById(`e-a-${day}-${slot}`);
+    const oddsInput = document.getElementById(`e-o-${day}-${slot}`);
+    const stakeRaw = String(stakeInput?.value || "").trim();
+    const oddsRaw = String(oddsInput?.value || "").trim();
+    const amt = parseFloat(stakeRaw);
+    const odds = parseFloat(oddsRaw);
     const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
     const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
     const hasComboGap = comboRows.some(row => !row.note || !Number(row.odds || 0));
-    if (isNaN(amt) || isNaN(odds) || (!isCrypto && hasComboGap)) {
+    if (!stakeRaw || !oddsRaw || isNaN(amt) || isNaN(odds) || (!isCrypto && hasComboGap)) {
       if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Tutar ve Net K/Z $ alanını doldur." : "Maç, oran, tutar ve ek maç oranlarını doldur.");
       return;
     }
