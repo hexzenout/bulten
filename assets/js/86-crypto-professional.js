@@ -951,6 +951,27 @@
     if (actions) actions.classList.remove("v847-hide-main-actions");
   }
 
+  function v898WarnStakeInput(stakeInput) {
+    if (!stakeInput) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Bir tutar gir");
+      return;
+    }
+    stakeInput.placeholder = "Bir tutar gir";
+    try {
+      stakeInput.setCustomValidity("Bir tutar gir");
+      stakeInput.reportValidity();
+      const clear = () => {
+        stakeInput.setCustomValidity("");
+        stakeInput.removeEventListener("input", clear);
+        if (!String(stakeInput.value || "").trim()) stakeInput.placeholder = "Tutar";
+      };
+      stakeInput.addEventListener("input", clear);
+    } catch(e) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Bir tutar gir");
+    }
+    try { stakeInput.focus(); } catch(e) {}
+  }
+
   function v768BindBetCalc(root) {
     const scope = root || document;
     scope.querySelectorAll('[id^="e-o-"], [id^="e-a-"], [data-v763-extra-odds]').forEach(input => {
@@ -1149,9 +1170,9 @@
       const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
       const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
       const summaryHtml = isActiveBet || isHistoryBet
-        ? `<div class="v893-active-summary ${isHistoryBet ? "v897-history-summary" : ""}"><span><small>Tutar</small><b>${v768Money(row.stake)}</b></span><span><small>Toplam Oran</small><b>${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</b></span><span><small>Kazanç</small><b>${row.possible ? v768Money(row.possible) : "-"}</b></span></div>`
+        ? `<div class="v893-active-summary"><span><small>Tutar</small><b>${v768Money(row.stake)}</b></span><span><small>Toplam Oran</small><b>${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</b></span><span><small>Kazanç</small><b>${row.possible ? v768Money(row.possible) : "-"}</b></span></div>`
         : `<p>${metric}</p>`;
-      const cardClass = isActiveBet ? "v768-feature-card v892-bet-active-card" : isHistoryBet ? "v768-feature-card v897-bet-history-card" : "v768-feature-card";
+      const cardClass = isActiveBet || isHistoryBet ? "v768-feature-card v892-bet-active-card" : "v768-feature-card";
       return `<article class="${cardClass}"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}</article>`;
     }).join("");
   }
@@ -1740,8 +1761,12 @@
     const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
     const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
     const hasComboGap = comboRows.some(row => !row.note || !Number(row.odds || 0));
-    if (!stakeRaw || !oddsRaw || isNaN(amt) || isNaN(odds) || (!isCrypto && hasComboGap)) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Tutar ve Net K/Z $ alanını doldur." : "Maç, oran, tutar ve ek maç oranlarını doldur.");
+    if (!stakeRaw || isNaN(amt)) {
+      v898WarnStakeInput(stakeInput);
+      return;
+    }
+    if (!oddsRaw || isNaN(odds) || (!isCrypto && hasComboGap)) {
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Net K/Z $ alanını doldur." : "Maç, oran ve ek maç oranlarını doldur.");
       return;
     }
     if (!note) {
