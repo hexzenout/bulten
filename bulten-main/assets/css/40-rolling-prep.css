@@ -1,0 +1,699 @@
+/* Ses paneli güvenli görünürlük.
+   Eski geniş [class*="sound"] / [class*="audio"] gizleme kuralı kaldırıldı.
+   O kural yeni ses kartlarını da gizlediği için Ses Ayarları altında içerik kayboluyordu. */
+.crypto-v28-panel[data-crypto-pane="sound"] > *:not(#v28-sound-mount),
+.crypto-v28-panel[data-crypto-pane="sound"] .alarm-sound-panel,
+.crypto-v28-panel[data-crypto-pane="sound"] .alarm-audio-panel {
+    display: none !important;
+}
+
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v32-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v499f-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v507-sound-card,
+.crypto-v28-panel[data-crypto-pane="sound"] #v28-sound-mount .v512-sound-card {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#v28-sound-mount {
+    display: block !important;
+}
+
+/* Rolling F5 açılışında finance sayfası boş/ana sayfa hissi vermesin */
+body:has(#rolling-excel-overlay.show-modal) #omega-home-block {
+    display: none !important;
+}
+
+/* Kripto kontroller */
+.v38-chart-controls {
+    position: relative;
+}
+
+.v38-coin-field {
+    position: relative;
+    z-index: 20;
+}
+
+.v38-coin-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 9999;
+    max-height: 300px;
+    overflow: auto;
+    border: 1px solid #303030;
+    border-radius: 12px;
+    background: #070707;
+    box-shadow: 0 18px 50px rgba(0,0,0,.45);
+    padding: 6px;
+}
+
+.v38-coin-menu.show {
+    display: block;
+}
+
+.v38-coin-menu button {
+    width: 100%;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font-weight: 950;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.v38-coin-menu button:hover {
+    background: #f97316;
+    color: #111;
+}
+
+.v38-coin-menu span {
+    color: #999;
+    font-size: .75rem;
+}
+
+.v38-coin-menu button:hover span {
+    color: #111;
+}
+
+.v38-quote-locked select {
+    opacity: .9;
+}
+
+/* Kripto eski sağ panel gereksizleri */
+.crypto-v28-info-grid,
+.crypto-v10-chart-caption,
+#crypto-v10-caption,
+.crypto-v10-price {
+    display: none !important;
+}
+
+.crypto-chart-context-menu {
+    position: fixed;
+    z-index: 99999;
+    min-width: 190px;
+    background: #080808;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 18px 55px rgba(0,0,0,.45);
+}
+
+.crypto-chart-context-menu b {
+    display: block;
+    padding: 8px 9px;
+    color: #fbbf24;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.crypto-chart-context-menu button {
+    display: block;
+    width: 100%;
+    min-height: 34px;
+    margin-top: 5px;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    background: #151515;
+    color: #fff;
+    font-weight: 850;
+    text-align: left;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.crypto-chart-context-menu button:hover {
+    background: #f97316;
+    border-color: #f97316;
+    color: #111;
+}
+
+
+/* ===============================
+   V39 LAYOUT + ROLLING FIT FIX
+   İşlem/Ses taşmaları, Rolling yatay genişlik ve rolling F5 deneyimi.
+================================ */
+
+.crypto-v28-layout {
+    grid-template-columns: 148px minmax(0, 1fr) 430px !important;
+}
+
+.crypto-v28-control-panel,
+.crypto-v28-panel,
+#v28-sound-mount,
+#v28-alarm-mount {
+    min-width: 0 !important;
+    overflow: visible !important;
+}
+
+.tp-v10-row {
+    grid-template-columns: 38px minmax(0, 1fr) 62px minmax(56px, .8fr) 28px !important;
+    gap: 6px !important;
+}
+
+.tp-v10-row input,
+.tp-v10-row b,
+.tp-v10-row button {
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.tp-v10-row b {
+    font-size: .68em !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.crypto-v10-actions {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+}
+
+.crypto-v10-actions .terminal-v10-btn {
+    min-width: 0 !important;
+    width: 100% !important;
+    white-space: normal !important;
+    line-height: 1.15;
+    text-align: center;
+    padding: 12px 10px !important;
+}
+
+.crypto-v10-actions .terminal-v10-btn:last-child {
+    grid-column: 1 / -1;
+}
+
+.v32-sound-card {
+    padding: 18px 16px !important;
+}
+
+.v32-sound-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 12px !important;
+}
+
+.v32-sound-field {
+    min-width: 0 !important;
+    overflow: hidden;
+}
+
+.v32-sound-field label {
+    line-height: 1.25;
+}
+
+.v32-sound-actions button,
+.v32-file-btn {
+    min-width: 0 !important;
+    white-space: normal;
+    line-height: 1.15;
+    padding: 0 10px;
+}
+
+.v32-file-row {
+    display: grid !important;
+    grid-template-columns: 110px minmax(0, 1fr) !important;
+    gap: 8px !important;
+    align-items: center !important;
+}
+
+.v32-file-name {
+    min-width: 0 !important;
+    max-width: 100% !important;
+}
+
+.day-row-capsule.v32 {
+    grid-template-columns: 116px 1fr 116px !important;
+    align-items: start !important;
+}
+
+.capsule-container.v32 {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.kapsul.v32 {
+    min-height: 104px !important;
+    padding: 10px !important;
+}
+
+.kapsul.v32 input {
+    height: 32px !important;
+    margin-bottom: 5px !important;
+    font-size: .75em !important;
+}
+
+.kapsul.v32 .k-result {
+    min-height: 72px;
+}
+
+.kapsul.v32 .k-note-show {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (max-width: 1500px) {
+    .crypto-v28-layout {
+        grid-template-columns: 138px minmax(0, 1fr) 400px !important;
+    }
+}
+
+@media (max-width: 1350px) {
+    .crypto-v28-layout {
+        grid-template-columns: 128px minmax(0, 1fr) !important;
+    }
+
+    .crypto-v28-control-panel {
+        grid-column: 2;
+    }
+}
+
+@media (max-width: 1100px) {
+    .day-row-capsule.v32 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .capsule-container.v32 {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .v32-sound-grid,
+    .crypto-v10-actions,
+    .crypto-v10-metrics,
+    .crypto-v28-two-btns {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .tp-v10-row {
+        grid-template-columns: 40px minmax(0,1fr) 58px !important;
+    }
+
+    .tp-v10-row b,
+    .tp-v10-row button {
+        grid-column: span 3;
+    }
+}
+
+/* ===============================
+   V40 ROLLING + SOUND FILE WIDTH FIX
+   Rolling yatay genişleme, F5 arka plan sızıntısı ve özel ses dosyası alanı.
+================================ */
+
+/* Rolling F5 sırasında arkadaki kasa/ana sayfa görüntüsünü siyah perdeyle kes. */
+html.rolling-hash-boot body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: #050505;
+    z-index: 99996;
+}
+
+html.rolling-hash-boot main,
+html.rolling-hash-boot header,
+html.rolling-hash-boot nav,
+body.rolling-active main,
+body.rolling-active #omega-site-footer {
+    visibility: hidden !important;
+}
+
+#rolling-excel-overlay {
+    background: #050505 !important;
+    backdrop-filter: none !important;
+}
+
+#rolling-excel-overlay.show-modal {
+    background: #050505 !important;
+    z-index: 99998 !important;
+}
+
+#rolling-excel-overlay .modal-header,
+#rolling-excel-overlay .modal-config-bar,
+#rolling-excel-overlay .modal-body-wrapper {
+    background: #0b0b0b !important;
+}
+
+#rolling-excel-overlay .modal-body-wrapper {
+    overflow-x: hidden !important;
+}
+
+/* Rolling: aşağı büyütme değil, satır içinde sağa doğru genişletme. */
+.day-row-capsule.v32 {
+    grid-template-columns: 150px minmax(0, 1fr) 130px !important;
+    align-items: start !important;
+    min-width: 0 !important;
+}
+
+.day-info-v32 {
+    min-width: 0 !important;
+}
+
+.day-tools-v32 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 7px !important;
+    width: 100% !important;
+}
+
+.day-tools-v32 button {
+    width: 100% !important;
+    min-height: 34px !important;
+    padding: 0 8px !important;
+    white-space: nowrap !important;
+    font-size: .72rem !important;
+}
+
+.day-tools-v32 button:first-child,
+.day-tools-v32 button:last-child {
+    grid-column: 1 / -1 !important;
+}
+
+.capsule-container.v32 {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 12px !important;
+    padding: 2px 2px 8px !important;
+    scroll-behavior: smooth;
+}
+
+.capsule-container.v32::-webkit-scrollbar {
+    height: 8px;
+}
+
+.capsule-container.v32::-webkit-scrollbar-track {
+    background: #0b0b0b;
+    border-radius: 999px;
+}
+
+.capsule-container.v32::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 999px;
+}
+
+.kapsul.v32 {
+    flex: 0 0 260px !important;
+    width: 260px !important;
+    max-width: 260px !important;
+    min-height: 102px !important;
+    padding: 10px !important;
+}
+
+.kapsul.v32 input {
+    height: 34px !important;
+    margin-bottom: 5px !important;
+    font-size: .78em !important;
+}
+
+.kapsul.v32 .k-result {
+    min-height: 68px !important;
+}
+
+.kapsul.v32 .k-note-show {
+    font-size: .78em !important;
+    line-height: 1.25 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.k-actions.v32 {
+    grid-template-columns: 1fr 1fr !important;
+}
+
+/* Ses: Özel Ses Dosyası satırı tam genişlik kaplasın, dosya adı alanı görünsün. */
+.v32-sound-field:has(.v32-file-row) {
+    grid-column: 1 / -1 !important;
+}
+
+.v32-file-row {
+    display: grid !important;
+    grid-template-columns: 125px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+.v32-file-btn {
+    width: 125px !important;
+    min-width: 125px !important;
+}
+
+.v32-file-name {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 1100px) {
+    .day-row-capsule.v32 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .kapsul.v32 {
+        flex-basis: 230px !important;
+        width: 230px !important;
+        max-width: 230px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .v32-file-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .v32-file-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+
+/* ===============================
+   V41 ROLLING WRAP + SELECTOR + F5 FIX
+   Rolling kutuları görünür sarılır, butonlu seçici gelir, F5 arka planı kapanır.
+================================ */
+
+/* Rolling hash ile açılışta hiçbir arka plan sızmasın. */
+html.rolling-hash-boot,
+html.rolling-hash-boot body {
+    background: #050505 !important;
+}
+
+html.rolling-hash-boot body > *:not(#rolling-excel-overlay) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+html.rolling-hash-boot body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: #050505;
+    z-index: 999999;
+}
+
+body.rolling-active > header,
+body.rolling-active > nav,
+body.rolling-active > main {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+#rolling-excel-overlay {
+    background: #050505 !important;
+    backdrop-filter: none !important;
+}
+
+#rolling-excel-overlay.show-modal {
+    z-index: 1000000 !important;
+    background: #050505 !important;
+}
+
+/* Kasa Yönetimi içi Rolling butonu/selector */
+.finance-rolling-launch-card .finance-card-body {
+    padding: 14px !important;
+}
+
+.finance-rolling-selector {
+    width: 100%;
+}
+
+.finance-rolling-selector summary {
+    list-style: none;
+    min-height: 72px;
+    border: 1px solid #333;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #151515, #080808);
+    display: grid;
+    grid-template-columns: 46px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    cursor: pointer;
+}
+
+.finance-rolling-selector summary::-webkit-details-marker {
+    display: none;
+}
+
+.finance-rolling-selector summary i {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #fbbf24;
+    color: #111;
+}
+
+.finance-rolling-selector summary b {
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: .8px;
+}
+
+.finance-rolling-selector summary span {
+    color: #aaa;
+    font-size: .8rem;
+    font-weight: 900;
+}
+
+.finance-rolling-options {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.finance-rolling-options button {
+    min-height: 58px;
+    border: 1px solid #333;
+    border-radius: 12px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 950;
+}
+
+.finance-rolling-options button:hover {
+    background: #fbbf24;
+    border-color: #fbbf24;
+    color: #111;
+}
+
+.finance-rolling-options button b,
+.finance-rolling-options button span {
+    display: block;
+}
+
+.finance-rolling-options button b {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.15rem;
+}
+
+.finance-rolling-options button span {
+    font-size: .7rem;
+    opacity: .8;
+}
+
+/* Rolling modal: kutular gizlenmez, satır dolunca alta düzenli iner. */
+#rolling-excel-overlay .day-row-capsule.v32 {
+    grid-template-columns: 150px minmax(0, 1fr) 120px !important;
+    align-items: start !important;
+}
+
+#rolling-excel-overlay .day-tools-v32 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 7px !important;
+    width: 100% !important;
+}
+
+#rolling-excel-overlay .day-tools-v32 button {
+    min-height: 34px !important;
+    width: 100% !important;
+    padding: 0 8px !important;
+    white-space: nowrap !important;
+    font-size: .72rem !important;
+}
+
+#rolling-excel-overlay .day-tools-v32 button:first-child,
+#rolling-excel-overlay .day-tools-v32 button:last-child {
+    grid-column: 1 / -1 !important;
+}
+
+#rolling-excel-overlay .capsule-container.v32 {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)) !important;
+    gap: 10px !important;
+    overflow: visible !important;
+    padding: 0 !important;
+}
+
+#rolling-excel-overlay .kapsul.v32 {
+    width: auto !important;
+    max-width: none !important;
+    flex: initial !important;
+    min-height: 104px !important;
+    padding: 9px !important;
+}
+
+#rolling-excel-overlay .kapsul.v32 input {
+    height: 31px !important;
+    margin-bottom: 5px !important;
+    font-size: .76em !important;
+}
+
+#rolling-excel-overlay .k-actions.v32 button {
+    min-height: 31px !important;
+    font-size: .7rem !important;
+}
+
+#rolling-excel-overlay .k-note-show {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    line-height: 1.25 !important;
+}
+
+@media (max-width: 1100px) {
+    .finance-rolling-options {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    #rolling-excel-overlay .day-row-capsule.v32 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .finance-rolling-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ===============================

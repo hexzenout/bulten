@@ -1,0 +1,769 @@
+{
+  "version": "v538",
+  "updatedAt": "2026-05-24T00:00:00+03:00",
+  "note": "V530: Türkçeleştirilmiş Oran Terminali, futbol bahis türleri kataloğu ve tüm sitelerde karşılaştırma altyapısı.",
+  "groups": [
+    {
+      "id": "xbet_family",
+      "name": "X-Altyapısı",
+      "sites": [
+        "1xbet",
+        "betandyou"
+      ]
+    },
+    {
+      "id": "move_family",
+      "name": "Move/Holigan Altyapısı",
+      "sites": [
+        "betsmove",
+        "holigan"
+      ]
+    },
+    {
+      "id": "tb_family",
+      "name": "Türkbet/Betsat Altyapısı",
+      "sites": [
+        "turkbet",
+        "betsat"
+      ]
+    },
+    {
+      "id": "reference",
+      "name": "Referans Piyasa",
+      "sites": [
+        "pinnacle",
+        "bet365",
+        "polymarket"
+      ]
+    }
+  ],
+  "sites": [
+    {
+      "id": "1xbet",
+      "name": "1xbet",
+      "url": "https://tinyurl.com/1xturkey",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "xbet_family"
+    },
+    {
+      "id": "betsmove",
+      "name": "Betsmove",
+      "url": "https://dub.is/betsmovetelegram",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "move_family"
+    },
+    {
+      "id": "holigan",
+      "name": "Holigan",
+      "url": "http://dub.run/holiguncel",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "move_family"
+    },
+    {
+      "id": "betandyou",
+      "name": "Betandyou",
+      "url": "https://bit.ly/3UzfE7i",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "xbet_family"
+    },
+    {
+      "id": "tempobet",
+      "name": "Tempobet",
+      "url": "https://www.3002tempobet.com/",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "nesine",
+      "name": "Nesine",
+      "url": "https://www.nesine.com",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "local"
+    },
+    {
+      "id": "iddaa",
+      "name": "İddaa",
+      "url": "https://www.iddaa.com",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "local"
+    },
+    {
+      "id": "turkbet",
+      "name": "Türkbet",
+      "url": "https://bit.ly/TB-Telegram2026",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "tb_family"
+    },
+    {
+      "id": "betsat",
+      "name": "Betsat",
+      "url": "https://bit.ly/BS-Telegram2026",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "tb_family"
+    },
+    {
+      "id": "gamdom",
+      "name": "Gamdom",
+      "url": "http://shrtio.com/GamdomTR",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "stake",
+      "name": "Stake",
+      "url": "https://t2m.io/stakeguncel",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "masterbetting",
+      "name": "Masterbetting",
+      "url": "https://cutt.ly/Masterbetting",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "pusulabet",
+      "name": "Pusulabet",
+      "url": "http://cutt.ly/PusulaTelegram",
+      "type": "bookmaker",
+      "enabled": true,
+      "group": "independent"
+    },
+    {
+      "id": "polymarket",
+      "name": "Polymarket",
+      "url": "https://polymarket.com/",
+      "type": "prediction_market",
+      "enabled": true,
+      "group": "reference",
+      "reference": true
+    },
+    {
+      "id": "bet365",
+      "name": "Bet365",
+      "url": "",
+      "type": "reference",
+      "enabled": true,
+      "group": "reference",
+      "reference": true
+    },
+    {
+      "id": "pinnacle",
+      "name": "Pinnacle",
+      "url": "",
+      "type": "reference",
+      "enabled": true,
+      "group": "reference",
+      "reference": true
+    }
+  ],
+  "marketCategories": [
+    {
+      "id": "mac_sonucu",
+      "name": "Maç Sonucu / Çifte Şans",
+      "desc": "Maçı kim kazanır, beraberlik, çifte şans ve sonuç marketleri.",
+      "markets": [
+        {
+          "id": "match_winner",
+          "name": "Maç Sonucu"
+        },
+        {
+          "id": "double_chance",
+          "name": "Çifte Şans"
+        },
+        {
+          "id": "draw_no_bet",
+          "name": "Beraberlikte İade"
+        },
+        {
+          "id": "both_teams_to_score",
+          "name": "İki Takım da Gol Atar"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "gol_alt_ust",
+      "name": "Gol Alt / Üst",
+      "desc": "0.5, 1.5, 2.5, 3.5 ve takım gol alt/üst marketleri.",
+      "markets": [
+        {
+          "id": "total_goals_0_5",
+          "name": "0.5 Gol Alt / Üst"
+        },
+        {
+          "id": "total_goals_1_5",
+          "name": "1.5 Gol Alt / Üst"
+        },
+        {
+          "id": "total_goals_2_5",
+          "name": "2.5 Gol Alt / Üst"
+        },
+        {
+          "id": "total_goals_3_5",
+          "name": "3.5 Gol Alt / Üst"
+        },
+        {
+          "id": "team1_total_goals",
+          "name": "Takım 1 Gol Alt / Üst"
+        },
+        {
+          "id": "team2_total_goals",
+          "name": "Takım 2 Gol Alt / Üst"
+        },
+        {
+          "id": "team1_scores",
+          "name": "Takım 1 Gol Atar"
+        },
+        {
+          "id": "team2_scores",
+          "name": "Takım 2 Gol Atar"
+        },
+        {
+          "id": "total_goals_over_1_0",
+          "name": "Genel 1 Gol Üst"
+        },
+        {
+          "id": "total_goals_over_2_0",
+          "name": "Genel 2 Gol Üst"
+        },
+        {
+          "id": "total_goals_over_3_0",
+          "name": "Genel 3 Gol Üst"
+        },
+        {
+          "id": "team1_goals_over_1_0",
+          "name": "Takım 1 1 Gol Üst"
+        },
+        {
+          "id": "team1_goals_over_2_0",
+          "name": "Takım 1 2 Gol Üst"
+        },
+        {
+          "id": "team1_goals_over_3_0",
+          "name": "Takım 1 3 Gol Üst"
+        },
+        {
+          "id": "team2_goals_over_1_0",
+          "name": "Takım 2 1 Gol Üst"
+        },
+        {
+          "id": "team2_goals_over_2_0",
+          "name": "Takım 2 2 Gol Üst"
+        },
+        {
+          "id": "team2_goals_over_3_0",
+          "name": "Takım 2 3 Gol Üst"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "ilk_yari_ikinci_yari",
+      "name": "İlk Yarı / İkinci Yarı Gol",
+      "desc": "İlk yarı, ikinci yarı, iki yarıda gol ve yarı bazlı takım gol marketleri.",
+      "markets": [
+        {
+          "id": "first_half_goal",
+          "name": "İlk Yarı Gol Olur"
+        },
+        {
+          "id": "second_half_goal",
+          "name": "2. Yarı Gol Olur"
+        },
+        {
+          "id": "both_halves_goal",
+          "name": "2 Yarıda da Gol Olur"
+        },
+        {
+          "id": "first_half_over_1_5",
+          "name": "İlk Yarı 1.5 Gol Üst / Alt"
+        },
+        {
+          "id": "first_half_over_2_5",
+          "name": "İlk Yarı 2.5 Gol Üst / Alt"
+        },
+        {
+          "id": "team1_first_half_goal",
+          "name": "Takım 1 İlk Yarı Gol Atar"
+        },
+        {
+          "id": "team2_first_half_goal",
+          "name": "Takım 2 İlk Yarı Gol Atar"
+        },
+        {
+          "id": "team1_second_half_goal",
+          "name": "Takım 1 2. Yarı Gol Atar"
+        },
+        {
+          "id": "team2_second_half_goal",
+          "name": "Takım 2 2. Yarı Gol Atar"
+        },
+        {
+          "id": "first_half_total_goals_over_1_0",
+          "name": "İlk Yarı 1 Gol Üst"
+        },
+        {
+          "id": "first_half_total_goals_over_2_0",
+          "name": "İlk Yarı 2 Gol Üst"
+        },
+        {
+          "id": "first_half_team1_goals_over_1_0",
+          "name": "İlk Yarı Takım 1 1 Gol Üst"
+        },
+        {
+          "id": "first_half_team2_goals_over_1_0",
+          "name": "İlk Yarı Takım 2 1 Gol Üst"
+        },
+        {
+          "id": "second_half_total_goals_over_1_0",
+          "name": "İkinci Yarı 1 Gol Üst"
+        },
+        {
+          "id": "second_half_total_goals_over_2_0",
+          "name": "İkinci Yarı 2 Gol Üst"
+        },
+        {
+          "id": "second_half_team1_goals_over_1_0",
+          "name": "İkinci Yarı Takım 1 1 Gol Üst"
+        },
+        {
+          "id": "second_half_team2_goals_over_1_0",
+          "name": "İkinci Yarı Takım 2 1 Gol Üst"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "dakika_gol",
+      "name": "Dakikaya Kadar Gol",
+      "desc": "İlk 15/30/45/60/75 dakikaya kadar gol olur ve takım bazlı erken gol marketleri.",
+      "markets": [
+        {
+          "id": "goal_by_15",
+          "name": "İlk 15 Dakikada Gol Olur"
+        },
+        {
+          "id": "goal_by_30",
+          "name": "İlk 30 Dakikada Gol Olur"
+        },
+        {
+          "id": "goal_by_45",
+          "name": "İlk 45 Dakikada Gol Olur"
+        },
+        {
+          "id": "goal_by_60",
+          "name": "İlk 60 Dakikada Gol Olur"
+        },
+        {
+          "id": "team1_goal_by_60",
+          "name": "Takım 1 İlk 60 Dakikaya Kadar Gol Atar"
+        },
+        {
+          "id": "team2_goal_by_60",
+          "name": "Takım 2 İlk 60 Dakikaya Kadar Gol Atar"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "ard_arda_gol",
+      "name": "Ard Arda Gol Atamaz",
+      "desc": "Takım 1, Takım 2 veya herhangi bir takım ard arda 2/3/4 gol atamaz marketleri.",
+      "markets": [
+        {
+          "id": "team1_no_2_consecutive_goals",
+          "name": "Takım 1 Ard Arda 2 Gol Atamaz"
+        },
+        {
+          "id": "team1_no_3_consecutive_goals",
+          "name": "Takım 1 Ard Arda 3 Gol Atamaz"
+        },
+        {
+          "id": "team1_no_4_consecutive_goals",
+          "name": "Takım 1 Ard Arda 4 Gol Atamaz"
+        },
+        {
+          "id": "team2_no_2_consecutive_goals",
+          "name": "Takım 2 Ard Arda 2 Gol Atamaz"
+        },
+        {
+          "id": "team2_no_3_consecutive_goals",
+          "name": "Takım 2 Ard Arda 3 Gol Atamaz"
+        },
+        {
+          "id": "team2_no_4_consecutive_goals",
+          "name": "Takım 2 Ard Arda 4 Gol Atamaz"
+        },
+        {
+          "id": "any_team_no_2_consecutive_goals",
+          "name": "Herhangi Bir Takım Ard Arda 2 Gol Atamaz"
+        },
+        {
+          "id": "any_team_no_3_consecutive_goals",
+          "name": "Herhangi Bir Takım Ard Arda 3 Gol Atamaz"
+        },
+        {
+          "id": "any_team_no_4_consecutive_goals",
+          "name": "Herhangi Bir Takım Ard Arda 4 Gol Atamaz"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "handikap",
+      "name": "Takım Handikapları",
+      "desc": "Rakip 2/3 fark yemez, takım şu kadar fark atamaz, ilk yarı handikap marketleri.",
+      "markets": [
+        {
+          "id": "asian_handicap",
+          "name": "Asya Handikap"
+        },
+        {
+          "id": "team1_minus_handicap",
+          "name": "Takım 1 Handikap"
+        },
+        {
+          "id": "team2_plus_handicap",
+          "name": "Takım 2 + Handikap"
+        },
+        {
+          "id": "team1_cannot_win_by_3",
+          "name": "Takım 1 3 Fark Atamaz"
+        },
+        {
+          "id": "team2_not_lose_by_3",
+          "name": "Takım 2 3 Fark Yemez"
+        },
+        {
+          "id": "first_half_handicap",
+          "name": "İlk Yarı Handikap"
+        },
+        {
+          "id": "first_half_team_not_lose_by_2",
+          "name": "İlk Yarı 2 Fark Yemez"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "kornerler",
+      "name": "Kornerler",
+      "desc": "Maç toplam korner, ilk yarı korner ve takım korner alt/üst.",
+      "markets": [
+        {
+          "id": "corners_6_5",
+          "name": "6.5 Korner Alt / Üst"
+        },
+        {
+          "id": "corners_7_5",
+          "name": "7.5 Korner Alt / Üst"
+        },
+        {
+          "id": "corners_8_5",
+          "name": "8.5 Korner Alt / Üst"
+        },
+        {
+          "id": "corners_9_5",
+          "name": "9.5 Korner Alt / Üst"
+        },
+        {
+          "id": "first_half_corners",
+          "name": "1. Yarı Toplam Korner"
+        },
+        {
+          "id": "team1_corners",
+          "name": "Takım 1 Korner Alt / Üst"
+        },
+        {
+          "id": "team2_corners",
+          "name": "Takım 2 Korner Alt / Üst"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "kartlar",
+      "name": "Sarı / Kırmızı Kartlar",
+      "desc": "Sarı kart, toplam kart, kırmızı kart ve takım kart marketleri.",
+      "markets": [
+        {
+          "id": "yellow_cards",
+          "name": "Sarı Kart Alt / Üst"
+        },
+        {
+          "id": "total_cards",
+          "name": "Toplam Kart Alt / Üst"
+        },
+        {
+          "id": "red_card",
+          "name": "Kırmızı Kart Olur"
+        },
+        {
+          "id": "team1_cards",
+          "name": "Takım 1 Kart Alt / Üst"
+        },
+        {
+          "id": "team2_cards",
+          "name": "Takım 2 Kart Alt / Üst"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "sutlar",
+      "name": "Şut / İsabetli Şut",
+      "desc": "Toplam şut, ilk yarı şut, isabetli şut ve takım şut marketleri.",
+      "markets": [
+        {
+          "id": "total_shots",
+          "name": "Toplam Şut Alt / Üst"
+        },
+        {
+          "id": "first_half_total_shots",
+          "name": "1. Yarı Toplam Şut"
+        },
+        {
+          "id": "shots_on_target",
+          "name": "İsabetli Şut Alt / Üst"
+        },
+        {
+          "id": "first_half_shots_on_target",
+          "name": "1. Yarı İsabetli Şut"
+        },
+        {
+          "id": "team1_shots",
+          "name": "Takım 1 Şut Alt / Üst"
+        },
+        {
+          "id": "team2_shots",
+          "name": "Takım 2 Şut Alt / Üst"
+        },
+        {
+          "id": "team1_shots_on_target",
+          "name": "Takım 1 İsabetli Şut Alt / Üst"
+        },
+        {
+          "id": "team2_shots_on_target",
+          "name": "Takım 2 İsabetli Şut Alt / Üst"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "faul_tac_top",
+      "name": "Faul / Taç / Topla Oynama",
+      "desc": "Takım faul, taç, toplam taç ve topla oynama yüzdesi marketleri.",
+      "markets": [
+        {
+          "id": "total_fouls",
+          "name": "Toplam Faul Alt / Üst"
+        },
+        {
+          "id": "team1_fouls",
+          "name": "Takım 1 Faul Alt / Üst"
+        },
+        {
+          "id": "team2_fouls",
+          "name": "Takım 2 Faul Alt / Üst"
+        },
+        {
+          "id": "throw_ins",
+          "name": "Taçlar Alt / Üst"
+        },
+        {
+          "id": "team1_throw_ins",
+          "name": "Takım 1 Taç Alt / Üst"
+        },
+        {
+          "id": "team2_throw_ins",
+          "name": "Takım 2 Taç Alt / Üst"
+        },
+        {
+          "id": "possession_team1",
+          "name": "Takım 1 Topla Oynama %"
+        },
+        {
+          "id": "possession_team2",
+          "name": "Takım 2 Topla Oynama %"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "oyuncu",
+      "name": "Oyuncu İstatistikleri",
+      "desc": "Oyuncu gol, şut, isabetli şut, kart, faul ve asist marketleri.",
+      "markets": [
+        {
+          "id": "player_goal",
+          "name": "Oyuncu Gol Atar"
+        },
+        {
+          "id": "player_shots",
+          "name": "Oyuncu Şut Alt / Üst"
+        },
+        {
+          "id": "player_shots_on_target",
+          "name": "Oyuncu İsabetli Şut Alt / Üst"
+        },
+        {
+          "id": "player_card",
+          "name": "Oyuncu Kart Görür"
+        },
+        {
+          "id": "player_fouls",
+          "name": "Oyuncu Faul Alt / Üst"
+        },
+        {
+          "id": "player_assist",
+          "name": "Oyuncu Asist Yapar"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "var_ofsayt",
+      "name": "VAR / Ofsayt / Hakem",
+      "desc": "VAR incelemesi, ofsayt, penaltı, hakem kararları ve maç içi özel olay marketleri.",
+      "markets": [
+        {
+          "id": "var_review",
+          "name": "Hakem VAR'a Gider"
+        },
+        {
+          "id": "var_overturn",
+          "name": "VAR Kararı Değiştirir"
+        },
+        {
+          "id": "penalty_awarded",
+          "name": "Penaltı Olur"
+        },
+        {
+          "id": "offsides_total",
+          "name": "Ofsayt Alt / Üst"
+        },
+        {
+          "id": "team1_offsides",
+          "name": "Takım 1 Ofsayt Alt / Üst"
+        },
+        {
+          "id": "team2_offsides",
+          "name": "Takım 2 Ofsayt Alt / Üst"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "paslar",
+      "name": "Pas Sayısı / Pas Yüzdesi",
+      "desc": "Toplam pas, takım pas sayısı ve pas isabet yüzdesi marketleri.",
+      "markets": [
+        {
+          "id": "total_passes",
+          "name": "Toplam Pas Sayısı Alt / Üst"
+        },
+        {
+          "id": "team1_passes",
+          "name": "Takım 1 Pas Sayısı Alt / Üst"
+        },
+        {
+          "id": "team2_passes",
+          "name": "Takım 2 Pas Sayısı Alt / Üst"
+        },
+        {
+          "id": "team1_pass_accuracy",
+          "name": "Takım 1 Pas İsabet Yüzdesi"
+        },
+        {
+          "id": "team2_pass_accuracy",
+          "name": "Takım 2 Pas İsabet Yüzdesi"
+        }
+      ],
+      "sport": "football"
+    },
+    {
+      "id": "basketbol_marketleri",
+      "name": "Basketbol Marketleri",
+      "desc": "Basketbol toplam sayı, handikap, çeyrek, takım ve oyuncu istatistikleri.",
+      "markets": [
+        {
+          "id": "basket_total_points",
+          "name": "Toplam Sayı Alt / Üst"
+        },
+        {
+          "id": "basket_team1_total",
+          "name": "Takım 1 Sayı Alt / Üst"
+        },
+        {
+          "id": "basket_team2_total",
+          "name": "Takım 2 Sayı Alt / Üst"
+        },
+        {
+          "id": "basket_handicap",
+          "name": "Basketbol Handikap"
+        },
+        {
+          "id": "basket_first_half_total",
+          "name": "İlk Yarı Toplam Sayı"
+        },
+        {
+          "id": "basket_quarter_total",
+          "name": "Çeyrek Toplam Sayı"
+        },
+        {
+          "id": "player_points",
+          "name": "Oyuncu Sayı Alt / Üst"
+        },
+        {
+          "id": "player_rebounds",
+          "name": "Oyuncu Ribaund Alt / Üst"
+        },
+        {
+          "id": "player_assists",
+          "name": "Oyuncu Asist Alt / Üst"
+        },
+        {
+          "id": "player_threes",
+          "name": "Oyuncu Üçlük Alt / Üst"
+        },
+        {
+          "id": "player_steals",
+          "name": "Oyuncu Top Çalma Alt / Üst"
+        },
+        {
+          "id": "player_blocks",
+          "name": "Oyuncu Blok Alt / Üst"
+        },
+        {
+          "id": "player_turnovers",
+          "name": "Oyuncu Top Kaybı Alt / Üst"
+        }
+      ],
+      "sport": "basketball"
+    }
+  ],
+  "turkishTerms": {
+    "value": "Değerli Oran",
+    "drop": "Oran Düşüş Alarmı",
+    "referenceProbability": "Referans Olasılık",
+    "impliedProbability": "Sitenin Verdiği Olasılık",
+    "lineGap": "Barem Farkı",
+    "arbitrage": "Teorik Arbitraj",
+    "opening": "İlk Oran",
+    "current": "Güncel Oran"
+  }
+}

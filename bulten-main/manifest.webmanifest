@@ -1,0 +1,19 @@
+{
+  "name": "V26 Bülten Terminal",
+  "short_name": "V26 Terminal",
+  "description": "Bülten, canlı takip, kripto terminal ve kasa yönetimi.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#0f0f0f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/icons/app-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
