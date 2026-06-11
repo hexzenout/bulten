@@ -11249,3 +11249,45 @@ select:-webkit-autofill {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* V902: Tutar boş uyarısı input metnini değiştirmeden kutu içine gömülü gösterilir */
+#rolling-excel-overlay .v902-stake-field {
+  position: relative !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+#rolling-excel-overlay .v902-stake-field input {
+  padding-right: 112px !important;
+}
+
+#rolling-excel-overlay .v902-stake-inline-warning {
+  display: none !important;
+  position: absolute !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  max-width: 104px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  pointer-events: none !important;
+  color: #fbbf24 !important;
+  font-size: .76rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  text-shadow: 0 0 10px rgba(251,191,36,.34) !important;
+  z-index: 2 !important;
+}
+
+#rolling-excel-overlay .v902-stake-field.v902-stake-has-warning .v902-stake-inline-warning {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+#rolling-excel-overlay .v902-stake-field.v902-stake-has-warning input.v856-stake-warning {
+  border-color: rgba(251,191,36,.85) !important;
+  background: rgba(120,53,15,.26) !important;
+  box-shadow: 0 0 0 2px rgba(251,191,36,.18), 0 0 16px rgba(251,191,36,.20) !important;
+}

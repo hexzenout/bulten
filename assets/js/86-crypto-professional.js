@@ -955,24 +955,33 @@
     const message = "Bir tutar gir";
     if (!stakeInput) return;
     try {
-      const originalPlaceholder = stakeInput.dataset.v901OriginalPlaceholder || stakeInput.getAttribute("placeholder") || "Tutar";
-      stakeInput.dataset.v901OriginalPlaceholder = originalPlaceholder;
       try { stakeInput.setCustomValidity(""); } catch(e) {}
+      const field = stakeInput.closest(".v902-stake-field") || stakeInput.parentElement;
+      if (!field) return;
+      field.classList.add("v902-stake-field", "v902-stake-has-warning");
       stakeInput.classList.add("v856-stake-warning");
-      stakeInput.placeholder = message;
-      if (stakeInput._v901StakeWarnClear) {
-        stakeInput.removeEventListener("input", stakeInput._v901StakeWarnClear);
-        stakeInput.removeEventListener("change", stakeInput._v901StakeWarnClear);
+      let warning = field.querySelector("[data-v902-stake-warning]");
+      if (!warning) {
+        warning = document.createElement("span");
+        warning.setAttribute("data-v902-stake-warning", "");
+        warning.className = "v902-stake-inline-warning";
+        stakeInput.insertAdjacentElement("afterend", warning);
+      }
+      warning.textContent = message;
+      if (stakeInput._v902StakeWarnClear) {
+        stakeInput.removeEventListener("input", stakeInput._v902StakeWarnClear);
+        stakeInput.removeEventListener("change", stakeInput._v902StakeWarnClear);
       }
       const clear = () => {
-        stakeInput.placeholder = stakeInput.dataset.v901OriginalPlaceholder || "Tutar";
+        if (String(stakeInput.value || "").trim() === "") return;
+        field.classList.remove("v902-stake-has-warning");
         stakeInput.classList.remove("v856-stake-warning");
         try { stakeInput.setCustomValidity(""); } catch(e) {}
         stakeInput.removeEventListener("input", clear);
         stakeInput.removeEventListener("change", clear);
-        stakeInput._v901StakeWarnClear = null;
+        stakeInput._v902StakeWarnClear = null;
       };
-      stakeInput._v901StakeWarnClear = clear;
+      stakeInput._v902StakeWarnClear = clear;
       stakeInput.addEventListener("input", clear);
       stakeInput.addEventListener("change", clear);
     } catch(e) {}
@@ -1608,7 +1617,10 @@
                   </div>
                   <input type="number" id="e-o-${day}-${slot}" placeholder="Oran" step="0.01" value="${pOddsV774}">
                   <div class="v765-extra-match-list">${pComboHtmlV774}</div>
-                  <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
+                  <div class="v902-stake-field">
+                    <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
+                    <span class="v902-stake-inline-warning" data-v902-stake-warning>Bir tutar gir</span>
+                  </div>
                   <div class="v768-bet-calc" data-v768-calc="${day}:${slot}"><span>Toplam Oran: <b>-</b></span><span>Tahmini Kazanç: <b>-</b></span></div>
                   <div class="v847-bet-leg-result-panel" data-v847-leg-panel="${day}:${slot}"></div>
                 </div>
