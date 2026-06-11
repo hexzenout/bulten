@@ -11333,3 +11333,107 @@ select:-webkit-autofill {
     grid-template-columns: 96px minmax(0, 1fr) !important;
   }
 }
+
+/* V904: Rolling Geçmiş/Aktif accordion detay sadeleştirme + maç sonuç renkleri */
+#omega-rolling-feature-host .v768-feature-modal.bet.history {
+  width: min(660px, 96vw) !important;
+  max-height: 86vh !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v768-feature-body {
+  gap: 10px !important;
+  padding: 14px 16px 18px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-accordion-card {
+  padding: 10px !important;
+  contain: layout paint !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary {
+  padding: 13px 14px !important;
+}
+#omega-rolling-feature-host .v903-bet-detail {
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 38px !important;
+  padding: 9px 11px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(15,23,42,.72) !important;
+  color: #f8fafc !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li span {
+  min-width: 0 !important;
+  color: #f8fafc !important;
+  font-size: 12.5px !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li b {
+  color: #fbbf24 !important;
+  font-size: 12.5px !important;
+  font-weight: 950 !important;
+  white-space: nowrap !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li em {
+  min-width: 66px !important;
+  text-align: center !important;
+  font-style: normal !important;
+  border-radius: 999px !important;
+  padding: 5px 8px !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  white-space: nowrap !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.win {
+  border-color: rgba(34,197,94,.42) !important;
+  background: linear-gradient(135deg, rgba(22,101,52,.28), rgba(15,23,42,.74)) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.win em {
+  color: #bbf7d0 !important;
+  background: rgba(22,101,52,.50) !important;
+  border: 1px solid rgba(34,197,94,.38) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.loss {
+  border-color: rgba(239,68,68,.42) !important;
+  background: linear-gradient(135deg, rgba(127,29,29,.30), rgba(15,23,42,.74)) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.loss em {
+  color: #fecaca !important;
+  background: rgba(127,29,29,.54) !important;
+  border: 1px solid rgba(239,68,68,.40) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.pending {
+  border-color: rgba(251,146,60,.38) !important;
+  background: linear-gradient(135deg, rgba(124,45,18,.24), rgba(15,23,42,.74)) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.pending em {
+  color: #fed7aa !important;
+  background: rgba(154,52,18,.46) !important;
+  border: 1px solid rgba(251,146,60,.38) !important;
+}
+@media (max-width: 720px) {
+  #omega-rolling-feature-host .v904-bet-match-list li {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+  }
+  #omega-rolling-feature-host .v904-bet-match-list li em {
+    grid-column: 1 / -1 !important;
+    justify-self: start !important;
+  }
+}

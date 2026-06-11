@@ -856,6 +856,32 @@
   }
 
 
+  function v904BetMatchStatus(row, kind, idx, count) {
+    if (kind !== "history") return "pending";
+    const raw = Array.isArray(row?.comboResults) ? row.comboResults : [];
+    const saved = raw[idx] === "loss" ? "loss" : raw[idx] === "win" ? "win" : "";
+    if (saved) return saved;
+    const finalStatus = row?.res === "loss" ? "loss" : row?.res === "win" ? "win" : "pending";
+    if (count <= 1) return finalStatus;
+    return finalStatus === "win" ? "win" : finalStatus === "loss" ? "loss" : "pending";
+  }
+
+  function v904BetMatchStatusLabel(status) {
+    return status === "win" ? "Kazandı" : status === "loss" ? "Kaybetti" : "Bekliyor";
+  }
+
+  function v904BetMatchListHtml(row, kind, matchItems) {
+    const items = Array.isArray(matchItems) ? matchItems : [];
+    if (!items.length) return "";
+    return `<ul class="v904-bet-match-list">${items.map((x, idx) => {
+      const status = v904BetMatchStatus(row, kind, idx, items.length);
+      const safeName = v763EscapeHtml(x.note || `Maç ${idx + 1}`);
+      const odds = Number(x.odds || 0) ? Number(x.odds).toFixed(2) : "-";
+      return `<li class="${status}"><span>${idx + 1}. ${safeName}</span><b>${odds}</b><em>${v904BetMatchStatusLabel(status)}</em></li>`;
+    }).join("")}</ul>`;
+  }
+
+
   function v847BetLegStatusLabel(status) {
     return status === "loss" ? "KAYBETTİ" : status === "win" ? "KAZANDI" : "BEKLİYOR";
   }
@@ -1160,7 +1186,7 @@
           const combo = isCrypto ? [] : v763ComboRows(day, slot);
           if (!note && !stake && !odds && !combo.length) continue;
           const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
-          rows.push({ day, slot, note, stake, odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, createdAt: Date.now(), updatedAt: Date.now() });
+          rows.push({ day, slot, note, stake, odds, combo, comboResults: [], totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, createdAt: Date.now(), updatedAt: Date.now() });
           continue;
         }
         const pending = v774GetPendingSlot(day, slot);
@@ -1172,7 +1198,7 @@
         const odds = Number(src.odds || 0);
         const combo = Array.isArray(src.combo) ? src.combo : [];
         const totalOdds = v763BetTotalOdds(odds, combo);
-        rows.push({ day, slot, note: src.note, stake, odds, combo, totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true, createdAt: src.createdAt || src.updatedAt || Date.now(), updatedAt: src.updatedAt || Date.now() });
+        rows.push({ day, slot, note: src.note, stake, odds, combo, comboResults: Array.isArray(src.comboResults) ? src.comboResults : [], totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true, createdAt: src.createdAt || src.updatedAt || Date.now(), updatedAt: src.updatedAt || Date.now() });
       }
     }
     return rows;
@@ -1196,7 +1222,7 @@
           op.createdAt = stamp;
           stampDirty = true;
         }
-        rows.push({ day, slot, note: op.note || (isCrypto ? "İşlem" : "Maç"), stake, odds: op.odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, res: op.res, pnl, createdAt: stamp, settledAt: Number(op.settledAt || op.updatedAt || stamp) });
+        rows.push({ day, slot, note: op.note || (isCrypto ? "İşlem" : "Maç"), stake, odds: op.odds, combo, comboResults: Array.isArray(op.comboResults) ? op.comboResults : [], totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, res: op.res, pnl, createdAt: stamp, settledAt: Number(op.settledAt || op.updatedAt || stamp) });
       });
     }
     if (stampDirty) omega_SaveRollingDB();
@@ -1229,7 +1255,7 @@
       if (isActiveBet || isHistoryBet) {
         return `<article class="${cardClass} v903-bet-accordion-card" data-v903-accordion-card>
           ${v903BetSummaryHtml(row, kind)}
-          <div class="v903-bet-detail" data-v903-accordion-detail hidden>${oldDetail}</div>
+          <div class="v903-bet-detail" data-v903-accordion-detail hidden>${v904BetMatchListHtml(row, kind, matchItems)}</div>
         </article>`;
       }
       return `<article class="${cardClass}">${oldDetail}</article>`;
