@@ -953,20 +953,28 @@
 
   function v898WarnStakeInput(stakeInput) {
     const message = "Bir tutar gir";
-    if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(message);
     if (!stakeInput) return;
     try {
-      // Placeholder/etiket değişmez; eski davranış gibi uyarı doğrudan tutar inputu üzerinde gösterilir.
-      stakeInput.setCustomValidity(message);
-      stakeInput.reportValidity();
+      const originalPlaceholder = stakeInput.dataset.v901OriginalPlaceholder || stakeInput.getAttribute("placeholder") || "Tutar";
+      stakeInput.dataset.v901OriginalPlaceholder = originalPlaceholder;
+      try { stakeInput.setCustomValidity(""); } catch(e) {}
+      stakeInput.classList.add("v856-stake-warning");
+      stakeInput.placeholder = message;
+      if (stakeInput._v901StakeWarnClear) {
+        stakeInput.removeEventListener("input", stakeInput._v901StakeWarnClear);
+        stakeInput.removeEventListener("change", stakeInput._v901StakeWarnClear);
+      }
       const clear = () => {
-        stakeInput.setCustomValidity("");
-        stakeInput.removeEventListener("input", clear);
-      };
-      stakeInput.addEventListener("input", clear);
-      setTimeout(() => {
+        stakeInput.placeholder = stakeInput.dataset.v901OriginalPlaceholder || "Tutar";
+        stakeInput.classList.remove("v856-stake-warning");
         try { stakeInput.setCustomValidity(""); } catch(e) {}
-      }, 2200);
+        stakeInput.removeEventListener("input", clear);
+        stakeInput.removeEventListener("change", clear);
+        stakeInput._v901StakeWarnClear = null;
+      };
+      stakeInput._v901StakeWarnClear = clear;
+      stakeInput.addEventListener("input", clear);
+      stakeInput.addEventListener("change", clear);
     } catch(e) {}
     try { stakeInput.focus(); } catch(e) {}
   }
