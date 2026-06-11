@@ -857,17 +857,13 @@
 
 
   function v904BetMatchStatus(row, kind, idx, count) {
-    if (kind !== "history") return "pending";
     const raw = Array.isArray(row?.comboResults) ? row.comboResults : [];
     const saved = raw[idx] === "loss" ? "loss" : raw[idx] === "win" ? "win" : "";
-    if (saved) return saved;
-    const finalStatus = row?.res === "loss" ? "loss" : row?.res === "win" ? "win" : "pending";
-    if (count <= 1) return finalStatus;
-    return finalStatus === "win" ? "win" : finalStatus === "loss" ? "loss" : "pending";
+    return saved || "pending";
   }
 
   function v904BetMatchStatusLabel(status) {
-    return status === "win" ? "Kazandı" : status === "loss" ? "Kaybetti" : "Bekliyor";
+    return status === "win" ? "Kazandı" : status === "loss" ? "Kaybetti" : "────────";
   }
 
   function v904BetMatchListHtml(row, kind, matchItems) {
@@ -1253,9 +1249,11 @@
       const cardClass = isActiveBet || isHistoryBet ? "v768-feature-card v892-bet-active-card" : "v768-feature-card";
       const oldDetail = `<div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}`;
       if (isActiveBet || isHistoryBet) {
+        const detailHtml = v904BetMatchListHtml(row, kind, matchItems);
         return `<article class="${cardClass} v903-bet-accordion-card" data-v903-accordion-card>
           ${v903BetSummaryHtml(row, kind)}
-          <div class="v903-bet-detail" data-v903-accordion-detail hidden>${v904BetMatchListHtml(row, kind, matchItems)}</div>
+          <div class="v903-bet-detail" data-v903-accordion-detail hidden></div>
+          <template data-v905-accordion-template>${detailHtml}</template>
         </article>`;
       }
       return `<article class="${cardClass}">${oldDetail}</article>`;
@@ -1578,18 +1576,28 @@
           openCard.classList.remove("is-open");
           const detail = openCard.querySelector("[data-v903-accordion-detail]");
           const toggle = openCard.querySelector("[data-v903-accordion-toggle]");
-          if (detail) detail.hidden = true;
+          if (detail) {
+            detail.hidden = true;
+            detail.innerHTML = "";
+          }
           if (toggle) toggle.setAttribute("aria-expanded", "false");
         });
         if (isOpen) {
           card.classList.remove("is-open");
           const detail = card.querySelector("[data-v903-accordion-detail]");
-          if (detail) detail.hidden = true;
+          if (detail) {
+            detail.hidden = true;
+            detail.innerHTML = "";
+          }
           accordionToggle.setAttribute("aria-expanded", "false");
         } else {
           card.classList.add("is-open");
           const detail = card.querySelector("[data-v903-accordion-detail]");
-          if (detail) detail.hidden = false;
+          const template = card.querySelector("template[data-v905-accordion-template]");
+          if (detail) {
+            detail.innerHTML = template ? template.innerHTML : detail.innerHTML;
+            detail.hidden = false;
+          }
           accordionToggle.setAttribute("aria-expanded", "true");
         }
         return;

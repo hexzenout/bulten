@@ -11336,7 +11336,7 @@ select:-webkit-autofill {
 
 /* V904: Rolling Geçmiş/Aktif accordion detay sadeleştirme + maç sonuç renkleri */
 #omega-rolling-feature-host .v768-feature-modal.bet.history {
-  width: min(660px, 96vw) !important;
+  width: min(528px, 96vw) !important;
   max-height: 86vh !important;
 }
 #omega-rolling-feature-host .v768-feature-modal.bet.history .v768-feature-body {
@@ -11420,13 +11420,15 @@ select:-webkit-autofill {
   border: 1px solid rgba(239,68,68,.40) !important;
 }
 #omega-rolling-feature-host .v904-bet-match-list li.pending {
-  border-color: rgba(251,146,60,.38) !important;
-  background: linear-gradient(135deg, rgba(124,45,18,.24), rgba(15,23,42,.74)) !important;
+  border-color: rgba(148,163,184,.30) !important;
+  background: linear-gradient(135deg, rgba(51,65,85,.24), rgba(15,23,42,.74)) !important;
 }
 #omega-rolling-feature-host .v904-bet-match-list li.pending em {
-  color: #fed7aa !important;
-  background: rgba(154,52,18,.46) !important;
-  border: 1px solid rgba(251,146,60,.38) !important;
+  min-width: 78px !important;
+  color: #cbd5e1 !important;
+  background: rgba(51,65,85,.50) !important;
+  border: 1px solid rgba(148,163,184,.30) !important;
+  letter-spacing: .06em !important;
 }
 @media (max-width: 720px) {
   #omega-rolling-feature-host .v904-bet-match-list li {
@@ -11436,4 +11438,20 @@ select:-webkit-autofill {
     grid-column: 1 / -1 !important;
     justify-self: start !important;
   }
+}
+
+
+/* V905: Geçmiş accordion daraltma + nötr çizgi bekleyen maç */
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary > span {
+  grid-template-columns: 112px minmax(0, 1fr) !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary small,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b {
+  display: inline !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-detail[hidden] {
+  display: none !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-accordion-card:not(.is-open) .v903-bet-detail {
+  display: none !important;
 }
