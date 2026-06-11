@@ -821,6 +821,40 @@
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  function v903FormatRollingDate(value) {
+    const ts = Number(value || 0) || Date.now();
+    const d = new Date(ts);
+    const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    const pad = n => String(n).padStart(2, "0");
+    return `${d.getDate()} ${months[d.getMonth()] || ""} ${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function v903BetKindLabel(row) {
+    const comboCount = Array.isArray(row?.combo) ? row.combo.length : 0;
+    return comboCount >= 1 ? "Kombine" : "Tek";
+  }
+
+  function v903BetSummaryHtml(row, kind) {
+    const isHistory = kind === "history";
+    const isLoss = isHistory && row.res === "loss";
+    const isWin = isHistory && row.res === "win";
+    const statusLabel = isHistory ? (isLoss ? "Kaybetti" : "Kazandı") : "Bekliyor";
+    const statusClass = isLoss ? "loss" : isWin ? "win" : "pending";
+    const stamp = v903FormatRollingDate(row.createdAt || row.settledAt || row.updatedAt || Date.now());
+    const oddsLabel = Number(row.totalOdds || 0) ? Number(row.totalOdds).toFixed(2) : "-";
+    const stakeLabel = v768Money(row.stake);
+    const winLabel = Number(row.possible || 0) ? v768Money(row.possible) : "-";
+    const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b>${winLabel}</b></span>`;
+    return `<button type="button" class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false">
+      <strong>${stamp} - Gün ${row.day} · Bahis ${row.slot + 1}</strong>
+      <span><small>Tip:</small><b>${v903BetKindLabel(row)}</b></span>
+      <span><small>Oran:</small><b>${oddsLabel}</b></span>
+      <span><small>Bahis Tutarı:</small><b>${stakeLabel}</b></span>
+      ${gainLine}
+      <span><small>Durum:</small><b class="${statusClass}">${statusLabel}</b></span>
+    </button>`;
+  }
+
 
   function v847BetLegStatusLabel(status) {
     return status === "loss" ? "KAYBETTİ" : status === "win" ? "KAZANDI" : "BEKLİYOR";
@@ -955,33 +989,24 @@
     const message = "Bir tutar gir";
     if (!stakeInput) return;
     try {
+      const originalPlaceholder = stakeInput.dataset.v901OriginalPlaceholder || stakeInput.getAttribute("placeholder") || "Tutar";
+      stakeInput.dataset.v901OriginalPlaceholder = originalPlaceholder;
       try { stakeInput.setCustomValidity(""); } catch(e) {}
-      const field = stakeInput.closest(".v902-stake-field") || stakeInput.parentElement;
-      if (!field) return;
-      field.classList.add("v902-stake-field", "v902-stake-has-warning");
       stakeInput.classList.add("v856-stake-warning");
-      let warning = field.querySelector("[data-v902-stake-warning]");
-      if (!warning) {
-        warning = document.createElement("span");
-        warning.setAttribute("data-v902-stake-warning", "");
-        warning.className = "v902-stake-inline-warning";
-        stakeInput.insertAdjacentElement("afterend", warning);
-      }
-      warning.textContent = message;
-      if (stakeInput._v902StakeWarnClear) {
-        stakeInput.removeEventListener("input", stakeInput._v902StakeWarnClear);
-        stakeInput.removeEventListener("change", stakeInput._v902StakeWarnClear);
+      stakeInput.placeholder = message;
+      if (stakeInput._v901StakeWarnClear) {
+        stakeInput.removeEventListener("input", stakeInput._v901StakeWarnClear);
+        stakeInput.removeEventListener("change", stakeInput._v901StakeWarnClear);
       }
       const clear = () => {
-        if (String(stakeInput.value || "").trim() === "") return;
-        field.classList.remove("v902-stake-has-warning");
+        stakeInput.placeholder = stakeInput.dataset.v901OriginalPlaceholder || "Tutar";
         stakeInput.classList.remove("v856-stake-warning");
         try { stakeInput.setCustomValidity(""); } catch(e) {}
         stakeInput.removeEventListener("input", clear);
         stakeInput.removeEventListener("change", clear);
-        stakeInput._v902StakeWarnClear = null;
+        stakeInput._v901StakeWarnClear = null;
       };
-      stakeInput._v902StakeWarnClear = clear;
+      stakeInput._v901StakeWarnClear = clear;
       stakeInput.addEventListener("input", clear);
       stakeInput.addEventListener("change", clear);
     } catch(e) {}
@@ -1023,7 +1048,10 @@
     })).filter(row => row.note || Number(row.odds || 0)) : [];
     if (!note && stake === "" && odds === "" && !combo.length) return null;
     const comboResults = Array.isArray(entry.comboResults) ? entry.comboResults.map(v => v === "loss" ? "loss" : v === "win" ? "win" : "").slice(0, combo.length + 1) : [];
-    return { note, amt: stake, odds, combo, comboResults, status: "pending", updatedAt: Number(entry.updatedAt || Date.now()) };
+    const now = Date.now();
+    const createdAt = Number(entry.createdAt || entry.playedAt || entry.insertedAt || entry.updatedAt || now);
+    const updatedAt = Number(entry.updatedAt || now);
+    return { note, amt: stake, odds, combo, comboResults, status: "pending", createdAt, updatedAt };
   }
 
   function v774PendingFromDom(day, slot) {
@@ -1038,9 +1066,10 @@
     const combo = v763ComboRows(day, slot).map(row => ({ note: row.note, odds: row.odds || "" }));
     const previous = v774GetPendingSlot(day, slot);
     const comboResults = Array.isArray(previous?.comboResults) ? previous.comboResults : [];
+    const createdAt = Number(previous?.createdAt || previous?.updatedAt || Date.now());
     const hasAny = Boolean(note || stakeText !== "" || oddsText !== "" || combo.length);
     if (!hasAny) return null;
-    return { note, amt: stake, odds, combo, comboResults, status: "pending", updatedAt: Date.now() };
+    return { note, amt: stake, odds, combo, comboResults, status: "pending", createdAt, updatedAt: Date.now() };
   }
 
   function v774SetPendingSlot(day, slot, entry) {
@@ -1131,7 +1160,7 @@
           const combo = isCrypto ? [] : v763ComboRows(day, slot);
           if (!note && !stake && !odds && !combo.length) continue;
           const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
-          rows.push({ day, slot, note, stake, odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0 });
+          rows.push({ day, slot, note, stake, odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, createdAt: Date.now(), updatedAt: Date.now() });
           continue;
         }
         const pending = v774GetPendingSlot(day, slot);
@@ -1143,7 +1172,7 @@
         const odds = Number(src.odds || 0);
         const combo = Array.isArray(src.combo) ? src.combo : [];
         const totalOdds = v763BetTotalOdds(odds, combo);
-        rows.push({ day, slot, note: src.note, stake, odds, combo, totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true });
+        rows.push({ day, slot, note: src.note, stake, odds, combo, totalOdds, possible: (stake && totalOdds) ? stake * totalOdds : 0, pending: true, createdAt: src.createdAt || src.updatedAt || Date.now(), updatedAt: src.updatedAt || Date.now() });
       }
     }
     return rows;
@@ -1153,6 +1182,7 @@
     const plan = ensureRollingPlan();
     const isCrypto = mode === "crypto";
     const rows = [];
+    let stampDirty = false;
     for (let day = 1; day <= _ACTIVE_EXCEL_DAYS; day++) {
       const dayOps = plan.ops?.[day] || [];
       dayOps.forEach((op, slot) => {
@@ -1161,9 +1191,15 @@
         const totalOdds = isCrypto ? Number(op.odds || 0) : v763BetTotalOdds(Number(op.odds || 0), combo);
         const stake = Number(op.amt || 0);
         const pnl = isCrypto ? Number(op.odds || 0) : (op.res === "win" ? (stake * totalOdds) - stake : -stake);
-        rows.push({ day, slot, note: op.note || (isCrypto ? "İşlem" : "Maç"), stake, odds: op.odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, res: op.res, pnl });
+        const stamp = Number(op.createdAt || op.playedAt || op.settledAt || op.updatedAt || 0) || Date.now();
+        if (!op.createdAt) {
+          op.createdAt = stamp;
+          stampDirty = true;
+        }
+        rows.push({ day, slot, note: op.note || (isCrypto ? "İşlem" : "Maç"), stake, odds: op.odds, combo, totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, res: op.res, pnl, createdAt: stamp, settledAt: Number(op.settledAt || op.updatedAt || stamp) });
       });
     }
+    if (stampDirty) omega_SaveRollingDB();
     return rows;
   }
 
@@ -1189,7 +1225,14 @@
         ? `<div class="v893-active-summary"><span><small>Tutar</small><b>${v768Money(row.stake)}</b></span><span><small>Toplam Oran</small><b>${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</b></span><span><small>Kazanç</small><b>${row.possible ? v768Money(row.possible) : "-"}</b></span></div>`
         : `<p>${metric}</p>`;
       const cardClass = isActiveBet || isHistoryBet ? "v768-feature-card v892-bet-active-card" : "v768-feature-card";
-      return `<article class="${cardClass}"><div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}</article>`;
+      const oldDetail = `<div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}`;
+      if (isActiveBet || isHistoryBet) {
+        return `<article class="${cardClass} v903-bet-accordion-card" data-v903-accordion-card>
+          ${v903BetSummaryHtml(row, kind)}
+          <div class="v903-bet-detail" data-v903-accordion-detail hidden>${oldDetail}</div>
+        </article>`;
+      }
+      return `<article class="${cardClass}">${oldDetail}</article>`;
     }).join("");
   }
 
@@ -1496,6 +1539,35 @@
         v768DownloadReport(reportBtn.dataset.v768ReportDownload === "crypto" ? "crypto" : "bet");
         return;
       }
+      const accordionToggle = event.target.closest && event.target.closest("[data-v903-accordion-toggle]");
+      if (accordionToggle) {
+        event.preventDefault();
+        event.stopPropagation();
+        const card = accordionToggle.closest("[data-v903-accordion-card]");
+        if (!card) return;
+        const body = card.closest(".v768-feature-body") || card.parentElement;
+        const isOpen = card.classList.contains("is-open");
+        body?.querySelectorAll("[data-v903-accordion-card].is-open").forEach(openCard => {
+          if (openCard === card) return;
+          openCard.classList.remove("is-open");
+          const detail = openCard.querySelector("[data-v903-accordion-detail]");
+          const toggle = openCard.querySelector("[data-v903-accordion-toggle]");
+          if (detail) detail.hidden = true;
+          if (toggle) toggle.setAttribute("aria-expanded", "false");
+        });
+        if (isOpen) {
+          card.classList.remove("is-open");
+          const detail = card.querySelector("[data-v903-accordion-detail]");
+          if (detail) detail.hidden = true;
+          accordionToggle.setAttribute("aria-expanded", "false");
+        } else {
+          card.classList.add("is-open");
+          const detail = card.querySelector("[data-v903-accordion-detail]");
+          if (detail) detail.hidden = false;
+          accordionToggle.setAttribute("aria-expanded", "true");
+        }
+        return;
+      }
       if (event.target?.closest && document.getElementById("rolling-excel-overlay")?.contains(event.target)) {
         if (!event.target.closest("[data-v765-kapsul]") && !event.target.closest("[data-v768-feature-open]")) v774FlushAllPendingFromDom();
       }
@@ -1617,10 +1689,7 @@
                   </div>
                   <input type="number" id="e-o-${day}-${slot}" placeholder="Oran" step="0.01" value="${pOddsV774}">
                   <div class="v765-extra-match-list">${pComboHtmlV774}</div>
-                  <div class="v902-stake-field">
-                    <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
-                    <span class="v902-stake-inline-warning" data-v902-stake-warning>Bir tutar gir</span>
-                  </div>
+                  <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pStakeV774}">
                   <div class="v768-bet-calc" data-v768-calc="${day}:${slot}"><span>Toplam Oran: <b>-</b></span><span>Tahmini Kazanç: <b>-</b></span></div>
                   <div class="v847-bet-leg-result-panel" data-v847-leg-panel="${day}:${slot}"></div>
                 </div>
@@ -1714,6 +1783,7 @@
       combo,
       comboResults,
       status: "pending",
+      createdAt: Number(op.createdAt || op.playedAt || Date.now()),
       updatedAt: Date.now()
     });
     if (!currentPlan.pending) currentPlan.pending = {};
@@ -1799,7 +1869,8 @@
           .map(v => v === "loss" ? "loss" : v === "win" ? "win" : "")
           .slice(0, comboRows.length + 1)
       : [];
-    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, comboResults, res: result, netMode: isCrypto ? "amount" : "odds" };
+    const opCreatedAt = Number(pendingBeforeResolve?.createdAt || pendingBeforeResolve?.updatedAt || Date.now());
+    currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, comboResults, res: result, netMode: isCrypto ? "amount" : "odds", createdAt: opCreatedAt, settledAt: Date.now() };
     if (currentPlan.pending?.[day]) {
       delete currentPlan.pending[day][slot];
       if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];
