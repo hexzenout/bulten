@@ -1352,10 +1352,11 @@
       const oldDetail = `<div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}`;
       if (isActiveBet || isHistoryBet) {
         const detailHtml = v904BetMatchListHtml(row, kind, matchItems);
-        const historyPhotoBtn = isHistoryBet ? `<button type="button" class="v912-history-card-camera" onclick="return omega_RollingResultPhoto(event, ${row.day}, ${row.slot})" title="Geçmiş kupon fotoğrafı" aria-label="Geçmiş kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>` : "";
+        const photoTitle = isHistoryBet ? "Geçmiş kupon fotoğrafı" : "Aktif kupon fotoğrafı";
+        const cardPhotoBtn = `<button type="button" class="v912-history-card-camera v915-card-title-camera" onclick="return omega_RollingResultPhoto(event, ${row.day}, ${row.slot})" title="${photoTitle}" aria-label="${photoTitle}"><i class="fa-solid fa-camera"></i></button>`;
         return `<article class="${cardClass} v903-bet-accordion-card" data-v903-accordion-card>
           ${v903BetSummaryHtml(row, kind)}
-          ${historyPhotoBtn}
+          ${cardPhotoBtn}
           <div class="v903-bet-detail" data-v903-accordion-detail hidden></div>
           <template data-v905-accordion-template>${detailHtml}</template>
         </article>`;
@@ -1456,8 +1457,7 @@
     const title = k === "active" ? (m === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR") : k === "history" ? "Geçmiş" : "Rapor";
     const reportRows = v768HistoryRows(m);
     const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>Toplam K/Z</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
-    const activePhotoBtn = k === "active" && m === "bet" ? `<button type="button" class="v891-feature-photo-btn" data-v891-active-photo title="Aktif bahisler fotoğrafı" aria-label="Aktif bahisler fotoğrafı"><i class="fa-solid fa-camera"></i></button>` : "";
-    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
+    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions"><button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
     host.style.display = "block";
   }
 

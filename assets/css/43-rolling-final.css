@@ -11780,3 +11780,17 @@ select:-webkit-autofill {
 #omega-rolling-feature-host .v903-bet-summary .v911-summary-bet-ref {
   color: #fbbf24 !important;
 }
+
+
+/* V915: Kamera sadece kart başlık satırı sağında; modal X yanı kamera yok */
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary {
+  padding-right: 58px !important;
+}
+#omega-rolling-feature-host .v903-bet-accordion-card .v915-card-title-camera {
+  top: 25px !important;
+  right: 24px !important;
+}
+#omega-rolling-feature-host .v891-feature-head-actions .v891-feature-photo-btn {
+  display: none !important;
+}
