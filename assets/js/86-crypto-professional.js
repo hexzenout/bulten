@@ -937,17 +937,6 @@
     const gainStyle = isHistory && isWin ? "color:#4ade80 !important;" : "color:#f8fafc !important;";
     const statusColor = statusClass === "win" ? "#4ade80" : statusClass === "loss" ? "#f87171" : "#fb923c";
     const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b class="${gainClass}" style="${gainStyle}">${winLabel}</b></span>`;
-    if (isHistory) {
-      const titlePhotoBtn = `<button type="button" class="v919-summary-camera" data-v919-summary-photo="${row.day}:${row.slot}" title="Geçmiş kupon fotoğrafı" aria-label="Geçmiş kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`;
-      return `<div class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false" role="button" tabindex="0">
-        <strong class="v919-summary-title-row"><span class="v919-summary-title-text"><span class="v911-summary-date">${stamp} - </span><span class="v911-summary-bet-ref" style="color:#fbbf24 !important;">Gün ${row.day} · Bahis ${row.slot + 1}</span></span>${titlePhotoBtn}</strong>
-        <span><small>Tip:</small><b class="${kindClass}" style="color:${kindColor} !important;">${kindLabel}</b></span>
-        <span><small>Oran:</small><b class="v908-odds v910-odds" style="color:#fbbf24 !important;">${oddsLabel}</b></span>
-        <span><small>Bahis Tutarı:</small><b>${stakeLabel}</b></span>
-        ${gainLine}
-        <span><small>Durum:</small><b class="${statusClass} v910-status-${statusClass}" style="color:${statusColor} !important;">${statusLabel}</b></span>
-      </div>`;
-    }
     return `<button type="button" class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false">
       <strong><span class="v911-summary-date">${stamp} - </span><span class="v911-summary-bet-ref" style="color:#fbbf24 !important;">Gün ${row.day} · Bahis ${row.slot + 1}</span></strong>
       <span><small>Tip:</small><b class="${kindClass}" style="color:${kindColor} !important;">${kindLabel}</b></span>
@@ -1363,8 +1352,10 @@
       const oldDetail = `<div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}`;
       if (isActiveBet || isHistoryBet) {
         const detailHtml = v904BetMatchListHtml(row, kind, matchItems);
+        const historyPhotoBtn = isHistoryBet ? `<button type="button" class="v912-history-card-camera" onclick="return omega_RollingResultPhoto(event, ${row.day}, ${row.slot})" title="Geçmiş kupon fotoğrafı" aria-label="Geçmiş kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>` : "";
         return `<article class="${cardClass} v903-bet-accordion-card" data-v903-accordion-card>
           ${v903BetSummaryHtml(row, kind)}
+          ${historyPhotoBtn}
           <div class="v903-bet-detail" data-v903-accordion-detail hidden></div>
           <template data-v905-accordion-template>${detailHtml}</template>
         </article>`;
@@ -1726,15 +1717,6 @@
       if (reportBtn) {
         event.preventDefault();
         v768DownloadReport(reportBtn.dataset.v768ReportDownload === "crypto" ? "crypto" : "bet");
-        return;
-      }
-      const summaryPhotoBtn = event.target.closest && event.target.closest("[data-v919-summary-photo]");
-      if (summaryPhotoBtn) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-        const [dayRaw, slotRaw] = String(summaryPhotoBtn.dataset.v919SummaryPhoto || "0:0").split(":");
-        window.omega_RollingResultPhoto(event, Number(dayRaw), Number(slotRaw));
         return;
       }
       const accordionToggle = event.target.closest && event.target.closest("[data-v903-accordion-toggle]");
