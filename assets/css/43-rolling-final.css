@@ -11783,23 +11783,27 @@ select:-webkit-autofill {
 
 
 /* V921: Geçmiş kamera başlık satırına, button içi span ile güvenli yerleşim */
-#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary.v921-history-summary {
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary.v921-history-summary,
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary.v922-active-summary {
   padding-right: 14px !important;
 }
-#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary > strong.v921-summary-title-row {
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary > strong.v921-summary-title-row,
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary > strong.v921-summary-title-row {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 10px !important;
   width: 100% !important;
 }
-#omega-rolling-feature-host .v768-feature-modal.bet.history .v921-summary-title-text {
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v921-summary-title-text,
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v921-summary-title-text {
   flex: 1 1 auto !important;
   min-width: 0 !important;
   color: inherit !important;
   line-height: 1.35 !important;
 }
-#omega-rolling-feature-host .v768-feature-modal.bet.history .v921-summary-camera {
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v921-summary-camera,
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v921-summary-camera {
   flex: 0 0 32px !important;
   width: 32px !important;
   height: 32px !important;
@@ -11814,7 +11818,8 @@ select:-webkit-autofill {
   cursor: pointer !important;
   box-shadow: 0 0 0 1px rgba(251,191,36,.10), 0 6px 16px rgba(0,0,0,.22) !important;
 }
-#omega-rolling-feature-host .v768-feature-modal.bet.history .v921-summary-camera:hover {
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v921-summary-camera:hover,
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v921-summary-camera:hover {
   background: rgba(30,41,59,.96) !important;
   border-color: rgba(251,191,36,.74) !important;
 }

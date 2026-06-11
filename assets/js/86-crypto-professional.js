@@ -938,12 +938,15 @@
     const statusColor = statusClass === "win" ? "#4ade80" : statusClass === "loss" ? "#f87171" : "#fb923c";
     const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b class="${gainClass}" style="${gainStyle}">${winLabel}</b></span>`;
     const titleInner = `<span class="v911-summary-date">${stamp} - </span><span class="v911-summary-bet-ref" style="color:#fbbf24 !important;">Gün ${row.day} · Bahis ${row.slot + 1}</span>`;
+    const isActive = kind === "active";
     const titleCamera = isHistory
       ? `<span class="v921-summary-camera" data-v921-history-photo="${row.day}:${row.slot}" title="Geçmiş kupon fotoğrafı" aria-label="Geçmiş kupon fotoğrafı"><i class="fa-solid fa-camera"></i></span>`
-      : "";
-    const summaryClass = isHistory ? "v903-bet-summary v921-history-summary" : "v903-bet-summary";
-    const titleClass = isHistory ? "v921-summary-title-row" : "";
-    const titleHtml = isHistory
+      : isActive
+        ? `<span class="v921-summary-camera v922-active-summary-camera" data-v922-active-photo="${row.day}:${row.slot}" title="Aktif kupon fotoğrafı" aria-label="Aktif kupon fotoğrafı"><i class="fa-solid fa-camera"></i></span>`
+        : "";
+    const summaryClass = isHistory ? "v903-bet-summary v921-history-summary" : isActive ? "v903-bet-summary v922-active-summary" : "v903-bet-summary";
+    const titleClass = (isHistory || isActive) ? "v921-summary-title-row" : "";
+    const titleHtml = (isHistory || isActive)
       ? `<span class="v921-summary-title-text">${titleInner}</span>${titleCamera}`
       : titleInner;
     return `<button type="button" class="${summaryClass}" data-v903-accordion-toggle aria-expanded="false">
@@ -1733,6 +1736,15 @@
         if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
         const [dayRaw, slotRaw] = String(historyPhotoBtn.dataset.v921HistoryPhoto || "0:0").split(":");
         window.omega_RollingResultPhoto(event, Number(dayRaw), Number(slotRaw));
+        return;
+      }
+      const activeCardPhotoBtn = event.target.closest && event.target.closest("[data-v922-active-photo]");
+      if (activeCardPhotoBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        const [dayRaw, slotRaw] = String(activeCardPhotoBtn.dataset.v922ActivePhoto || "0:0").split(":");
+        window.omega_RollingSlotPhoto(Number(dayRaw), Number(slotRaw));
         return;
       }
       const accordionToggle = event.target.closest && event.target.closest("[data-v903-accordion-toggle]");
