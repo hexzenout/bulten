@@ -937,14 +937,15 @@
     const gainStyle = isHistory && isWin ? "color:#4ade80 !important;" : "color:#f8fafc !important;";
     const statusColor = statusClass === "win" ? "#4ade80" : statusClass === "loss" ? "#f87171" : "#fb923c";
     const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b class="${gainClass}" style="${gainStyle}">${winLabel}</b></span>`;
-    return `<button type="button" class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false">
-      <strong><span class="v911-summary-date">${stamp} - </span><span class="v911-summary-bet-ref" style="color:#fbbf24 !important;">Gün ${row.day} · Bahis ${row.slot + 1}</span></strong>
+    const cameraBtn = `<button type="button" class="v913-summary-card-camera" onclick="return omega_RollingResultPhoto(event, ${row.day}, ${row.slot})" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>`;
+    return `<div class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false" role="button" tabindex="0">
+      <div class="v913-summary-title-row"><strong><span class="v911-summary-date">${stamp} - </span><span class="v911-summary-bet-ref" style="color:#fbbf24 !important;">Gün ${row.day} · Bahis ${row.slot + 1}</span></strong>${cameraBtn}</div>
       <span><small>Tip:</small><b class="${kindClass}" style="color:${kindColor} !important;">${kindLabel}</b></span>
       <span><small>Oran:</small><b class="v908-odds v910-odds" style="color:#fbbf24 !important;">${oddsLabel}</b></span>
       <span><small>Bahis Tutarı:</small><b>${stakeLabel}</b></span>
       ${gainLine}
       <span><small>Durum:</small><b class="${statusClass} v910-status-${statusClass}" style="color:${statusColor} !important;">${statusLabel}</b></span>
-    </button>`;
+    </div>`;
   }
 
 
@@ -1352,10 +1353,8 @@
       const oldDetail = `<div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}`;
       if (isActiveBet || isHistoryBet) {
         const detailHtml = v904BetMatchListHtml(row, kind, matchItems);
-        const historyPhotoBtn = isHistoryBet ? `<button type="button" class="v912-history-card-camera" onclick="return omega_RollingResultPhoto(event, ${row.day}, ${row.slot})" title="Geçmiş kupon fotoğrafı" aria-label="Geçmiş kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>` : "";
         return `<article class="${cardClass} v903-bet-accordion-card" data-v903-accordion-card>
           ${v903BetSummaryHtml(row, kind)}
-          ${historyPhotoBtn}
           <div class="v903-bet-detail" data-v903-accordion-detail hidden></div>
           <template data-v905-accordion-template>${detailHtml}</template>
         </article>`;
@@ -1456,8 +1455,7 @@
     const title = k === "active" ? (m === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR") : k === "history" ? "Geçmiş" : "Rapor";
     const reportRows = v768HistoryRows(m);
     const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>Toplam K/Z</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
-    const activePhotoBtn = k === "active" && m === "bet" ? `<button type="button" class="v891-feature-photo-btn" data-v891-active-photo title="Aktif bahisler fotoğrafı" aria-label="Aktif bahisler fotoğrafı"><i class="fa-solid fa-camera"></i></button>` : "";
-    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
+    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions"><button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
     host.style.display = "block";
   }
 
