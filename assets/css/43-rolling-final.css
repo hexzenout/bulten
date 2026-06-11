@@ -11637,3 +11637,37 @@ select:-webkit-autofill {
   background: rgba(51,65,85,.48) !important;
   border: 1px solid rgba(148,163,184,.30) !important;
 }
+
+
+/* V908: özet renkleri + çıktı uzun bahis adı taşma düzeltmesi */
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v908-odds,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-odds {
+  color: #fbbf24 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v908-kind-single,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-kind-single {
+  color: #38bdf8 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v908-kind-combo,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-kind-combo {
+  color: #c084fc !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-gain-win {
+  color: #4ade80 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.pending {
+  color: #fb923c !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.pending {
+  color: #e5e7eb !important;
+}
+#rolling-excel-overlay .v847-shot-lines span {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  overflow-wrap: anywhere !important;
+}
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
+  min-width: 0 !important;
+}

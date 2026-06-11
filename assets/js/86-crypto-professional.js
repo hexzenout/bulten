@@ -859,11 +859,14 @@
     const oddsLabel = Number(row.totalOdds || 0) ? Number(row.totalOdds).toFixed(2) : "-";
     const stakeLabel = v768Money(row.stake);
     const winLabel = Number(row.possible || 0) ? v768Money(row.possible) : "-";
-    const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b>${winLabel}</b></span>`;
+    const kindLabel = v903BetKindLabel(row);
+    const kindClass = kindLabel === "Kombine" ? "v908-kind-combo" : "v908-kind-single";
+    const gainClass = isHistory && isWin ? "v908-gain-win" : "v908-gain";
+    const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b class="${gainClass}">${winLabel}</b></span>`;
     return `<button type="button" class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false">
       <strong>${stamp} - Gün ${row.day} · Bahis ${row.slot + 1}</strong>
-      <span><small>Tip:</small><b>${v903BetKindLabel(row)}</b></span>
-      <span><small>Oran:</small><b>${oddsLabel}</b></span>
+      <span><small>Tip:</small><b class="${kindClass}">${kindLabel}</b></span>
+      <span><small>Oran:</small><b class="v908-odds">${oddsLabel}</b></span>
       <span><small>Bahis Tutarı:</small><b>${stakeLabel}</b></span>
       ${gainLine}
       <span><small>Durum:</small><b class="${statusClass}">${statusLabel}</b></span>
@@ -879,6 +882,12 @@
 
   function v904BetMatchStatusLabel(status) {
     return status === "win" ? "Kazandı" : status === "loss" ? "Kaybetti" : "────────";
+  }
+
+  function v908CompactText(value, maxLen) {
+    const text = String(value || "").trim();
+    const limit = Number(maxLen || 0) || 48;
+    return text.length > limit ? text.slice(0, Math.max(1, limit - 1)) + "…" : text;
   }
 
   function v904BetMatchListHtml(row, kind, matchItems) {
@@ -1305,7 +1314,7 @@
         y += 48;
       } else if (row.kind === "match") {
         const note = String(row.note || "Maç");
-        const shortNote = note.length > 72 ? note.slice(0, 69) + "..." : note;
+        const shortNote = v908CompactText(note, 46);
         parts.push(`<text x="66" y="${y + 18}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="800">${row.idx + 1}. ${safe(shortNote)}</text>`);
         parts.push(`<text x="836" y="${y + 18}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">Oran: ${row.odds ? row.odds.toFixed(2) : "-"}</text>`);
         y += 34;
@@ -1427,7 +1436,8 @@
       const statusFill = status === "win" ? "#bbf7d0" : status === "loss" ? "#fecaca" : "#cbd5e1";
       const statusStroke = status === "win" ? "#22c55e" : status === "loss" ? "#ef4444" : "#64748b";
       const statusBg = status === "win" ? "#14532d" : status === "loss" ? "#7f1d1d" : "#334155";
-      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text><text x="682" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text><rect x="710" y="${y - 25}" width="128" height="30" rx="15" fill="${statusBg}" stroke="${statusStroke}"/><text x="774" y="${y - 5}" text-anchor="middle" fill="${statusFill}" font-size="14" font-family="Arial" font-weight="900">${safe(statusText)}</text>`;
+      const safeNote = safe(`${idx + 1}. ${v908CompactText(row.note || 'Maç', 42)}`);
+      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="800">${safeNote}</text><text x="682" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text><rect x="710" y="${y - 25}" width="128" height="30" rx="15" fill="${statusBg}" stroke="${statusStroke}"/><text x="774" y="${y - 5}" text-anchor="middle" fill="${statusFill}" font-size="14" font-family="Arial" font-weight="900">${safe(statusText)}</text>`;
     }).join('');
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
