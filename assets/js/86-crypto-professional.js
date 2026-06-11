@@ -299,11 +299,11 @@
 
 
 
-  // V910: Aktif/Geçmiş özet renklerini inline ve güçlü sınıflarla kesin uygula.
+  // V912: Özet/fotoğraf renkleri, geçmiş kamera ve kupon fotoğraf aksiyonları.
   (function v910EnsureSummaryAndShotCss(){
-    if (document.getElementById("v910-summary-shot-css")) return;
+    if (document.getElementById("v912-summary-shot-css")) return;
     const style = document.createElement("style");
-    style.id = "v910-summary-shot-css";
+    style.id = "v912-summary-shot-css";
     style.textContent = `
       #omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v908-odds,
       #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-odds {
@@ -346,6 +346,9 @@
       }
       #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-status-loss {
         color: #f87171 !important;
+      }
+      #omega-rolling-feature-host .v903-bet-summary .v911-summary-bet-ref {
+        color: #fbbf24 !important;
       }
       #rolling-excel-overlay .v847-shot-lines li,
       #rolling-excel-overlay .v847-shot-lines span {
@@ -935,7 +938,7 @@
     const statusColor = statusClass === "win" ? "#4ade80" : statusClass === "loss" ? "#f87171" : "#fb923c";
     const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b class="${gainClass}" style="${gainStyle}">${winLabel}</b></span>`;
     return `<button type="button" class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false">
-      <strong>${stamp} - Gün ${row.day} · Bahis ${row.slot + 1}</strong>
+      <strong><span class="v911-summary-date">${stamp} - </span><span class="v911-summary-bet-ref" style="color:#fbbf24 !important;">Gün ${row.day} · Bahis ${row.slot + 1}</span></strong>
       <span><small>Tip:</small><b class="${kindClass}" style="color:${kindColor} !important;">${kindLabel}</b></span>
       <span><small>Oran:</small><b class="v908-odds v910-odds" style="color:#fbbf24 !important;">${oddsLabel}</b></span>
       <span><small>Bahis Tutarı:</small><b>${stakeLabel}</b></span>
@@ -948,7 +951,11 @@
   function v904BetMatchStatus(row, kind, idx, count) {
     const raw = Array.isArray(row?.comboResults) ? row.comboResults : [];
     const saved = raw[idx] === "loss" ? "loss" : raw[idx] === "win" ? "win" : "";
-    return saved || "pending";
+    if (saved) return saved;
+    if (kind === "history" && Number(count || 0) <= 1) {
+      return row?.res === "loss" ? "loss" : row?.res === "win" ? "win" : "pending";
+    }
+    return "pending";
   }
 
   function v904BetMatchStatusLabel(status) {
@@ -1345,8 +1352,10 @@
       const oldDetail = `<div><b>${v763EscapeHtml(title)}</b>${status}</div><span>Gün ${row.day} · Bahis ${row.slot + 1}</span>${summaryHtml}${matchHtml}`;
       if (isActiveBet || isHistoryBet) {
         const detailHtml = v904BetMatchListHtml(row, kind, matchItems);
+        const historyPhotoBtn = isHistoryBet ? `<button type="button" class="v912-history-card-camera" onclick="return omega_RollingResultPhoto(event, ${row.day}, ${row.slot})" title="Geçmiş kupon fotoğrafı" aria-label="Geçmiş kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button>` : "";
         return `<article class="${cardClass} v903-bet-accordion-card" data-v903-accordion-card>
           ${v903BetSummaryHtml(row, kind)}
+          ${historyPhotoBtn}
           <div class="v903-bet-detail" data-v903-accordion-detail hidden></div>
           <template data-v905-accordion-template>${detailHtml}</template>
         </article>`;
@@ -1380,15 +1389,20 @@
     lineRows.forEach(row => {
       if (row.kind === "head") {
         parts.push(`<rect x="42" y="${y}" width="816" height="38" rx="13" fill="#1e293b" stroke="#475569"/>`);
-        parts.push(`<text x="64" y="${y + 25}" fill="#f8fafc" font-size="20" font-family="Arial" font-weight="900">GÜN ${row.day} BAHİS ${row.slot + 1}</text>`);
-        parts.push(`<text x="836" y="${y + 25}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${row.count > 1 ? `KOMBİNE ${row.count} MAÇ` : "TEKLİ BAHİS"}</text>`);
+        const kindText = row.count > 1 ? `KOMBİNE ${row.count} MAÇ` : "TEKLİ BAHİS";
+        const kindFill = row.count > 1 ? "#c084fc" : "#38bdf8";
+        parts.push(`<text x="64" y="${y + 25}" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">GÜN ${row.day} BAHİS ${row.slot + 1}</text>`);
+        parts.push(`<text x="836" y="${y + 25}" text-anchor="end" fill="${kindFill}" font-size="17" font-family="Arial" font-weight="900">${kindText}</text>`);
         y += 48;
       } else if (row.kind === "match") {
         const note = String(row.note || "Maç");
-        const shortNote = v908CompactText(note, 46);
-        parts.push(`<text x="66" y="${y + 18}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="800">${row.idx + 1}. ${safe(shortNote)}</text>`);
-        parts.push(`<text x="836" y="${y + 18}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">Oran: ${row.odds ? row.odds.toFixed(2) : "-"}</text>`);
-        y += 34;
+        const noteLines = v909SvgTextLines(`${row.idx + 1}. ${note}`, 46);
+        const lineHeight = 20;
+        const rowHeight = Math.max(34, 18 + noteLines.length * lineHeight);
+        const textBody = noteLines.map((line, lineIdx) => `<tspan x="66" dy="${lineIdx === 0 ? 0 : lineHeight}">${safe(line)}</tspan>`).join("");
+        parts.push(`<text x="66" y="${y + 18}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="800">${textBody}</text>`);
+        parts.push(`<text x="836" y="${y + 18}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${row.odds ? row.odds.toFixed(2) : "-"}</text>`);
+        y += rowHeight;
       } else if (row.kind === "summary") {
         parts.push(`<rect x="56" y="${y}" width="788" height="76" rx="14" fill="#111827" stroke="#334155"/>`);
         parts.push(`<text x="76" y="${y + 25}" fill="#cbd5e1" font-size="16" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="826" y="${y + 25}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</text>`);
@@ -1604,7 +1618,7 @@
       host.id = "omega-rolling-feature-host";
       document.body.appendChild(host);
     }
-    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Bahis ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v776-photo-show>Resmi Göster</button><button type="button" data-v777-photo-download>Resmi İndir PNG</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
+    host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Bahis ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v777-photo-download>Resmi İndir</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v776-photo-close")) return;
