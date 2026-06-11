@@ -123,8 +123,9 @@
         background: rgba(15,23,42,.86) !important;
         border: 1px solid rgba(51,65,85,.85) !important;
       }
-      #rolling-excel-overlay .v847-shot-lines li.win { border-color: rgba(34,197,94,.62) !important; background: rgba(6,78,59,.25) !important; }
-      #rolling-excel-overlay .v847-shot-lines li.loss { border-color: rgba(248,113,113,.62) !important; background: rgba(127,29,29,.24) !important; }
+      #rolling-excel-overlay .v847-shot-lines li.win { border-color: rgba(51,65,85,.85) !important; background: rgba(15,23,42,.86) !important; }
+      #rolling-excel-overlay .v847-shot-lines li.loss { border-color: rgba(51,65,85,.85) !important; background: rgba(15,23,42,.86) !important; }
+      #rolling-excel-overlay .v847-shot-lines li.pending { border-color: rgba(51,65,85,.85) !important; background: rgba(15,23,42,.86) !important; }
       #rolling-excel-overlay .v847-shot-lines span {
         color: #f8fafc !important;
         font-size: .82rem !important;
@@ -145,14 +146,28 @@
         font-weight: 1000 !important;
       }
       #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em {
-        color: #94a3b8 !important;
+        width: 74px !important;
+        min-width: 74px !important;
+        max-width: 74px !important;
+        height: 24px !important;
+        box-sizing: border-box !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 8px !important;
+        border-radius: 999px !important;
+        color: #cbd5e1 !important;
+        background: rgba(51,65,85,.48) !important;
+        border: 1px solid rgba(148,163,184,.30) !important;
         font-style: normal !important;
-        font-size: .68rem !important;
+        font-size: .64rem !important;
+        line-height: 1 !important;
         font-weight: 1000 !important;
-        text-align: right !important;
+        text-align: center !important;
       }
-      #rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em { color: #4ade80 !important; }
-      #rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em { color: #f87171 !important; }
+      #rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em { color: #bbf7d0 !important; background: rgba(22,101,52,.42) !important; border-color: rgba(34,197,94,.36) !important; }
+      #rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em { color: #fecaca !important; background: rgba(127,29,29,.46) !important; border-color: rgba(239,68,68,.38) !important; }
+      #rolling-excel-overlay .v847-shot-lines li.pending .v851-shot-line-meta em { color: #cbd5e1 !important; background: rgba(51,65,85,.48) !important; border-color: rgba(148,163,184,.30) !important; }
       #rolling-excel-overlay .v847-shot-footer {
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;

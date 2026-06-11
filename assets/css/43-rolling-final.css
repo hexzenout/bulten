@@ -11529,3 +11529,111 @@ select:-webkit-autofill {
   background: rgba(51,65,85,.48) !important;
   border: 1px solid rgba(148,163,184,.30) !important;
 }
+
+
+/* V907: Rozet hizalama, nötr maç satırı ve özet renk/boşluk düzeltmesi */
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b:not(.win):not(.loss):not(.pending),
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b:not(.win):not(.loss):not(.pending) {
+  color: #f8fafc !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.win,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.win {
+  color: #4ade80 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.loss,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.loss {
+  color: #f87171 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.pending,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.pending {
+  color: #e5e7eb !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-detail,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-detail {
+  margin-top: 7px !important;
+  padding-top: 7px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v904-bet-match-list,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v904-bet-match-list {
+  gap: 7px !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.win,
+#omega-rolling-feature-host .v904-bet-match-list li.loss,
+#omega-rolling-feature-host .v904-bet-match-list li.pending {
+  border-color: rgba(255,255,255,.10) !important;
+  background: rgba(15,23,42,.72) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li em,
+#omega-rolling-feature-host .v904-bet-match-list li.win em,
+#omega-rolling-feature-host .v904-bet-match-list li.loss em,
+#omega-rolling-feature-host .v904-bet-match-list li.pending em {
+  width: 74px !important;
+  min-width: 74px !important;
+  max-width: 74px !important;
+  height: 24px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 8px !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  text-align: center !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.win em {
+  color: #bbf7d0 !important;
+  background: rgba(22,101,52,.50) !important;
+  border: 1px solid rgba(34,197,94,.38) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.loss em {
+  color: #fecaca !important;
+  background: rgba(127,29,29,.54) !important;
+  border: 1px solid rgba(239,68,68,.40) !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.pending em {
+  color: #cbd5e1 !important;
+  background: rgba(51,65,85,.50) !important;
+  border: 1px solid rgba(148,163,184,.30) !important;
+  letter-spacing: 0 !important;
+}
+#rolling-excel-overlay .v847-shot-lines li.win,
+#rolling-excel-overlay .v847-shot-lines li.loss,
+#rolling-excel-overlay .v847-shot-lines li.pending {
+  border-color: rgba(51,65,85,.85) !important;
+  background: rgba(15,23,42,.86) !important;
+}
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em,
+#rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em,
+#rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em,
+#rolling-excel-overlay .v847-shot-lines li.pending .v851-shot-line-meta em {
+  width: 74px !important;
+  min-width: 74px !important;
+  max-width: 74px !important;
+  height: 24px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 8px !important;
+  border-radius: 999px !important;
+  font-size: .64rem !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+  text-align: center !important;
+}
+#rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em {
+  color: #bbf7d0 !important;
+  background: rgba(22,101,52,.42) !important;
+  border: 1px solid rgba(34,197,94,.36) !important;
+}
+#rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em {
+  color: #fecaca !important;
+  background: rgba(127,29,29,.46) !important;
+  border: 1px solid rgba(239,68,68,.38) !important;
+}
+#rolling-excel-overlay .v847-shot-lines li.pending .v851-shot-line-meta em {
+  color: #cbd5e1 !important;
+  background: rgba(51,65,85,.48) !important;
+  border: 1px solid rgba(148,163,184,.30) !important;
+}
