@@ -11705,3 +11705,34 @@ select:-webkit-autofill {
 #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
   flex: 0 0 auto !important;
 }
+
+
+/* V910: Aktif/Geçmiş özet değer renklerini en son katmanda kesinleştir */
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v910-odds,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-odds,
+#omega-rolling-feature-host .v903-bet-summary b.v910-odds {
+  color: #fbbf24 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v910-kind-single,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-kind-single,
+#omega-rolling-feature-host .v903-bet-summary b.v910-kind-single {
+  color: #38bdf8 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v910-kind-combo,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-kind-combo,
+#omega-rolling-feature-host .v903-bet-summary b.v910-kind-combo {
+  color: #c084fc !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-gain-win,
+#omega-rolling-feature-host .v903-bet-summary b.v910-gain-win {
+  color: #4ade80 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v910-status-pending {
+  color: #fb923c !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-status-win {
+  color: #4ade80 !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-status-loss {
+  color: #f87171 !important;
+}

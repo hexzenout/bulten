@@ -299,11 +299,11 @@
 
 
 
-  // V909: Aktif/Geçmiş özet renklerini ve çıktı satır kırılımını kesin uygula.
-  (function v909EnsureSummaryAndShotCss(){
-    if (document.getElementById("v909-summary-shot-css")) return;
+  // V910: Aktif/Geçmiş özet renklerini inline ve güçlü sınıflarla kesin uygula.
+  (function v910EnsureSummaryAndShotCss(){
+    if (document.getElementById("v910-summary-shot-css")) return;
     const style = document.createElement("style");
-    style.id = "v909-summary-shot-css";
+    style.id = "v910-summary-shot-css";
     style.textContent = `
       #omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v908-odds,
       #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-odds {
@@ -325,6 +325,27 @@
       }
       #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.pending {
         color: #e5e7eb !important;
+      }
+      #omega-rolling-feature-host .v903-bet-summary b.v910-odds {
+        color: #fbbf24 !important;
+      }
+      #omega-rolling-feature-host .v903-bet-summary b.v910-kind-single {
+        color: #38bdf8 !important;
+      }
+      #omega-rolling-feature-host .v903-bet-summary b.v910-kind-combo {
+        color: #c084fc !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-gain-win {
+        color: #4ade80 !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v910-status-pending {
+        color: #fb923c !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-status-win {
+        color: #4ade80 !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-status-loss {
+        color: #f87171 !important;
       }
       #rolling-excel-overlay .v847-shot-lines li,
       #rolling-excel-overlay .v847-shot-lines span {
@@ -907,16 +928,19 @@
     const stakeLabel = v768Money(row.stake);
     const winLabel = Number(row.possible || 0) ? v768Money(row.possible) : "-";
     const kindLabel = v903BetKindLabel(row);
-    const kindClass = kindLabel === "Kombine" ? "v908-kind-combo" : "v908-kind-single";
-    const gainClass = isHistory && isWin ? "v908-gain-win" : "v908-gain";
-    const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b class="${gainClass}">${winLabel}</b></span>`;
+    const kindClass = kindLabel === "Kombine" ? "v908-kind-combo v910-kind-combo" : "v908-kind-single v910-kind-single";
+    const kindColor = kindLabel === "Kombine" ? "#c084fc" : "#38bdf8";
+    const gainClass = isHistory && isWin ? "v908-gain-win v910-gain-win" : "v908-gain v910-gain";
+    const gainStyle = isHistory && isWin ? "color:#4ade80 !important;" : "color:#f8fafc !important;";
+    const statusColor = statusClass === "win" ? "#4ade80" : statusClass === "loss" ? "#f87171" : "#fb923c";
+    const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b class="${gainClass}" style="${gainStyle}">${winLabel}</b></span>`;
     return `<button type="button" class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false">
       <strong>${stamp} - Gün ${row.day} · Bahis ${row.slot + 1}</strong>
-      <span><small>Tip:</small><b class="${kindClass}">${kindLabel}</b></span>
-      <span><small>Oran:</small><b class="v908-odds">${oddsLabel}</b></span>
+      <span><small>Tip:</small><b class="${kindClass}" style="color:${kindColor} !important;">${kindLabel}</b></span>
+      <span><small>Oran:</small><b class="v908-odds v910-odds" style="color:#fbbf24 !important;">${oddsLabel}</b></span>
       <span><small>Bahis Tutarı:</small><b>${stakeLabel}</b></span>
       ${gainLine}
-      <span><small>Durum:</small><b class="${statusClass}">${statusLabel}</b></span>
+      <span><small>Durum:</small><b class="${statusClass} v910-status-${statusClass}" style="color:${statusColor} !important;">${statusLabel}</b></span>
     </button>`;
   }
 
