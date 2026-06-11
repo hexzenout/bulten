@@ -952,23 +952,22 @@
   }
 
   function v898WarnStakeInput(stakeInput) {
-    if (!stakeInput) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Bir tutar gir");
-      return;
-    }
-    stakeInput.placeholder = "Bir tutar gir";
+    const message = "Bir tutar gir";
+    if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(message);
+    if (!stakeInput) return;
     try {
-      stakeInput.setCustomValidity("Bir tutar gir");
+      // Placeholder/etiket değişmez; eski davranış gibi uyarı doğrudan tutar inputu üzerinde gösterilir.
+      stakeInput.setCustomValidity(message);
       stakeInput.reportValidity();
       const clear = () => {
         stakeInput.setCustomValidity("");
         stakeInput.removeEventListener("input", clear);
-        if (!String(stakeInput.value || "").trim()) stakeInput.placeholder = "Tutar";
       };
       stakeInput.addEventListener("input", clear);
-    } catch(e) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast("Bir tutar gir");
-    }
+      setTimeout(() => {
+        try { stakeInput.setCustomValidity(""); } catch(e) {}
+      }, 2200);
+    } catch(e) {}
     try { stakeInput.focus(); } catch(e) {}
   }
 
