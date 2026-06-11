@@ -11455,3 +11455,77 @@ select:-webkit-autofill {
 #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-accordion-card:not(.is-open) .v903-bet-detail {
   display: none !important;
 }
+
+
+/* V906: Aktif/Geçmiş kart boyu eşitleme + çizgi rozeti + screenshot rozet uyumu */
+#omega-rolling-feature-host .v768-feature-modal.bet.active,
+#omega-rolling-feature-host .v768-feature-modal.bet.history {
+  width: min(528px, 96vw) !important;
+  max-width: 528px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v768-feature-body,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v768-feature-body {
+  gap: 10px !important;
+  padding: 14px 16px 18px !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-accordion-card,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-accordion-card {
+  padding: 10px !important;
+  contain: layout paint !important;
+}
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary {
+  padding: 13px 14px !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li em,
+#omega-rolling-feature-host .v904-bet-match-list li.pending em {
+  min-width: 66px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px 8px !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+#omega-rolling-feature-host .v904-bet-match-list li.pending em {
+  color: #cbd5e1 !important;
+  background: rgba(51,65,85,.50) !important;
+  border: 1px solid rgba(148,163,184,.30) !important;
+  letter-spacing: 0 !important;
+}
+@media (max-width: 720px) {
+  #omega-rolling-feature-host .v768-feature-modal.bet.active,
+  #omega-rolling-feature-host .v768-feature-modal.bet.history {
+    width: min(528px, 96vw) !important;
+    max-width: 96vw !important;
+  }
+}
+
+#rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta em {
+  min-width: 74px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  font-size: .64rem !important;
+  line-height: 1 !important;
+}
+#rolling-excel-overlay .v847-shot-lines li.win .v851-shot-line-meta em {
+  color: #bbf7d0 !important;
+  background: rgba(22,101,52,.42) !important;
+  border: 1px solid rgba(34,197,94,.36) !important;
+}
+#rolling-excel-overlay .v847-shot-lines li.loss .v851-shot-line-meta em {
+  color: #fecaca !important;
+  background: rgba(127,29,29,.46) !important;
+  border: 1px solid rgba(239,68,68,.38) !important;
+}
+#rolling-excel-overlay .v847-shot-lines li.pending .v851-shot-line-meta em {
+  color: #cbd5e1 !important;
+  background: rgba(51,65,85,.48) !important;
+  border: 1px solid rgba(148,163,184,.30) !important;
+}

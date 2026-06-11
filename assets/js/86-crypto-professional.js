@@ -879,7 +879,7 @@
 
 
   function v847BetLegStatusLabel(status) {
-    return status === "loss" ? "KAYBETTİ" : status === "win" ? "KAZANDI" : "BEKLİYOR";
+    return status === "loss" ? "KAYBETTİ" : status === "win" ? "KAZANDI" : "────────";
   }
 
   function v847BetLegStatusClass(status) {
@@ -1372,6 +1372,11 @@
     const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || pending?.amt || savedOp?.amt || 0);
     const combo = v763ComboRows(day, slot);
     const savedCombo = Array.isArray(pending?.combo) ? pending.combo : Array.isArray(savedOp?.combo) ? savedOp.combo : [];
+    const rawResults = Array.isArray(savedOp?.comboResults)
+      ? savedOp.comboResults
+      : Array.isArray(pending?.comboResults)
+        ? pending.comboResults
+        : [];
     const rows = [];
     if (baseNote || baseOdds) rows.push({ note: baseNote || "Maç", odds: baseOdds });
     const comboSource = combo.length ? combo : savedCombo;
@@ -1380,10 +1385,15 @@
       const odds = Number(row.odds || 0);
       if (note || odds) rows.push({ note: note || "Maç", odds });
     });
+    rows.forEach((row, idx) => {
+      let status = rawResults[idx] === "loss" ? "loss" : rawResults[idx] === "win" ? "win" : "";
+      if (!status && savedOp && rows.length <= 1) status = savedOp.res === "loss" ? "loss" : savedOp.res === "win" ? "win" : "";
+      row.status = status || "pending";
+    });
     const oddsList = rows.map(r => Number(r.odds || 0)).filter(v => v > 0);
     const totalOdds = oddsList.length ? oddsList.reduce((acc, val) => acc * val, 1) : 0;
     const possible = stake && totalOdds ? stake * totalOdds : 0;
-    return { rows, stake, totalOdds, possible };
+    return { rows, stake, totalOdds, possible, result: savedOp?.res || "pending" };
   }
 
   function v776BuildSlotPhotoSvg(day, slot) {
@@ -1397,7 +1407,12 @@
     const possibleLabel = data.possible ? v768Money(data.possible) : "-";
     const rowHtml = data.rows.map((row, idx) => {
       const y = 150 + idx * 48;
-      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="19" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text><text x="830" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="19" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text>`;
+      const status = row.status === "loss" ? "loss" : row.status === "win" ? "win" : "pending";
+      const statusText = v904BetMatchStatusLabel(status);
+      const statusFill = status === "win" ? "#bbf7d0" : status === "loss" ? "#fecaca" : "#cbd5e1";
+      const statusStroke = status === "win" ? "#22c55e" : status === "loss" ? "#ef4444" : "#64748b";
+      const statusBg = status === "win" ? "#14532d" : status === "loss" ? "#7f1d1d" : "#334155";
+      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="800">${safe(row.note || 'Maç')}</text><text x="682" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text><rect x="710" y="${y - 25}" width="128" height="30" rx="15" fill="${statusBg}" stroke="${statusStroke}"/><text x="774" y="${y - 5}" text-anchor="middle" fill="${statusFill}" font-size="14" font-family="Arial" font-weight="900">${safe(statusText)}</text>`;
     }).join('');
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
