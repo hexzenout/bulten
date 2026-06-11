@@ -297,6 +297,53 @@
     document.head.appendChild(style);
   })();
 
+
+
+  // V909: Aktif/Geçmiş özet renklerini ve çıktı satır kırılımını kesin uygula.
+  (function v909EnsureSummaryAndShotCss(){
+    if (document.getElementById("v909-summary-shot-css")) return;
+    const style = document.createElement("style");
+    style.id = "v909-summary-shot-css";
+    style.textContent = `
+      #omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v908-odds,
+      #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-odds {
+        color: #fbbf24 !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v908-kind-single,
+      #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-kind-single {
+        color: #38bdf8 !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.v908-kind-combo,
+      #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-kind-combo {
+        color: #c084fc !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v908-gain-win {
+        color: #4ade80 !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary b.pending {
+        color: #fb923c !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.pending {
+        color: #e5e7eb !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines li,
+      #rolling-excel-overlay .v847-shot-lines span {
+        min-width: 0 !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines span {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+      }
+      #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
+        flex: 0 0 auto !important;
+      }
+    `;
+    document.head.appendChild(style);
+  })();
+
   function getSoundSettings() {
     try {
       return {
@@ -1420,25 +1467,56 @@
     return { rows, stake, totalOdds, possible, result: savedOp?.res || "pending" };
   }
 
+  function v909SvgTextLines(value, maxChars) {
+    const text = String(value || "").replace(/\s+/g, " ").trim();
+    const limit = Math.max(18, Number(maxChars || 0) || 44);
+    if (!text) return [""];
+    const words = text.split(" ");
+    const lines = [];
+    let current = "";
+    words.forEach(word => {
+      const next = current ? `${current} ${word}` : word;
+      if (next.length > limit && current) {
+        lines.push(current);
+        current = word;
+      } else if (word.length > limit) {
+        if (current) lines.push(current);
+        for (let i = 0; i < word.length; i += limit) lines.push(word.slice(i, i + limit));
+        current = "";
+      } else {
+        current = next;
+      }
+    });
+    if (current) lines.push(current);
+    return lines.slice(0, 4);
+  }
+
   function v776BuildSlotPhotoSvg(day, slot) {
     const data = v776SlotPhotoRows(day, slot);
     if (!data.rows.length) return null;
     const safe = v763EscapeHtml;
-    const footerY = 150 + data.rows.length * 48 + 40;
-    const footerH = 130;
-    const height = Math.max(520, footerY + footerH + 46);
     const totalOddsLabel = data.totalOdds ? data.totalOdds.toFixed(2) : "-";
     const possibleLabel = data.possible ? v768Money(data.possible) : "-";
-    const rowHtml = data.rows.map((row, idx) => {
-      const y = 150 + idx * 48;
+    let y = 150;
+    const rowParts = [];
+    data.rows.forEach((row, idx) => {
       const status = row.status === "loss" ? "loss" : row.status === "win" ? "win" : "pending";
       const statusText = v904BetMatchStatusLabel(status);
       const statusFill = status === "win" ? "#bbf7d0" : status === "loss" ? "#fecaca" : "#cbd5e1";
       const statusStroke = status === "win" ? "#22c55e" : status === "loss" ? "#ef4444" : "#64748b";
       const statusBg = status === "win" ? "#14532d" : status === "loss" ? "#7f1d1d" : "#334155";
-      const safeNote = safe(`${idx + 1}. ${v908CompactText(row.note || 'Maç', 42)}`);
-      return `<rect x="42" y="${y - 28}" width="816" height="38" rx="12" fill="#0f172a" stroke="#334155"/><text x="64" y="${y - 3}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="800">${safeNote}</text><text x="682" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text><rect x="710" y="${y - 25}" width="128" height="30" rx="15" fill="${statusBg}" stroke="${statusStroke}"/><text x="774" y="${y - 5}" text-anchor="middle" fill="${statusFill}" font-size="14" font-family="Arial" font-weight="900">${safe(statusText)}</text>`;
-    }).join('');
+      const lines = v909SvgTextLines(`${idx + 1}. ${row.note || "Maç"}`, 42);
+      const lineHeight = 22;
+      const rectH = Math.max(42, 18 + (lines.length * lineHeight));
+      const textY = y - 3;
+      const noteText = `<text x="64" y="${textY}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="800">${lines.map((line, lineIdx) => `<tspan x="64" dy="${lineIdx === 0 ? 0 : lineHeight}">${safe(line)}</tspan>`).join("")}</text>`;
+      rowParts.push(`<rect x="42" y="${y - 28}" width="816" height="${rectH}" rx="12" fill="#0f172a" stroke="#334155"/>${noteText}<text x="682" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text><rect x="710" y="${y - 25}" width="128" height="30" rx="15" fill="${statusBg}" stroke="${statusStroke}"/><text x="774" y="${y - 5}" text-anchor="middle" fill="${statusFill}" font-size="14" font-family="Arial" font-weight="900">${safe(statusText)}</text>`);
+      y += rectH + 10;
+    });
+    const rowHtml = rowParts.join('');
+    const footerY = y + 22;
+    const footerH = 130;
+    const height = Math.max(520, footerY + footerH + 46);
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
