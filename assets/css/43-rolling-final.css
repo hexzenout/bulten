@@ -11831,3 +11831,21 @@ select:-webkit-autofill {
 #omega-rolling-feature-host .v912-history-card-camera {
   display: none !important;
 }
+
+/* V924: Kamera fotoğraf ön izlemesi Aktif/Geçmiş panelinin arkasında kalmasın */
+#omega-rolling-photo-host {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1003000 !important;
+  pointer-events: none !important;
+}
+#omega-rolling-photo-host .v776-photo-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1003001 !important;
+  pointer-events: auto !important;
+}
+#omega-rolling-photo-host .v776-photo-modal {
+  position: relative !important;
+  z-index: 1003002 !important;
+}

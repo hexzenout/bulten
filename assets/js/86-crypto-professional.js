@@ -1622,6 +1622,11 @@
       host.id = "omega-rolling-photo-host";
       document.body.appendChild(host);
     }
+    // V924: Fotoğraf ön izlemesi Aktif Bahisleri Görüntüle / Geçmiş panelinin arkasında kalmasın.
+    host.style.position = "fixed";
+    host.style.inset = "0";
+    host.style.zIndex = "1003000";
+    host.style.pointerEvents = "none";
     return host;
   }
 
