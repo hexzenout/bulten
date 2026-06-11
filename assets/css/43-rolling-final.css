@@ -11736,3 +11736,11 @@ select:-webkit-autofill {
 #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-status-loss {
   color: #f87171 !important;
 }
+
+
+/* V911: Aktif/Geçmiş başlığında Gün/Bahis kısmı sarı */
+#omega-rolling-feature-host .v903-bet-summary .v911-summary-bet-ref,
+#omega-rolling-feature-host .v768-feature-modal.bet.active .v903-bet-summary .v911-summary-bet-ref,
+#omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary .v911-summary-bet-ref {
+  color: #fbbf24 !important;
+}

@@ -347,6 +347,9 @@
       #omega-rolling-feature-host .v768-feature-modal.bet.history .v903-bet-summary b.v910-status-loss {
         color: #f87171 !important;
       }
+      #omega-rolling-feature-host .v903-bet-summary .v911-summary-bet-ref {
+        color: #fbbf24 !important;
+      }
       #rolling-excel-overlay .v847-shot-lines li,
       #rolling-excel-overlay .v847-shot-lines span {
         min-width: 0 !important;
@@ -935,7 +938,7 @@
     const statusColor = statusClass === "win" ? "#4ade80" : statusClass === "loss" ? "#f87171" : "#fb923c";
     const gainLine = isLoss ? "" : `<span><small>Kazanç:</small><b class="${gainClass}" style="${gainStyle}">${winLabel}</b></span>`;
     return `<button type="button" class="v903-bet-summary" data-v903-accordion-toggle aria-expanded="false">
-      <strong>${stamp} - Gün ${row.day} · Bahis ${row.slot + 1}</strong>
+      <strong><span class="v911-summary-date">${stamp}</span><span class="v911-summary-bet-ref" style="color:#fbbf24 !important;"> - Gün ${row.day} · Bahis ${row.slot + 1}</span></strong>
       <span><small>Tip:</small><b class="${kindClass}" style="color:${kindColor} !important;">${kindLabel}</b></span>
       <span><small>Oran:</small><b class="v908-odds v910-odds" style="color:#fbbf24 !important;">${oddsLabel}</b></span>
       <span><small>Bahis Tutarı:</small><b>${stakeLabel}</b></span>
