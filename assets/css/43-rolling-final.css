@@ -9707,26 +9707,31 @@ html textarea:-webkit-autofill::first-line {
 }
 
 /* V850: Sonuç fotoğrafı ön izleme modalı */
-#omega-rolling-feature-host .v850-result-photo-modal {
+#omega-rolling-feature-host .v850-result-photo-modal,
+#omega-rolling-photo-host .v850-result-photo-modal {
   max-width: min(94vw, 980px) !important;
 }
 
-#omega-rolling-feature-host .v850-result-photo-head b {
+#omega-rolling-feature-host .v850-result-photo-head b,
+#omega-rolling-photo-host .v850-result-photo-head b {
   color: #fbbf24 !important;
   font-size: 1rem !important;
   letter-spacing: .03em !important;
 }
 
-#omega-rolling-feature-host .v850-result-photo-head span {
+#omega-rolling-feature-host .v850-result-photo-head span,
+#omega-rolling-photo-host .v850-result-photo-head span {
   color: #bfdbfe !important;
   font-weight: 900 !important;
 }
 
-#omega-rolling-feature-host .v850-result-photo-actions {
+#omega-rolling-feature-host .v850-result-photo-actions,
+#omega-rolling-photo-host .v850-result-photo-actions {
   justify-content: flex-start !important;
 }
 
-#omega-rolling-feature-host .v850-result-photo-actions button {
+#omega-rolling-feature-host .v850-result-photo-actions button,
+#omega-rolling-photo-host .v850-result-photo-actions button {
   display: inline-flex !important;
   align-items: center !important;
   gap: 7px !important;

@@ -1564,7 +1564,8 @@
     const rowHtml = rowParts.join('');
     const footerY = y + 22;
     const footerH = 130;
-    const height = Math.max(520, footerY + footerH + 46);
+    const compactMinHeight = data.rows.length <= 1 ? 400 : 520;
+    const height = Math.max(compactMinHeight, footerY + footerH + 46);
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${height}" viewBox="0 0 900 ${height}"><rect width="900" height="${height}" fill="#020617"/><rect x="22" y="22" width="856" height="${height-44}" rx="24" fill="#0b1120" stroke="#fbbf24" stroke-width="2"/><text x="42" y="76" fill="#fbbf24" font-size="28" font-family="Arial" font-weight="900">BAHİS ${_ACTIVE_EXCEL_DAYS} GÜNLÜK ROLLING</text><text x="42" y="112" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="800">GÜN ${day} · BAHİS ${slot + 1}</text>${rowHtml}<rect x="42" y="${footerY}" width="816" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/><text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Toplam Oran:</text><text x="836" y="${footerY + 34}" text-anchor="end" fill="#fbbf24" font-size="20" font-family="Arial" font-weight="900">${totalOddsLabel}</text><text x="64" y="${footerY + 70}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text><text x="836" y="${footerY + 70}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${v768Money(data.stake)}</text><text x="64" y="${footerY + 106}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Tahmini Kazanç:</text><text x="836" y="${footerY + 106}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${possibleLabel}</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
@@ -1614,6 +1615,16 @@
     img.src = svgUri;
   }
 
+  function v923GetRollingPhotoHost() {
+    let host = document.getElementById("omega-rolling-photo-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-rolling-photo-host";
+      document.body.appendChild(host);
+    }
+    return host;
+  }
+
   window.omega_RollingSlotPhoto = function(day, slot) {
     v774SavePendingSlot(day, slot);
     const uri = v776BuildSlotPhotoSvg(day, slot);
@@ -1622,12 +1633,7 @@
       else alert("Önce maç ve oran yaz.");
       return false;
     }
-    let host = document.getElementById("omega-rolling-feature-host");
-    if (!host) {
-      host = document.createElement("div");
-      host.id = "omega-rolling-feature-host";
-      document.body.appendChild(host);
-    }
+    const host = v923GetRollingPhotoHost();
     host.innerHTML = `<div class="v776-photo-overlay" data-v776-photo-close><section class="v776-photo-modal"><div class="v776-photo-head"><div><b>Kupon Fotoğrafı</b><span>Gün ${day} · Bahis ${slot + 1}</span></div><button type="button" data-v776-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v777-photo-download>Resmi İndir</button></div><img src="${uri}" alt="Kupon fotoğrafı"></section></div>`;
     host.style.display = "block";
     host.querySelectorAll("[data-v776-photo-close]").forEach(el => el.addEventListener("click", event => {
@@ -2026,12 +2032,7 @@
       else alert("Sonuç fotoğrafı hazırlanamadı.");
       return false;
     }
-    let host = document.getElementById("omega-rolling-feature-host");
-    if (!host) {
-      host = document.createElement("div");
-      host.id = "omega-rolling-feature-host";
-      document.body.appendChild(host);
-    }
+    const host = v923GetRollingPhotoHost();
     host.innerHTML = `<div class="v776-photo-overlay v850-result-photo-overlay" data-v776-photo-close>
       <section class="v776-photo-modal v850-result-photo-modal">
         <div class="v776-photo-head v850-result-photo-head">
