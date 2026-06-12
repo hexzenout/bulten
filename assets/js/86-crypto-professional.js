@@ -1133,6 +1133,19 @@
         opacity: 1 !important;
       }
 
+      /* V944: Sadece Stop/Liq sıralama renkleri ve kripto geri dönüş butonu */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .stop-amount b,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.stop-amount b {
+        color: #38bdf8 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .liq-amount b,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.liq-amount b {
+        color: #a78bfa !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v944-crypto-result-toolbar {
+        justify-content: flex-start !important;
+      }
+
       #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear {
         display: inline-flex !important;
         align-items: center !important;
@@ -2208,10 +2221,10 @@
         <span class="entry">Giriş: <b>${v763EscapeHtml(data.meta.entry || "-")}</b></span>
         <span class="lev">Kaldıraç: <b>${v763EscapeHtml(data.meta.leverage || "-")}</b></span>
         ${tpHtml}
-        <span class="liq v941-action-line">Liq: <b>${v763EscapeHtml(data.meta.liq || "-")}</b>${actionBtn("liq", 1, "minus")}</span>
-        <span class="liq-amount">Liq Miktarı: <b>${v942FormatPlainDollar(data.meta.liqAmount)}</b></span>
         <span class="stop v941-action-line">Stop: <b>${v763EscapeHtml(data.meta.stop || "-")}</b>${actionBtn("stop", 1, "minus")}</span>
         <span class="stop-amount">Stop Miktarı: <b>${v942FormatPlainDollar(data.meta.stopAmount)}</b></span>
+        <span class="liq v941-action-line">Liq: <b>${v763EscapeHtml(data.meta.liq || "-")}</b>${actionBtn("liq", 1, "minus")}</span>
+        <span class="liq-amount">Liq Miktarı: <b>${v942FormatPlainDollar(data.meta.liqAmount)}</b></span>
       </div>`;
     box.classList.add("is-visible");
   }
@@ -2275,7 +2288,9 @@
     const coinLabel = v927DisplayValue(meta.coin || op?.note || "İşlem");
     const hasCoinLabel = String(meta.coin || op?.note || "").trim();
     return `<div class="kapsul v32 ${finalStatus} v927-crypto-result ${finalStatus}">
-      <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
+      <div class="v850-shot-toolbar v944-crypto-result-toolbar">
+        <button type="button" class="v847-shot-back v850-shot-return" onclick="return omega_ReturnCryptoExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
+      </div>
       <div class="v927-crypto-result-head">
         <div class="v927-crypto-title-row"><b>Gün ${day} · İşlem ${slot + 1}</b><span class="v927-crypto-status ${finalStatus}">${statusLabel}</span></div>
       </div>
@@ -2295,10 +2310,10 @@
             return v927RenderCryptoMetric(`TP${idx + 1}`, v927DisplayValue(tp)) + v927RenderCryptoMetric(`TP${idx + 1} Kâr`, profit ? `<span class="pos">${v942FormatPlainDollar(profit)}</span>` : "-", "tp-profit");
           }).join("");
         })()}
-        ${v927RenderCryptoMetric("Liq", v927DisplayValue(meta.liq), "liq")}
-        ${v927RenderCryptoMetric("Liq Miktarı", v942FormatPlainDollar(meta.liqAmount), "liq-amount")}
         ${v927RenderCryptoMetric("Stop", v927DisplayValue(meta.stop), "stop")}
         ${v927RenderCryptoMetric("Stop Miktarı", v942FormatPlainDollar(meta.stopAmount), "stop-amount")}
+        ${v927RenderCryptoMetric("Liq", v927DisplayValue(meta.liq), "liq")}
+        ${v927RenderCryptoMetric("Liq Miktarı", v942FormatPlainDollar(meta.liqAmount), "liq-amount")}
         ${v927RenderCryptoMetric("Durum", statusLabel, finalStatus)}
       </div>
     </div>`;
@@ -3628,10 +3643,10 @@
                     <input type="text" data-v927-crypto-entry="${day}:${slot}" placeholder="Giriş">
                     <input type="text" data-v927-crypto-leverage="${day}:${slot}" placeholder="Kaldıraç">
                     <div class="v932-crypto-tp-list" data-v932-crypto-tp-list="${day}:${slot}">${v938CryptoTpPairMarkup(day, slot, 1)}</div>
-                    <input type="text" data-v927-crypto-liq="${day}:${slot}" placeholder="Liq">
-                    <input type="text" data-v927-crypto-liq-amount="${day}:${slot}" placeholder="Liq Miktarı">
                     <input type="text" data-v927-crypto-stop="${day}:${slot}" placeholder="Stop">
                     <input type="text" data-v927-crypto-stop-amount="${day}:${slot}" placeholder="Stop Miktarı">
+                    <input type="text" data-v927-crypto-liq="${day}:${slot}" placeholder="Liq">
+                    <input type="text" data-v927-crypto-liq-amount="${day}:${slot}" placeholder="Liq Miktarı">
                   </div>
                   <div class="v937-crypto-preview" data-v937-crypto-preview="${day}:${slot}"></div>
                 </div>
@@ -3723,6 +3738,63 @@
     if (currentPlan.pending?.[day]) currentPlan.pending[day][slot] = null;
     omega_SaveRollingDB();
     omega_RenderExcelTable();
+    return false;
+  };
+
+  function v944FillCryptoReturnedOp(day, slot, op) {
+    try {
+      const meta = v927CryptoMetaFromOp(op || {});
+      const noteInput = document.getElementById(`e-n-${day}-${slot}`);
+      const stakeInput = document.getElementById(`e-a-${day}-${slot}`);
+      const totalPlInput = document.getElementById(`e-o-${day}-${slot}`);
+      if (noteInput) noteInput.value = String(op?.note || "");
+      if (stakeInput) stakeInput.value = op?.amt === "" || op?.amt == null ? "" : String(op.amt);
+      if (totalPlInput) {
+        const pl = Number(op?.odds || 0);
+        totalPlInput.value = Number.isFinite(pl) && pl !== 0 ? v941FormatSignedMoney(pl) : "";
+        totalPlInput.dataset.v941PlNumber = String(Number.isFinite(pl) ? pl : 0);
+        totalPlInput.classList.toggle("pos", Number.isFinite(pl) && pl >= 0 && pl !== 0);
+        totalPlInput.classList.toggle("neg", Number.isFinite(pl) && pl < 0);
+      }
+      v937SetCryptoSide(day, slot, meta.side);
+      const setField = (key, value) => {
+        const rawKey = String(key || "");
+        const kebabKey = rawKey.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+        const el = document.querySelector(`[data-v927-crypto-${rawKey}="${day}:${slot}"]`) || document.querySelector(`[data-v927-crypto-${kebabKey}="${day}:${slot}"]`);
+        if (el) el.value = String(value || "");
+      };
+      setField("entry", meta.entry);
+      setField("leverage", meta.leverage);
+      setField("stop", meta.stop);
+      setField("stopAmount", meta.stopAmount);
+      setField("liq", meta.liq);
+      setField("liqAmount", meta.liqAmount);
+      const list = document.querySelector(`[data-v932-crypto-tp-list="${day}:${slot}"]`);
+      if (list) {
+        const tps = Array.isArray(meta.tps) && meta.tps.length ? meta.tps : [""];
+        const profits = Array.isArray(meta.tpProfits) ? meta.tpProfits : [];
+        const rows = Math.max(tps.length, profits.length, 1);
+        list.innerHTML = Array.from({ length: rows }, (_, idx) => v938CryptoTpPairMarkup(day, slot, idx + 1, tps[idx] || "", profits[idx] || "")).join("");
+      }
+      try { delete (window.V941_CRYPTO_PL_ADJUST || {})[v941CryptoKey(day, slot)]; } catch(e) {}
+      v937RenderCryptoPreview(day, slot);
+      setTimeout(() => noteInput?.focus(), 20);
+    } catch(e) {}
+  }
+
+  window.omega_ReturnCryptoExcelOp = function(event, day, slot) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    const currentPlan = ensureRollingPlan();
+    const op = currentPlan.ops?.[day]?.[slot];
+    if (!op) return false;
+    const savedOp = JSON.parse(JSON.stringify(op));
+    if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    currentPlan.ops[day][slot] = null;
+    omega_SaveRollingDB();
+    omega_RenderExcelTable();
+    setTimeout(() => v944FillCryptoReturnedOp(day, slot, savedOp), 30);
     return false;
   };
 
