@@ -429,12 +429,8 @@
         box-shadow:0 0 14px rgba(251,191,36,.18);
       }
       #omega-rolling-feature-host .v929-history-date-open::before {
-        content:"";
-        width:8px;
-        height:8px;
-        border-radius:999px;
-        background:#fbbf24;
-        box-shadow:0 0 10px rgba(251,191,36,.45);
+        display:none !important;
+        content:none !important;
       }
       #omega-rolling-feature-host .v929-history-date-panel {
         position:absolute;
@@ -505,13 +501,14 @@
       }
       #omega-rolling-feature-host .v768-feature-modal.crypto.active,
       #omega-rolling-feature-host .v768-feature-modal.crypto.history {
-        width:min(880px, 96vw) !important;
-        max-height:88vh !important;
+        width:min(528px, 96vw) !important;
+        max-width:528px !important;
+        max-height:86vh !important;
       }
       #omega-rolling-feature-host .v768-feature-modal.crypto.active .v768-feature-body,
       #omega-rolling-feature-host .v768-feature-modal.crypto.history .v768-feature-body {
-        gap:14px !important;
-        padding:18px !important;
+        gap:10px !important;
+        padding:14px 16px 18px !important;
       }
       #omega-rolling-feature-host .v768-feature-modal.bet.active,
       #omega-rolling-feature-host .v768-feature-modal.bet.history,
@@ -1399,10 +1396,10 @@
     return `${d.getDate()} ${months[d.getMonth()] || ""} ${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
 
-  const V928_HISTORY_MIN_DATE = "2026-06-01";
+  const V928_HISTORY_MIN_DATE = "2026-05-01";
 
   function v928HistoryMinTime() {
-    return new Date(2026, 5, 1).getTime();
+    return new Date(2026, 4, 1).getTime();
   }
 
   function v928ClampHistoryDate(value) {
@@ -1524,27 +1521,28 @@
 
   function v929BuildDatePanelHtml(mode, manual) {
     const today = v929TodayYmdParts();
-    const safeManual = v928ClampHistoryDate(manual || "") || V928_HISTORY_MIN_DATE;
+    const todayValue = `${String(today.y).padStart(4,"0")}-${String(today.m).padStart(2,"0")}-${String(today.d).padStart(2,"0")}`;
+    const safeManual = v928ClampHistoryDate(manual || todayValue) || V928_HISTORY_MIN_DATE;
     const parts = safeManual.split("-").map(Number);
     let year = parts[0] || Math.max(2026, today.y);
-    let month = parts[1] || 6;
-    let day = parts[2] || 1;
+    let month = parts[1] || today.m || 5;
+    let day = parts[2] || today.d || 1;
     year = Math.min(Math.max(2026, year), Math.max(2026, today.y));
-    month = Math.min(Math.max(year === 2026 ? 6 : 1, month), year === today.y ? today.m : 12);
-    day = Math.min(Math.max(year === 2026 && month === 6 ? 1 : 1, day), year === today.y && month === today.m ? today.d : v929DaysInMonth(year, month));
+    month = Math.min(Math.max(year === 2026 ? 5 : 1, month), year === today.y ? today.m : 12);
+    day = Math.min(Math.max(year === 2026 && month === 5 ? 1 : 1, day), year === today.y && month === today.m ? today.d : v929DaysInMonth(year, month));
     const yearMax = Math.max(2026, today.y);
     const years = [];
     for (let y = yearMax; y >= 2026; y--) years.push(y);
-    const monthMin = year === 2026 ? 6 : 1;
+    const monthMin = year === 2026 ? 5 : 1;
     const monthMax = year === today.y ? today.m : 12;
     const months = [];
     for (let m = monthMin; m <= monthMax; m++) months.push(m);
-    const dayMin = year === 2026 && month === 6 ? 1 : 1;
+    const dayMin = year === 2026 && month === 5 ? 1 : 1;
     const dayMax = year === today.y && month === today.m ? today.d : v929DaysInMonth(year, month);
     const days = [];
     for (let d = dayMin; d <= dayMax; d++) days.push(d);
     return `<div class="v929-history-date-panel" data-v929-date-panel="${mode}" hidden>
-      <div class="v929-history-date-panel-head"><b>Tarih Seç</b><span>En erken 1 Haziran 2026</span></div>
+      <div class="v929-history-date-panel-head"><b>Tarih Seç</b></div>
       <div class="v929-date-grid">
         <label class="v929-date-field"><small>Yıl</small><select data-v929-date-year="${mode}">${years.map(y => `<option value="${y}" ${y === year ? "selected" : ""}>${y}</option>`).join("")}</select></label>
         <label class="v929-date-field"><small>Ay</small><select data-v929-date-month="${mode}">${months.map(m => `<option value="${m}" ${m === month ? "selected" : ""}>${v763EscapeHtml(v929MonthName(m))}</option>`).join("")}</select></label>
@@ -2525,6 +2523,9 @@
         v768OpenFeaturePanel(mode, "history");
         return;
       }
+      if (!event.target.closest || !event.target.closest("[data-v929-date-wrap]")) {
+        document.querySelectorAll("[data-v929-date-panel]").forEach(panel => { panel.hidden = true; });
+      }
     }, true);
     document.addEventListener("change", function(event) {
       const yearSelect = event.target && event.target.closest && event.target.closest("[data-v929-date-year]");
@@ -2540,14 +2541,14 @@
       let y = Number(ySel?.value || 2026);
       let m = Number(mSel?.value || 6);
       let d = Number(dSel?.value || 1);
-      const monthMin = y === 2026 ? 6 : 1;
+      const monthMin = y === 2026 ? 5 : 1;
       const monthMax = y === today.y ? today.m : 12;
       if (m < monthMin) m = monthMin;
       if (m > monthMax) m = monthMax;
       if (mSel) {
         mSel.innerHTML = Array.from({ length: monthMax - monthMin + 1 }, (_, i) => monthMin + i).map(mm => `<option value="${mm}" ${mm === m ? "selected" : ""}>${v929MonthName(mm)}</option>`).join("");
       }
-      const dayMin = y === 2026 && m === 6 ? 1 : 1;
+      const dayMin = y === 2026 && m === 5 ? 1 : 1;
       const dayMax = y === today.y && m === today.m ? today.d : v929DaysInMonth(y, m);
       if (d < dayMin) d = dayMin;
       if (d > dayMax) d = dayMax;
