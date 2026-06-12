@@ -1071,6 +1071,68 @@
         box-shadow: 0 0 0 1px rgba(251,191,36,.18), 0 0 15px rgba(251,191,36,.16) !important;
       }
 
+
+      /* V943: TP Kâr eş yeşil input + çıktı başlığı/renkleri */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list input[data-v927-crypto-tp],
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list input.v939-crypto-tp-profit,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list .v939-crypto-tp-profit {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 38px !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(34,197,94,.54) !important;
+        background: linear-gradient(180deg, rgba(6,78,59,.25), rgba(15,23,42,.88)) !important;
+        color: #bbf7d0 !important;
+        font: 900 12px/1.15 Inter,system-ui,sans-serif !important;
+        letter-spacing: .01em !important;
+        box-shadow: inset 0 0 0 1px rgba(34,197,94,.05) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list input[data-v927-crypto-tp]::placeholder,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list input.v939-crypto-tp-profit::placeholder,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list .v939-crypto-tp-profit::placeholder {
+        color: rgba(187,247,208,.86) !important;
+        opacity: 1 !important;
+        font-weight: 900 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v943-crypto-preview-title {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        margin: 0 0 8px !important;
+        color: #e5e7eb !important;
+        font: 950 12px/1.1 Inter,system-ui,sans-serif !important;
+        letter-spacing: .02em !important;
+        text-align: center !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v943-crypto-preview-title::before,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v943-crypto-preview-title::after {
+        content: "" !important;
+        flex: 1 1 0 !important;
+        height: 1px !important;
+        background: linear-gradient(90deg, transparent, rgba(148,163,184,.35), transparent) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v943-crypto-preview-title b {
+        color: #fbbf24 !important;
+        font-weight: 1000 !important;
+        max-width: 62% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .stake b,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.stake b {
+        color: #fbbf24 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .liq b,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.liq b {
+        color: #ef4444 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v941-pl-action.is-active {
+        outline: 2px solid rgba(255,255,255,.16) !important;
+        opacity: 1 !important;
+      }
+
       #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear {
         display: inline-flex !important;
         align-items: center !important;
@@ -1970,7 +2032,7 @@
     const safeProfit = v763EscapeHtml(String(profit || ""));
     return `<div class="v938-crypto-tp-pair" data-v938-crypto-tp-pair="${day}:${slot}:${index}">
       <input type="text" data-v927-crypto-tp="${day}:${slot}" data-v927-tp-index="${index}" placeholder="TP${index}" value="${safeValue}">
-      <input type="text" class="v939-crypto-tp-profit" data-v939-crypto-tp-profit="${day}:${slot}" data-v939-tp-profit-index="${index}" placeholder="TP${index} Kâr" value="${safeProfit}">
+      <input type="text" class="v939-crypto-tp-profit v943-crypto-tp-profit" data-v939-crypto-tp-profit="${day}:${slot}" data-v939-tp-profit-index="${index}" placeholder="TP${index} Kâr" value="${safeProfit}">
     </div>`;
   }
 
@@ -2035,8 +2097,17 @@
   };
 
   function v927FieldValue(day, slot, key) {
-    const el = document.querySelector(`[data-v927-crypto-${key}="${day}:${slot}"]`);
-    return (el?.value || "").trim();
+    const rawKey = String(key || "");
+    const kebabKey = rawKey.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+    const selectors = [
+      `[data-v927-crypto-${rawKey}="${day}:${slot}"]`,
+      `[data-v927-crypto-${kebabKey}="${day}:${slot}"]`
+    ];
+    for (const selector of selectors) {
+      const el = document.querySelector(selector);
+      if (el) return (el.value || "").trim();
+    }
+    return "";
   }
 
   function v927CryptoMetaFromDom(day, slot) {
@@ -2130,9 +2201,8 @@
       const i = idx + 1;
       return `<span class="tp v941-action-line">TP${i}: <b>${v763EscapeHtml(tp || "-")}</b>${actionBtn("tp", i, "plus")}</span><span class="tp-profit">TP${i} Kâr: <b>${v942FormatPlainDollar(profit)}</b></span>`;
     }).join("");
-    const coinHtml = data.note ? `<span class="coin">İşlem: <b>${v763EscapeHtml(data.note)}</b></span>` : "";
-    box.innerHTML = `<div class="v937-crypto-preview-grid">
-        ${coinHtml}
+    const titleHtml = data.note ? `<div class="v943-crypto-preview-title"><span>İşlem:</span><b>${v763EscapeHtml(data.note)}</b></div>` : "";
+    box.innerHTML = `${titleHtml}<div class="v937-crypto-preview-grid">
         <span class="stake">Tutar: <b>${data.stakeRaw ? v768Money(Number(data.stakeRaw || 0)) : "-"}</b></span>
         <span class="pl">Toplam P/L: <b class="${plClass}">${data.plRaw ? v763EscapeHtml(data.plRaw) : "-"}</b></span>
         <span class="entry">Giriş: <b>${v763EscapeHtml(data.meta.entry || "-")}</b></span>
@@ -2211,7 +2281,7 @@
       </div>
       <div class="v927-crypto-metrics">
         ${hasCoinLabel ? v927RenderCryptoMetric("İşlem", `<span class="v927-coin">${coinLabel}</span>`) : ""}
-        ${v927RenderCryptoMetric("Tutar", v768Money(amt))}
+        ${v927RenderCryptoMetric("Tutar", v768Money(amt), "stake")}
         ${v927RenderCryptoMetric("Toplam P/L", `<span class="${pnlClass}">${pnlText}</span>`, "pnl")}
         ${v927RenderCryptoMetric("Giriş", v927DisplayValue(meta.entry))}
         ${v927RenderCryptoMetric("Kaldıraç", v927LeverageLabel(meta.leverage))}
