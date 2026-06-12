@@ -899,6 +899,38 @@
         outline:none !important;
         box-shadow:inset 0 0 0 1px rgba(34,197,94,.18), 0 0 12px rgba(34,197,94,.14) !important;
       }
+
+      /* V940: TP ve TP Kâr bitişik değil, normal iki ayrı input */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list .v938-crypto-tp-pair {
+        display: contents !important;
+        grid-column: auto !important;
+        gap: 8px !important;
+        width: auto !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list .v938-crypto-tp-pair input,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list .v939-crypto-tp-profit {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(51,65,85,.72) !important;
+        border-right: 1px solid rgba(51,65,85,.72) !important;
+        background: rgba(15,23,42,.88) !important;
+        color: #e5e7eb !important;
+        font: inherit !important;
+        box-shadow: none !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list .v939-crypto-tp-profit::placeholder {
+        color: #94a3b8 !important;
+        opacity: .92 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list .v939-crypto-tp-profit:focus {
+        background: rgba(15,23,42,.94) !important;
+        color: #e5e7eb !important;
+        outline: none !important;
+        border-color: rgba(251,191,36,.48) !important;
+        box-shadow: 0 0 0 1px rgba(251,191,36,.12) !important;
+      }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview {
         border-color:rgba(56,189,248,.24) !important;
         background:linear-gradient(180deg, rgba(15,23,42,.84), rgba(2,6,23,.64)) !important;
