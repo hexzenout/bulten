@@ -950,7 +950,7 @@
         border-color: rgba(239,68,68,.42) !important;
         background: rgba(127,29,29,.16) !important;
       }
-      /* V949: Toplam P/L ve Liq Miktarı iki satıra inebilir; kutu boyutu/teması normal inputa yakın tutulur */
+      /* V950: Toplam P/L ve Liq Miktarı boşken ortalı, değer gelince eski iki satırlı düzene döner */
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v941-crypto-total-pl],
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount] {
         width: 100% !important;
@@ -970,11 +970,20 @@
         font-family: 'Inter', system-ui, sans-serif !important;
         font-size: .72rem !important;
         font-weight: 850 !important;
+        text-align: center !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v941-crypto-total-pl].v950-metric-filled,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount].v950-metric-filled {
+        text-align: left !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount].v950-metric-filled {
+        color: #a78bfa !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v941-crypto-total-pl]::placeholder,
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount]::placeholder {
         color: #d9d9d9 !important;
         opacity: .9 !important;
+        text-align: center !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount] {
         cursor: default !important;
@@ -1200,6 +1209,11 @@
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.stop b { color: #f97316 !important; }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.win b { color: #22c55e !important; }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.loss b { color: #ef4444 !important; }
+      /* V950: Liq Miktarı değer rengi mor sabit */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .liq-amount b,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.liq-amount b {
+        color: #a78bfa !important;
+      }
 
       #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear {
         display: inline-flex !important;
@@ -1979,6 +1993,7 @@
     liqAmountInput.readOnly = true;
     liqAmountInput.dataset.v947RawValue = money;
     liqAmountInput.value = money ? v948StackedMetricValue("Liq Miktarı", money) : "";
+    liqAmountInput.classList.toggle("v950-metric-filled", !!money);
   }
 
   function v947NormalizeLeverageField(day, slot) {
@@ -2136,6 +2151,7 @@
     input.dataset.v941PlNumber = String(total);
     input.dataset.v941PlHas = has ? "1" : "0";
     input.value = has ? v948StackedMetricValue("Toplam P/L", display) : "";
+    input.classList.toggle("v950-metric-filled", has);
     input.classList.toggle("pos", has && total >= 0);
     input.classList.toggle("neg", has && total < 0);
     return total;
@@ -3910,6 +3926,7 @@
         totalPlInput.dataset.v941PlNumber = String(Number.isFinite(pl) ? pl : 0);
         totalPlInput.dataset.v941PlHas = hasPl ? "1" : "0";
         totalPlInput.value = hasPl ? v948StackedMetricValue("Toplam P/L", v941FormatSignedMoney(pl)) : "";
+        totalPlInput.classList.toggle("v950-metric-filled", hasPl);
         totalPlInput.classList.toggle("pos", hasPl && pl >= 0);
         totalPlInput.classList.toggle("neg", hasPl && pl < 0);
       }
