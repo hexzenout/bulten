@@ -408,17 +408,29 @@
         padding:0 14px;
         min-width:132px;
       }
+      #omega-rolling-feature-host .v929-history-date-break {
+        flex:0 0 100%;
+        width:100%;
+        height:0;
+        margin:0;
+        padding:0;
+      }
       #omega-rolling-feature-host .v929-history-date-wrap {
         position:relative;
-        flex: 1 1 100%;
-        display:flex;
+        flex: 0 0 auto;
+        display:inline-flex;
         align-items:center;
         justify-content:flex-start;
-        min-width:220px;
+        min-width:0;
+        width:auto;
       }
       #omega-rolling-feature-host .v929-history-date-open {
         width:auto;
-        min-width:156px;
+        min-width:104px;
+        max-width:min(190px, 78vw);
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
         border-color:rgba(251,191,36,.34);
         color:#f8fafc;
         background:linear-gradient(180deg, rgba(15,23,42,.94), rgba(2,6,23,.86));
@@ -1560,6 +1572,7 @@
     const dateLabel = active === "manual" && manual ? v929FormatHistoryDateLabel(manual) : "Tarih Seç";
     return `<div class="v926-history-filters v928-history-filters" data-v926-history-filters="${m}">
       ${items.map(([key, label]) => `<button type="button" class="${active === key ? "active" : ""}" data-v926-history-filter="${m}:${key}">${label}</button>`).join("")}
+      <span class="v929-history-date-break" aria-hidden="true"></span>
       <div class="v929-history-date-wrap" data-v929-date-wrap="${m}"><button type="button" class="v929-history-date-open ${active === "manual" ? "active" : ""}" data-v929-date-open="${m}">${v763EscapeHtml(dateLabel)}</button>${v929BuildDatePanelHtml(m, manual)}</div>
     </div>`;
   }
@@ -2495,7 +2508,11 @@
         const mode = dateOpen.dataset.v929DateOpen === "crypto" ? "crypto" : "bet";
         const wrap = dateOpen.closest(`[data-v929-date-wrap="${mode}"]`);
         const panel = wrap?.querySelector(`[data-v929-date-panel="${mode}"]`);
-        if (panel) panel.hidden = !panel.hidden;
+        const willOpen = panel ? panel.hidden : false;
+        document.querySelectorAll("[data-v929-date-panel]").forEach(other => {
+          if (other !== panel) other.hidden = true;
+        });
+        if (panel) panel.hidden = !willOpen;
         return;
       }
       const apply = event.target.closest && event.target.closest("[data-v929-date-apply]");
@@ -2523,9 +2540,16 @@
         v768OpenFeaturePanel(mode, "history");
         return;
       }
-      if (!event.target.closest || !event.target.closest("[data-v929-date-wrap]")) {
+      const insideDatePicker = event.target.closest && (event.target.closest("[data-v929-date-panel]") || event.target.closest("[data-v929-date-open]"));
+      if (!insideDatePicker) {
         document.querySelectorAll("[data-v929-date-panel]").forEach(panel => { panel.hidden = true; });
       }
+    }, true);
+    document.addEventListener("pointerdown", function(event) {
+      const openPanel = document.querySelector("[data-v929-date-panel]:not([hidden])");
+      if (!openPanel) return;
+      const insideDatePicker = event.target.closest && (event.target.closest("[data-v929-date-panel]") || event.target.closest("[data-v929-date-open]"));
+      if (!insideDatePicker) openPanel.hidden = true;
     }, true);
     document.addEventListener("change", function(event) {
       const yearSelect = event.target && event.target.closest && event.target.closest("[data-v929-date-year]");
