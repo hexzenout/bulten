@@ -950,27 +950,32 @@
         border-color: rgba(239,68,68,.42) !important;
         background: rgba(127,29,29,.16) !important;
       }
-      /* V951: Toplam P/L ve Liq Miktarı normal input hizasında; değer gelince iki satıra iner */
+      /* V952: Toplam P/L ve Liq Miktarı placeholder hizası normal inputlarla eşitlendi */
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v941-crypto-total-pl],
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount] {
         width: 100% !important;
         min-width: 0 !important;
-        height: 34px !important;
-        min-height: 34px !important;
-        max-height: 34px !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        max-height: 38px !important;
         resize: none !important;
         white-space: pre-line !important;
         overflow: hidden !important;
         text-overflow: clip !important;
         line-height: 1.12 !important;
         padding: 4px 8px !important;
-        margin: 0 0 6px !important;
+        margin: 0 !important;
         box-sizing: border-box !important;
-        border-radius: 7px !important;
+        border-radius: 12px !important;
         font-family: 'Inter', system-ui, sans-serif !important;
         font-size: .72rem !important;
         font-weight: 850 !important;
         text-align: left !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v941-crypto-total-pl]:placeholder-shown,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount]:placeholder-shown {
+        padding-top: 11px !important;
+        line-height: 1 !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount].v950-metric-filled {
         color: #a78bfa !important;
