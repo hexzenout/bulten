@@ -720,6 +720,124 @@
         font-weight: 900 !important;
         text-align: center !important;
       }
+      /* V937: Long/Short özel seçim menüsü ve kripto kutu altı ön çıktı */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-wrap {
+        position: relative !important;
+        width: 92px !important;
+        min-width: 92px !important;
+        max-width: 92px !important;
+        align-self: stretch !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-trigger {
+        width: 92px !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 0 10px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        color: #e0f2fe !important;
+        font-size: 12px !important;
+        font-weight: 1000 !important;
+        letter-spacing: .01em !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(56,189,248,.52) !important;
+        background:
+          linear-gradient(135deg, rgba(14,165,233,.24), rgba(15,23,42,.96) 46%, rgba(251,113,133,.22)),
+          linear-gradient(180deg, rgba(2,6,23,.98), rgba(15,23,42,.98)) !important;
+        box-shadow: inset 0 0 0 1px rgba(251,191,36,.12), 0 0 14px rgba(56,189,248,.12) !important;
+        cursor: pointer !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-trigger[data-side="short"] {
+        color: #ffe4e6 !important;
+        border-color: rgba(251,113,133,.58) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu {
+        position: absolute !important;
+        z-index: 40 !important;
+        top: calc(100% + 6px) !important;
+        left: 0 !important;
+        width: 92px !important;
+        padding: 5px !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(251,191,36,.35) !important;
+        background: rgba(2,6,23,.98) !important;
+        box-shadow: 0 16px 34px rgba(0,0,0,.38), 0 0 18px rgba(251,191,36,.12) !important;
+        display: none !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-wrap.is-open .v937-crypto-side-menu {
+        display: grid !important;
+        gap: 4px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu button {
+        width: 100% !important;
+        height: 30px !important;
+        padding: 0 8px !important;
+        border: 0 !important;
+        border-radius: 9px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        color: #e5e7eb !important;
+        background: rgba(15,23,42,.92) !important;
+        font: 950 12px/1 Inter,system-ui,sans-serif !important;
+        cursor: pointer !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu button:hover,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu button.is-active {
+        color: #fbbf24 !important;
+        background: rgba(251,191,36,.14) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview {
+        display: none !important;
+        margin-top: 8px !important;
+        padding: 10px !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(251,191,36,.28) !important;
+        background: rgba(15,23,42,.72) !important;
+        box-shadow: inset 0 0 0 1px rgba(148,163,184,.06) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview.is-visible {
+        display: grid !important;
+        gap: 7px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-head {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        color: #e5e7eb !important;
+        font: 950 12px/1.2 Inter,system-ui,sans-serif !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-head b {
+        color: #fbbf24 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-head em {
+        font-style: normal !important;
+        color: #94a3b8 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid span {
+        min-width: 0 !important;
+        border: 1px solid rgba(51,65,85,.72) !important;
+        border-radius: 10px !important;
+        padding: 7px 8px !important;
+        background: rgba(2,6,23,.36) !important;
+        color: #cbd5e1 !important;
+        font: 850 11px/1.2 Inter,system-ui,sans-serif !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid span b {
+        color: #e5e7eb !important;
+        font-weight: 1000 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .pl b.pos { color: #22c55e !important; }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .pl b.neg { color: #ef4444 !important; }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear {
         display: inline-flex !important;
         align-items: center !important;
@@ -1459,6 +1577,7 @@
     } else if (action === "minus") {
       if (inputs.length > 1) inputs[inputs.length - 1].remove();
     }
+    v937RenderCryptoPreview(day, slot);
     return false;
   };
 
@@ -1467,12 +1586,14 @@
       const wrap = document.querySelector(`#rolling-excel-overlay[data-roll-mode="crypto"] [data-v765-kapsul="${day}:${slot}"]`);
       if (wrap) {
         wrap.querySelectorAll("input").forEach(input => { input.value = ""; });
-        const side = wrap.querySelector("select[data-v927-crypto-side]");
+        const side = wrap.querySelector("[data-v927-crypto-side]");
         if (side) side.value = "long";
+        v937SetCryptoSide(day, slot, "long");
         const list = wrap.querySelector(`[data-v932-crypto-tp-list="${day}:${slot}"]`);
         if (list) {
           list.innerHTML = `<input type="text" data-v927-crypto-tp="${day}:${slot}" data-v927-tp-index="1" placeholder="TP1">`;
         }
+        v937RenderCryptoPreview(day, slot);
       }
       const currentPlan = typeof ensureRollingPlan === "function" ? ensureRollingPlan() : null;
       if (currentPlan?.pending?.[day]?.[slot]) {
@@ -1505,6 +1626,83 @@
       tps: tpValues,
       tp1: tpValues[0] || ""
     };
+  }
+
+
+  function v937CryptoSideMarkup(day, slot) {
+    return `<div class="v937-crypto-side-wrap" data-v937-crypto-side-wrap="${day}:${slot}">
+      <input type="hidden" data-v927-crypto-side="${day}:${slot}" value="long">
+      <button type="button" class="v937-crypto-side-trigger" data-v937-crypto-side-trigger="${day}:${slot}" data-side="long" aria-haspopup="listbox" aria-expanded="false">Long</button>
+      <div class="v937-crypto-side-menu" data-v937-crypto-side-menu="${day}:${slot}" role="listbox">
+        <button type="button" class="is-active" data-v937-crypto-side-option="${day}:${slot}:long">Long</button>
+        <button type="button" data-v937-crypto-side-option="${day}:${slot}:short">Short</button>
+      </div>
+    </div>`;
+  }
+
+  function v937SetCryptoSide(day, slot, side) {
+    const value = side === "short" ? "short" : "long";
+    const wrap = document.querySelector(`[data-v937-crypto-side-wrap="${day}:${slot}"]`);
+    const hidden = document.querySelector(`[data-v927-crypto-side="${day}:${slot}"]`);
+    const trigger = document.querySelector(`[data-v937-crypto-side-trigger="${day}:${slot}"]`);
+    if (hidden) hidden.value = value;
+    if (trigger) {
+      trigger.textContent = value === "short" ? "Short" : "Long";
+      trigger.dataset.side = value;
+      trigger.setAttribute("aria-expanded", "false");
+    }
+    if (wrap) {
+      wrap.classList.remove("is-open");
+      wrap.querySelectorAll("[data-v937-crypto-side-option]").forEach(btn => {
+        const raw = String(btn.dataset.v937CryptoSideOption || "").split(":").pop();
+        btn.classList.toggle("is-active", raw === value);
+      });
+    }
+  }
+
+  function v937CryptoPreviewData(day, slot) {
+    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
+    const stakeRaw = (document.getElementById(`e-a-${day}-${slot}`)?.value || "").trim();
+    const plRaw = (document.getElementById(`e-o-${day}-${slot}`)?.value || "").trim();
+    const meta = v927CryptoMetaFromDom(day, slot);
+    const tps = Array.isArray(meta.tps) ? meta.tps.filter(Boolean) : [];
+    const hasAny = Boolean(note || stakeRaw || plRaw || meta.entry || meta.leverage || meta.liq || meta.stop || tps.length);
+    if (!hasAny) return null;
+    return { note, stakeRaw, plRaw, meta, tps };
+  }
+
+  function v937RenderCryptoPreview(day, slot) {
+    const box = document.querySelector(`[data-v937-crypto-preview="${day}:${slot}"]`);
+    if (!box) return;
+    const data = v937CryptoPreviewData(day, slot);
+    if (!data) {
+      box.innerHTML = "";
+      box.classList.remove("is-visible");
+      return;
+    }
+    const sideLabel = data.meta.side === "short" ? "Short" : "Long";
+    const plValue = Number(String(data.plRaw || "").replace(",", "."));
+    const plClass = Number.isFinite(plValue) && plValue < 0 ? "neg" : "pos";
+    const tpHtml = data.tps.map((tp, idx) => `<span>TP${idx + 1}: <b>${v763EscapeHtml(tp)}</b></span>`).join("");
+    box.innerHTML = `<div class="v937-crypto-preview-head"><b>${v763EscapeHtml(data.note || "İşlem")}</b><em>${sideLabel}</em></div>
+      <div class="v937-crypto-preview-grid">
+        <span>Tutar: <b>${data.stakeRaw ? v768Money(Number(data.stakeRaw || 0)) : "-"}</b></span>
+        <span class="pl">P/L: <b class="${plClass}">${data.plRaw ? v768Money(Math.abs(Number(data.plRaw || 0))) : "-"}</b></span>
+        <span>Giriş: <b>${v763EscapeHtml(data.meta.entry || "-")}</b></span>
+        <span>Kaldıraç: <b>${v763EscapeHtml(data.meta.leverage || "-")}</b></span>
+        <span>Likidasyon: <b>${v763EscapeHtml(data.meta.liq || "-")}</b></span>
+        <span>Stop: <b>${v763EscapeHtml(data.meta.stop || "-")}</b></span>
+        ${tpHtml}
+      </div>`;
+    box.classList.add("is-visible");
+  }
+
+  function v937RenderAllCryptoPreviews(root) {
+    const scope = root || document;
+    scope.querySelectorAll('#rolling-excel-overlay[data-roll-mode="crypto"] [data-v765-kapsul]').forEach(kapsul => {
+      const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
+      if (day && Number.isInteger(slot)) v937RenderCryptoPreview(day, slot);
+    });
   }
 
   function v927CryptoMetaFromOp(op) {
@@ -2576,6 +2774,35 @@
         }
         return;
       }
+      const sideTrigger = event.target.closest && event.target.closest("[data-v937-crypto-side-trigger]");
+      if (sideTrigger) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        const wrap = sideTrigger.closest("[data-v937-crypto-side-wrap]");
+        document.querySelectorAll('#rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-wrap.is-open').forEach(open => {
+          if (open !== wrap) open.classList.remove("is-open");
+        });
+        if (wrap) {
+          const opened = !wrap.classList.contains("is-open");
+          wrap.classList.toggle("is-open", opened);
+          sideTrigger.setAttribute("aria-expanded", opened ? "true" : "false");
+        }
+        return;
+      }
+      const sideOption = event.target.closest && event.target.closest("[data-v937-crypto-side-option]");
+      if (sideOption) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        const parts = String(sideOption.dataset.v937CryptoSideOption || "").split(":");
+        const day = Number(parts[0]);
+        const slot = Number(parts[1]);
+        const side = parts[2] === "short" ? "short" : "long";
+        v937SetCryptoSide(day, slot, side);
+        v937RenderCryptoPreview(day, slot);
+        return;
+      }
       const activePhotoBtn = event.target.closest && event.target.closest("[data-v891-active-photo]");
       if (activePhotoBtn) {
         event.preventDefault();
@@ -2757,14 +2984,29 @@
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
       v768UpdateBetCalc(day, slot);
       v774SavePendingSlot(day, slot);
+      v937RenderCryptoPreview(day, slot);
     }, true);
     document.addEventListener("focusout", function(event) {
       const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
       if (!kapsul) return;
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
       v774SavePendingSlot(day, slot);
+      v937RenderCryptoPreview(day, slot);
     }, true);
   }
+
+
+  document.addEventListener("click", function(event) {
+    if (!event.target.closest || !event.target.closest('#rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-wrap')) {
+      document.querySelectorAll('#rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-wrap.is-open').forEach(wrap => {
+        wrap.classList.remove("is-open");
+        wrap.querySelector("[data-v937-crypto-side-trigger]")?.setAttribute("aria-expanded", "false");
+      });
+    }
+    if (document.querySelector('#rolling-excel-overlay[data-roll-mode="crypto"]') && !event.target.closest?.('#omega-rolling-feature-host')) {
+      v937RenderAllCryptoPreviews(document);
+    }
+  }, true);
 
   function v765BindExcelFeatureControls(root) {
     const scope = root || document;
@@ -2843,10 +3085,7 @@
                 <div class="v927-crypto-entry">
                   <div class="v927-crypto-main-grid">
                     <div class="v932-crypto-entry-line"><div class="v932-crypto-tp-controls"><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'plus')" title="TP ekle">+</button><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'minus')" title="Son TP sil">−</button></div><input type="text" id="e-n-${day}-${slot}" placeholder="İşlem"></div>
-                    <select data-v927-crypto-side="${day}:${slot}" aria-label="İşlem tipi">
-                      <option value="long">Long</option>
-                      <option value="short">Short</option>
-                    </select>
+                    ${v937CryptoSideMarkup(day, slot)}
                   </div>
                   <div class="v927-crypto-field-grid">
                     <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01">
@@ -2857,6 +3096,7 @@
                     <input type="text" data-v927-crypto-stop="${day}:${slot}" placeholder="Stop">
                     <div class="v932-crypto-tp-list" data-v932-crypto-tp-list="${day}:${slot}"><input type="text" data-v927-crypto-tp="${day}:${slot}" data-v927-tp-index="1" placeholder="TP1"></div>
                   </div>
+                  <div class="v937-crypto-preview" data-v937-crypto-preview="${day}:${slot}"></div>
                 </div>
               ` : `
                 <div class="v765-bet-entry">
