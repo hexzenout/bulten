@@ -667,6 +667,47 @@
         min-width: 0 !important;
         box-sizing: border-box !important;
       }
+
+      /* V934: Rolling number input spinner temizliği + kripto Long/Short renkli seçim */
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-entry input[type="number"],
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-extra-match-row input[type="number"],
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[type="number"] {
+        appearance: textfield !important;
+        -moz-appearance: textfield !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-entry input[type="number"]::-webkit-outer-spin-button,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-entry input[type="number"]::-webkit-inner-spin-button,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-extra-match-row input[type="number"]::-webkit-outer-spin-button,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-extra-match-row input[type="number"]::-webkit-inner-spin-button,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[type="number"]::-webkit-outer-spin-button,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] select[data-v927-crypto-side] {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        color: #e0f2fe !important;
+        font-weight: 1000 !important;
+        letter-spacing: .02em !important;
+        border: 1px solid rgba(56,189,248,.52) !important;
+        background:
+          linear-gradient(135deg, rgba(14,165,233,.24), rgba(15,23,42,.96) 46%, rgba(251,113,133,.22)),
+          linear-gradient(180deg, rgba(2,6,23,.98), rgba(15,23,42,.98)) !important;
+        box-shadow: inset 0 0 0 1px rgba(251,191,36,.12), 0 0 14px rgba(56,189,248,.12) !important;
+        cursor: pointer !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] select[data-v927-crypto-side]:focus {
+        outline: none !important;
+        border-color: rgba(251,191,36,.72) !important;
+        box-shadow: 0 0 0 2px rgba(251,191,36,.14), 0 0 16px rgba(56,189,248,.18) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] select[data-v927-crypto-side] option {
+        background: #020617 !important;
+        color: #e5e7eb !important;
+        font-weight: 900 !important;
+      }
+
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-result {
         position: relative !important;
         display: grid !important;
