@@ -933,29 +933,41 @@
       }
 
       /* V941: Kripto Toplam P/L otomatik hesap + sade normal inputlar */
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[readonly] {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[readonly],
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[readonly] {
         cursor: default !important;
         color: #e5e7eb !important;
         background: rgba(15,23,42,.78) !important;
         border-color: rgba(51,65,85,.72) !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[data-v941-crypto-total-pl].pos {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid [data-v941-crypto-total-pl].pos {
         color: #86efac !important;
         border-color: rgba(34,197,94,.38) !important;
         background: rgba(20,83,45,.16) !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[data-v941-crypto-total-pl].neg {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid [data-v941-crypto-total-pl].neg {
         color: #fecaca !important;
         border-color: rgba(239,68,68,.42) !important;
         background: rgba(127,29,29,.16) !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[data-v941-crypto-total-pl],
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[data-v947-auto-liq-amount] {
-        white-space: nowrap !important;
+      /* V948: Toplam P/L ve Liq Miktarı değerleri sığmazsa kutu içinde alt satıra iner */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid [data-v941-crypto-total-pl],
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid [data-v947-auto-liq-amount] {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 48px !important;
+        height: 48px !important;
+        resize: none !important;
+        white-space: pre-line !important;
         overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        text-overflow: clip !important;
+        line-height: 1.18 !important;
+        padding-top: 8px !important;
+        padding-bottom: 7px !important;
+        box-sizing: border-box !important;
+        font: 900 11.5px/1.18 Inter, system-ui, sans-serif !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[data-v947-auto-liq-amount] {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid [data-v947-auto-liq-amount] {
         cursor: default !important;
         color: #c4b5fd !important;
         background: rgba(76,29,149,.14) !important;
@@ -1938,6 +1950,13 @@
     return `$${Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
 
+  function v948StackedMetricValue(label, value) {
+    const safeLabel = String(label || "").trim();
+    const safeValue = String(value || "").trim();
+    if (!safeValue) return "";
+    return `${safeLabel}:\n${safeValue}`;
+  }
+
   function v947TotalPlDisplay(day, slot) {
     const input = document.getElementById(`e-o-${day}-${slot}`);
     const has = !!input?.dataset?.v941PlHas && input.dataset.v941PlHas === "1";
@@ -1953,7 +1972,7 @@
     const money = v947FormatAutoDollarValue(rawStake);
     liqAmountInput.readOnly = true;
     liqAmountInput.dataset.v947RawValue = money;
-    liqAmountInput.value = money ? `Liq Miktarı: ${money}` : "";
+    liqAmountInput.value = money ? v948StackedMetricValue("Liq Miktarı", money) : "";
   }
 
   function v947NormalizeLeverageField(day, slot) {
@@ -2110,7 +2129,7 @@
     const display = v941FormatSignedMoney(total);
     input.dataset.v941PlNumber = String(total);
     input.dataset.v941PlHas = has ? "1" : "0";
-    input.value = has ? `Toplam P/L: ${display}` : "";
+    input.value = has ? v948StackedMetricValue("Toplam P/L", display) : "";
     input.classList.toggle("pos", has && total >= 0);
     input.classList.toggle("neg", has && total < 0);
     return total;
@@ -3769,14 +3788,14 @@
                   </div>
                   <div class="v927-crypto-field-grid">
                     <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01">
-                    <input type="text" id="e-o-${day}-${slot}" data-v941-crypto-total-pl="${day}:${slot}" placeholder="Toplam P/L" readonly>
+                    <textarea id="e-o-${day}-${slot}" data-v941-crypto-total-pl="${day}:${slot}" placeholder="Toplam P/L" readonly rows="2"></textarea>
                     <input type="text" data-v927-crypto-entry="${day}:${slot}" placeholder="Giriş">
                     <input type="text" data-v927-crypto-leverage="${day}:${slot}" placeholder="Kaldıraç">
                     <div class="v932-crypto-tp-list" data-v932-crypto-tp-list="${day}:${slot}">${v938CryptoTpPairMarkup(day, slot, 1)}</div>
                     <input type="text" data-v927-crypto-stop="${day}:${slot}" placeholder="Stop">
                     <input type="text" data-v927-crypto-stop-amount="${day}:${slot}" placeholder="Stop Miktarı">
                     <input type="text" data-v927-crypto-liq="${day}:${slot}" placeholder="Liq">
-                    <input type="text" data-v927-crypto-liq-amount="${day}:${slot}" data-v947-auto-liq-amount="${day}:${slot}" placeholder="Liq Miktarı" readonly>
+                    <textarea data-v927-crypto-liq-amount="${day}:${slot}" data-v947-auto-liq-amount="${day}:${slot}" placeholder="Liq Miktarı" readonly rows="2"></textarea>
                   </div>
                   <div class="v937-crypto-preview" data-v937-crypto-preview="${day}:${slot}"></div>
                 </div>
@@ -3884,7 +3903,7 @@
         const hasPl = Number.isFinite(pl) && pl !== 0;
         totalPlInput.dataset.v941PlNumber = String(Number.isFinite(pl) ? pl : 0);
         totalPlInput.dataset.v941PlHas = hasPl ? "1" : "0";
-        totalPlInput.value = hasPl ? `Toplam P/L: ${v941FormatSignedMoney(pl)}` : "";
+        totalPlInput.value = hasPl ? v948StackedMetricValue("Toplam P/L", v941FormatSignedMoney(pl)) : "";
         totalPlInput.classList.toggle("pos", hasPl && pl >= 0);
         totalPlInput.classList.toggle("neg", hasPl && pl < 0);
       }
