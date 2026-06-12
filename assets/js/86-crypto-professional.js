@@ -619,7 +619,8 @@
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-main-grid {
         display: grid !important;
-        grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr) !important;
+        grid-template-columns: minmax(0, 1fr) max-content !important;
+        align-items: stretch !important;
         gap: 8px !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid {
@@ -687,9 +688,20 @@
       #rolling-excel-overlay[data-roll-mode="crypto"] select[data-v927-crypto-side] {
         appearance: none !important;
         -webkit-appearance: none !important;
+        width: 92px !important;
+        min-width: 92px !important;
+        max-width: 92px !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 0 10px !important;
+        line-height: 36px !important;
+        text-align: center !important;
+        text-align-last: center !important;
         color: #e0f2fe !important;
+        font-size: 12px !important;
         font-weight: 1000 !important;
-        letter-spacing: .02em !important;
+        letter-spacing: .01em !important;
+        border-radius: 12px !important;
         border: 1px solid rgba(56,189,248,.52) !important;
         background:
           linear-gradient(135deg, rgba(14,165,233,.24), rgba(15,23,42,.96) 46%, rgba(251,113,133,.22)),
