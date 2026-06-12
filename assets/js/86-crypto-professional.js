@@ -1216,6 +1216,35 @@
         color: #a78bfa !important;
       }
 
+      /* V953: Ön çıktı değerlerini label yanına yaklaştır + miktar formatı sade */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .v941-action-line {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .v953-metric-text {
+        display: inline-flex !important;
+        align-items: baseline !important;
+        justify-content: flex-start !important;
+        gap: 5px !important;
+        min-width: 0 !important;
+        white-space: nowrap !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .pl {
+        display: block !important;
+        white-space: normal !important;
+        overflow: visible !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .pl b {
+        max-width: none !important;
+        display: inline !important;
+        margin-left: 5px !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+      }
+
       #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear {
         display: inline-flex !important;
         align-items: center !important;
@@ -1931,6 +1960,34 @@
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  function v953FormatCryptoNumber(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return "";
+    const normalized = raw
+      .replace(/\s+/g, "")
+      .replace(/,/g, "")
+      .replace(/[^0-9+\-.]/g, "");
+    const n = Number(normalized);
+    if (!Number.isFinite(n)) return raw;
+    return Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+
+  function v953FormatCryptoMoneyPrefix(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return "";
+    const n = v941ParseMoney(raw);
+    if (!Number.isFinite(n) || n === 0) return "$0";
+    return `$${v953FormatCryptoNumber(Math.abs(n))}`;
+  }
+
+  function v953FormatCryptoMoneySuffix(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return "";
+    const n = v941ParseMoney(raw);
+    if (!Number.isFinite(n) || n === 0) return "0$";
+    return `${v953FormatCryptoNumber(Math.abs(n))}$`;
+  }
+
 
   window.V941_CRYPTO_PL_ADJUST = window.V941_CRYPTO_PL_ADJUST || {};
 
@@ -1952,7 +2009,7 @@
   function v941FormatSignedMoney(value) {
     const n = Number(value || 0);
     const sign = n >= 0 ? "+" : "-";
-    return `${sign}$${Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `${sign}$${Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   }
 
   function v947NormalizeLeverage(value) {
@@ -1968,7 +2025,7 @@
   function v947FormatAutoDollarValue(value) {
     const n = v941ParseMoney(value);
     if (!Number.isFinite(n) || n === 0) return "";
-    return `$${Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `$${Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   }
 
   function v948StackedMetricValue(label, value) {
@@ -2008,7 +2065,7 @@
   function v942FormatPlainDollar(value) {
     const raw = String(value ?? "").trim();
     if (!raw) return "-";
-    return /\$/.test(raw) ? v763EscapeHtml(raw) : `${v763EscapeHtml(raw)}$`;
+    return v763EscapeHtml(v953FormatCryptoMoneySuffix(raw));
   }
 
   function v942WarnCryptoField(el, message) {
@@ -2361,18 +2418,18 @@
       const tp = data.tps[idx] || "";
       const profit = tpProfits[idx] || "";
       const i = idx + 1;
-      return `<span class="tp v941-action-line">TP${i}: <b>${v763EscapeHtml(tp || "-")}</b>${actionBtn("tp", i, "plus")}</span><span class="tp-profit">TP${i} Kâr: <b>${v942FormatPlainDollar(profit)}</b></span>`;
+      return `<span class="tp v941-action-line"><span class="v953-metric-text">TP${i}: <b>${v763EscapeHtml(tp || "-")}</b></span>${actionBtn("tp", i, "plus")}</span><span class="tp-profit">TP${i} Kâr: <b>${v942FormatPlainDollar(profit)}</b></span>`;
     }).join("");
     const titleHtml = data.note ? `<div class="v943-crypto-preview-title"><span>İşlem:</span><b>${v763EscapeHtml(data.note)}</b></div>` : "";
     box.innerHTML = `${titleHtml}<div class="v937-crypto-preview-grid">
-        <span class="stake">Tutar: <b>${data.stakeRaw ? v768Money(Number(data.stakeRaw || 0)) : "-"}</b></span>
+        <span class="stake">Tutar: <b>${data.stakeRaw ? v953FormatCryptoMoneyPrefix(data.stakeRaw) : "-"}</b></span>
         <span class="pl">Toplam P/L: <b class="${plClass}">${data.plRaw ? v763EscapeHtml(data.plRaw) : "-"}</b></span>
         <span class="entry">Giriş: <b>${v763EscapeHtml(data.meta.entry || "-")}</b></span>
         <span class="lev">Kaldıraç: <b>${v927LeverageLabel(data.meta.leverage)}</b></span>
         ${tpHtml}
-        <span class="stop v941-action-line">Stop: <b>${v763EscapeHtml(data.meta.stop || "-")}</b>${actionBtn("stop", 1, "minus")}</span>
+        <span class="stop v941-action-line"><span class="v953-metric-text">Stop: <b>${v763EscapeHtml(data.meta.stop || "-")}</b></span>${actionBtn("stop", 1, "minus")}</span>
         <span class="stop-amount">Stop Miktarı: <b>${v942FormatPlainDollar(data.meta.stopAmount)}</b></span>
-        <span class="liq v941-action-line">Liq: <b>${v763EscapeHtml(data.meta.liq || "-")}</b>${actionBtn("liq", 1, "minus")}</span>
+        <span class="liq v941-action-line"><span class="v953-metric-text">Liq: <b>${v763EscapeHtml(data.meta.liq || "-")}</b></span>${actionBtn("liq", 1, "minus")}</span>
         <span class="liq-amount">Liq Miktarı: <b>${v942FormatPlainDollar(data.meta.liqAmount)}</b></span>
       </div>`;
     box.classList.add("is-visible");
@@ -2438,7 +2495,7 @@
     const statusLabel = isWin ? "KÂR" : "ZARAR";
     const sideLabel = meta.side === "short" ? "Short" : "Long";
     const sideClass = meta.side === "short" ? "v927-side-short" : "v927-side-long";
-    const pnlText = `${numericEffect >= 0 ? "+" : "-"}$${Math.abs(numericEffect).toFixed(2)}`;
+    const pnlText = `${numericEffect >= 0 ? "+" : "-"}$${v953FormatCryptoNumber(Math.abs(numericEffect))}`;
     const pnlClass = numericEffect >= 0 ? "pos" : "neg";
     const coinLabel = v927DisplayValue(meta.coin || op?.note || "İşlem");
     const hasCoinLabel = String(meta.coin || op?.note || "").trim();
@@ -2451,7 +2508,7 @@
       </div>
       <div class="v927-crypto-metrics">
         ${hasCoinLabel ? v927RenderCryptoMetric("İşlem", `<span class="v927-coin">${coinLabel}</span>`) : ""}
-        ${v927RenderCryptoMetric("Tutar", v768Money(amt), "stake")}
+        ${v927RenderCryptoMetric("Tutar", v953FormatCryptoMoneyPrefix(amt), "stake")}
         ${v927RenderCryptoMetric("Toplam P/L", `<span class="${pnlClass}">${pnlText}</span>`, "pnl")}
         ${v927RenderCryptoMetric("Giriş", v927DisplayValue(meta.entry), "entry")}
         ${v927RenderCryptoMetric("Kaldıraç", v927LeverageLabel(meta.leverage), "lev")}
