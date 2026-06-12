@@ -545,7 +545,7 @@
 
 
 
-  // V927/V928/V932: KRİPTO Rolling kutu çıktısı, kapalı-açılır kripto giriş alanı, P/L ve dinamik TP alanları.
+  // V927/V928/V932/V936: KRİPTO Rolling kutu çıktısı, otomatik açık giriş alanı, P/L ve dinamik TP alanları.
   (function v927EnsureCryptoRollingOutputCss(){
     if (document.getElementById("v927-crypto-rolling-output-css")) return;
     const style = document.createElement("style");
@@ -718,6 +718,27 @@
         background: #020617 !important;
         color: #e5e7eb !important;
         font-weight: 900 !important;
+        text-align: center !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
+        border-radius: 10px !important;
+        border: 1px solid rgba(248,113,113,.50) !important;
+        background: rgba(127,29,29,.24) !important;
+        color: #fecaca !important;
+        font: 1000 18px/1 Inter,system-ui,sans-serif !important;
+        cursor: pointer !important;
+        box-shadow: 0 0 12px rgba(248,113,113,.10) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear:hover {
+        border-color: rgba(248,113,113,.82) !important;
+        color: #fff !important;
+        background: rgba(239,68,68,.32) !important;
       }
 
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-result {
@@ -1438,6 +1459,29 @@
     } else if (action === "minus") {
       if (inputs.length > 1) inputs[inputs.length - 1].remove();
     }
+    return false;
+  };
+
+  window.omega_CryptoClearSlot = function(day, slot) {
+    try {
+      const wrap = document.querySelector(`#rolling-excel-overlay[data-roll-mode="crypto"] [data-v765-kapsul="${day}:${slot}"]`);
+      if (wrap) {
+        wrap.querySelectorAll("input").forEach(input => { input.value = ""; });
+        const side = wrap.querySelector("select[data-v927-crypto-side]");
+        if (side) side.value = "long";
+        const list = wrap.querySelector(`[data-v932-crypto-tp-list="${day}:${slot}"]`);
+        if (list) {
+          list.innerHTML = `<input type="text" data-v927-crypto-tp="${day}:${slot}" data-v927-tp-index="1" placeholder="TP1">`;
+        }
+      }
+      const currentPlan = typeof ensureRollingPlan === "function" ? ensureRollingPlan() : null;
+      if (currentPlan?.pending?.[day]?.[slot]) {
+        delete currentPlan.pending[day][slot];
+        if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];
+        if (typeof omega_SaveRollingDB === "function") omega_SaveRollingDB();
+      }
+      setTimeout(() => document.getElementById(`e-n-${day}-${slot}`)?.focus(), 20);
+    } catch(e) {}
     return false;
   };
 
@@ -2793,9 +2837,9 @@
           const pComboV774 = Array.isArray(pendingV774?.combo) ? pendingV774.combo : [];
           const pComboHtmlV774 = pComboV774.map(row => `<div class="v765-extra-match-row v768-extra-match-row" data-v763-extra-row="${day}:${slot}"><input type="text" data-v763-extra-note placeholder="Maç" value="${v763EscapeHtml(row.note || "")}"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01" value="${row.odds === "" || row.odds == null ? "" : v763EscapeHtml(row.odds)}"></div>`).join("");
           cards.push(`
-            <div class="kapsul v32 ${isCryptoV491 ? "v928-crypto-kapsul" : "v765-bet-kapsul"}" data-v765-kapsul="${day}:${slot}">
+            <div class="kapsul v32 ${isCryptoV491 ? "v928-crypto-kapsul is-open" : "v765-bet-kapsul"}" data-v765-kapsul="${day}:${slot}">
               ${isCryptoV491 ? `
-                <button type="button" class="v928-crypto-empty-head" data-v928-crypto-toggle="${day}:${slot}" aria-expanded="false"><span>Gün ${day} · İşlem ${slot + 1}</span><b>İşlem ekle</b></button>
+                <div class="v928-crypto-empty-head" data-v936-crypto-head="${day}:${slot}"><span>Gün ${day} · İşlem ${slot + 1}</span><button type="button" class="v936-crypto-clear" data-v936-crypto-clear="${day}:${slot}" onclick="return omega_CryptoClearSlot(${day}, ${slot})" title="Kutuyu temizle">×</button></div>
                 <div class="v927-crypto-entry">
                   <div class="v927-crypto-main-grid">
                     <div class="v932-crypto-entry-line"><div class="v932-crypto-tp-controls"><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'plus')" title="TP ekle">+</button><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'minus')" title="Son TP sil">−</button></div><input type="text" id="e-n-${day}-${slot}" placeholder="İşlem"></div>
