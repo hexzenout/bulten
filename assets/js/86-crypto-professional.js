@@ -950,28 +950,34 @@
         border-color: rgba(239,68,68,.42) !important;
         background: rgba(127,29,29,.16) !important;
       }
-      /* V948: Toplam P/L ve Liq Miktarı değerleri sığmazsa kutu içinde alt satıra iner */
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid [data-v941-crypto-total-pl],
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid [data-v947-auto-liq-amount] {
+      /* V949: Toplam P/L ve Liq Miktarı iki satıra inebilir; kutu boyutu/teması normal inputa yakın tutulur */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v941-crypto-total-pl],
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount] {
         width: 100% !important;
         min-width: 0 !important;
-        min-height: 48px !important;
-        height: 48px !important;
+        height: 34px !important;
+        min-height: 34px !important;
+        max-height: 34px !important;
         resize: none !important;
         white-space: pre-line !important;
         overflow: hidden !important;
         text-overflow: clip !important;
-        line-height: 1.18 !important;
-        padding-top: 8px !important;
-        padding-bottom: 7px !important;
+        line-height: 1.12 !important;
+        padding: 4px 8px !important;
+        margin: 0 0 6px !important;
         box-sizing: border-box !important;
-        font: 900 11.5px/1.18 Inter, system-ui, sans-serif !important;
+        border-radius: 7px !important;
+        font-family: 'Inter', system-ui, sans-serif !important;
+        font-size: .72rem !important;
+        font-weight: 850 !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid [data-v947-auto-liq-amount] {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v941-crypto-total-pl]::placeholder,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount]::placeholder {
+        color: #d9d9d9 !important;
+        opacity: .9 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid textarea[data-v947-auto-liq-amount] {
         cursor: default !important;
-        color: #c4b5fd !important;
-        background: rgba(76,29,149,.14) !important;
-        border-color: rgba(167,139,250,.36) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .v941-action-line {
         display: inline-flex !important;
