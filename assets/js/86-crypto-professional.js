@@ -545,7 +545,7 @@
 
 
 
-  // V927/V928: KRİPTO Rolling kutu çıktısı, kapalı-açılır kripto giriş alanı ve kripto işlem alanları.
+  // V927/V928/V932: KRİPTO Rolling kutu çıktısı, kapalı-açılır kripto giriş alanı, P/L ve dinamik TP alanları.
   (function v927EnsureCryptoRollingOutputCss(){
     if (document.getElementById("v927-crypto-rolling-output-css")) return;
     const style = document.createElement("style");
@@ -606,6 +606,38 @@
         gap: 8px !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-entry-line {
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-entry-line input {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-controls {
+        flex: 0 0 auto !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-controls button {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 9px !important;
+        border: 1px solid rgba(251,191,36,.36) !important;
+        background: rgba(15,23,42,.92) !important;
+        color: #fbbf24 !important;
+        font: 1000 15px/1 Inter,system-ui,sans-serif !important;
+        cursor: pointer !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list {
+        grid-column: 1 / -1 !important;
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 8px !important;
@@ -725,6 +757,7 @@
       @media (max-width: 700px) {
         #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-main-grid,
         #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid,
+        #rolling-excel-overlay[data-roll-mode="crypto"] .v932-crypto-tp-list,
         #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metrics {
           grid-template-columns: 1fr !important;
         }
@@ -1312,6 +1345,32 @@
   }
 
 
+  function v932CryptoTpInputs(day, slot) {
+    return Array.from(document.querySelectorAll(`[data-v927-crypto-tp="${day}:${slot}"]`))
+      .sort((a, b) => Number(a.dataset.v927TpIndex || 0) - Number(b.dataset.v927TpIndex || 0));
+  }
+
+  window.omega_CryptoToggleTpRow = function(day, slot, action) {
+    const list = document.querySelector(`[data-v932-crypto-tp-list="${day}:${slot}"]`);
+    if (!list) return false;
+    const inputs = v932CryptoTpInputs(day, slot);
+    if (action === "plus") {
+      const next = Math.min(inputs.length + 1, 8);
+      if (next > inputs.length) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = `TP${next}`;
+        input.dataset.v927CryptoTp = `${day}:${slot}`;
+        input.dataset.v927TpIndex = String(next);
+        list.appendChild(input);
+        try { input.focus(); } catch(e) {}
+      }
+    } else if (action === "minus") {
+      if (inputs.length > 1) inputs[inputs.length - 1].remove();
+    }
+    return false;
+  };
+
   function v927FieldValue(day, slot, key) {
     const el = document.querySelector(`[data-v927-crypto-${key}="${day}:${slot}"]`);
     return (el?.value || "").trim();
@@ -1320,34 +1379,37 @@
   function v927CryptoMetaFromDom(day, slot) {
     const sideRaw = v927FieldValue(day, slot, "side");
     const side = sideRaw === "short" ? "short" : "long";
+    const tpValues = v932CryptoTpInputs(day, slot).map(input => (input.value || "").trim());
+    if (!tpValues.length) tpValues.push(v927FieldValue(day, slot, "tp1"));
     return {
       side,
       coin: v927FieldValue(day, slot, "coin") || (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim(),
       entry: v927FieldValue(day, slot, "entry"),
-      exit: v927FieldValue(day, slot, "exit"),
       leverage: v927FieldValue(day, slot, "leverage"),
       liq: v927FieldValue(day, slot, "liq"),
       stop: v927FieldValue(day, slot, "stop"),
-      tp1: v927FieldValue(day, slot, "tp1"),
-      tp2: v927FieldValue(day, slot, "tp2"),
-      tp3: v927FieldValue(day, slot, "tp3")
+      tps: tpValues,
+      tp1: tpValues[0] || ""
     };
   }
 
   function v927CryptoMetaFromOp(op) {
     const src = op?.cryptoMeta && typeof op.cryptoMeta === "object" ? op.cryptoMeta : op || {};
     const side = String(src.side || src.direction || src.type || "long").toLowerCase() === "short" ? "short" : "long";
+    const savedTps = Array.isArray(src.tps) ? src.tps : [];
+    const legacyTps = [src.tp1, src.tp2, src.tp3, src.tp4, src.tp5, src.tp6, src.tp7, src.tp8]
+      .map(v => String(v || "").trim())
+      .filter((v, idx) => v || idx === 0);
+    const tps = (savedTps.length ? savedTps : legacyTps.length ? legacyTps : [""]).map(v => String(v || "").trim());
     return {
       side,
       coin: String(src.coin || op?.note || "İşlem").trim(),
       entry: String(src.entry || src.giris || "").trim(),
-      exit: String(src.exit || src.cikis || "").trim(),
       leverage: String(src.leverage || src.kaldirac || "").trim(),
       liq: String(src.liq || src.liquidation || src.likidasyon || "").trim(),
       stop: String(src.stop || src.stopLoss || src.sl || "").trim(),
-      tp1: String(src.tp1 || "").trim(),
-      tp2: String(src.tp2 || "").trim(),
-      tp3: String(src.tp3 || "").trim()
+      tps,
+      tp1: tps[0] || ""
     };
   }
 
@@ -1383,19 +1445,16 @@
         <div class="v927-crypto-subline">Gün ${day} · İşlem ${slot + 1} · <span class="${sideClass}">${sideLabel}</span></div>
       </div>
       <div class="v927-crypto-metrics">
-        ${v927RenderCryptoMetric("İşlem Tipi", `<span class="${sideClass}">${sideLabel}</span>`)}
-        ${v927RenderCryptoMetric("Coin", `<span class="v927-coin">${coinLabel}</span>`)}
+        ${v927RenderCryptoMetric("İşlem", `<span class="v927-coin">${coinLabel}</span>`)}
+        ${v927RenderCryptoMetric("Yön", `<span class="${sideClass}">${sideLabel}</span>`)}
         ${v927RenderCryptoMetric("Giriş", v927DisplayValue(meta.entry))}
-        ${v927RenderCryptoMetric("Çıkış", v927DisplayValue(meta.exit))}
         ${v927RenderCryptoMetric("Kaldıraç", v927LeverageLabel(meta.leverage))}
-        ${v927RenderCryptoMetric("İşlem Tutarı", v768Money(amt))}
+        ${v927RenderCryptoMetric("Tutar", v768Money(amt))}
         ${v927RenderCryptoMetric("Likidasyon", v927DisplayValue(meta.liq))}
         ${v927RenderCryptoMetric("Stop", v927DisplayValue(meta.stop))}
-        ${v927RenderCryptoMetric("TP1", v927DisplayValue(meta.tp1))}
-        ${v927RenderCryptoMetric("TP2", v927DisplayValue(meta.tp2))}
-        ${v927RenderCryptoMetric("TP3", v927DisplayValue(meta.tp3))}
+        ${(Array.isArray(meta.tps) && meta.tps.length ? meta.tps : [meta.tp1 || ""]).map((tp, idx) => v927RenderCryptoMetric(`TP${idx + 1}`, v927DisplayValue(tp))).join("")}
         ${v927RenderCryptoMetric("Durum", statusLabel, finalStatus)}
-        ${v927RenderCryptoMetric("K/Z", `<span class="${pnlClass}">${pnlText}</span>`, "pnl")}
+        ${v927RenderCryptoMetric("P/L", `<span class="${pnlClass}">${pnlText}</span>`, "pnl")}
       </div>
     </div>`;
   }
@@ -2018,8 +2077,8 @@
         ? `<ul class="v892-active-match-list">${matchItems.map((x, idx) => `<li><span>${idx + 1}. ${v763EscapeHtml(x.note || "Maç")}</span><b>${Number(x.odds || 0) ? Number(x.odds || 0).toFixed(2) : "-"}</b></li>`).join("")}</ul>`
         : "";
       const title = isCrypto ? (row.note || "İşlem") : (comboRows.length ? "Kombine" : "Tekli Bahis");
-      const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KAZANÇ" : "KAZANDI") : (isCrypto ? "KAYIP" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
-      const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net K/Z: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
+      const status = kind === "history" ? `<em class="${row.res === "win" ? "pos" : "neg"}">${row.res === "win" ? (isCrypto ? "KÂR" : "KAZANDI") : (isCrypto ? "ZARAR" : "KAYBETTİ")}</em>` : `<em>Bekliyor</em>`;
+      const metric = isCrypto ? `Tutar: ${v768Money(row.stake)} · Net P/L: ${v768Money(row.odds)}` : `Tutar: ${v768Money(row.stake)} · Toplam Oran: ${row.totalOdds ? row.totalOdds.toFixed(2) : "-"} · Kazanç: ${row.possible ? v768Money(row.possible) : "-"}`;
       const summaryHtml = isActiveBet || isHistoryBet
         ? `<div class="v893-active-summary"><span><small>Tutar</small><b>${v768Money(row.stake)}</b></span><span><small>Toplam Oran</small><b>${row.totalOdds ? row.totalOdds.toFixed(2) : "-"}</b></span><span><small>Kazanç</small><b>${row.possible ? v768Money(row.possible) : "-"}</b></span></div>`
         : `<p>${metric}</p>`;
@@ -2131,7 +2190,7 @@
     }
     const title = k === "active" ? (m === "crypto" ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR") : k === "history" ? "Geçmiş" : "Rapor";
     const reportRows = v768HistoryRows(m);
-    const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>Toplam K/Z</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
+    const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>${m === "crypto" ? "Toplam P/L" : "Toplam K/Z"}</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
     const activePhotoBtn = "";
     const historyFilters = k === "history" ? v926HistoryFiltersHtml(m) : "";
     host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${historyFilters}${reportHtml}</div></section></div>`;
@@ -2141,7 +2200,7 @@
   function v768DownloadReport(mode) {
     const rows = v768HistoryRows(mode);
     const pnl = rows.reduce((a,r)=>a+Number(r.pnl||0),0);
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420"><rect width="900" height="420" rx="28" fill="#020617"/><rect x="26" y="26" width="848" height="368" rx="22" fill="none" stroke="#fbbf24" stroke-width="2"/><text x="52" y="80" fill="#fbbf24" font-size="26" font-family="Arial" font-weight="900">BULTEN · ${mode === "crypto" ? "KRİPTO" : "BAHİS"} ROLLING RAPOR</text><text x="52" y="140" fill="#fff" font-size="22" font-family="Arial" font-weight="800">Kayıt: ${rows.length}</text><text x="52" y="180" fill="#fff" font-size="22" font-family="Arial" font-weight="800">Toplam K/Z: ${v768Money(pnl)}</text><text x="52" y="230" fill="#94a3b8" font-size="16" font-family="Arial">${new Date().toLocaleString("tr-TR")}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420"><rect width="900" height="420" rx="28" fill="#020617"/><rect x="26" y="26" width="848" height="368" rx="22" fill="none" stroke="#fbbf24" stroke-width="2"/><text x="52" y="80" fill="#fbbf24" font-size="26" font-family="Arial" font-weight="900">BULTEN · ${mode === "crypto" ? "KRİPTO" : "BAHİS"} ROLLING RAPOR</text><text x="52" y="140" fill="#fff" font-size="22" font-family="Arial" font-weight="800">Kayıt: ${rows.length}</text><text x="52" y="180" fill="#fff" font-size="22" font-family="Arial" font-weight="800">${mode === "crypto" ? "Toplam P/L" : "Toplam K/Z"}: ${v768Money(pnl)}</text><text x="52" y="230" fill="#94a3b8" font-size="16" font-family="Arial">${new Date().toLocaleString("tr-TR")}</text></svg>`;
     const a = document.createElement("a");
     a.href = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     a.download = `bulten-${mode}-rolling-rapor.svg`;
@@ -2669,23 +2728,20 @@
                 <button type="button" class="v928-crypto-empty-head" data-v928-crypto-toggle="${day}:${slot}" aria-expanded="false"><span>Gün ${day} · İşlem ${slot + 1}</span><b>İşlem ekle</b></button>
                 <div class="v927-crypto-entry">
                   <div class="v927-crypto-main-grid">
-                    <input type="text" id="e-n-${day}-${slot}" placeholder="Coin / İşlem">
+                    <div class="v932-crypto-entry-line"><div class="v932-crypto-tp-controls"><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'plus')" title="TP ekle">+</button><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'minus')" title="Son TP sil">−</button></div><input type="text" id="e-n-${day}-${slot}" placeholder="İşlem"></div>
                     <select data-v927-crypto-side="${day}:${slot}" aria-label="İşlem tipi">
                       <option value="long">Long</option>
                       <option value="short">Short</option>
                     </select>
                   </div>
                   <div class="v927-crypto-field-grid">
-                    <input type="number" id="e-a-${day}-${slot}" placeholder="İşlem Tutarı" step="0.01">
-                    <input type="number" id="e-o-${day}-${slot}" placeholder="K/Z $" step="0.01">
+                    <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01">
+                    <input type="number" id="e-o-${day}-${slot}" placeholder="P/L $" step="0.01">
                     <input type="text" data-v927-crypto-entry="${day}:${slot}" placeholder="Giriş">
-                    <input type="text" data-v927-crypto-exit="${day}:${slot}" placeholder="Çıkış">
                     <input type="text" data-v927-crypto-leverage="${day}:${slot}" placeholder="Kaldıraç">
                     <input type="text" data-v927-crypto-liq="${day}:${slot}" placeholder="Likidasyon">
                     <input type="text" data-v927-crypto-stop="${day}:${slot}" placeholder="Stop">
-                    <input type="text" data-v927-crypto-tp1="${day}:${slot}" placeholder="TP1">
-                    <input type="text" data-v927-crypto-tp2="${day}:${slot}" placeholder="TP2">
-                    <input type="text" data-v927-crypto-tp3="${day}:${slot}" placeholder="TP3">
+                    <div class="v932-crypto-tp-list" data-v932-crypto-tp-list="${day}:${slot}"><input type="text" data-v927-crypto-tp="${day}:${slot}" data-v927-tp-index="1" placeholder="TP1"></div>
                   </div>
                 </div>
               ` : `
@@ -2709,8 +2765,8 @@
                 </div>
               `}
               <div class="k-actions v32" data-v847-main-actions="${day}:${slot}">
-                <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KAZANÇ" : "KAZANDI"}</button>
-                <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "KAYIP" : "KAYBETTİ"}</button>
+                <button class="w" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'win')">${isCryptoV491 ? "KÂR" : "KAZANDI"}</button>
+                <button class="l" onclick="omega_ResolveExcelOp(${day}, ${slot}, 'loss')">${isCryptoV491 ? "ZARAR" : "KAYBETTİ"}</button>
               </div>
             </div>
           `);
@@ -2722,7 +2778,7 @@
           <div class="day-info-v32">
             <h3>GÜN ${day}</h3>
             <span>Başlangıç: $${dayStart.toFixed(2)}</span>
-            <span>${isCryptoV491 ? "Gün K/Z" : "Gün K/Z"}: ${(dayProfit >= 0 ? "+" : "")}$${dayProfit.toFixed(2)}</span>
+            <span>${isCryptoV491 ? "Gün P/L" : "Gün K/Z"}: ${(dayProfit >= 0 ? "+" : "")}$${dayProfit.toFixed(2)}</span>
             <div class="day-tools-v32">
               <button class="gold" onclick="omega_RollingAddSlot(${day})">+ İŞLEM</button>
               <button onclick="omega_RollingRemoveSlot(${day})">- SİL</button>
@@ -2749,7 +2805,7 @@
       pnlElement.innerText = (totalProfit >= 0 ? "+" : "") + "$" + totalProfit.toFixed(2);
       pnlElement.style.color = totalProfit >= 0 ? "var(--green)" : "var(--red)";
       const pnlLabel = pnlElement.closest(".config-item")?.querySelector("label");
-      if (pnlLabel) pnlLabel.textContent = "K/Z:";
+      if (pnlLabel) pnlLabel.textContent = isCryptoV491 ? "P/L:" : "K/Z:";
     }
 
     const targetBal = Number(currentPlan.targetBal || ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS] || 0);
@@ -2867,7 +2923,7 @@
       return;
     }
     if (!oddsRaw || isNaN(odds) || (!isCrypto && hasComboGap)) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Net K/Z $ alanını doldur." : "Maç, oran ve ek maç oranlarını doldur.");
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "P/L $ alanını doldur." : "Maç, oran ve ek maç oranlarını doldur.");
       return;
     }
     if (!note) {
