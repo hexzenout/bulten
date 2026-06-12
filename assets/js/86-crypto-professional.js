@@ -2226,6 +2226,7 @@
     state[id] = willActivate;
     v941UpdateCryptoTotalPl(day, slot);
     v937RenderCryptoPreview(day, slot);
+    v954SaveCryptoDraft(day, slot);
     return false;
   };
 
@@ -2279,6 +2280,7 @@
     }
     v941UpdateCryptoTotalPl(day, slot);
     v937RenderCryptoPreview(day, slot);
+    v954SaveCryptoDraft(day, slot);
     return false;
   };
 
@@ -2304,6 +2306,7 @@
         if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];
         if (typeof omega_SaveRollingDB === "function") omega_SaveRollingDB();
       }
+      v954ClearCryptoDraft(day, slot);
       setTimeout(() => document.getElementById(`e-n-${day}-${slot}`)?.focus(), 20);
     } catch(e) {}
     return false;
@@ -2349,13 +2352,119 @@
   }
 
 
-  function v937CryptoSideMarkup(day, slot) {
+
+  function v954CryptoDraftStore(plan) {
+    if (!plan.cryptoPending || typeof plan.cryptoPending !== "object") plan.cryptoPending = {};
+    return plan.cryptoPending;
+  }
+
+  function v954NormalizeCryptoDraft(entry) {
+    if (!entry || typeof entry !== "object") return null;
+    const meta = v927CryptoMetaFromOp(entry.cryptoMeta || entry.meta || entry);
+    const note = String(entry.note || meta.coin || "").trim();
+    const amt = entry.amt === "" || entry.amt == null ? "" : String(entry.amt);
+    const odds = entry.odds === "" || entry.odds == null ? "" : String(entry.odds);
+    const hasMeta = Boolean(
+      meta.entry || meta.leverage || meta.liq || meta.liqAmount || meta.stop || meta.stopAmount ||
+      (meta.tps || []).some(Boolean) || (meta.tpProfits || []).some(Boolean) ||
+      (meta.plAdjustments || []).length || meta.side === "short"
+    );
+    if (!note && !amt && !odds && !hasMeta) return null;
+    const now = Date.now();
+    return {
+      note,
+      amt,
+      odds,
+      status: "pending",
+      cryptoMeta: meta,
+      createdAt: Number(entry.createdAt || entry.updatedAt || now),
+      updatedAt: Number(entry.updatedAt || now)
+    };
+  }
+
+  function v954GetCryptoDraft(day, slot) {
+    const plan = ensureRollingPlan();
+    return v954NormalizeCryptoDraft(plan.cryptoPending?.[day]?.[slot]);
+  }
+
+  function v954SetCryptoDraft(day, slot, entry) {
+    const plan = ensureRollingPlan();
+    const store = v954CryptoDraftStore(plan);
+    if (!store[day]) store[day] = {};
+    const normalized = v954NormalizeCryptoDraft(entry);
+    if (!normalized) {
+      delete store[day][slot];
+      if (Object.keys(store[day]).length === 0) delete store[day];
+      if (Object.keys(store).length === 0) delete plan.cryptoPending;
+    } else {
+      store[day][slot] = normalized;
+    }
+    omega_SaveRollingDB();
+  }
+
+  function v954ClearCryptoDraft(day, slot) {
+    const plan = ensureRollingPlan();
+    if (plan.cryptoPending?.[day]) {
+      delete plan.cryptoPending[day][slot];
+      if (Object.keys(plan.cryptoPending[day]).length === 0) delete plan.cryptoPending[day];
+      if (plan.cryptoPending && Object.keys(plan.cryptoPending).length === 0) delete plan.cryptoPending;
+      omega_SaveRollingDB();
+    }
+  }
+
+  function v954SaveCryptoDraft(day, slot) {
+    const plan = ensureRollingPlan();
+    if (plan.ops?.[day]?.[slot]) {
+      v954ClearCryptoDraft(day, slot);
+      return;
+    }
+    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
+    const amt = (document.getElementById(`e-a-${day}-${slot}`)?.value || "").trim();
+    const plInput = document.getElementById(`e-o-${day}-${slot}`);
+    const odds = plInput?.dataset?.v941PlHas === "1"
+      ? v941FormatSignedMoney(Number(plInput.dataset.v941PlNumber || 0))
+      : "";
+    v954SetCryptoDraft(day, slot, {
+      note,
+      amt,
+      odds,
+      cryptoMeta: v927CryptoMetaFromDom(day, slot),
+      createdAt: Number(v954GetCryptoDraft(day, slot)?.createdAt || Date.now()),
+      updatedAt: Date.now()
+    });
+  }
+
+  function v954PrimeCryptoDraft(day, slot, draft) {
+    const normalized = v954NormalizeCryptoDraft(draft);
+    if (!normalized) {
+      v945SetCryptoAdjustState(day, slot, []);
+      return normalized;
+    }
+    v945SetCryptoAdjustState(day, slot, normalized.cryptoMeta?.plAdjustments || []);
+    return normalized;
+  }
+
+  function v954RestoreCryptoDraftViews(root) {
+    const scope = root || document;
+    scope.querySelectorAll('#rolling-excel-overlay[data-roll-mode="crypto"] [data-v765-kapsul]').forEach(kapsul => {
+      const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
+      if (!day || !Number.isInteger(slot)) return;
+      v947NormalizeLeverageField(day, slot);
+      v947SyncLiqAmountFromStake(day, slot);
+      v941UpdateCryptoTotalPl(day, slot);
+      v937RenderCryptoPreview(day, slot);
+    });
+  }
+
+  function v937CryptoSideMarkup(day, slot, selectedSide = "long") {
+    const side = String(selectedSide || "long").toLowerCase() === "short" ? "short" : "long";
+    const label = side === "short" ? "Short" : "Long";
     return `<div class="v937-crypto-side-wrap" data-v937-crypto-side-wrap="${day}:${slot}">
-      <input type="hidden" data-v927-crypto-side="${day}:${slot}" value="long">
-      <button type="button" class="v937-crypto-side-trigger" data-v937-crypto-side-trigger="${day}:${slot}" data-side="long" aria-haspopup="listbox" aria-expanded="false">Long</button>
+      <input type="hidden" data-v927-crypto-side="${day}:${slot}" value="${side}">
+      <button type="button" class="v937-crypto-side-trigger" data-v937-crypto-side-trigger="${day}:${slot}" data-side="${side}" aria-haspopup="listbox" aria-expanded="false">${label}</button>
       <div class="v937-crypto-side-menu" data-v937-crypto-side-menu="${day}:${slot}" role="listbox">
-        <button type="button" class="is-active" data-v937-side-value="long" data-v937-crypto-side-option="${day}:${slot}:long">Long</button>
-        <button type="button" data-v937-side-value="short" data-v937-crypto-side-option="${day}:${slot}:short">Short</button>
+        <button type="button" class="${side === "long" ? "is-active" : ""}" data-v937-side-value="long" data-v937-crypto-side-option="${day}:${slot}:long">Long</button>
+        <button type="button" class="${side === "short" ? "is-active" : ""}" data-v937-side-value="short" data-v937-crypto-side-option="${day}:${slot}:short">Short</button>
       </div>
     </div>`;
   }
@@ -3561,6 +3670,7 @@
         const side = parts[2] === "short" ? "short" : "long";
         v937SetCryptoSide(day, slot, side);
         v937RenderCryptoPreview(day, slot);
+        v954SaveCryptoDraft(day, slot);
         return;
       }
       const activePhotoBtn = event.target.closest && event.target.closest("[data-v891-active-photo]");
@@ -3747,6 +3857,7 @@
       if (isCryptoKapsul) {
         if (event.target && event.target.id === `e-a-${day}-${slot}`) v947SyncLiqAmountFromStake(day, slot);
         v941UpdateCryptoTotalPl(day, slot);
+        v954SaveCryptoDraft(day, slot);
       }
       v774SavePendingSlot(day, slot);
       v937RenderCryptoPreview(day, slot);
@@ -3760,6 +3871,7 @@
         if (event.target && event.target.matches && event.target.matches(`[data-v927-crypto-leverage="${day}:${slot}"]`)) v947NormalizeLeverageField(day, slot);
         if (event.target && event.target.id === `e-a-${day}-${slot}`) v947SyncLiqAmountFromStake(day, slot);
         v941UpdateCryptoTotalPl(day, slot);
+        v954SaveCryptoDraft(day, slot);
       }
       v774SavePendingSlot(day, slot);
       v937RenderCryptoPreview(day, slot);
@@ -3781,6 +3893,7 @@
           v947NormalizeLeverageField(day, slot);
           v947SyncLiqAmountFromStake(day, slot);
           v941UpdateCryptoTotalPl(day, slot);
+          v954SaveCryptoDraft(day, slot);
         }
       });
       v937RenderAllCryptoPreviews(document);
@@ -3857,25 +3970,33 @@
           const pStakeV774 = pendingV774?.amt === "" || pendingV774?.amt == null ? "" : v763EscapeHtml(pendingV774.amt);
           const pComboV774 = Array.isArray(pendingV774?.combo) ? pendingV774.combo : [];
           const pComboHtmlV774 = pComboV774.map(row => `<div class="v765-extra-match-row v768-extra-match-row" data-v763-extra-row="${day}:${slot}"><input type="text" data-v763-extra-note placeholder="Maç" value="${v763EscapeHtml(row.note || "")}"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01" value="${row.odds === "" || row.odds == null ? "" : v763EscapeHtml(row.odds)}"></div>`).join("");
+          const pCryptoV954 = isCryptoV491 ? v954PrimeCryptoDraft(day, slot, v954GetCryptoDraft(day, slot)) : null;
+          const pCryptoMetaV954 = pCryptoV954?.cryptoMeta || {};
+          const pCryptoNoteV954 = v763EscapeHtml(pCryptoV954?.note || "");
+          const pCryptoStakeV954 = pCryptoV954?.amt === "" || pCryptoV954?.amt == null ? "" : v763EscapeHtml(pCryptoV954.amt);
+          const pCryptoTpsV954 = Array.isArray(pCryptoMetaV954.tps) && pCryptoMetaV954.tps.length ? pCryptoMetaV954.tps : [""];
+          const pCryptoProfitsV954 = Array.isArray(pCryptoMetaV954.tpProfits) ? pCryptoMetaV954.tpProfits : [];
+          const pCryptoTpRowsV954 = Math.max(pCryptoTpsV954.length, pCryptoProfitsV954.length, 1);
+          const pCryptoTpHtmlV954 = Array.from({ length: pCryptoTpRowsV954 }, (_, idx) => v938CryptoTpPairMarkup(day, slot, idx + 1, pCryptoTpsV954[idx] || "", pCryptoProfitsV954[idx] || "")).join("");
           cards.push(`
             <div class="kapsul v32 ${isCryptoV491 ? "v928-crypto-kapsul is-open" : "v765-bet-kapsul"}" data-v765-kapsul="${day}:${slot}">
               ${isCryptoV491 ? `
                 <div class="v928-crypto-empty-head" data-v936-crypto-head="${day}:${slot}"><span>Gün ${day} · İşlem ${slot + 1}</span><button type="button" class="v936-crypto-clear" data-v936-crypto-clear="${day}:${slot}" onclick="return omega_CryptoClearSlot(${day}, ${slot})" title="Kutuyu temizle">×</button></div>
                 <div class="v927-crypto-entry">
                   <div class="v927-crypto-main-grid">
-                    <div class="v932-crypto-entry-line"><div class="v932-crypto-tp-controls"><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'plus')" title="TP ekle">+</button><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'minus')" title="Son TP sil">−</button></div><input type="text" id="e-n-${day}-${slot}" placeholder="İşlem"></div>
-                    ${v937CryptoSideMarkup(day, slot)}
+                    <div class="v932-crypto-entry-line"><div class="v932-crypto-tp-controls"><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'plus')" title="TP ekle">+</button><button type="button" onclick="return omega_CryptoToggleTpRow(${day}, ${slot}, 'minus')" title="Son TP sil">−</button></div><input type="text" id="e-n-${day}-${slot}" placeholder="İşlem" value="${pCryptoNoteV954}"></div>
+                    ${v937CryptoSideMarkup(day, slot, pCryptoMetaV954.side)}
                   </div>
                   <div class="v927-crypto-field-grid">
-                    <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01">
+                    <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01" value="${pCryptoStakeV954}">
                     <textarea id="e-o-${day}-${slot}" data-v941-crypto-total-pl="${day}:${slot}" placeholder="Toplam P/L" readonly rows="2"></textarea>
-                    <input type="text" data-v927-crypto-entry="${day}:${slot}" placeholder="Giriş">
-                    <input type="text" data-v927-crypto-leverage="${day}:${slot}" placeholder="Kaldıraç">
-                    <div class="v932-crypto-tp-list" data-v932-crypto-tp-list="${day}:${slot}">${v938CryptoTpPairMarkup(day, slot, 1)}</div>
-                    <input type="text" data-v927-crypto-stop="${day}:${slot}" placeholder="Stop">
-                    <input type="text" data-v927-crypto-stop-amount="${day}:${slot}" placeholder="Stop Miktarı">
-                    <input type="text" data-v927-crypto-liq="${day}:${slot}" placeholder="Liq">
-                    <textarea data-v927-crypto-liq-amount="${day}:${slot}" data-v947-auto-liq-amount="${day}:${slot}" placeholder="Liq Miktarı" readonly rows="2"></textarea>
+                    <input type="text" data-v927-crypto-entry="${day}:${slot}" placeholder="Giriş" value="${v763EscapeHtml(pCryptoMetaV954.entry || "")}">
+                    <input type="text" data-v927-crypto-leverage="${day}:${slot}" placeholder="Kaldıraç" value="${v763EscapeHtml(pCryptoMetaV954.leverage || "")}">
+                    <div class="v932-crypto-tp-list" data-v932-crypto-tp-list="${day}:${slot}">${pCryptoTpHtmlV954}</div>
+                    <input type="text" data-v927-crypto-stop="${day}:${slot}" placeholder="Stop" value="${v763EscapeHtml(pCryptoMetaV954.stop || "")}">
+                    <input type="text" data-v927-crypto-stop-amount="${day}:${slot}" placeholder="Stop Miktarı" value="${v763EscapeHtml(pCryptoMetaV954.stopAmount || "")}">
+                    <input type="text" data-v927-crypto-liq="${day}:${slot}" placeholder="Liq" value="${v763EscapeHtml(pCryptoMetaV954.liq || "")}">
+                    <textarea data-v927-crypto-liq-amount="${day}:${slot}" data-v947-auto-liq-amount="${day}:${slot}" placeholder="Liq Miktarı" readonly rows="2">${v763EscapeHtml(pCryptoMetaV954.liqAmount || "")}</textarea>
                   </div>
                   <div class="v937-crypto-preview" data-v937-crypto-preview="${day}:${slot}"></div>
                 </div>
@@ -3931,6 +4052,7 @@
 
     wrapper.innerHTML = htmlBuffer;
     v765BindExcelFeatureControls(wrapper);
+    if (isCryptoV491) v954RestoreCryptoDraftViews(wrapper);
 
     const current = qs("#excel-current-bal");
     if (current) current.innerText = `$${runningBalance.toFixed(2)}`;
@@ -4016,6 +4138,7 @@
         v941UpdateCryptoTotalPl(day, slot);
       }
       v937RenderCryptoPreview(day, slot);
+      v954SaveCryptoDraft(day, slot);
       setTimeout(() => noteInput?.focus(), 20);
     } catch(e) {}
   }
@@ -4140,6 +4263,7 @@
       : [];
     const opCreatedAt = Number(pendingBeforeResolve?.createdAt || pendingBeforeResolve?.updatedAt || Date.now());
     currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, comboResults, res: result, netMode: isCrypto ? "amount" : "odds", cryptoMeta, createdAt: opCreatedAt, settledAt: Date.now() };
+    if (isCrypto) v954ClearCryptoDraft(day, slot);
     if (currentPlan.pending?.[day]) {
       delete currentPlan.pending[day][slot];
       if (Object.keys(currentPlan.pending[day]).length === 0) delete currentPlan.pending[day];
