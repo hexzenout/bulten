@@ -403,22 +403,132 @@
         border-color:rgba(251,191,36,.72);
         box-shadow:0 0 14px rgba(251,191,36,.16);
       }
-      #omega-rolling-feature-host .v926-history-date {
-        padding:0 10px;
+      #omega-rolling-feature-host .v926-history-date,
+      #omega-rolling-feature-host .v929-history-date-open {
+        padding:0 14px;
+        min-width:132px;
       }
-      #omega-rolling-feature-host .v926-history-date::before {
-        content:"📅";
-        font-size:13px;
-        line-height:1;
+      #omega-rolling-feature-host .v929-history-date-wrap {
+        position:relative;
+        flex: 1 1 100%;
+        display:flex;
+        align-items:center;
+        justify-content:flex-start;
+        min-width:220px;
       }
-      #omega-rolling-feature-host .v926-history-date input {
+      #omega-rolling-feature-host .v929-history-date-open {
+        width:auto;
+        min-width:156px;
+        border-color:rgba(251,191,36,.34);
         color:#f8fafc;
-        background:transparent;
-        border:0;
+        background:linear-gradient(180deg, rgba(15,23,42,.94), rgba(2,6,23,.86));
+      }
+      #omega-rolling-feature-host .v929-history-date-open.active {
+        color:#fbbf24;
+        border-color:rgba(251,191,36,.74);
+        box-shadow:0 0 14px rgba(251,191,36,.18);
+      }
+      #omega-rolling-feature-host .v929-history-date-open::before {
+        content:"";
+        width:8px;
+        height:8px;
+        border-radius:999px;
+        background:#fbbf24;
+        box-shadow:0 0 10px rgba(251,191,36,.45);
+      }
+      #omega-rolling-feature-host .v929-history-date-panel {
+        position:absolute;
+        left:0;
+        top:calc(100% + 10px);
+        z-index:30;
+        width:min(390px, 88vw);
+        padding:14px;
+        border-radius:18px;
+        border:1px solid rgba(251,191,36,.34);
+        background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.98));
+        box-shadow:0 24px 70px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.06);
+      }
+      #omega-rolling-feature-host .v929-history-date-panel[hidden] { display:none !important; }
+      #omega-rolling-feature-host .v929-history-date-panel-head {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        margin-bottom:12px;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel-head b {
+        color:#fbbf24;
+        font:950 13px/1 'Inter',system-ui,sans-serif;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel-head span {
+        color:#94a3b8;
+        font:800 11px/1.2 'Inter',system-ui,sans-serif;
+      }
+      #omega-rolling-feature-host .v929-date-grid {
+        display:grid;
+        grid-template-columns:1fr 1.2fr 1fr;
+        gap:10px;
+      }
+      #omega-rolling-feature-host .v929-date-field small {
+        display:block;
+        margin:0 0 6px;
+        color:#93c5fd;
+        font:900 11px/1 'Inter',system-ui,sans-serif;
+      }
+      #omega-rolling-feature-host .v929-date-field select {
+        width:100%;
+        min-height:38px;
+        border-radius:12px;
+        border:1px solid rgba(148,163,184,.28);
+        background:rgba(2,6,23,.84);
+        color:#f8fafc;
+        padding:0 10px;
         outline:0;
-        min-width:124px;
-        font:900 12px/1 'JetBrains Mono',monospace;
-        color-scheme:dark;
+        font:900 12px/1 'Inter',system-ui,sans-serif;
+      }
+      #omega-rolling-feature-host .v929-date-actions {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        margin-top:13px;
+      }
+      #omega-rolling-feature-host .v929-date-actions button {
+        min-height:36px;
+        border-radius:12px;
+        padding:0 13px;
+      }
+      #omega-rolling-feature-host .v929-date-actions [data-v929-date-apply] {
+        color:#020617;
+        background:#fbbf24;
+        border-color:#fbbf24;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.crypto.active,
+      #omega-rolling-feature-host .v768-feature-modal.crypto.history {
+        width:min(880px, 96vw) !important;
+        max-height:88vh !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.crypto.active .v768-feature-body,
+      #omega-rolling-feature-host .v768-feature-modal.crypto.history .v768-feature-body {
+        gap:14px !important;
+        padding:18px !important;
+      }
+      #omega-rolling-feature-host .v768-feature-modal.bet.active,
+      #omega-rolling-feature-host .v768-feature-modal.bet.history,
+      #omega-rolling-feature-host .v768-feature-modal.crypto.active,
+      #omega-rolling-feature-host .v768-feature-modal.crypto.history {
+        scrollbar-gutter: stable;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+      #omega-rolling-feature-host .v768-feature-body {
+        transform: translateZ(0);
+      }
+      #omega-rolling-feature-host .v768-feature-card,
+      #omega-rolling-feature-host .v903-bet-accordion-card {
+        content-visibility: auto;
+        contain-intrinsic-size: 150px;
+        contain: layout paint style;
       }
     `;
     document.head.appendChild(style);
@@ -1392,14 +1502,67 @@
     });
   }
 
+  function v929FormatHistoryDateLabel(value) {
+    const raw = String(value || "").trim();
+    const parts = raw.split("-").map(Number);
+    if (parts.length !== 3 || parts.some(n => !Number.isFinite(n) || !n)) return "Tarih Seç";
+    return new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString("tr-TR", { day:"2-digit", month:"long", year:"numeric" });
+  }
+
+  function v929TodayYmdParts() {
+    const now = new Date();
+    return { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };
+  }
+
+  function v929DaysInMonth(year, month) {
+    return new Date(Number(year), Number(month), 0).getDate();
+  }
+
+  function v929MonthName(month) {
+    return new Date(2026, Number(month) - 1, 1).toLocaleDateString("tr-TR", { month:"long" });
+  }
+
+  function v929BuildDatePanelHtml(mode, manual) {
+    const today = v929TodayYmdParts();
+    const safeManual = v928ClampHistoryDate(manual || "") || V928_HISTORY_MIN_DATE;
+    const parts = safeManual.split("-").map(Number);
+    let year = parts[0] || Math.max(2026, today.y);
+    let month = parts[1] || 6;
+    let day = parts[2] || 1;
+    year = Math.min(Math.max(2026, year), Math.max(2026, today.y));
+    month = Math.min(Math.max(year === 2026 ? 6 : 1, month), year === today.y ? today.m : 12);
+    day = Math.min(Math.max(year === 2026 && month === 6 ? 1 : 1, day), year === today.y && month === today.m ? today.d : v929DaysInMonth(year, month));
+    const yearMax = Math.max(2026, today.y);
+    const years = [];
+    for (let y = yearMax; y >= 2026; y--) years.push(y);
+    const monthMin = year === 2026 ? 6 : 1;
+    const monthMax = year === today.y ? today.m : 12;
+    const months = [];
+    for (let m = monthMin; m <= monthMax; m++) months.push(m);
+    const dayMin = year === 2026 && month === 6 ? 1 : 1;
+    const dayMax = year === today.y && month === today.m ? today.d : v929DaysInMonth(year, month);
+    const days = [];
+    for (let d = dayMin; d <= dayMax; d++) days.push(d);
+    return `<div class="v929-history-date-panel" data-v929-date-panel="${mode}" hidden>
+      <div class="v929-history-date-panel-head"><b>Tarih Seç</b><span>En erken 1 Haziran 2026</span></div>
+      <div class="v929-date-grid">
+        <label class="v929-date-field"><small>Yıl</small><select data-v929-date-year="${mode}">${years.map(y => `<option value="${y}" ${y === year ? "selected" : ""}>${y}</option>`).join("")}</select></label>
+        <label class="v929-date-field"><small>Ay</small><select data-v929-date-month="${mode}">${months.map(m => `<option value="${m}" ${m === month ? "selected" : ""}>${v763EscapeHtml(v929MonthName(m))}</option>`).join("")}</select></label>
+        <label class="v929-date-field"><small>Gün</small><select data-v929-date-day="${mode}">${days.map(d => `<option value="${d}" ${d === day ? "selected" : ""}>${String(d).padStart(2, "0")}</option>`).join("")}</select></label>
+      </div>
+      <div class="v929-date-actions"><button type="button" data-v929-date-clear="${mode}">Temizle</button><button type="button" data-v929-date-apply="${mode}">Uygula</button></div>
+    </div>`;
+  }
+
   function v926HistoryFiltersHtml(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const active = v926GetHistoryFilter(m);
     const manual = v926GetHistoryManualDate(m);
     const items = [["all", "Tümü"], ["day", "Bugün"], ["week", "1 Hafta"], ["month", "1 Ay"], ["quarter", "3 Ay"], ["half", "6 Ay"], ["year", "1 Yıl"]];
+    const dateLabel = active === "manual" && manual ? v929FormatHistoryDateLabel(manual) : "Tarih Seç";
     return `<div class="v926-history-filters v928-history-filters" data-v926-history-filters="${m}">
       ${items.map(([key, label]) => `<button type="button" class="${active === key ? "active" : ""}" data-v926-history-filter="${m}:${key}">${label}</button>`).join("")}
-      <label class="v926-history-date ${active === "manual" ? "active" : ""}" title="Tarih seç"><input type="date" min="${V928_HISTORY_MIN_DATE}" value="${v763EscapeHtml(manual)}" data-v926-history-date="${m}"></label>
+      <div class="v929-history-date-wrap" data-v929-date-wrap="${m}"><button type="button" class="v929-history-date-open ${active === "manual" ? "active" : ""}" data-v929-date-open="${m}">${v763EscapeHtml(dateLabel)}</button>${v929BuildDatePanelHtml(m, manual)}</div>
     </div>`;
   }
 
@@ -2326,14 +2489,69 @@
         if (!event.target.closest("[data-v765-kapsul]") && !event.target.closest("[data-v768-feature-open]")) v774FlushAllPendingFromDom();
       }
     }, true);
+    document.addEventListener("click", function(event) {
+      const dateOpen = event.target.closest && event.target.closest("[data-v929-date-open]");
+      if (dateOpen) {
+        event.preventDefault();
+        event.stopPropagation();
+        const mode = dateOpen.dataset.v929DateOpen === "crypto" ? "crypto" : "bet";
+        const wrap = dateOpen.closest(`[data-v929-date-wrap="${mode}"]`);
+        const panel = wrap?.querySelector(`[data-v929-date-panel="${mode}"]`);
+        if (panel) panel.hidden = !panel.hidden;
+        return;
+      }
+      const apply = event.target.closest && event.target.closest("[data-v929-date-apply]");
+      if (apply) {
+        event.preventDefault();
+        event.stopPropagation();
+        const mode = apply.dataset.v929DateApply === "crypto" ? "crypto" : "bet";
+        const wrap = apply.closest(`[data-v929-date-wrap="${mode}"]`);
+        const y = Number(wrap?.querySelector(`[data-v929-date-year="${mode}"]`)?.value || 2026);
+        const m = Number(wrap?.querySelector(`[data-v929-date-month="${mode}"]`)?.value || 6);
+        const d = Number(wrap?.querySelector(`[data-v929-date-day="${mode}"]`)?.value || 1);
+        const clampedDate = v928ClampHistoryDate(`${String(y).padStart(4,"0")}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`);
+        localStorage.setItem(v926HistoryDateStorageKey(mode), clampedDate);
+        localStorage.setItem(v926HistoryFilterStorageKey(mode), "manual");
+        v768OpenFeaturePanel(mode, "history");
+        return;
+      }
+      const clear = event.target.closest && event.target.closest("[data-v929-date-clear]");
+      if (clear) {
+        event.preventDefault();
+        event.stopPropagation();
+        const mode = clear.dataset.v929DateClear === "crypto" ? "crypto" : "bet";
+        localStorage.removeItem(v926HistoryDateStorageKey(mode));
+        localStorage.setItem(v926HistoryFilterStorageKey(mode), "all");
+        v768OpenFeaturePanel(mode, "history");
+        return;
+      }
+    }, true);
     document.addEventListener("change", function(event) {
-      const dateInput = event.target && event.target.closest && event.target.closest("[data-v926-history-date]");
-      if (!dateInput) return;
-      const mode = dateInput.dataset.v926HistoryDate === "crypto" ? "crypto" : "bet";
-      const clampedDate = v928ClampHistoryDate(String(dateInput.value || ""));
-      localStorage.setItem(v926HistoryDateStorageKey(mode), clampedDate);
-      localStorage.setItem(v926HistoryFilterStorageKey(mode), "manual");
-      v768OpenFeaturePanel(mode, "history");
+      const yearSelect = event.target && event.target.closest && event.target.closest("[data-v929-date-year]");
+      const monthSelect = event.target && event.target.closest && event.target.closest("[data-v929-date-month]");
+      if (!yearSelect && !monthSelect) return;
+      const mode = (yearSelect?.dataset.v929DateYear || monthSelect?.dataset.v929DateMonth) === "crypto" ? "crypto" : "bet";
+      const wrap = (yearSelect || monthSelect).closest(`[data-v929-date-wrap="${mode}"]`);
+      if (!wrap) return;
+      const today = v929TodayYmdParts();
+      const ySel = wrap.querySelector(`[data-v929-date-year="${mode}"]`);
+      const mSel = wrap.querySelector(`[data-v929-date-month="${mode}"]`);
+      const dSel = wrap.querySelector(`[data-v929-date-day="${mode}"]`);
+      let y = Number(ySel?.value || 2026);
+      let m = Number(mSel?.value || 6);
+      let d = Number(dSel?.value || 1);
+      const monthMin = y === 2026 ? 6 : 1;
+      const monthMax = y === today.y ? today.m : 12;
+      if (m < monthMin) m = monthMin;
+      if (m > monthMax) m = monthMax;
+      if (mSel) {
+        mSel.innerHTML = Array.from({ length: monthMax - monthMin + 1 }, (_, i) => monthMin + i).map(mm => `<option value="${mm}" ${mm === m ? "selected" : ""}>${v929MonthName(mm)}</option>`).join("");
+      }
+      const dayMin = y === 2026 && m === 6 ? 1 : 1;
+      const dayMax = y === today.y && m === today.m ? today.d : v929DaysInMonth(y, m);
+      if (d < dayMin) d = dayMin;
+      if (d > dayMax) d = dayMax;
+      if (dSel) dSel.innerHTML = Array.from({ length: dayMax - dayMin + 1 }, (_, i) => dayMin + i).map(dd => `<option value="${dd}" ${dd === d ? "selected" : ""}>${String(dd).padStart(2, "0")}</option>`).join("");
     }, true);
     document.addEventListener("input", function(event) {
       const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
