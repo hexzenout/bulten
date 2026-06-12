@@ -1236,13 +1236,39 @@
         white-space: normal !important;
         overflow: visible !important;
       }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid > span {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 5px !important;
+        min-height: 38px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid > span.v941-action-line {
+        justify-content: space-between !important;
+      }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .pl b {
+        flex: 0 1 auto !important;
         max-width: none !important;
         display: inline !important;
-        margin-left: 5px !important;
+        margin-left: 0 !important;
         white-space: nowrap !important;
         overflow: visible !important;
         text-overflow: clip !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .v953-metric-text {
+        align-items: center !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .tp-profit,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .stop-amount,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .liq-amount,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .stake,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .entry,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .lev {
+        white-space: nowrap !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .liq-amount {
+        white-space: normal !important;
+        flex-wrap: wrap !important;
       }
 
       #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear {
@@ -1998,11 +2024,19 @@
   function v941ParseMoney(value) {
     const raw = String(value ?? "").trim();
     if (!raw) return 0;
-    const normalized = raw
+    let normalized = raw
       .replace(/\s+/g, "")
-      .replace(/,/g, ".")
-      .replace(/[^0-9+\-.]/g, "");
-    const n = Number(normalized);
+      .replace(/[^0-9+\-.,]/g, "");
+    if (!normalized || normalized === "+" || normalized === "-") return 0;
+    const sign = normalized.startsWith("-") ? "-" : "";
+    normalized = normalized.replace(/^[+\-]/, "");
+    if (normalized.includes(",") && normalized.includes(".")) {
+      normalized = normalized.replace(/,/g, "");
+    } else if (normalized.includes(",")) {
+      const looksThousands = /^\d{1,3}(,\d{3})+(?:\.\d+)?$/.test(normalized);
+      normalized = looksThousands ? normalized.replace(/,/g, "") : normalized.replace(/,/g, ".");
+    }
+    const n = Number(sign + normalized);
     return Number.isFinite(n) ? n : 0;
   }
 
@@ -2025,7 +2059,7 @@
   function v947FormatAutoDollarValue(value) {
     const n = v941ParseMoney(value);
     if (!Number.isFinite(n) || n === 0) return "";
-    return `$${Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+    return `$${v953FormatCryptoNumber(Math.abs(n))}`;
   }
 
   function v948StackedMetricValue(label, value) {
@@ -2040,6 +2074,31 @@
     const has = !!input?.dataset?.v941PlHas && input.dataset.v941PlHas === "1";
     if (!input || !has) return "";
     return v941FormatSignedMoney(Number(input.dataset.v941PlNumber || 0));
+  }
+
+  function v955CryptoCleanMetricText(value) {
+    return String(value ?? "")
+      .replace(/^(Toplam\s*P\/L|Liq\s*Miktarı)\s*:\s*/i, "")
+      .trim();
+  }
+
+  function v955CryptoHasText(value) {
+    const text = v955CryptoCleanMetricText(value);
+    if (!text || text === "-") return false;
+    return v941ParseMoney(text) !== 0 || /[A-Za-zÇĞİÖŞÜçğıöşü]/.test(text);
+  }
+
+  function v955CryptoSlotHasMeaningfulContent(day, slot) {
+    const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
+    const stake = (document.getElementById(`e-a-${day}-${slot}`)?.value || "").trim();
+    const meta = v927CryptoMetaFromDom(day, slot);
+    const hasTp = (meta.tps || []).some(v955CryptoHasText) || (meta.tpProfits || []).some(v955CryptoHasText);
+    return Boolean(
+      note || v955CryptoHasText(stake) || v955CryptoHasText(meta.entry) || v955CryptoHasText(meta.leverage) ||
+      v955CryptoHasText(meta.stop) || v955CryptoHasText(meta.stopAmount) ||
+      v955CryptoHasText(meta.liq) || (v955CryptoHasText(stake) && v955CryptoHasText(meta.liqAmount)) ||
+      hasTp || v945CryptoActiveAdjustIds(day, slot).length
+    );
   }
 
   function v947SyncLiqAmountFromStake(day, slot) {
@@ -2361,14 +2420,17 @@
   function v954NormalizeCryptoDraft(entry) {
     if (!entry || typeof entry !== "object") return null;
     const meta = v927CryptoMetaFromOp(entry.cryptoMeta || entry.meta || entry);
-    const note = String(entry.note || meta.coin || "").trim();
+    let note = String(entry.note || meta.coin || "").trim();
     const amt = entry.amt === "" || entry.amt == null ? "" : String(entry.amt);
     const odds = entry.odds === "" || entry.odds == null ? "" : String(entry.odds);
     const hasMeta = Boolean(
-      meta.entry || meta.leverage || meta.liq || meta.liqAmount || meta.stop || meta.stopAmount ||
-      (meta.tps || []).some(Boolean) || (meta.tpProfits || []).some(Boolean) ||
+      v955CryptoHasText(meta.entry) || v955CryptoHasText(meta.leverage) || v955CryptoHasText(meta.liq) ||
+      (v955CryptoHasText(amt) && v955CryptoHasText(meta.liqAmount)) ||
+      v955CryptoHasText(meta.stop) || v955CryptoHasText(meta.stopAmount) ||
+      (meta.tps || []).some(v955CryptoHasText) || (meta.tpProfits || []).some(v955CryptoHasText) ||
       (meta.plAdjustments || []).length || meta.side === "short"
     );
+    if (note === "İşlem" && !amt && !odds && !hasMeta) note = "";
     if (!note && !amt && !odds && !hasMeta) return null;
     const now = Date.now();
     return {
@@ -2497,7 +2559,7 @@
     const meta = v927CryptoMetaFromDom(day, slot);
     const tps = Array.isArray(meta.tps) ? meta.tps : [];
     const tpProfits = Array.isArray(meta.tpProfits) ? meta.tpProfits : [];
-    const hasAny = Boolean(note || stakeRaw || plRaw || meta.entry || meta.leverage || meta.liq || meta.liqAmount || meta.stop || meta.stopAmount || tps.some(Boolean) || tpProfits.some(Boolean));
+    const hasAny = v955CryptoSlotHasMeaningfulContent(day, slot);
     if (!hasAny) return null;
     return { note, stakeRaw, plRaw, meta, tps };
   }
@@ -2567,7 +2629,7 @@
     const tpProfits = Array.isArray(src.tpProfits) ? src.tpProfits.map(v => String(v || "").trim()) : [];
     return {
       side,
-      coin: String(src.coin || op?.note || "İşlem").trim(),
+      coin: String(src.coin || op?.note || "").trim(),
       entry: String(src.entry || src.giris || "").trim(),
       leverage: String(src.leverage || src.kaldirac || "").trim(),
       liq: String(src.liq || src.liquidation || src.likidasyon || "").trim(),
@@ -3193,10 +3255,12 @@
         if (saved) continue;
         if (!smartBet) {
           const note = (document.getElementById(`e-n-${day}-${slot}`)?.value || "").trim();
-          const stake = Number(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
-          const odds = Number(document.getElementById(`e-o-${day}-${slot}`)?.value || 0);
+          const stake = v941ParseMoney(document.getElementById(`e-a-${day}-${slot}`)?.value || 0);
+          const oddsInput = document.getElementById(`e-o-${day}-${slot}`);
+          const odds = isCrypto ? Number(oddsInput?.dataset?.v941PlNumber || 0) : Number(oddsInput?.value || 0);
           const combo = isCrypto ? [] : v763ComboRows(day, slot);
-          if (!note && !stake && !odds && !combo.length) continue;
+          if (isCrypto && !v955CryptoSlotHasMeaningfulContent(day, slot)) continue;
+          if (!isCrypto && !note && !stake && !odds && !combo.length) continue;
           const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
           rows.push({ day, slot, note, stake, odds, combo, comboResults: [], totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, createdAt: Date.now(), updatedAt: Date.now() });
           continue;
@@ -3893,7 +3957,7 @@
           v947NormalizeLeverageField(day, slot);
           v947SyncLiqAmountFromStake(day, slot);
           v941UpdateCryptoTotalPl(day, slot);
-          v954SaveCryptoDraft(day, slot);
+          if (v955CryptoSlotHasMeaningfulContent(day, slot) || v954GetCryptoDraft(day, slot)) v954SaveCryptoDraft(day, slot);
         }
       });
       v937RenderAllCryptoPreviews(document);
