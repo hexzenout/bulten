@@ -931,6 +931,64 @@
         border-color: rgba(251,191,36,.48) !important;
         box-shadow: 0 0 0 1px rgba(251,191,36,.12) !important;
       }
+
+      /* V941: Kripto Toplam P/L otomatik hesap + sade normal inputlar */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[readonly] {
+        cursor: default !important;
+        color: #e5e7eb !important;
+        background: rgba(15,23,42,.78) !important;
+        border-color: rgba(51,65,85,.72) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[data-v941-crypto-total-pl].pos {
+        color: #86efac !important;
+        border-color: rgba(34,197,94,.38) !important;
+        background: rgba(20,83,45,.16) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-field-grid input[data-v941-crypto-total-pl].neg {
+        color: #fecaca !important;
+        border-color: rgba(239,68,68,.42) !important;
+        background: rgba(127,29,29,.16) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .v941-action-line {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v941-pl-action {
+        flex: 0 0 auto !important;
+        width: 22px !important;
+        height: 22px !important;
+        min-width: 22px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 999px !important;
+        font: 1000 12px/1 Inter,system-ui,sans-serif !important;
+        cursor: pointer !important;
+        color: #fff !important;
+        opacity: .86 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v941-pl-action.plus {
+        border: 1px solid rgba(34,197,94,.55) !important;
+        background: rgba(22,163,74,.22) !important;
+        box-shadow: 0 0 12px rgba(34,197,94,.10) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v941-pl-action.minus {
+        border: 1px solid rgba(239,68,68,.58) !important;
+        background: rgba(185,28,28,.22) !important;
+        box-shadow: 0 0 12px rgba(239,68,68,.10) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v941-pl-action.is-active {
+        opacity: 1 !important;
+        transform: scale(1.03) !important;
+        box-shadow: 0 0 16px rgba(251,191,36,.16) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .liq-amount b,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .stop-amount b { color:#fecaca !important; }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.tp-profit b { color:#22c55e !important; }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.liq-amount b,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.stop-amount b { color:#ef4444 !important; }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview {
         border-color:rgba(56,189,248,.24) !important;
         background:linear-gradient(180deg, rgba(15,23,42,.84), rgba(2,6,23,.64)) !important;
@@ -1678,6 +1736,94 @@
   }
 
 
+  window.V941_CRYPTO_PL_ADJUST = window.V941_CRYPTO_PL_ADJUST || {};
+
+  function v941CryptoKey(day, slot) {
+    return `${Number(day)}:${Number(slot)}`;
+  }
+
+  function v941ParseMoney(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return 0;
+    const normalized = raw
+      .replace(/\s+/g, "")
+      .replace(/,/g, ".")
+      .replace(/[^0-9+\-.]/g, "");
+    const n = Number(normalized);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function v941FormatSignedMoney(value) {
+    const n = Number(value || 0);
+    const sign = n >= 0 ? "+" : "-";
+    return `${sign}$${Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
+  function v941GetCryptoAdjustState(day, slot) {
+    const key = v941CryptoKey(day, slot);
+    const store = window.V941_CRYPTO_PL_ADJUST || (window.V941_CRYPTO_PL_ADJUST = {});
+    if (!store[key]) store[key] = {};
+    return store[key];
+  }
+
+  function v941CryptoAdjustId(type, index) {
+    const t = type === "liq" ? "liq" : type === "stop" ? "stop" : "tp";
+    const i = Math.max(1, Number(index || 1));
+    return t === "tp" ? `tp:${i}` : t;
+  }
+
+  function v941CryptoAdjustmentValue(day, slot, type, index) {
+    if (type === "liq") {
+      return -Math.abs(v941ParseMoney(v927FieldValue(day, slot, "liqAmount")));
+    }
+    if (type === "stop") {
+      return -Math.abs(v941ParseMoney(v927FieldValue(day, slot, "stopAmount")));
+    }
+    const el = document.querySelector(`[data-v939-crypto-tp-profit="${day}:${slot}"][data-v939-tp-profit-index="${Number(index || 1)}"]`);
+    return Math.abs(v941ParseMoney(el?.value || ""));
+  }
+
+  function v941ComputeCryptoTotalPl(day, slot) {
+    const state = v941GetCryptoAdjustState(day, slot);
+    let total = 0;
+    Object.keys(state).forEach(id => {
+      if (!state[id]) return;
+      const [type, idxRaw] = id.split(":");
+      total += v941CryptoAdjustmentValue(day, slot, type, Number(idxRaw || 1));
+    });
+    return total;
+  }
+
+  function v941HasCryptoAdjust(day, slot) {
+    const state = v941GetCryptoAdjustState(day, slot);
+    return Object.keys(state).some(k => !!state[k]);
+  }
+
+  function v941UpdateCryptoTotalPl(day, slot) {
+    const input = document.getElementById(`e-o-${day}-${slot}`);
+    if (!input) return 0;
+    const has = v941HasCryptoAdjust(day, slot);
+    const total = has ? v941ComputeCryptoTotalPl(day, slot) : 0;
+    input.value = has ? v941FormatSignedMoney(total) : "";
+    input.dataset.v941PlNumber = String(total);
+    input.classList.toggle("pos", has && total >= 0);
+    input.classList.toggle("neg", has && total < 0);
+    return total;
+  }
+
+  window.omega_CryptoTogglePlAdjust = function(event, day, slot, type, index) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+    if (event && typeof event.stopPropagation === "function") event.stopPropagation();
+    if (event && typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    const id = v941CryptoAdjustId(type, index);
+    const state = v941GetCryptoAdjustState(day, slot);
+    state[id] = !state[id];
+    v941UpdateCryptoTotalPl(day, slot);
+    v937RenderCryptoPreview(day, slot);
+    return false;
+  };
+
+
   function v932CryptoTpInputs(day, slot) {
     return Array.from(document.querySelectorAll(`[data-v927-crypto-tp="${day}:${slot}"]`))
       .sort((a, b) => Number(a.dataset.v927TpIndex || 0) - Number(b.dataset.v927TpIndex || 0));
@@ -1722,8 +1868,10 @@
         const idx = Number(last.dataset.v927TpIndex || inputs.length) || inputs.length;
         const pair = document.querySelector(`[data-v938-crypto-tp-pair="${day}:${slot}:${idx}"]`);
         if (pair) pair.remove(); else last.remove();
+        try { delete v941GetCryptoAdjustState(day, slot)[v941CryptoAdjustId("tp", idx)]; } catch(e) {}
       }
     }
+    v941UpdateCryptoTotalPl(day, slot);
     v937RenderCryptoPreview(day, slot);
     return false;
   };
@@ -1740,6 +1888,8 @@
         if (list) {
           list.innerHTML = v938CryptoTpPairMarkup(day, slot, 1);
         }
+        try { delete (window.V941_CRYPTO_PL_ADJUST || {})[v941CryptoKey(day, slot)]; } catch(e) {}
+        v941UpdateCryptoTotalPl(day, slot);
         v937RenderCryptoPreview(day, slot);
       }
       const currentPlan = typeof ensureRollingPlan === "function" ? ensureRollingPlan() : null;
@@ -1769,7 +1919,9 @@
       entry: v927FieldValue(day, slot, "entry"),
       leverage: v927FieldValue(day, slot, "leverage"),
       liq: v927FieldValue(day, slot, "liq"),
+      liqAmount: v927FieldValue(day, slot, "liqAmount"),
       stop: v927FieldValue(day, slot, "stop"),
+      stopAmount: v927FieldValue(day, slot, "stopAmount"),
       tps: tpValues,
       tpProfits: v939CryptoTpProfitValues(day, slot),
       tp1: tpValues[0] || ""
@@ -1814,7 +1966,8 @@
     const plRaw = (document.getElementById(`e-o-${day}-${slot}`)?.value || "").trim();
     const meta = v927CryptoMetaFromDom(day, slot);
     const tps = Array.isArray(meta.tps) ? meta.tps.filter(Boolean) : [];
-    const hasAny = Boolean(note || stakeRaw || plRaw || meta.entry || meta.leverage || meta.liq || meta.stop || tps.length);
+    const tpProfits = Array.isArray(meta.tpProfits) ? meta.tpProfits.filter(Boolean) : [];
+    const hasAny = Boolean(note || stakeRaw || plRaw || meta.entry || meta.leverage || meta.liq || meta.liqAmount || meta.stop || meta.stopAmount || tps.length || tpProfits.length);
     if (!hasAny) return null;
     return { note, stakeRaw, plRaw, meta, tps };
   }
@@ -1830,26 +1983,37 @@
     }
     const sideLabel = data.meta.side === "short" ? "Short" : "Long";
     const sideClass = data.meta.side === "short" ? "side-short" : "side-long";
-    const plValue = Number(String(data.plRaw || "").replace(",", "."));
-    const plClass = Number.isFinite(plValue) && plValue < 0 ? "neg" : "pos";
+    const plValue = v941ParseMoney(data.plRaw || "");
+    const plClass = plValue < 0 ? "neg" : "pos";
     const tpProfits = Array.isArray(data.meta.tpProfits) ? data.meta.tpProfits : [];
-    const tpRows = Math.max(data.tps.length, tpProfits.filter(Boolean).length);
+    const tpRows = Math.max(data.tps.length, tpProfits.filter(Boolean).length, 1);
+    const state = v941GetCryptoAdjustState(day, slot);
+    const actionBtn = (type, idx, sign) => {
+      const id = v941CryptoAdjustId(type, idx);
+      const active = state[id] ? " is-active" : "";
+      const klass = sign === "minus" ? "minus" : "plus";
+      const label = sign === "minus" ? "−" : "+";
+      return `<button type="button" class="v941-pl-action ${klass}${active}" onclick="return omega_CryptoTogglePlAdjust(event, ${day}, ${slot}, '${type}', ${Number(idx || 1)})" title="Toplam P/L'ye işle">${label}</button>`;
+    };
     const tpHtml = Array.from({ length: tpRows }, (_, idx) => {
       const tp = data.tps[idx] || "";
       const profit = tpProfits[idx] || "";
-      return `<span class="tp">TP${idx + 1}: <b>${v763EscapeHtml(tp || "-")}</b></span>${profit ? `<span class="tp-profit">TP${idx + 1} Kâr: <b>${v763EscapeHtml(profit)}</b></span>` : ""}`;
+      const i = idx + 1;
+      return `<span class="tp">TP${i}: <b>${v763EscapeHtml(tp || "-")}</b></span><span class="tp-profit v941-action-line">TP${i} Kâr: <b>${v763EscapeHtml(profit || "-")}</b>${actionBtn("tp", i, "plus")}</span>`;
     }).join("");
-    box.innerHTML = `<div class="v937-crypto-preview-head"><b>${v763EscapeHtml(data.note || "İşlem")}</b><em class="${sideClass}">${sideLabel}</em></div>
-      <div class="v937-crypto-preview-grid">
-        <span class="coin">İşlem: <b>${v763EscapeHtml(data.note || "İşlem")}</b></span>
+    const coinHtml = data.note ? `<span class="coin">İşlem: <b>${v763EscapeHtml(data.note)}</b></span>` : "";
+    box.innerHTML = `<div class="v937-crypto-preview-grid">
+        ${coinHtml}
         <span class="${sideClass}">Yön: <b>${sideLabel}</b></span>
         <span class="stake">Tutar: <b>${data.stakeRaw ? v768Money(Number(data.stakeRaw || 0)) : "-"}</b></span>
-        <span class="pl">P/L: <b class="${plClass}">${data.plRaw ? v768Money(Math.abs(Number(data.plRaw || 0))) : "-"}</b></span>
+        <span class="pl">Toplam P/L: <b class="${plClass}">${data.plRaw ? v763EscapeHtml(data.plRaw) : "-"}</b></span>
         <span class="entry">Giriş: <b>${v763EscapeHtml(data.meta.entry || "-")}</b></span>
         <span class="lev">Kaldıraç: <b>${v763EscapeHtml(data.meta.leverage || "-")}</b></span>
-        <span class="liq">Likidasyon: <b>${v763EscapeHtml(data.meta.liq || "-")}</b></span>
-        <span class="stop">Stop: <b>${v763EscapeHtml(data.meta.stop || "-")}</b></span>
         ${tpHtml}
+        <span class="liq">Liq: <b>${v763EscapeHtml(data.meta.liq || "-")}</b></span>
+        <span class="liq-amount v941-action-line">Liq Miktarı: <b>${v763EscapeHtml(data.meta.liqAmount || "-")}</b>${actionBtn("liq", 1, "minus")}</span>
+        <span class="stop">Stop: <b>${v763EscapeHtml(data.meta.stop || "-")}</b></span>
+        <span class="stop-amount v941-action-line">Stop Miktarı: <b>${v763EscapeHtml(data.meta.stopAmount || "-")}</b>${actionBtn("stop", 1, "minus")}</span>
       </div>`;
     box.classList.add("is-visible");
   }
@@ -1877,7 +2041,9 @@
       entry: String(src.entry || src.giris || "").trim(),
       leverage: String(src.leverage || src.kaldirac || "").trim(),
       liq: String(src.liq || src.liquidation || src.likidasyon || "").trim(),
+      liqAmount: String(src.liqAmount || src.liqAmt || src.liquidationAmount || "").trim(),
       stop: String(src.stop || src.stopLoss || src.sl || "").trim(),
+      stopAmount: String(src.stopAmount || src.stopAmt || src.stopLossAmount || "").trim(),
       tps,
       tpProfits,
       tp1: tps[0] || ""
@@ -1909,32 +2075,34 @@
     const pnlText = `${effect >= 0 ? "+" : "-"}$${Math.abs(Number(effect || 0)).toFixed(2)}`;
     const pnlClass = effect >= 0 ? "pos" : "neg";
     const coinLabel = v927DisplayValue(meta.coin || op?.note || "İşlem");
+    const hasCoinLabel = String(meta.coin || op?.note || "").trim();
     return `<div class="kapsul v32 ${finalStatus} v927-crypto-result ${finalStatus}">
       <button class="k-undo v32" onclick="omega_UndoExcelOp(${day}, ${slot})" title="Geri Al">×</button>
       <div class="v927-crypto-result-head">
-        <div class="v927-crypto-title-row"><b><span class="v927-coin">${coinLabel}</span></b><span class="v927-crypto-status ${finalStatus}">${statusLabel}</span></div>
-        <div class="v927-crypto-subline">Gün ${day} · İşlem ${slot + 1} · <span class="${sideClass}">${sideLabel}</span></div>
+        <div class="v927-crypto-title-row"><b>Gün ${day} · İşlem ${slot + 1}</b><span class="v927-crypto-status ${finalStatus}">${statusLabel}</span></div>
       </div>
       <div class="v927-crypto-metrics">
-        ${v927RenderCryptoMetric("İşlem", `<span class="v927-coin">${coinLabel}</span>`)}
+        ${hasCoinLabel ? v927RenderCryptoMetric("İşlem", `<span class="v927-coin">${coinLabel}</span>`) : ""}
         ${v927RenderCryptoMetric("Yön", `<span class="${sideClass}">${sideLabel}</span>`)}
+        ${v927RenderCryptoMetric("Tutar", v768Money(amt))}
+        ${v927RenderCryptoMetric("Toplam P/L", `<span class="${pnlClass}">${pnlText}</span>`, "pnl")}
         ${v927RenderCryptoMetric("Giriş", v927DisplayValue(meta.entry))}
         ${v927RenderCryptoMetric("Kaldıraç", v927LeverageLabel(meta.leverage))}
-        ${v927RenderCryptoMetric("Tutar", v768Money(amt))}
-        ${v927RenderCryptoMetric("Likidasyon", v927DisplayValue(meta.liq))}
-        ${v927RenderCryptoMetric("Stop", v927DisplayValue(meta.stop))}
         ${(() => {
           const tps = Array.isArray(meta.tps) && meta.tps.length ? meta.tps : [meta.tp1 || ""];
           const profits = Array.isArray(meta.tpProfits) ? meta.tpProfits : [];
-          const rows = Math.max(tps.length, profits.filter(Boolean).length);
+          const rows = Math.max(tps.length, profits.filter(Boolean).length, 1);
           return Array.from({ length: rows }, (_, idx) => {
             const tp = tps[idx] || "";
             const profit = profits[idx] || "";
-            return v927RenderCryptoMetric(`TP${idx + 1}`, v927DisplayValue(tp)) + (profit ? v927RenderCryptoMetric(`TP${idx + 1} Kâr`, `<span class="pos">${v763EscapeHtml(profit)}</span>`, "tp-profit") : "");
+            return v927RenderCryptoMetric(`TP${idx + 1}`, v927DisplayValue(tp)) + v927RenderCryptoMetric(`TP${idx + 1} Kâr`, profit ? `<span class="pos">${v763EscapeHtml(profit)}</span>` : "-", "tp-profit");
           }).join("");
         })()}
+        ${v927RenderCryptoMetric("Liq", v927DisplayValue(meta.liq))}
+        ${v927RenderCryptoMetric("Liq Miktarı", v927DisplayValue(meta.liqAmount), "liq-amount")}
+        ${v927RenderCryptoMetric("Stop", v927DisplayValue(meta.stop))}
+        ${v927RenderCryptoMetric("Stop Miktarı", v927DisplayValue(meta.stopAmount), "stop-amount")}
         ${v927RenderCryptoMetric("Durum", statusLabel, finalStatus)}
-        ${v927RenderCryptoMetric("P/L", `<span class="${pnlClass}">${pnlText}</span>`, "pnl")}
       </div>
     </div>`;
   }
@@ -3152,6 +3320,7 @@
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
       v768UpdateBetCalc(day, slot);
       v774SavePendingSlot(day, slot);
+      if (kapsul.closest && kapsul.closest('#rolling-excel-overlay[data-roll-mode="crypto"]')) v941UpdateCryptoTotalPl(day, slot);
       v937RenderCryptoPreview(day, slot);
     }, true);
     document.addEventListener("focusout", function(event) {
@@ -3159,6 +3328,7 @@
       if (!kapsul) return;
       const [day, slot] = String(kapsul.dataset.v765Kapsul || "0:0").split(":").map(Number);
       v774SavePendingSlot(day, slot);
+      if (kapsul.closest && kapsul.closest('#rolling-excel-overlay[data-roll-mode="crypto"]')) v941UpdateCryptoTotalPl(day, slot);
       v937RenderCryptoPreview(day, slot);
     }, true);
   }
@@ -3257,12 +3427,14 @@
                   </div>
                   <div class="v927-crypto-field-grid">
                     <input type="number" id="e-a-${day}-${slot}" placeholder="Tutar" step="0.01">
-                    <input type="number" id="e-o-${day}-${slot}" placeholder="P/L $" step="0.01">
+                    <input type="text" id="e-o-${day}-${slot}" data-v941-crypto-total-pl="${day}:${slot}" placeholder="Toplam P/L" readonly>
                     <input type="text" data-v927-crypto-entry="${day}:${slot}" placeholder="Giriş">
                     <input type="text" data-v927-crypto-leverage="${day}:${slot}" placeholder="Kaldıraç">
-                    <input type="text" data-v927-crypto-liq="${day}:${slot}" placeholder="Likidasyon">
-                    <input type="text" data-v927-crypto-stop="${day}:${slot}" placeholder="Stop">
                     <div class="v932-crypto-tp-list" data-v932-crypto-tp-list="${day}:${slot}">${v938CryptoTpPairMarkup(day, slot, 1)}</div>
+                    <input type="text" data-v927-crypto-liq="${day}:${slot}" placeholder="Liq">
+                    <input type="text" data-v927-crypto-liq-amount="${day}:${slot}" placeholder="Liq Miktarı">
+                    <input type="text" data-v927-crypto-stop="${day}:${slot}" placeholder="Stop">
+                    <input type="text" data-v927-crypto-stop-amount="${day}:${slot}" placeholder="Stop Miktarı">
                   </div>
                   <div class="v937-crypto-preview" data-v937-crypto-preview="${day}:${slot}"></div>
                 </div>
@@ -3435,7 +3607,7 @@
     const stakeRaw = String(stakeInput?.value || "").trim();
     const oddsRaw = String(oddsInput?.value || "").trim();
     const amt = parseFloat(stakeRaw);
-    const odds = parseFloat(oddsRaw);
+    const odds = isCrypto ? v941ParseMoney(oddsRaw) : parseFloat(oddsRaw);
     const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
     const cryptoMeta = isCrypto ? v927CryptoMetaFromDom(day, slot) : null;
     const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
@@ -3445,7 +3617,7 @@
       return;
     }
     if (!oddsRaw || isNaN(odds) || (!isCrypto && hasComboGap)) {
-      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "P/L $ alanını doldur." : "Maç, oran ve ek maç oranlarını doldur.");
+      if (typeof omega_ShowFinanceToast === "function") omega_ShowFinanceToast(isCrypto ? "Toplam P/L alanını doldur." : "Maç, oran ve ek maç oranlarını doldur.");
       return;
     }
     if (!note) {
