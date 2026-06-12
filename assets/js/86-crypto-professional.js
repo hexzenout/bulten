@@ -1146,6 +1146,31 @@
         justify-content: flex-start !important;
       }
 
+      /* V945: Toplam P/L taşmasını sabitle + final kart renklerini ön çıktı ile eşitle */
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .pl,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.pnl {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-preview-grid .pl b,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.pnl b {
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 58% !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.tp b { color: #fbbf24 !important; }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.entry b { color: #38bdf8 !important; }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.lev b { color: #a78bfa !important; }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.stop b { color: #f97316 !important; }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.win b { color: #22c55e !important; }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-metric.loss b { color: #ef4444 !important; }
+
       #rolling-excel-overlay[data-roll-mode="crypto"] .v936-crypto-clear {
         display: inline-flex !important;
         align-items: center !important;
@@ -1970,6 +1995,27 @@
     return store[key];
   }
 
+  function v945CryptoActiveAdjustIds(day, slot) {
+    const state = v941GetCryptoAdjustState(day, slot);
+    return Object.keys(state).filter(id => !!state[id]);
+  }
+
+  function v945SetCryptoAdjustState(day, slot, ids) {
+    const key = v941CryptoKey(day, slot);
+    const store = window.V941_CRYPTO_PL_ADJUST || (window.V941_CRYPTO_PL_ADJUST = {});
+    store[key] = {};
+    (Array.isArray(ids) ? ids : []).forEach(id => {
+      const safeId = String(id || "").trim();
+      if (/^(tp:\d+|stop|liq)$/.test(safeId)) store[key][safeId] = true;
+    });
+    return store[key];
+  }
+
+  function v945NormalizeCryptoAdjustIds(value) {
+    if (!Array.isArray(value)) return [];
+    return value.map(v => String(v || "").trim()).filter(v => /^(tp:\d+|stop|liq)$/.test(v));
+  }
+
   function v941CryptoAdjustId(type, index) {
     const t = type === "liq" ? "liq" : type === "stop" ? "stop" : "tp";
     const i = Math.max(1, Number(index || 1));
@@ -2139,6 +2185,7 @@
       stopAmount: v927FieldValue(day, slot, "stopAmount"),
       tps: tpValues,
       tpProfits: v939CryptoTpProfitValues(day, slot),
+      plAdjustments: v945CryptoActiveAdjustIds(day, slot),
       tp1: tpValues[0] || ""
     };
   }
@@ -2257,6 +2304,7 @@
       stopAmount: String(src.stopAmount || src.stopAmt || src.stopLossAmount || "").trim(),
       tps,
       tpProfits,
+      plAdjustments: v945NormalizeCryptoAdjustIds(src.plAdjustments),
       tp1: tps[0] || ""
     };
   }
@@ -2278,13 +2326,14 @@
 
   function v927RenderCryptoResultCard(day, slot, op, amt, effect) {
     const meta = v927CryptoMetaFromOp(op);
-    const finalStatus = op?.res === "loss" ? "loss" : "win";
+    const numericEffect = Number(effect || 0);
+    const finalStatus = numericEffect < 0 ? "loss" : "win";
     const isWin = finalStatus === "win";
     const statusLabel = isWin ? "KÂR" : "ZARAR";
     const sideLabel = meta.side === "short" ? "Short" : "Long";
     const sideClass = meta.side === "short" ? "v927-side-short" : "v927-side-long";
-    const pnlText = `${effect >= 0 ? "+" : "-"}$${Math.abs(Number(effect || 0)).toFixed(2)}`;
-    const pnlClass = effect >= 0 ? "pos" : "neg";
+    const pnlText = `${numericEffect >= 0 ? "+" : "-"}$${Math.abs(numericEffect).toFixed(2)}`;
+    const pnlClass = numericEffect >= 0 ? "pos" : "neg";
     const coinLabel = v927DisplayValue(meta.coin || op?.note || "İşlem");
     const hasCoinLabel = String(meta.coin || op?.note || "").trim();
     return `<div class="kapsul v32 ${finalStatus} v927-crypto-result ${finalStatus}">
@@ -2292,14 +2341,14 @@
         <button type="button" class="v847-shot-back v850-shot-return" onclick="return omega_ReturnCryptoExcelOp(event, ${day}, ${slot})" title="Geri Dön"><i class="fa-solid fa-arrow-left"></i><span>Geri Dön</span></button>
       </div>
       <div class="v927-crypto-result-head">
-        <div class="v927-crypto-title-row"><b>Gün ${day} · İşlem ${slot + 1}</b><span class="v927-crypto-status ${finalStatus}">${statusLabel}</span></div>
+        <div class="v927-crypto-title-row"><b>Gün ${day} · İşlem ${slot + 1}</b></div>
       </div>
       <div class="v927-crypto-metrics">
         ${hasCoinLabel ? v927RenderCryptoMetric("İşlem", `<span class="v927-coin">${coinLabel}</span>`) : ""}
         ${v927RenderCryptoMetric("Tutar", v768Money(amt), "stake")}
         ${v927RenderCryptoMetric("Toplam P/L", `<span class="${pnlClass}">${pnlText}</span>`, "pnl")}
-        ${v927RenderCryptoMetric("Giriş", v927DisplayValue(meta.entry))}
-        ${v927RenderCryptoMetric("Kaldıraç", v927LeverageLabel(meta.leverage))}
+        ${v927RenderCryptoMetric("Giriş", v927DisplayValue(meta.entry), "entry")}
+        ${v927RenderCryptoMetric("Kaldıraç", v927LeverageLabel(meta.leverage), "lev")}
         ${(() => {
           const tps = Array.isArray(meta.tps) && meta.tps.length ? meta.tps : [meta.tp1 || ""];
           const profits = Array.isArray(meta.tpProfits) ? meta.tpProfits : [];
@@ -2307,7 +2356,7 @@
           return Array.from({ length: rows }, (_, idx) => {
             const tp = tps[idx] || "";
             const profit = profits[idx] || "";
-            return v927RenderCryptoMetric(`TP${idx + 1}`, v927DisplayValue(tp)) + v927RenderCryptoMetric(`TP${idx + 1} Kâr`, profit ? `<span class="pos">${v942FormatPlainDollar(profit)}</span>` : "-", "tp-profit");
+            return v927RenderCryptoMetric(`TP${idx + 1}`, v927DisplayValue(tp), "tp") + v927RenderCryptoMetric(`TP${idx + 1} Kâr`, profit ? `<span class="pos">${v942FormatPlainDollar(profit)}</span>` : "-", "tp-profit");
           }).join("");
         })()}
         ${v927RenderCryptoMetric("Stop", v927DisplayValue(meta.stop), "stop")}
@@ -3776,7 +3825,11 @@
         const rows = Math.max(tps.length, profits.length, 1);
         list.innerHTML = Array.from({ length: rows }, (_, idx) => v938CryptoTpPairMarkup(day, slot, idx + 1, tps[idx] || "", profits[idx] || "")).join("");
       }
-      try { delete (window.V941_CRYPTO_PL_ADJUST || {})[v941CryptoKey(day, slot)]; } catch(e) {}
+      const restoredAdjustments = v945NormalizeCryptoAdjustIds(meta.plAdjustments);
+      v945SetCryptoAdjustState(day, slot, restoredAdjustments);
+      if (restoredAdjustments.length) {
+        v941UpdateCryptoTotalPl(day, slot);
+      }
       v937RenderCryptoPreview(day, slot);
       setTimeout(() => noteInput?.focus(), 20);
     } catch(e) {}
