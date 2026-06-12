@@ -364,6 +364,46 @@
       #rolling-excel-overlay .v847-shot-lines .v851-shot-line-meta {
         flex: 0 0 auto !important;
       }
+      #omega-rolling-feature-host .v926-history-filters {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        flex-wrap:wrap;
+        margin:0 0 14px;
+        padding:10px;
+        border:1px solid rgba(251,191,36,.22);
+        border-radius:16px;
+        background:rgba(15,23,42,.72);
+      }
+      #omega-rolling-feature-host .v926-history-filters button,
+      #omega-rolling-feature-host .v926-history-date {
+        border:1px solid rgba(148,163,184,.28);
+        border-radius:999px;
+        background:rgba(2,6,23,.72);
+        color:#cbd5e1;
+        min-height:34px;
+        padding:0 12px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        font:800 12px/1 'Inter',system-ui,sans-serif;
+        cursor:pointer;
+      }
+      #omega-rolling-feature-host .v926-history-filters button.active,
+      #omega-rolling-feature-host .v926-history-date.active {
+        color:#fbbf24;
+        border-color:rgba(251,191,36,.72);
+        box-shadow:0 0 14px rgba(251,191,36,.16);
+      }
+      #omega-rolling-feature-host .v926-history-date input {
+        color:#f8fafc;
+        background:transparent;
+        border:0;
+        outline:0;
+        font:800 12px/1 'JetBrains Mono',monospace;
+        color-scheme:dark;
+      }
     `;
     document.head.appendChild(style);
   })();
@@ -902,6 +942,45 @@
     return total;
   }
 
+  function v926OpStake(op) {
+    const candidates = [op?.amt, op?.stake, op?.amount, op?.tutar];
+    for (const value of candidates) {
+      const n = Number(value || 0);
+      if (Number.isFinite(n) && n > 0) return n;
+    }
+    return 0;
+  }
+
+  function v926OpBaseOdds(op) {
+    const candidates = [op?.odds, op?.baseOdds, op?.oran];
+    for (const value of candidates) {
+      const n = Number(value || 0);
+      if (Number.isFinite(n) && n) return n;
+    }
+    return 0;
+  }
+
+  function v926OpTotalOdds(op, isCrypto) {
+    if (isCrypto) return v926OpBaseOdds(op);
+    const savedTotal = Number(op?.totalOdds || op?.toplamOran || 0);
+    if (Number.isFinite(savedTotal) && savedTotal > 0) return savedTotal;
+    return v763BetTotalOdds(v926OpBaseOdds(op), Array.isArray(op?.combo) ? op.combo : []);
+  }
+
+  function v926OpEffect(op, isCrypto) {
+    if (!op) return 0;
+    if (isCrypto) {
+      const n = Number(op?.pnl ?? op?.net ?? op?.odds ?? 0);
+      if (!Number.isFinite(n)) return 0;
+      return op?.res === "loss" && n > 0 ? -n : n;
+    }
+    const stake = v926OpStake(op);
+    const totalOdds = v926OpTotalOdds(op, false);
+    if (op?.res === "win") return stake && totalOdds ? (stake * totalOdds) - stake : 0;
+    if (op?.res === "loss") return -stake;
+    return 0;
+  }
+
   function v768Money(value) {
     const n = Number(value || 0);
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -913,6 +992,92 @@
     const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
     const pad = n => String(n).padStart(2, "0");
     return `${d.getDate()} ${months[d.getMonth()] || ""} ${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function v926HistoryFilterStorageKey(mode) {
+    return `bulten_v926_history_filter_${mode === "crypto" ? "crypto" : "bet"}_${_ACTIVE_EXCEL_DAYS}`;
+  }
+
+  function v926HistoryDateStorageKey(mode) {
+    return `bulten_v926_history_date_${mode === "crypto" ? "crypto" : "bet"}_${_ACTIVE_EXCEL_DAYS}`;
+  }
+
+  function v926GetHistoryFilter(mode) {
+    const value = localStorage.getItem(v926HistoryFilterStorageKey(mode)) || "all";
+    return ["all", "day", "week", "month", "year", "manual"].includes(value) ? value : "all";
+  }
+
+  function v926GetHistoryManualDate(mode) {
+    return localStorage.getItem(v926HistoryDateStorageKey(mode)) || "";
+  }
+
+  function v926StartOfLocalDay(date) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  function v926EndOfLocalDay(date) {
+    const d = v926StartOfLocalDay(date);
+    d.setDate(d.getDate() + 1);
+    return d;
+  }
+
+  function v926FilterRange(mode) {
+    const filter = v926GetHistoryFilter(mode);
+    const now = new Date();
+    if (filter === "all") return null;
+    if (filter === "day") return [v926StartOfLocalDay(now).getTime(), v926EndOfLocalDay(now).getTime()];
+    if (filter === "week") {
+      const start = v926StartOfLocalDay(now);
+      start.setDate(start.getDate() - 6);
+      return [start.getTime(), v926EndOfLocalDay(now).getTime()];
+    }
+    if (filter === "month") {
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      return [start.getTime(), end.getTime()];
+    }
+    if (filter === "year") {
+      const start = new Date(now.getFullYear(), 0, 1);
+      const end = new Date(now.getFullYear() + 1, 0, 1);
+      return [start.getTime(), end.getTime()];
+    }
+    const manual = v926GetHistoryManualDate(mode);
+    if (manual) {
+      const parts = manual.split("-").map(Number);
+      if (parts.length === 3 && parts.every(Boolean)) {
+        const start = new Date(parts[0], parts[1] - 1, parts[2]);
+        const end = new Date(parts[0], parts[1] - 1, parts[2] + 1);
+        return [start.getTime(), end.getTime()];
+      }
+    }
+    return null;
+  }
+
+  function v926HistoryRowTime(row) {
+    return Number(row?.settledAt || row?.createdAt || row?.updatedAt || 0) || Date.now();
+  }
+
+  function v926FilterHistoryRows(rows, mode) {
+    const range = v926FilterRange(mode);
+    if (!range) return rows;
+    const [start, end] = range;
+    return rows.filter(row => {
+      const ts = v926HistoryRowTime(row);
+      return ts >= start && ts < end;
+    });
+  }
+
+  function v926HistoryFiltersHtml(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const active = v926GetHistoryFilter(m);
+    const manual = v926GetHistoryManualDate(m);
+    const items = [["all", "Tümü"], ["day", "Gün"], ["week", "Hafta"], ["month", "Ay"], ["year", "Yıl"]];
+    return `<div class="v926-history-filters" data-v926-history-filters="${m}">
+      ${items.map(([key, label]) => `<button type="button" class="${active === key ? "active" : ""}" data-v926-history-filter="${m}:${key}">${label}</button>`).join("")}
+      <label class="v926-history-date ${active === "manual" ? "active" : ""}"><span>Manuel Tarih</span><input type="date" value="${v763EscapeHtml(manual)}" data-v926-history-date="${m}"></label>
+    </div>`;
   }
 
   function v903BetKindLabel(row) {
@@ -1324,9 +1489,9 @@
       dayOps.forEach((op, slot) => {
         if (!op) return;
         const combo = Array.isArray(op.combo) ? op.combo : [];
-        const totalOdds = isCrypto ? Number(op.odds || 0) : v763BetTotalOdds(Number(op.odds || 0), combo);
-        const stake = Number(op.amt || 0);
-        const pnl = isCrypto ? Number(op.odds || 0) : (op.res === "win" ? (stake * totalOdds) - stake : -stake);
+        const totalOdds = v926OpTotalOdds(op, isCrypto);
+        const stake = v926OpStake(op);
+        const pnl = v926OpEffect(op, isCrypto);
         const stamp = Number(op.createdAt || op.playedAt || op.settledAt || op.updatedAt || 0) || Date.now();
         if (!op.createdAt) {
           op.createdAt = stamp;
@@ -1341,8 +1506,9 @@
 
   function v768FeatureRowsHtml(mode, kind) {
     const isCrypto = mode === "crypto";
-    const rows = kind === "active" ? v768LiveRows(mode) : v768HistoryRows(mode);
-    if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif bahis yok. Maç/işlem yazınca burada görünür." : "Geçmiş kayıt yok."}</div>`;
+    const allRows = kind === "active" ? v768LiveRows(mode) : v768HistoryRows(mode);
+    const rows = kind === "history" ? v926FilterHistoryRows(allRows, mode) : allRows;
+    if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif bahis yok. Maç/işlem yazınca burada görünür." : "Seçilen tarih aralığında geçmiş kayıt yok."}</div>`;
     return rows.map(row => {
       const comboRows = Array.isArray(row.combo) ? row.combo : [];
       const isBet = !isCrypto;
@@ -1470,7 +1636,8 @@
     const reportRows = v768HistoryRows(m);
     const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>Toplam K/Z</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
     const activePhotoBtn = "";
-    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${reportHtml}</div></section></div>`;
+    const historyFilters = k === "history" ? v926HistoryFiltersHtml(m) : "";
+    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${historyFilters}${reportHtml}</div></section></div>`;
     host.style.display = "block";
   }
 
@@ -1731,6 +1898,18 @@
         v891OpenActiveBetPhotoPreview();
         return;
       }
+      const historyFilterBtn = event.target.closest && event.target.closest("[data-v926-history-filter]");
+      if (historyFilterBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        const [modeRaw, filterRaw] = String(historyFilterBtn.dataset.v926HistoryFilter || "bet:all").split(":");
+        const mode = modeRaw === "crypto" ? "crypto" : "bet";
+        const filter = ["all", "day", "week", "month", "year", "manual"].includes(filterRaw) ? filterRaw : "all";
+        localStorage.setItem(v926HistoryFilterStorageKey(mode), filter);
+        v768OpenFeaturePanel(mode, "history");
+        return;
+      }
       const closeBtn = event.target.closest && event.target.closest("[data-v768-feature-close]");
       if (closeBtn) {
         event.preventDefault();
@@ -1808,6 +1987,14 @@
         if (!event.target.closest("[data-v765-kapsul]") && !event.target.closest("[data-v768-feature-open]")) v774FlushAllPendingFromDom();
       }
     }, true);
+    document.addEventListener("change", function(event) {
+      const dateInput = event.target && event.target.closest && event.target.closest("[data-v926-history-date]");
+      if (!dateInput) return;
+      const mode = dateInput.dataset.v926HistoryDate === "crypto" ? "crypto" : "bet";
+      localStorage.setItem(v926HistoryDateStorageKey(mode), String(dateInput.value || ""));
+      localStorage.setItem(v926HistoryFilterStorageKey(mode), "manual");
+      v768OpenFeaturePanel(mode, "history");
+    }, true);
     document.addEventListener("input", function(event) {
       const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
       if (!kapsul) return;
@@ -1874,12 +2061,12 @@
       for (let slot = 0; slot < dayOps.length; slot++) {
         const op = dayOps[slot];
         if (op) {
-          const amt = Number(op.amt || 0);
-          const baseOdds = Number(op.odds || 0);
+          const amt = v926OpStake(op);
+          const baseOdds = v926OpBaseOdds(op);
           const comboRows = Array.isArray(op.combo) ? op.combo : [];
-          const totalOdds = isCryptoV491 ? baseOdds : v763BetTotalOdds(baseOdds, comboRows);
-          const pnl = isCryptoV491 ? Math.abs(baseOdds) : (op.res === "win" ? (amt * totalOdds) - amt : amt);
-          const effect = op.res === "win" ? pnl : -pnl;
+          const totalOdds = v926OpTotalOdds(op, isCryptoV491);
+          const effect = v926OpEffect(op, isCryptoV491);
+          const pnl = Math.abs(effect);
           runningBalance += effect; totalProfit += effect; dayProfit += effect;
           if (!isCryptoV491) {
             cards.push(v847RenderBetResultCard(day, slot, op, amt, baseOdds, comboRows, totalOdds, effect));
@@ -1970,10 +2157,12 @@
     if (pnlElement) {
       pnlElement.innerText = (totalProfit >= 0 ? "+" : "") + "$" + totalProfit.toFixed(2);
       pnlElement.style.color = totalProfit >= 0 ? "var(--green)" : "var(--red)";
+      const pnlLabel = pnlElement.closest(".config-item")?.querySelector("label");
+      if (pnlLabel) pnlLabel.textContent = "K/Z:";
     }
 
-    const targetBal = currentPlan.targetBal || ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS];
-    const progressPercentage = Math.min((runningBalance / targetBal) * 100, 100);
+    const targetBal = Number(currentPlan.targetBal || ROLLING_TARGETS[_ACTIVE_EXCEL_DAYS] || 0);
+    const progressPercentage = targetBal > 0 ? Math.max(0, Math.min((runningBalance / targetBal) * 100, 100)) : 0;
     const progressBar = qs("#excel-progress-bar");
     if (progressBar) progressBar.style.width = progressPercentage + "%";
 
