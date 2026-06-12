@@ -593,7 +593,24 @@
         display:grid !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 {
-        display:flex !important;
+        display:grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-top: 8px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 40px !important;
+        padding: 0 8px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important;
+        font-size: .78rem !important;
+        line-height: 1 !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .v928-crypto-empty-head {
         margin-bottom:8px !important;
