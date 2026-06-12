@@ -1409,9 +1409,12 @@
         const noteLines = v909SvgTextLines(`${row.idx + 1}. ${note}`, 46);
         const lineHeight = 20;
         const rowHeight = Math.max(34, 18 + noteLines.length * lineHeight);
+        const centerY = y + (rowHeight / 2);
+        const textStartY = centerY - (((noteLines.length - 1) * lineHeight) / 2) + 6;
+        const rightTextY = centerY + 6;
         const textBody = noteLines.map((line, lineIdx) => `<tspan x="66" dy="${lineIdx === 0 ? 0 : lineHeight}">${safe(line)}</tspan>`).join("");
-        parts.push(`<text x="66" y="${y + 18}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="800">${textBody}</text>`);
-        parts.push(`<text x="836" y="${y + 18}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${row.odds ? row.odds.toFixed(2) : "-"}</text>`);
+        parts.push(`<text x="66" y="${textStartY}" fill="#e5e7eb" font-size="17" font-family="Arial" font-weight="800">${textBody}</text>`);
+        parts.push(`<text x="836" y="${rightTextY}" text-anchor="end" fill="#fbbf24" font-size="17" font-family="Arial" font-weight="900">${row.odds ? row.odds.toFixed(2) : "-"}</text>`);
         y += rowHeight;
       } else if (row.kind === "summary") {
         parts.push(`<rect x="56" y="${y}" width="788" height="76" rx="14" fill="#111827" stroke="#334155"/>`);
@@ -1556,9 +1559,13 @@
       const lines = v909SvgTextLines(`${idx + 1}. ${row.note || "Maç"}`, 42);
       const lineHeight = 22;
       const rectH = Math.max(42, 18 + (lines.length * lineHeight));
-      const textY = y - 3;
+      const rectY = y - 28;
+      const centerY = rectY + (rectH / 2);
+      const textY = centerY - (((lines.length - 1) * lineHeight) / 2) + 6;
+      const rightTextY = centerY + 6;
+      const statusRectY = centerY - 15;
       const noteText = `<text x="64" y="${textY}" fill="#f8fafc" font-size="18" font-family="Arial" font-weight="800">${lines.map((line, lineIdx) => `<tspan x="64" dy="${lineIdx === 0 ? 0 : lineHeight}">${safe(line)}</tspan>`).join("")}</text>`;
-      rowParts.push(`<rect x="42" y="${y - 28}" width="816" height="${rectH}" rx="12" fill="#0f172a" stroke="#334155"/>${noteText}<text x="682" y="${y - 3}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text><rect x="710" y="${y - 25}" width="128" height="30" rx="15" fill="${statusBg}" stroke="${statusStroke}"/><text x="774" y="${y - 5}" text-anchor="middle" fill="${statusFill}" font-size="14" font-family="Arial" font-weight="900">${safe(statusText)}</text>`);
+      rowParts.push(`<rect x="42" y="${rectY}" width="816" height="${rectH}" rx="12" fill="#0f172a" stroke="#334155"/>${noteText}<text x="682" y="${rightTextY}" text-anchor="end" fill="#fbbf24" font-size="18" font-family="Arial" font-weight="900">${row.odds ? Number(row.odds).toFixed(2) : '-'}</text><rect x="710" y="${statusRectY}" width="128" height="30" rx="15" fill="${statusBg}" stroke="${statusStroke}"/><text x="774" y="${rightTextY}" text-anchor="middle" fill="${statusFill}" font-size="14" font-family="Arial" font-weight="900">${safe(statusText)}</text>`);
       y += rectH + 10;
     });
     const rowHtml = rowParts.join('');
