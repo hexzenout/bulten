@@ -372,8 +372,9 @@
         margin:0 0 14px;
         padding:10px;
         border:1px solid rgba(251,191,36,.22);
-        border-radius:16px;
-        background:rgba(15,23,42,.72);
+        border-radius:18px;
+        background:linear-gradient(180deg, rgba(15,23,42,.82), rgba(2,6,23,.78));
+        box-shadow: inset 0 0 0 1px rgba(15,23,42,.65);
       }
       #omega-rolling-feature-host .v926-history-filters button,
       #omega-rolling-feature-host .v926-history-date {
@@ -387,8 +388,14 @@
         align-items:center;
         justify-content:center;
         gap:8px;
-        font:800 12px/1 'Inter',system-ui,sans-serif;
+        font:900 12px/1 'Inter',system-ui,sans-serif;
         cursor:pointer;
+        transition: border-color .16s ease, color .16s ease, box-shadow .16s ease, transform .16s ease;
+      }
+      #omega-rolling-feature-host .v926-history-filters button:hover,
+      #omega-rolling-feature-host .v926-history-date:hover {
+        transform: translateY(-1px);
+        border-color:rgba(251,191,36,.45);
       }
       #omega-rolling-feature-host .v926-history-filters button.active,
       #omega-rolling-feature-host .v926-history-date.active {
@@ -396,12 +403,21 @@
         border-color:rgba(251,191,36,.72);
         box-shadow:0 0 14px rgba(251,191,36,.16);
       }
+      #omega-rolling-feature-host .v926-history-date {
+        padding:0 10px;
+      }
+      #omega-rolling-feature-host .v926-history-date::before {
+        content:"📅";
+        font-size:13px;
+        line-height:1;
+      }
       #omega-rolling-feature-host .v926-history-date input {
         color:#f8fafc;
         background:transparent;
         border:0;
         outline:0;
-        font:800 12px/1 'JetBrains Mono',monospace;
+        min-width:124px;
+        font:900 12px/1 'JetBrains Mono',monospace;
         color-scheme:dark;
       }
     `;
@@ -410,7 +426,7 @@
 
 
 
-  // V927: KRİPTO Rolling kutu çıktısı ve kripto işlem alanları. Sadece crypto modunu hedefler.
+  // V927/V928: KRİPTO Rolling kutu çıktısı, kapalı-açılır kripto giriş alanı ve kripto işlem alanları.
   (function v927EnsureCryptoRollingOutputCss(){
     if (document.getElementById("v927-crypto-rolling-output-css")) return;
     const style = document.createElement("style");
@@ -422,6 +438,48 @@
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-entry {
         display: grid !important;
         gap: 8px !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul {
+        cursor: pointer !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-empty-head {
+        width:100% !important;
+        appearance:none !important;
+        border:1px solid rgba(251,191,36,.30) !important;
+        border-radius:14px !important;
+        background:rgba(15,23,42,.76) !important;
+        color:#e5e7eb !important;
+        min-height:42px !important;
+        padding:0 12px !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:space-between !important;
+        gap:10px !important;
+        font:950 12px/1 'Inter',system-ui,sans-serif !important;
+        cursor:pointer !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-empty-head span {
+        color:#94a3b8 !important;
+        font-weight:950 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-empty-head b {
+        color:#fbbf24 !important;
+        font-weight:1000 !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul:not(.is-open) .v927-crypto-entry,
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul:not(.is-open) .k-actions.v32 {
+        display:none !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .v927-crypto-entry {
+        display:grid !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 {
+        display:flex !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .v928-crypto-empty-head {
+        margin-bottom:8px !important;
+        border-color:rgba(251,191,36,.58) !important;
+        box-shadow:0 0 18px rgba(251,191,36,.10) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-main-grid {
         display: grid !important;
@@ -1231,6 +1289,18 @@
     return `${d.getDate()} ${months[d.getMonth()] || ""} ${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
 
+  const V928_HISTORY_MIN_DATE = "2026-06-01";
+
+  function v928HistoryMinTime() {
+    return new Date(2026, 5, 1).getTime();
+  }
+
+  function v928ClampHistoryDate(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    return raw < V928_HISTORY_MIN_DATE ? V928_HISTORY_MIN_DATE : raw;
+  }
+
   function v926HistoryFilterStorageKey(mode) {
     return `bulten_v926_history_filter_${mode === "crypto" ? "crypto" : "bet"}_${_ACTIVE_EXCEL_DAYS}`;
   }
@@ -1241,11 +1311,14 @@
 
   function v926GetHistoryFilter(mode) {
     const value = localStorage.getItem(v926HistoryFilterStorageKey(mode)) || "all";
-    return ["all", "day", "week", "month", "year", "manual"].includes(value) ? value : "all";
+    return ["all", "day", "week", "month", "quarter", "half", "year", "manual"].includes(value) ? value : "all";
   }
 
   function v926GetHistoryManualDate(mode) {
-    return localStorage.getItem(v926HistoryDateStorageKey(mode)) || "";
+    const key = v926HistoryDateStorageKey(mode);
+    const clamped = v928ClampHistoryDate(localStorage.getItem(key) || "");
+    if (clamped) localStorage.setItem(key, clamped);
+    return clamped;
   }
 
   function v926StartOfLocalDay(date) {
@@ -1271,14 +1344,24 @@
       return [start.getTime(), v926EndOfLocalDay(now).getTime()];
     }
     if (filter === "month") {
-      const start = new Date(now.getFullYear(), now.getMonth(), 1);
-      const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-      return [start.getTime(), end.getTime()];
+      const start = v926StartOfLocalDay(now);
+      start.setMonth(start.getMonth() - 1);
+      return [start.getTime(), v926EndOfLocalDay(now).getTime()];
+    }
+    if (filter === "quarter") {
+      const start = v926StartOfLocalDay(now);
+      start.setMonth(start.getMonth() - 3);
+      return [start.getTime(), v926EndOfLocalDay(now).getTime()];
+    }
+    if (filter === "half") {
+      const start = v926StartOfLocalDay(now);
+      start.setMonth(start.getMonth() - 6);
+      return [start.getTime(), v926EndOfLocalDay(now).getTime()];
     }
     if (filter === "year") {
-      const start = new Date(now.getFullYear(), 0, 1);
-      const end = new Date(now.getFullYear() + 1, 0, 1);
-      return [start.getTime(), end.getTime()];
+      const start = v926StartOfLocalDay(now);
+      start.setFullYear(start.getFullYear() - 1);
+      return [start.getTime(), v926EndOfLocalDay(now).getTime()];
     }
     const manual = v926GetHistoryManualDate(mode);
     if (manual) {
@@ -1297,10 +1380,13 @@
   }
 
   function v926FilterHistoryRows(rows, mode) {
+    const minTime = v928HistoryMinTime();
+    const baseRows = rows.filter(row => v926HistoryRowTime(row) >= minTime);
     const range = v926FilterRange(mode);
-    if (!range) return rows;
-    const [start, end] = range;
-    return rows.filter(row => {
+    if (!range) return baseRows;
+    const [startRaw, end] = range;
+    const start = Math.max(Number(startRaw || 0), minTime);
+    return baseRows.filter(row => {
       const ts = v926HistoryRowTime(row);
       return ts >= start && ts < end;
     });
@@ -1310,10 +1396,10 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const active = v926GetHistoryFilter(m);
     const manual = v926GetHistoryManualDate(m);
-    const items = [["all", "Tümü"], ["day", "Gün"], ["week", "Hafta"], ["month", "Ay"], ["year", "Yıl"]];
-    return `<div class="v926-history-filters" data-v926-history-filters="${m}">
+    const items = [["all", "Tümü"], ["day", "Bugün"], ["week", "1 Hafta"], ["month", "1 Ay"], ["quarter", "3 Ay"], ["half", "6 Ay"], ["year", "1 Yıl"]];
+    return `<div class="v926-history-filters v928-history-filters" data-v926-history-filters="${m}">
       ${items.map(([key, label]) => `<button type="button" class="${active === key ? "active" : ""}" data-v926-history-filter="${m}:${key}">${label}</button>`).join("")}
-      <label class="v926-history-date ${active === "manual" ? "active" : ""}"><span>Manuel Tarih</span><input type="date" value="${v763EscapeHtml(manual)}" data-v926-history-date="${m}"></label>
+      <label class="v926-history-date ${active === "manual" ? "active" : ""}" title="Tarih seç"><input type="date" min="${V928_HISTORY_MIN_DATE}" value="${v763EscapeHtml(manual)}" data-v926-history-date="${m}"></label>
     </div>`;
   }
 
@@ -2127,6 +2213,22 @@
         window.omega_RollingToggleComboRow(Number(dayRaw), Number(slotRaw), dirRaw === "minus" ? "minus" : "plus");
         return;
       }
+      const cryptoToggleBtn = event.target.closest && event.target.closest("[data-v928-crypto-toggle]");
+      if (cryptoToggleBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        const kapsul = cryptoToggleBtn.closest("[data-v765-kapsul]");
+        if (kapsul) {
+          document.querySelectorAll('#rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open').forEach(openCard => {
+            if (openCard !== kapsul) openCard.classList.remove("is-open");
+          });
+          kapsul.classList.add("is-open");
+          cryptoToggleBtn.setAttribute("aria-expanded", "true");
+          setTimeout(() => kapsul.querySelector('input[id^="e-n-"]')?.focus(), 30);
+        }
+        return;
+      }
       const activePhotoBtn = event.target.closest && event.target.closest("[data-v891-active-photo]");
       if (activePhotoBtn) {
         event.preventDefault();
@@ -2142,7 +2244,7 @@
         if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
         const [modeRaw, filterRaw] = String(historyFilterBtn.dataset.v926HistoryFilter || "bet:all").split(":");
         const mode = modeRaw === "crypto" ? "crypto" : "bet";
-        const filter = ["all", "day", "week", "month", "year", "manual"].includes(filterRaw) ? filterRaw : "all";
+        const filter = ["all", "day", "week", "month", "quarter", "half", "year", "manual"].includes(filterRaw) ? filterRaw : "all";
         localStorage.setItem(v926HistoryFilterStorageKey(mode), filter);
         v768OpenFeaturePanel(mode, "history");
         return;
@@ -2228,7 +2330,8 @@
       const dateInput = event.target && event.target.closest && event.target.closest("[data-v926-history-date]");
       if (!dateInput) return;
       const mode = dateInput.dataset.v926HistoryDate === "crypto" ? "crypto" : "bet";
-      localStorage.setItem(v926HistoryDateStorageKey(mode), String(dateInput.value || ""));
+      const clampedDate = v928ClampHistoryDate(String(dateInput.value || ""));
+      localStorage.setItem(v926HistoryDateStorageKey(mode), clampedDate);
       localStorage.setItem(v926HistoryFilterStorageKey(mode), "manual");
       v768OpenFeaturePanel(mode, "history");
     }, true);
@@ -2318,8 +2421,9 @@
           const pComboV774 = Array.isArray(pendingV774?.combo) ? pendingV774.combo : [];
           const pComboHtmlV774 = pComboV774.map(row => `<div class="v765-extra-match-row v768-extra-match-row" data-v763-extra-row="${day}:${slot}"><input type="text" data-v763-extra-note placeholder="Maç" value="${v763EscapeHtml(row.note || "")}"><input type="number" data-v763-extra-odds placeholder="Oran" step="0.01" value="${row.odds === "" || row.odds == null ? "" : v763EscapeHtml(row.odds)}"></div>`).join("");
           cards.push(`
-            <div class="kapsul v32 ${isCryptoV491 ? "" : "v765-bet-kapsul"}" data-v765-kapsul="${day}:${slot}">
+            <div class="kapsul v32 ${isCryptoV491 ? "v928-crypto-kapsul" : "v765-bet-kapsul"}" data-v765-kapsul="${day}:${slot}">
               ${isCryptoV491 ? `
+                <button type="button" class="v928-crypto-empty-head" data-v928-crypto-toggle="${day}:${slot}" aria-expanded="false"><span>Gün ${day} · İşlem ${slot + 1}</span><b>İşlem ekle</b></button>
                 <div class="v927-crypto-entry">
                   <div class="v927-crypto-main-grid">
                     <input type="text" id="e-n-${day}-${slot}" placeholder="Coin / İşlem">
@@ -2375,7 +2479,7 @@
           <div class="day-info-v32">
             <h3>GÜN ${day}</h3>
             <span>Başlangıç: $${dayStart.toFixed(2)}</span>
-            <span>${isCryptoV491 ? "Gün P/L" : "Gün K/Z"}: ${(dayProfit >= 0 ? "+" : "")}$${dayProfit.toFixed(2)}</span>
+            <span>${isCryptoV491 ? "Gün K/Z" : "Gün K/Z"}: ${(dayProfit >= 0 ? "+" : "")}$${dayProfit.toFixed(2)}</span>
             <div class="day-tools-v32">
               <button class="gold" onclick="omega_RollingAddSlot(${day})">+ İŞLEM</button>
               <button onclick="omega_RollingRemoveSlot(${day})">- SİL</button>
