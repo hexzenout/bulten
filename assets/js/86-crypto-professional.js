@@ -1292,6 +1292,160 @@
         background: rgba(239,68,68,.32) !important;
       }
 
+
+      /* V956: KRİPTO Aktif/Geçmiş detay kartları */
+      #omega-rolling-feature-host .v956-crypto-feature-card {
+        border: 1px solid rgba(59,130,246,.32) !important;
+        background: linear-gradient(180deg, rgba(15,23,42,.96), rgba(2,6,23,.96)) !important;
+        border-radius: 18px !important;
+        padding: 12px !important;
+        display: grid !important;
+        gap: 10px !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-top {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        border-radius: 14px !important;
+        padding: 10px 11px !important;
+        background: rgba(15,23,42,.86) !important;
+        border: 1px solid rgba(51,65,85,.82) !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-top b {
+        color: #fbbf24 !important;
+        font-size: .86rem !important;
+        font-weight: 1000 !important;
+        overflow-wrap: anywhere !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-top em {
+        font-style: normal !important;
+        border-radius: 999px !important;
+        padding: 6px 10px !important;
+        font-size: .68rem !important;
+        font-weight: 1000 !important;
+        white-space: nowrap !important;
+        color: #cbd5e1 !important;
+        background: rgba(51,65,85,.45) !important;
+        border: 1px solid rgba(148,163,184,.28) !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-top em.win,
+      #omega-rolling-feature-host .v956-crypto-feature-top em.pos {
+        color: #bbf7d0 !important;
+        background: rgba(22,101,52,.42) !important;
+        border-color: rgba(34,197,94,.36) !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-top em.loss,
+      #omega-rolling-feature-host .v956-crypto-feature-top em.neg {
+        color: #fecaca !important;
+        background: rgba(127,29,29,.46) !important;
+        border-color: rgba(239,68,68,.38) !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-date-lines {
+        display: grid !important;
+        gap: 6px !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-date-lines span {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        padding: 8px 10px !important;
+        border-radius: 12px !important;
+        background: rgba(15,23,42,.76) !important;
+        border: 1px solid rgba(51,65,85,.70) !important;
+        color: #cbd5e1 !important;
+        font-size: .72rem !important;
+        font-weight: 900 !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-date-lines b {
+        color: #f8fafc !important;
+        font-size: .72rem !important;
+        font-weight: 1000 !important;
+        text-align: right !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+        gap: 7px !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-grid span {
+        min-height: 38px !important;
+        border-radius: 12px !important;
+        background: rgba(15,23,42,.82) !important;
+        border: 1px solid rgba(51,65,85,.78) !important;
+        padding: 8px 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        color: #cbd5e1 !important;
+        font-size: .72rem !important;
+        font-weight: 950 !important;
+        overflow: hidden !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-grid b {
+        color: #f8fafc !important;
+        font-size: .74rem !important;
+        font-weight: 1000 !important;
+        text-align: right !important;
+        overflow-wrap: anywhere !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-feature-grid .stake b { color:#fbbf24 !important; }
+      #omega-rolling-feature-host .v956-crypto-feature-grid .pnl b.pos { color:#22c55e !important; }
+      #omega-rolling-feature-host .v956-crypto-feature-grid .pnl b.neg { color:#ef4444 !important; }
+      #omega-rolling-feature-host .v956-crypto-feature-grid .entry b { color:#38bdf8 !important; }
+      #omega-rolling-feature-host .v956-crypto-feature-grid .lev b { color:#a78bfa !important; }
+      #omega-rolling-feature-host .v956-crypto-feature-grid .stop b { color:#f97316 !important; }
+      #omega-rolling-feature-host .v956-crypto-feature-grid .liq b { color:#ef4444 !important; }
+      #omega-rolling-feature-host .v956-crypto-feature-targets {
+        display: grid !important;
+        gap: 7px !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-target-title {
+        color: #bfdbfe !important;
+        font-size: .74rem !important;
+        font-weight: 1000 !important;
+        letter-spacing: .02em !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-target-row {
+        border-radius: 13px !important;
+        padding: 9px 10px !important;
+        background: rgba(15,23,42,.82) !important;
+        border: 1px solid rgba(51,65,85,.78) !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 8px !important;
+        align-items: center !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-target-row b {
+        color: #f8fafc !important;
+        font-size: .74rem !important;
+        font-weight: 1000 !important;
+        overflow-wrap: anywhere !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-target-row small {
+        color: #94a3b8 !important;
+        font-size: .68rem !important;
+        font-weight: 900 !important;
+        text-align: right !important;
+      }
+      #omega-rolling-feature-host .v956-crypto-target-row.tp { border-color: rgba(34,197,94,.36) !important; }
+      #omega-rolling-feature-host .v956-crypto-target-row.tp small { color:#86efac !important; }
+      #omega-rolling-feature-host .v956-crypto-target-row.stop { border-color: rgba(249,115,22,.38) !important; }
+      #omega-rolling-feature-host .v956-crypto-target-row.stop small { color:#60a5fa !important; }
+      #omega-rolling-feature-host .v956-crypto-target-row.liq { border-color: rgba(239,68,68,.38) !important; }
+      #omega-rolling-feature-host .v956-crypto-target-row.liq small { color:#c084fc !important; }
+      #omega-rolling-feature-host .v956-crypto-target-empty {
+        color:#94a3b8 !important;
+        font-size:.72rem !important;
+        font-weight:900 !important;
+        padding:9px 10px !important;
+        border-radius:12px !important;
+        background:rgba(15,23,42,.72) !important;
+        border:1px dashed rgba(148,163,184,.28) !important;
+      }
+
       #rolling-excel-overlay[data-roll-mode="crypto"] .v927-crypto-result {
         position: relative !important;
         display: grid !important;
@@ -3261,8 +3415,15 @@
           const combo = isCrypto ? [] : v763ComboRows(day, slot);
           if (isCrypto && !v955CryptoSlotHasMeaningfulContent(day, slot)) continue;
           if (!isCrypto && !note && !stake && !odds && !combo.length) continue;
+          let cryptoMeta = null;
+          let cryptoDraft = null;
+          if (isCrypto) {
+            cryptoMeta = v927CryptoMetaFromDom(day, slot);
+            try { v954SaveCryptoDraft(day, slot); } catch(e) {}
+            try { cryptoDraft = v954GetCryptoDraft(day, slot); } catch(e) { cryptoDraft = null; }
+          }
           const totalOdds = isCrypto ? odds : v763BetTotalOdds(odds, combo);
-          rows.push({ day, slot, note, stake, odds, combo, comboResults: [], totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, createdAt: Date.now(), updatedAt: Date.now() });
+          rows.push({ day, slot, note, stake, odds, combo, comboResults: [], totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, cryptoMeta, createdAt: Number(cryptoDraft?.createdAt || Date.now()), updatedAt: Number(cryptoDraft?.updatedAt || Date.now()) });
           continue;
         }
         const pending = v774GetPendingSlot(day, slot);
@@ -3298,11 +3459,79 @@
           op.createdAt = stamp;
           stampDirty = true;
         }
-        rows.push({ day, slot, note: op.note || (isCrypto ? "İşlem" : "Maç"), stake, odds: op.odds, combo, comboResults: Array.isArray(op.comboResults) ? op.comboResults : [], totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, res: op.res, pnl, createdAt: stamp, settledAt: Number(op.settledAt || op.updatedAt || stamp) });
+        rows.push({ day, slot, note: op.note || (isCrypto ? "İşlem" : "Maç"), stake, odds: op.odds, combo, comboResults: Array.isArray(op.comboResults) ? op.comboResults : [], totalOdds, possible: (!isCrypto && stake && totalOdds) ? stake * totalOdds : 0, res: op.res, pnl, cryptoMeta: isCrypto ? v927CryptoMetaFromOp(op) : null, createdAt: stamp, settledAt: Number(op.settledAt || op.updatedAt || stamp) });
       });
     }
     if (stampDirty) omega_SaveRollingDB();
     return rows;
+  }
+
+
+  function v956CryptoFeatureMeta(row) {
+    return v927CryptoMetaFromOp(row?.cryptoMeta || row || {});
+  }
+
+  function v956CryptoFeatureDateHtml(row, kind) {
+    const opened = v903FormatRollingDate(row?.createdAt || row?.updatedAt || Date.now());
+    const closed = v903FormatRollingDate(row?.settledAt || row?.updatedAt || Date.now());
+    if (kind === "history") {
+      return `<div class="v956-crypto-date-lines"><span>İşlem şu tarihte açıldı:<b>${v763EscapeHtml(opened)}</b></span><span>İşlem şu tarihte kapandı:<b>${v763EscapeHtml(closed)}</b></span></div>`;
+    }
+    return `<div class="v956-crypto-date-lines"><span>İşlem şu tarihte açıldı:<b>${v763EscapeHtml(opened)}</b></span></div>`;
+  }
+
+  function v956CryptoFeatureMetric(label, value, cls = "") {
+    return `<span class="${cls}">${v763EscapeHtml(label)}<b>${value}</b></span>`;
+  }
+
+  function v956CryptoFeatureTargetsHtml(row, kind) {
+    const meta = v956CryptoFeatureMeta(row);
+    const ids = v945NormalizeCryptoAdjustIds(meta.plAdjustments || []);
+    const tps = Array.isArray(meta.tps) ? meta.tps : [];
+    const profits = Array.isArray(meta.tpProfits) ? meta.tpProfits : [];
+    const rows = [];
+    ids.forEach(id => {
+      if (/^tp:\d+$/.test(id)) {
+        const idx = Math.max(1, Number(id.split(":")[1] || 1));
+        const tp = tps[idx - 1] || "-";
+        const profit = profits[idx - 1] || "";
+        rows.push(`<div class="v956-crypto-target-row tp"><b>TP${idx}: ${v763EscapeHtml(tp || "-")}</b><small>TP${idx} Kâr: ${v942FormatPlainDollar(profit)}</small></div>`);
+      }
+    });
+    if (ids.includes("stop") || (kind === "history" && row?.res === "loss" && meta.stop && meta.stopAmount && !ids.includes("liq"))) {
+      rows.push(`<div class="v956-crypto-target-row stop"><b>Stop: ${v763EscapeHtml(meta.stop || "-")}</b><small>Stop Miktarı: ${v942FormatPlainDollar(meta.stopAmount)}</small></div>`);
+    }
+    if (ids.includes("liq")) {
+      rows.push(`<div class="v956-crypto-target-row liq"><b>Liq: ${v763EscapeHtml(meta.liq || "-")}</b><small>Liq Miktarı: ${v942FormatPlainDollar(meta.liqAmount)}</small></div>`);
+    }
+    const title = kind === "history" ? "İşlem Detayı" : "Aktif TP / Stop / Liq";
+    const empty = kind === "history" ? "TP / Stop / Liq işaret kaydı yok." : "Henüz TP / Stop / Liq işaretlenmedi.";
+    return `<div class="v956-crypto-feature-targets"><b class="v956-crypto-target-title">${title}</b>${rows.length ? rows.join("") : `<div class="v956-crypto-target-empty">${empty}</div>`}</div>`;
+  }
+
+  function v956CryptoFeatureCardHtml(row, kind) {
+    const meta = v956CryptoFeatureMeta(row);
+    const title = row?.note || meta.coin || "İşlem";
+    const isHistory = kind === "history";
+    const pnl = Number(row?.pnl ?? row?.odds ?? 0);
+    const pnlClass = pnl < 0 ? "neg" : "pos";
+    const statusText = isHistory ? (pnl < 0 ? "ZARAR" : "KÂR") : "BEKLİYOR";
+    const statusClass = isHistory ? (pnl < 0 ? "loss" : "win") : "";
+    const stakeText = v953FormatCryptoMoneyPrefix(row?.stake || 0);
+    const pnlText = isHistory || Number(row?.odds || 0) ? v941FormatSignedMoney(Number(row?.odds || row?.pnl || 0)) : "-";
+    return `<article class="v768-feature-card v956-crypto-feature-card">
+      <div class="v956-crypto-feature-top"><b>Gün ${row.day} · İşlem ${row.slot + 1} — ${v763EscapeHtml(title)}</b><em class="${statusClass}">${statusText}</em></div>
+      ${v956CryptoFeatureDateHtml(row, kind)}
+      <div class="v956-crypto-feature-grid">
+        ${v956CryptoFeatureMetric("Tutar", stakeText || "-", "stake")}
+        ${v956CryptoFeatureMetric("Toplam P/L", `<span class="${pnlClass}">${v763EscapeHtml(pnlText)}</span>`, "pnl")}
+        ${v956CryptoFeatureMetric("Giriş", v927DisplayValue(meta.entry), "entry")}
+        ${v956CryptoFeatureMetric("Kaldıraç", v927LeverageLabel(meta.leverage), "lev")}
+        ${v956CryptoFeatureMetric("Stop", v927DisplayValue(meta.stop), "stop")}
+        ${v956CryptoFeatureMetric("Liq", v927DisplayValue(meta.liq), "liq")}
+      </div>
+      ${v956CryptoFeatureTargetsHtml(row, kind)}
+    </article>`;
   }
 
   function v768FeatureRowsHtml(mode, kind) {
@@ -3311,6 +3540,7 @@
     const rows = kind === "history" ? v926FilterHistoryRows(allRows, mode) : allRows;
     if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif bahis yok. Maç/işlem yazınca burada görünür." : "Seçilen tarih aralığında geçmiş kayıt yok."}</div>`;
     return rows.map(row => {
+      if (isCrypto) return v956CryptoFeatureCardHtml(row, kind);
       const comboRows = Array.isArray(row.combo) ? row.combo : [];
       const isBet = !isCrypto;
       const isActiveBet = isBet && kind === "active";
@@ -4305,6 +4535,7 @@
     const comboRows = isCrypto ? [] : v763ComboRows(day, slot);
     const cryptoMeta = isCrypto ? v927CryptoMetaFromDom(day, slot) : null;
     const pendingBeforeResolve = !isCrypto ? v774GetPendingSlot(day, slot) : null;
+    const cryptoDraftBeforeResolve = isCrypto ? v954GetCryptoDraft(day, slot) : null;
     const hasComboGap = comboRows.some(row => !row.note || !Number(row.odds || 0));
     if (!stakeRaw || isNaN(amt)) {
       v898WarnStakeInput(stakeInput);
@@ -4325,7 +4556,7 @@
           .map(v => v === "loss" ? "loss" : v === "win" ? "win" : "")
           .slice(0, comboRows.length + 1)
       : [];
-    const opCreatedAt = Number(pendingBeforeResolve?.createdAt || pendingBeforeResolve?.updatedAt || Date.now());
+    const opCreatedAt = Number(isCrypto ? (cryptoDraftBeforeResolve?.createdAt || cryptoDraftBeforeResolve?.updatedAt || Date.now()) : (pendingBeforeResolve?.createdAt || pendingBeforeResolve?.updatedAt || Date.now()));
     currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, comboResults, res: result, netMode: isCrypto ? "amount" : "odds", cryptoMeta, createdAt: opCreatedAt, settledAt: Date.now() };
     if (isCrypto) v954ClearCryptoDraft(day, slot);
     if (currentPlan.pending?.[day]) {
