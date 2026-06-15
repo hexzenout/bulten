@@ -37,10 +37,15 @@
     if (!branch) return;
     const raw = rollingRawHash();
     const isRollingRoute = raw.startsWith("rolling") || raw.startsWith("finance/rolling");
-    if (forceOpen === true) branch.classList.add("open");
+
+    if (forceOpen === true) {
+      branch.classList.remove("manual-closed");
+      branch.classList.add("open");
+    }
+    if (!isRollingRoute) branch.classList.remove("manual-closed");
     branch.classList.toggle("route-open", isRollingRoute);
 
-    const shouldOpen = branch.classList.contains("open") || branch.classList.contains("route-open");
+    const shouldOpen = branch.classList.contains("open") || (branch.classList.contains("route-open") && !branch.classList.contains("manual-closed"));
     const toggle = document.getElementById("nav-rolling");
     if (toggle) toggle.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
 
@@ -180,8 +185,14 @@
         if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
         const branch = document.getElementById("nav-rolling-branch");
         if (branch) {
-          const willOpen = !branch.classList.contains("open");
-          branch.classList.toggle("open", willOpen);
+          const isVisible = branch.classList.contains("open") || (branch.classList.contains("route-open") && !branch.classList.contains("manual-closed"));
+          if (isVisible) {
+            branch.classList.remove("open");
+            branch.classList.add("manual-closed");
+          } else {
+            branch.classList.remove("manual-closed");
+            branch.classList.add("open");
+          }
         }
         syncRollingBranch(false);
         return;

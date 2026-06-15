@@ -160,7 +160,7 @@
 }
 
 .accordion-menu .nav-rolling-branch.open .nav-rolling-toggle .nav-rolling-chevron,
-.accordion-menu .nav-rolling-branch.route-open .nav-rolling-toggle .nav-rolling-chevron {
+.accordion-menu .nav-rolling-branch.route-open:not(.manual-closed) .nav-rolling-toggle .nav-rolling-chevron {
     transform: rotate(180deg) !important;
     opacity: 1 !important;
 }
@@ -175,7 +175,7 @@
 }
 
 .accordion-menu .nav-rolling-branch.open .nav-rolling-submenu,
-.accordion-menu .nav-rolling-branch.route-open .nav-rolling-submenu {
+.accordion-menu .nav-rolling-branch.route-open:not(.manual-closed) .nav-rolling-submenu {
     display: grid !important;
 }
 
@@ -210,4 +210,14 @@
 
 .accordion-menu.active-menu {
     max-height: 820px !important;
+}
+
+
+/* V970: ROLLING mevcut route üzerindeyken tekrar basınca alt menüyü kapatabilsin. */
+.accordion-menu .nav-rolling-branch.manual-closed .nav-rolling-submenu {
+    display: none !important;
+}
+
+.accordion-menu .nav-rolling-branch.manual-closed .nav-rolling-toggle .nav-rolling-chevron {
+    transform: rotate(0deg) !important;
 }
