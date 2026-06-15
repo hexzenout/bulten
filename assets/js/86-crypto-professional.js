@@ -1661,6 +1661,56 @@
       #omega-rolling-feature-host .v957-crypto-detail-grid .stop-amount b { color:#60a5fa !important; }
       #omega-rolling-feature-host .v957-crypto-detail-grid .liq b { color:#ef4444 !important; }
       #omega-rolling-feature-host .v957-crypto-detail-grid .liq-amount b { color:#c084fc !important; }
+      /* V959: KRİPTO Aktif/Geçmiş başlık rengi, header bekliyor ve P/L genişleme kilidi */
+      #omega-rolling-feature-host .v959-crypto-title-date { color: #cbd5e1 !important; }
+      #omega-rolling-feature-host .v959-crypto-title-main { color: #fbbf24 !important; }
+      #omega-rolling-feature-host .v959-crypto-header-status {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 31px !important;
+        padding: 0 11px !important;
+        border-radius: 999px !important;
+        color: #fed7aa !important;
+        background: rgba(124,45,18,.42) !important;
+        border: 1px solid rgba(251,146,60,.38) !important;
+        font-size: .70rem !important;
+        font-weight: 1000 !important;
+        letter-spacing: .01em !important;
+        white-space: nowrap !important;
+      }
+      #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl,
+      #omega-rolling-feature-host .v957-crypto-detail-grid span.pnl {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+      }
+      #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl b,
+      #omega-rolling-feature-host .v957-crypto-detail-grid span.pnl b {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+      }
+      #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl b span,
+      #omega-rolling-feature-host .v957-crypto-detail-grid span.pnl b span {
+        display: block !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+      #omega-rolling-feature-host .v958-crypto-actions {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+      }
+      #omega-rolling-feature-host .v958-crypto-actions button {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+
       @media (max-width: 560px) {
         #omega-rolling-feature-host .v957-crypto-summary-meta,
         #omega-rolling-feature-host .v957-crypto-detail-grid {
@@ -3690,7 +3740,12 @@
 
 
   function v956CryptoFeatureMeta(row) {
-    return v927CryptoMetaFromOp(row?.cryptoMeta || row || {});
+    const meta = v927CryptoMetaFromOp(row?.cryptoMeta || row || {});
+    if (row && typeof row === "object") {
+      const stakeRaw = row.stake ?? row.amt ?? meta.stakeAmount ?? "";
+      if (stakeRaw !== "" && stakeRaw != null) meta.stakeAmount = stakeRaw;
+    }
+    return meta;
   }
 
   function v957CryptoHasValue(value) {
@@ -3719,6 +3774,14 @@
     return `${v958CryptoTitleStamp(row, kind)} - Gün ${row.day} · İşlem ${Number(row.slot || 0) + 1} - ${title}`;
   }
 
+  function v959CryptoTitleHtml(row, kind) {
+    const meta = v956CryptoFeatureMeta(row);
+    const title = String(row?.note || meta.coin || "İşlem").trim() || "İşlem";
+    const stamp = v958CryptoTitleStamp(row, kind);
+    const ref = `Gün ${row.day} · İşlem ${Number(row.slot || 0) + 1} - ${title}`;
+    return `<span class="v959-crypto-title-date">${v763EscapeHtml(stamp)} - </span><span class="v959-crypto-title-main">${v763EscapeHtml(ref)}</span>`;
+  }
+
   function v957CryptoMetric(label, value, cls = "") {
     const rendered = String(value ?? "").trim();
     if (!rendered || rendered === "-") return "";
@@ -3733,13 +3796,21 @@
 
   function v958CryptoAdjustmentAmount(meta, id) {
     const safeId = String(id || "").trim();
+    const fallbackLoss = Math.abs(v941ParseMoney(meta?.stakeAmount || meta?.stake || meta?.amt || ""));
     if (/^tp:\d+$/.test(safeId)) {
       const idx = Math.max(1, Number(safeId.split(":")[1] || 1));
       const profits = Array.isArray(meta?.tpProfits) ? meta.tpProfits : [];
       return Math.abs(v941ParseMoney(profits[idx - 1] || ""));
     }
-    if (safeId === "stop") return -Math.abs(v941ParseMoney(meta?.stopAmount || ""));
-    if (safeId === "liq") return -Math.abs(v941ParseMoney(meta?.liqAmount || ""));
+    if (safeId === "stop") {
+      const amount = Math.abs(v941ParseMoney(meta?.stopAmount || ""));
+      return -Math.abs(amount || fallbackLoss || 0);
+    }
+    if (safeId === "liq") {
+      const amount = Math.abs(v941ParseMoney(meta?.liqAmount || ""));
+      return -Math.abs(amount || fallbackLoss || 0);
+    }
+    if (safeId === "loss") return -Math.abs(fallbackLoss || 0);
     return 0;
   }
 
@@ -3759,6 +3830,7 @@
     const draft = v954GetCryptoDraft(day, slot);
     if (!draft) return null;
     const meta = v927CryptoMetaFromOp(draft.cryptoMeta || draft);
+    meta.stakeAmount = draft.amt ?? draft.stake ?? meta.stakeAmount ?? "";
     Object.assign(meta, metaPatch || {});
     const total = v958CryptoTotalFromMeta(meta);
     const ids = v945NormalizeCryptoAdjustIds(meta.plAdjustments || []);
@@ -3799,12 +3871,10 @@
     }
     if (type === "stop") {
       if (!v957CryptoHasValue(meta.stop)) { try { omega_ShowFinanceToast("Stop gir"); } catch(e) {} return false; }
-      if (!v957CryptoHasValue(meta.stopAmount)) { try { omega_ShowFinanceToast("Stop miktarı gir"); } catch(e) {} return false; }
       return true;
     }
     if (type === "liq") {
       if (!v957CryptoHasValue(meta.liq)) { try { omega_ShowFinanceToast("Liq gir"); } catch(e) {} return false; }
-      if (!v957CryptoHasValue(meta.liqAmount)) { try { omega_ShowFinanceToast("Liq miktarı gir"); } catch(e) {} return false; }
       return true;
     }
     return true;
@@ -3845,7 +3915,15 @@
     const draft = v954GetCryptoDraft(day, slot);
     if (!draft) return false;
     const meta = v927CryptoMetaFromOp(draft.cryptoMeta || draft);
-    const ids = v945NormalizeCryptoAdjustIds(meta.plAdjustments || []);
+    meta.stakeAmount = draft.amt ?? draft.stake ?? meta.stakeAmount ?? "";
+    let ids = v945NormalizeCryptoAdjustIds(meta.plAdjustments || []);
+    if (!ids.length && result === "loss") {
+      const fallbackId = v957CryptoHasValue(meta.stop) ? "stop" : v957CryptoHasValue(meta.liq) ? "liq" : "loss";
+      meta.plAdjustments = [fallbackId];
+      const setResult = v958CryptoSetFeatureDraft(day, slot, { plAdjustments: meta.plAdjustments, stakeAmount: meta.stakeAmount });
+      if (setResult?.meta) Object.assign(meta, setResult.meta);
+      ids = v945NormalizeCryptoAdjustIds(meta.plAdjustments || []);
+    }
     if (!ids.length) {
       try { omega_ShowFinanceToast(result === "loss" ? "Stop veya Liq seç." : "TP seç."); } catch(e) {}
       return false;
@@ -3956,12 +4034,13 @@
   function v957CryptoSummaryHtml(row, kind) {
     const isHistory = kind === "history";
     const pnl = isHistory ? Number(row?.pnl ?? row?.odds ?? 0) : v958CryptoTotalFromMeta(v956CryptoFeatureMeta(row));
-    const statusText = isHistory ? (pnl < 0 ? "ZARAR" : "KÂR") : "BEKLİYOR";
+    const statusText = isHistory ? (pnl < 0 ? "ZARAR" : "KÂR") : "";
     const statusClass = isHistory ? (pnl < 0 ? "loss" : "win") : "";
+    const statusHtml = isHistory ? `<em class="${statusClass}">${statusText}</em>` : "";
     const stakeText = v953FormatCryptoMoneyPrefix(row?.stake || 0);
     const pnlText = isHistory ? v941FormatSignedMoney(Number(row?.odds || row?.pnl || 0)) : v958CryptoFeaturePlText(row);
     return `<button type="button" class="v957-crypto-summary" data-v903-accordion-toggle aria-expanded="false">
-      <span class="v957-crypto-summary-top"><b>${v763EscapeHtml(v958CryptoTitleText(row, kind))}</b><em class="${statusClass}">${statusText}</em></span>
+      <span class="v957-crypto-summary-top"><b>${v959CryptoTitleHtml(row, kind)}</b>${statusHtml}</span>
       <span class="v957-crypto-summary-meta">
         ${v957CryptoMetric("Tutar", stakeText || "-", "stake")}
         ${v958CryptoPlMetric(row, pnlText, pnl < 0 ? "neg" : pnlText !== "-" ? "pos" : "")}
@@ -4111,8 +4190,9 @@
     const reportRows = v768HistoryRows(m);
     const reportHtml = k === "report" ? `<div class="v768-feature-report"><div><span>Kayıt</span><b>${reportRows.length}</b></div><div><span>${m === "crypto" ? "Toplam P/L" : "Toplam K/Z"}</span><b>${v768Money(reportRows.reduce((a,r)=>a+Number(r.pnl||0),0))}</b></div><button type="button" data-v768-report-download="${m}">Rapor Özeti İndir</button></div>` : v768FeatureRowsHtml(m, k);
     const activePhotoBtn = "";
+    const cryptoActiveStatus = (m === "crypto" && k === "active") ? `<span class="v959-crypto-header-status">Bekliyor</span>` : "";
     const historyFilters = k === "history" ? v926HistoryFiltersHtml(m) : "";
-    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions">${activePhotoBtn}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${historyFilters}${reportHtml}</div></section></div>`;
+    host.innerHTML = `<div class="v768-feature-overlay" data-v768-feature-panel><section class="v768-feature-modal ${m} ${k}"><div class="v768-feature-head"><div><b>${title}</b><span>${m === "crypto" ? "Kripto rolling" : "Bahis rolling"} · ${_ACTIVE_EXCEL_DAYS} günlük model</span></div><div class="v891-feature-head-actions">${activePhotoBtn}${cryptoActiveStatus}<button type="button" data-v768-feature-close>×</button></div></div><div class="v768-feature-body">${historyFilters}${reportHtml}</div></section></div>`;
     host.style.display = "block";
   }
 
