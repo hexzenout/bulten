@@ -1591,11 +1591,9 @@
         padding: 9px 10px !important;
         background: rgba(15,23,42,.82) !important;
         border: 1px solid rgba(51,65,85,.78) !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
+        display: grid !important;
+        grid-template-columns: minmax(108px, 108px) minmax(0, 1fr) !important;
         align-items: center !important;
-        align-content: center !important;
-        justify-content: flex-start !important;
         gap: 4px 8px !important;
         min-width: 0 !important;
       }
@@ -1604,7 +1602,7 @@
         font-size: .74rem !important;
         font-weight: 1000 !important;
         min-width: 0 !important;
-        flex: 0 0 auto !important;
+        width: 108px !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -1613,7 +1611,10 @@
         font-size: .70rem !important;
         font-weight: 1000 !important;
         white-space: nowrap !important;
-        flex: 0 0 auto !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        justify-self: start !important;
       }
       #omega-rolling-feature-host .v957-crypto-target-row.tp { border-color: rgba(34,197,94,.36) !important; }
       #omega-rolling-feature-host .v957-crypto-target-row.tp small { color:#86efac !important; }
@@ -1623,7 +1624,7 @@
       #omega-rolling-feature-host .v957-crypto-target-row.liq small { color:#c084fc !important; }
       #omega-rolling-feature-host .v957-crypto-target-row.v958-has-action {
         display: grid !important;
-        grid-template-columns: minmax(0,1fr) auto 30px !important;
+        grid-template-columns: minmax(108px, 108px) minmax(0, 1fr) 30px !important;
         align-items: center !important;
       }
       #omega-rolling-feature-host .v958-crypto-hit-btn {
@@ -1687,9 +1688,11 @@
       #omega-rolling-feature-host .v957-crypto-detail-grid .liq-amount b { color:#c084fc !important; }
       /* V959: KRİPTO Aktif/Geçmiş başlık rengi, header bekliyor ve P/L genişleme kilidi */
       #omega-rolling-feature-host .v959-crypto-title-date,
-      #omega-rolling-feature-host .v911-summary-date { color: #e2e8f0 !important; }
+      #omega-rolling-feature-host .v911-summary-date { color: #f8fafc !important; }
       #omega-rolling-feature-host .v959-crypto-title-main,
       #omega-rolling-feature-host .v911-summary-bet-ref { color: #fbbf24 !important; }
+      #omega-rolling-feature-host .v957-crypto-summary-top b .v959-crypto-title-date { color: #f8fafc !important; }
+      #omega-rolling-feature-host .v957-crypto-summary-top b .v959-crypto-title-main { color: #fbbf24 !important; }
       #omega-rolling-feature-host .v959-crypto-title-date,
       #omega-rolling-feature-host .v959-crypto-title-main,
       #omega-rolling-feature-host .v911-summary-date,
@@ -1748,6 +1751,34 @@
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
+      }
+
+
+      /* V964: Kripto aktif/geçmiş başlığı ve TP hedef hizası */
+      #omega-rolling-feature-host .v957-crypto-summary-top b .v959-crypto-title-date,
+      #omega-rolling-feature-host .v957-crypto-summary-top b .v911-summary-date {
+        color:#f8fafc !important;
+      }
+      #omega-rolling-feature-host .v957-crypto-summary-top b .v959-crypto-title-main,
+      #omega-rolling-feature-host .v957-crypto-summary-top b .v911-summary-bet-ref {
+        color:#fbbf24 !important;
+      }
+      #omega-rolling-feature-host .v957-crypto-target-row,
+      #omega-rolling-feature-host .v957-crypto-target-row.v958-has-action {
+        display:grid !important;
+        grid-template-columns:minmax(108px,108px) minmax(0,1fr) 30px !important;
+        align-items:center !important;
+      }
+      #omega-rolling-feature-host .v957-crypto-target-row:not(.v958-has-action) {
+        grid-template-columns:minmax(108px,108px) minmax(0,1fr) !important;
+      }
+      #omega-rolling-feature-host .v957-crypto-target-row b {
+        width:108px !important;
+        max-width:108px !important;
+      }
+      #omega-rolling-feature-host .v957-crypto-target-row small {
+        justify-self:start !important;
+        text-align:left !important;
       }
 
       @media (max-width: 560px) {
