@@ -1472,7 +1472,7 @@
         gap: 10px !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-top b {
-        color: #fbbf24 !important;
+        color: #f8fafc !important;
         font-size: .86rem !important;
         font-weight: 1000 !important;
         line-height: 1.22 !important;
@@ -1551,8 +1551,11 @@
         flex: 0 0 auto !important;
         text-align: left !important;
         white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        padding-right: 2px !important;
+        font-variant-numeric: tabular-nums !important;
+        font-feature-settings: "tnum" 1 !important;
       }
       #omega-rolling-feature-host .v957-crypto-detail {
         padding: 0 12px 12px !important;
@@ -1671,7 +1674,7 @@
       #omega-rolling-feature-host .v957-crypto-detail-grid .liq b { color:#ef4444 !important; }
       #omega-rolling-feature-host .v957-crypto-detail-grid .liq-amount b { color:#c084fc !important; }
       /* V959: KRİPTO Aktif/Geçmiş başlık rengi, header bekliyor ve P/L genişleme kilidi */
-      #omega-rolling-feature-host .v959-crypto-title-date { color: #cbd5e1 !important; }
+      #omega-rolling-feature-host .v959-crypto-title-date { color: #e2e8f0 !important; }
       #omega-rolling-feature-host .v959-crypto-title-main { color: #fbbf24 !important; }
       #omega-rolling-feature-host .v959-crypto-title-date,
       #omega-rolling-feature-host .v959-crypto-title-main {
@@ -1682,15 +1685,17 @@
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
+        min-width: 88px !important;
         min-height: 31px !important;
-        padding: 0 11px !important;
+        padding: 0 12px !important;
         border-radius: 999px !important;
-        color: #fed7aa !important;
-        background: rgba(124,45,18,.42) !important;
-        border: 1px solid rgba(251,146,60,.38) !important;
+        color: #cbd5e1 !important;
+        background: rgba(51,65,85,.45) !important;
+        border: 1px solid rgba(148,163,184,.28) !important;
         font-size: .70rem !important;
         font-weight: 1000 !important;
         letter-spacing: .01em !important;
+        line-height: 1 !important;
         white-space: nowrap !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl,
