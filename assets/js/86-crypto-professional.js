@@ -1478,6 +1478,9 @@
         line-height: 1.22 !important;
         min-width: 0 !important;
         overflow-wrap: anywhere !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-top em {
         font-style: normal !important;
@@ -1517,9 +1520,11 @@
         border: 1px solid rgba(51,65,85,.78) !important;
         padding: 8px 10px !important;
         display: flex !important;
+        flex-wrap: wrap !important;
         align-items: center !important;
+        align-content: center !important;
         justify-content: flex-start !important;
-        gap: 6px !important;
+        gap: 4px 6px !important;
         color: #cbd5e1 !important;
         font-size: .72rem !important;
         font-weight: 950 !important;
@@ -1543,6 +1548,7 @@
         font-size: .72rem !important;
         font-weight: 1000 !important;
         min-width: 0 !important;
+        flex: 0 0 auto !important;
         text-align: left !important;
         white-space: nowrap !important;
         overflow: hidden !important;
@@ -1571,9 +1577,11 @@
         background: rgba(15,23,42,.82) !important;
         border: 1px solid rgba(51,65,85,.78) !important;
         display: flex !important;
+        flex-wrap: wrap !important;
         align-items: center !important;
+        align-content: center !important;
         justify-content: flex-start !important;
-        gap: 8px !important;
+        gap: 4px 8px !important;
         min-width: 0 !important;
       }
       #omega-rolling-feature-host .v957-crypto-target-row b {
@@ -1581,6 +1589,7 @@
         font-size: .74rem !important;
         font-weight: 1000 !important;
         min-width: 0 !important;
+        flex: 0 0 auto !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -1664,6 +1673,11 @@
       /* V959: KRİPTO Aktif/Geçmiş başlık rengi, header bekliyor ve P/L genişleme kilidi */
       #omega-rolling-feature-host .v959-crypto-title-date { color: #cbd5e1 !important; }
       #omega-rolling-feature-host .v959-crypto-title-main { color: #fbbf24 !important; }
+      #omega-rolling-feature-host .v959-crypto-title-date,
+      #omega-rolling-feature-host .v959-crypto-title-main {
+        display: inline !important;
+        line-height: 1.25 !important;
+      }
       #omega-rolling-feature-host .v959-crypto-header-status {
         display: inline-flex !important;
         align-items: center !important;
@@ -1687,14 +1701,14 @@
       }
       #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl b,
       #omega-rolling-feature-host .v957-crypto-detail-grid span.pnl b {
-        flex: 1 1 auto !important;
+        flex: 0 0 auto !important;
         min-width: 0 !important;
         max-width: 100% !important;
         overflow: hidden !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl b span,
       #omega-rolling-feature-host .v957-crypto-detail-grid span.pnl b span {
-        display: block !important;
+        display: inline !important;
         max-width: 100% !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -3788,6 +3802,13 @@
     return `<span class="${cls}"><small>${v763EscapeHtml(label)}:</small><b>${rendered}</b></span>`;
   }
 
+  function v960CryptoHistoryPnl(row) {
+    const direct = Number(row?.pnl);
+    if (Number.isFinite(direct)) return direct;
+    const fallback = Number(row?.odds ?? 0);
+    return Number.isFinite(fallback) ? fallback : 0;
+  }
+
   function v958CryptoPlMetric(row, text, cls = "") {
     const safe = String(text || "-").trim() || "-";
     const css = cls || (safe.startsWith("-") ? "neg" : safe !== "-" ? "pos" : "");
@@ -4013,8 +4034,8 @@
   function v957CryptoDetailHtml(row, kind) {
     const meta = v956CryptoFeatureMeta(row);
     const isHistory = kind === "history";
-    const pnl = isHistory ? Number(row?.pnl ?? row?.odds ?? 0) : v958CryptoTotalFromMeta(meta);
-    const pnlText = isHistory ? v941FormatSignedMoney(Number(row?.odds || row?.pnl || 0)) : v958CryptoFeaturePlText(row);
+    const pnl = isHistory ? v960CryptoHistoryPnl(row) : v958CryptoTotalFromMeta(meta);
+    const pnlText = isHistory ? v941FormatSignedMoney(v960CryptoHistoryPnl(row)) : v958CryptoFeaturePlText(row);
     const stakeText = v953FormatCryptoMoneyPrefix(row?.stake || 0);
     const metrics = [
       v957CryptoMetric("Tutar", stakeText, "stake"),
@@ -4033,12 +4054,12 @@
 
   function v957CryptoSummaryHtml(row, kind) {
     const isHistory = kind === "history";
-    const pnl = isHistory ? Number(row?.pnl ?? row?.odds ?? 0) : v958CryptoTotalFromMeta(v956CryptoFeatureMeta(row));
+    const pnl = isHistory ? v960CryptoHistoryPnl(row) : v958CryptoTotalFromMeta(v956CryptoFeatureMeta(row));
     const statusText = isHistory ? (pnl < 0 ? "ZARAR" : "KÂR") : "";
     const statusClass = isHistory ? (pnl < 0 ? "loss" : "win") : "";
     const statusHtml = isHistory ? `<em class="${statusClass}">${statusText}</em>` : "";
     const stakeText = v953FormatCryptoMoneyPrefix(row?.stake || 0);
-    const pnlText = isHistory ? v941FormatSignedMoney(Number(row?.odds || row?.pnl || 0)) : v958CryptoFeaturePlText(row);
+    const pnlText = isHistory ? v941FormatSignedMoney(v960CryptoHistoryPnl(row)) : v958CryptoFeaturePlText(row);
     return `<button type="button" class="v957-crypto-summary" data-v903-accordion-toggle aria-expanded="false">
       <span class="v957-crypto-summary-top"><b>${v959CryptoTitleHtml(row, kind)}</b>${statusHtml}</span>
       <span class="v957-crypto-summary-meta">
