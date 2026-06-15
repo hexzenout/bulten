@@ -1687,15 +1687,15 @@
       #omega-rolling-feature-host .v957-crypto-detail-grid .liq-amount b { color:#c084fc !important; }
       /* V959: KRİPTO Aktif/Geçmiş başlık rengi, header bekliyor ve P/L genişleme kilidi */
       #omega-rolling-feature-host .v959-crypto-title-date,
-      #omega-rolling-feature-host .v911-summary-date { color: #f8fafc !important; }
+      #omega-rolling-feature-host .v957-crypto-summary .v911-summary-date { color: #fff7ed !important; }
       #omega-rolling-feature-host .v959-crypto-title-main,
-      #omega-rolling-feature-host .v911-summary-bet-ref { color: #fbbf24 !important; }
+      #omega-rolling-feature-host .v957-crypto-summary .v911-summary-bet-ref { color: #fbbf24 !important; }
       #omega-rolling-feature-host .v959-crypto-title-date,
       #omega-rolling-feature-host .v959-crypto-title-main,
-      #omega-rolling-feature-host .v911-summary-date,
-      #omega-rolling-feature-host .v911-summary-bet-ref {
+      #omega-rolling-feature-host .v957-crypto-summary .v911-summary-date,
+      #omega-rolling-feature-host .v957-crypto-summary .v911-summary-bet-ref {
         display: inline !important;
-        line-height: 1.25 !important;
+        line-height: 1.35 !important;
       }
       #omega-rolling-feature-host .v959-crypto-header-status {
         display: inline-flex !important;
