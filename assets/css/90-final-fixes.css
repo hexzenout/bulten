@@ -138,3 +138,76 @@
     fill: var(--v508-blue) !important;
 }
 
+
+/* V969: Ana hamburger menüde ROLLING alt kırılımı (Bahis / Kripto). */
+.accordion-menu .nav-rolling-branch {
+    width: 100% !important;
+    display: grid !important;
+    gap: 4px !important;
+}
+
+.accordion-menu .nav-rolling-toggle {
+    justify-content: flex-start !important;
+}
+
+.accordion-menu .nav-rolling-toggle .nav-rolling-chevron {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    width: auto !important;
+    font-size: .78em !important;
+    opacity: .72 !important;
+    transition: transform .18s ease, opacity .18s ease !important;
+}
+
+.accordion-menu .nav-rolling-branch.open .nav-rolling-toggle .nav-rolling-chevron,
+.accordion-menu .nav-rolling-branch.route-open .nav-rolling-toggle .nav-rolling-chevron {
+    transform: rotate(180deg) !important;
+    opacity: 1 !important;
+}
+
+.accordion-menu .nav-rolling-submenu {
+    display: none !important;
+    grid-template-columns: 1fr !important;
+    gap: 4px !important;
+    margin: -1px 0 4px 16px !important;
+    padding: 6px 0 6px 10px !important;
+    border-left: 1px solid rgba(126,34,206,.45) !important;
+}
+
+.accordion-menu .nav-rolling-branch.open .nav-rolling-submenu,
+.accordion-menu .nav-rolling-branch.route-open .nav-rolling-submenu {
+    display: grid !important;
+}
+
+.accordion-menu .nav-rolling-sub-link {
+    min-height: 36px !important;
+    padding: 9px 12px !important;
+    font-size: .82em !important;
+    border-radius: 8px !important;
+    background: rgba(15,23,42,.28) !important;
+    color: #e5e7eb !important;
+}
+
+.accordion-menu .nav-rolling-sub-link i {
+    margin-right: 10px !important;
+    width: 20px !important;
+    font-size: 1em !important;
+}
+
+.accordion-menu .nav-rolling-sub-link.bet > i {
+    color: #22c55e !important;
+}
+
+.accordion-menu .nav-rolling-sub-link.crypto > i {
+    color: #f59e0b !important;
+}
+
+.accordion-menu .nav-rolling-sub-link.active {
+    background: rgba(126,34,206,.24) !important;
+    color: #fff !important;
+    font-weight: 900 !important;
+}
+
+.accordion-menu.active-menu {
+    max-height: 820px !important;
+}

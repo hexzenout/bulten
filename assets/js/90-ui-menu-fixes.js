@@ -19,6 +19,37 @@
   };
 
   let lock = false;
+  const ROLLING_PAGE_MODE_KEY = "v48_rolling_page_mode";
+
+  function rollingRawHash() {
+    return String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
+  }
+
+  function rollingModeFromHash() {
+    const raw = rollingRawHash();
+    if (raw.startsWith("rolling/crypto") || raw.startsWith("finance/rolling/crypto")) return "crypto";
+    if (raw.startsWith("rolling/bet") || raw.startsWith("rolling/bahis") || raw.startsWith("finance/rolling/bet")) return "bet";
+    try { return localStorage.getItem(ROLLING_PAGE_MODE_KEY) === "crypto" ? "crypto" : "bet"; } catch { return "bet"; }
+  }
+
+  function syncRollingBranch(forceOpen) {
+    const branch = document.getElementById("nav-rolling-branch");
+    if (!branch) return;
+    const raw = rollingRawHash();
+    const isRollingRoute = raw.startsWith("rolling") || raw.startsWith("finance/rolling");
+    if (forceOpen === true) branch.classList.add("open");
+    branch.classList.toggle("route-open", isRollingRoute);
+
+    const shouldOpen = branch.classList.contains("open") || branch.classList.contains("route-open");
+    const toggle = document.getElementById("nav-rolling");
+    if (toggle) toggle.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+
+    const mode = rollingModeFromHash();
+    const bet = document.getElementById("nav-rolling-bet");
+    const crypto = document.getElementById("nav-rolling-crypto");
+    if (bet) bet.classList.toggle("active", isRollingRoute && mode === "bet");
+    if (crypto) crypto.classList.toggle("active", isRollingRoute && mode === "crypto");
+  }
 
   function keyFromHash() {
     const raw = String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
@@ -51,6 +82,7 @@
     document.querySelectorAll("#main-dropdown-nav .nav-link").forEach(a => a.classList.remove("active"));
     const item = MAP[key];
     if (item?.id) document.getElementById(item.id)?.classList.add("active");
+    syncRollingBranch(false);
 
     const streamIcon = document.querySelector("#nav-stream > i");
     if (streamIcon) streamIcon.style.setProperty("color", "#3b82f6", "important");
@@ -141,6 +173,26 @@
     forceCryptoGraphIfBase();
 
     document.addEventListener("click", e => {
+      const rollingToggle = e.target.closest("#nav-rolling");
+      if (rollingToggle && !e.target.closest(".nav-rolling-sub-link")) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+        const branch = document.getElementById("nav-rolling-branch");
+        if (branch) {
+          const willOpen = !branch.classList.contains("open");
+          branch.classList.toggle("open", willOpen);
+        }
+        syncRollingBranch(false);
+        return;
+      }
+
+      const rollingSub = e.target.closest("#nav-rolling-bet, #nav-rolling-crypto");
+      if (rollingSub) {
+        try { localStorage.setItem(ROLLING_PAGE_MODE_KEY, rollingSub.id === "nav-rolling-crypto" ? "crypto" : "bet"); } catch {}
+        syncRollingBranch(true);
+      }
+
       const link = e.target.closest("#main-dropdown-nav .nav-link");
       if (link?.id) {
         const k = link.id.replace(/^nav-/, "");
@@ -169,13 +221,15 @@
     }
 
     window.addEventListener("hashchange", () => {
+      syncRollingBranch(false);
       setTimeout(() => { patchSwitch(); apply(); forceSoundIfNeeded(); }, 0);
       setTimeout(() => { apply(); forceSoundIfNeeded(); }, 250);
       const key = keyFromHash();
       if (key === "stream") setTimeout(() => { if (typeof window.omega_BootStreamV49 === "function") window.omega_BootStreamV49(true); }, 120);
     });
 
-    setTimeout(() => { patchSwitch(); apply(); forceSoundIfNeeded(); }, 300);
+    syncRollingBranch(false);
+    setTimeout(() => { patchSwitch(); apply(); forceSoundIfNeeded(); syncRollingBranch(false); }, 300);
     setTimeout(() => { apply(); forceSoundIfNeeded(); }, 900);
     setTimeout(() => { apply(); forceSoundIfNeeded(); }, 1800);
   }
