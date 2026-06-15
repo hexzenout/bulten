@@ -1857,22 +1857,24 @@
     const cryptoSum = slotSummary(state.modeSlots.crypto);
     const betRollSum = rollingSummary("bet");
     const cryptoRollSum = rollingSummary("crypto");
-    const rollSum = rollingSummary();
     const betTotalPnl = betSum.pnl + betRollSum.pnlTotal;
     const cryptoTotalPnl = cryptoSum.pnl + cryptoRollSum.pnlTotal;
-    const totalPnl = betTotalPnl + cryptoTotalPnl;
-    const betGrowth = growthPct(betTotalPnl, betRollSum.startTotal || state.quickPlan?.start || 100);
-    const cryptoGrowth = growthPct(cryptoTotalPnl, cryptoRollSum.startTotal || state.quickPlan?.start || 100);
-    const totalGrowth = growthPct(totalPnl, (betRollSum.startTotal || 0) + (cryptoRollSum.startTotal || 0) || state.quickPlan?.start || 100);
     const mode = activeMode();
+    const isCrypto = mode === "crypto";
+    const modeSum = isCrypto ? cryptoSum : betSum;
+    const modeRollSum = isCrypto ? cryptoRollSum : betRollSum;
+    const modeTotalPnl = isCrypto ? cryptoTotalPnl : betTotalPnl;
+    const modeLabel = isCrypto ? "KRİPTO" : "BAHİS";
+    const modeIcon = isCrypto ? "fa-brands fa-bitcoin" : "fa-solid fa-layer-group";
+    const modeGrowth = growthPct(modeTotalPnl, modeRollSum.startTotal || getModeQuickPlan(state, mode).start || 100);
     mount.innerHTML = `
-      <div class="rolling-v47-page v48-rolling-page v49-rolling-page">
+      <div class="rolling-v47-page v48-rolling-page v49-rolling-page" data-rolling-screen="${mode}">
         <div class="rolling-v47-hero v48-rolling-hero">
-          <div><h2><i class="fa-solid fa-layer-group"></i> ROLLING</h2><span class="v798-hero-note">Genel Performans Özeti</span></div>
+          <div><h2><i class="${modeIcon}"></i> ${modeLabel} ROLLING</h2><span class="v798-hero-note">${modeLabel} Genel Performans Özeti</span></div>
           <div class="rolling-v47-hero-kpis v753-rolling-kpis v756-rolling-kpis">
-            <div><span>Bahis Kar/Zarar</span><b class="${betTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(betTotalPnl)}</b><em>${pctText(betGrowth)} büyüme</em></div>
-            <div><span>Kripto Kar/Zarar</span><b class="${cryptoTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(cryptoTotalPnl)}</b><em>${pctText(cryptoGrowth)} büyüme</em></div>
-            <div><span>Toplam Kar/Zarar</span><b class="${totalPnl >= 0 ? "pos" : "neg"}">${signedMoney(totalPnl)}</b><em>${pctText(totalGrowth)} büyüme</em></div>
+            <div><span>${modeLabel} Kar/Zarar</span><b class="${modeTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(modeTotalPnl)}</b><em>${pctText(modeGrowth)} büyüme</em></div>
+            <div><span>Kapalı / Açık</span><b>${modeSum.settled} işlem</b><em>Açık tutar ${money(modeSum.open)}</em></div>
+            <div><span>Rolling K/Z</span><b class="${modeRollSum.pnlTotal >= 0 ? "pos" : "neg"}">${signedMoney(modeRollSum.pnlTotal)}</b><em>Başlangıç ${money(modeRollSum.startTotal || getModeQuickPlan(state, mode).start || 100)}</em></div>
           </div>
         </div>
 
@@ -1881,7 +1883,7 @@
             <div class="rolling-v48-rail-toggle v49-rolling-rail-title v808-rail-title"><span>ROLLING MENÜSÜ</span></div>
             <button type="button" class="rolling-v48-rail-tab bet ${mode === "bet" ? "active" : ""}" data-roll-tab="bet"><span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span><span class="rolling-v493-rail-label">BAHİS</span></button>
             <button type="button" class="rolling-v48-rail-tab crypto ${mode === "crypto" ? "active" : ""}" data-roll-tab="crypto"><span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span><span class="rolling-v493-rail-label">KRİPTO</span></button>
-            ${renderPlanControl(state, mode, mode === "crypto" ? cryptoTotalPnl : betTotalPnl)}
+            ${renderPlanControl(state, mode, modeTotalPnl)}
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
         </div>
