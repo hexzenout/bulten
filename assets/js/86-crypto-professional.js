@@ -1448,7 +1448,16 @@
 
 
       /* V957: KRİPTO Aktif/Geçmiş kartlarını bahis gibi açılır-kapanır ve okunur yap */
+      #omega-rolling-feature-host .v768-feature-modal.crypto {
+        width: min(520px, calc(100vw - 18px)) !important;
+        max-width: calc(100vw - 18px) !important;
+        box-sizing: border-box !important;
+      }
       #omega-rolling-feature-host .v956-crypto-feature-card.v957-crypto-accordion {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
         padding: 0 !important;
         gap: 0 !important;
         overflow: hidden !important;
@@ -1470,6 +1479,8 @@
         align-items: center !important;
         justify-content: space-between !important;
         gap: 10px !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-top b {
         color: #f8fafc !important;
@@ -1477,10 +1488,9 @@
         font-weight: 1000 !important;
         line-height: 1.22 !important;
         min-width: 0 !important;
+        max-width: 100% !important;
         overflow-wrap: anywhere !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: center !important;
+        display: block !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-top em {
         font-style: normal !important;
@@ -1531,6 +1541,8 @@
         line-height: 1.15 !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-meta small,
       #omega-rolling-feature-host .v957-crypto-date-single small,
@@ -1674,10 +1686,14 @@
       #omega-rolling-feature-host .v957-crypto-detail-grid .liq b { color:#ef4444 !important; }
       #omega-rolling-feature-host .v957-crypto-detail-grid .liq-amount b { color:#c084fc !important; }
       /* V959: KRİPTO Aktif/Geçmiş başlık rengi, header bekliyor ve P/L genişleme kilidi */
-      #omega-rolling-feature-host .v959-crypto-title-date { color: #e2e8f0 !important; }
-      #omega-rolling-feature-host .v959-crypto-title-main { color: #fbbf24 !important; }
       #omega-rolling-feature-host .v959-crypto-title-date,
-      #omega-rolling-feature-host .v959-crypto-title-main {
+      #omega-rolling-feature-host .v911-summary-date { color: #e2e8f0 !important; }
+      #omega-rolling-feature-host .v959-crypto-title-main,
+      #omega-rolling-feature-host .v911-summary-bet-ref { color: #fbbf24 !important; }
+      #omega-rolling-feature-host .v959-crypto-title-date,
+      #omega-rolling-feature-host .v959-crypto-title-main,
+      #omega-rolling-feature-host .v911-summary-date,
+      #omega-rolling-feature-host .v911-summary-bet-ref {
         display: inline !important;
         line-height: 1.25 !important;
       }
@@ -1686,6 +1702,7 @@
         align-items: center !important;
         justify-content: center !important;
         min-width: 88px !important;
+        height: 31px !important;
         min-height: 31px !important;
         padding: 0 12px !important;
         border-radius: 999px !important;
@@ -1695,7 +1712,9 @@
         font-size: .70rem !important;
         font-weight: 1000 !important;
         letter-spacing: .01em !important;
-        line-height: 1 !important;
+        line-height: 31px !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
         white-space: nowrap !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl,
@@ -1706,18 +1725,19 @@
       }
       #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl b,
       #omega-rolling-feature-host .v957-crypto-detail-grid span.pnl b {
-        flex: 0 0 auto !important;
+        flex: 1 1 auto !important;
         min-width: 0 !important;
         max-width: 100% !important;
         overflow: hidden !important;
       }
       #omega-rolling-feature-host .v957-crypto-summary-meta span.pnl b span,
       #omega-rolling-feature-host .v957-crypto-detail-grid span.pnl b span {
-        display: inline !important;
+        display: inline-block !important;
         max-width: 100% !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
+        vertical-align: middle !important;
       }
       #omega-rolling-feature-host .v958-crypto-actions {
         width: 100% !important;
@@ -3798,7 +3818,7 @@
     const title = String(row?.note || meta.coin || "İşlem").trim() || "İşlem";
     const stamp = v958CryptoTitleStamp(row, kind);
     const ref = `Gün ${row.day} · İşlem ${Number(row.slot || 0) + 1} - ${title}`;
-    return `<span class="v959-crypto-title-date">${v763EscapeHtml(stamp)} - </span><span class="v959-crypto-title-main">${v763EscapeHtml(ref)}</span>`;
+    return `<span class="v911-summary-date v959-crypto-title-date">${v763EscapeHtml(stamp)} - </span><span class="v911-summary-bet-ref v959-crypto-title-main">${v763EscapeHtml(ref)}</span>`;
   }
 
   function v957CryptoMetric(label, value, cls = "") {
@@ -4038,13 +4058,7 @@
 
   function v957CryptoDetailHtml(row, kind) {
     const meta = v956CryptoFeatureMeta(row);
-    const isHistory = kind === "history";
-    const pnl = isHistory ? v960CryptoHistoryPnl(row) : v958CryptoTotalFromMeta(meta);
-    const pnlText = isHistory ? v941FormatSignedMoney(v960CryptoHistoryPnl(row)) : v958CryptoFeaturePlText(row);
-    const stakeText = v953FormatCryptoMoneyPrefix(row?.stake || 0);
     const metrics = [
-      v957CryptoMetric("Tutar", stakeText, "stake"),
-      v958CryptoPlMetric(row, pnlText, pnl < 0 ? "neg" : pnlText !== "-" ? "pos" : ""),
       v957CryptoMetric("Giriş", v927DisplayValue(meta.entry), "entry"),
       v957CryptoMetric("Kaldıraç", v927LeverageLabel(meta.leverage), "lev")
     ].filter(Boolean).join("");
