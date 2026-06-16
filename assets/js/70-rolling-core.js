@@ -2089,9 +2089,7 @@ function escapeHtml(str) {
       const group = betCouponGroup(s);
       const kindClass = group ? "combo" : "single";
       const groupLabel = group ? `Kupon ${group}` : "Tek";
-      const groupChoices = [`<button type="button" class="v995-bet-group-option single" data-bet-group-choice="${i}:">Tek</button>`].concat([1,2,3,4,5,6].map(n => `<button type="button" class="v995-bet-group-option combo" data-bet-group-choice="${i}:${n}">Kupon ${n}</button>`)).join("");
-      const dropClass = "";
-      const kindSelect = `<div class="v995-bet-group-menu ${kindClass}${dropClass}" data-bet-group-menu="${i}"><button type="button" class="v995-bet-group-toggle ${kindClass}" data-bet-group-toggle="${i}" title="Tekli / kupon grubu seç"><span>${groupLabel}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><div class="v995-bet-group-list" data-bet-group-list="${i}">${groupChoices}</div></div>`;
+      const kindSelect = `<div class="v995-bet-group-menu ${kindClass}" data-bet-group-menu="${i}"><button type="button" class="v995-bet-group-toggle ${kindClass}" data-bet-group-toggle="${i}" title="Tekli / kupon grubu seç"><span>${groupLabel}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button></div>`;
       return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell v988-bet-type-cell"><span class="rolling-v47-type ${mode}">Bahis</span>${kindSelect}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${rowStatus === "win" || rowStatus === "loss" ? rowStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
@@ -2460,6 +2458,7 @@ function escapeHtml(str) {
       input.addEventListener("change", saveInput);
     });
     const closeBetGroupPortal = () => {
+      document.getElementById("v1008-bet-group-portal")?.remove();
       document.getElementById("v1007-bet-group-portal")?.remove();
       mount.querySelectorAll("[data-bet-group-menu].is-open").forEach(menu => {
         menu.classList.remove("is-open");
@@ -2480,18 +2479,18 @@ function escapeHtml(str) {
       row?.classList.add("v995-group-row-open");
       const rect = btn.getBoundingClientRect();
       const portal = document.createElement("div");
-      portal.id = "v1007-bet-group-portal";
-      portal.className = "v1007-bet-group-portal";
+      portal.id = "v1008-bet-group-portal";
+      portal.className = "v1008-bet-group-portal";
       portal.style.left = `${Math.round(rect.left)}px`;
       portal.style.top = `${Math.round(rect.bottom + 6)}px`;
       portal.style.minWidth = `${Math.max(108, Math.round(rect.width + 22))}px`;
-      portal.innerHTML = [`<button type="button" class="v1007-bet-group-option single" data-v1007-bet-group-choice="${i}:">Tek</button>`].concat([1,2,3,4,5,6].map(n => `<button type="button" class="v1007-bet-group-option combo" data-v1007-bet-group-choice="${i}:${n}">Kupon ${n}</button>`)).join("");
+      portal.innerHTML = [`<button type="button" class="v1008-bet-group-option single" data-v1008-bet-group-choice="${i}:">Tek</button>`].concat([1,2,3,4,5,6].map(n => `<button type="button" class="v1008-bet-group-option combo" data-v1008-bet-group-choice="${i}:${n}">Kupon ${n}</button>`)).join("");
       portal.addEventListener("click", choiceEvent => {
-        const choice = choiceEvent.target?.closest?.("[data-v1007-bet-group-choice]");
+        const choice = choiceEvent.target?.closest?.("[data-v1008-bet-group-choice]");
         if (!choice) return;
         choiceEvent.preventDefault();
         choiceEvent.stopPropagation();
-        const [slotRaw, groupRaw] = String(choice.dataset.v1007BetGroupChoice || "0:").split(":");
+        const [slotRaw, groupRaw] = String(choice.dataset.v1008BetGroupChoice || "0:").split(":");
         const slotIndex = Number(slotRaw || 0);
         const group = betCouponGroup({ couponGroup: groupRaw || "" });
         if (!state.modeSlots.bet[slotIndex]) state.modeSlots.bet[slotIndex] = createSlot("bet", slotIndex);
@@ -2508,11 +2507,12 @@ function escapeHtml(str) {
       });
       document.body.appendChild(portal);
     }));
-    if (!window.__bultenV1007BetGroupOutsideClose) {
-      window.__bultenV1007BetGroupOutsideClose = true;
+    if (!window.__bultenV1008BetGroupOutsideClose) {
+      window.__bultenV1008BetGroupOutsideClose = true;
       document.addEventListener("click", event => {
-        if (event.target?.closest?.("#v1007-bet-group-portal") || event.target?.closest?.("[data-bet-group-toggle]")) return;
-        document.getElementById("v1007-bet-group-portal")?.remove();
+        if (event.target?.closest?.("#v1008-bet-group-portal") || event.target?.closest?.("[data-bet-group-toggle]")) return;
+        document.getElementById("v1008-bet-group-portal")?.remove();
+      document.getElementById("v1007-bet-group-portal")?.remove();
         document.querySelectorAll("[data-bet-group-menu].is-open").forEach(menu => {
           menu.classList.remove("is-open");
           menu.closest("tr")?.classList.remove("v995-group-row-open");
