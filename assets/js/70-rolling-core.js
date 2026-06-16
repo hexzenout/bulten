@@ -102,7 +102,7 @@
       ? { start: legacy?.quickPlan?.start ?? 100, target: "", currentOverride: "" }
       : { ...(legacy?.quickPlan || {}), start: legacy?.quickPlan?.start ?? 100, target: legacy?.quickPlan?.target ?? 1000, currentOverride: legacy?.quickPlan?.currentOverride ?? "" };
     return {
-      version: 981,
+      version: 983,
       mode: safeMode,
       slots: Array.isArray(source.slots) ? source.slots : fallbackSlots,
       rowCount: Math.max(1, Math.min(20, Number(source.rowCount ?? legacy?.rowCounts?.[safeMode] ?? 20))),
@@ -119,7 +119,7 @@
     ensureQuickTemplates(state);
     ensureQuickPlans(state);
     return {
-      version: 981,
+      version: 983,
       mode: safeMode,
       updatedAt: Date.now(),
       slots: Array.isArray(state.modeSlots?.[safeMode]) ? state.modeSlots[safeMode] : createSlots(safeMode, 20),
@@ -519,30 +519,34 @@
     const all = loadTargetLog().filter(r => (r.mode || "bet") === mode);
     const rows = filterHistoryRows(all, HISTORY_FILTER);
     const pnl = rows.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
-    const filters = ["today","yesterday","week","month","year","twoYears","all"].map(f => `<button type="button" class="v758-row-tool history ${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${historyFilterLabel(f)}</button>`).join("");
-    const tableRows = rows.length ? rows.map((r, idx) => `
-      <div class="kapsul v32 v982-history-kapsul ${Number(r.pnl || 0) >= 0 ? "win" : "loss"}" style="min-height:132px;">
-        <button type="button" class="k-undo" data-target-history-delete="${escapeHtml(r.id || "")}" title="Sil"><i class="fa-solid fa-xmark"></i></button>
-        <div class="k-result">
-          <div class="k-note-show">${idx + 1}. ${escapeHtml(formatDateTime(r.ts))}</div>
-          <b>Başlangıç ${money(r.start)} · Hedef ${money(r.target)}</b>
-          <b>Güncel ${money(r.current ?? (Number(r.start || 0) + Number(r.pnl || 0)))}</b>
-          <span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</span>
-        </div>
-      </div>`).join("") : `<div class="v759-empty-note" style="grid-column:1/-1;">Bu filtrede kasa hedefi geçmişi yok.</div>`;
+    const filters = ["today","yesterday","week","month","year","twoYears","all"].map(f => `<button type="button" class="${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${historyFilterLabel(f)}</button>`).join("");
+    const body = rows.length ? rows.map(r => `
+      <tr>
+        <td>${escapeHtml(formatDateTime(r.ts))}</td>
+        <td>${money(r.start)}</td>
+        <td>${r.target ? money(r.target) : "-"}</td>
+        <td>${money(r.current ?? (Number(r.start || 0) + Number(r.pnl || 0)))}</td>
+        <td><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</span></td>
+        <td><button type="button" class="v757-history-delete" data-target-history-delete="${escapeHtml(r.id || "")}" title="Bu kasa hedefi kaydını sil"><i class="fa-solid fa-trash"></i></button></td>
+      </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede kasa hedefi geçmişi yok.</td></tr>`;
     return `
-      <div id="rolling-target-history-overlay" class="show-modal v982-target-history-excel" data-roll-mode="${mode}" data-target-history-overlay style="display:flex;">
-        <section class="v982-target-history-modal" onclick="event.stopPropagation()" style="width:min(1180px,calc(100vw - 38px));max-height:calc(100vh - 52px);overflow:auto;border-radius:26px;border:1px solid rgba(251,191,36,.25);background:linear-gradient(180deg,rgba(9,12,20,.98),rgba(3,7,18,.98));box-shadow:0 28px 90px rgba(0,0,0,.62);padding:18px;">
-          <div class="excel-title" style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px;">
+      <div class="v512-history-overlay" data-target-history-overlay style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.72);padding:24px;">
+        <div class="v512-history-modal ${mode}" onclick="event.stopPropagation()" style="width:min(1180px,calc(100vw - 48px));max-height:calc(100vh - 54px);overflow:auto;">
+          <div class="v512-history-head">
             <div>
-              <h2 id="excel-modal-title" style="margin:0;">${isCrypto ? "KRİPTO KASA HEDEFİ GEÇMİŞİ" : "BAHİS KASA HEDEFİ GEÇMİŞİ"}</h2>
-              <span style="display:block;color:#94a3b8;font-weight:900;font-size:.82rem;margin-top:4px;">${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · Kasa Hedefi K/Z ${signedMoney(pnl)}</span>
+              <b>${isCrypto ? "KRİPTO KASA HEDEFİ GEÇMİŞİ" : "BAHİS KASA HEDEFİ GEÇMİŞİ"}</b>
+              <span>${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · Kasa Hedefi K/Z ${signedMoney(pnl)}</span>
             </div>
-            <button type="button" data-target-history-close style="width:42px;height:42px;border-radius:14px;border:1px solid rgba(239,68,68,.42);background:rgba(127,29,29,.42);color:#fff;font-weight:950;font-size:1.2rem;">×</button>
+            <button type="button" data-target-history-close>×</button>
           </div>
-          <div class="v766-excel-feature-controls" style="margin-bottom:14px;">${filters}</div>
-          <div class="capsule-container v32" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;">${tableRows}</div>
-        </section>
+          <div class="v512-history-filters">${filters}</div>
+          <div class="v512-history-table-wrap">
+            <table class="v512-history-table">
+              <thead><tr><th>Tarih / Saat</th><th>Başlangıç</th><th>Hedef</th><th>Güncel</th><th>K/Z</th><th>Sil</th></tr></thead>
+              <tbody>${body}</tbody>
+            </table>
+          </div>
+        </div>
       </div>`;
   }
 
@@ -621,6 +625,46 @@
   function canAutoAttachToCombo(row) {
     return !!row && !!cleanText(row.name) && !Number(row.stake || 0);
   }
+  function betKind(slot) {
+    return slot?.betKind === "combo" ? "combo" : "single";
+  }
+  function normalizeBetComboRanges(slots) {
+    const list = Array.isArray(slots) ? slots : [];
+    list.forEach(slot => {
+      if (!slot || slot.type !== "bet") return;
+      if (slot.betKind !== "combo") slot.betKind = "single";
+    });
+    const marked = list
+      .map((slot, index) => ({ slot, index }))
+      .filter(x => x.slot && x.slot.type === "bet" && x.slot.betKind === "combo")
+      .map(x => x.index);
+    if (marked.length >= 2) {
+      const first = Math.min(...marked);
+      const last = Math.max(...marked);
+      for (let i = first; i <= last; i++) {
+        if (!list[i]) list[i] = createSlot("bet", i);
+        list[i].type = "bet";
+        list[i].id = i + 1;
+        list[i].betKind = "combo";
+      }
+    }
+    return list;
+  }
+  function buildExplicitComboRow(rows = []) {
+    const ordered = (Array.isArray(rows) ? rows : []).filter(Boolean).sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
+    const first = ordered[0] || {};
+    const stakeRow = ordered.find(row => Number(row.stake || 0));
+    const rest = ordered.slice(1).map(row => ({ name: cleanText(row.name), odds: row.odds, sourceIndex: row.index }));
+    return {
+      ...first,
+      stake: stakeRow ? stakeRow.stake : first.stake,
+      autoCombo: false,
+      manualCombo: true,
+      autoComboRows: ordered.map(row => row.index),
+      extraMatches: rest,
+      comboResults: Array.isArray(first.comboResults) ? first.comboResults.slice() : []
+    };
+  }
   function buildAutoComboRow(base, preRows = [], postRows = []) {
     const ordered = [...(preRows || []), base, ...(postRows || [])].filter(Boolean);
     const first = ordered[0] || base;
@@ -647,68 +691,54 @@
     return matches;
   }
   function getBetCouponGroups(state) {
+    const source = Array.isArray(state?.modeSlots?.bet) ? state.modeSlots.bet : [];
+    normalizeBetComboRanges(source);
     const rows = pendingRowsForMode("bet", state).sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
     const singles = [];
     const coupons = [];
     const consumed = new Set();
-    const noStakeBuffer = [];
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
       if (!row || consumed.has(row.index)) continue;
 
-      if (canAutoAttachToCombo(row)) {
-        noStakeBuffer.push(row);
+      const manualMatchCount = getSlotMatches(row).length;
+      if (manualMatchCount > 1) {
+        coupons.push({
+          id: Number(row.index || 0) + 1,
+          slotIndex: Number(row.index || 0),
+          row,
+          rows: [row],
+          matches: getSlotMatches(row)
+        });
+        consumed.add(row.index);
         continue;
       }
 
-      if (!cleanText(row.name)) continue;
-
-      const preRows = [];
-      if (Number(row.stake || 0) && noStakeBuffer.length) {
-        let expected = Number(row.index || 0) - 1;
-        for (let b = noStakeBuffer.length - 1; b >= 0; b--) {
-          const candidate = noStakeBuffer[b];
-          if (Number(candidate.index || 0) !== expected) break;
-          preRows.unshift(candidate);
-          expected--;
+      if (betKind(row) === "combo") {
+        const startIndex = Number(row.index || 0);
+        let endIndex = startIndex;
+        while (source[endIndex + 1] && betKind(source[endIndex + 1]) === "combo") endIndex++;
+        const group = rows.filter(r => !consumed.has(r.index) && Number(r.index || 0) >= startIndex && Number(r.index || 0) <= endIndex && betKind(r) === "combo");
+        group.forEach(r => consumed.add(r.index));
+        if (group.length >= 2) {
+          const comboRow = buildExplicitComboRow(group);
+          coupons.push({
+            id: Number(group[0].index || 0) + 1,
+            slotIndex: Number(group[0].index || 0),
+            row: comboRow,
+            rows: group,
+            matches: getSlotMatches(comboRow)
+          });
+        } else {
+          singles.push(row);
         }
-        preRows.forEach(pre => consumed.add(pre.index));
-        if (preRows.length) noStakeBuffer.splice(noStakeBuffer.length - preRows.length, preRows.length);
+        continue;
       }
 
-      const postRows = [];
-      if (Number(row.stake || 0)) {
-        let lastIndex = Number(row.index || 0);
-        for (let j = i + 1; j < rows.length; j++) {
-          const next = rows[j];
-          if (!next || consumed.has(next.index)) continue;
-          if (Number(next.index || 0) !== lastIndex + 1) break;
-          if (!canAutoAttachToCombo(next)) break;
-          postRows.push(next);
-          consumed.add(next.index);
-          lastIndex = Number(next.index || 0);
-        }
-      }
-
-      const manualMatchCount = getSlotMatches(row).length;
-      if (manualMatchCount > 1 || preRows.length || postRows.length) {
-        const comboRow = (preRows.length || postRows.length) ? buildAutoComboRow(row, preRows, postRows) : row;
-        coupons.push({
-          id: (preRows[0]?.index ?? row.index) + 1,
-          slotIndex: row.index,
-          row: comboRow,
-          rows: [...preRows, row, ...postRows],
-          matches: getSlotMatches(comboRow)
-        });
-      } else {
-        singles.push(row);
-      }
+      singles.push(row);
+      consumed.add(row.index);
     }
-
-    noStakeBuffer.forEach(row => {
-      if (!consumed.has(row.index)) singles.push(row);
-    });
 
     return { singles, coupons, rows };
   }
@@ -1767,7 +1797,9 @@
   }
 
   function createSlot(type = "bet", i = 0) {
-    return { id: i + 1, type, name: "", stake: "", odds: "", cryptoPnlMode: type === "crypto" ? "amount" : "odds", status: "pending", pnl: 0 };
+    const slot = { id: i + 1, type, name: "", stake: "", odds: "", cryptoPnlMode: type === "crypto" ? "amount" : "odds", status: "pending", pnl: 0 };
+    if (type === "bet") slot.betKind = "single";
+    return slot;
   }
   function createSlots(type = "bet", count = 5) {
     return Array.from({ length: count }, (_, i) => createSlot(type, i));
@@ -1805,7 +1837,8 @@
     state.rowCounts.crypto = Math.max(1, Math.min(20, Number(state.rowCounts.crypto || 20)));
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
     while (state.modeSlots.crypto.length < state.rowCounts.crypto) state.modeSlots.crypto.push(createSlot("crypto", state.modeSlots.crypto.length));
-    state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; sanitizeEmptyPendingSlot(s, "bet"); });
+    state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; if (s.betKind !== "combo") s.betKind = "single"; sanitizeEmptyPendingSlot(s, "bet"); });
+    normalizeBetComboRanges(state.modeSlots.bet);
     state.modeSlots.crypto.forEach((s, i) => {
       s.type = "crypto";
       s.id = i + 1;
@@ -1847,7 +1880,7 @@
   function saveState(state) {
     ensureStateShape(state);
     writeJson(STORAGE_KEY_UI, {
-      version: 981,
+      version: 983,
       updatedAt: Date.now(),
       bank: Number(state.bank || DEFAULT_STATE.bank),
       quickPlan: state.quickPlan || { start: 100, target: 1000, currentOverride: "" }
@@ -1988,7 +2021,13 @@
       const rowStatus = comboStatus || s.status || "pending";
       const status = rowStatus === "win" ? winText : rowStatus === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${rowStatus === "win" || rowStatus === "loss" ? rowStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
+      const kind = betKind(s);
+      const kindText = kind === "combo" ? "Kombine" : "Tek";
+      const kindStyle = kind === "combo"
+        ? "background:rgba(37,99,235,.24);border:1px solid rgba(59,130,246,.65);color:#60a5fa;"
+        : "background:rgba(16,185,129,.20);border:1px solid rgba(34,197,94,.65);color:#34d399;";
+      const kindBtn = `<button type="button" data-bet-kind-toggle="${i}" title="Tek / Kombine değiştir" style="margin-left:6px;border-radius:999px;padding:5px 9px;font-size:.72rem;font-weight:950;line-height:1;${kindStyle}">${kindText}</button>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span>${kindBtn}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${rowStatus === "win" || rowStatus === "loss" ? rowStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModeSplitNotice(mode) {
@@ -2040,19 +2079,15 @@
     return `
       <details class="v796-target-card v798-target-card v802-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
         <summary class="v802-target-summary" style="cursor:pointer;padding:12px;display:grid;gap:9px;position:relative;">
-          <div style="position:relative;width:100%;min-height:42px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;">
-            <div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls" style="position:absolute;left:0;top:50%;transform:translateY(-50%);padding:0;border:0;background:transparent;box-shadow:none;min-width:0;justify-content:flex-start;">
-              <button type="button" class="v758-row-tool history" data-target-history-open="${m}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
-            </div>
-            <div style="text-align:center;width:100%;padding:0 82px;min-width:0;">
-              <b style="display:block;color:#22c55e !important;text-shadow:0 0 12px rgba(34,197,94,.38);font-size:.93rem;font-weight:950;line-height:1.05;white-space:nowrap;">${modeLabel} Kasa Hedefi</b>
-            </div>
+          <div style="width:100%;min-height:34px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+            <button type="button" class="v758-row-tool history" data-target-history-open="${m}" style="flex:0 0 auto;"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
+            <b style="display:block;flex:1;text-align:center;color:#22c55e !important;text-shadow:0 0 12px rgba(34,197,94,.38);font-size:.98rem;font-weight:950;line-height:1.1;white-space:nowrap;overflow:visible;">${modeLabel} Kasa Hedefi</b>
           </div>
-          <div class="v802-target-mini-grid">
-            <span>Başlangıç <b>${money(plan.start)}</b></span>
-            <span>Hedef <b>${plan.target ? money(plan.target) : "Hedef gir"}</b></span>
-            <span>Güncel <b>${money(plan.current)}</b></span>
-            <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
+          <div class="v802-target-mini-grid" style="display:grid;gap:8px;min-width:0;overflow:visible;">
+            <span style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;">Başlangıç <b style="white-space:nowrap;overflow:visible;">${money(plan.start)}</b></span>
+            <span style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;">Hedef <b style="white-space:nowrap;overflow:visible;">${plan.target ? money(plan.target) : "Hedef gir"}</b></span>
+            <span style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;">Güncel <b style="white-space:nowrap;overflow:visible;">${money(plan.current)}</b></span>
+            <span style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;">Kalan <b style="white-space:nowrap;overflow:visible;">${plan.target ? money(plan.remaining) : "-"}</b></span>
           </div>
         </summary>
 
@@ -2346,6 +2381,7 @@
         if (!list[i]) list[i] = createSlot(mode, i);
         list[i][key] = input.value;
         list[i].type = mode;
+        if (mode === "bet" && list[i].betKind !== "combo") list[i].betKind = "single";
         if (slotHasUserEntry(list[i], mode)) {
           if (list[i].status !== "win" && list[i].status !== "loss") list[i].status = "pending";
         }
@@ -2356,6 +2392,20 @@
       input.addEventListener("input", saveInput);
       input.addEventListener("change", saveInput);
     });
+    mount.querySelectorAll("[data-bet-kind-toggle]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const i = Number(btn.dataset.betKindToggle || 0);
+      if (!state.modeSlots.bet[i]) state.modeSlots.bet[i] = createSlot("bet", i);
+      const slot = state.modeSlots.bet[i];
+      slot.type = "bet";
+      slot.id = i + 1;
+      slot.betKind = betKind(slot) === "combo" ? "single" : "combo";
+      if (slot.betKind === "single") slot.comboResults = [];
+      normalizeBetComboRanges(state.modeSlots.bet);
+      saveState(state);
+      refresh();
+    }));
     mount.querySelectorAll("[data-clear-row]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, slotRaw] = String(btn.dataset.clearRow || "bet:0").split(":");
       const i = Number(slotRaw || 0);
@@ -3143,6 +3193,10 @@
               confirmText: nextMatchStatus === "pending" ? "BEKLİYOR olarak işaretle" : `${resultLabel} olarak işaretle`
             };
             refresh();
+            return;
+          }
+          if (betKind(list[i]) === "combo") {
+            alert("Kombine için en az iki satırı Kombine olarak seç. Tek satır Kombine geçmişe gönderilmez.");
             return;
           }
         }
