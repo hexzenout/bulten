@@ -209,6 +209,7 @@
         slot.historyStatus = "";
         if (mode === "bet") {
           slot.comboResults = [];
+          if (!betCouponGroup(slot)) slot.betKind = "single";
         }
       });
     });
@@ -636,31 +637,47 @@
   function canAutoAttachToCombo(row) {
     return !!row && !!cleanText(row.name) && !Number(row.stake || 0);
   }
-  function betKind(slot) {
-    return slot?.betKind === "combo" ? "combo" : "single";
+  function betCouponGroup(slot) {
+    const raw = cleanText(slot?.couponGroup || slot?.couponNo || "");
+    const n = Number(raw || 0);
+    return Number.isFinite(n) && n >= 1 && n <= 6 ? String(n) : "";
   }
-  function normalizeBetComboRanges(slots) {
+  function betKind(slot) {
+    return betCouponGroup(slot) ? "combo" : "single";
+  }
+  function normalizeBetCouponGroups(slots) {
     const list = Array.isArray(slots) ? slots : [];
-    list.forEach(slot => {
+    list.forEach((slot, index) => {
       if (!slot || slot.type !== "bet") return;
-      if (slot.betKind !== "combo") slot.betKind = "single";
+      slot.id = index + 1;
+      if (!slot.couponGroup && slot.betKind === "combo") slot.couponGroup = "1";
+      const group = betCouponGroup(slot);
+      slot.couponGroup = group;
+      slot.betKind = group ? "combo" : "single";
+      if (!group) slot.comboResults = [];
     });
-    const marked = list
-      .map((slot, index) => ({ slot, index }))
-      .filter(x => x.slot && x.slot.type === "bet" && x.slot.betKind === "combo")
-      .map(x => x.index);
-    if (marked.length >= 2) {
-      const first = Math.min(...marked);
-      const last = Math.max(...marked);
+    const groups = {};
+    list.forEach((slot, index) => {
+      const group = betCouponGroup(slot);
+      if (!group) return;
+      if (!groups[group]) groups[group] = [];
+      groups[group].push(index);
+    });
+    Object.entries(groups).forEach(([group, indices]) => {
+      if (!indices || indices.length < 2) return;
+      const first = Math.min(...indices);
+      const last = Math.max(...indices);
       for (let i = first; i <= last; i++) {
         if (!list[i]) list[i] = createSlot("bet", i);
         list[i].type = "bet";
         list[i].id = i + 1;
+        list[i].couponGroup = group;
         list[i].betKind = "combo";
       }
-    }
+    });
     return list;
   }
+  const normalizeBetComboRanges = normalizeBetCouponGroups;
   function buildExplicitComboRow(rows = []) {
     const ordered = (Array.isArray(rows) ? rows : []).filter(Boolean).sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
     const first = ordered[0] || {};
@@ -703,11 +720,39 @@
   }
   function getBetCouponGroups(state) {
     const source = Array.isArray(state?.modeSlots?.bet) ? state.modeSlots.bet : [];
-    normalizeBetComboRanges(source);
+    normalizeBetCouponGroups(source);
     const rows = pendingRowsForMode("bet", state).sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
     const singles = [];
     const coupons = [];
     const consumed = new Set();
+
+    const grouped = {};
+    rows.forEach(row => {
+      const group = betCouponGroup(row);
+      if (!group) return;
+      if (!grouped[group]) grouped[group] = [];
+      grouped[group].push(row);
+    });
+
+    Object.entries(grouped).forEach(([group, groupRows]) => {
+      const ordered = groupRows
+        .filter(Boolean)
+        .sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
+      ordered.forEach(row => consumed.add(row.index));
+      if (ordered.length >= 2) {
+        const comboRow = buildExplicitComboRow(ordered);
+        comboRow.couponGroup = group;
+        coupons.push({
+          id: Number(group),
+          group,
+          label: `Kupon ${group}`,
+          slotIndex: Number(ordered[0].index || 0),
+          row: comboRow,
+          rows: ordered,
+          matches: getSlotMatches(comboRow)
+        });
+      }
+    });
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
@@ -717,6 +762,8 @@
       if (manualMatchCount > 1) {
         coupons.push({
           id: Number(row.index || 0) + 1,
+          group: "manual-" + (Number(row.index || 0) + 1),
+          label: "Kombine Kupon",
           slotIndex: Number(row.index || 0),
           row,
           rows: [row],
@@ -726,31 +773,12 @@
         continue;
       }
 
-      if (betKind(row) === "combo") {
-        const startIndex = Number(row.index || 0);
-        let endIndex = startIndex;
-        while (source[endIndex + 1] && betKind(source[endIndex + 1]) === "combo") endIndex++;
-        const group = rows.filter(r => !consumed.has(r.index) && Number(r.index || 0) >= startIndex && Number(r.index || 0) <= endIndex && betKind(r) === "combo");
-        group.forEach(r => consumed.add(r.index));
-        if (group.length >= 2) {
-          const comboRow = buildExplicitComboRow(group);
-          coupons.push({
-            id: Number(group[0].index || 0) + 1,
-            slotIndex: Number(group[0].index || 0),
-            row: comboRow,
-            rows: group,
-            matches: getSlotMatches(comboRow)
-          });
-        } else {
-          singles.push(row);
-        }
-        continue;
-      }
-
       singles.push(row);
       consumed.add(row.index);
     }
 
+    coupons.sort((a, b) => Number(a.slotIndex || 0) - Number(b.slotIndex || 0));
+    singles.sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
     return { singles, coupons, rows };
   }
   function getBetCouponForSlot(state, slotIndex) {
@@ -1509,7 +1537,7 @@
     return `<article class="v763-active-card bet combo v801-bet-card" id="${cardId}">
       <details ${keepOpen ? "open" : ""}>
         <summary>
-          <div><b>Kombine</b><span>${matches.length} maç · ${done}/${matches.length} sonuçlandı</span></div>
+          <div><b>${escapeHtml(coupon.label || "Kombine")}</b><span>${matches.length} maç · ${done}/${matches.length} sonuçlandı</span></div>
           ${renderCardShotButton(cardId)}
         </summary>
         ${renderBetInfoBar(row)}
@@ -1682,7 +1710,7 @@
         <div class="v757-pending-head v763-pending-head">
           <div>
             <b>Aktif Bahisler / Kuponlar</b>
-            <span>Maç adı yazılan kutular burada görünür. 1 maç Bahis, 2+ maç otomatik Kombine olur.</span>
+            <span>Tek seçilen satır tekli gider; Kupon 1/2/3 seçilen satırlar kendi kupon grubunda birleşir.</span>
           </div>
           <div class="v757-pending-metrics"><span>${grouped.rows.length} aktif</span></div>
         </div>
@@ -1828,7 +1856,7 @@
 
   function createSlot(type = "bet", i = 0) {
     const slot = { id: i + 1, type, name: "", stake: "", odds: "", cryptoPnlMode: type === "crypto" ? "amount" : "odds", status: "pending", pnl: 0 };
-    if (type === "bet") slot.betKind = "single";
+    if (type === "bet") { slot.betKind = "single"; slot.couponGroup = ""; }
     return slot;
   }
   function createSlots(type = "bet", count = 5) {
@@ -1847,6 +1875,8 @@
     if (type === "bet") {
       slot.extraMatches = [];
       slot.comboResults = [];
+      slot.couponGroup = "";
+      slot.betKind = "single";
     }
   }
   function ensureStateShape(state) {
@@ -1867,8 +1897,8 @@
     state.rowCounts.crypto = Math.max(1, Math.min(20, Number(state.rowCounts.crypto || 20)));
     while (state.modeSlots.bet.length < state.rowCounts.bet) state.modeSlots.bet.push(createSlot("bet", state.modeSlots.bet.length));
     while (state.modeSlots.crypto.length < state.rowCounts.crypto) state.modeSlots.crypto.push(createSlot("crypto", state.modeSlots.crypto.length));
-    state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; if (s.betKind !== "combo") s.betKind = "single"; sanitizeEmptyPendingSlot(s, "bet"); });
-    normalizeBetComboRanges(state.modeSlots.bet);
+    state.modeSlots.bet.forEach((s, i) => { s.type = "bet"; s.id = i + 1; sanitizeEmptyPendingSlot(s, "bet"); });
+    normalizeBetCouponGroups(state.modeSlots.bet);
     state.modeSlots.crypto.forEach((s, i) => {
       s.type = "crypto";
       s.id = i + 1;
@@ -2051,13 +2081,11 @@
       const rowStatus = comboStatus || s.status || "pending";
       const status = rowStatus === "win" ? winText : rowStatus === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      const kind = betKind(s);
-      const kindText = kind === "combo" ? "Kombine" : "Tek";
-      const kindStyle = kind === "combo"
-        ? "background:rgba(37,99,235,.24);border:1px solid rgba(59,130,246,.65);color:#60a5fa;"
-        : "background:rgba(16,185,129,.20);border:1px solid rgba(34,197,94,.65);color:#34d399;";
-      const kindBtn = `<button type="button" data-bet-kind-toggle="${i}" title="Tek / Kombine değiştir" style="margin-left:6px;border-radius:999px;padding:5px 9px;font-size:.72rem;font-weight:950;line-height:1;${kindStyle}">${kindText}</button>`;
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span>${kindBtn}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${rowStatus === "win" || rowStatus === "loss" ? rowStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
+      const group = betCouponGroup(s);
+      const kindClass = group ? "combo" : "single";
+      const groupOptions = [`<option value="">Tek</option>`].concat([1,2,3,4,5,6].map(n => `<option value="${n}" ${group === String(n) ? "selected" : ""}>Kupon ${n}</option>`)).join("");
+      const kindSelect = `<select data-bet-group-select="${i}" class="v988-bet-group-select ${kindClass}" title="Tekli / kupon grubu seç">${groupOptions}</select>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell v988-bet-type-cell"><span class="rolling-v47-type ${mode}">Bahis</span>${kindSelect}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${rowStatus === "win" || rowStatus === "loss" ? rowStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModeSplitNotice(mode) {
@@ -2284,7 +2312,7 @@
         slot.historyStatus = "";
         slot.status = slotHasUserEntry(slot, m) ? "pending" : "pending";
         slot.pnl = 0;
-        if (m === "bet") slot.comboResults = [];
+        if (m === "bet") { slot.comboResults = []; slot.couponGroup = ""; slot.betKind = "single"; }
       }
     }));
     syncStateWithHistory(state);
@@ -2410,7 +2438,10 @@
         if (!list[i]) list[i] = createSlot(mode, i);
         list[i][key] = input.value;
         list[i].type = mode;
-        if (mode === "bet" && list[i].betKind !== "combo") list[i].betKind = "single";
+        if (mode === "bet") {
+          if (!betCouponGroup(list[i])) list[i].betKind = "single";
+          normalizeBetCouponGroups(list);
+        }
         if (slotHasUserEntry(list[i], mode)) {
           if (list[i].status !== "win" && list[i].status !== "loss") list[i].status = "pending";
         }
@@ -2421,17 +2452,19 @@
       input.addEventListener("input", saveInput);
       input.addEventListener("change", saveInput);
     });
-    mount.querySelectorAll("[data-bet-kind-toggle]").forEach(btn => btn.addEventListener("click", event => {
+    mount.querySelectorAll("[data-bet-group-select]").forEach(sel => sel.addEventListener("change", event => {
       event.preventDefault();
       event.stopPropagation();
-      const i = Number(btn.dataset.betKindToggle || 0);
+      const i = Number(sel.dataset.betGroupSelect || 0);
+      const group = betCouponGroup({ couponGroup: sel.value });
       if (!state.modeSlots.bet[i]) state.modeSlots.bet[i] = createSlot("bet", i);
       const slot = state.modeSlots.bet[i];
       slot.type = "bet";
       slot.id = i + 1;
-      slot.betKind = betKind(slot) === "combo" ? "single" : "combo";
-      if (slot.betKind === "single") slot.comboResults = [];
-      normalizeBetComboRanges(state.modeSlots.bet);
+      slot.couponGroup = group;
+      slot.betKind = group ? "combo" : "single";
+      if (!group) slot.comboResults = [];
+      normalizeBetCouponGroups(state.modeSlots.bet);
       saveState(state);
       refresh();
     }));

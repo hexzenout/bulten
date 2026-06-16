@@ -12380,3 +12380,123 @@ select:-webkit-autofill {
 .rolling-v47-card.crypto .rolling-v47-table .v986-crypto-type-cell .rolling-v47-type.crypto {
   margin: 0 !important;
 }
+
+/* ===============================
+   V988 Kupon grup sistemi + hedef/kripto kompakt düzen
+   =============================== */
+.rolling-v48-rail .v985-target-head {
+  align-items: center !important;
+  margin-bottom: 12px !important;
+}
+.rolling-v48-rail .v984-target-history-btn,
+.rolling-v48-rail button.v984-target-history-btn {
+  min-width: 74px !important;
+  height: 24px !important;
+  padding: 0 9px !important;
+}
+.rolling-v48-rail .v985-target-detail-toggle {
+  min-width: 74px !important;
+  height: 24px !important;
+  padding: 0 9px !important;
+}
+.rolling-v48-rail .v985-target-title,
+.rolling-v48-rail .v984-target-title.v985-target-title {
+  margin: 13px auto 14px !important;
+  padding-top: 2px !important;
+  max-width: 190px !important;
+  text-align: center !important;
+  line-height: 1.05 !important;
+}
+.rolling-v47-roll-panel .rolling-v47-roll-buttons {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(135px, 170px)) !important;
+  justify-content: center !important;
+  gap: 10px !important;
+}
+.rolling-v47-roll-panel .rolling-v47-roll-buttons button {
+  min-height: 54px !important;
+  padding: 0 12px !important;
+  width: 100% !important;
+  max-width: 170px !important;
+}
+.rolling-v47-roll-panel .rolling-v47-roll-buttons button span {
+  white-space: nowrap !important;
+  font-size: .72rem !important;
+  letter-spacing: .03em !important;
+}
+.rolling-v47-card.crypto .rolling-v47-table-wrap {
+  overflow-x: auto !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table {
+  width: min(980px, 100%) !important;
+  table-layout: fixed !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(1),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(1) { width: 42px !important; }
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(2),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(2) { width: 46px !important; }
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(3),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(3) { width: 86px !important; min-width: 86px !important; max-width: 86px !important; }
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(4) { width: 48% !important; padding-left: 4px !important; }
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(5),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(5) { width: 34% !important; }
+.rolling-v47-card.crypto .v803-crypto-main-table input {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.rolling-v47-card.crypto .v986-crypto-type-cell {
+  width: 68px !important;
+  min-width: 68px !important;
+  max-width: 68px !important;
+}
+.rolling-v47-card.bet .v988-bet-type-cell {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+}
+.v988-bet-group-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  border-radius: 999px !important;
+  padding: 5px 22px 5px 9px !important;
+  min-width: 76px !important;
+  max-width: 96px !important;
+  font-size: .68rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%) !important;
+  background-position: calc(100% - 12px) 50%, calc(100% - 8px) 50% !important;
+  background-size: 4px 4px, 4px 4px !important;
+  background-repeat: no-repeat !important;
+}
+.v988-bet-group-select.single {
+  border: 1px solid rgba(34,197,94,.66) !important;
+  color: #34d399 !important;
+  background-color: rgba(16,185,129,.18) !important;
+}
+.v988-bet-group-select.combo {
+  border: 1px solid rgba(59,130,246,.70) !important;
+  color: #60a5fa !important;
+  background-color: rgba(37,99,235,.22) !important;
+}
+.v988-bet-group-select:focus,
+.v988-bet-group-select:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+@media (max-width: 980px) {
+  .rolling-v47-roll-panel .rolling-v47-roll-buttons {
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)) !important;
+  }
+  .rolling-v47-roll-panel .rolling-v47-roll-buttons button {
+    max-width: none !important;
+  }
+  .rolling-v47-card.crypto .v803-crypto-main-table {
+    width: 860px !important;
+  }
+}
