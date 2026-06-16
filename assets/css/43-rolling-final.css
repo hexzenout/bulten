@@ -13758,3 +13758,76 @@ select:-webkit-autofill {
     overflow-x: auto !important;
   }
 }
+
+
+/* ===============================
+   V1003 Kripto sağ boş paneli kaldırma
+   Hedef:
+   - Aktif İşlem/Tutar boyutlarına dokunma.
+   - Kırmızıyla gösterilen boş alanı, Kripto kartının arka panelini o bölgede göstermeyerek kaldır.
+   - Kripto başlık ve Kripto Rolling alanı görünümünü koru.
+   - Sadece #rolling/crypto içindeki KRİPTO İŞLEM MENÜSÜ alanını etkiler.
+   =============================== */
+
+/* Dış crypto kart arka planını transparan yapıyoruz; böylece aktif menünün sağındaki boş panel görünmez. */
+.rolling-v47-card.crypto.v49-mode-card,
+.rolling-v47-card.crypto {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+/* Üst KRİPTO başlık satırı eski kart görünümünü korusun. */
+.rolling-v47-card.crypto > .rolling-v47-head {
+  background: #0b0b0b !important;
+  border: 1px solid #292929 !important;
+  border-bottom: 1px solid #252525 !important;
+  border-radius: 20px 20px 0 0 !important;
+}
+
+/* KRİPTO ROLLING alanı full genişliğini korusun; üst tasarım bozulmasın. */
+.rolling-v47-card.crypto > details.rolling-v49-fold:has(> summary.rolling-v494-crypto-roll-title) {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  background: #0b0b0b !important;
+  border-left: 1px solid #292929 !important;
+  border-right: 1px solid #292929 !important;
+  border-bottom: 1px solid #292929 !important;
+  border-top: 0 !important;
+  border-radius: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* KRİPTO İŞLEM MENÜSÜ yalnızca içeriği kadar genişlesin; sağdaki boş alan yok olsun. */
+.rolling-v47-card.crypto > details.rolling-v49-fold:has(> summary.rolling-v494-active-title) {
+  display: inline-block !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  background: #0b0b0b !important;
+  border: 1px solid #292929 !important;
+  border-radius: 0 0 18px 18px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  vertical-align: top !important;
+}
+
+/* Aktif menü içi kontrol satırı ve tablo, paneli sağa doğru büyütmesin. */
+.rolling-v47-card.crypto > details.rolling-v49-fold:has(> summary.rolling-v494-active-title) .rolling-v47-section-title,
+.rolling-v47-card.crypto > details.rolling-v49-fold:has(> summary.rolling-v494-active-title) .rolling-v47-table-wrap {
+  width: max-content !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+/* Dar ekranda içerik kırpılmasın; sadece yatay kaydırma açılsın. */
+@media (max-width: 900px) {
+  .rolling-v47-card.crypto > details.rolling-v49-fold:has(> summary.rolling-v494-active-title) {
+    max-width: 100% !important;
+  }
+  .rolling-v47-card.crypto > details.rolling-v49-fold:has(> summary.rolling-v494-active-title) .rolling-v47-table-wrap {
+    overflow-x: auto !important;
+  }
+}
