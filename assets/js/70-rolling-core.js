@@ -102,7 +102,7 @@
       ? { start: legacy?.quickPlan?.start ?? 100, target: "", currentOverride: "" }
       : { ...(legacy?.quickPlan || {}), start: legacy?.quickPlan?.start ?? 100, target: legacy?.quickPlan?.target ?? 1000, currentOverride: legacy?.quickPlan?.currentOverride ?? "" };
     return {
-      version: 973,
+      version: 981,
       mode: safeMode,
       slots: Array.isArray(source.slots) ? source.slots : fallbackSlots,
       rowCount: Math.max(1, Math.min(20, Number(source.rowCount ?? legacy?.rowCounts?.[safeMode] ?? 20))),
@@ -119,7 +119,7 @@
     ensureQuickTemplates(state);
     ensureQuickPlans(state);
     return {
-      version: 973,
+      version: 981,
       mode: safeMode,
       updatedAt: Date.now(),
       slots: Array.isArray(state.modeSlots?.[safeMode]) ? state.modeSlots[safeMode] : createSlots(safeMode, 20),
@@ -531,7 +531,7 @@
       </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede kasa hedefi geçmişi yok.</td></tr>`;
     return `
       <div class="v757-log-center-overlay v758-log-center-overlay v979-target-history-overlay">
-        <section class="v757-log-center-modal v758-log-center-modal ${mode}">
+        <section class="v757-log-center-modal v758-log-center-modal ${mode}" style="width:min(820px,calc(100vw - 28px));max-width:820px;max-height:min(78vh,720px);overflow:auto;border-radius:22px;">
           <div class="v512-history-head">
             <div>
               <b>${isCrypto ? "KRİPTO KASA HEDEFİ GEÇMİŞİ" : "BAHİS KASA HEDEFİ GEÇMİŞİ"}</b>
@@ -1040,7 +1040,7 @@
   }
 
   function renderCardShotButton(id) {
-    return `<button type="button" class="v763-shot-btn" data-card-screenshot="${escapeHtml(id)}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i> Screenshot</button>`;
+    return `<button type="button" class="v763-shot-btn" data-card-screenshot="${escapeHtml(id)}" title="Fotoğraf önizle" aria-label="Fotoğraf önizle"><i class="fa-solid fa-camera"></i></button>`;
   }
 
   function v781RowsForPhoto(mode, state) {
@@ -1305,6 +1305,26 @@
       if (typeof onConfirm === "function") onConfirm();
     });
   }
+  function openRollingPhotoPreview(dataUrl, filename, title = "Fotoğraf", subtitle = "ROLLING") {
+    if (!dataUrl) return;
+    let host = document.getElementById("omega-rolling-feature-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "omega-rolling-feature-host";
+      document.body.appendChild(host);
+    }
+    host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${escapeHtml(title)}</b><span>${escapeHtml(subtitle)}</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
+    host.style.display = "block";
+    host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
+      host.innerHTML = "";
+      host.style.display = "none";
+    }));
+    host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
+      v781DownloadPngFromSvg(dataUrl, filename);
+    });
+  }
+
   function openTargetItemPhoto(mode, id) {
     const payload = v816BuildTargetItemPhotoData(mode, id);
     if (!payload) {
@@ -1804,7 +1824,7 @@
   function saveState(state) {
     ensureStateShape(state);
     writeJson(STORAGE_KEY_UI, {
-      version: 973,
+      version: 981,
       updatedAt: Date.now(),
       bank: Number(state.bank || DEFAULT_STATE.bank),
       quickPlan: state.quickPlan || { start: 100, target: 1000, currentOverride: "" }
@@ -1991,19 +2011,17 @@
     const plan = getPlanNumbers(state, modePnl, m);
     const rows = loadTargetLog().filter(r => (r.mode || "bet") === m);
     const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
-    const currentTag = plan.hasManualCurrent ? "Kaynak: Manuel" : "Kaynak: Otomatik";
     return `
       <details class="v796-target-card v798-target-card v802-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
         <summary class="v798-target-summary v802-target-summary">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin-bottom:10px;">
-            <div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls" style="padding:0;border:0;background:transparent;box-shadow:none;min-width:0;">
+          <div style="display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;width:100%;margin-bottom:10px;">
+            <div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls" style="padding:0;border:0;background:transparent;box-shadow:none;min-width:0;justify-content:flex-start;">
               <button type="button" class="v758-row-tool history" data-target-history-open="${m}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
             </div>
-            <small class="${plan.hasManualCurrent ? "manual" : "auto"}" style="white-space:nowrap;">${currentTag}</small>
-          </div>
-          <div class="v798-target-summary-main" style="text-align:center;">
-            <b>${modeLabel} Kasa Hedefi</b>
-            <span>${modeLabel} · ${plan.stateLabel}</span>
+            <div class="v798-target-summary-main" style="text-align:center;justify-self:center;min-width:0;">
+              <b style="display:block;color:#22c55e;text-shadow:0 0 12px rgba(34,197,94,.32);">${modeLabel} Kasa Hedefi</b>
+            </div>
+            <span aria-hidden="true" style="width:74px;display:block;"></span>
           </div>
           <div class="v802-target-mini-grid">
             <span>Başlangıç <b>${money(plan.start)}</b></span>
@@ -2137,7 +2155,7 @@
     const svg = v785BuildBetPhotoSvg(rows, 'BAHİS FOTOĞRAFI');
     if (!svg) return;
     const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    v781DownloadPngFromSvg(dataUrl, `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`);
+    openRollingPhotoPreview(dataUrl, `bulten-bahis-fotografi-${new Date().toISOString().slice(0,10)}.png`, 'Bahis Fotoğrafı', 'Aktif Bahisler / Kuponlar');
   }
 
   function buildCryptoCardPhotoSvg(row) {
@@ -2163,7 +2181,7 @@
     const row = { ...(state.modeSlots.crypto[Number(slotIndex || 0)] || {}), index: Number(slotIndex || 0) };
     if (!slotHasUserEntry(row, "crypto")) return;
     const dataUrl = buildCryptoCardPhotoSvg(row);
-    v781DownloadPngFromSvg(dataUrl, `bulten-kripto-islem-${new Date().toISOString().slice(0,10)}.png`);
+    openRollingPhotoPreview(dataUrl, `bulten-kripto-islem-${new Date().toISOString().slice(0,10)}.png`, 'Kripto İşlem Fotoğrafı', 'Aktif Kripto İşlemleri');
   }
 
   function deleteHistoryRecord(mode, id) {
@@ -2931,6 +2949,7 @@
     mount.querySelectorAll("[data-confirm-no]").forEach(btn => btn.addEventListener("click", () => {
       const keepPanel = CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
       CONFIRM_DIALOG = null;
+      CONFIRM_RETURN_PANEL_MODE = null;
       if (keepPanel) restoreActivePanelAfterConfirm(keepPanel);
       refresh();
     }));
@@ -2938,6 +2957,7 @@
       if (event.target !== overlay) return;
       const keepPanel = CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
       CONFIRM_DIALOG = null;
+      CONFIRM_RETURN_PANEL_MODE = null;
       if (keepPanel) restoreActivePanelAfterConfirm(keepPanel);
       refresh();
     }));
@@ -2951,7 +2971,7 @@
         saveState(fresh);
       } else if (action.type === "settleCoupon") {
         const fresh = loadState();
-        const coupon = getBetCouponGroups(fresh).coupons.find(c => c.id === Number(action.couponId || 1));
+        const coupon = getBetCouponGroups(fresh).coupons.find(c => c.id === Number(action.couponId || 1) || Number(c.slotIndex) === Number(action.couponSlot ?? -1));
         if (coupon) {
           addCouponHistoryRecord(fresh, coupon, action.status === "loss" ? "loss" : "win");
           saveState(fresh);
@@ -2982,6 +3002,7 @@
         restoreHistoryRecord(action.mode, action.id);
       }
       const keepPanel = action.keepActivePanel || CONFIRM_RETURN_PANEL_MODE || PENDING_BOARD_OPEN_MODE;
+      CONFIRM_RETURN_PANEL_MODE = null;
       if (keepPanel) {
         restoreActivePanelAfterConfirm(keepPanel);
         return;
@@ -3063,13 +3084,34 @@
       if (nextStatus === "win" || nextStatus === "loss") {
         const currentStatus = list[i]?.status || "";
         const finalStatus = currentStatus === nextStatus ? "pending" : nextStatus;
+        const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
+        if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
+        if (mode === "bet" && finalStatus !== "pending") {
+          const coupon = getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === i);
+          if (coupon && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
+            const resultLabel = finalStatus === "win" ? "KAZANDI" : "KAYBETTİ";
+            CONFIRM_DIALOG = {
+              type: "settleCoupon",
+              mode: "bet",
+              couponId: coupon.id,
+              couponSlot: coupon.slotIndex,
+              status: finalStatus,
+              keepActivePanel: keepPanel,
+              tone: finalStatus === "loss" ? "danger" : "success",
+              title: "Kombine kupon sonucunu onayla",
+              message: `${coupon.matches.length} maçlık kombine kupon ${resultLabel} olarak kaydedilecek.`,
+              detail: "Bu kayıt Geçmiş/Rapor merkezine Kombine Kupon olarak işlenecek.",
+              confirmText: `${resultLabel} olarak kaydet`
+            };
+            refresh();
+            return;
+          }
+        }
         const label = mode === "crypto" ? "kripto işlem" : "bahis / maç";
         const resultLabel = finalStatus === "pending"
           ? "BEKLİYOR"
           : (finalStatus === "win" ? (mode === "crypto" ? "KAZANÇ" : "KAZANDI") : (mode === "crypto" ? "KAYIP" : "KAYBETTİ"));
         const name = String(list[i].name || "").trim() || `${label} #${i + 1}`;
-        const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
-        if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
         CONFIRM_DIALOG = {
           type: "settle",
           mode,
