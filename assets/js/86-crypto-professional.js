@@ -5146,7 +5146,12 @@
   const oldCloseRollingV778 = window.omega_CloseRollingExcel;
   window.omega_CloseRollingExcel = function(force = false) {
     const hash = String(location.hash || "");
-    const closeTarget = hash.startsWith("#rolling/rolling/") ? "#rolling" : hash.startsWith("#finance/rolling/") ? "#finance" : "";
+    const closeTarget = /^#rolling\/(bet|crypto)\/rolling\/\d+/i.test(hash)
+      ? (hash.toLowerCase().includes("/crypto/") ? "#rolling/crypto" : "#rolling/bet")
+      : hash.startsWith("#rolling/rolling/") ? "#rolling"
+      : /^#finance\/(bet|crypto)\/rolling\/\d+/i.test(hash)
+        ? "#finance"
+        : hash.startsWith("#finance/rolling/") ? "#finance" : "";
     const overlay = document.getElementById("rolling-excel-overlay");
     if (overlay) {
       overlay.classList.remove("show-modal");

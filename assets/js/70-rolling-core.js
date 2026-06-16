@@ -1863,12 +1863,21 @@
   function railCollapsed() { return localStorage.getItem(RAIL_KEY) === "1"; }
   function setRailCollapsed(v) { localStorage.setItem(RAIL_KEY, v ? "1" : "0"); }
   function openRolling(mode, days) {
-    localStorage.setItem("finance_rolling_mode", mode === "crypto" ? "crypto" : "bet");
-    if (typeof window.omega_OpenRollingExcel === "function") window.omega_OpenRollingExcel(days);
+    const m = mode === "crypto" ? "crypto" : "bet";
+    localStorage.setItem("finance_rolling_mode", m);
+    if (typeof window.omega_OpenRollingExcel === "function") {
+      window.omega_OpenRollingExcel(days);
+      const raw = String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
+      if (raw.startsWith("rolling")) {
+        try { history.replaceState({ tab: "rolling", mode: m, rollingDays: days }, "", `#rolling/${m}/rolling/${days}`); } catch {}
+      }
+    }
     else alert("Rolling modülü bulunamadı.");
   }
   function renderRollingButtons(mode) {
-    return [7, 15, 30, 60, 90].map(d => `<button type="button" data-roll="${mode}:${d}"><span>${d} GÜNLÜK ROLLING</span></button>`).join("");
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const label = m === "crypto" ? "KRİPTO" : "BAHİS";
+    return [7, 15, 30, 60, 90].map(d => `<button type="button" data-roll="${m}:${d}"><span>${label} ${d} GÜNLÜK ROLLING</span></button>`).join("");
   }
   function renderRowControls(mode, state) {
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
@@ -1963,7 +1972,7 @@
       <details class="v796-target-card v798-target-card v802-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
         <summary class="v798-target-summary v802-target-summary">
           <div class="v798-target-summary-main">
-            <b>Kasa Hedefi</b>
+            <b>${modeLabel} Kasa Hedefi</b>
             <span>${modeLabel} · ${plan.stateLabel}</span>
           </div>
           <div class="v802-target-mini-grid">
@@ -2046,7 +2055,7 @@
 
         <div class="rolling-v48-layout v49-rolling-layout">
           <aside class="rolling-v48-rail v49-rolling-rail">
-            <div class="rolling-v48-rail-toggle v49-rolling-rail-title v808-rail-title"><span>ROLLING MENÜSÜ</span></div>
+            <div class="rolling-v48-rail-toggle v49-rolling-rail-title v808-rail-title"><span>${modeLabel} ROLLING MENÜSÜ</span></div>
             ${renderRailTab("bet", mode)}
             ${renderRailTab("crypto", mode)}
             ${renderPlanControl(state, mode, modeTotalPnl)}
