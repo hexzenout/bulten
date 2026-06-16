@@ -459,6 +459,8 @@
       const d = new Date(start.getFullYear(), start.getMonth(), 1);
       return rows.filter(r => r.ts >= d.getTime());
     }
+    if (filter === "threeMonths") return rows.filter(r => r.ts >= Date.now() - 92 * 86400000);
+    if (filter === "sixMonths") return rows.filter(r => r.ts >= Date.now() - 183 * 86400000);
     if (filter === "year") {
       const d = new Date(start.getFullYear(), 0, 1);
       return rows.filter(r => r.ts >= d.getTime());
@@ -519,33 +521,42 @@
     const all = loadTargetLog().filter(r => (r.mode || "bet") === mode);
     const rows = filterHistoryRows(all, HISTORY_FILTER);
     const pnl = rows.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
-    const filters = ["today","yesterday","week","month","year","twoYears","all"].map(f => `<button type="button" class="${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${historyFilterLabel(f)}</button>`).join("");
-    const body = rows.length ? rows.map(r => `
-      <tr>
-        <td>${escapeHtml(formatDateTime(r.ts))}</td>
-        <td>${money(r.start)}</td>
-        <td>${r.target ? money(r.target) : "-"}</td>
-        <td>${money(r.current ?? (Number(r.start || 0) + Number(r.pnl || 0)))}</td>
-        <td><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</span></td>
-        <td><button type="button" class="v757-history-delete" data-target-history-delete="${escapeHtml(r.id || "")}" title="Bu kasa hedefi kaydını sil"><i class="fa-solid fa-trash"></i></button></td>
-      </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede kasa hedefi geçmişi yok.</td></tr>`;
+    const modeLabel = isCrypto ? "Kripto" : "Bahis";
+    const targetFilters = [
+      ["all", "Tümü"],
+      ["today", "Bugün"],
+      ["week", "1 Hafta"],
+      ["month", "1 Ay"],
+      ["threeMonths", "3 Ay"],
+      ["sixMonths", "6 Ay"],
+      ["year", "1 Yıl"]
+    ];
+    const filters = targetFilters.map(([f, label]) => `<button type="button" class="${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${label}</button>`).join("") + `<button type="button" class="v985-date-filter" disabled>Tarih Seç</button>`;
+    const body = rows.length ? `
+      <table class="v512-history-table v985-target-history-table">
+        <thead><tr><th>Tarih / Saat</th><th>Başlangıç</th><th>Hedef</th><th>Güncel</th><th>K/Z</th><th>Sil</th></tr></thead>
+        <tbody>${rows.map(r => `
+          <tr>
+            <td>${escapeHtml(formatDateTime(r.ts))}</td>
+            <td>${money(r.start)}</td>
+            <td>${r.target ? money(r.target) : "-"}</td>
+            <td>${money(r.current ?? (Number(r.start || 0) + Number(r.pnl || 0)))}</td>
+            <td><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</span></td>
+            <td><button type="button" class="v757-history-delete" data-target-history-delete="${escapeHtml(r.id || "")}" title="Bu kasa hedefi kaydını sil"><i class="fa-solid fa-trash"></i></button></td>
+          </tr>`).join("")}</tbody>
+      </table>` : `<div class="v512-history-empty v985-target-history-empty">Seçilen tarih aralığında kasa hedefi geçmiş kaydı yok.</div>`;
     return `
-      <div class="v984-target-history-overlay" data-target-history-overlay>
-        <section class="v984-target-history-modal ${mode}" onclick="event.stopPropagation()">
-          <div class="v984-target-history-head">
+      <div class="v512-history-overlay v985-target-history-overlay" data-target-history-overlay>
+        <section class="v512-history-modal v985-target-history-modal ${mode}" onclick="event.stopPropagation()">
+          <div class="v512-history-head v985-target-history-head">
             <div>
-              <b>${isCrypto ? "KRİPTO KASA HEDEFİ GEÇMİŞİ" : "BAHİS KASA HEDEFİ GEÇMİŞİ"}</b>
-              <span>${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · Kasa Hedefi K/Z ${signedMoney(pnl)}</span>
+              <b>Geçmiş</b>
+              <span>${modeLabel} kasa hedefi · ${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · K/Z ${signedMoney(pnl)}</span>
             </div>
             <button type="button" data-target-history-close>×</button>
           </div>
-          <div class="v984-target-history-filters">${filters}</div>
-          <div class="v984-target-history-table-wrap">
-            <table class="v512-history-table v984-target-history-table">
-              <thead><tr><th>Tarih / Saat</th><th>Başlangıç</th><th>Hedef</th><th>Güncel</th><th>K/Z</th><th>Sil</th></tr></thead>
-              <tbody>${body}</tbody>
-            </table>
-          </div>
+          <div class="v512-history-filters v985-target-history-filters">${filters}</div>
+          <div class="v512-history-table-wrap v985-target-history-body">${body}</div>
         </section>
       </div>`;
   }
@@ -1624,6 +1635,25 @@
       slot.historyStatus = finalStatus;
     });
   }
+  function applyComboMatchStatus(fresh, requestedIndex, matchIndex, status) {
+    const couponBefore = getBetCouponForSlot(fresh, requestedIndex);
+    const baseIndex = Number(couponBefore?.slotIndex ?? requestedIndex);
+    const slot = fresh?.modeSlots?.bet?.[baseIndex];
+    if (!slot) return false;
+    if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
+    if (status === "pending") slot.comboResults[Number(matchIndex || 0)] = "";
+    else slot.comboResults[Number(matchIndex || 0)] = status === "loss" ? "loss" : "win";
+    slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
+    const updatedCoupon = getBetCouponForSlot(fresh, baseIndex);
+    const matches = updatedCoupon ? getSlotMatches(updatedCoupon.row) : getSlotMatches({ ...slot, index: baseIndex });
+    const allDone = status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
+    if (allDone) {
+      const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
+      addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
+    }
+    return true;
+  }
+
   function renderPendingBoard(mode, state) {
     const isCrypto = mode === "crypto";
     if (isCrypto) {
@@ -2077,12 +2107,13 @@
     const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
     return `
       <details class="v796-target-card v798-target-card v802-target-card v984-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
-        <summary class="v802-target-summary v984-target-summary">
-          <div class="v984-target-head">
+        <summary class="v802-target-summary v984-target-summary v985-target-summary">
+          <div class="v984-target-head v985-target-head">
             <button type="button" class="v758-row-tool history v984-target-history-btn" data-target-history-open="${m}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
-            <b class="v984-target-title">${modeLabel} Kasa Hedefi</b>
+            <span class="v985-target-detail-toggle" aria-hidden="true"></span>
           </div>
-          <div class="v802-target-mini-grid v984-target-mini-grid">
+          <b class="v984-target-title v985-target-title">${modeLabel} Kasa Hedefi</b>
+          <div class="v802-target-mini-grid v984-target-mini-grid v985-target-mini-grid">
             <span>Başlangıç <b>${money(plan.start)}</b></span>
             <span>Hedef <b>${plan.target ? money(plan.target) : "Hedef gir"}</b></span>
             <span>Güncel <b>${money(plan.current)}</b></span>
@@ -2912,7 +2943,7 @@
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;
       PENDING_BOARD_OPEN_MODE = null;
-      HISTORY_FILTER = "today";
+      HISTORY_FILTER = "all";
       renderFloatingPanel();
     }));
     mount.querySelectorAll("[data-target-history-close]").forEach(btn => btn.addEventListener("click", () => {
@@ -3041,8 +3072,24 @@
       if (!action) return refresh();
       if (action.type === "settle") {
         const fresh = loadState();
-        applySlotResult(fresh, action.mode, Number(action.slot || 0), action.status);
-        saveState(fresh);
+        const settleSlotIndex = Number(action.slot || 0);
+        if (action.mode === "bet") {
+          const coupon = getBetCouponForSlot(fresh, settleSlotIndex);
+          const slot = fresh?.modeSlots?.bet?.[settleSlotIndex];
+          if (coupon && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
+            const matchIndex = getBetCouponMatchIndex(coupon, settleSlotIndex);
+            applyComboMatchStatus(fresh, settleSlotIndex, matchIndex, action.status === "loss" ? "loss" : action.status === "pending" ? "pending" : "win");
+            saveState(fresh);
+          } else if (betKind(slot) === "combo") {
+            saveState(fresh);
+          } else {
+            applySlotResult(fresh, action.mode, settleSlotIndex, action.status);
+            saveState(fresh);
+          }
+        } else {
+          applySlotResult(fresh, action.mode, settleSlotIndex, action.status);
+          saveState(fresh);
+        }
       } else if (action.type === "settleCoupon") {
         const fresh = loadState();
         const coupon = getBetCouponGroups(fresh).coupons.find(c => c.id === Number(action.couponId || 1) || Number(c.slotIndex) === Number(action.couponSlot ?? -1));
@@ -3056,20 +3103,7 @@
         const beforeCoupon = getBetCouponForSlot(fresh, requestedIndex);
         const baseIndex = Number(beforeCoupon?.slotIndex ?? requestedIndex);
         ACTIVE_COMBO_DETAIL_SLOT = baseIndex;
-        const slot = fresh.modeSlots.bet[baseIndex];
-        if (slot) {
-          if (!Array.isArray(slot.comboResults)) slot.comboResults = [];
-          const matchIndex = Number(action.match || 0);
-          if (action.status === "pending") slot.comboResults[matchIndex] = "";
-          else slot.comboResults[matchIndex] = action.status === "loss" ? "loss" : "win";
-          slot.comboResults = slot.comboResults.map(v => (v === "win" || v === "loss") ? v : "");
-          const updatedCoupon = getBetCouponForSlot(fresh, baseIndex);
-          const matches = updatedCoupon ? getSlotMatches(updatedCoupon.row) : getSlotMatches({ ...slot, index: baseIndex });
-          const allDone = action.status !== "pending" && matches.length > 1 && matches.every(m => m.status === "win" || m.status === "loss");
-          if (allDone) {
-            const finalStatus = matches.every(m => m.status === "win") ? "win" : "loss";
-            addCouponHistoryRecord(fresh, updatedCoupon || { row: { ...slot, index: baseIndex }, rows: [{ ...slot, index: baseIndex }], matches }, finalStatus);
-          }
+        if (applyComboMatchStatus(fresh, requestedIndex, Number(action.match || 0), action.status === "loss" ? "loss" : action.status === "pending" ? "pending" : "win")) {
           saveState(fresh);
         }
       } else if (action.type === "deleteHistory") {
