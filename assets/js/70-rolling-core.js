@@ -566,9 +566,7 @@
     return mode === "crypto" ? "Kripto kayıt alanı" : "Bahis kayıt alanı";
   }
   function modeSeparationText(mode) {
-    return mode === "crypto"
-      ? "Bu ekranda sadece Kripto Rolling kayıtları görünür; Bahis kayıtları ayrı tutulur."
-      : "Bu ekranda sadece Bahis Rolling kayıtları görünür; Kripto kayıtları ayrı tutulur.";
+    return "";
   }
   function modeUiCounts(mode, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -1678,7 +1676,6 @@
           <div class="v512-history-head">
             <div>
               <b>${isCrypto ? "AKTİF KRİPTO İŞLEMLERİ" : "AKTİF BAHİSLER / KUPONLAR"}</b>
-              <span>${modeSeparationText(mode)} Sonuç verince sadece bu modülün Geçmiş/Rapor alanına gider.</span>
             </div>
             <button type="button" data-pending-close>×</button>
           </div>
@@ -1911,11 +1908,7 @@
     }).join("")}</tbody></table></div>`;
   }
   function renderModeSplitNotice(mode) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const isCrypto = m === "crypto";
-    return `<div class="v973-mode-split-notice ${m}" data-v973-rolling-split="${m}">
-      <div><b>${isCrypto ? "KRİPTO ALANI" : "BAHİS ALANI"}</b><span>${modeSeparationText(m)}</span></div>
-    </div>`;
+    return "";
   }
 
   function renderModePanel(mode, state) {
@@ -1946,7 +1939,7 @@
         </details>
 
         <details class="rolling-v49-fold ${mode}" open>
-          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "KRİPTO AKTİF İŞLEM ALANI" : "BAHİS AKTİF ALANI / KOMBİNE KUPONLAR"}</span></summary>
+          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "KRİPTO İŞLEM MENÜSÜ" : "TEKLİ MAÇ / KOMBİNE KUPONLAR MENÜSÜ"}</span></summary>
           <div class="rolling-v47-section-title">
             <div>${renderRowControls(mode, state)}</div>
             <button type="button" data-clear="${mode}">TÜMÜNÜ TEMİZLE</button>
@@ -2048,7 +2041,6 @@
 
         <div class="rolling-v48-layout v49-rolling-layout">
           <aside class="rolling-v48-rail v49-rolling-rail" data-rolling-owned-menu="${mode}">
-            <div class="rolling-v48-rail-toggle v49-rolling-rail-title v808-rail-title" aria-label="${modeLabel} Rolling Menüsü"><span>${modeRailIcon}</span></div>
             ${renderPlanControl(state, mode, modeTotalPnl)}
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
