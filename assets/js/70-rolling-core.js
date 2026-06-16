@@ -2458,10 +2458,14 @@
       event.stopPropagation();
       const menu = btn.closest("[data-bet-group-menu]");
       if (!menu) return;
+      const row = menu.closest("tr");
+      const willOpen = !menu.classList.contains("is-open");
       mount.querySelectorAll("[data-bet-group-menu].is-open").forEach(other => {
         if (other !== menu) other.classList.remove("is-open");
+        other.closest("tr")?.classList.remove("v995-group-row-open");
       });
-      menu.classList.toggle("is-open");
+      menu.classList.toggle("is-open", willOpen);
+      row?.classList.toggle("v995-group-row-open", willOpen);
     }));
     mount.querySelectorAll("[data-bet-group-choice]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
