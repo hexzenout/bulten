@@ -640,7 +640,7 @@
   function betCouponGroup(slot) {
     const raw = cleanText(slot?.couponGroup || slot?.couponNo || "");
     const n = Number(raw || 0);
-    return Number.isFinite(n) && n >= 1 && n <= 6 ? String(n) : "";
+    return Number.isFinite(n) && n >= 1 && n <= 4 ? String(n) : "";
   }
   function betKind(slot) {
     return betCouponGroup(slot) ? "combo" : "single";
@@ -2388,6 +2388,20 @@ function escapeHtml(str) {
 
   function bindEvents(mount, state) {
     const refresh = () => refreshForMount(mount);
+    mount.querySelectorAll("details.rolling-v49-fold").forEach(details => {
+      details.open = true;
+      const summary = details.querySelector(":scope > summary");
+      if (summary) {
+        summary.addEventListener("click", event => {
+          event.preventDefault();
+          event.stopPropagation();
+          details.open = true;
+        });
+      }
+      details.addEventListener("toggle", () => {
+        if (!details.open) details.open = true;
+      });
+    });
     mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => { const [mode, days] = String(btn.dataset.roll || "bet:7").split(":"); openRolling(mode, Number(days || 7)); }));
     mount.querySelectorAll("[data-row-op]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, op] = String(btn.dataset.rowOp || "bet:plus").split(":");
@@ -2487,20 +2501,26 @@ function escapeHtml(str) {
     window.__bultenV1010OpenBetGroupPortal = (btn) => {
       if (!btn) return;
       const slotIndex = Number(btn.dataset.betGroupToggle || btn.closest("[data-bet-group-menu]")?.dataset.betGroupMenu || 0);
+      const currentPortal = document.getElementById("v1010-bet-group-portal");
+      if (currentPortal && currentPortal.dataset.slotIndex === String(slotIndex)) {
+        closeBetGroupPortal();
+        return;
+      }
       closeBetGroupPortal();
       const rect = btn.getBoundingClientRect();
       const portal = document.createElement("div");
       portal.id = "v1010-bet-group-portal";
       portal.className = "v1010-bet-group-portal";
       const width = Math.max(112, Math.round(rect.width + 28));
-      const estimatedHeight = 232;
+      const estimatedHeight = 170;
       const left = Math.max(6, Math.min(Math.round(rect.left), window.innerWidth - width - 8));
       let top = Math.round(rect.bottom + 6);
       if (top + estimatedHeight > window.innerHeight - 6) top = Math.max(6, window.innerHeight - estimatedHeight - 6);
       portal.style.left = `${left}px`;
       portal.style.top = `${top}px`;
       portal.style.width = `${width}px`;
-      portal.innerHTML = [`<button type="button" class="v1010-bet-group-option single" data-v1010-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4,5,6].map(n => `<button type="button" class="v1010-bet-group-option combo" data-v1010-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
+      portal.dataset.slotIndex = String(slotIndex);
+      portal.innerHTML = [`<button type="button" class="v1010-bet-group-option single" data-v1010-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4].map(n => `<button type="button" class="v1010-bet-group-option combo" data-v1010-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
       document.body.appendChild(portal);
       btn.closest("[data-bet-group-menu]")?.classList.add("is-open");
       btn.closest("tr")?.classList.add("v995-group-row-open");
@@ -2526,7 +2546,6 @@ function escapeHtml(str) {
         if (event.target?.closest?.("#v1010-bet-group-portal")) return;
         window.__bultenV1010CloseBetGroupPortal?.();
       }, true);
-      window.addEventListener("scroll", () => window.__bultenV1010CloseBetGroupPortal?.(), true);
       window.addEventListener("resize", () => window.__bultenV1010CloseBetGroupPortal?.(), true);
     }
     mount.querySelectorAll("[data-clear-row]").forEach(btn => btn.addEventListener("click", () => {
