@@ -13916,3 +13916,119 @@ select:-webkit-autofill {
   box-shadow: 0 0 0 1px rgba(96,165,250,.40) inset, 0 0 14px rgba(37,99,235,.48) !important;
   transform: translateY(-1px) !important;
 }
+
+/* ===============================
+   V1005 Bahis tablo sabitleme
+   - 5/10/20 alan değişiminde Bahis + Tek/Kupon hücresi genişleyip/alt alta düşmez
+   - 1 ile Bahis arasındaki boşluk kripto tarafı gibi sıkılaştırıldı
+   - Sadece TEKLİ MAÇ / KOMBİNE KUPONLAR MENÜSÜ tablosunu etkiler
+   =============================== */
+
+/* Bahis tablosunda kolonlar row count değişince yeniden şişmesin. */
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table {
+  table-layout: fixed !important;
+  width: 1240px !important;
+  min-width: 1240px !important;
+  max-width: 1240px !important;
+}
+
+/* X kolonu */
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(1),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(1) {
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  padding-left: 4px !important;
+  padding-right: 2px !important;
+}
+
+/* # kolonu: 1 ile Bahis arasındaki boşluğu azalt. */
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(2),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(2) {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+  text-align: center !important;
+}
+
+/* Tür kolonu: Bahis + Tek/Kupon aynı satırda sabit kalsın. */
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(3),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(3) {
+  width: 174px !important;
+  min-width: 174px !important;
+  max-width: 174px !important;
+  padding-left: 2px !important;
+  padding-right: 6px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+.rolling-v47-card.bet .v988-bet-type-cell {
+  width: 166px !important;
+  min-width: 166px !important;
+  max-width: 166px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+.rolling-v47-card.bet .v988-bet-type-cell .rolling-v47-type.bet {
+  flex: 0 0 70px !important;
+  width: 70px !important;
+  min-width: 70px !important;
+  max-width: 70px !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+.rolling-v47-card.bet .v988-bet-type-cell .v995-bet-group-menu {
+  flex: 0 0 86px !important;
+  width: 86px !important;
+  min-width: 86px !important;
+  max-width: 86px !important;
+}
+
+/* Diğer kolonlar da sabit kalsın; row count ile tablo değişmesin. */
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(4),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(4) {
+  width: 220px !important;
+  max-width: 220px !important;
+}
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(5),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(5) {
+  width: 200px !important;
+  max-width: 200px !important;
+}
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(6),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(6) {
+  width: 200px !important;
+  max-width: 200px !important;
+}
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(7),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(7) {
+  width: 110px !important;
+  max-width: 110px !important;
+}
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(8),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(8) {
+  width: 80px !important;
+  max-width: 80px !important;
+}
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(9),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(9) {
+  width: 180px !important;
+  max-width: 180px !important;
+}
+
+/* Küçük ekranda kırpma yapma; tablo yatay kayar. */
+@media (max-width: 1300px) {
+  .rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table-wrap {
+    overflow-x: auto !important;
+  }
+}
