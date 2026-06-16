@@ -13523,3 +13523,25 @@ select:-webkit-autofill {
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
+
+
+/* ===============================
+   V1000 Kripto Tutar kutusu boyut düzeltmesi
+   Sadece Kripto İşlem Menüsü:
+   - Tutar kutusu Aktif İşlem kutusuyla aynı boyuta alındı.
+   - Sağ alan / Tümünü Temizle / başka bloklara dokunulmadı.
+   =============================== */
+
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(5),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(5) {
+  width: 360px !important;
+  max-width: 360px !important;
+}
+
+.rolling-v47-card.crypto .v803-crypto-main-table input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
