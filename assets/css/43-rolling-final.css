@@ -12843,3 +12843,158 @@ select:-webkit-autofill {
   background: #0b0b0b !important;
   color: #ffffff !important;
 }
+
+
+/* ===============================
+   V992 Kasa Hedefi üst hizalama net düzeltme
+   İstenen düzen:
+   Geçmiş                             Gizle/Detay
+
+              Bahis/Kripto Kasa Hedefi
+   =============================== */
+
+.rolling-v48-rail .v985-target-summary,
+.rolling-v48-rail > .v984-target-card summary.v985-target-summary {
+  display: block !important;
+}
+
+.rolling-v48-rail .v985-target-head {
+  display: flex !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 0 10px !important;
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+
+.rolling-v48-rail .v984-target-history-btn,
+.rolling-v48-rail button.v984-target-history-btn {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  justify-self: flex-start !important;
+  flex: 0 0 auto !important;
+  min-width: 72px !important;
+  width: auto !important;
+  height: 24px !important;
+  padding: 0 9px !important;
+  margin: 0 !important;
+  border-radius: 9px !important;
+  cursor: pointer !important;
+}
+
+.rolling-v48-rail .v985-target-detail-toggle {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  justify-self: flex-end !important;
+  flex: 0 0 auto !important;
+  min-width: 72px !important;
+  width: auto !important;
+  height: 24px !important;
+  padding: 0 9px !important;
+  margin: 0 !important;
+  border-radius: 9px !important;
+  cursor: pointer !important;
+}
+
+.rolling-v48-rail .v985-target-title,
+.rolling-v48-rail .v984-target-title.v985-target-title {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 auto 12px !important;
+  padding: 0 !important;
+  text-align: center !important;
+  color: #22c55e !important;
+  text-shadow: 0 0 12px rgba(34,197,94,.40) !important;
+  font-size: .98rem !important;
+  font-weight: 950 !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+
+/* ===============================
+   V993 Kasa Hedefi başlık hizası - fotoğraftaki düzen
+   Geçmiş                  Gizle
+
+        Bahis/Kripto Kasa Hedefi
+   Not: Sadece kasa hedefi üst düzeni. Başka alanlara dokunmaz.
+   =============================== */
+
+.rolling-v48-rail .v985-target-summary,
+.rolling-v48-rail > .v984-target-card summary.v985-target-summary {
+  display: block !important;
+  padding-top: 10px !important;
+}
+
+/* Geçmiş ve Gizle kartın uçlarına kaçmaz; fotoğraftaki gibi daha yakın durur. */
+.rolling-v48-rail .v985-target-head {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 236px !important;
+  margin: 0 auto 7px !important;
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0 !important;
+}
+
+/* Geçmiş solda; ama fotoğraftaki iç hizaya göre. */
+.rolling-v48-rail .v984-target-history-btn,
+.rolling-v48-rail button.v984-target-history-btn {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  flex: 0 0 auto !important;
+  min-width: 72px !important;
+  width: 72px !important;
+  height: 24px !important;
+  padding: 0 8px !important;
+  margin: 0 !important;
+  border-radius: 9px !important;
+  cursor: pointer !important;
+}
+
+/* Gizle/Detay sağda; ama kart ucuna değil fotoğraftaki mesafeye göre. */
+.rolling-v48-rail .v985-target-detail-toggle {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  flex: 0 0 auto !important;
+  min-width: 72px !important;
+  width: 72px !important;
+  height: 24px !important;
+  padding: 0 8px !important;
+  margin: 0 !important;
+  border-radius: 9px !important;
+  cursor: pointer !important;
+}
+
+/* Başlık kısa boşlukla hemen altta, fotoğraftaki gibi merkezde. */
+.rolling-v48-rail .v985-target-title,
+.rolling-v48-rail .v984-target-title.v985-target-title {
+  display: block !important;
+  width: 100% !important;
+  max-width: 236px !important;
+  margin: 7px auto 12px !important;
+  padding: 0 !important;
+  text-align: center !important;
+  color: #22c55e !important;
+  text-shadow: 0 0 12px rgba(34,197,94,.40) !important;
+  font-size: .98rem !important;
+  font-weight: 950 !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
