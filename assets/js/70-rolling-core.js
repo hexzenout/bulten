@@ -2458,16 +2458,19 @@ function escapeHtml(str) {
       input.addEventListener("change", saveInput);
     });
     const closeBetGroupPortal = () => {
+      document.getElementById("v1010-bet-group-portal")?.remove();
       document.getElementById("v1009-bet-group-portal")?.remove();
       document.getElementById("v1008-bet-group-portal")?.remove();
       document.getElementById("v1007-bet-group-portal")?.remove();
-      mount.querySelectorAll("[data-bet-group-menu].is-open").forEach(menu => {
+      document.querySelectorAll("[data-bet-group-menu].is-open").forEach(menu => {
         menu.classList.remove("is-open");
         menu.closest("tr")?.classList.remove("v995-group-row-open");
       });
     };
-    window.__bultenV1009BetGroupApply = (slotRaw, groupRaw) => {
+    window.__bultenV1010CloseBetGroupPortal = closeBetGroupPortal;
+    window.__bultenV1010BetGroupApply = (slotRaw, groupRaw) => {
       const slotIndex = Number(slotRaw || 0);
+      if (!Number.isFinite(slotIndex) || slotIndex < 0) return;
       const group = betCouponGroup({ couponGroup: groupRaw || "" });
       if (!state.modeSlots.bet[slotIndex]) state.modeSlots.bet[slotIndex] = createSlot("bet", slotIndex);
       const slot = state.modeSlots.bet[slotIndex];
@@ -2481,48 +2484,50 @@ function escapeHtml(str) {
       closeBetGroupPortal();
       refresh();
     };
-    mount.querySelectorAll("[data-bet-group-toggle]").forEach(btn => btn.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      const menu = btn.closest("[data-bet-group-menu]");
-      if (!menu) return;
-      const i = Number(btn.dataset.betGroupToggle || menu.dataset.betGroupMenu || 0);
-      const row = menu.closest("tr");
-      const willOpen = !menu.classList.contains("is-open");
+    window.__bultenV1010OpenBetGroupPortal = (btn) => {
+      if (!btn) return;
+      const slotIndex = Number(btn.dataset.betGroupToggle || btn.closest("[data-bet-group-menu]")?.dataset.betGroupMenu || 0);
       closeBetGroupPortal();
-      if (!willOpen) return;
-      menu.classList.add("is-open");
-      row?.classList.add("v995-group-row-open");
       const rect = btn.getBoundingClientRect();
       const portal = document.createElement("div");
-      portal.id = "v1009-bet-group-portal";
-      portal.className = "v1009-bet-group-portal";
-      portal.style.left = `${Math.round(rect.left)}px`;
-      portal.style.top = `${Math.round(rect.bottom + 6)}px`;
-      portal.style.minWidth = `${Math.max(108, Math.round(rect.width + 22))}px`;
-      portal.innerHTML = [`<button type="button" class="v1009-bet-group-option single" data-v1009-bet-group-choice="${i}:">Tek</button>`].concat([1,2,3,4,5,6].map(n => `<button type="button" class="v1009-bet-group-option combo" data-v1009-bet-group-choice="${i}:${n}">Kupon ${n}</button>`)).join("");
+      portal.id = "v1010-bet-group-portal";
+      portal.className = "v1010-bet-group-portal";
+      const width = Math.max(112, Math.round(rect.width + 28));
+      const estimatedHeight = 232;
+      const left = Math.max(6, Math.min(Math.round(rect.left), window.innerWidth - width - 8));
+      let top = Math.round(rect.bottom + 6);
+      if (top + estimatedHeight > window.innerHeight - 6) top = Math.max(6, window.innerHeight - estimatedHeight - 6);
+      portal.style.left = `${left}px`;
+      portal.style.top = `${top}px`;
+      portal.style.width = `${width}px`;
+      portal.innerHTML = [`<button type="button" class="v1010-bet-group-option single" data-v1010-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4,5,6].map(n => `<button type="button" class="v1010-bet-group-option combo" data-v1010-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
       document.body.appendChild(portal);
-    }));
-    if (!window.__bultenV1009BetGroupPointerHandler) {
-      window.__bultenV1009BetGroupPointerHandler = true;
+      btn.closest("[data-bet-group-menu]")?.classList.add("is-open");
+      btn.closest("tr")?.classList.add("v995-group-row-open");
+    };
+    if (!window.__bultenV1010BetGroupPointerHandler) {
+      window.__bultenV1010BetGroupPointerHandler = true;
       document.addEventListener("pointerdown", event => {
-        const choice = event.target?.closest?.("[data-v1009-bet-group-choice]");
+        const choice = event.target?.closest?.("[data-v1010-bet-group-choice]");
         if (choice) {
           event.preventDefault();
           event.stopPropagation();
-          const [slotRaw, groupRaw] = String(choice.dataset.v1009BetGroupChoice || "0:").split(":");
-          window.__bultenV1009BetGroupApply?.(slotRaw, groupRaw || "");
+          const [slotRaw, groupRaw] = String(choice.dataset.v1010BetGroupChoice || "0:").split(":");
+          window.__bultenV1010BetGroupApply?.(slotRaw, groupRaw || "");
           return;
         }
-        if (event.target?.closest?.("#v1009-bet-group-portal") || event.target?.closest?.("[data-bet-group-toggle]")) return;
-        document.getElementById("v1009-bet-group-portal")?.remove();
-        document.getElementById("v1008-bet-group-portal")?.remove();
-        document.getElementById("v1007-bet-group-portal")?.remove();
-        document.querySelectorAll("[data-bet-group-menu].is-open").forEach(menu => {
-          menu.classList.remove("is-open");
-          menu.closest("tr")?.classList.remove("v995-group-row-open");
-        });
+        const toggle = event.target?.closest?.("[data-bet-group-toggle]");
+        if (toggle) {
+          event.preventDefault();
+          event.stopPropagation();
+          window.__bultenV1010OpenBetGroupPortal?.(toggle);
+          return;
+        }
+        if (event.target?.closest?.("#v1010-bet-group-portal")) return;
+        window.__bultenV1010CloseBetGroupPortal?.();
       }, true);
+      window.addEventListener("scroll", () => window.__bultenV1010CloseBetGroupPortal?.(), true);
+      window.addEventListener("resize", () => window.__bultenV1010CloseBetGroupPortal?.(), true);
     }
     mount.querySelectorAll("[data-clear-row]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, slotRaw] = String(btn.dataset.clearRow || "bet:0").split(":");
