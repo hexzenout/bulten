@@ -33,6 +33,7 @@
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
   let PENDING_BOARD_OPEN_MODE = null;
+  let TARGET_HISTORY_OPEN_MODE = null;
   let HISTORY_FILTER = "today";
   let CONFIRM_DIALOG = null;
   let CONFIRM_RETURN_PANEL_MODE = null;
@@ -507,6 +508,45 @@
             </table>
           </div>
         </div>
+      </div>`;
+  }
+
+
+  function renderTargetHistoryModal() {
+    if (!TARGET_HISTORY_OPEN_MODE) return "";
+    const mode = TARGET_HISTORY_OPEN_MODE === "crypto" ? "crypto" : "bet";
+    const isCrypto = mode === "crypto";
+    const all = loadTargetLog().filter(r => (r.mode || "bet") === mode);
+    const rows = filterHistoryRows(all, HISTORY_FILTER);
+    const pnl = rows.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
+    const filters = ["today","yesterday","week","month","year","twoYears","all"].map(f => `<button type="button" class="${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${historyFilterLabel(f)}</button>`).join("");
+    const tableRows = rows.length ? rows.map(r => `
+      <tr>
+        <td>${escapeHtml(formatDateTime(r.ts))}</td>
+        <td>${money(r.start)}</td>
+        <td>${money(r.target)}</td>
+        <td>${money(r.current ?? (Number(r.start || 0) + Number(r.pnl || 0)))}</td>
+        <td><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</span></td>
+        <td>${pctText(r.growth)}</td>
+      </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede kasa hedefi geçmişi yok.</td></tr>`;
+    return `
+      <div class="v757-log-center-overlay v758-log-center-overlay v979-target-history-overlay">
+        <section class="v757-log-center-modal v758-log-center-modal ${mode}">
+          <div class="v512-history-head">
+            <div>
+              <b>${isCrypto ? "KRİPTO KASA HEDEFİ GEÇMİŞİ" : "BAHİS KASA HEDEFİ GEÇMİŞİ"}</b>
+              <span>${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · Kasa hedefi K/Z ${signedMoney(pnl)}</span>
+            </div>
+            <button type="button" data-target-history-close>×</button>
+          </div>
+          <div class="v512-history-filters v758-history-filters">${filters}</div>
+          <div class="v512-history-table-wrap v758-history-table-wrap">
+            <table class="v512-history-table">
+              <thead><tr><th>Tarih / Saat</th><th>Başlangıç</th><th>Hedef</th><th>Güncel</th><th>K/Z</th><th>Büyüme</th></tr></thead>
+              <tbody>${tableRows}</tbody>
+            </table>
+          </div>
+        </section>
       </div>`;
   }
 
@@ -1950,28 +1990,20 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const plan = getPlanNumbers(state, modePnl, m);
     const rows = loadTargetLog().filter(r => (r.mode || "bet") === m);
-    const latest = rows.slice(0, 6).map(r => `
-      <li>
-        <span>${escapeHtml(formatDateTime(r.ts))}</span>
-        <b>${money(r.start)} → ${money(r.target)}</b>
-        <em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</em>
-      </li>`).join("") || `<li class="empty"><span>Kayıt yok</span><b>Hedefi bitirince burada kalır.</b><em>-</em></li>`;
     const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
     const currentTag = plan.hasManualCurrent ? "Kaynak: Manuel" : "Kaynak: Otomatik";
-    const logOpen = targetLogOpen(m);
     return `
       <details class="v796-target-card v798-target-card v802-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
         <summary class="v798-target-summary v802-target-summary">
-          <div class="v978-target-summary-head" style="display:grid;grid-template-columns:minmax(88px,auto) 1fr minmax(88px,auto);align-items:center;gap:10px;width:100%;">
-            <div class="v802-target-log-wrap ${logOpen ? "open" : ""}" onclick="event.stopPropagation()">
-              <button type="button" class="v802-target-log-btn v978-target-history-btn" data-target-log-toggle="${m}">Geçmiş <span>${rows.length}</span></button>
-              <div class="v802-target-log-panel"><ul>${latest}</ul></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin-bottom:10px;">
+            <div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls" style="padding:0;border:0;background:transparent;box-shadow:none;min-width:0;">
+              <button type="button" class="v758-row-tool history" data-target-history-open="${m}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
             </div>
-            <div class="v798-target-summary-main" style="text-align:center;justify-self:center;">
-              <b>${modeLabel} Kasa Hedefi</b>
-              <span>${modeLabel} · ${plan.stateLabel}</span>
-            </div>
-            <small class="${plan.hasManualCurrent ? "manual" : "auto"}" style="justify-self:end;">${currentTag}</small>
+            <small class="${plan.hasManualCurrent ? "manual" : "auto"}" style="white-space:nowrap;">${currentTag}</small>
+          </div>
+          <div class="v798-target-summary-main" style="text-align:center;">
+            <b>${modeLabel} Kasa Hedefi</b>
+            <span>${modeLabel} · ${plan.stateLabel}</span>
           </div>
           <div class="v802-target-mini-grid">
             <span>Başlangıç <b>${money(plan.start)}</b></span>
@@ -2045,6 +2077,7 @@
         ${renderLogCenterModal(state)}
         ${renderReportCenterModal(state)}
         ${renderHistoryModal()}
+        ${renderTargetHistoryModal()}
         ${renderConfirmDialog()}
       </div>`;
     bindEvents(mount, state);
@@ -2204,7 +2237,7 @@
     }
     const state = loadState();
     host.dataset.rollingFloating = "1";
-    host.innerHTML = `${renderPendingModal(state)}${renderLogCenterModal(state)}${renderReportCenterModal(state)}${renderConfirmDialog()}`;
+    host.innerHTML = `${renderPendingModal(state)}${renderLogCenterModal(state)}${renderReportCenterModal(state)}${renderTargetHistoryModal()}${renderConfirmDialog()}`;
     bindEvents(host, state);
   }
 
@@ -2779,9 +2812,30 @@
         }
       });
     }
+    mount.querySelectorAll("[data-target-history-open]").forEach(btn => btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      TARGET_HISTORY_OPEN_MODE = btn.dataset.targetHistoryOpen === "crypto" ? "crypto" : "bet";
+      HISTORY_OPEN_MODE = null;
+      LOG_CENTER_OPEN_MODE = null;
+      REPORT_CENTER_OPEN_MODE = null;
+      PENDING_BOARD_OPEN_MODE = null;
+      HISTORY_FILTER = "today";
+      refresh();
+    }));
+    mount.querySelectorAll("[data-target-history-close]").forEach(btn => btn.addEventListener("click", () => {
+      TARGET_HISTORY_OPEN_MODE = null;
+      refresh();
+    }));
+    mount.querySelectorAll(".v979-target-history-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
+      if (event.target !== overlay) return;
+      TARGET_HISTORY_OPEN_MODE = null;
+      refresh();
+    }));
     mount.querySelectorAll("[data-history-open]").forEach(btn => btn.addEventListener("click", () => {
       HISTORY_OPEN_MODE = btn.dataset.historyOpen === "crypto" ? "crypto" : "bet";
       LOG_CENTER_OPEN_MODE = null;
+      TARGET_HISTORY_OPEN_MODE = null;
       HISTORY_FILTER = "today";
       refresh();
     }));
@@ -2794,6 +2848,7 @@
       REPORT_CENTER_OPEN_MODE = null;
       PENDING_BOARD_OPEN_MODE = null;
       HISTORY_OPEN_MODE = null;
+      TARGET_HISTORY_OPEN_MODE = null;
       HISTORY_FILTER = "today";
       refresh();
     }));
@@ -2803,6 +2858,7 @@
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;
       HISTORY_OPEN_MODE = null;
+      TARGET_HISTORY_OPEN_MODE = null;
       refresh();
     }));
     mount.querySelectorAll("[data-report-open]").forEach(btn => btn.addEventListener("click", () => {
@@ -2810,6 +2866,7 @@
       LOG_CENTER_OPEN_MODE = null;
       PENDING_BOARD_OPEN_MODE = null;
       HISTORY_OPEN_MODE = null;
+      TARGET_HISTORY_OPEN_MODE = null;
       refresh();
     }));
     mount.querySelectorAll("[data-report-center-close]").forEach(btn => btn.addEventListener("click", () => {
@@ -2837,6 +2894,7 @@
       if (event.target !== overlay) return;
       LOG_CENTER_OPEN_MODE = null;
       REPORT_CENTER_OPEN_MODE = null;
+      TARGET_HISTORY_OPEN_MODE = null;
       refresh();
     }));
     mount.querySelectorAll("[data-history-delete]").forEach(btn => btn.addEventListener("click", () => {
