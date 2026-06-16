@@ -519,33 +519,29 @@
     const all = loadTargetLog().filter(r => (r.mode || "bet") === mode);
     const rows = filterHistoryRows(all, HISTORY_FILTER);
     const pnl = rows.reduce((sum, r) => sum + Number(r.pnl || 0), 0);
-    const filters = ["today","yesterday","week","month","year","twoYears","all"].map(f => `<button type="button" class="${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${historyFilterLabel(f)}</button>`).join("");
-    const tableRows = rows.length ? rows.map(r => `
-      <tr>
-        <td>${escapeHtml(formatDateTime(r.ts))}</td>
-        <td>${money(r.start)}</td>
-        <td>${money(r.target)}</td>
-        <td>${money(r.current ?? (Number(r.start || 0) + Number(r.pnl || 0)))}</td>
-        <td><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</span></td>
-        <td>${pctText(r.growth)}</td>
-      </tr>`).join("") : `<tr><td colspan="6" class="v512-history-empty">Bu filtrede kasa hedefi geçmişi yok.</td></tr>`;
+    const filters = ["today","yesterday","week","month","year","twoYears","all"].map(f => `<button type="button" class="v758-row-tool history ${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${historyFilterLabel(f)}</button>`).join("");
+    const tableRows = rows.length ? rows.map((r, idx) => `
+      <div class="kapsul v32 v982-history-kapsul ${Number(r.pnl || 0) >= 0 ? "win" : "loss"}" style="min-height:132px;">
+        <button type="button" class="k-undo" data-target-history-delete="${escapeHtml(r.id || "")}" title="Sil"><i class="fa-solid fa-xmark"></i></button>
+        <div class="k-result">
+          <div class="k-note-show">${idx + 1}. ${escapeHtml(formatDateTime(r.ts))}</div>
+          <b>Başlangıç ${money(r.start)} · Hedef ${money(r.target)}</b>
+          <b>Güncel ${money(r.current ?? (Number(r.start || 0) + Number(r.pnl || 0)))}</b>
+          <span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)} · ${pctText(r.growth)}</span>
+        </div>
+      </div>`).join("") : `<div class="v759-empty-note" style="grid-column:1/-1;">Bu filtrede kasa hedefi geçmişi yok.</div>`;
     return `
-      <div class="v757-log-center-overlay v758-log-center-overlay v979-target-history-overlay">
-        <section class="v757-log-center-modal v758-log-center-modal ${mode}" style="width:min(820px,calc(100vw - 28px));max-width:820px;max-height:min(78vh,720px);overflow:auto;border-radius:22px;">
-          <div class="v512-history-head">
+      <div id="rolling-target-history-overlay" class="show-modal v982-target-history-excel" data-roll-mode="${mode}" data-target-history-overlay style="display:flex;">
+        <section class="v982-target-history-modal" onclick="event.stopPropagation()" style="width:min(1180px,calc(100vw - 38px));max-height:calc(100vh - 52px);overflow:auto;border-radius:26px;border:1px solid rgba(251,191,36,.25);background:linear-gradient(180deg,rgba(9,12,20,.98),rgba(3,7,18,.98));box-shadow:0 28px 90px rgba(0,0,0,.62);padding:18px;">
+          <div class="excel-title" style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px;">
             <div>
-              <b>${isCrypto ? "KRİPTO KASA HEDEFİ GEÇMİŞİ" : "BAHİS KASA HEDEFİ GEÇMİŞİ"}</b>
-              <span>${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · Kasa hedefi K/Z ${signedMoney(pnl)}</span>
+              <h2 id="excel-modal-title" style="margin:0;">${isCrypto ? "KRİPTO KASA HEDEFİ GEÇMİŞİ" : "BAHİS KASA HEDEFİ GEÇMİŞİ"}</h2>
+              <span style="display:block;color:#94a3b8;font-weight:900;font-size:.82rem;margin-top:4px;">${historyFilterLabel(HISTORY_FILTER)} · ${rows.length} kayıt · Kasa Hedefi K/Z ${signedMoney(pnl)}</span>
             </div>
-            <button type="button" data-target-history-close>×</button>
+            <button type="button" data-target-history-close style="width:42px;height:42px;border-radius:14px;border:1px solid rgba(239,68,68,.42);background:rgba(127,29,29,.42);color:#fff;font-weight:950;font-size:1.2rem;">×</button>
           </div>
-          <div class="v512-history-filters v758-history-filters">${filters}</div>
-          <div class="v512-history-table-wrap v758-history-table-wrap">
-            <table class="v512-history-table">
-              <thead><tr><th>Tarih / Saat</th><th>Başlangıç</th><th>Hedef</th><th>Güncel</th><th>K/Z</th><th>Büyüme</th></tr></thead>
-              <tbody>${tableRows}</tbody>
-            </table>
-          </div>
+          <div class="v766-excel-feature-controls" style="margin-bottom:14px;">${filters}</div>
+          <div class="capsule-container v32" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;">${tableRows}</div>
         </section>
       </div>`;
   }
@@ -715,6 +711,33 @@
     });
 
     return { singles, coupons, rows };
+  }
+  function getBetCouponForSlot(state, slotIndex) {
+    const idx = Number(slotIndex || 0);
+    return getBetCouponGroups(state).coupons.find(coupon => {
+      if (Number(coupon?.slotIndex ?? -1) === idx) return true;
+      return Array.isArray(coupon?.rows) && coupon.rows.some(row => Number(row?.index ?? -1) === idx);
+    }) || null;
+  }
+  function getBetCouponMatchIndex(coupon, slotIndex) {
+    const idx = Number(slotIndex || 0);
+    const rows = Array.isArray(coupon?.rows) ? coupon.rows : [];
+    const rowIndex = rows.findIndex(row => Number(row?.index ?? -1) === idx);
+    if (rowIndex >= 0) return rowIndex;
+    if (Number(coupon?.slotIndex ?? -1) === idx) return 0;
+    return 0;
+  }
+  function getBetComboStatusLookup(state) {
+    const lookup = {};
+    getBetCouponGroups(state).coupons.forEach(coupon => {
+      const matches = Array.isArray(coupon.matches) ? coupon.matches : [];
+      const rows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows : [coupon.row].filter(Boolean);
+      rows.forEach((row, idx) => {
+        const status = matches[idx]?.status || '';
+        if (status === 'win' || status === 'loss') lookup[Number(row.index || 0)] = status;
+      });
+    });
+    return lookup;
   }
   function rowBetTotals(row) {
     const matches = getSlotMatches(row);
@@ -1948,6 +1971,7 @@
     const isCrypto = mode === "crypto";
     const rowCount = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const visible = slots.slice(0, rowCount);
+    const comboStatusLookup = isCrypto ? {} : getBetComboStatusLookup(state);
     if (isCrypto) {
       return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table v803-crypto-main-table"><thead><tr><th></th><th>#</th><th>Tür</th><th>AKTİF İŞLEM</th><th>Tutar</th></tr></thead><tbody>${visible.map((s, i) => {
         return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Kripto</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="İşlem"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td></tr>`;
@@ -1960,9 +1984,11 @@
     const lossText = "KAYBETTİ";
     const pnlHead = "K/Z";
     return `<div class="rolling-v47-table-wrap"><table class="rolling-v47-table"><thead><tr><th><button type="button" class="v781-table-photo-btn" data-main-table-photo="bet" title="Kupon fotoğrafı" aria-label="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></th><th>#</th><th>Tür</th><th>${noteHead}</th><th>${valHead}</th><th>Tutar</th><th>Durum</th><th>${pnlHead}</th><th>İşlem</th></tr></thead><tbody>${visible.map((s, i) => {
-      const status = s.status === "win" ? winText : s.status === "loss" ? lossText : "BEKLİYOR";
+      const comboStatus = comboStatusLookup[i] || "";
+      const rowStatus = comboStatus || s.status || "pending";
+      const status = rowStatus === "win" ? winText : rowStatus === "loss" ? lossText : "BEKLİYOR";
       const pnlClass = Number(s.pnl || 0) >= 0 ? "pos" : "neg";
-      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
+      return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${rowStatus === "win" || rowStatus === "loss" ? rowStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
   function renderModeSplitNotice(mode) {
@@ -2013,15 +2039,14 @@
     const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
     return `
       <details class="v796-target-card v798-target-card v802-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
-        <summary class="v798-target-summary v802-target-summary">
-          <div style="display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;width:100%;margin-bottom:10px;">
-            <div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls" style="padding:0;border:0;background:transparent;box-shadow:none;min-width:0;justify-content:flex-start;">
+        <summary class="v802-target-summary" style="cursor:pointer;padding:12px;display:grid;gap:9px;position:relative;">
+          <div style="position:relative;width:100%;min-height:42px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;">
+            <div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls" style="position:absolute;left:0;top:50%;transform:translateY(-50%);padding:0;border:0;background:transparent;box-shadow:none;min-width:0;justify-content:flex-start;">
               <button type="button" class="v758-row-tool history" data-target-history-open="${m}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
             </div>
-            <div class="v798-target-summary-main" style="text-align:center;justify-self:center;min-width:0;">
-              <b style="display:block;color:#22c55e;text-shadow:0 0 12px rgba(34,197,94,.32);">${modeLabel} Kasa Hedefi</b>
+            <div style="text-align:center;width:100%;padding:0 82px;min-width:0;">
+              <b style="display:block;color:#22c55e !important;text-shadow:0 0 12px rgba(34,197,94,.38);font-size:.93rem;font-weight:950;line-height:1.05;white-space:nowrap;">${modeLabel} Kasa Hedefi</b>
             </div>
-            <span aria-hidden="true" style="width:74px;display:block;"></span>
           </div>
           <div class="v802-target-mini-grid">
             <span>Başlangıç <b>${money(plan.start)}</b></span>
@@ -2845,7 +2870,7 @@
       TARGET_HISTORY_OPEN_MODE = null;
       refresh();
     }));
-    mount.querySelectorAll(".v979-target-history-overlay").forEach(overlay => overlay.addEventListener("click", (event) => {
+    mount.querySelectorAll("[data-target-history-overlay]").forEach(overlay => overlay.addEventListener("click", (event) => {
       if (event.target !== overlay) return;
       TARGET_HISTORY_OPEN_MODE = null;
       refresh();
@@ -3018,6 +3043,14 @@
       HISTORY_FILTER = btn.dataset.historyFilter || "today";
       refresh();
     }));
+    mount.querySelectorAll("[data-target-history-delete]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const id = btn.dataset.targetHistoryDelete || "";
+      if (!id) return;
+      saveTargetLog(loadTargetLog().filter(r => String(r.id || "") !== String(id)));
+      refresh();
+    }));
     mount.querySelectorAll("[data-combo-match-status]").forEach(btn => btn.addEventListener("click", () => {
       const [slotRaw, matchRaw, statusRaw] = String(btn.dataset.comboMatchStatus || "0:0:win").split(":");
       const i = Number(slotRaw || 0);
@@ -3087,21 +3120,27 @@
         const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || mode) : (PENDING_BOARD_OPEN_MODE || null);
         if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
         if (mode === "bet" && finalStatus !== "pending") {
-          const coupon = getBetCouponGroups(state).coupons.find(c => Number(c.slotIndex) === i);
+          const coupon = getBetCouponForSlot(state, i);
           if (coupon && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
-            const resultLabel = finalStatus === "win" ? "KAZANDI" : "KAYBETTİ";
+            const matchIndex = getBetCouponMatchIndex(coupon, i);
+            const matchName = coupon.matches[matchIndex]?.name || `Maç ${matchIndex + 1}`;
+            const currentMatchStatus = coupon.matches[matchIndex]?.status || "";
+            const nextMatchStatus = currentMatchStatus === finalStatus ? "pending" : finalStatus;
+            const resultLabel = nextMatchStatus === "win" ? "KAZANDI" : nextMatchStatus === "loss" ? "KAYBETTİ" : "BEKLİYOR";
+            ACTIVE_COMBO_DETAIL_SLOT = Number(coupon.slotIndex || 0);
             CONFIRM_DIALOG = {
-              type: "settleCoupon",
-              mode: "bet",
-              couponId: coupon.id,
-              couponSlot: coupon.slotIndex,
-              status: finalStatus,
+              type: "comboMatch",
+              slot: Number(coupon.slotIndex || 0),
+              match: matchIndex,
+              status: nextMatchStatus,
               keepActivePanel: keepPanel,
-              tone: finalStatus === "loss" ? "danger" : "success",
-              title: "Kombine kupon sonucunu onayla",
-              message: `${coupon.matches.length} maçlık kombine kupon ${resultLabel} olarak kaydedilecek.`,
-              detail: "Bu kayıt Geçmiş/Rapor merkezine Kombine Kupon olarak işlenecek.",
-              confirmText: `${resultLabel} olarak kaydet`
+              tone: nextMatchStatus === "loss" ? "danger" : "success",
+              title: nextMatchStatus === "pending" ? "Maçı bekliyor durumuna al" : "Kombine maç sonucunu onayla",
+              message: nextMatchStatus === "pending"
+                ? `${matchName} tekrar BEKLİYOR durumuna alınacak.`
+                : `${matchName} için ${resultLabel} sonucu kaydedilecek.`,
+              detail: nextMatchStatus === "pending" ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur." : "Kombine tüm maçlar sonuçlanana kadar aktif listede kalır. Tek maç sonucu Geçmiş'e tek başına düşmez.",
+              confirmText: nextMatchStatus === "pending" ? "BEKLİYOR olarak işaretle" : `${resultLabel} olarak işaretle`
             };
             refresh();
             return;
