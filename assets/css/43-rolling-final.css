@@ -12342,3 +12342,41 @@ select:-webkit-autofill {
 .rolling-v48-row-controls .v759-row-tool.report {
   display: none !important;
 }
+
+
+/* ===============================
+   V987 küçük hizalama düzeltmeleri
+   - Kasa hedefi başlığını butonlardan biraz aşağı al
+   - Kapat yazısını Gizle yap
+   - Kripto işlem tablosunda Bahis Tek/Kombine alanından kalan boşluğu kapat
+   =============================== */
+.rolling-v48-rail .v985-target-title,
+.rolling-v48-rail .v984-target-title.v985-target-title {
+  margin: 8px 0 11px !important;
+  padding-top: 2px !important;
+}
+.rolling-v48-rail .v984-target-card[open] .v985-target-detail-toggle::before {
+  content: "Gizle" !important;
+}
+.rolling-v47-card.crypto .rolling-v47-table th:nth-child(3),
+.rolling-v47-card.crypto .rolling-v47-table td:nth-child(3) {
+  width: 86px !important;
+  min-width: 86px !important;
+  max-width: 86px !important;
+  padding-right: 6px !important;
+}
+.rolling-v47-card.crypto .rolling-v47-table th:nth-child(4),
+.rolling-v47-card.crypto .rolling-v47-table td:nth-child(4) {
+  padding-left: 4px !important;
+}
+.rolling-v47-card.crypto .rolling-v47-table .v986-crypto-type-cell,
+.rolling-v47-card.crypto .v986-crypto-type-cell {
+  width: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  justify-content: flex-start !important;
+  overflow: hidden !important;
+}
+.rolling-v47-card.crypto .rolling-v47-table .v986-crypto-type-cell .rolling-v47-type.crypto {
+  margin: 0 !important;
+}
