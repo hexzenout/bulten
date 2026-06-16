@@ -2014,16 +2014,6 @@
       </details>`;
   }
 
-  function renderRailTab(mode, activeModeName) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const isCrypto = m === "crypto";
-    const label = isCrypto ? "KRİPTO" : "BAHİS";
-    const icon = isCrypto
-      ? '<span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span>'
-      : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>';
-    return `<button type="button" class="rolling-v48-rail-tab ${m} ${activeModeName === m ? "active" : ""}" data-roll-tab="${m}" data-v973-rail-mode="${m}">${icon}<span class="rolling-v493-rail-label">${label}</span></button>`;
-  }
-
   function renderModule() {
     const mount = qs("omega-rolling-render");
     if (!mount) return;
@@ -2041,6 +2031,9 @@
     const modeTotalPnl = isCrypto ? cryptoTotalPnl : betTotalPnl;
     const modeLabel = isCrypto ? "KRİPTO" : "BAHİS";
     const modeIcon = isCrypto ? "fa-brands fa-bitcoin" : "fa-solid fa-layer-group";
+    const modeRailIcon = isCrypto
+      ? '<span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span>'
+      : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>';
     const modeGrowth = growthPct(modeTotalPnl, modeRollSum.startTotal || getModeQuickPlan(state, mode).start || 100);
     mount.innerHTML = `
       <div class="rolling-v47-page v48-rolling-page v49-rolling-page" data-rolling-screen="${mode}">
@@ -2054,10 +2047,8 @@
         </div>
 
         <div class="rolling-v48-layout v49-rolling-layout">
-          <aside class="rolling-v48-rail v49-rolling-rail">
-            <div class="rolling-v48-rail-toggle v49-rolling-rail-title v808-rail-title"><span>${modeLabel} ROLLING MENÜSÜ</span></div>
-            ${renderRailTab("bet", mode)}
-            ${renderRailTab("crypto", mode)}
+          <aside class="rolling-v48-rail v49-rolling-rail" data-rolling-owned-menu="${mode}">
+            <div class="rolling-v48-rail-toggle v49-rolling-rail-title v808-rail-title" aria-label="${modeLabel} Rolling Menüsü"><span>${modeRailIcon}</span></div>
             ${renderPlanControl(state, mode, modeTotalPnl)}
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
@@ -2236,7 +2227,6 @@
 
   function bindEvents(mount, state) {
     const refresh = () => refreshForMount(mount);
-    mount.querySelectorAll("[data-roll-tab]").forEach(btn => btn.addEventListener("click", () => { setActiveMode(btn.dataset.rollTab); refresh(); }));
     mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => { const [mode, days] = String(btn.dataset.roll || "bet:7").split(":"); openRolling(mode, Number(days || 7)); }));
     mount.querySelectorAll("[data-row-op]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, op] = String(btn.dataset.rowOp || "bet:plus").split(":");
