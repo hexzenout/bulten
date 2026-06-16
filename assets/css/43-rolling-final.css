@@ -13523,3 +13523,93 @@ select:-webkit-autofill {
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
+
+
+/* ===============================
+   V999 Kripto Tutar hizası düzeltme
+   - Tutar kutusu sona kadar uzatılmadı.
+   - Tutar kolonu Tümünü Temizle hizasının altına gelecek şekilde sağa alındı.
+   - Sağdaki gereksiz boş alan input genişleterek değil, tablo hizasıyla toparlandı.
+   =============================== */
+
+.rolling-v47-card.crypto .rolling-v47-table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: visible !important;
+}
+
+/* Kripto tabloyu kontrollü genişlikte tut; inputları sayfanın sonuna kadar büyütme. */
+.rolling-v47-card.crypto .v803-crypto-main-table {
+  width: min(100%, 1080px) !important;
+  max-width: 1080px !important;
+  min-width: 900px !important;
+  table-layout: fixed !important;
+}
+
+/* Sol tarafı sıkı tut. */
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(1),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(1) {
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+}
+
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(2),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(2) {
+  width: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+}
+
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(3),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(3) {
+  width: 82px !important;
+  min-width: 82px !important;
+  max-width: 82px !important;
+}
+
+/* Aktif işlem orta genişlikte kalsın. */
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(4) {
+  width: 430px !important;
+  max-width: 430px !important;
+}
+
+/* Tutar kolonu Tümünü Temizle tarafına yaklaşsın ama aşırı uzamasın. */
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(5),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(5) {
+  width: 360px !important;
+  max-width: 360px !important;
+}
+
+/* Inputlar kendi kolonunu doldurur, sayfanın sonuna kadar büyümez. */
+.rolling-v47-card.crypto .v803-crypto-main-table input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Tümünü Temizle sağda kalır; Tutar kolonu onun alt hizasına yaklaşır. */
+.rolling-v47-card.crypto .rolling-v47-section-title {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+}
+
+.rolling-v47-card.crypto .rolling-v47-section-title > button[data-clear] {
+  margin-left: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+/* Dar ekranda taşmayı güvenli tut. */
+@media (max-width: 1100px) {
+  .rolling-v47-card.crypto .rolling-v47-table-wrap {
+    overflow-x: auto !important;
+  }
+  .rolling-v47-card.crypto .v803-crypto-main-table {
+    width: 940px !important;
+    min-width: 940px !important;
+    max-width: 940px !important;
+  }
+}
