@@ -2057,7 +2057,12 @@
     return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls"><span>${count}/20 ${label} Alanı</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-log-center="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button></div>`;
   }
 
-  function escapeHtml(str) {
+  
+  function v997BetMenuTypeLabel(slot) {
+    const g = betCouponGroup(slot);
+    return g ? `Kupon ${g}` : "Tekli Bahis";
+  }
+function escapeHtml(str) {
     return String(str || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
   }
   function renderTable(mode, slots, state) {
@@ -2138,7 +2143,7 @@
       <details class="v796-target-card v798-target-card v802-target-card v984-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
         <summary class="v802-target-summary v984-target-summary v985-target-summary">
           <div class="v984-target-head v985-target-head">
-            <button type="button" class="v758-row-tool history v984-target-history-btn" data-target-history-open="${m}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button>
+            <button type="button" class="v758-row-tool history v984-target-history-btn" data-target-history-open="${m}">Geçmiş</button>
             <span class="v985-target-detail-toggle" aria-hidden="true"></span>
           </div>
           <b class="v984-target-title v985-target-title">${modeLabel} Kasa Hedefi</b>

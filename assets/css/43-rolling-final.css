@@ -13307,3 +13307,119 @@ select:-webkit-autofill {
   width: 100% !important;
   text-align: center !important;
 }
+
+
+/* ===============================
+   V997
+   - Tek/Kupon açılır menü gömülme/kesilme düzeltmesi
+   - Tüm satırlarda menü üstte ve seçilebilir kalsın
+   - Kasa hedefi Geçmiş ikon kaldırıldıktan sonra tam sola hizalama
+   =============================== */
+
+/* Kasa hedefi: Geçmiş yazısı ikon olmadan sola tam otursun; Gizle aynı üst hatta kalsın. */
+.rolling-v48-rail .v985-target-head {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 0 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+.rolling-v48-rail .v984-target-history-btn,
+.rolling-v48-rail button.v984-target-history-btn {
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  color: #fbbf24 !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+.rolling-v48-rail .v984-target-history-btn i {
+  display: none !important;
+}
+.rolling-v48-rail .v985-target-detail-toggle {
+  margin-left: auto !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: #e5e7eb !important;
+  font-size: .72rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+/* Başlık mevcut ayardan sadece bir satır aşağıda kalsın. */
+.rolling-v48-rail .v985-target-title,
+.rolling-v48-rail .v984-target-title.v985-target-title {
+  margin-top: 17px !important;
+}
+
+/* Tek/Kupon menünün satır ve tablo tarafından kesilmesini engelle. */
+.rolling-v47-card.bet,
+.rolling-v47-card.bet .rolling-v47-table-wrap,
+.rolling-v47-card.bet .rolling-v47-table,
+.rolling-v47-card.bet .rolling-v47-table thead,
+.rolling-v47-card.bet .rolling-v47-table tbody,
+.rolling-v47-card.bet .rolling-v47-table tr,
+.rolling-v47-card.bet .rolling-v47-table th,
+.rolling-v47-card.bet .rolling-v47-table td {
+  overflow: visible !important;
+}
+
+/* Alt satırlardaki açık menü üstte kalsın. */
+.rolling-v47-card.bet .rolling-v47-table tr:has(.v995-bet-group-menu.is-open),
+.rolling-v47-card.bet .rolling-v47-table td:has(.v995-bet-group-menu.is-open) {
+  position: relative !important;
+  z-index: 200000 !important;
+}
+.v995-bet-group-menu {
+  z-index: 200001 !important;
+}
+.v995-bet-group-menu.is-open {
+  z-index: 300000 !important;
+}
+.v995-bet-group-menu.is-open .v995-bet-group-list {
+  display: grid !important;
+  z-index: 300001 !important;
+  pointer-events: auto !important;
+}
+
+/* Açılır menü: hayalet etkiyi kaldır, tek gerçek liste göster. */
+.v995-bet-group-list {
+  isolation: isolate !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  backdrop-filter: none !important;
+  background: #05070c !important;
+}
+
+/* Aynı renkleri koru, yazıları tam ortala. */
+.v995-bet-group-option,
+.v995-bet-group-toggle span {
+  text-align: center !important;
+}
+.v995-bet-group-option.single {
+  border: 1px solid rgba(34,197,94,.66) !important;
+  color: #34d399 !important;
+  background: rgba(16,185,129,.18) !important;
+}
+.v995-bet-group-option.combo {
+  border: 1px solid rgba(59,130,246,.70) !important;
+  color: #60a5fa !important;
+  background: rgba(37,99,235,.22) !important;
+}
