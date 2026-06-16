@@ -12582,3 +12582,163 @@ select:-webkit-autofill {
     max-width: 720px !important;
   }
 }
+
+/* ===============================
+   V990 son düzenlemeler
+   - Tümünü Temizle butonunu Geçmiş yanına al
+   - Rolling kutularında üst/alt boşluğu eşitle, kutu/yazıyı tam sığdır
+   - Kripto tablo boşluğunu ve #/Tür arası gereksiz alanı kırp
+   - Kasa hedefi Geçmiş/Gizle hizasını başlığa göre ortala
+   - Tek / Kupon seçimini ortala ve koyu renk arka plan kullan
+   =============================== */
+
+/* Kasa hedefi üst satırı başlık genişliğine göre ortalanmış dursun. */
+.rolling-v48-rail .v985-target-head {
+  width: 100% !important;
+  max-width: 210px !important;
+  margin: 0 auto 2px !important;
+  display: grid !important;
+  grid-template-columns: 72px 1fr 72px !important;
+  align-items: center !important;
+  column-gap: 6px !important;
+}
+.rolling-v48-rail .v984-target-history-btn,
+.rolling-v48-rail button.v984-target-history-btn {
+  grid-column: 1 !important;
+  justify-self: start !important;
+  min-width: 72px !important;
+  width: 72px !important;
+}
+.rolling-v48-rail .v985-target-detail-toggle {
+  grid-column: 3 !important;
+  justify-self: end !important;
+  min-width: 72px !important;
+  width: 72px !important;
+}
+.rolling-v48-rail .v985-target-title,
+.rolling-v48-rail .v984-target-title.v985-target-title {
+  margin: 8px auto 12px !important;
+  padding-top: 0 !important;
+  max-width: 210px !important;
+}
+
+/* Tümünü Temizle artık Geçmiş yanında dursun, sağdaki gereksiz boşluğu büyütmesin. */
+.rolling-v47-card .rolling-v47-section-title {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+}
+.rolling-v47-card .rolling-v47-section-title > div:first-child {
+  flex: 0 1 auto !important;
+}
+.rolling-v47-card .rolling-v47-section-title > button[data-clear] {
+  margin-left: 0 !important;
+  align-self: center !important;
+}
+
+/* 7/15/... rolling kutuları: panel içine tam ortalı ve eşit boşluklarla yerleşsin. */
+.rolling-v47-roll-panel {
+  padding: 10px 14px !important;
+}
+.rolling-v47-roll-panel .rolling-v47-roll-buttons {
+  align-items: center !important;
+}
+.rolling-v47-roll-panel .rolling-v47-roll-buttons button {
+  min-height: 62px !important;
+  border-radius: 15px !important;
+}
+.rolling-v47-roll-panel .rolling-v47-roll-buttons button span {
+  font-size: .84rem !important;
+}
+
+/* Kripto tablo: # ile Tür arasını sıkıştır, input genişliklerini dengele. */
+.rolling-v47-card.crypto .v803-crypto-main-table {
+  width: 690px !important;
+  max-width: 690px !important;
+  min-width: 690px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(1),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(1) {
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(2),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(2) {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  padding-right: 2px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(3),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(3) {
+  width: 74px !important;
+  min-width: 74px !important;
+  max-width: 74px !important;
+  padding-left: 2px !important;
+  padding-right: 4px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(4) {
+  width: 330px !important;
+  max-width: 330px !important;
+  padding-left: 2px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(5),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(5) {
+  width: 210px !important;
+  max-width: 210px !important;
+}
+.rolling-v47-card.crypto .v986-crypto-type-cell {
+  width: 62px !important;
+  min-width: 62px !important;
+  max-width: 62px !important;
+}
+.rolling-v47-card.crypto .rolling-v47-table tbody td:nth-child(2),
+.rolling-v47-card.crypto .rolling-v47-table thead th:nth-child(2) {
+  text-align: center !important;
+}
+
+/* Tek / Kupon seçimleri ortalı, koyu yeşil / koyu mavi görünsün. */
+.v988-bet-group-select {
+  min-width: 86px !important;
+  max-width: 102px !important;
+  padding: 5px 24px 5px 12px !important;
+  text-align: center !important;
+  text-align-last: center !important;
+  background-position: calc(100% - 12px) 50%, calc(100% - 8px) 50% !important;
+}
+.v988-bet-group-select.single {
+  border: 1px solid #10b981 !important;
+  color: #d1fae5 !important;
+  background-color: #065f46 !important;
+}
+.v988-bet-group-select.combo {
+  border: 1px solid #60a5fa !important;
+  color: #dbeafe !important;
+  background-color: #1d4ed8 !important;
+}
+.v988-bet-group-select option {
+  background: #08111d !important;
+  color: #e5e7eb !important;
+}
+
+@media (max-width: 980px) {
+  .rolling-v47-card.crypto .v803-crypto-main-table {
+    width: 650px !important;
+    max-width: 650px !important;
+    min-width: 650px !important;
+  }
+  .rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(4),
+  .rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(4) {
+    width: 300px !important;
+    max-width: 300px !important;
+  }
+  .rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(5),
+  .rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(5) {
+    width: 190px !important;
+    max-width: 190px !important;
+  }
+}
