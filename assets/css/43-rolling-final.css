@@ -12998,3 +12998,54 @@ select:-webkit-autofill {
   overflow: visible !important;
   text-overflow: clip !important;
 }
+
+
+/* ===============================
+   V994 acil iki düzeltme
+   1) Kasa Hedefi başlığını 1 sıra aşağı al
+   2) Tek / Kupon select yazılarını ortala ve açılır listede mevcut yeşil/mavi temayı koru
+   Başka alanlara dokunmaz.
+   =============================== */
+
+/* Bahis/Kripto Kasa Hedefi başlığı 1 sıra aşağı. */
+.rolling-v48-rail .v985-target-title,
+.rolling-v48-rail .v984-target-title.v985-target-title {
+  margin-top: 17px !important;
+  margin-bottom: 12px !important;
+}
+
+/* Tek / Kupon kapalı görünüm: yazılar tam ortalı kalsın, mevcut pill renkleri korunsun. */
+.v988-bet-group-select {
+  text-align: center !important;
+  text-align-last: center !important;
+  -moz-text-align-last: center !important;
+  padding-left: 12px !important;
+  padding-right: 24px !important;
+  background-position: calc(100% - 12px) 50%, calc(100% - 8px) 50% !important;
+}
+
+/* Native açılır listede de seçenek yazıları ortalı ve aynı tema ailesinde kalsın. */
+.v988-bet-group-select option {
+  text-align: center !important;
+  font-weight: 950 !important;
+}
+
+.v988-bet-group-select option[value=""] {
+  background-color: rgba(16,185,129,.18) !important;
+  color: #34d399 !important;
+}
+
+.v988-bet-group-select option[value="1"],
+.v988-bet-group-select option[value="2"],
+.v988-bet-group-select option[value="3"],
+.v988-bet-group-select option[value="4"],
+.v988-bet-group-select option[value="5"],
+.v988-bet-group-select option[value="6"] {
+  background-color: rgba(37,99,235,.22) !important;
+  color: #60a5fa !important;
+}
+
+/* Seçili option tarayıcı destekliyorsa aynı temada kalsın. */
+.v988-bet-group-select option:checked {
+  font-weight: 950 !important;
+}
