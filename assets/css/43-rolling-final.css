@@ -14738,3 +14738,101 @@ tr:nth-last-child(-n+3) .v995-bet-group-list {
     overflow: visible !important;
   }
 }
+
+/* ===============================
+   V1017 — Tek/Kupon fixed layer + kupon tutarı ilk satıra yönlendirme
+   - Dropdown artık body üzerinde bağımsız fixed layer içinde açılır.
+   - İç scroll container kayınca menü satırla beraber hareket etmez.
+   - Aynı kupondaki 2./3./4. tutar kutusu ilk kupon tutarına odaklar.
+   =============================== */
+#v1017-bet-group-layer,
+.v1017-bet-group-layer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+  overflow: visible !important;
+  transform: none !important;
+  contain: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+html.rolling-hash-boot body > #v1017-bet-group-layer,
+body.rolling-active > #v1017-bet-group-layer {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+}
+
+#v1017-bet-group-portal,
+.v1017-bet-group-portal {
+  position: absolute !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 2147483647 !important;
+  display: grid !important;
+  gap: 5px !important;
+  padding: 6px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(148,163,184,.25) !important;
+  background: #05070c !important;
+  box-shadow: 0 18px 42px rgba(0,0,0,.60) !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  contain: layout paint style !important;
+}
+
+.v1017-bet-group-option {
+  min-height: 26px !important;
+  border-radius: 999px !important;
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  font-size: .68rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease, background .15s ease, color .15s ease !important;
+}
+
+.v1017-bet-group-option.single {
+  border: 1px solid rgba(34,197,94,.66) !important;
+  color: #34d399 !important;
+  background: rgba(16,185,129,.18) !important;
+}
+
+.v1017-bet-group-option.combo {
+  border: 1px solid rgba(59,130,246,.70) !important;
+  color: #60a5fa !important;
+  background: rgba(37,99,235,.22) !important;
+}
+
+.v1017-bet-group-option.single:hover,
+.v1017-bet-group-option.single:focus-visible {
+  background: rgba(16,185,129,.30) !important;
+  border-color: rgba(52,211,153,.95) !important;
+  color: #d1fae5 !important;
+  box-shadow: 0 0 0 1px rgba(52,211,153,.38) inset, 0 0 14px rgba(16,185,129,.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+.v1017-bet-group-option.combo:hover,
+.v1017-bet-group-option.combo:focus-visible {
+  background: rgba(37,99,235,.36) !important;
+  border-color: rgba(96,165,250,.95) !important;
+  color: #dbeafe !important;
+  box-shadow: 0 0 0 1px rgba(96,165,250,.40) inset, 0 0 14px rgba(37,99,235,.48) !important;
+  transform: translateY(-1px) !important;
+}
+
+input.v1017-combo-stake-target {
+  border-color: rgba(251,191,36,.98) !important;
+  box-shadow: 0 0 0 2px rgba(251,191,36,.46), 0 0 18px rgba(251,191,36,.42) !important;
+  background: rgba(251,191,36,.10) !important;
+}

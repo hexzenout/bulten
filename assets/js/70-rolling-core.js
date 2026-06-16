@@ -640,7 +640,7 @@
   function betCouponGroup(slot) {
     const raw = cleanText(slot?.couponGroup || slot?.couponNo || "");
     const n = Number(raw || 0);
-    return Number.isFinite(n) && n >= 1 && n <= 6 ? String(n) : "";
+    return Number.isFinite(n) && n >= 1 && n <= 4 ? String(n) : "";
   }
   function betKind(slot) {
     return betCouponGroup(slot) ? "combo" : "single";
@@ -2436,6 +2436,40 @@ function escapeHtml(str) {
       saveState(state);
       refresh();
     }));
+    const flashComboStakeTarget = (target) => {
+      if (!target) return;
+      target.classList.remove("v1017-combo-stake-target");
+      void target.offsetWidth;
+      target.classList.add("v1017-combo-stake-target");
+      window.clearTimeout(target.__bultenV1017StakeFlashTimer);
+      target.__bultenV1017StakeFlashTimer = window.setTimeout(() => {
+        target.classList.remove("v1017-combo-stake-target");
+      }, 1150);
+    };
+    const redirectComboStakeInput = (input, event) => {
+      if (!input || input.dataset.mode !== "bet" || input.dataset.key !== "stake") return false;
+      const slotIndex = Number(input.dataset.slot || 0);
+      const list = state.modeSlots.bet || [];
+      const group = betCouponGroup(list[slotIndex]);
+      if (!group) return false;
+      const firstIndex = list.findIndex(row => betCouponGroup(row) === group);
+      if (!Number.isFinite(firstIndex) || firstIndex < 0 || firstIndex === slotIndex) return false;
+      const target = mount.querySelector(`input[data-mode="bet"][data-slot="${firstIndex}"][data-key="stake"]`);
+      if (!target) return false;
+      if (event) {
+        event.preventDefault?.();
+        event.stopPropagation?.();
+      }
+      window.requestAnimationFrame(() => {
+        target.scrollIntoView?.({ block: "center", inline: "nearest", behavior: "smooth" });
+        window.setTimeout(() => {
+          try { target.focus({ preventScroll: true }); } catch { target.focus(); }
+          try { target.select(); } catch {}
+          flashComboStakeTarget(target);
+        }, 120);
+      });
+      return true;
+    };
     mount.querySelectorAll("input[data-mode]").forEach(input => {
       const saveInput = () => {
         const mode = input.dataset.mode, i = Number(input.dataset.slot), key = input.dataset.key;
@@ -2454,35 +2488,36 @@ function escapeHtml(str) {
         recalcSlot(list[i]);
         saveState(state);
       };
+      if (input.dataset.mode === "bet" && input.dataset.key === "stake") {
+        input.addEventListener("pointerdown", event => redirectComboStakeInput(input, event), true);
+        input.addEventListener("focus", event => redirectComboStakeInput(input, event), true);
+      }
       input.addEventListener("input", saveInput);
       input.addEventListener("change", saveInput);
     });
-    const pinBetGroupPortal = () => {
-      const portal = document.getElementById("v1016-bet-group-portal");
-      if (!portal) return;
-      const left = Number(portal.dataset.fixedLeft || "");
-      const top = Number(portal.dataset.fixedTop || "");
-      if (!Number.isFinite(left) || !Number.isFinite(top)) return;
-      portal.style.setProperty("position", "fixed", "important");
-      portal.style.setProperty("left", `${left}px`, "important");
-      portal.style.setProperty("top", `${top}px`, "important");
-      portal.style.setProperty("right", "auto", "important");
-      portal.style.setProperty("bottom", "auto", "important");
-      portal.style.setProperty("transform", "translate3d(0,0,0)", "important");
+    const getBetGroupFixedLayer = () => {
+      let layer = document.getElementById("v1017-bet-group-layer");
+      if (layer) return layer;
+      layer = document.createElement("div");
+      layer.id = "v1017-bet-group-layer";
+      layer.className = "v1017-bet-group-layer";
+      document.body.appendChild(layer);
+      return layer;
     };
     const closeBetGroupPortal = () => {
-      ["v1016-bet-group-portal","v1015-bet-group-portal","v1014-bet-group-portal","v1013-bet-group-portal","v1012-bet-group-portal","v1011-bet-group-portal","v1010-bet-group-portal","v1009-bet-group-portal","v1008-bet-group-portal","v1007-bet-group-portal"].forEach(id => {
+      ["v1017-bet-group-portal","v1016-bet-group-portal","v1015-bet-group-portal","v1014-bet-group-portal","v1013-bet-group-portal","v1012-bet-group-portal","v1011-bet-group-portal","v1010-bet-group-portal","v1009-bet-group-portal","v1008-bet-group-portal","v1007-bet-group-portal"].forEach(id => {
         document.getElementById(id)?.remove();
       });
-      window.__bultenV1016BetGroupActiveSlot = null;
+      const layer = document.getElementById("v1017-bet-group-layer");
+      if (layer && !layer.children.length) layer.remove();
+      window.__bultenV1017BetGroupActiveSlot = null;
       document.querySelectorAll("[data-bet-group-menu].is-open").forEach(menu => {
         menu.classList.remove("is-open");
         menu.closest("tr")?.classList.remove("v995-group-row-open");
       });
     };
-    window.__bultenV1016PinBetGroupPortal = pinBetGroupPortal;
-    window.__bultenV1016CloseBetGroupPortal = closeBetGroupPortal;
-    window.__bultenV1016BetGroupApply = (slotRaw, groupRaw) => {
+    window.__bultenV1017CloseBetGroupPortal = closeBetGroupPortal;
+    window.__bultenV1017BetGroupApply = (slotRaw, groupRaw) => {
       const slotIndex = Number(slotRaw || 0);
       if (!Number.isFinite(slotIndex) || slotIndex < 0) return;
       const group = betCouponGroup({ couponGroup: groupRaw || "" });
@@ -2498,63 +2533,57 @@ function escapeHtml(str) {
       closeBetGroupPortal();
       refresh();
     };
-    window.__bultenV1016OpenBetGroupPortal = (btn) => {
+    window.__bultenV1017OpenBetGroupPortal = (btn) => {
       if (!btn) return;
       const slotIndex = Number(btn.dataset.betGroupToggle || btn.closest("[data-bet-group-menu]")?.dataset.betGroupMenu || 0);
-      const current = document.getElementById("v1016-bet-group-portal");
-      if (current && Number(window.__bultenV1016BetGroupActiveSlot) === slotIndex) {
+      const current = document.getElementById("v1017-bet-group-portal");
+      if (current && Number(window.__bultenV1017BetGroupActiveSlot) === slotIndex) {
         closeBetGroupPortal();
         return;
       }
       closeBetGroupPortal();
       const rect = btn.getBoundingClientRect();
+      const layer = getBetGroupFixedLayer();
       const portal = document.createElement("div");
-      portal.id = "v1016-bet-group-portal";
-      portal.className = "v1016-bet-group-portal";
+      portal.id = "v1017-bet-group-portal";
+      portal.className = "v1017-bet-group-portal";
       portal.dataset.slot = String(slotIndex);
       const width = Math.max(112, Math.round(rect.width + 28));
       const estimatedHeight = 170;
       const left = Math.max(6, Math.min(Math.round(rect.left), window.innerWidth - width - 8));
       let top = Math.round(rect.bottom + 6);
       if (top + estimatedHeight > window.innerHeight - 6) top = Math.max(6, window.innerHeight - estimatedHeight - 6);
-      portal.dataset.fixedLeft = String(left);
-      portal.dataset.fixedTop = String(top);
       portal.style.setProperty("left", `${left}px`, "important");
       portal.style.setProperty("top", `${top}px`, "important");
       portal.style.setProperty("width", `${width}px`, "important");
-      portal.innerHTML = [`<button type="button" class="v1016-bet-group-option single" data-v1016-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4].map(n => `<button type="button" class="v1016-bet-group-option combo" data-v1016-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
-      document.body.appendChild(portal);
-      window.__bultenV1016BetGroupActiveSlot = slotIndex;
+      portal.innerHTML = [`<button type="button" class="v1017-bet-group-option single" data-v1017-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4].map(n => `<button type="button" class="v1017-bet-group-option combo" data-v1017-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
+      layer.appendChild(portal);
+      window.__bultenV1017BetGroupActiveSlot = slotIndex;
       btn.closest("[data-bet-group-menu]")?.classList.add("is-open");
       btn.closest("tr")?.classList.add("v995-group-row-open");
-      pinBetGroupPortal();
     };
-    if (!window.__bultenV1016BetGroupPointerHandler) {
-      window.__bultenV1016BetGroupPointerHandler = true;
+    if (!window.__bultenV1017BetGroupPointerHandler) {
+      window.__bultenV1017BetGroupPointerHandler = true;
       document.addEventListener("pointerdown", event => {
-        const choice = event.target?.closest?.("[data-v1016-bet-group-choice]");
+        const choice = event.target?.closest?.("[data-v1017-bet-group-choice]");
         if (choice) {
           event.preventDefault();
           event.stopPropagation();
-          const [slotRaw, groupRaw] = String(choice.dataset.v1016BetGroupChoice || "0:").split(":");
-          window.__bultenV1016BetGroupApply?.(slotRaw, groupRaw || "");
+          const [slotRaw, groupRaw] = String(choice.dataset.v1017BetGroupChoice || "0:").split(":");
+          window.__bultenV1017BetGroupApply?.(slotRaw, groupRaw || "");
           return;
         }
         const toggle = event.target?.closest?.("[data-bet-group-toggle]");
         if (toggle) {
           event.preventDefault();
           event.stopPropagation();
-          window.__bultenV1016OpenBetGroupPortal?.(toggle);
+          window.__bultenV1017OpenBetGroupPortal?.(toggle);
           return;
         }
-        if (event.target?.closest?.("#v1016-bet-group-portal")) return;
-        window.__bultenV1016CloseBetGroupPortal?.();
+        if (event.target?.closest?.("#v1017-bet-group-portal")) return;
+        window.__bultenV1017CloseBetGroupPortal?.();
       }, true);
-      const keepPortalPinned = () => window.__bultenV1016PinBetGroupPortal?.();
-      window.addEventListener("scroll", keepPortalPinned, true);
-      window.addEventListener("wheel", keepPortalPinned, true);
-      window.addEventListener("touchmove", keepPortalPinned, true);
-      window.addEventListener("resize", () => window.__bultenV1016CloseBetGroupPortal?.(), true);
+      window.addEventListener("resize", () => window.__bultenV1017CloseBetGroupPortal?.(), true);
     }
     const syncV1016TargetRail = () => {
       const top = 64;
