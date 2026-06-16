@@ -13423,3 +13423,103 @@ select:-webkit-autofill {
   color: #60a5fa !important;
   background: rgba(37,99,235,.22) !important;
 }
+
+/* ===============================
+   V998 net düzeltmeler
+   - Kasa hedefi Geçmiş eski buton görünümüne döndü, sadece ikon yok
+   - Tek/Kupon alt satırlarda yukarı açılır; gömülme/kesilme olmasın
+   - Kripto tablosu sağdaki boşluğu doldurur; Tutar kutusu sağa uzar
+   =============================== */
+
+/* Kasa Hedefi: Geçmiş kutu tasarımı eski görünüme yakın; ikon gizli. */
+.rolling-v48-rail .v984-target-history-btn,
+.rolling-v48-rail button.v984-target-history-btn {
+  min-width: 68px !important;
+  width: auto !important;
+  height: 24px !important;
+  padding: 0 9px !important;
+  margin: 0 !important;
+  border-radius: 9px !important;
+  border: 1px solid rgba(251,191,36,.28) !important;
+  background: linear-gradient(135deg, rgba(251,191,36,.18), rgba(15,23,42,.86)) !important;
+  color: #fde68a !important;
+  box-shadow: none !important;
+  font-size: .66rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.rolling-v48-rail .v984-target-history-btn i,
+.rolling-v48-rail button.v984-target-history-btn i {
+  display: none !important;
+}
+.rolling-v48-rail .v985-target-head {
+  align-items: center !important;
+}
+
+/* Tek/Kupon: açık menü alttaki satırların içine gömülmesin. */
+.rolling-v47-card.bet .v995-bet-group-menu.is-open.drop-up .v995-bet-group-list {
+  top: auto !important;
+  bottom: calc(100% + 6px) !important;
+}
+.rolling-v47-card.bet .v995-bet-group-menu.is-open .v995-bet-group-list {
+  display: grid !important;
+  gap: 5px !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+.rolling-v47-card.bet .rolling-v47-table-wrap {
+  padding-bottom: 46px !important;
+}
+.rolling-v47-card.bet .rolling-v47-table tr:has(.v995-bet-group-menu.is-open) {
+  z-index: 400000 !important;
+}
+
+/* Kripto işlem menüsü: sağdaki boş alanı kaldır, Tutar alanını Tümünü Temizle altına doğru uzat. */
+.rolling-v47-card.crypto .rolling-v47-table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(1),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(1) {
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(2),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(2) {
+  width: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(3),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(3) {
+  width: 78px !important;
+  min-width: 78px !important;
+  max-width: 78px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(4) {
+  width: 320px !important;
+  max-width: 320px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(5),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(5) {
+  width: auto !important;
+  max-width: none !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
