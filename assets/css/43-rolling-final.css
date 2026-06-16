@@ -13831,3 +13831,88 @@ select:-webkit-autofill {
     overflow-x: auto !important;
   }
 }
+
+
+/* ===============================
+   V1004 son düzeltme
+   - Bahis/Kripto menü alt boşluğu kaldırılır
+   - Kripto etiketi ile işlem kutusu Bahis gibi ayrılır
+   - Tek/Kupon menüsü her satırda aşağı açılır
+   - Tek/Kupon hover/parlama eklenir
+   =============================== */
+
+/* Alt boşluk: tabloyu uzatan eski padding/marginleri kapat. */
+.rolling-v47-card.bet .rolling-v47-table-wrap,
+.rolling-v47-card.crypto .rolling-v47-table-wrap {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title),
+.rolling-v47-card.crypto .rolling-v49-fold:has(> summary.rolling-v494-active-title) {
+  padding-bottom: 8px !important;
+}
+.rolling-v47-card.bet .rolling-v47-table,
+.rolling-v47-card.crypto .rolling-v47-table {
+  margin-bottom: 0 !important;
+}
+.rolling-v47-card.bet .rolling-v47-table tbody tr:last-child td,
+.rolling-v47-card.crypto .rolling-v47-table tbody tr:last-child td {
+  padding-bottom: 4px !important;
+}
+
+/* Kripto: Kripto etiketi ile Aktif İşlem kutusu bitişik olmasın, ama eski büyük boşluk dönmesin. */
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(3),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(3) {
+  padding-right: 10px !important;
+}
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(4) {
+  padding-left: 8px !important;
+}
+.rolling-v47-card.crypto .v986-crypto-type-cell {
+  width: 62px !important;
+  min-width: 62px !important;
+  max-width: 62px !important;
+}
+
+/* Tek/Kupon: tüm satırlarda aşağı aç. */
+.v995-bet-group-list,
+.rolling-v47-card.bet .v995-bet-group-menu.is-open.drop-up .v995-bet-group-list,
+.rolling-v47-card.bet .v995-bet-group-menu.drop-up .v995-bet-group-list,
+.rolling-v47-card.bet .v995-bet-group-menu.is-up .v995-bet-group-list,
+.rolling-v47-card.bet tr:nth-last-child(-n+3) .v995-bet-group-list {
+  top: calc(100% + 6px) !important;
+  bottom: auto !important;
+}
+.rolling-v47-card.bet .v995-bet-group-menu.is-open .v995-bet-group-list {
+  display: grid !important;
+  gap: 5px !important;
+  max-height: none !important;
+  overflow: visible !important;
+  z-index: 500000 !important;
+}
+.rolling-v47-card.bet .rolling-v47-table tr:has(.v995-bet-group-menu.is-open),
+.rolling-v47-card.bet .rolling-v47-table td:has(.v995-bet-group-menu.is-open) {
+  z-index: 499999 !important;
+}
+
+/* Tek/Kupon seçenek hover/parlama. */
+.v995-bet-group-option {
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease, background .15s ease, color .15s ease !important;
+}
+.v995-bet-group-option.single:hover,
+.v995-bet-group-option.single:focus-visible {
+  background: rgba(16,185,129,.30) !important;
+  border-color: rgba(52,211,153,.95) !important;
+  color: #d1fae5 !important;
+  box-shadow: 0 0 0 1px rgba(52,211,153,.38) inset, 0 0 14px rgba(16,185,129,.45) !important;
+  transform: translateY(-1px) !important;
+}
+.v995-bet-group-option.combo:hover,
+.v995-bet-group-option.combo:focus-visible {
+  background: rgba(37,99,235,.36) !important;
+  border-color: rgba(96,165,250,.95) !important;
+  color: #dbeafe !important;
+  box-shadow: 0 0 0 1px rgba(96,165,250,.40) inset, 0 0 14px rgba(37,99,235,.48) !important;
+  transform: translateY(-1px) !important;
+}
