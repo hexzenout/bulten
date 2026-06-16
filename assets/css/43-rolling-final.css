@@ -14836,3 +14836,94 @@ input.v1017-combo-stake-target {
   box-shadow: 0 0 0 2px rgba(251,191,36,.46), 0 0 18px rgba(251,191,36,.42) !important;
   background: rgba(251,191,36,.10) !important;
 }
+
+
+/* ===============================
+   V1018 — Tek/Kupon menüsü buton ankraj takibi + daha hafif tutar ışığı
+   - Menü artık viewport'a sabit bırakılmaz; açık olduğu ok butonunu takip eder.
+   - Sayfa kayınca menü başka satırın üstüne düşmez.
+   - Kupon tutar yönlendirme ışığı 0.75 sn ve daha hafiftir.
+   =============================== */
+#v1018-bet-group-layer,
+.v1018-bet-group-layer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+  overflow: visible !important;
+  transform: none !important;
+  contain: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#v1018-bet-group-portal,
+.v1018-bet-group-portal {
+  position: absolute !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 2147483647 !important;
+  display: grid !important;
+  gap: 5px !important;
+  padding: 6px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(148,163,184,.25) !important;
+  background: #05070c !important;
+  box-shadow: 0 12px 26px rgba(0,0,0,.48) !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  contain: layout paint style !important;
+}
+
+.v1018-bet-group-option {
+  min-height: 26px !important;
+  border-radius: 999px !important;
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  font-size: .68rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: border-color .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease !important;
+}
+
+.v1018-bet-group-option.single {
+  border: 1px solid rgba(34,197,94,.66) !important;
+  color: #34d399 !important;
+  background: rgba(16,185,129,.18) !important;
+}
+
+.v1018-bet-group-option.combo {
+  border: 1px solid rgba(59,130,246,.70) !important;
+  color: #60a5fa !important;
+  background: rgba(37,99,235,.22) !important;
+}
+
+.v1018-bet-group-option.single:hover,
+.v1018-bet-group-option.single:focus-visible {
+  background: rgba(16,185,129,.30) !important;
+  border-color: rgba(52,211,153,.95) !important;
+  color: #d1fae5 !important;
+  box-shadow: 0 0 0 1px rgba(52,211,153,.35) inset, 0 0 10px rgba(16,185,129,.35) !important;
+}
+
+.v1018-bet-group-option.combo:hover,
+.v1018-bet-group-option.combo:focus-visible {
+  background: rgba(37,99,235,.36) !important;
+  border-color: rgba(96,165,250,.95) !important;
+  color: #dbeafe !important;
+  box-shadow: 0 0 0 1px rgba(96,165,250,.35) inset, 0 0 10px rgba(37,99,235,.35) !important;
+}
+
+input.v1018-combo-stake-target {
+  border-color: rgba(251,191,36,.95) !important;
+  box-shadow: 0 0 0 1px rgba(251,191,36,.52), 0 0 8px rgba(251,191,36,.38) !important;
+  background: inherit !important;
+  transition: border-color .15s ease, box-shadow .15s ease !important;
+}
