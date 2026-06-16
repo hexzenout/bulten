@@ -1901,13 +1901,11 @@
       return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell"><span class="rolling-v47-type ${mode}">Bahis</span></div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${s.status === "win" || s.status === "loss" ? s.status : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
-  function renderModeSplitNotice(mode, state, total) {
+  function renderModeSplitNotice(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const c = modeUiCounts(m, state);
     const isCrypto = m === "crypto";
     return `<div class="v973-mode-split-notice ${m}" data-v973-rolling-split="${m}">
       <div><b>${isCrypto ? "KRİPTO ALANI" : "BAHİS ALANI"}</b><span>${modeSeparationText(m)}</span></div>
-      <div><span>Aktif ${c.active}</span><span>Girilmiş ${c.entered}</span><span>Bugün ${c.today}</span><b class="${Number(total || 0) >= 0 ? "pos" : "neg"}">${signedMoney(total)}</b></div>
     </div>`;
   }
 
@@ -1929,7 +1927,7 @@
           </div>
         </div>
 
-        ${renderModeSplitNotice(mode, state, total)}
+        ${renderModeSplitNotice(mode)}
 
         <details class="rolling-v49-fold ${mode}" open>
           <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
@@ -2007,15 +2005,14 @@
       </details>`;
   }
 
-  function renderRailTab(mode, activeModeName, state) {
+  function renderRailTab(mode, activeModeName) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const isCrypto = m === "crypto";
-    const c = modeUiCounts(m, state);
     const label = isCrypto ? "KRİPTO" : "BAHİS";
     const icon = isCrypto
       ? '<span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span>'
       : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>';
-    return `<button type="button" class="rolling-v48-rail-tab ${m} ${activeModeName === m ? "active" : ""}" data-roll-tab="${m}" data-v973-rail-mode="${m}">${icon}<span class="rolling-v493-rail-label">${label}</span><small>${c.active} aktif · ${c.today} bugün</small></button>`;
+    return `<button type="button" class="rolling-v48-rail-tab ${m} ${activeModeName === m ? "active" : ""}" data-roll-tab="${m}" data-v973-rail-mode="${m}">${icon}<span class="rolling-v493-rail-label">${label}</span></button>`;
   }
 
   function renderModule() {
@@ -2050,8 +2047,8 @@
         <div class="rolling-v48-layout v49-rolling-layout">
           <aside class="rolling-v48-rail v49-rolling-rail">
             <div class="rolling-v48-rail-toggle v49-rolling-rail-title v808-rail-title"><span>ROLLING MENÜSÜ</span></div>
-            ${renderRailTab("bet", mode, state)}
-            ${renderRailTab("crypto", mode, state)}
+            ${renderRailTab("bet", mode)}
+            ${renderRailTab("crypto", mode)}
             ${renderPlanControl(state, mode, modeTotalPnl)}
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
