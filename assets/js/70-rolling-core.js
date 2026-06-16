@@ -375,11 +375,10 @@
     const target = plan.target === "" || plan.target === null || plan.target === undefined ? 0 : Number(plan.target || 0);
     const targetSelfPnl = typeof v812TargetRealizedPnl === "function" ? v812TargetRealizedPnl(mode) : 0;
     const targetOwnPnl = Number(targetSelfPnl || 0);
-    const autoCurrent = start + Number(totalPnl || 0) + targetOwnPnl;
+    const autoCurrent = start + targetOwnPnl;
     const hasOverrideValue = plan.currentOverride !== "" && plan.currentOverride !== null && plan.currentOverride !== undefined && Number.isFinite(Number(plan.currentOverride));
-    const manualBaseCurrent = hasOverrideValue ? Number(plan.currentOverride) : autoCurrent;
-    const manualCurrent = hasOverrideValue ? manualBaseCurrent + targetOwnPnl : autoCurrent;
-    const hasManualCurrent = hasOverrideValue && Math.abs(manualBaseCurrent - (start + Number(totalPnl || 0))) > 0.0001;
+    const manualCurrent = hasOverrideValue ? Number(plan.currentOverride) : autoCurrent;
+    const hasManualCurrent = hasOverrideValue;
     const current = hasManualCurrent ? manualCurrent : autoCurrent;
     const pnl = current - start;
     const growth = growthPct(pnl, start);
@@ -1873,8 +1872,7 @@
   }
   function renderRollingButtons(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const label = m === "crypto" ? "KRİPTO" : "BAHİS";
-    return [7, 15, 30, 60, 90].map(d => `<button type="button" data-roll="${m}:${d}"><span>${label} ${d} GÜNLÜK ROLLING</span></button>`).join("");
+    return [7, 15, 30, 60, 90].map(d => `<button type="button" data-roll="${m}:${d}"><span>${d} GÜNLÜK ROLLING</span></button>`).join("");
   }
   function renderRowControls(mode, state) {
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
@@ -1916,7 +1914,7 @@
     const slots = isCrypto ? state.modeSlots.crypto : state.modeSlots.bet;
     const sum = slotSummary(slots);
     const rollSum = rollingSummary(mode);
-    const total = sum.pnl + rollSum.pnlTotal;
+    const menuTitle = isCrypto ? "KRİPTO İŞLEM MENÜSÜ" : "TEKLİ MAÇ / KOMBİNE KUPONLAR MENÜSÜ";
     return `
       <section class="rolling-v47-card ${mode} v49-mode-card">
         <div class="rolling-v47-head">
@@ -1924,22 +1922,22 @@
             <h3 class="${isCrypto ? "rolling-v493-title crypto" : "rolling-v493-title bet"}">${isCrypto ? '<span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span>' : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>'} <span>${isCrypto ? "KRİPTO" : "BAHİS"}</span></h3>
           </div>
           <div class="rolling-v47-mini">
-            <span>${sum.settled} kapalı · Rolling ${money(rollSum.pnlTotal)}</span>
-            <b class="${total >= 0 ? "pos" : "neg"}">${money(total)}</b>
+            <span>Rolling ${money(rollSum.pnlTotal)} · Menü ${money(sum.pnl)}</span>
+            <b class="${sum.pnl >= 0 ? "pos" : "neg"}">${money(sum.pnl)}</b>
           </div>
         </div>
 
         ${renderModeSplitNotice(mode)}
 
         <details class="rolling-v49-fold ${mode}" open>
-          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
+          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span ${isCrypto ? 'style="color:#fbbf24"' : ""}>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
           <div class="rolling-v47-roll-panel ${mode}">
             <div class="rolling-v47-roll-buttons">${renderRollingButtons(mode)}</div>
           </div>
         </details>
 
         <details class="rolling-v49-fold ${mode}" open>
-          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}"></i> <span>${isCrypto ? "KRİPTO İŞLEM MENÜSÜ" : "TEKLİ MAÇ / KOMBİNE KUPONLAR MENÜSÜ"}</span></summary>
+          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}" ${isCrypto ? "" : 'style="color:#22c55e"'}></i> <span>${menuTitle}</span></summary>
           <div class="rolling-v47-section-title">
             <div>${renderRowControls(mode, state)}</div>
             <button type="button" data-clear="${mode}">TÜMÜNÜ TEMİZLE</button>
@@ -1964,9 +1962,16 @@
     return `
       <details class="v796-target-card v798-target-card v802-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
         <summary class="v798-target-summary v802-target-summary">
-          <div class="v798-target-summary-main">
-            <b>${modeLabel} Kasa Hedefi</b>
-            <span>${modeLabel} · ${plan.stateLabel}</span>
+          <div class="v978-target-summary-head" style="display:grid;grid-template-columns:minmax(88px,auto) 1fr minmax(88px,auto);align-items:center;gap:10px;width:100%;">
+            <div class="v802-target-log-wrap ${logOpen ? "open" : ""}" onclick="event.stopPropagation()">
+              <button type="button" class="v802-target-log-btn v978-target-history-btn" data-target-log-toggle="${m}">Geçmiş <span>${rows.length}</span></button>
+              <div class="v802-target-log-panel"><ul>${latest}</ul></div>
+            </div>
+            <div class="v798-target-summary-main" style="text-align:center;justify-self:center;">
+              <b>${modeLabel} Kasa Hedefi</b>
+              <span>${modeLabel} · ${plan.stateLabel}</span>
+            </div>
+            <small class="${plan.hasManualCurrent ? "manual" : "auto"}" style="justify-self:end;">${currentTag}</small>
           </div>
           <div class="v802-target-mini-grid">
             <span>Başlangıç <b>${money(plan.start)}</b></span>
@@ -1974,13 +1979,12 @@
             <span>Güncel <b>${money(plan.current)}</b></span>
             <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
           </div>
-          <small class="${plan.hasManualCurrent ? "manual" : "auto"}">${currentTag}</small>
         </summary>
 
         <div class="v796-target-bar v798-target-bar"><u style="width:${plan.pct.toFixed(1)}%"></u></div>
 
         <div class="v796-target-metrics v798-target-metrics">
-          <span>K/Z <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</b></span>
+          <span>Kasa Hedefi K/Z <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</b></span>
           <span>Büyüme <b class="${plan.growth >= 0 ? "pos" : "neg"}">${pctText(plan.growth)}</b></span>
           <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
         </div>
@@ -1998,11 +2002,6 @@
             <button type="button" data-target-reset data-rolling-target-mode="${m}">Yeni Hedef</button>
             <button type="button" class="complete" data-target-complete data-rolling-target-mode="${m}" ${plan.done ? "" : "disabled"}>Hedefi Bitir</button>
           </div>
-
-          <div class="v802-target-log-wrap ${logOpen ? "open" : ""}">
-            <button type="button" class="v802-target-log-btn" data-target-log-toggle="${m}">LOG <span>${rows.length}</span></button>
-            <div class="v802-target-log-panel"><ul>${latest}</ul></div>
-          </div>
         </div>
       </details>`;
   }
@@ -2015,33 +2014,30 @@
     const cryptoSum = slotSummary(state.modeSlots.crypto);
     const betRollSum = rollingSummary("bet");
     const cryptoRollSum = rollingSummary("crypto");
-    const betTotalPnl = betSum.pnl + betRollSum.pnlTotal;
-    const cryptoTotalPnl = cryptoSum.pnl + cryptoRollSum.pnlTotal;
     const mode = activeMode();
     const isCrypto = mode === "crypto";
     const modeSum = isCrypto ? cryptoSum : betSum;
     const modeRollSum = isCrypto ? cryptoRollSum : betRollSum;
-    const modeTotalPnl = isCrypto ? cryptoTotalPnl : betTotalPnl;
     const modeLabel = isCrypto ? "KRİPTO" : "BAHİS";
     const modeIcon = isCrypto ? "fa-brands fa-bitcoin" : "fa-solid fa-layer-group";
-    const modeRailIcon = isCrypto
-      ? '<span class="rolling-v518-crypto-icons"><i class="fa-brands fa-bitcoin rolling-v493-crypto-icon"></i><img class="rolling-v521-ethereum-svg rolling-v518-ethereum-icon" src="assets/icons/ethereum.svg" alt="Ethereum" loading="lazy"></span>'
-      : '<span class="rolling-v491-bet-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-basketball"></i></span>';
-    const modeGrowth = growthPct(modeTotalPnl, modeRollSum.startTotal || getModeQuickPlan(state, mode).start || 100);
+    const modePlanPnl = v812TargetRealizedPnl(mode);
+    const modePlanStart = getModeQuickPlan(state, mode).start || 100;
+    const modePlanGrowth = growthPct(modePlanPnl, modePlanStart);
+    const menuKpiLabel = isCrypto ? "Kripto İşlem Menüsü K/Z" : "Kombine Kuponlar Menüsü K/Z";
     mount.innerHTML = `
       <div class="rolling-v47-page v48-rolling-page v49-rolling-page" data-rolling-screen="${mode}">
         <div class="rolling-v47-hero v48-rolling-hero">
-          <div><h2><i class="${modeIcon}"></i> ${modeLabel} ROLLING</h2><span class="v798-hero-note">${modeLabel} Genel Performans Özeti</span></div>
+          <div><h2><i class="${modeIcon}"></i> <span ${isCrypto ? 'style="color:#fbbf24"' : ""}>${modeLabel} ROLLING</span></h2><span class="v798-hero-note">${modeLabel} Genel Performans Özeti</span></div>
           <div class="rolling-v47-hero-kpis v753-rolling-kpis v756-rolling-kpis">
-            <div><span>${modeLabel} Kar/Zarar</span><b class="${modeTotalPnl >= 0 ? "pos" : "neg"}">${signedMoney(modeTotalPnl)}</b><em>${pctText(modeGrowth)} büyüme</em></div>
-            <div><span>Kapalı / Açık</span><b>${modeSum.settled} işlem</b><em>Açık tutar ${money(modeSum.open)}</em></div>
-            <div><span>Rolling K/Z</span><b class="${modeRollSum.pnlTotal >= 0 ? "pos" : "neg"}">${signedMoney(modeRollSum.pnlTotal)}</b><em>Başlangıç ${money(modeRollSum.startTotal || getModeQuickPlan(state, mode).start || 100)}</em></div>
+            <div><span>Kasa Hedefi K/Z</span><b class="${modePlanPnl >= 0 ? "pos" : "neg"}">${signedMoney(modePlanPnl)}</b><em>${pctText(modePlanGrowth)} hedef alanı</em></div>
+            <div><span>${isCrypto ? "Kripto" : "Bahis"} Rolling K/Z</span><b class="${modeRollSum.pnlTotal >= 0 ? "pos" : "neg"}">${signedMoney(modeRollSum.pnlTotal)}</b><em>Başlangıç ${money(modeRollSum.startTotal || 0)}</em></div>
+            <div><span>${menuKpiLabel}</span><b class="${modeSum.pnl >= 0 ? "pos" : "neg"}">${signedMoney(modeSum.pnl)}</b><em>${modeSum.settled} kapalı · Açık ${money(modeSum.open)}</em></div>
           </div>
         </div>
 
         <div class="rolling-v48-layout v49-rolling-layout">
           <aside class="rolling-v48-rail v49-rolling-rail" data-rolling-owned-menu="${mode}">
-            ${renderPlanControl(state, mode, modeTotalPnl)}
+            ${renderPlanControl(state, mode, 0)}
           </aside>
           <main class="rolling-v48-main">${renderModePanel(mode, state)}</main>
         </div>
@@ -2716,10 +2712,7 @@
     }));
     mount.querySelectorAll("[data-target-reset]").forEach(btn => btn.addEventListener("click", () => {
       const mode = btn.dataset.rollingTargetMode === "crypto" ? "crypto" : "bet";
-      const modeSum = slotSummary(state.modeSlots[mode]);
-      const rollSum = rollingSummary(mode);
-      const modePnl = Number(modeSum.pnl || 0) + Number(rollSum.pnlTotal || 0);
-      const plan = getPlanNumbers(state, modePnl, mode);
+      const plan = getPlanNumbers(state, 0, mode);
       const quick = getModeQuickPlan(state, mode);
       quick.start = Number(plan.current.toFixed(2));
       quick.target = "";
