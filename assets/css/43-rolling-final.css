@@ -14032,3 +14032,70 @@ select:-webkit-autofill {
     overflow-x: auto !important;
   }
 }
+
+
+/* ===============================
+   V1006
+   - Bahis Tek/Kupon menüsü tüm satırlarda seçilebilir olsun: menü fixed overlay ile açılır.
+   - 5/10/20 sonrası Tür hücresi genişlemesi korunur.
+   - Kasa Hedefi Geçmiş/Gizle üstündeki siyah boşluk azaltıldı.
+   =============================== */
+
+/* Kasa Hedefi üst boşluğu kırp: Geçmiş/Gizle karta daha yukarı otursun. */
+.rolling-v48-rail .v985-target-summary,
+.rolling-v48-rail > .v984-target-card summary.v985-target-summary {
+  padding-top: 4px !important;
+}
+.rolling-v48-rail .v985-target-head {
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+}
+.rolling-v48-rail > .v984-target-card,
+.rolling-v48-rail > .v985-target-card {
+  padding-top: 0 !important;
+}
+
+/* Bahis tablosunda 1 ile Bahis arası kripto gibi sıkı kalsın. */
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table th:nth-child(2),
+.rolling-v47-card.bet .rolling-v49-fold:has(> summary.rolling-v494-combine-title) .rolling-v47-table td:nth-child(2) {
+  width: 24px !important;
+  min-width: 24px !important;
+  max-width: 24px !important;
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+
+/* Tek/Kupon açılır menüsü tablo/kart içinde gömülmesin; tüm satırlarda aşağı doğru ve üst katmanda açılır. */
+.rolling-v47-card.bet .v995-bet-group-menu.is-open .v995-bet-group-list {
+  position: fixed !important;
+  left: var(--v995-menu-left) !important;
+  top: var(--v995-menu-top) !important;
+  bottom: auto !important;
+  width: var(--v995-menu-width) !important;
+  min-width: 108px !important;
+  display: grid !important;
+  gap: 5px !important;
+  z-index: 2147483000 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  pointer-events: auto !important;
+}
+.v995-bet-group-menu.is-open .v995-bet-group-list,
+.v995-bet-group-menu.is-open.drop-up .v995-bet-group-list,
+.v995-bet-group-menu.drop-up .v995-bet-group-list,
+.v995-bet-group-menu.is-up .v995-bet-group-list,
+tr:nth-last-child(-n+3) .v995-bet-group-list {
+  top: var(--v995-menu-top) !important;
+  bottom: auto !important;
+}
+
+/* Parent overflow ne olursa olsun menünün tıklaması kapanmasın. */
+.rolling-v47-card.bet,
+.rolling-v47-card.bet .rolling-v49-fold,
+.rolling-v47-card.bet .rolling-v47-table-wrap,
+.rolling-v47-card.bet .rolling-v47-table,
+.rolling-v47-card.bet .rolling-v47-table tbody,
+.rolling-v47-card.bet .rolling-v47-table tr,
+.rolling-v47-card.bet .rolling-v47-table td {
+  overflow: visible !important;
+}

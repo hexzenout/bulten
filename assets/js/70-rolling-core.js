@@ -2470,6 +2470,12 @@ function escapeHtml(str) {
         if (other !== menu) other.classList.remove("is-open");
         other.closest("tr")?.classList.remove("v995-group-row-open");
       });
+      if (willOpen) {
+        const rect = btn.getBoundingClientRect();
+        menu.style.setProperty("--v995-menu-left", `${Math.round(rect.left)}px`);
+        menu.style.setProperty("--v995-menu-top", `${Math.round(rect.bottom + 6)}px`);
+        menu.style.setProperty("--v995-menu-width", `${Math.max(108, Math.round(rect.width + 22))}px`);
+      }
       menu.classList.toggle("is-open", willOpen);
       row?.classList.toggle("v995-group-row-open", willOpen);
     }));
