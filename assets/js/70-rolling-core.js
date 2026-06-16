@@ -1970,14 +1970,14 @@
         ${renderModeSplitNotice(mode)}
 
         <details class="rolling-v49-fold ${mode}" open>
-          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span ${isCrypto ? 'style="color:#fbbf24"' : ""}>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
+          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span ${isCrypto ? 'style="color:#fbbf24 !important;text-shadow:0 0 10px rgba(251,191,36,.24);"' : ""}>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
           <div class="rolling-v47-roll-panel ${mode}">
             <div class="rolling-v47-roll-buttons">${renderRollingButtons(mode)}</div>
           </div>
         </details>
 
         <details class="rolling-v49-fold ${mode}" open>
-          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}" ${isCrypto ? "" : 'style="color:#22c55e"'}></i> <span>${menuTitle}</span></summary>
+          <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-active-title" : "rolling-v493-fold-title bet rolling-v494-combine-title"}"><i class="fa-solid ${isCrypto ? "fa-chart-simple" : "fa-list-check"}" ${isCrypto ? "" : 'style="color:#22c55e !important;text-shadow:0 0 10px rgba(34,197,94,.35);"'}></i> <span>${menuTitle}</span></summary>
           <div class="rolling-v47-section-title">
             <div>${renderRowControls(mode, state)}</div>
             <button type="button" data-clear="${mode}">TÜMÜNÜ TEMİZLE</button>
@@ -2059,7 +2059,7 @@
     mount.innerHTML = `
       <div class="rolling-v47-page v48-rolling-page v49-rolling-page" data-rolling-screen="${mode}">
         <div class="rolling-v47-hero v48-rolling-hero">
-          <div><h2><i class="${modeIcon}"></i> <span ${isCrypto ? 'style="color:#fbbf24"' : ""}>${modeLabel} ROLLING</span></h2><span class="v798-hero-note">${modeLabel} Genel Performans Özeti</span></div>
+          <div><h2><i class="${modeIcon}"></i> <span ${isCrypto ? 'style="color:#fbbf24 !important;text-shadow:0 0 10px rgba(251,191,36,.24);"' : ""}>${modeLabel} ROLLING</span></h2><span class="v798-hero-note">${modeLabel} Genel Performans Özeti</span></div>
           <div class="rolling-v47-hero-kpis v753-rolling-kpis v756-rolling-kpis">
             <div><span>Kasa Hedefi K/Z</span><b class="${modePlanPnl >= 0 ? "pos" : "neg"}">${signedMoney(modePlanPnl)}</b><em>${pctText(modePlanGrowth)} hedef alanı</em></div>
             <div><span>${isCrypto ? "Kripto" : "Bahis"} Rolling K/Z</span><b class="${modeRollSum.pnlTotal >= 0 ? "pos" : "neg"}">${signedMoney(modeRollSum.pnlTotal)}</b><em>Başlangıç ${money(modeRollSum.startTotal || 0)}</em></div>
