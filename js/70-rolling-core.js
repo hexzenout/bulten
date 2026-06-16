@@ -637,13 +637,10 @@
   function canAutoAttachToCombo(row) {
     return !!row && !!cleanText(row.name) && !Number(row.stake || 0);
   }
-  const BET_COUPON_GROUP_MAX = 4;
-  const BET_COUPON_GROUPS = Array.from({ length: BET_COUPON_GROUP_MAX }, (_, idx) => idx + 1);
-
   function betCouponGroup(slot) {
     const raw = cleanText(slot?.couponGroup || slot?.couponNo || "");
     const n = Number(raw || 0);
-    return Number.isFinite(n) && n >= 1 && n <= BET_COUPON_GROUP_MAX ? String(n) : "";
+    return Number.isFinite(n) && n >= 1 && n <= 4 ? String(n) : "";
   }
   function betKind(slot) {
     return betCouponGroup(slot) ? "combo" : "single";
@@ -1713,7 +1710,7 @@
         <div class="v757-pending-head v763-pending-head">
           <div>
             <b>Aktif Bahisler / Kuponlar</b>
-            <span>Tek seçilen satır tekli gider; Kupon 1/2/3/4 seçilen satırlar kendi kupon grubunda birleşir.</span>
+            <span>Tek seçilen satır tekli gider; Kupon 1/2/3 seçilen satırlar kendi kupon grubunda birleşir.</span>
           </div>
           <div class="v757-pending-metrics"><span>${grouped.rows.length} aktif</span></div>
         </div>
@@ -2391,6 +2388,20 @@ function escapeHtml(str) {
 
   function bindEvents(mount, state) {
     const refresh = () => refreshForMount(mount);
+    mount.querySelectorAll("details.rolling-v49-fold").forEach(details => {
+      details.open = true;
+      const summary = details.querySelector(":scope > summary");
+      if (summary) {
+        summary.addEventListener("click", event => {
+          event.preventDefault();
+          event.stopPropagation();
+          details.open = true;
+        });
+      }
+      details.addEventListener("toggle", () => {
+        if (!details.open) details.open = true;
+      });
+    });
     mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => { const [mode, days] = String(btn.dataset.roll || "bet:7").split(":"); openRolling(mode, Number(days || 7)); }));
     mount.querySelectorAll("[data-row-op]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, op] = String(btn.dataset.rowOp || "bet:plus").split(":");
@@ -2491,7 +2502,7 @@ function escapeHtml(str) {
       if (!btn) return;
       const slotIndex = Number(btn.dataset.betGroupToggle || btn.closest("[data-bet-group-menu]")?.dataset.betGroupMenu || 0);
       const currentPortal = document.getElementById("v1010-bet-group-portal");
-      if (currentPortal && String(currentPortal.dataset.slotIndex || "") === String(slotIndex)) {
+      if (currentPortal && currentPortal.dataset.slotIndex === String(slotIndex)) {
         closeBetGroupPortal();
         return;
       }
@@ -2500,17 +2511,16 @@ function escapeHtml(str) {
       const portal = document.createElement("div");
       portal.id = "v1010-bet-group-portal";
       portal.className = "v1010-bet-group-portal";
-      portal.dataset.slotIndex = String(slotIndex);
       const width = Math.max(112, Math.round(rect.width + 28));
-      const optionCount = 1 + BET_COUPON_GROUPS.length;
-      const estimatedHeight = 12 + (optionCount * 26) + ((optionCount - 1) * 5);
+      const estimatedHeight = 170;
       const left = Math.max(6, Math.min(Math.round(rect.left), window.innerWidth - width - 8));
       let top = Math.round(rect.bottom + 6);
       if (top + estimatedHeight > window.innerHeight - 6) top = Math.max(6, window.innerHeight - estimatedHeight - 6);
       portal.style.left = `${left}px`;
       portal.style.top = `${top}px`;
       portal.style.width = `${width}px`;
-      portal.innerHTML = [`<button type="button" class="v1010-bet-group-option single" data-v1010-bet-group-choice="${slotIndex}:">Tek</button>`].concat(BET_COUPON_GROUPS.map(n => `<button type="button" class="v1010-bet-group-option combo" data-v1010-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
+      portal.dataset.slotIndex = String(slotIndex);
+      portal.innerHTML = [`<button type="button" class="v1010-bet-group-option single" data-v1010-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4].map(n => `<button type="button" class="v1010-bet-group-option combo" data-v1010-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
       document.body.appendChild(portal);
       btn.closest("[data-bet-group-menu]")?.classList.add("is-open");
       btn.closest("tr")?.classList.add("v995-group-row-open");

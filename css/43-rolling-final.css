@@ -14385,7 +14385,7 @@ tr:nth-last-child(-n+3) .v995-bet-group-list {
    - Eski v995/v1007/v1008/v1009 menü/listeleri tamamen kapalı
    - Sadece v1010 fixed portal aktif
    - 1-20 tüm satırlarda seçim aynı handler ile çalışır
-   - Scroll sırasında menü kapanmaz; boş alan/başka buton tıklanınca kapanır
+   - Scroll/resize olursa menü kapanır; sayfayla birlikte kaymaz
    =============================== */
 
 #v1009-bet-group-portal,
@@ -14467,4 +14467,25 @@ tr:nth-last-child(-n+3) .v995-bet-group-list {
 /* Buton görünümü aynı kalır; sadece iç liste yok. */
 .v995-bet-group-menu.is-open .v995-bet-group-toggle {
   box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset !important;
+}
+
+
+/* ===============================
+   V1012
+   - BAHİS ROLLING / KRİPTO ROLLING ve Tekli/Kombine menü başlıkları sabit açık
+   - Tek/Kupon portalı scroll'da kapanmaz; boş alan veya başka yere tıklayınca kapanır
+   - Kupon 5/6 kaldırıldı, aktif seçenekler Tek + Kupon 1-4
+   =============================== */
+.rolling-v49-fold > summary.rolling-v493-fold-title {
+  cursor: default !important;
+  user-select: none !important;
+}
+.v1010-bet-group-portal {
+  max-height: calc(100vh - 12px) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+.v1010-bet-group-option {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
 }
