@@ -13545,3 +13545,116 @@ select:-webkit-autofill {
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
+
+
+/* ===============================
+   V1001 Kripto İşlem Menüsü kompakt düzeltme
+   - Aktif İşlem ve Tutar mevcut V1000 halinin yaklaşık yarısı
+   - Sağdaki gereksiz boş panel alanı input uzatmadan kaldırıldı
+   - X / 1 / Kripto tarafındaki gereksiz boşluklar kırpıldı
+   - Sadece Kripto İşlem Menüsü alanını etkiler
+   =============================== */
+
+/* Kripto işlem menüsünün sağında kalan boş alanı kaldır: kutu içeriği kadar genişlesin. */
+.rolling-v47-card.crypto > details.rolling-v49-fold.crypto:nth-of-type(2) {
+  width: fit-content !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  padding-right: 14px !important;
+}
+
+/* Üst kontrol satırı da içerik genişliğinde kalsın. */
+.rolling-v47-card.crypto > details.rolling-v49-fold.crypto:nth-of-type(2) .rolling-v47-section-title {
+  width: fit-content !important;
+  max-width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Tümünü Temizle sağdaki büyük boş alana kaçmasın; kontrol grubunun yanında kalsın. */
+.rolling-v47-card.crypto > details.rolling-v49-fold.crypto:nth-of-type(2) .rolling-v47-section-title > button[data-clear] {
+  margin-left: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+/* Tabloyu kompakt hale getir. */
+.rolling-v47-card.crypto .rolling-v47-table-wrap {
+  width: fit-content !important;
+  max-width: 100% !important;
+  overflow-x: visible !important;
+}
+
+.rolling-v47-card.crypto .v803-crypto-main-table {
+  width: 560px !important;
+  max-width: 560px !important;
+  min-width: 560px !important;
+  table-layout: fixed !important;
+}
+
+/* X, sıra numarası ve Kripto etiketi tarafındaki boşlukları kırp. */
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(1),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(1) {
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  padding-left: 4px !important;
+  padding-right: 2px !important;
+}
+
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(2),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(2) {
+  width: 24px !important;
+  min-width: 24px !important;
+  max-width: 24px !important;
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+  text-align: center !important;
+}
+
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(3),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(3) {
+  width: 66px !important;
+  min-width: 66px !important;
+  max-width: 66px !important;
+  padding-left: 2px !important;
+  padding-right: 4px !important;
+}
+
+/* Kripto etiketi kendi genişliğinde kalsın; sağında gereksiz alan bırakmasın. */
+.rolling-v47-card.crypto .v986-crypto-type-cell {
+  width: 58px !important;
+  min-width: 58px !important;
+  max-width: 58px !important;
+  justify-content: flex-start !important;
+  overflow: hidden !important;
+}
+
+.rolling-v47-card.crypto .v986-crypto-type-cell .rolling-v47-type.crypto {
+  margin: 0 !important;
+}
+
+/* Aktif İşlem ve Tutar: V1000'deki 360px ayarının yarısı. */
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(4),
+.rolling-v47-card.crypto .v803-crypto-main-table th:nth-child(5),
+.rolling-v47-card.crypto .v803-crypto-main-table td:nth-child(5) {
+  width: 180px !important;
+  max-width: 180px !important;
+  min-width: 180px !important;
+}
+
+.rolling-v47-card.crypto .v803-crypto-main-table input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Dar ekranda kırpma yapma, sadece yatay kaydırma aç. */
+@media (max-width: 760px) {
+  .rolling-v47-card.crypto .rolling-v47-table-wrap {
+    overflow-x: auto !important;
+  }
+}
