@@ -12742,3 +12742,104 @@ select:-webkit-autofill {
     max-width: 190px !important;
   }
 }
+
+
+/* ===============================
+   V991 acil düzeltme
+   - Tek / Kupon renklerini V988/V989 görünümüne geri al
+   - Kasa hedefi üst düzenini: Geçmiş solda, Gizle/Detay sağda, başlık ortada yap
+   =============================== */
+
+/* Kasa Hedefi üst düzen: 
+   Geçmiş                         Gizle/Detay
+              Bahis/Kripto Kasa Hedefi
+*/
+.rolling-v48-rail .v985-target-head {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 0 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+.rolling-v48-rail .v984-target-history-btn,
+.rolling-v48-rail button.v984-target-history-btn {
+  position: static !important;
+  justify-self: auto !important;
+  min-width: 72px !important;
+  width: auto !important;
+  height: 24px !important;
+  padding: 0 9px !important;
+  border-radius: 9px !important;
+  cursor: pointer !important;
+}
+
+.rolling-v48-rail .v985-target-detail-toggle {
+  position: static !important;
+  justify-self: auto !important;
+  min-width: 72px !important;
+  width: auto !important;
+  height: 24px !important;
+  padding: 0 9px !important;
+  border-radius: 9px !important;
+  cursor: pointer !important;
+}
+
+.rolling-v48-rail .v985-target-title,
+.rolling-v48-rail .v984-target-title.v985-target-title {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 8px auto 12px !important;
+  padding: 0 !important;
+  text-align: center !important;
+  color: #22c55e !important;
+  font-size: .98rem !important;
+  font-weight: 950 !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+/* Tek / Kupon: V990 koyu arka plan geri alındı. Resimdeki eski yeşil/mavi pill görünümü korunur. */
+.v988-bet-group-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  min-width: 82px !important;
+  max-width: 102px !important;
+  padding: 5px 24px 5px 12px !important;
+  border-radius: 999px !important;
+  text-align: center !important;
+  text-align-last: center !important;
+  font-size: .68rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%) !important;
+  background-position: calc(100% - 12px) 50%, calc(100% - 8px) 50% !important;
+  background-size: 4px 4px, 4px 4px !important;
+  background-repeat: no-repeat !important;
+}
+
+.v988-bet-group-select.single {
+  border: 1px solid rgba(34,197,94,.66) !important;
+  color: #34d399 !important;
+  background-color: rgba(16,185,129,.18) !important;
+}
+
+.v988-bet-group-select.combo {
+  border: 1px solid rgba(59,130,246,.70) !important;
+  color: #60a5fa !important;
+  background-color: rgba(37,99,235,.22) !important;
+}
+
+/* Açılan native option arka planı tarayıcıya göre değişebilir; ana kapalı görünüm yukarıdaki pill renginde kalır. */
+.v988-bet-group-select option {
+  background: #0b0b0b !important;
+  color: #ffffff !important;
+}
