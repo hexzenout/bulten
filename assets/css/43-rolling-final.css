@@ -14927,3 +14927,99 @@ input.v1018-combo-stake-target {
   background: inherit !important;
   transition: border-color .15s ease, box-shadow .15s ease !important;
 }
+
+/* ===============================
+   V1019 — Tek/Kupon menüsü gerçek sabit nokta + hafif sarı tutar ışığı
+   - Menü açıldığı ekran koordinatında kalır; scroll sırasında ok/satır takibi yapmaz.
+   - Kupon tutarı yönlendirme sayfayı otomatik kaydırmaz.
+   =============================== */
+#v1019-bet-group-layer,
+.v1019-bet-group-layer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+  overflow: visible !important;
+  transform: none !important;
+  contain: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#v1019-bet-group-portal,
+.v1019-bet-group-portal {
+  position: fixed !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 2147483647 !important;
+  display: grid !important;
+  gap: 5px !important;
+  padding: 6px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(148,163,184,.25) !important;
+  background: #05070c !important;
+  box-shadow: 0 12px 26px rgba(0,0,0,.48) !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  contain: layout paint style !important;
+}
+
+.v1019-bet-group-option {
+  min-height: 26px !important;
+  border-radius: 999px !important;
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  font-size: .68rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: border-color .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease !important;
+}
+
+.v1019-bet-group-option.single {
+  border: 1px solid rgba(34,197,94,.66) !important;
+  color: #34d399 !important;
+  background: rgba(16,185,129,.18) !important;
+}
+
+.v1019-bet-group-option.combo {
+  border: 1px solid rgba(59,130,246,.70) !important;
+  color: #60a5fa !important;
+  background: rgba(37,99,235,.22) !important;
+}
+
+.v1019-bet-group-option.single:hover,
+.v1019-bet-group-option.single:focus-visible {
+  background: rgba(16,185,129,.30) !important;
+  border-color: rgba(52,211,153,.95) !important;
+  color: #d1fae5 !important;
+  box-shadow: 0 0 0 1px rgba(52,211,153,.35) inset, 0 0 10px rgba(16,185,129,.35) !important;
+}
+
+.v1019-bet-group-option.combo:hover,
+.v1019-bet-group-option.combo:focus-visible {
+  background: rgba(37,99,235,.36) !important;
+  border-color: rgba(96,165,250,.95) !important;
+  color: #dbeafe !important;
+  box-shadow: 0 0 0 1px rgba(96,165,250,.35) inset, 0 0 10px rgba(37,99,235,.35) !important;
+}
+
+input.v1019-combo-stake-target {
+  border-color: #facc15 !important;
+  outline: 1px solid rgba(250,204,21,.90) !important;
+  outline-offset: 1px !important;
+  box-shadow: 0 0 0 1px rgba(250,204,21,.72), 0 0 10px rgba(250,204,21,.48) !important;
+  background-color: transparent !important;
+  animation: v1019StakeYellowPulse .85s ease-out 1 !important;
+}
+
+@keyframes v1019StakeYellowPulse {
+  0% { box-shadow: 0 0 0 1px rgba(250,204,21,.92), 0 0 13px rgba(250,204,21,.62); }
+  100% { box-shadow: 0 0 0 1px rgba(250,204,21,.28), 0 0 3px rgba(250,204,21,.14); }
+}

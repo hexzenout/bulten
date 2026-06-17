@@ -2438,13 +2438,40 @@ function escapeHtml(str) {
     }));
     const flashComboStakeTarget = (target) => {
       if (!target) return;
-      target.classList.remove("v1018-combo-stake-target");
+      target.classList.remove("v1018-combo-stake-target", "v1019-combo-stake-target");
       void target.offsetWidth;
-      target.classList.add("v1018-combo-stake-target");
-      window.clearTimeout(target.__bultenV1018StakeFlashTimer);
-      target.__bultenV1018StakeFlashTimer = window.setTimeout(() => {
-        target.classList.remove("v1018-combo-stake-target");
-      }, 750);
+      target.classList.add("v1019-combo-stake-target");
+      window.clearTimeout(target.__bultenV1019StakeFlashTimer);
+      target.__bultenV1019StakeFlashTimer = window.setTimeout(() => {
+        target.classList.remove("v1019-combo-stake-target");
+      }, 850);
+    };
+    const captureScrollPositions = () => {
+      const points = [{ el: window, x: window.scrollX || 0, y: window.scrollY || 0 }];
+      document.querySelectorAll("*").forEach(el => {
+        if (el && (el.scrollTop || el.scrollLeft)) points.push({ el, x: el.scrollLeft || 0, y: el.scrollTop || 0 });
+      });
+      return points;
+    };
+    const restoreScrollPositions = (points) => {
+      (points || []).forEach(point => {
+        try {
+          if (point.el === window) window.scrollTo(point.x || 0, point.y || 0);
+          else {
+            point.el.scrollLeft = point.x || 0;
+            point.el.scrollTop = point.y || 0;
+          }
+        } catch {}
+      });
+    };
+    const focusStakeWithoutScroll = (target) => {
+      if (!target) return;
+      const points = captureScrollPositions();
+      try { target.focus({ preventScroll: true }); }
+      catch { try { target.focus(); } catch {} }
+      restoreScrollPositions(points);
+      window.requestAnimationFrame(() => restoreScrollPositions(points));
+      window.setTimeout(() => restoreScrollPositions(points), 40);
     };
     const redirectComboStakeInput = (input, event) => {
       if (!input || input.dataset.mode !== "bet" || input.dataset.key !== "stake") return false;
@@ -2461,12 +2488,9 @@ function escapeHtml(str) {
         event.stopPropagation?.();
       }
       window.requestAnimationFrame(() => {
-        target.scrollIntoView?.({ block: "center", inline: "nearest", behavior: "smooth" });
-        window.setTimeout(() => {
-          try { target.focus({ preventScroll: true }); } catch { target.focus(); }
-          try { target.select(); } catch {}
-          flashComboStakeTarget(target);
-        }, 120);
+        focusStakeWithoutScroll(target);
+        try { target.select(); } catch {}
+        flashComboStakeTarget(target);
       });
       return true;
     };
@@ -2496,23 +2520,15 @@ function escapeHtml(str) {
       input.addEventListener("change", saveInput);
     });
     const getBetGroupFixedLayer = () => {
-      let layer = document.getElementById("v1018-bet-group-layer");
+      let layer = document.getElementById("v1019-bet-group-layer");
       if (layer) return layer;
       layer = document.createElement("div");
-      layer.id = "v1018-bet-group-layer";
-      layer.className = "v1018-bet-group-layer";
-      document.body.appendChild(layer);
+      layer.id = "v1019-bet-group-layer";
+      layer.className = "v1019-bet-group-layer";
+      (document.body || document.documentElement).appendChild(layer);
       return layer;
     };
-    const stopBetGroupAnchorLoop = () => {
-      if (window.__bultenV1018BetGroupRaf) {
-        window.cancelAnimationFrame(window.__bultenV1018BetGroupRaf);
-        window.__bultenV1018BetGroupRaf = 0;
-      }
-    };
-    const positionBetGroupPortal = () => {
-      const portal = document.getElementById("v1018-bet-group-portal");
-      const btn = window.__bultenV1018BetGroupAnchorButton;
+    const positionBetGroupPortalOnce = (portal, btn) => {
       if (!portal || !btn || !btn.isConnected) return false;
       const rect = btn.getBoundingClientRect();
       const width = Number(portal.dataset.portalWidth || 0) || Math.max(112, Math.round(rect.width + 28));
@@ -2526,37 +2542,26 @@ function escapeHtml(str) {
       portal.style.setProperty("left", `${left}px`, "important");
       portal.style.setProperty("top", `${top}px`, "important");
       portal.style.setProperty("width", `${width}px`, "important");
+      portal.dataset.fixedLeft = String(left);
+      portal.dataset.fixedTop = String(top);
       return true;
     };
-    const startBetGroupAnchorLoop = () => {
-      stopBetGroupAnchorLoop();
-      const tick = () => {
-        if (!positionBetGroupPortal()) {
-          stopBetGroupAnchorLoop();
-          return;
-        }
-        window.__bultenV1018BetGroupRaf = window.requestAnimationFrame(tick);
-      };
-      window.__bultenV1018BetGroupRaf = window.requestAnimationFrame(tick);
-    };
     const closeBetGroupPortal = () => {
-      stopBetGroupAnchorLoop();
-      ["v1018-bet-group-portal","v1017-bet-group-portal","v1016-bet-group-portal","v1015-bet-group-portal","v1014-bet-group-portal","v1013-bet-group-portal","v1012-bet-group-portal","v1011-bet-group-portal","v1010-bet-group-portal","v1009-bet-group-portal","v1008-bet-group-portal","v1007-bet-group-portal"].forEach(id => {
+      ["v1019-bet-group-portal","v1018-bet-group-portal","v1017-bet-group-portal","v1016-bet-group-portal","v1015-bet-group-portal","v1014-bet-group-portal","v1013-bet-group-portal","v1012-bet-group-portal","v1011-bet-group-portal","v1010-bet-group-portal","v1009-bet-group-portal","v1008-bet-group-portal","v1007-bet-group-portal"].forEach(id => {
         document.getElementById(id)?.remove();
       });
-      ["v1018-bet-group-layer","v1017-bet-group-layer"].forEach(id => {
+      ["v1019-bet-group-layer","v1018-bet-group-layer","v1017-bet-group-layer"].forEach(id => {
         const layer = document.getElementById(id);
         if (layer && !layer.children.length) layer.remove();
       });
-      window.__bultenV1018BetGroupActiveSlot = null;
-      window.__bultenV1018BetGroupAnchorButton = null;
+      window.__bultenV1019BetGroupActiveSlot = null;
       document.querySelectorAll("[data-bet-group-menu].is-open").forEach(menu => {
         menu.classList.remove("is-open");
         menu.closest("tr")?.classList.remove("v995-group-row-open");
       });
     };
-    window.__bultenV1018CloseBetGroupPortal = closeBetGroupPortal;
-    window.__bultenV1018BetGroupApply = (slotRaw, groupRaw) => {
+    window.__bultenV1019CloseBetGroupPortal = closeBetGroupPortal;
+    window.__bultenV1019BetGroupApply = (slotRaw, groupRaw) => {
       const slotIndex = Number(slotRaw || 0);
       if (!Number.isFinite(slotIndex) || slotIndex < 0) return;
       const group = betCouponGroup({ couponGroup: groupRaw || "" });
@@ -2572,11 +2577,11 @@ function escapeHtml(str) {
       closeBetGroupPortal();
       refresh();
     };
-    window.__bultenV1018OpenBetGroupPortal = (btn) => {
+    window.__bultenV1019OpenBetGroupPortal = (btn) => {
       if (!btn) return;
       const slotIndex = Number(btn.dataset.betGroupToggle || btn.closest("[data-bet-group-menu]")?.dataset.betGroupMenu || 0);
-      const current = document.getElementById("v1018-bet-group-portal");
-      if (current && Number(window.__bultenV1018BetGroupActiveSlot) === slotIndex) {
+      const current = document.getElementById("v1019-bet-group-portal");
+      if (current && Number(window.__bultenV1019BetGroupActiveSlot) === slotIndex) {
         closeBetGroupPortal();
         return;
       }
@@ -2584,43 +2589,41 @@ function escapeHtml(str) {
       const rect = btn.getBoundingClientRect();
       const layer = getBetGroupFixedLayer();
       const portal = document.createElement("div");
-      portal.id = "v1018-bet-group-portal";
-      portal.className = "v1018-bet-group-portal";
+      portal.id = "v1019-bet-group-portal";
+      portal.className = "v1019-bet-group-portal";
       portal.dataset.slot = String(slotIndex);
       const width = Math.max(112, Math.round(rect.width + 28));
       portal.dataset.portalWidth = String(width);
       portal.style.setProperty("width", `${width}px`, "important");
-      portal.innerHTML = [`<button type="button" class="v1018-bet-group-option single" data-v1018-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4].map(n => `<button type="button" class="v1018-bet-group-option combo" data-v1018-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
+      portal.innerHTML = [`<button type="button" class="v1019-bet-group-option single" data-v1019-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4].map(n => `<button type="button" class="v1019-bet-group-option combo" data-v1019-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
       layer.appendChild(portal);
-      window.__bultenV1018BetGroupActiveSlot = slotIndex;
-      window.__bultenV1018BetGroupAnchorButton = btn;
+      window.__bultenV1019BetGroupActiveSlot = slotIndex;
       btn.closest("[data-bet-group-menu]")?.classList.add("is-open");
       btn.closest("tr")?.classList.add("v995-group-row-open");
-      positionBetGroupPortal();
-      startBetGroupAnchorLoop();
+      positionBetGroupPortalOnce(portal, btn);
     };
-    if (!window.__bultenV1018BetGroupPointerHandler) {
-      window.__bultenV1018BetGroupPointerHandler = true;
+    if (!window.__bultenV1019BetGroupPointerHandler) {
+      window.__bultenV1019BetGroupPointerHandler = true;
       document.addEventListener("pointerdown", event => {
-        const choice = event.target?.closest?.("[data-v1018-bet-group-choice]");
+        const choice = event.target?.closest?.("[data-v1019-bet-group-choice]");
         if (choice) {
           event.preventDefault();
           event.stopPropagation();
-          const [slotRaw, groupRaw] = String(choice.dataset.v1018BetGroupChoice || "0:").split(":");
-          window.__bultenV1018BetGroupApply?.(slotRaw, groupRaw || "");
+          const [slotRaw, groupRaw] = String(choice.dataset.v1019BetGroupChoice || "0:").split(":");
+          window.__bultenV1019BetGroupApply?.(slotRaw, groupRaw || "");
           return;
         }
         const toggle = event.target?.closest?.("[data-bet-group-toggle]");
         if (toggle) {
           event.preventDefault();
           event.stopPropagation();
-          window.__bultenV1018OpenBetGroupPortal?.(toggle);
+          window.__bultenV1019OpenBetGroupPortal?.(toggle);
           return;
         }
-        if (event.target?.closest?.("#v1018-bet-group-portal")) return;
-        window.__bultenV1018CloseBetGroupPortal?.();
+        if (event.target?.closest?.("#v1019-bet-group-portal")) return;
+        window.__bultenV1019CloseBetGroupPortal?.();
       }, true);
-      window.addEventListener("resize", () => window.__bultenV1018CloseBetGroupPortal?.(), true);
+      window.addEventListener("resize", () => window.__bultenV1019CloseBetGroupPortal?.(), true);
     }
     const syncV1016TargetRail = () => {
       const top = 64;
