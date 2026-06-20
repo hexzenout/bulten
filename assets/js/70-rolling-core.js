@@ -2089,7 +2089,8 @@ function escapeHtml(str) {
       const group = betCouponGroup(s);
       const kindClass = group ? "combo" : "single";
       const groupLabel = group ? `Kupon ${group}` : "Tek";
-      const kindSelect = `<div class="v995-bet-group-menu ${kindClass}" data-bet-group-menu="${i}"><button type="button" class="v995-bet-group-toggle ${kindClass}" data-bet-group-toggle="${i}" title="Tekli / kupon grubu seç"><span>${groupLabel}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button></div>`;
+      const groupChoices = [`<button type="button" class="v995-bet-group-option single" data-bet-group-choice="${i}:">Tek</button>`].concat([1,2,3,4].map(n => `<button type="button" class="v995-bet-group-option combo" data-bet-group-choice="${i}:${n}">Kupon ${n}</button>`)).join("");
+      const kindSelect = `<div class="v995-bet-group-menu ${kindClass}" data-bet-group-menu="${i}"><button type="button" class="v995-bet-group-toggle ${kindClass}" data-bet-group-toggle="${i}" title="Tekli / kupon grubu seç"><span>${groupLabel}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><div class="v995-bet-group-list" role="menu">${groupChoices}</div></div>`;
       return `<tr><td><button type="button" class="rolling-v495-row-clear" data-clear-row="${mode}:${i}" title="Bu kutuyu temizle"><i class="fa-solid fa-xmark"></i></button></td><td>${i + 1}</td><td><div class="v515-type-history-cell v988-bet-type-cell"><span class="rolling-v47-type ${mode}">Bahis</span>${kindSelect}</div></td><td><input data-mode="${mode}" data-slot="${i}" data-key="name" value="${escapeHtml(s.name)}" placeholder="${notePH}"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="odds" type="number" step="0.01" value="${s.odds || ""}" placeholder="Oran"></td><td><input data-mode="${mode}" data-slot="${i}" data-key="stake" type="number" step="0.01" value="${s.stake || ""}" placeholder="Tutar"></td><td><span class="v757-status-pill ${rowStatus === "win" || rowStatus === "loss" ? rowStatus : "pending"}">${status}</span></td><td class="${pnlClass}">${money(s.pnl || 0)}</td><td><div class="rolling-v47-actions v757-actions"><button type="button" class="win" data-mode="${mode}" data-slot="${i}" data-status="win">${winText}</button><button type="button" class="loss" data-mode="${mode}" data-slot="${i}" data-status="loss">${lossText}</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   }
@@ -2438,13 +2439,13 @@ function escapeHtml(str) {
     }));
     const flashComboStakeTarget = (target) => {
       if (!target) return;
-      target.classList.remove("v1018-combo-stake-target", "v1019-combo-stake-target");
+      target.classList.remove("v1018-combo-stake-target", "v1019-combo-stake-target", "v1020-combo-stake-target");
       void target.offsetWidth;
-      target.classList.add("v1019-combo-stake-target");
-      window.clearTimeout(target.__bultenV1019StakeFlashTimer);
-      target.__bultenV1019StakeFlashTimer = window.setTimeout(() => {
-        target.classList.remove("v1019-combo-stake-target");
-      }, 850);
+      target.classList.add("v1020-combo-stake-target");
+      window.clearTimeout(target.__bultenV1020StakeFlashTimer);
+      target.__bultenV1020StakeFlashTimer = window.setTimeout(() => {
+        target.classList.remove("v1020-combo-stake-target");
+      }, 750);
     };
     const captureScrollPositions = () => {
       const points = [{ el: window, x: window.scrollX || 0, y: window.scrollY || 0 }];
@@ -2489,7 +2490,6 @@ function escapeHtml(str) {
       }
       window.requestAnimationFrame(() => {
         focusStakeWithoutScroll(target);
-        try { target.select(); } catch {}
         flashComboStakeTarget(target);
       });
       return true;
@@ -2519,49 +2519,23 @@ function escapeHtml(str) {
       input.addEventListener("input", saveInput);
       input.addEventListener("change", saveInput);
     });
-    const getBetGroupFixedLayer = () => {
-      let layer = document.getElementById("v1019-bet-group-layer");
-      if (layer) return layer;
-      layer = document.createElement("div");
-      layer.id = "v1019-bet-group-layer";
-      layer.className = "v1019-bet-group-layer";
-      (document.body || document.documentElement).appendChild(layer);
-      return layer;
+    const removeLegacyBetGroupPortals = () => {
+      [
+        "v1019-bet-group-portal","v1018-bet-group-portal","v1017-bet-group-portal","v1016-bet-group-portal","v1015-bet-group-portal",
+        "v1014-bet-group-portal","v1013-bet-group-portal","v1012-bet-group-portal","v1011-bet-group-portal","v1010-bet-group-portal",
+        "v1009-bet-group-portal","v1008-bet-group-portal","v1007-bet-group-portal"
+      ].forEach(id => document.getElementById(id)?.remove());
+      ["v1019-bet-group-layer","v1018-bet-group-layer","v1017-bet-group-layer"].forEach(id => document.getElementById(id)?.remove());
     };
-    const positionBetGroupPortalOnce = (portal, btn) => {
-      if (!portal || !btn || !btn.isConnected) return false;
-      const rect = btn.getBoundingClientRect();
-      const width = Number(portal.dataset.portalWidth || 0) || Math.max(112, Math.round(rect.width + 28));
-      const gap = 6;
-      const height = portal.offsetHeight || 170;
-      const left = Math.max(6, Math.min(Math.round(rect.left), window.innerWidth - width - 8));
-      let top = Math.round(rect.bottom + gap);
-      if (top + height > window.innerHeight - 6 && rect.top - height - gap >= 6) {
-        top = Math.round(rect.top - height - gap);
-      }
-      portal.style.setProperty("left", `${left}px`, "important");
-      portal.style.setProperty("top", `${top}px`, "important");
-      portal.style.setProperty("width", `${width}px`, "important");
-      portal.dataset.fixedLeft = String(left);
-      portal.dataset.fixedTop = String(top);
-      return true;
-    };
-    const closeBetGroupPortal = () => {
-      ["v1019-bet-group-portal","v1018-bet-group-portal","v1017-bet-group-portal","v1016-bet-group-portal","v1015-bet-group-portal","v1014-bet-group-portal","v1013-bet-group-portal","v1012-bet-group-portal","v1011-bet-group-portal","v1010-bet-group-portal","v1009-bet-group-portal","v1008-bet-group-portal","v1007-bet-group-portal"].forEach(id => {
-        document.getElementById(id)?.remove();
-      });
-      ["v1019-bet-group-layer","v1018-bet-group-layer","v1017-bet-group-layer"].forEach(id => {
-        const layer = document.getElementById(id);
-        if (layer && !layer.children.length) layer.remove();
-      });
-      window.__bultenV1019BetGroupActiveSlot = null;
+    const closeBetGroupMenu = () => {
+      removeLegacyBetGroupPortals();
+      window.__bultenV1020BetGroupActiveSlot = null;
       document.querySelectorAll("[data-bet-group-menu].is-open").forEach(menu => {
         menu.classList.remove("is-open");
         menu.closest("tr")?.classList.remove("v995-group-row-open");
       });
     };
-    window.__bultenV1019CloseBetGroupPortal = closeBetGroupPortal;
-    window.__bultenV1019BetGroupApply = (slotRaw, groupRaw) => {
+    const applyBetGroupChoice = (slotRaw, groupRaw) => {
       const slotIndex = Number(slotRaw || 0);
       if (!Number.isFinite(slotIndex) || slotIndex < 0) return;
       const group = betCouponGroup({ couponGroup: groupRaw || "" });
@@ -2574,56 +2548,46 @@ function escapeHtml(str) {
       if (!group) slot.comboResults = [];
       normalizeBetCouponGroups(state.modeSlots.bet);
       saveState(state);
-      closeBetGroupPortal();
+      closeBetGroupMenu();
       refresh();
     };
-    window.__bultenV1019OpenBetGroupPortal = (btn) => {
+    const toggleBetGroupMenu = (btn) => {
       if (!btn) return;
-      const slotIndex = Number(btn.dataset.betGroupToggle || btn.closest("[data-bet-group-menu]")?.dataset.betGroupMenu || 0);
-      const current = document.getElementById("v1019-bet-group-portal");
-      if (current && Number(window.__bultenV1019BetGroupActiveSlot) === slotIndex) {
-        closeBetGroupPortal();
-        return;
-      }
-      closeBetGroupPortal();
-      const rect = btn.getBoundingClientRect();
-      const layer = getBetGroupFixedLayer();
-      const portal = document.createElement("div");
-      portal.id = "v1019-bet-group-portal";
-      portal.className = "v1019-bet-group-portal";
-      portal.dataset.slot = String(slotIndex);
-      const width = Math.max(112, Math.round(rect.width + 28));
-      portal.dataset.portalWidth = String(width);
-      portal.style.setProperty("width", `${width}px`, "important");
-      portal.innerHTML = [`<button type="button" class="v1019-bet-group-option single" data-v1019-bet-group-choice="${slotIndex}:">Tek</button>`].concat([1,2,3,4].map(n => `<button type="button" class="v1019-bet-group-option combo" data-v1019-bet-group-choice="${slotIndex}:${n}">Kupon ${n}</button>`)).join("");
-      layer.appendChild(portal);
-      window.__bultenV1019BetGroupActiveSlot = slotIndex;
-      btn.closest("[data-bet-group-menu]")?.classList.add("is-open");
-      btn.closest("tr")?.classList.add("v995-group-row-open");
-      positionBetGroupPortalOnce(portal, btn);
+      const menu = btn.closest("[data-bet-group-menu]");
+      if (!menu) return;
+      const slotIndex = Number(btn.dataset.betGroupToggle || menu.dataset.betGroupMenu || 0);
+      const wasOpen = menu.classList.contains("is-open") && Number(window.__bultenV1020BetGroupActiveSlot) === slotIndex;
+      closeBetGroupMenu();
+      if (wasOpen) return;
+      window.__bultenV1020BetGroupActiveSlot = slotIndex;
+      menu.classList.add("is-open");
+      menu.closest("tr")?.classList.add("v995-group-row-open");
     };
-    if (!window.__bultenV1019BetGroupPointerHandler) {
-      window.__bultenV1019BetGroupPointerHandler = true;
+    window.__bultenV1020CloseBetGroupMenu = closeBetGroupMenu;
+    window.__bultenV1020BetGroupApply = applyBetGroupChoice;
+    window.__bultenV1020ToggleBetGroupMenu = toggleBetGroupMenu;
+    if (!window.__bultenV1020BetGroupPointerHandler) {
+      window.__bultenV1020BetGroupPointerHandler = true;
       document.addEventListener("pointerdown", event => {
-        const choice = event.target?.closest?.("[data-v1019-bet-group-choice]");
+        const choice = event.target?.closest?.("[data-bet-group-choice]");
         if (choice) {
           event.preventDefault();
           event.stopPropagation();
-          const [slotRaw, groupRaw] = String(choice.dataset.v1019BetGroupChoice || "0:").split(":");
-          window.__bultenV1019BetGroupApply?.(slotRaw, groupRaw || "");
+          const [slotRaw, groupRaw] = String(choice.dataset.betGroupChoice || "0:").split(":");
+          window.__bultenV1020BetGroupApply?.(slotRaw, groupRaw || "");
           return;
         }
         const toggle = event.target?.closest?.("[data-bet-group-toggle]");
         if (toggle) {
           event.preventDefault();
           event.stopPropagation();
-          window.__bultenV1019OpenBetGroupPortal?.(toggle);
+          window.__bultenV1020ToggleBetGroupMenu?.(toggle);
           return;
         }
-        if (event.target?.closest?.("#v1019-bet-group-portal")) return;
-        window.__bultenV1019CloseBetGroupPortal?.();
+        if (event.target?.closest?.("[data-bet-group-menu]")) return;
+        window.__bultenV1020CloseBetGroupMenu?.();
       }, true);
-      window.addEventListener("resize", () => window.__bultenV1019CloseBetGroupPortal?.(), true);
+      window.addEventListener("resize", () => window.__bultenV1020CloseBetGroupMenu?.(), true);
     }
     const syncV1016TargetRail = () => {
       const top = 64;
