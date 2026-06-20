@@ -2590,48 +2590,27 @@ function escapeHtml(str) {
       window.addEventListener("resize", () => window.__bultenV1020CloseBetGroupMenu?.(), true);
     }
     const syncV1016TargetRail = () => {
-      const top = 64;
       const rails = document.querySelectorAll(".rolling-v48-rail, .v49-rolling-rail");
       rails.forEach(rail => {
         const card = rail.querySelector(":scope > .v984-target-card, :scope > .v985-target-card, :scope > .v796-target-card");
         if (!card) return;
-        if (window.innerWidth <= 760) {
-          rail.style.removeProperty("--v1016-target-placeholder-height");
-          rail.style.removeProperty("--v1016-target-left");
-          rail.style.removeProperty("--v1016-target-width");
-          rail.style.removeProperty("--v1016-target-top");
-          rail.style.minHeight = "";
-          card.classList.remove("v1016-target-fixed");
-          delete rail.dataset.v1016NaturalTop;
-          delete rail.dataset.v1022TargetHeight;
-          return;
-        }
 
         /*
-          V1022: Kasa Hedefi artık scroll eşiğine göre aç/kapat yapılmıyor.
-          Kupon seçimi refresh() tetiklediğinde eski V1016 kodu rail'in o anki
-          scrolled konumunu "doğal top" sanıp kartı normal akışa geri düşürüyordu.
-          Sonuç: kart seçimden sonra aşağı iniyor, scroll sırasında gömülü gibi oynuyordu.
-          Çözüm: masaüstünde kart her zaman fixed kalır; rail sadece yer tutucu olur.
+          V1023: V1022'deki JS kontrollü fixed sistem kaldırıldı.
+          Kartı fixed'e koparmak sol rail arka planının üstüne bindiriyordu ve
+          kupon seçiminden sonra scroll içinde gömülü gibi oynatıyordu.
+          Artık Kasa Hedefi normal sol kolonun içinde kalır; sabitlemeyi CSS sticky yapar.
         */
-        const railRect = rail.getBoundingClientRect();
-        const railStyle = window.getComputedStyle(rail);
-        const padLeft = Number.parseFloat(railStyle.paddingLeft || "0") || 0;
-        const padRight = Number.parseFloat(railStyle.paddingRight || "0") || 0;
-        const width = Math.max(240, Math.round(railRect.width - padLeft - padRight));
-        const left = Math.round(railRect.left + padLeft);
-
-        rail.style.setProperty("--v1016-target-left", `${left}px`);
-        rail.style.setProperty("--v1016-target-width", `${width}px`);
-        rail.style.setProperty("--v1016-target-top", `${top}px`);
-        card.classList.add("v1016-target-fixed");
-
-        const measuredHeight = Math.max(320, Math.round(card.scrollHeight || card.getBoundingClientRect().height || 0));
-        const height = Math.max(Number(rail.dataset.v1022TargetHeight || 0), measuredHeight);
-        rail.dataset.v1022TargetHeight = String(height);
-        rail.style.setProperty("--v1016-target-placeholder-height", `${height}px`);
-        rail.style.minHeight = `${height}px`;
+        rail.style.removeProperty("--v1016-target-placeholder-height");
+        rail.style.removeProperty("--v1016-target-left");
+        rail.style.removeProperty("--v1016-target-width");
+        rail.style.removeProperty("--v1016-target-top");
+        rail.style.minHeight = "";
         delete rail.dataset.v1016NaturalTop;
+        delete rail.dataset.v1016TargetHeight;
+        delete rail.dataset.v1022TargetHeight;
+        card.classList.remove("v1016-target-fixed");
+        card.classList.add("v1023-target-sticky-card");
       });
     };
     window.__bultenV1016SyncTargetRail = syncV1016TargetRail;

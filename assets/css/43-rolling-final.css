@@ -15162,3 +15162,60 @@ input.v1020-combo-stake-target {
   opacity: 1 !important;
   pointer-events: auto !important;
 }
+
+
+/* ===============================
+   V1023 — Kasa Hedefi fixed overlay temizliği
+   - V1022 JS-controlled fixed kartı sol raydan koparıp arka plan üstüne bindiriyordu.
+   - Kart artık sol kolon içinde sticky kalır; fixed sınıfı gelse bile override edilir.
+   =============================== */
+@media (min-width: 761px) {
+  .rolling-v48-layout,
+  .v49-rolling-layout {
+    align-items: start !important;
+    overflow: visible !important;
+  }
+
+  .rolling-v48-rail,
+  .v49-rolling-rail {
+    position: relative !important;
+    top: auto !important;
+    align-self: start !important;
+    z-index: 60 !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+  }
+
+  .rolling-v48-rail > .v1023-target-sticky-card,
+  .v49-rolling-rail > .v1023-target-sticky-card,
+  .rolling-v48-rail > .v1016-target-fixed,
+  .v49-rolling-rail > .v1016-target-fixed,
+  .rolling-v48-rail > .v984-target-card,
+  .v49-rolling-rail > .v984-target-card,
+  .rolling-v48-rail > .v985-target-card,
+  .v49-rolling-rail > .v985-target-card {
+    position: sticky !important;
+    top: 64px !important;
+    left: auto !important;
+    width: 100% !important;
+    max-height: calc(100vh - 76px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    z-index: 80 !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .rolling-v48-rail > .v1023-target-sticky-card,
+  .v49-rolling-rail > .v1023-target-sticky-card,
+  .rolling-v48-rail > .v1016-target-fixed,
+  .v49-rolling-rail > .v1016-target-fixed {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
