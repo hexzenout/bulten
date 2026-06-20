@@ -15143,3 +15143,22 @@ input.v1020-combo-stake-target {
   0% { box-shadow: 0 0 0 1px rgba(250,204,21,.95), 0 0 10px rgba(250,204,21,.52); }
   100% { box-shadow: 0 0 0 1px rgba(250,204,21,.20), 0 0 2px rgba(250,204,21,.10); }
 }
+
+/* ===============================
+   V1021 — Tek/Kupon inline liste görünürlük onarımı
+   - V1020 satır-içi menüde eski v1007/v1008/v1009 gizleme kuralları visibility:hidden bırakıyordu.
+   - is-open halinde listeyi tekrar görünür/tıklanır yapar; JS mantığına dokunmaz.
+   =============================== */
+.rolling-v47-card.bet .v995-bet-group-menu.is-open > .v995-bet-group-list,
+.rolling-v47-card.bet .v995-bet-group-menu.is-open .v995-bet-group-list {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+.rolling-v47-card.bet .v995-bet-group-menu.is-open > .v995-bet-group-list .v995-bet-group-option,
+.rolling-v47-card.bet .v995-bet-group-menu.is-open .v995-bet-group-option {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
