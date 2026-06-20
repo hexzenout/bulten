@@ -2596,10 +2596,12 @@ function escapeHtml(str) {
         if (!card) return;
 
         /*
-          V1023: V1022'deki JS kontrollü fixed sistem kaldırıldı.
-          Kartı fixed'e koparmak sol rail arka planının üstüne bindiriyordu ve
-          kupon seçiminden sonra scroll içinde gömülü gibi oynatıyordu.
-          Artık Kasa Hedefi normal sol kolonun içinde kalır; sabitlemeyi CSS sticky yapar.
+          V1024: Kasa Hedefi'nde fixed/sticky JS sistemi tamamen kapatıldı.
+          V1022 fixed overlay, V1023 sticky + internal scroll davranışı;
+          kartın altını kesiyor, mouse üstündeyken ana sayfa scroll'unu kilitliyor
+          ve refresh/scroll sırasında performans hissini düşürüyordu.
+          Kart artık sol rail içinde normal akışta kalır; CSS de position/overflow
+          değerlerini statik ve sade tutar.
         */
         rail.style.removeProperty("--v1016-target-placeholder-height");
         rail.style.removeProperty("--v1016-target-left");
@@ -2609,8 +2611,7 @@ function escapeHtml(str) {
         delete rail.dataset.v1016NaturalTop;
         delete rail.dataset.v1016TargetHeight;
         delete rail.dataset.v1022TargetHeight;
-        card.classList.remove("v1016-target-fixed");
-        card.classList.add("v1023-target-sticky-card");
+        card.classList.remove("v1016-target-fixed", "v1023-target-sticky-card");
       });
     };
     window.__bultenV1016SyncTargetRail = syncV1016TargetRail;
