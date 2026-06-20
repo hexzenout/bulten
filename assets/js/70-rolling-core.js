@@ -2603,40 +2603,46 @@ function escapeHtml(str) {
           rail.style.minHeight = "";
           card.classList.remove("v1016-target-fixed");
           delete rail.dataset.v1016NaturalTop;
+          delete rail.dataset.v1022TargetHeight;
           return;
         }
-        const isFixed = card.classList.contains("v1016-target-fixed");
+
+        /*
+          V1022: Kasa Hedefi artık scroll eşiğine göre aç/kapat yapılmıyor.
+          Kupon seçimi refresh() tetiklediğinde eski V1016 kodu rail'in o anki
+          scrolled konumunu "doğal top" sanıp kartı normal akışa geri düşürüyordu.
+          Sonuç: kart seçimden sonra aşağı iniyor, scroll sırasında gömülü gibi oynuyordu.
+          Çözüm: masaüstünde kart her zaman fixed kalır; rail sadece yer tutucu olur.
+        */
         const railRect = rail.getBoundingClientRect();
         const railStyle = window.getComputedStyle(rail);
         const padLeft = Number.parseFloat(railStyle.paddingLeft || "0") || 0;
         const padRight = Number.parseFloat(railStyle.paddingRight || "0") || 0;
-        const naturalTop = rail.dataset.v1016NaturalTop ? Number(rail.dataset.v1016NaturalTop) : window.scrollY + railRect.top;
-        rail.dataset.v1016NaturalTop = String(naturalTop);
-        const shouldFix = window.scrollY + top >= naturalTop;
         const width = Math.max(240, Math.round(railRect.width - padLeft - padRight));
         const left = Math.round(railRect.left + padLeft);
-        let height = Number(rail.dataset.v1016TargetHeight || 0);
-        if (!isFixed || !height) {
-          const cardRect = card.getBoundingClientRect();
-          height = Math.max(320, Math.round(cardRect.height || card.scrollHeight || 0));
-          rail.dataset.v1016TargetHeight = String(height);
-        }
+
         rail.style.setProperty("--v1016-target-left", `${left}px`);
         rail.style.setProperty("--v1016-target-width", `${width}px`);
         rail.style.setProperty("--v1016-target-top", `${top}px`);
+        card.classList.add("v1016-target-fixed");
+
+        const measuredHeight = Math.max(320, Math.round(card.scrollHeight || card.getBoundingClientRect().height || 0));
+        const height = Math.max(Number(rail.dataset.v1022TargetHeight || 0), measuredHeight);
+        rail.dataset.v1022TargetHeight = String(height);
         rail.style.setProperty("--v1016-target-placeholder-height", `${height}px`);
-        rail.style.minHeight = shouldFix ? `${height}px` : "";
-        card.classList.toggle("v1016-target-fixed", shouldFix);
+        rail.style.minHeight = `${height}px`;
+        delete rail.dataset.v1016NaturalTop;
       });
     };
     window.__bultenV1016SyncTargetRail = syncV1016TargetRail;
     requestAnimationFrame(syncV1016TargetRail);
     setTimeout(syncV1016TargetRail, 60);
+    setTimeout(syncV1016TargetRail, 180);
     if (!window.__bultenV1016TargetRailHandlers) {
       window.__bultenV1016TargetRailHandlers = true;
       const syncRail = () => window.__bultenV1016SyncTargetRail?.();
-      window.addEventListener("scroll", syncRail, true);
       window.addEventListener("resize", syncRail, true);
+      window.addEventListener("orientationchange", syncRail, true);
     }
 
     mount.querySelectorAll("details.rolling-v49-fold").forEach(details => {
