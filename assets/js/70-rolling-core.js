@@ -2335,25 +2335,26 @@
     const start = Math.max(0, Number(startInput.value || 0));
     const currentTarget = Math.max(0, Number(targetInput.value || 0));
     const currentGrowth = v1045SmartGrowthPercent(growthInput.value);
-    const plan = v1049UpdateGrowthStore(mode, days, pl => {
-      pl.start = v1049RoundMoneyValue(start);
-      if (source === "target") {
-        const computedGrowth = v1049CalcGrowthFromTarget(start, currentTarget, days);
-        pl.growth = computedGrowth;
-        if (document.activeElement !== growthInput) growthInput.value = v1049InputNumberText(computedGrowth);
-      } else {
-        pl.growth = currentGrowth;
-        const computedTarget = v1049CalcTargetFromGrowth(start, currentGrowth, days);
-        if (document.activeElement !== targetInput && computedTarget > 0) targetInput.value = v1049InputNumberText(computedTarget);
-      }
-    });
+    // V1052: HEDEF <-> BÜYÜME % sadece üst satırda taslak olarak senkronlanır.
+    // Büyüme Planı tablosu / gün kutuları Planı Uygula basılmadan değiştirilmez.
     if (source === "target") {
       const computedGrowth = v1049CalcGrowthFromTarget(start, currentTarget, days);
-      if (document.activeElement !== growthInput) growthInput.value = v1049InputNumberText(computedGrowth);
+      if (Number.isFinite(computedGrowth) && document.activeElement !== growthInput) {
+        growthInput.value = v1049InputNumberText(computedGrowth);
+      }
+      overlay.dataset.v1052DraftGrowth = v1049InputNumberText(computedGrowth);
+      overlay.dataset.v1052DraftTarget = v1049InputNumberText(currentTarget);
     } else {
-      const computedTarget = v1049CalcTargetFromGrowth(start, plan.growth, days);
-      if (document.activeElement !== targetInput && computedTarget > 0) targetInput.value = v1049InputNumberText(computedTarget);
+      const computedTarget = v1049CalcTargetFromGrowth(start, currentGrowth, days);
+      if (computedTarget > 0 && document.activeElement !== targetInput) {
+        targetInput.value = v1049InputNumberText(computedTarget);
+      }
+      overlay.dataset.v1052DraftGrowth = v1049InputNumberText(currentGrowth);
+      overlay.dataset.v1052DraftTarget = v1049InputNumberText(computedTarget);
     }
+    overlay.dataset.v1052DraftMode = mode;
+    overlay.dataset.v1052DraftDays = String(days);
+    overlay.dataset.v1052DraftStart = v1049InputNumberText(start);
   }
   function v1046RememberRollingRoute(mode, days) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2447,21 +2448,15 @@
         v1049SyncExcelTargetGrowth("growth");
       };
       startInput.addEventListener("input", syncStart);
-      startInput.addEventListener("change", () => setTimeout(() => {
-        syncStart();
-        v1043InjectExcelGrowthPlan();
-      }, 0));
+      startInput.addEventListener("change", syncStart);
     }
     if (targetInput && targetInput.dataset.v1049GrowthTargetSync !== "1") {
       targetInput.dataset.v1049GrowthTargetSync = "1";
-      let timer = 0;
       const syncTarget = () => {
         v1049SyncExcelTargetGrowth("target");
-        window.clearTimeout(timer);
-        timer = window.setTimeout(() => v1043InjectExcelGrowthPlan(), 120);
       };
       targetInput.addEventListener("input", syncTarget);
-      targetInput.addEventListener("change", () => { syncTarget(); v1043InjectExcelGrowthPlan(); });
+      targetInput.addEventListener("change", syncTarget);
     }
   }
   function v1046EnsureExcelGrowthConfig(mode, days, state) {
@@ -2513,14 +2508,11 @@
     }
     if (input.dataset.v1046GrowthBound !== "1") {
       input.dataset.v1046GrowthBound = "1";
-      let timer = 0;
       const sync = () => {
         v1049SyncExcelTargetGrowth("growth");
-        window.clearTimeout(timer);
-        timer = window.setTimeout(() => v1043InjectExcelGrowthPlan(), 120);
       };
       input.addEventListener("input", sync);
-      input.addEventListener("change", () => { sync(); v1043InjectExcelGrowthPlan(); });
+      input.addEventListener("change", sync);
     }
     return input;
   }

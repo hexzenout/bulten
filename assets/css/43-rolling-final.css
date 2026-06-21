@@ -16404,3 +16404,21 @@ input.v1020-combo-stake-target {
 #rolling-excel-overlay .v1048-growth-table td:nth-child(5) b.v1051-current-balance.down{
   color:#ef4444!important;
 }
+
+/* V1052: Büyüme Planı - Planı Uygula olmadan tabloya yazma + BAKİYE/HEDEF belirginliği */
+#rolling-excel-overlay .v1048-growth-table td:nth-child(2){
+  color:#dbeafe!important;
+  font-weight:950!important;
+  text-shadow:0 0 8px rgba(147,197,253,.12)!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(3),
+#rolling-excel-overlay .v1048-growth-table td:nth-child(3) strong{
+  color:#fde68a!important;
+  font-weight:950!important;
+  text-shadow:0 0 8px rgba(250,204,21,.12)!important;
+}
+#rolling-excel-overlay .v1048-growth-table th:nth-child(2),
+#rolling-excel-overlay .v1048-growth-table th:nth-child(3){
+  color:#cbd5e1!important;
+  font-weight:950!important;
+}
