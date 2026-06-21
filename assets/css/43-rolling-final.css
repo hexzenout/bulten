@@ -15521,7 +15521,7 @@ input.v1020-combo-stake-target {
 }
 
 
-/* V1029: Bahis Kasa Hedefi Detay - Tutar/Kazanç sade yazı + sağda iki satır yüksekliğinde çöp */
+/* V1030: Bahis Kasa Hedefi Detay - Tutar/Kazanç sade yazı renk uyumu */
 .rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-footer.bet {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) 42px !important;
@@ -15546,7 +15546,7 @@ input.v1020-combo-stake-target {
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  color: #cbd5e1 !important;
+  color: #9ca3af !important;
   font-size: .72rem !important;
   line-height: 1.25 !important;
   font-weight: 900 !important;
@@ -15570,7 +15570,7 @@ input.v1020-combo-stake-target {
 }
 
 .rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta span:nth-child(1) b {
-  color: #f8fafc !important;
+  color: #34d399 !important;
 }
 
 .rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta span:nth-child(2) b {
