@@ -2281,9 +2281,7 @@
     return raw;
   }
   function v1045GrowthColumnLabel(growth) {
-    const clean = v1045SmartGrowthPercent(growth);
-    const text = Number.isInteger(clean) ? String(clean) : clean.toFixed(2).replace(/\.?0+$/, "");
-    return `Büyüme %${text}`;
+    return "BÜYÜME";
   }
   function v1049RoundMoneyValue(value) {
     const n = Number(value);
@@ -2547,8 +2545,10 @@
             const actual = actualRows[idx]?.balance;
             const effect = actualRows[idx]?.effect;
             const currentValue = Number.isFinite(actual) ? actual : (row.day === 1 ? Number(plan.start || 0) : null);
-            const effectValue = Number.isFinite(effect) ? `<b class="v1050-growth-delta ${effect >= 0 ? "win" : "loss"}">${effect >= 0 ? "+" : ""}${money(effect)}</b>` : blank;
-            return `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${effectValue}</td><td>${Number.isFinite(currentValue) ? `<b>${money(currentValue)}</b>` : blank}</td></tr>`;
+            const effectValue = Number.isFinite(effect) ? `<b class="v1050-growth-delta ${effect >= 0 ? "win" : "loss"}">${money(effect)}</b>` : blank;
+            const baseStart = Number(plan.start || 0);
+            const currentClass = Number.isFinite(currentValue) && currentValue < baseStart ? "v1051-current-balance down" : "v1051-current-balance";
+            return `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${effectValue}</td><td>${Number.isFinite(currentValue) ? `<b class="${currentClass}">${money(currentValue)}</b>` : blank}</td></tr>`;
           }).join("")}</tbody>
         </table>
       </div>

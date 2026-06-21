@@ -16386,3 +16386,21 @@ input.v1020-combo-stake-target {
   color:#ef4444!important;
   font-weight:950!important;
 }
+
+
+/* V1051: Büyüme Planı - sade BÜYÜME başlığı, turuncu kazanç, zarar altında kırmızı güncel kasa */
+#rolling-excel-overlay .v1048-growth-table .v1050-growth-delta.win{
+  color:#f97316!important;
+  font-weight:950!important;
+}
+#rolling-excel-overlay .v1048-growth-table .v1050-growth-delta.loss{
+  color:#ef4444!important;
+  font-weight:950!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(5) b.v1051-current-balance{
+  color:#22c55e!important;
+  font-weight:950!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(5) b.v1051-current-balance.down{
+  color:#ef4444!important;
+}
