@@ -982,7 +982,7 @@
   }
   function v812BetTitle(item) {
     const legs = v812BetLegs(item);
-    if (legs.length <= 1) return cleanText(legs[0]?.name || "") || "Tekli Bahis";
+    if (legs.length <= 1) return "Tek";
     return `Kombine ${legs.length} maç`;
   }
   function v812BetInfo(item) {
@@ -1064,11 +1064,19 @@
     }
     const details = rows.slice(-8).reverse().map(item => {
       const result = cleanText(item.result || "");
+      const legs = v812BetLegs(item);
       const odds = v812BetOddsProduct(item);
       const possibleReturn = v812BetPotential(item);
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row bet ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head"><span title="${escapeHtml(v812BetTitle(item))}">${escapeHtml(v812BetTitle(item))}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
-        <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list">${v813BetLegRowsHtml(item)}</div>
+      const stake = Number(item?.stake || 0);
+      const typeClass = legs.length > 1 ? "combo" : "single";
+      const title = v812BetTitle(item);
+      const oddsText = odds ? odds.toFixed(2) : "-";
+      const stakeText = stake ? money(stake) : "-";
+      const possibleText = possibleReturn ? money(possibleReturn) : "-";
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row v835-bet-detail-row v1026-bet-detail-row bet ${typeClass} ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+        <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v835-bet-detail-head v1026-bet-detail-head"><span class="v1026-bet-type-label ${typeClass}" title="${escapeHtml(title)}">${escapeHtml(title)}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
+        <div class="v835-bet-detail-meta v1026-bet-detail-meta"><span>Tutar <b>${escapeHtml(stakeText)}</b></span><span>Oran <b>${escapeHtml(oddsText)}</b></span><span>Olası <b>${escapeHtml(possibleText)}</b></span></div>
+        <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list v835-bet-match-list">${v813BetLegRowsHtml(item)}</div>
         <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
       </li>`;
     }).join("");
@@ -1127,7 +1135,7 @@
         <input type="number" step="0.01" inputmode="decimal" data-target-self-field="${m}:stake" placeholder="Tutar">
         <div class="v812-target-form-actions v814-target-form-actions"><button type="button" data-target-bet-leg-add="${m}">+ Maç</button></div>
       </div>
-      ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
+      ${data.hasRows ? `<details open class="v810-target-self-details v811-target-self-details v812-target-self-details v813-target-self-details v814-target-self-details v835-target-self-details"><summary>Detay</summary><ul>${data.details}</ul></details>` : ""}
     </div>`;
   }
 

@@ -15293,3 +15293,86 @@ input.v1020-combo-stake-target {
     overscroll-behavior: auto !important;
   }
 }
+
+/* V1026: Kasa Hedefi Bahis Detay - Tek/Kombine etiketi ve tutar bilgisi */
+.rolling-v48-rail .v1026-bet-detail-head {
+  grid-template-columns: minmax(0, 1fr) 36px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.rolling-v48-rail .v1026-bet-type-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  min-width: 58px !important;
+  padding: 5px 10px !important;
+  border-radius: 999px !important;
+  font-size: .72rem !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: .01em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rolling-v48-rail .v1026-bet-type-label.single {
+  color: #34d399 !important;
+  border: 1px solid rgba(52,211,153,.44) !important;
+  background: linear-gradient(135deg, rgba(6,78,59,.72), rgba(15,23,42,.92)) !important;
+  box-shadow: 0 0 10px rgba(16,185,129,.14) !important;
+}
+
+.rolling-v48-rail .v1026-bet-type-label.combo {
+  color: #fbbf24 !important;
+  border: 1px solid rgba(251,191,36,.46) !important;
+  background: linear-gradient(135deg, rgba(120,53,15,.70), rgba(58,7,100,.54)) !important;
+  box-shadow: 0 0 10px rgba(251,146,60,.14) !important;
+}
+
+.rolling-v48-rail .v1026-bet-detail-meta {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  margin: 0 0 8px !important;
+}
+
+.rolling-v48-rail .v1026-bet-detail-meta span {
+  min-width: 0 !important;
+  padding: 6px 7px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.74) !important;
+  border: 1px solid rgba(148,163,184,.15) !important;
+  color: #94a3b8 !important;
+  font-size: .66rem !important;
+  font-weight: 850 !important;
+}
+
+.rolling-v48-rail .v1026-bet-detail-meta b {
+  display: block !important;
+  margin-top: 2px !important;
+  color: #f8fafc !important;
+  font-size: .72rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.rolling-v48-rail .v1026-bet-detail-meta span:first-child {
+  border-color: rgba(52,211,153,.26) !important;
+  background: linear-gradient(135deg, rgba(6,78,59,.30), rgba(15,23,42,.78)) !important;
+}
+
+.rolling-v48-rail .v1026-bet-detail-meta span:first-child b {
+  color: #34d399 !important;
+}
+
+@media (max-width: 900px) {
+  .rolling-v48-rail .v1026-bet-detail-meta {
+    grid-template-columns: 1fr !important;
+  }
+}
