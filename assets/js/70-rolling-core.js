@@ -1072,13 +1072,13 @@
       const title = v812BetTitle(item);
       const oddsText = odds ? odds.toFixed(2) : "-";
       const stakeText = stake ? money(stake) : "-";
-      const profitOnly = possibleReturn && stake ? Math.max(0, possibleReturn - stake) : 0;
-      const profitOnlyText = profitOnly ? money(profitOnly) : "-";
+      const payoutTotal = possibleReturn && stake ? possibleReturn : 0;
+      const payoutTotalText = payoutTotal ? money(payoutTotal) : "-";
       return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row v835-bet-detail-row v1026-bet-detail-row v1027-bet-detail-row v1028-bet-detail-row v1029-bet-detail-row bet ${typeClass} ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
         <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v835-bet-detail-head v1026-bet-detail-head"><span class="v1026-bet-type-label ${typeClass}" title="${escapeHtml(title)}">${escapeHtml(title)}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
         <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list v835-bet-match-list">${v813BetLegRowsHtml(item)}</div>
         <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer v1027-bet-detail-footer v1028-bet-detail-footer v1029-bet-detail-footer bet">
-          <div class="v835-bet-detail-meta v1026-bet-detail-meta v1027-bet-detail-meta v1028-bet-detail-meta v1029-bet-detail-meta"><span>Tutar: <b>${escapeHtml(stakeText)}</b></span><span>Kazanç: <b>${escapeHtml(profitOnlyText)}</b></span></div>
+          <div class="v835-bet-detail-meta v1026-bet-detail-meta v1027-bet-detail-meta v1028-bet-detail-meta v1029-bet-detail-meta"><span>Tutar: <b>${escapeHtml(stakeText)}</b></span><span>Kazanç: <b>${escapeHtml(payoutTotalText)}</b></span></div>
           <button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button>
         </div>
       </li>`;
