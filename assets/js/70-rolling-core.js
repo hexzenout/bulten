@@ -1416,7 +1416,7 @@
     if (!svg) return null;
     return { dataUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), label: 'Kripto Fotoğrafı', file: `bulten-kripto-${new Date().toISOString().slice(0,10)}.png` };
   }
-  function openTargetResultConfirm(options, onConfirm) {
+  function openTargetResultConfirm(options, onConfirm, onCancel) {
     const opts = options || {};
     const tone = opts.tone === "loss" || opts.tone === "danger" || opts.tone === "stop" ? "danger" : "success";
     let host = document.getElementById("omega-target-confirm-host");
@@ -1441,13 +1441,20 @@
       </section>
     </div>`;
     host.style.display = "block";
-    const close = () => { host.innerHTML = ""; host.style.display = "none"; };
+    let settled = false;
+    const close = (cancelled = false) => {
+      if (settled) return;
+      settled = true;
+      host.innerHTML = "";
+      host.style.display = "none";
+      if (cancelled && typeof onCancel === "function") onCancel();
+    };
     host.querySelectorAll("[data-v823-confirm-cancel]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !el.hasAttribute("data-v823-confirm-cancel")) return;
-      close();
+      close(true);
     }));
     host.querySelector("[data-v823-confirm-ok]")?.addEventListener("click", () => {
-      close();
+      close(false);
       if (typeof onConfirm === "function") onConfirm();
     });
   }
@@ -3012,12 +3019,13 @@ function escapeHtml(str) {
       upsertTargetItemLogRecord("crypto", row, row.result);
       const rowSnapshot = { ...row, tps: row.tps.map(tp => ({ ...tp })) };
       saveTargetItems(latest);
-      refresh();
       if (options && options.askCleanup) {
-        setTimeout(() => askTargetCleanup("crypto", id, rowSnapshot, options.tone || (row.result === "stop" ? "danger" : "success")), 0);
+        askTargetCleanup("crypto", id, rowSnapshot, options.tone || (row.result === "stop" ? "danger" : "success"), { refreshOnCancel: true });
+      } else {
+        refresh();
       }
     };
-    const askTargetCleanup = (modeRaw, id, rowSnapshot, tone = "success") => {
+    const askTargetCleanup = (modeRaw, id, rowSnapshot, tone = "success", options = {}) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       const label = mode === "crypto" ? "işlemi" : "bahisi";
       openTargetResultConfirm({
@@ -3026,7 +3034,9 @@ function escapeHtml(str) {
         okText: "Evet, temizle",
         cancelText: "Hayır, kalsın",
         tone
-      }, () => removeTargetItemAfterResult(mode, id, rowSnapshot));
+      }, () => removeTargetItemAfterResult(mode, id, rowSnapshot), () => {
+        if (options && options.refreshOnCancel) refresh();
+      });
     };
     mount.querySelectorAll("[data-target-self-tp-done]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw] = String(btn.dataset.targetSelfTpDone || "crypto::0").split(":");
