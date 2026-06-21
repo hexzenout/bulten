@@ -15590,3 +15590,118 @@ input.v1020-combo-stake-target {
   align-items: center !important;
   justify-content: center !important;
 }
+
+/* V1032: Kripto Kasa Hedefi - detay çıktısı autosave + TP/Kazanç hizası */
+.rolling-v48-rail .v1032-crypto-detail-head,
+.rolling-v48-rail .v814-crypto-detail-head.v1032-crypto-detail-head {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 32px 32px !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.rolling-v48-rail .v1032-crypto-delete {
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  border-radius: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fecaca !important;
+  border: 1px solid rgba(248,113,113,.42) !important;
+  background: linear-gradient(135deg, rgba(127,29,29,.36), rgba(15,23,42,.88)) !important;
+  box-shadow: 0 0 10px rgba(127,29,29,.12) !important;
+  cursor: pointer !important;
+}
+
+.rolling-v48-rail .v1032-crypto-delete:hover {
+  color: #fff !important;
+  border-color: rgba(248,113,113,.72) !important;
+  background: linear-gradient(135deg, rgba(185,28,28,.62), rgba(127,29,29,.92)) !important;
+}
+
+.rolling-v48-rail .v1032-crypto-meta-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+}
+
+.rolling-v48-rail .v1032-crypto-meta-grid span {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 7px 9px !important;
+}
+
+.rolling-v48-rail .v1032-crypto-meta-grid em {
+  font-style: normal !important;
+  font-size: .67rem !important;
+  font-weight: 950 !important;
+}
+
+.rolling-v48-rail .v1032-crypto-meta-grid .stake em {
+  color: #67e8f9 !important;
+}
+
+.rolling-v48-rail .v1032-crypto-meta-grid .stake b {
+  color: #86efac !important;
+}
+
+.rolling-v48-rail .v1032-crypto-meta-grid .entry em {
+  color: #fdba74 !important;
+}
+
+.rolling-v48-rail .v1032-crypto-meta-grid .entry b {
+  color: #93c5fd !important;
+}
+
+.rolling-v48-rail .v1032-crypto-detail-line.tp {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 34px !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.rolling-v48-rail .v1032-crypto-tp-summary {
+  display: grid !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+}
+
+.rolling-v48-rail .v1032-crypto-tp-summary span {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+  font-size: .68rem !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rolling-v48-rail .v1032-crypto-tp-summary b,
+.rolling-v48-rail .v1032-crypto-tp-summary em {
+  font-style: normal !important;
+  font-weight: 950 !important;
+  min-width: 0 !important;
+}
+
+.rolling-v48-rail .v1032-crypto-tp-summary .tp-target b {
+  color: #c4b5fd !important;
+}
+
+.rolling-v48-rail .v1032-crypto-tp-summary .tp-target em {
+  color: #facc15 !important;
+}
+
+.rolling-v48-rail .v1032-crypto-tp-summary .tp-profit b {
+  color: #86efac !important;
+}
+
+.rolling-v48-rail .v1032-crypto-tp-summary .tp-profit em {
+  color: #22c55e !important;
+}

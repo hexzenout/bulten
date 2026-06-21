@@ -1022,10 +1022,12 @@
     if (!tps.length) return "";
     return tps.map((tp, i) => {
       const isDone = cleanText(item?.result || "") === "tp" || !!tp.done;
-      const profit = tp.profit !== "" ? signedMoney(Number(tp.profit || 0)) : "+$0.00";
-      return `<div class="v813-crypto-detail-line v814-crypto-detail-line v815-crypto-detail-line tp ${isDone ? "done" : ""}">
-        <span>TP ${i + 1}</span>
-        <div class="v814-crypto-values v815-crypto-values"><b>${escapeHtml(tp.target || "-")}</b><em>${escapeHtml(profit)}</em></div>
+      const profit = tp.profit !== "" ? money(Number(tp.profit || 0)) : "$0.00";
+      return `<div class="v813-crypto-detail-line v814-crypto-detail-line v815-crypto-detail-line v1032-crypto-detail-line tp ${isDone ? "done" : ""}">
+        <div class="v1032-crypto-tp-summary">
+          <span class="tp-target"><b>TP${i + 1}:</b> <em>${escapeHtml(tp.target || "-")}</em></span>
+          <span class="tp-profit"><b>Kazanç:</b> <em>${escapeHtml(profit)}</em></span>
+        </div>
         <button type="button" class="tp-check v815-result-btn ${isDone ? "active" : ""}" data-target-self-tp-done="crypto:${escapeHtml(item.id || "")}:${i}" title="Kazanç"><i class="fa-solid fa-check"></i></button>
       </div>`;
     }).join("");
@@ -1054,10 +1056,9 @@
       const details = rows.slice(-8).reverse().map(item => {
         const result = cleanText(item.result || "");
         return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row crypto ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
-          <div class="v814-crypto-detail-head v819-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
-          <div class="v814-crypto-meta-grid"><span>Tutar <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span>Giriş <b>${escapeHtml(v814EntryText(item))}</b></span></div>
-          <div class="v813-crypto-lines v814-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
-          <div class="v819-target-card-footer crypto"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="v814-crypto-detail-head v819-crypto-detail-head v1032-crypto-detail-head"><span title="${escapeHtml(cleanText(item.name || "") || "İşlem")}">${escapeHtml(cleanText(item.name || "") || "İşlem")}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="İşlem fotoğrafı"><i class="fa-solid fa-camera"></i></button><button type="button" class="v1032-crypto-delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Çıktıyı temizle"><i class="fa-solid fa-xmark"></i></button></div>
+          <div class="v814-crypto-meta-grid v1032-crypto-meta-grid"><span class="stake"><em>Tutar:</em> <b>${Number(item.stake || 0) ? money(item.stake) : "-"}</b></span><span class="entry"><em>Giriş:</em> <b>${escapeHtml(v814EntryText(item))}</b></span></div>
+          <div class="v813-crypto-lines v814-crypto-lines v1032-crypto-lines">${v813CryptoTpRowsHtml(item)}${v813CryptoStopRowHtml(item)}</div>
         </li>`;
       }).join("");
       return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -2929,23 +2930,21 @@ function escapeHtml(str) {
         const saved = saveTargetSelfFromForm(autosaveMode);
         if (saved) refresh();
       });
-      if (autosaveMode === "bet") {
-        form.addEventListener('focusout', event => {
-          window.setTimeout(() => {
-            if (!mount.isConnected || !form.isConnected) return;
-            if (form.dataset.skipAutosaveOnce === '1') {
-              delete form.dataset.skipAutosaveOnce;
-              return;
-            }
-            const active = document.activeElement;
-            if (active && form.contains(active)) return;
-            const related = event.relatedTarget;
-            if (related instanceof Node && form.contains(related)) return;
-            const saved = saveTargetSelfFromForm(autosaveMode);
-            if (saved) refresh();
-          }, 0);
-        });
-      }
+      form.addEventListener('focusout', event => {
+        window.setTimeout(() => {
+          if (!mount.isConnected || !form.isConnected) return;
+          if (form.dataset.skipAutosaveOnce === '1') {
+            delete form.dataset.skipAutosaveOnce;
+            return;
+          }
+          const active = document.activeElement;
+          if (active && form.contains(active)) return;
+          const related = event.relatedTarget;
+          if (related instanceof Node && form.contains(related)) return;
+          const saved = saveTargetSelfFromForm(autosaveMode);
+          if (saved) refresh();
+        }, 0);
+      });
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
