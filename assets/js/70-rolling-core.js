@@ -2119,6 +2119,8 @@
     const d = Number(days);
     if (d === 15) return 15;
     if (d === 30) return 30;
+    if (d === 60) return 60;
+    if (d === 90) return 90;
     return 7;
   }
   function v1041RouteRollingInfo() {
@@ -2233,13 +2235,18 @@
       </div>
     </section>`;
   }
+  function renderRollingGrowthEntry(mode, state) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const growthLabel = m === "crypto" ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
+    const growthActive = growthPanelOpen(m) ? " active" : "";
+    return `<div class="v1042-roll-growth-entry ${m}"><button type="button" class="v758-row-tool v1041-growth-toggle${growthActive}" data-growth-panel-toggle="${m}"><i class="fa-solid fa-chart-line"></i> ${growthLabel}</button></div>${growthPanelOpen(m) ? renderGrowthPlanPanel(m, state) : ""}`;
+  }
+
   function renderRowControls(mode, state) {
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const label = mode === "crypto" ? "Kripto" : "Bahis";
     const pendingLabel = mode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
-    const growthLabel = mode === "crypto" ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
-    const growthActive = growthPanelOpen(mode) ? " active" : "";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls"><span>${count}/20 ${label} Alanı</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-log-center="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button><button type="button" class="v758-row-tool v1041-growth-toggle${growthActive}" data-growth-panel-toggle="${mode}"><i class="fa-solid fa-chart-line"></i> ${growthLabel}</button></div>`;
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls"><span>${count}/20 ${label} Alanı</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-log-center="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button></div>`;
   }
 
   
@@ -2307,6 +2314,7 @@ function escapeHtml(str) {
           <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span ${isCrypto ? 'style="color:#fbbf24 !important;text-shadow:0 0 10px rgba(251,191,36,.24);"' : ""}>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
           <div class="rolling-v47-roll-panel ${mode}">
             <div class="rolling-v47-roll-buttons">${renderRollingButtons(mode)}</div>
+            ${renderRollingGrowthEntry(mode, state)}
           </div>
         </details>
 
@@ -2316,7 +2324,6 @@ function escapeHtml(str) {
             <div>${renderRowControls(mode, state)}</div>
             <button type="button" data-clear="${mode}">TÜMÜNÜ TEMİZLE</button>
           </div>
-          ${growthPanelOpen(mode) ? renderGrowthPlanPanel(mode, state) : ""}
           ${renderTable(mode, slots, state)}
         </details>
       </section>`;
@@ -2580,7 +2587,7 @@ function escapeHtml(str) {
       const [mode, daysRaw] = String(btn.dataset.roll || "bet:7").split(":");
       const m = mode === "crypto" ? "crypto" : "bet";
       const days = Number(daysRaw || 7);
-      if (days === 7 || days === 15 || days === 30) {
+      if ([7, 15, 30, 60, 90].includes(days)) {
         const store = v1040LoadGrowthPlans();
         store.active[m] = v1041NormalizeGrowthDays(days);
         v1040GetGrowthPlan(store, m, days, state);
