@@ -15944,3 +15944,145 @@ input.v1020-combo-stake-target {
   #rolling-excel-overlay #v1043-excel-growth-host{padding:10px 14px 12px}
   #rolling-excel-overlay .v1043-excel-growth-bar{align-items:flex-start}
 }
+
+
+/* V1044: Büyüme Planı tam ekran Rolling içinde, gün satırlarının parçası gibi kompakt dursun. */
+#rolling-excel-overlay #v1043-excel-growth-host{
+  flex-shrink:0!important;
+  width:min(560px, calc(100% - 48px))!important;
+  max-width:560px!important;
+  margin:10px 0 12px 24px!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#rolling-excel-overlay .v1043-excel-growth-shell{
+  width:100%!important;
+  max-width:560px!important;
+  margin:0!important;
+}
+#rolling-excel-overlay .v1043-excel-growth-bar{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+  margin:0 0 8px!important;
+}
+#rolling-excel-overlay .v1043-excel-growth-bar > span{
+  display:none!important;
+}
+#rolling-excel-overlay .v1043-excel-growth-bar .v1041-growth-toggle{
+  min-height:38px!important;
+  padding:9px 14px!important;
+  border-radius:14px!important;
+  border:1px solid rgba(168,85,247,.42)!important;
+  background:linear-gradient(135deg, rgba(88,28,135,.40), rgba(15,23,42,.88))!important;
+  color:#e9d5ff!important;
+  box-shadow:0 10px 22px rgba(2,6,23,.18)!important;
+}
+#rolling-excel-overlay .v1043-excel-growth-bar .v1041-growth-toggle:hover{
+  border-color:rgba(192,132,252,.72)!important;
+  color:#f5d0fe!important;
+  background:linear-gradient(135deg, rgba(126,34,206,.48), rgba(30,41,59,.90))!important;
+  transform:translateY(-1px)!important;
+}
+#rolling-excel-overlay .v1043-excel-growth-bar .v1041-growth-toggle.active{
+  border-color:rgba(192,132,252,.82)!important;
+  color:#f5d0fe!important;
+  background:linear-gradient(135deg, rgba(126,34,206,.55), rgba(15,23,42,.92))!important;
+}
+#rolling-excel-overlay .v1040-growth-plan.v1044-growth-plan-compact{
+  width:100%!important;
+  max-width:560px!important;
+  margin:0!important;
+  padding:12px!important;
+  border-radius:16px!important;
+  border-color:rgba(34,197,94,.22)!important;
+  background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(2,6,23,.78))!important;
+  box-shadow:0 14px 28px rgba(2,6,23,.22)!important;
+}
+#rolling-excel-overlay .v1044-growth-head-compact{
+  display:flex!important;
+  justify-content:flex-start!important;
+  align-items:center!important;
+  margin:0 0 8px!important;
+}
+#rolling-excel-overlay .v1044-growth-head-compact .v1040-growth-total{
+  min-width:0!important;
+  text-align:left!important;
+}
+#rolling-excel-overlay .v1044-growth-head-compact .v1040-growth-total span{
+  font-size:10px!important;
+  color:#94a3b8!important;
+}
+#rolling-excel-overlay .v1044-growth-head-compact .v1040-growth-total b{
+  display:inline-block!important;
+  margin:0 8px 0 0!important;
+  font-size:15px!important;
+  color:#22c55e!important;
+}
+#rolling-excel-overlay .v1044-growth-head-compact .v1040-growth-total em{
+  display:inline-block!important;
+  font-size:10px!important;
+  color:#facc15!important;
+}
+#rolling-excel-overlay .v1040-growth-controls{
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+  margin-bottom:8px!important;
+}
+#rolling-excel-overlay .v1040-growth-actions{
+  grid-column:1 / -1!important;
+  justify-content:flex-start!important;
+}
+#rolling-excel-overlay .v1040-growth-controls input{
+  min-height:34px!important;
+  padding:7px 9px!important;
+  border-radius:10px!important;
+}
+#rolling-excel-overlay .v1040-growth-controls label span{
+  font-size:9px!important;
+}
+#rolling-excel-overlay .v1040-growth-actions button{
+  min-height:32px!important;
+  padding:7px 9px!important;
+  border-radius:10px!important;
+  font-size:11px!important;
+}
+#rolling-excel-overlay .v1040-growth-table-wrap{
+  max-height:330px!important;
+  overflow:auto!important;
+  border-radius:12px!important;
+}
+#rolling-excel-overlay .v1040-growth-table{
+  min-width:500px!important;
+}
+#rolling-excel-overlay .v1040-growth-table th,
+#rolling-excel-overlay .v1040-growth-table td{
+  padding:7px 8px!important;
+  font-size:11px!important;
+}
+#rolling-excel-overlay .v1040-growth-table th{
+  font-size:10px!important;
+}
+#rolling-excel-overlay .v1040-growth-total b,
+#rolling-excel-overlay .v1040-growth-table td:last-child b,
+#rolling-excel-overlay .v1040-growth-plan.crypto .v1040-growth-total b,
+#rolling-excel-overlay .v1040-growth-plan.crypto .v1040-growth-table td:last-child b{
+  color:#22c55e!important;
+}
+@media (max-width: 760px){
+  #rolling-excel-overlay #v1043-excel-growth-host{
+    width:calc(100% - 28px)!important;
+    max-width:none!important;
+    margin:10px 14px 12px!important;
+  }
+  #rolling-excel-overlay .v1043-excel-growth-shell,
+  #rolling-excel-overlay .v1040-growth-plan.v1044-growth-plan-compact{
+    max-width:none!important;
+  }
+  #rolling-excel-overlay .v1040-growth-controls{
+    grid-template-columns:1fr!important;
+  }
+}

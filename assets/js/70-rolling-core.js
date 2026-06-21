@@ -2213,9 +2213,8 @@
     const finalValue = rows.length ? rows[rows.length - 1].after : Number(plan.start || 0);
     const totalProfit = finalValue - Number(plan.start || 0);
     const title = isCrypto ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
-    return `<section class="v1040-growth-plan ${m}" data-growth-plan="${m}">
-      <div class="v1040-growth-head">
-        <div><b>${title}</b><span>${activeDays} Günlük Rolling için hedef kasa simülasyonu</span></div>
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact" data-growth-plan="${m}">
+      <div class="v1040-growth-head v1044-growth-head-compact">
         <div class="v1040-growth-total"><span>${activeDays}. Gün Final</span><b>${money(finalValue)}</b><em>Toplam kâr ${money(totalProfit)}</em></div>
       </div>
       <div class="v1040-growth-controls">
@@ -2299,8 +2298,8 @@
   function v1043InjectExcelGrowthPlan() {
     const overlay = document.getElementById("rolling-excel-overlay");
     if (!overlay || overlay.style.display === "none") return;
-    const config = overlay.querySelector(".modal-config-bar");
-    if (!config) return;
+    const body = overlay.querySelector("#excel-body-content");
+    if (!body) return;
     const { mode, days } = v1043ExcelGrowthContext();
     const state = loadState();
     const store = v1040LoadGrowthPlans();
@@ -2311,14 +2310,14 @@
     if (!host) {
       host = document.createElement("div");
       host.id = "v1043-excel-growth-host";
-      config.insertAdjacentElement("afterend", host);
     }
+    if (host.parentElement !== body) body.insertBefore(host, body.firstChild);
+    else if (body.firstElementChild !== host) body.insertBefore(host, body.firstChild);
     const label = mode === "crypto" ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
     const open = growthPanelOpen(mode);
     host.innerHTML = `<section class="v1043-excel-growth-shell ${mode}" data-v1043-excel-growth-shell="${mode}:${days}">
       <div class="v1043-excel-growth-bar">
         <button type="button" class="v758-row-tool v1041-growth-toggle${open ? " active" : ""}" data-v1043-excel-growth-toggle="${mode}"><i class="fa-solid fa-chart-line"></i> ${label}</button>
-        <span>${days} Günlük Rolling içinde gösteriliyor</span>
       </div>
       ${open ? renderGrowthPlanPanel(mode, state) : ""}
     </section>`;
