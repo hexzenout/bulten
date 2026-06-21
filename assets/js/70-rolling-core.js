@@ -2172,10 +2172,10 @@
     const fallback = v1040DefaultGrowthPlan(m, d, state);
     const current = store[m][String(d)] && typeof store[m][String(d)] === "object" ? store[m][String(d)] : {};
     const start = Number(current.start ?? fallback.start);
-    const growth = Number(current.growth ?? fallback.growth);
+    const growth = v1045SmartGrowthPercent(current.growth ?? fallback.growth);
     const plan = {
       start: Number.isFinite(start) && start > 0 ? start : fallback.start,
-      growth: Number.isFinite(growth) ? growth : fallback.growth,
+      growth,
       days: d
     };
     store[m][String(d)] = plan;
@@ -2183,7 +2183,7 @@
   }
   function v1040GrowthRows(plan) {
     const start = Math.max(0, Number(plan?.start || 0));
-    const growth = Number.isFinite(Number(plan?.growth)) ? Number(plan.growth) : 0;
+    const growth = v1045SmartGrowthPercent(plan?.growth);
     const days = v1041NormalizeGrowthDays(plan?.days);
     const rows = [];
     let kasa = start;
@@ -2200,6 +2200,121 @@
     const rows = v1040GrowthRows(plan);
     return rows.length ? rows[rows.length - 1].after : Number(plan?.start || 0);
   }
+
+  function v1045SmartGrowthPercent(value) {
+    const raw = Number(value);
+    if (!Number.isFinite(raw)) return 30;
+    if (raw < 0) return 0;
+    if (raw > 1000) return 1000;
+    return raw;
+  }
+  function v1045GrowthColumnLabel(growth) {
+    const clean = v1045SmartGrowthPercent(growth);
+    const text = Number.isInteger(clean) ? String(clean) : clean.toFixed(2).replace(/\.?0+$/, "");
+    return `Büyüme %${text}`;
+  }
+  function v1045GetExcelPlanKey(mode, days) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    try {
+      if (typeof window.omega_GetRollingPlanKeyV47 === "function") return window.omega_GetRollingPlanKeyV47(d);
+    } catch {}
+    return `${m}_${d}`;
+  }
+  function v1045ReadRollingDb() {
+    try { return JSON.parse(localStorage.getItem(ROLLING_KEY) || "{}"); } catch { return {}; }
+  }
+  function v1045WriteRollingDb(db) {
+    try { localStorage.setItem(ROLLING_KEY, JSON.stringify(db && typeof db === "object" ? db : {})); } catch {}
+  }
+  function v1045SetExcelConfigValues(mode, days, startValue, targetValue) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    const start = Number(startValue);
+    const target = Number(targetValue);
+    const startInput = document.getElementById("excel-start-bal");
+    const targetInput = document.getElementById("excel-target-bal-input");
+    if (startInput && Number.isFinite(start)) startInput.value = String(Number(start.toFixed(2)));
+    if (targetInput && Number.isFinite(target) && target > 0) targetInput.value = String(Number(target.toFixed(2)));
+    const db = v1045ReadRollingDb();
+    const key = v1045GetExcelPlanKey(m, d);
+    const current = db[key] && typeof db[key] === "object" ? db[key] : { ops: {}, mode: m, days: d };
+    current.mode = m;
+    current.days = d;
+    current.ops = current.ops && typeof current.ops === "object" ? current.ops : {};
+    if (Number.isFinite(start)) current.startBal = Number(start.toFixed(2));
+    if (Number.isFinite(target) && target > 0) current.targetBal = Number(target.toFixed(2));
+    db[key] = current;
+    v1045WriteRollingDb(db);
+    try { window._ROLLING_DB = db; } catch {}
+  }
+  function v1045SyncOverlayStartToGrowthPlan(mode, days, startValue) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    const start = Number(startValue);
+    if (!Number.isFinite(start) || start < 0) return;
+    const state = loadState();
+    const store = v1040LoadGrowthPlans();
+    const plan = v1040GetGrowthPlan(store, m, d, state);
+    plan.start = Number(start.toFixed(2));
+    plan.days = d;
+    store.active[m] = d;
+    store[m][String(d)] = plan;
+    v1040SaveGrowthPlans(store);
+  }
+  function v1045SyncGrowthPlanStartToOverlay(mode, days, plan) {
+    const startInput = document.getElementById("excel-start-bal");
+    if (!startInput || !plan) return;
+    const start = Number(plan.start || 0);
+    if (Number.isFinite(start)) {
+      startInput.value = String(Number(start.toFixed(2)));
+      const targetInput = document.getElementById("excel-target-bal-input");
+      const target = targetInput ? Number(targetInput.value || 0) : Number(v1040GrowthFinal(plan) || 0);
+      v1045SetExcelConfigValues(mode, days, start, target);
+    }
+  }
+  function v1045DecorateExcelDays(mode, days, state) {
+    const overlay = document.getElementById("rolling-excel-overlay");
+    if (!overlay || overlay.style.display === "none") return;
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    const store = v1040LoadGrowthPlans();
+    const plan = v1040GetGrowthPlan(store, m, d, state || loadState());
+    const rows = v1040GrowthRows(plan);
+    const label = v1045GrowthColumnLabel(plan.growth);
+    overlay.querySelectorAll(".day-row-capsule").forEach((rowEl, idx) => {
+      const info = rowEl.querySelector(".day-info-v32, .day-info");
+      if (!info) return;
+      let chip = info.querySelector(".v1045-growth-day-goal");
+      if (!chip) {
+        chip = document.createElement("span");
+        chip.className = "v1045-growth-day-goal";
+        const tools = info.querySelector(".day-tools-v32");
+        if (tools) info.insertBefore(chip, tools);
+        else info.appendChild(chip);
+      }
+      const data = rows[idx];
+      if (!data) { chip.remove(); return; }
+      chip.innerHTML = `<b>${label}:</b> ${money(data.profit)} <em>Bakiye: ${money(data.after)}</em>`;
+    });
+  }
+  function v1045BindExcelHeaderSync() {
+    const input = document.getElementById("excel-start-bal");
+    if (!input || input.dataset.v1045GrowthStartSync === "1") return;
+    input.dataset.v1045GrowthStartSync = "1";
+    const sync = () => {
+      const { mode, days } = v1043ExcelGrowthContext();
+      v1045SyncOverlayStartToGrowthPlan(mode, days, input.value);
+      const overlay = document.getElementById("rolling-excel-overlay");
+      const growthInput = overlay?.querySelector(`[data-growth-input="${mode}:${days}:start"]`);
+      if (growthInput && document.activeElement !== growthInput) growthInput.value = input.value;
+    };
+    input.addEventListener("input", sync);
+    input.addEventListener("change", () => setTimeout(() => {
+      sync();
+      v1043InjectExcelGrowthPlan();
+    }, 0));
+  }
   function renderGrowthPlanPanel(mode, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const isCrypto = m === "crypto";
@@ -2212,7 +2327,7 @@
     const rows = v1040GrowthRows(plan);
     const finalValue = rows.length ? rows[rows.length - 1].after : Number(plan.start || 0);
     const totalProfit = finalValue - Number(plan.start || 0);
-    const title = isCrypto ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
+    const growthLabel = v1045GrowthColumnLabel(plan.growth);
     return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact" data-growth-plan="${m}">
       <div class="v1040-growth-head v1044-growth-head-compact">
         <div class="v1040-growth-total"><span>${activeDays}. Gün Final</span><b>${money(finalValue)}</b><em>Toplam kâr ${money(totalProfit)}</em></div>
@@ -2228,8 +2343,8 @@
       </div>
       <div class="v1040-growth-table-wrap">
         <table class="v1040-growth-table">
-          <thead><tr><th>Gün</th><th>Başlangıç Kasa</th><th>Hedef Kâr</th><th>Güncel Kasa</th></tr></thead>
-          <tbody>${rows.map(row => `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td>${money(row.profit)}</td><td><b>${money(row.after)}</b></td></tr>`).join("")}</tbody>
+          <thead><tr><th>Gün</th><th>Başlangıç Kasa</th><th>${growthLabel}</th><th>Güncel Kasa</th><th>Bakiye</th></tr></thead>
+          <tbody>${rows.map(row => `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td>${money(row.profit)}</td><td><b>${money(row.after)}</b></td><td><strong>${money(row.after)}</strong></td></tr>`).join("")}</tbody>
         </table>
       </div>
     </section>`;
@@ -2267,8 +2382,9 @@
     const growthInput = overlay.querySelector(`[data-growth-input="${m}:${d}:growth"]`);
     const start = Number(startInput?.value ?? plan.start);
     const growth = Number(growthInput?.value ?? plan.growth);
-    plan.start = Number.isFinite(start) && start >= 0 ? start : plan.start;
-    plan.growth = Number.isFinite(growth) ? growth : plan.growth;
+    plan.start = Number.isFinite(start) && start >= 0 ? Number(start.toFixed(2)) : plan.start;
+    plan.growth = v1045SmartGrowthPercent(growth);
+    if (startInput && document.activeElement === startInput) v1045SyncGrowthPlanStartToOverlay(m, d, plan);
     plan.days = d;
     store.active[m] = d;
     store[m][String(d)] = plan;
@@ -2278,21 +2394,22 @@
 
   function v1043ApplyGrowthPlanToExcel(mode, days, plan) {
     const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
     const finalValue = Number(v1040GrowthFinal(plan).toFixed(2));
     const startValue = Number(Number(plan.start || 0).toFixed(2));
-    const startInput = document.getElementById("excel-start-bal");
-    const targetInput = document.getElementById("excel-target-bal-input");
-    if (startInput) startInput.value = String(startValue);
-    if (targetInput) targetInput.value = String(finalValue);
+    v1045SetExcelConfigValues(m, d, startValue, finalValue);
     const state = loadState();
     const quick = getModeQuickPlan(state, m);
     quick.start = startValue;
     quick.target = finalValue;
     quick.currentOverride = "";
     saveState(state);
+    const body = document.getElementById("excel-body-content");
+    const scrollTop = body?.parentElement?.scrollTop || 0;
     if (typeof window.omega_UpdateExcelConfig === "function") window.omega_UpdateExcelConfig();
     else if (typeof window.omega_RenderExcelTable === "function") window.omega_RenderExcelTable();
-    setTimeout(v1043InjectExcelGrowthPlan, 0);
+    else v1043InjectExcelGrowthPlan();
+    if (body?.parentElement) body.parentElement.scrollTop = scrollTop;
   }
 
   function v1043InjectExcelGrowthPlan() {
@@ -2322,6 +2439,8 @@
       ${open ? renderGrowthPlanPanel(mode, state) : ""}
     </section>`;
     v1043BindExcelGrowthPlan(host, mode, days);
+    v1045BindExcelHeaderSync();
+    v1045DecorateExcelDays(mode, days, state);
   }
 
   function v1043BindExcelGrowthPlan(host, mode, days) {
@@ -2367,7 +2486,7 @@
       const originalOpen = openFn;
       const wrappedOpen = function(...args) {
         const result = originalOpen.apply(this, args);
-        setTimeout(v1043InjectExcelGrowthPlan, 0);
+        v1043InjectExcelGrowthPlan();
         setTimeout(v1043InjectExcelGrowthPlan, 80);
         return result;
       };
@@ -2379,7 +2498,7 @@
       const originalRender = renderFn;
       const wrappedRender = function(...args) {
         const result = originalRender.apply(this, args);
-        setTimeout(v1043InjectExcelGrowthPlan, 0);
+        v1043InjectExcelGrowthPlan();
         return result;
       };
       wrappedRender.__v1043GrowthWrapped = true;
@@ -2387,9 +2506,50 @@
     }
   }
 
+
+  function v1045RollingHashInfo() {
+    const raw = String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
+    let match = raw.match(/^rolling\/(bet|bahis|crypto)\/rolling\/(\d+)/);
+    if (!match) match = raw.match(/^rolling\/rolling\/(\d+)/);
+    if (!match) return null;
+    const hasMode = match.length === 3;
+    const mode = hasMode ? (match[1] === "crypto" ? "crypto" : "bet") : (localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet");
+    const days = v1041NormalizeGrowthDays(Number(hasMode ? match[2] : match[1]));
+    return { mode, days };
+  }
+  function v1045OpenRollingFromHash() {
+    const info = v1045RollingHashInfo();
+    if (!info) return;
+    localStorage.setItem("finance_rolling_mode", info.mode);
+    localStorage.setItem(PAGE_MODE_KEY, info.mode);
+    try {
+      if (typeof window.omega_SwitchMainTab === "function") {
+        window.omega_SwitchMainTab("rolling", document.getElementById("nav-rolling"), false);
+      }
+    } catch {}
+    const open = () => {
+      const overlay = document.getElementById("rolling-excel-overlay");
+      const title = document.getElementById("excel-modal-title");
+      const alreadyOpen = overlay && overlay.style.display !== "none" && String(title?.textContent || "").includes(String(info.days));
+      if (alreadyOpen) {
+        v1043InjectExcelGrowthPlan();
+        return;
+      }
+      if (typeof window.omega_OpenRollingExcel === "function") {
+        window.omega_OpenRollingExcel(info.days, true);
+        setTimeout(v1043InjectExcelGrowthPlan, 20);
+      }
+    };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(open, 80), { once: true });
+    else setTimeout(open, 80);
+  }
+
   setTimeout(v1043InstallExcelGrowthBridge, 0);
   setTimeout(v1043InstallExcelGrowthBridge, 350);
   document.addEventListener("DOMContentLoaded", () => setTimeout(v1043InstallExcelGrowthBridge, 0));
+  window.addEventListener("hashchange", () => setTimeout(v1045OpenRollingFromHash, 120));
+  document.addEventListener("DOMContentLoaded", () => setTimeout(v1045OpenRollingFromHash, 450));
+  setTimeout(v1045OpenRollingFromHash, 800);
 
   function renderRowControls(mode, state) {
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
@@ -2754,8 +2914,8 @@ function escapeHtml(str) {
       const growthInput = mount.querySelector(`[data-growth-input="${m}:${d}:growth"]`);
       const start = Number(startInput?.value ?? plan.start);
       const growth = Number(growthInput?.value ?? plan.growth);
-      plan.start = Number.isFinite(start) && start >= 0 ? start : plan.start;
-      plan.growth = Number.isFinite(growth) ? growth : plan.growth;
+      plan.start = Number.isFinite(start) && start >= 0 ? Number(start.toFixed(2)) : plan.start;
+      plan.growth = v1045SmartGrowthPercent(growth);
       store.active[m] = d;
       store[m][String(d)] = plan;
       v1040SaveGrowthPlans(store);

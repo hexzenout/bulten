@@ -16086,3 +16086,48 @@ input.v1020-combo-stake-target {
     grid-template-columns:1fr!important;
   }
 }
+
+
+/* V1045: Büyüme Planı - üst kasa satırı entegrasyonu ve akıllı gün hedefleri */
+#rolling-excel-overlay .v1040-growth-table{
+  min-width:620px!important;
+}
+#rolling-excel-overlay .v1040-growth-table td:nth-child(3){
+  color:#facc15!important;
+  font-weight:900!important;
+}
+#rolling-excel-overlay .v1040-growth-table td:nth-child(5) strong{
+  color:#22c55e!important;
+  font-weight:950!important;
+}
+#rolling-excel-overlay .v1045-growth-day-goal{
+  display:block!important;
+  margin:5px 0 7px!important;
+  padding:4px 7px!important;
+  border-radius:9px!important;
+  border:1px solid rgba(34,197,94,.18)!important;
+  background:rgba(15,23,42,.72)!important;
+  color:#cbd5e1!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+  font-weight:850!important;
+  letter-spacing:.01em!important;
+}
+#rolling-excel-overlay .v1045-growth-day-goal b{
+  color:#facc15!important;
+  font-weight:950!important;
+}
+#rolling-excel-overlay .v1045-growth-day-goal em{
+  display:block!important;
+  margin-top:2px!important;
+  font-style:normal!important;
+  color:#22c55e!important;
+  font-weight:950!important;
+}
+@media (max-width:760px){
+  #rolling-excel-overlay .v1040-growth-table{min-width:560px!important;}
+}
+#rolling-excel-overlay .v1040-growth-table td:nth-child(4) b{
+  color:#22c55e!important;
+  font-weight:950!important;
+}
