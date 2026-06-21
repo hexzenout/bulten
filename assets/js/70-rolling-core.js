@@ -2999,7 +2999,7 @@ function escapeHtml(str) {
       saveTargetItems(latest);
       refresh();
     };
-    const finalizeCryptoTargetItem = (id, result) => {
+    const finalizeCryptoTargetItem = (id, result, options = {}) => {
       const latest = loadTargetItems();
       latest.crypto = Array.isArray(latest.crypto) ? latest.crypto : [];
       const row = latest.crypto.find(item => String(item.id || "") === String(id));
@@ -3010,15 +3010,19 @@ function escapeHtml(str) {
       if (row.result === "stop") row.tps = row.tps.map(tp => ({ ...tp, done: false }));
       if (row.result === "tp") row.tps = row.tps.map(tp => ({ ...tp, done: true }));
       upsertTargetItemLogRecord("crypto", row, row.result);
+      const rowSnapshot = { ...row, tps: row.tps.map(tp => ({ ...tp })) };
       saveTargetItems(latest);
       refresh();
+      if (options && options.askCleanup) {
+        setTimeout(() => askTargetCleanup("crypto", id, rowSnapshot, options.tone || (row.result === "stop" ? "danger" : "success")), 0);
+      }
     };
     const askTargetCleanup = (modeRaw, id, rowSnapshot, tone = "success") => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       const label = mode === "crypto" ? "işlemi" : "bahisi";
       openTargetResultConfirm({
         title: "Detay temizlensin mi?",
-        message: `Sonuç işlendi. Bu ${label} detaydan kaldırılsın mı?`,
+        message: mode === "crypto" ? "Sonuç işlendi. Bu işlemi detaydan temizlemek istiyor musun?" : `Sonuç işlendi. Bu ${label} detaydan kaldırılsın mı?`,
         okText: "Evet, temizle",
         cancelText: "Hayır, kalsın",
         tone
@@ -3053,7 +3057,7 @@ function escapeHtml(str) {
         okText: "Onayla",
         cancelText: "Vazgeç",
         tone: "success"
-      }, () => finalizeCryptoTargetItem(id, "tp"));
+      }, () => finalizeCryptoTargetItem(id, "tp", { askCleanup: true, tone: "success" }));
     }));
     mount.querySelectorAll("[data-target-bet-leg-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw, resultRaw] = String(btn.dataset.targetBetLegResult || "bet:::").split(":");
@@ -3154,7 +3158,7 @@ function escapeHtml(str) {
           okText: "Onayla",
           cancelText: "Vazgeç",
           tone: result === "stop" ? "danger" : "success"
-        }, () => finalizeCryptoTargetItem(id, result));
+        }, () => finalizeCryptoTargetItem(id, result, { askCleanup: true, tone: result === "stop" ? "danger" : "success" }));
         return;
       }
       let message = 'Sonucu onaylıyor musun?';
