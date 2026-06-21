@@ -2992,14 +2992,11 @@ function escapeHtml(str) {
         if (nextDone && allDone) askTargetCleanup("crypto", id, row, "success");
       };
       if (!nextDone) { apply(); return; }
-      const label = cleanText(row.tps[index].target || '') || `TP ${index + 1}`;
-      const profit = v810NumberOrBlank(row.tps[index].profit) !== "" ? ` · ${signedMoney(Number(row.tps[index].profit || 0))}` : "";
-      openTargetResultConfirm({
-        title: "TP kazancı onayı",
-        message: `"${label}" hedefini kazanç olarak işlemek istiyor musun?${profit}`,
-        okText: "Kazanç yaz",
-        tone: "success"
-      }, apply);
+      if (!allDoneAfter) {
+        apply();
+        return;
+      }
+      apply();
     }));
     mount.querySelectorAll("[data-target-bet-leg-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw, resultRaw] = String(btn.dataset.targetBetLegResult || "bet:::").split(":");
