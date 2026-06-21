@@ -29,6 +29,7 @@
   const TARGET_CLOSED_PNL_KEY = "v829_rolling_target_closed_pnl_v1"; // legacy ortak kapalı P/L.
   const TARGET_CLOSED_PNL_KEY_BET = "v972_rolling_target_closed_pnl_bet_v1";
   const TARGET_CLOSED_PNL_KEY_CRYPTO = "v972_rolling_target_closed_pnl_crypto_v1";
+  const GROWTH_PLAN_KEY = "v1040_rolling_growth_plan_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -2111,6 +2112,98 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     return [7, 15, 30, 60, 90].map(d => `<button type="button" data-roll="${m}:${d}"><span>${d} GÜNLÜK ROLLING</span></button>`).join("");
   }
+
+
+  function v1040DefaultGrowthPlan(mode, days, state) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = Number(days) === 15 ? 15 : 7;
+    const quickStart = Number(getModeQuickPlan(state || {}, m)?.start || 1000);
+    return { start: Number.isFinite(quickStart) && quickStart > 0 ? quickStart : 1000, growth: 30, days: d };
+  }
+  function v1040LoadGrowthPlans() {
+    const raw = readJson(GROWTH_PLAN_KEY, {});
+    const store = raw && typeof raw === "object" ? raw : {};
+    if (!store.active || typeof store.active !== "object") store.active = {};
+    if (!store.bet || typeof store.bet !== "object") store.bet = {};
+    if (!store.crypto || typeof store.crypto !== "object") store.crypto = {};
+    store.active.bet = Number(store.active.bet) === 15 ? 15 : 7;
+    store.active.crypto = Number(store.active.crypto) === 15 ? 15 : 7;
+    return store;
+  }
+  function v1040SaveGrowthPlans(store) {
+    writeJson(GROWTH_PLAN_KEY, store && typeof store === "object" ? store : {});
+  }
+  function v1040GetGrowthPlan(store, mode, days, state) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = Number(days) === 15 ? 15 : 7;
+    if (!store[m] || typeof store[m] !== "object") store[m] = {};
+    const fallback = v1040DefaultGrowthPlan(m, d, state);
+    const current = store[m][String(d)] && typeof store[m][String(d)] === "object" ? store[m][String(d)] : {};
+    const start = Number(current.start ?? fallback.start);
+    const growth = Number(current.growth ?? fallback.growth);
+    const plan = {
+      start: Number.isFinite(start) && start > 0 ? start : fallback.start,
+      growth: Number.isFinite(growth) ? growth : fallback.growth,
+      days: d
+    };
+    store[m][String(d)] = plan;
+    return plan;
+  }
+  function v1040GrowthRows(plan) {
+    const start = Math.max(0, Number(plan?.start || 0));
+    const growth = Number.isFinite(Number(plan?.growth)) ? Number(plan.growth) : 0;
+    const days = Number(plan?.days) === 15 ? 15 : 7;
+    const rows = [];
+    let kasa = start;
+    for (let day = 1; day <= days; day += 1) {
+      const before = kasa;
+      const profit = before * (growth / 100);
+      const after = before + profit;
+      rows.push({ day, before, growth, profit, after });
+      kasa = after;
+    }
+    return rows;
+  }
+  function v1040GrowthFinal(plan) {
+    const rows = v1040GrowthRows(plan);
+    return rows.length ? rows[rows.length - 1].after : Number(plan?.start || 0);
+  }
+  function renderGrowthPlanPanel(mode, state) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const isCrypto = m === "crypto";
+    const store = v1040LoadGrowthPlans();
+    const activeDays = Number(store.active?.[m]) === 15 ? 15 : 7;
+    const plan = v1040GetGrowthPlan(store, m, activeDays, state);
+    const rows = v1040GrowthRows(plan);
+    const finalValue = rows.length ? rows[rows.length - 1].after : Number(plan.start || 0);
+    const totalProfit = finalValue - Number(plan.start || 0);
+    const title = isCrypto ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
+    return `<section class="v1040-growth-plan ${m}" data-growth-plan="${m}">
+      <div class="v1040-growth-head">
+        <div><b>${title}</b><span>${activeDays} günlük hedef kasa simülasyonu</span></div>
+        <div class="v1040-growth-total"><span>Final</span><b>${money(finalValue)}</b><em>Toplam kâr ${money(totalProfit)}</em></div>
+      </div>
+      <div class="v1040-growth-tabs" role="tablist" aria-label="Büyüme planı gün seçimi">
+        <button type="button" class="${activeDays === 7 ? "active" : ""}" data-growth-days="${m}:7">7 Gün</button>
+        <button type="button" class="${activeDays === 15 ? "active" : ""}" data-growth-days="${m}:15">15 Gün</button>
+      </div>
+      <div class="v1040-growth-controls">
+        <label><span>Başlangıç Kasa</span><input type="number" step="1" min="0" value="${Number(plan.start || 0)}" data-growth-input="${m}:${activeDays}:start"></label>
+        <label><span>Günlük Büyüme %</span><input type="number" step="0.1" value="${Number(plan.growth || 0)}" data-growth-input="${m}:${activeDays}:growth"></label>
+        <div class="v1040-growth-actions">
+          <button type="button" data-growth-action="${m}:${activeDays}:calc">Hesapla</button>
+          <button type="button" class="apply" data-growth-action="${m}:${activeDays}:apply">Planı Uygula</button>
+          <button type="button" class="reset" data-growth-action="${m}:${activeDays}:reset">Sıfırla</button>
+        </div>
+      </div>
+      <div class="v1040-growth-table-wrap">
+        <table class="v1040-growth-table">
+          <thead><tr><th>Gün</th><th>Başlangıç Kasa</th><th>Hedef Kâr</th><th>Güncel Kasa</th></tr></thead>
+          <tbody>${rows.map(row => `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td>${money(row.profit)}</td><td><b>${money(row.after)}</b></td></tr>`).join("")}</tbody>
+        </table>
+      </div>
+    </section>`;
+  }
   function renderRowControls(mode, state) {
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const label = mode === "crypto" ? "Kripto" : "Bahis";
@@ -2183,6 +2276,7 @@ function escapeHtml(str) {
           <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span ${isCrypto ? 'style="color:#fbbf24 !important;text-shadow:0 0 10px rgba(251,191,36,.24);"' : ""}>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
           <div class="rolling-v47-roll-panel ${mode}">
             <div class="rolling-v47-roll-buttons">${renderRollingButtons(mode)}</div>
+            ${renderGrowthPlanPanel(mode, state)}
           </div>
         </details>
 
@@ -2451,7 +2545,71 @@ function escapeHtml(str) {
 
   function bindEvents(mount, state) {
     const refresh = () => refreshForMount(mount);
-    mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => { const [mode, days] = String(btn.dataset.roll || "bet:7").split(":"); openRolling(mode, Number(days || 7)); }));
+    mount.querySelectorAll("[data-roll]").forEach(btn => btn.addEventListener("click", () => {
+      const [mode, daysRaw] = String(btn.dataset.roll || "bet:7").split(":");
+      const m = mode === "crypto" ? "crypto" : "bet";
+      const days = Number(daysRaw || 7);
+      if (days === 7 || days === 15) {
+        const store = v1040LoadGrowthPlans();
+        store.active[m] = days;
+        v1040GetGrowthPlan(store, m, days, state);
+        v1040SaveGrowthPlans(store);
+      }
+      openRolling(m, days);
+    }));
+
+    const v1040SaveGrowthFromDom = (mode, days) => {
+      const m = mode === "crypto" ? "crypto" : "bet";
+      const d = Number(days) === 15 ? 15 : 7;
+      const store = v1040LoadGrowthPlans();
+      const plan = v1040GetGrowthPlan(store, m, d, state);
+      const startInput = mount.querySelector(`[data-growth-input="${m}:${d}:start"]`);
+      const growthInput = mount.querySelector(`[data-growth-input="${m}:${d}:growth"]`);
+      const start = Number(startInput?.value ?? plan.start);
+      const growth = Number(growthInput?.value ?? plan.growth);
+      plan.start = Number.isFinite(start) && start >= 0 ? start : plan.start;
+      plan.growth = Number.isFinite(growth) ? growth : plan.growth;
+      store.active[m] = d;
+      store[m][String(d)] = plan;
+      v1040SaveGrowthPlans(store);
+      return { store, plan };
+    };
+    mount.querySelectorAll("[data-growth-days]").forEach(btn => btn.addEventListener("click", () => {
+      const [mode, daysRaw] = String(btn.dataset.growthDays || "bet:7").split(":");
+      const m = mode === "crypto" ? "crypto" : "bet";
+      const days = Number(daysRaw) === 15 ? 15 : 7;
+      const store = v1040LoadGrowthPlans();
+      store.active[m] = days;
+      v1040GetGrowthPlan(store, m, days, state);
+      v1040SaveGrowthPlans(store);
+      refresh();
+    }));
+    mount.querySelectorAll("[data-growth-input]").forEach(input => input.addEventListener("input", () => {
+      const [mode, daysRaw] = String(input.dataset.growthInput || "bet:7:start").split(":");
+      v1040SaveGrowthFromDom(mode, Number(daysRaw || 7));
+    }));
+    mount.querySelectorAll("[data-growth-action]").forEach(btn => btn.addEventListener("click", () => {
+      const [mode, daysRaw, action] = String(btn.dataset.growthAction || "bet:7:calc").split(":");
+      const m = mode === "crypto" ? "crypto" : "bet";
+      const days = Number(daysRaw) === 15 ? 15 : 7;
+      if (action === "reset") {
+        const store = v1040LoadGrowthPlans();
+        store.active[m] = days;
+        store[m][String(days)] = v1040DefaultGrowthPlan(m, days, state);
+        v1040SaveGrowthPlans(store);
+        refresh();
+        return;
+      }
+      const { plan } = v1040SaveGrowthFromDom(m, days);
+      if (action === "apply") {
+        const quick = getModeQuickPlan(state, m);
+        quick.start = Number(Number(plan.start || 0).toFixed(2));
+        quick.target = Number(v1040GrowthFinal(plan).toFixed(2));
+        quick.currentOverride = "";
+        saveState(state);
+      }
+      refresh();
+    }));
     mount.querySelectorAll("[data-row-op]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, op] = String(btn.dataset.rowOp || "bet:plus").split(":");
       state.rowCounts = state.rowCounts || { bet: 20, crypto: 20 };
