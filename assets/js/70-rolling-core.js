@@ -1072,12 +1072,15 @@
       const title = v812BetTitle(item);
       const oddsText = odds ? odds.toFixed(2) : "-";
       const stakeText = stake ? money(stake) : "-";
-      const possibleText = possibleReturn ? money(possibleReturn) : "-";
-      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row v835-bet-detail-row v1026-bet-detail-row bet ${typeClass} ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
+      const profitOnly = possibleReturn && stake ? Math.max(0, possibleReturn - stake) : 0;
+      const profitOnlyText = profitOnly ? money(profitOnly) : "-";
+      return `<li class="v812-target-detail-row v813-target-detail-row v814-target-detail-row v835-bet-detail-row v1026-bet-detail-row v1027-bet-detail-row bet ${typeClass} ${result ? "done " + result : ""}" data-target-self-row="${escapeHtml(item.id || "")}">
         <div class="v813-detail-head v814-bet-detail-head v821-bet-detail-head v835-bet-detail-head v1026-bet-detail-head"><span class="v1026-bet-type-label ${typeClass}" title="${escapeHtml(title)}">${escapeHtml(title)}</span><button type="button" class="photo" data-target-self-photo="${m}:${escapeHtml(item.id || "")}" title="Kupon fotoğrafı"><i class="fa-solid fa-camera"></i></button></div>
-        <div class="v835-bet-detail-meta v1026-bet-detail-meta"><span>Tutar <b>${escapeHtml(stakeText)}</b></span><span>Oran <b>${escapeHtml(oddsText)}</b></span><span>Olası <b>${escapeHtml(possibleText)}</b></span></div>
         <div class="v813-bet-match-list v814-bet-match-list v822-bet-match-list v835-bet-match-list">${v813BetLegRowsHtml(item)}</div>
-        <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer bet"><button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button></div>
+        <div class="v819-target-card-footer v821-target-card-footer v822-target-card-footer v1027-bet-detail-footer bet">
+          <div class="v835-bet-detail-meta v1026-bet-detail-meta v1027-bet-detail-meta"><span>Tutar <b>${escapeHtml(stakeText)}</b></span><span>Oran <b>${escapeHtml(oddsText)}</b></span><span>Sadece Kazanç <b>${escapeHtml(profitOnlyText)}</b></span></div>
+          <button type="button" class="delete" data-target-self-delete="${m}:${escapeHtml(item.id || "")}" title="Sil"><i class="fa-solid fa-trash"></i></button>
+        </div>
       </li>`;
     }).join("");
     return { mode: m, hasRows: rows.length > 0, summary: "", sub: "", details };
@@ -3026,20 +3029,41 @@ function escapeHtml(str) {
       };
       if (!next) { apply(); return; }
 
+      const currentLegs = v812BetLegs(row);
+      const isComboTicket = currentLegs.length > 1;
+      const currentFilled = currentLegs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
+      const currentAnyLoss = currentFilled.some(leg => cleanText(leg.result || "") === "loss");
+      const currentAllWin = currentFilled.length > 0 && currentFilled.every(leg => cleanText(leg.result || "") === "win");
+      const currentFinalResult = currentAnyLoss ? "loss" : (currentAllWin ? "win" : "");
       const tmpLegs = row.legs.map((leg, idx) => idx === index ? { ...leg, result: next } : { ...leg });
       const filled = tmpLegs.filter(leg => cleanText(leg.name || "") || v810NumberOrBlank(leg.odds) !== "");
       const anyLoss = filled.some(leg => cleanText(leg.result || "") === "loss");
       const allWin = filled.length > 0 && filled.every(leg => cleanText(leg.result || "") === "win");
       const finalResult = anyLoss ? "loss" : (allWin ? "win" : "");
+
+      if (isComboTicket) {
+        const shouldConfirmComboLoss = result === "loss" && finalResult === "loss" && currentFinalResult !== "loss";
+        const shouldConfirmComboWin = result === "win" && finalResult === "win" && currentFinalResult !== "win";
+        if (!shouldConfirmComboLoss && !shouldConfirmComboWin) {
+          apply();
+          return;
+        }
+        openTargetResultConfirm({
+          title: shouldConfirmComboLoss ? "Kombine kaybetti onayı" : "Kombine kazandı onayı",
+          message: shouldConfirmComboLoss
+            ? "Bu kırmızı seçimle kombine kupon kaybedecek. Onaylıyor musun?"
+            : "Tüm maçlar yeşil oldu. Kombine kuponu kazandı olarak işaretlemek istiyor musun?",
+          okText: "Onayla",
+          tone: shouldConfirmComboLoss ? "danger" : "success"
+        }, apply);
+        return;
+      }
+
       const label = result === "win" ? "Kazandı" : "Kaybetti";
       const title = result === "win" ? "Maç kazandı onayı" : "Maç kaybetti onayı";
-      let msg = `Bu maçı "${label}" olarak işlemek istiyor musun?`;
-      if (finalResult) {
-        const finalLabel = finalResult === "win" ? "Kazandı" : "Kaybetti";
-        msg = filled.length > 1
-          ? `Bu seçimle kombine kupon "${finalLabel}" olacak. Onaylıyor musun?`
-          : `Bu bahisi "${finalLabel}" olarak onaylıyor musun?`;
-      }
+      const msg = finalResult
+        ? `Bu bahisi "${label}" olarak onaylıyor musun?`
+        : `Bu maçı "${label}" olarak işlemek istiyor musun?`;
       openTargetResultConfirm({
         title,
         message: msg,

@@ -15376,3 +15376,86 @@ input.v1020-combo-stake-target {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* V1027: Bahis Kasa Hedefi Detay - özet satırı çöp kutusunun solunda + sade sonuç onayı */
+.rolling-v48-rail .v1027-bet-detail-row {
+  padding-bottom: 10px !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-footer.bet {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 36px !important;
+  align-items: end !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-meta {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  margin: 0 !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-meta span {
+  min-width: 0 !important;
+  padding: 6px 7px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.78) !important;
+  border: 1px solid rgba(148,163,184,.16) !important;
+  color: #9ca3af !important;
+  font-size: .62rem !important;
+  font-weight: 900 !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-meta b {
+  display: block !important;
+  margin-top: 2px !important;
+  color: #f8fafc !important;
+  font-size: .70rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-meta span:nth-child(1) {
+  border-color: rgba(52,211,153,.28) !important;
+  background: linear-gradient(135deg, rgba(6,78,59,.30), rgba(15,23,42,.82)) !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-meta span:nth-child(1) b {
+  color: #34d399 !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-meta span:nth-child(3) {
+  border-color: rgba(251,191,36,.32) !important;
+  background: linear-gradient(135deg, rgba(120,53,15,.28), rgba(15,23,42,.82)) !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-meta span:nth-child(3) b {
+  color: #fbbf24 !important;
+}
+
+.rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-footer .delete {
+  justify-self: end !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  border-radius: 11px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 900px) {
+  .rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-meta {
+    grid-template-columns: 1fr !important;
+  }
+
+  .rolling-v48-rail .v1027-bet-detail-row .v1027-bet-detail-footer.bet {
+    align-items: start !important;
+  }
+}
