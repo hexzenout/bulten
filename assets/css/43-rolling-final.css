@@ -16252,3 +16252,74 @@ input.v1020-combo-stake-target {
 #rolling-excel-overlay .v1046-growth-table th:nth-child(5),
 #rolling-excel-overlay .v1046-growth-table td:nth-child(5){width:28%!important;}
 #rolling-excel-overlay .v1046-growth-table td:nth-child(5) b{color:#22c55e!important;font-weight:950!important;}
+
+
+/* V1048: Büyüme Planı üst entegrasyon + temiz tablo */
+#rolling-excel-overlay .v1046-growth-config{
+  gap:8px!important;
+}
+#rolling-excel-overlay #excel-growth-percent-input{
+  width:68px!important;
+  min-width:68px!important;
+  background:#050505!important;
+  border:1px solid #444!important;
+  border-radius:8px!important;
+  color:#166534!important;
+  box-shadow:none!important;
+}
+#rolling-excel-overlay #excel-growth-percent-input:focus{
+  border-color:#555!important;
+  box-shadow:0 0 0 2px rgba(34,197,94,.10)!important;
+}
+#rolling-excel-overlay .v1048-growth-apply-top{
+  min-height:32px!important;
+  padding:6px 10px!important;
+  border-radius:9px!important;
+  border:1px solid rgba(34,197,94,.35)!important;
+  color:#86efac!important;
+  background:rgba(34,197,94,.10)!important;
+  font-family:'JetBrains Mono',monospace!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  cursor:pointer!important;
+  white-space:nowrap!important;
+}
+#rolling-excel-overlay .v1048-growth-apply-top:hover{
+  border-color:rgba(34,197,94,.62)!important;
+  color:#bbf7d0!important;
+  background:rgba(34,197,94,.16)!important;
+}
+#rolling-excel-overlay .v1048-growth-plan-clean{
+  border-color:rgba(148,163,184,.18)!important;
+}
+#rolling-excel-overlay .v1048-growth-plan-clean .v1046-growth-actions-inline{
+  display:none!important;
+}
+#rolling-excel-overlay .v1048-growth-table th:nth-child(4),
+#rolling-excel-overlay .v1048-growth-table th:nth-child(5){
+  color:#166534!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(4),
+#rolling-excel-overlay .v1048-growth-table td:nth-child(5){
+  color:#64748b!important;
+  font-weight:800!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(5) b{
+  color:#64748b!important;
+}
+#rolling-excel-overlay .v1048-growth-table .v1048-growth-empty{
+  opacity:.35!important;
+  color:#64748b!important;
+  font-weight:800!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(2){
+  color:#bfdbfe!important;
+  font-weight:900!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(3) strong{
+  color:#bfdbfe!important;
+  font-weight:900!important;
+}
+@media (max-width:760px){
+  #rolling-excel-overlay .v1048-growth-apply-top{font-size:10px!important;padding:6px 8px!important;}
+}
