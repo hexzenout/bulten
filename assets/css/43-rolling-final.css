@@ -15519,3 +15519,74 @@ input.v1020-combo-stake-target {
 .rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-footer .delete {
   justify-self: end !important;
 }
+
+
+/* V1029: Bahis Kasa Hedefi Detay - Tutar/Kazanç sade yazı + sağda iki satır yüksekliğinde çöp */
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-footer.bet {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 42px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
+
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta span {
+  display: block !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #cbd5e1 !important;
+  font-size: .72rem !important;
+  line-height: 1.25 !important;
+  font-weight: 900 !important;
+}
+
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta b {
+  display: inline !important;
+  margin: 0 0 0 4px !important;
+  color: #f8fafc !important;
+  font-size: .74rem !important;
+  font-weight: 950 !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta span:nth-child(1),
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta span:nth-child(2) {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta span:nth-child(1) b {
+  color: #f8fafc !important;
+}
+
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-meta span:nth-child(2) b {
+  color: #fbbf24 !important;
+}
+
+.rolling-v48-rail .v1029-bet-detail-row .v1029-bet-detail-footer .delete {
+  justify-self: end !important;
+  align-self: stretch !important;
+  width: 38px !important;
+  min-width: 38px !important;
+  height: auto !important;
+  min-height: 44px !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
