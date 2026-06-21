@@ -30,6 +30,7 @@
   const TARGET_CLOSED_PNL_KEY_BET = "v972_rolling_target_closed_pnl_bet_v1";
   const TARGET_CLOSED_PNL_KEY_CRYPTO = "v972_rolling_target_closed_pnl_crypto_v1";
   const GROWTH_PLAN_KEY = "v1040_rolling_growth_plan_v1";
+  const GROWTH_PANEL_OPEN_KEY = "v1041_rolling_growth_panel_open_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -2114,9 +2115,38 @@
   }
 
 
+  function v1041NormalizeGrowthDays(days) {
+    const d = Number(days);
+    if (d === 15) return 15;
+    if (d === 30) return 30;
+    return 7;
+  }
+  function v1041RouteRollingInfo() {
+    const raw = String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
+    const match = raw.match(/(?:^|\/)rolling\/(bet|bahis|crypto)\/rolling\/(\d+)/);
+    if (!match) return null;
+    const mode = match[1] === "crypto" ? "crypto" : "bet";
+    const days = v1041NormalizeGrowthDays(Number(match[2] || 7));
+    return { mode, days };
+  }
+  function v1041GrowthPanelStore() {
+    const raw = readJson(GROWTH_PANEL_OPEN_KEY, {});
+    return raw && typeof raw === "object" ? raw : {};
+  }
+  function growthPanelOpen(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    return v1041GrowthPanelStore()[m] === "1";
+  }
+  function setGrowthPanelOpen(mode, open) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const store = v1041GrowthPanelStore();
+    store[m] = open ? "1" : "0";
+    writeJson(GROWTH_PANEL_OPEN_KEY, store);
+  }
+
   function v1040DefaultGrowthPlan(mode, days, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const d = Number(days) === 15 ? 15 : 7;
+    const d = v1041NormalizeGrowthDays(days);
     const quickStart = Number(getModeQuickPlan(state || {}, m)?.start || 1000);
     return { start: Number.isFinite(quickStart) && quickStart > 0 ? quickStart : 1000, growth: 30, days: d };
   }
@@ -2126,8 +2156,8 @@
     if (!store.active || typeof store.active !== "object") store.active = {};
     if (!store.bet || typeof store.bet !== "object") store.bet = {};
     if (!store.crypto || typeof store.crypto !== "object") store.crypto = {};
-    store.active.bet = Number(store.active.bet) === 15 ? 15 : 7;
-    store.active.crypto = Number(store.active.crypto) === 15 ? 15 : 7;
+    store.active.bet = v1041NormalizeGrowthDays(store.active.bet);
+    store.active.crypto = v1041NormalizeGrowthDays(store.active.crypto);
     return store;
   }
   function v1040SaveGrowthPlans(store) {
@@ -2135,7 +2165,7 @@
   }
   function v1040GetGrowthPlan(store, mode, days, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const d = Number(days) === 15 ? 15 : 7;
+    const d = v1041NormalizeGrowthDays(days);
     if (!store[m] || typeof store[m] !== "object") store[m] = {};
     const fallback = v1040DefaultGrowthPlan(m, d, state);
     const current = store[m][String(d)] && typeof store[m][String(d)] === "object" ? store[m][String(d)] : {};
@@ -2152,7 +2182,7 @@
   function v1040GrowthRows(plan) {
     const start = Math.max(0, Number(plan?.start || 0));
     const growth = Number.isFinite(Number(plan?.growth)) ? Number(plan.growth) : 0;
-    const days = Number(plan?.days) === 15 ? 15 : 7;
+    const days = v1041NormalizeGrowthDays(plan?.days);
     const rows = [];
     let kasa = start;
     for (let day = 1; day <= days; day += 1) {
@@ -2172,7 +2202,10 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const isCrypto = m === "crypto";
     const store = v1040LoadGrowthPlans();
-    const activeDays = Number(store.active?.[m]) === 15 ? 15 : 7;
+    const routeInfo = v1041RouteRollingInfo();
+    const activeDays = routeInfo && routeInfo.mode === m ? routeInfo.days : v1041NormalizeGrowthDays(store.active?.[m]);
+    store.active[m] = activeDays;
+    v1040SaveGrowthPlans(store);
     const plan = v1040GetGrowthPlan(store, m, activeDays, state);
     const rows = v1040GrowthRows(plan);
     const finalValue = rows.length ? rows[rows.length - 1].after : Number(plan.start || 0);
@@ -2180,12 +2213,8 @@
     const title = isCrypto ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
     return `<section class="v1040-growth-plan ${m}" data-growth-plan="${m}">
       <div class="v1040-growth-head">
-        <div><b>${title}</b><span>${activeDays} günlük hedef kasa simülasyonu</span></div>
-        <div class="v1040-growth-total"><span>Final</span><b>${money(finalValue)}</b><em>Toplam kâr ${money(totalProfit)}</em></div>
-      </div>
-      <div class="v1040-growth-tabs" role="tablist" aria-label="Büyüme planı gün seçimi">
-        <button type="button" class="${activeDays === 7 ? "active" : ""}" data-growth-days="${m}:7">7 Gün</button>
-        <button type="button" class="${activeDays === 15 ? "active" : ""}" data-growth-days="${m}:15">15 Gün</button>
+        <div><b>${title}</b><span>${activeDays} Günlük Rolling için hedef kasa simülasyonu</span></div>
+        <div class="v1040-growth-total"><span>${activeDays}. Gün Final</span><b>${money(finalValue)}</b><em>Toplam kâr ${money(totalProfit)}</em></div>
       </div>
       <div class="v1040-growth-controls">
         <label><span>Başlangıç Kasa</span><input type="number" step="1" min="0" value="${Number(plan.start || 0)}" data-growth-input="${m}:${activeDays}:start"></label>
@@ -2208,7 +2237,9 @@
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
     const label = mode === "crypto" ? "Kripto" : "Bahis";
     const pendingLabel = mode === "crypto" ? "Aktif Kripto İşlemleri" : "Aktif Bahisler / Kuponlar";
-    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls"><span>${count}/20 ${label} Alanı</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-log-center="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button></div>`;
+    const growthLabel = mode === "crypto" ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
+    const growthActive = growthPanelOpen(mode) ? " active" : "";
+    return `<div class="rolling-v48-row-controls v514-row-controls v751-row-controls v758-row-controls v759-row-controls"><span>${count}/20 ${label} Alanı</span><button type="button" data-row-op="${mode}:minus" title="Alan azalt">−</button><button type="button" data-row-op="${mode}:plus" title="Alan ekle">+</button><button type="button" data-row-preset="${mode}:5">5</button><button type="button" data-row-preset="${mode}:10">10</button><button type="button" data-row-preset="${mode}:20">20</button><button type="button" class="v758-row-tool v759-row-tool active" data-pending-open="${mode}"><i class="fa-solid fa-list-check"></i> ${pendingLabel}</button><button type="button" class="v758-row-tool history" data-log-center="${mode}"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş</button><button type="button" class="v758-row-tool v1041-growth-toggle${growthActive}" data-growth-panel-toggle="${mode}"><i class="fa-solid fa-chart-line"></i> ${growthLabel}</button></div>`;
   }
 
   
@@ -2276,7 +2307,6 @@ function escapeHtml(str) {
           <summary class="${isCrypto ? "rolling-v493-fold-title crypto rolling-v494-crypto-roll-title" : "rolling-v493-fold-title bet rolling-v494-bet-roll-title"}"><i class="fa-solid fa-layer-group"></i> <span ${isCrypto ? 'style="color:#fbbf24 !important;text-shadow:0 0 10px rgba(251,191,36,.24);"' : ""}>${isCrypto ? "KRİPTO ROLLING" : "BAHİS ROLLING"}</span></summary>
           <div class="rolling-v47-roll-panel ${mode}">
             <div class="rolling-v47-roll-buttons">${renderRollingButtons(mode)}</div>
-            ${renderGrowthPlanPanel(mode, state)}
           </div>
         </details>
 
@@ -2286,6 +2316,7 @@ function escapeHtml(str) {
             <div>${renderRowControls(mode, state)}</div>
             <button type="button" data-clear="${mode}">TÜMÜNÜ TEMİZLE</button>
           </div>
+          ${growthPanelOpen(mode) ? renderGrowthPlanPanel(mode, state) : ""}
           ${renderTable(mode, slots, state)}
         </details>
       </section>`;
@@ -2549,9 +2580,9 @@ function escapeHtml(str) {
       const [mode, daysRaw] = String(btn.dataset.roll || "bet:7").split(":");
       const m = mode === "crypto" ? "crypto" : "bet";
       const days = Number(daysRaw || 7);
-      if (days === 7 || days === 15) {
+      if (days === 7 || days === 15 || days === 30) {
         const store = v1040LoadGrowthPlans();
-        store.active[m] = days;
+        store.active[m] = v1041NormalizeGrowthDays(days);
         v1040GetGrowthPlan(store, m, days, state);
         v1040SaveGrowthPlans(store);
       }
@@ -2560,7 +2591,7 @@ function escapeHtml(str) {
 
     const v1040SaveGrowthFromDom = (mode, days) => {
       const m = mode === "crypto" ? "crypto" : "bet";
-      const d = Number(days) === 15 ? 15 : 7;
+      const d = v1041NormalizeGrowthDays(days);
       const store = v1040LoadGrowthPlans();
       const plan = v1040GetGrowthPlan(store, m, d, state);
       const startInput = mount.querySelector(`[data-growth-input="${m}:${d}:start"]`);
@@ -2577,7 +2608,7 @@ function escapeHtml(str) {
     mount.querySelectorAll("[data-growth-days]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, daysRaw] = String(btn.dataset.growthDays || "bet:7").split(":");
       const m = mode === "crypto" ? "crypto" : "bet";
-      const days = Number(daysRaw) === 15 ? 15 : 7;
+      const days = v1041NormalizeGrowthDays(daysRaw);
       const store = v1040LoadGrowthPlans();
       store.active[m] = days;
       v1040GetGrowthPlan(store, m, days, state);
@@ -2591,7 +2622,7 @@ function escapeHtml(str) {
     mount.querySelectorAll("[data-growth-action]").forEach(btn => btn.addEventListener("click", () => {
       const [mode, daysRaw, action] = String(btn.dataset.growthAction || "bet:7:calc").split(":");
       const m = mode === "crypto" ? "crypto" : "bet";
-      const days = Number(daysRaw) === 15 ? 15 : 7;
+      const days = v1041NormalizeGrowthDays(daysRaw);
       if (action === "reset") {
         const store = v1040LoadGrowthPlans();
         store.active[m] = days;
@@ -2608,6 +2639,11 @@ function escapeHtml(str) {
         quick.currentOverride = "";
         saveState(state);
       }
+      refresh();
+    }));
+    mount.querySelectorAll("[data-growth-panel-toggle]").forEach(btn => btn.addEventListener("click", () => {
+      const m = btn.dataset.growthPanelToggle === "crypto" ? "crypto" : "bet";
+      setGrowthPanelOpen(m, !growthPanelOpen(m));
       refresh();
     }));
     mount.querySelectorAll("[data-row-op]").forEach(btn => btn.addEventListener("click", () => {
