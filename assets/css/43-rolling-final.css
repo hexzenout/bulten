@@ -15705,3 +15705,53 @@ input.v1020-combo-stake-target {
 .rolling-v48-rail .v1032-crypto-tp-summary .tp-profit em {
   color: #22c55e !important;
 }
+
+
+/* V1033: Kripto Kasa Hedefi - STOP/Zarar çıktı renk ve hizası */
+.rolling-v48-rail .v1033-crypto-detail-line.stop {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 34px !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.rolling-v48-rail .v1033-crypto-stop-summary {
+  display: grid !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+}
+
+.rolling-v48-rail .v1033-crypto-stop-summary span {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+  font-size: .68rem !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rolling-v48-rail .v1033-crypto-stop-summary b,
+.rolling-v48-rail .v1033-crypto-stop-summary em {
+  font-style: normal !important;
+  font-weight: 950 !important;
+  min-width: 0 !important;
+}
+
+.rolling-v48-rail .v1033-crypto-stop-summary .stop-target b {
+  color: #fca5a5 !important;
+}
+
+.rolling-v48-rail .v1033-crypto-stop-summary .stop-target em {
+  color: #fb923c !important;
+}
+
+.rolling-v48-rail .v1033-crypto-stop-summary .stop-loss b {
+  color: #fecaca !important;
+}
+
+.rolling-v48-rail .v1033-crypto-stop-summary .stop-loss em {
+  color: #ef4444 !important;
+}

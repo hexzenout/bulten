@@ -1038,9 +1038,11 @@
     if (!stopRaw && !loss) return "";
     const stop = stopRaw || "-";
     const active = cleanText(item?.result || "") === "stop";
-    return `<div class="v813-crypto-detail-line v814-crypto-detail-line v815-crypto-detail-line stop ${active ? "done" : ""}">
-      <span>STOP</span>
-      <div class="v814-crypto-values v815-crypto-values"><b>${escapeHtml(stop)}</b><em>${loss ? "-" + money(loss) : "-$0.00"}</em></div>
+    return `<div class="v813-crypto-detail-line v814-crypto-detail-line v815-crypto-detail-line v1033-crypto-detail-line stop ${active ? "done" : ""}">
+      <div class="v1033-crypto-stop-summary">
+        <span class="stop-target"><b>STOP:</b> <em>${escapeHtml(stop)}</em></span>
+        <span class="stop-loss"><b>Zarar:</b> <em>${loss ? "-" + money(loss) : "-$0.00"}</em></span>
+      </div>
       <button type="button" class="stop-x v815-result-btn ${active ? "active" : ""}" data-target-self-result="crypto:${escapeHtml(item.id || "")}:stop" title="Kaybetti"><i class="fa-solid fa-xmark"></i></button>
     </div>`;
   }
