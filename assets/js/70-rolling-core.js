@@ -400,6 +400,8 @@
       id: "rt_" + Date.now() + "_" + Math.random().toString(36).slice(2),
       mode: m,
       ts: Date.now(),
+      kind: "targetComplete",
+      label: "Hedef",
       start: plan.start,
       target: plan.target,
       current: plan.current,
@@ -412,6 +414,38 @@
     quick.target = "";
     quick.currentOverride = "";
     return { ok: true, plan };
+  }
+  function upsertTargetItemLogRecord(mode, item, result) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (!item || !item.id) return "";
+    const state = loadState();
+    const pnl = Number(v810TargetItemProfit(item, m).value || 0);
+    const plan = getPlanNumbers(state, 0, m);
+    const id = cleanText(item.targetLogId || "") || `ti_${m}_${String(item.id || "")}`;
+    const status = result === "stop" || result === "loss" ? "loss" : "win";
+    const row = {
+      id,
+      mode: m,
+      ts: Number(item.closedTs || Date.now()),
+      kind: "targetItem",
+      itemId: String(item.id || ""),
+      label: cleanText(item.name || "") || (m === "crypto" ? "Kripto işlem" : "Bahis"),
+      result: status,
+      resultLabel: status === "loss" ? "ZARAR" : (m === "crypto" ? "KÂR" : "KAZANDI"),
+      start: Number(plan.start || 0),
+      target: Number(plan.target || 0),
+      current: Number((Number(plan.start || 0) + pnl).toFixed(2)),
+      pnl,
+      growth: growthPct(pnl, Number(plan.start || 0))
+    };
+    const rows = loadTargetLog();
+    const idx = rows.findIndex(r => String(r.id || "") === String(id));
+    if (idx >= 0) rows[idx] = { ...rows[idx], ...row };
+    else rows.unshift(row);
+    saveTargetLog(rows);
+    item.targetLogId = id;
+    item.closedTs = row.ts;
+    return id;
   }
   function addHistoryRecord(mode, slot, index) {
     if (!slot || (slot.status !== "win" && slot.status !== "loss")) return;
@@ -534,17 +568,23 @@
     ];
     const filters = targetFilters.map(([f, label]) => `<button type="button" class="${HISTORY_FILTER === f ? "active" : ""}" data-history-filter="${f}">${label}</button>`).join("") + `<button type="button" class="v985-date-filter" disabled>Tarih Seç</button>`;
     const body = rows.length ? `
-      <table class="v512-history-table v985-target-history-table">
-        <thead><tr><th>Tarih / Saat</th><th>Başlangıç</th><th>Hedef</th><th>Güncel</th><th>K/Z</th><th>Sil</th></tr></thead>
-        <tbody>${rows.map(r => `
+      <table class="v512-history-table v985-target-history-table v1037-target-history-table">
+        <thead><tr><th>Tarih / Saat</th><th>Kayıt</th><th>Başlangıç</th><th>Hedef</th><th>Güncel</th><th>K/Z</th><th>Sil</th></tr></thead>
+        <tbody>${rows.map(r => {
+          const isItem = cleanText(r.kind || "") === "targetItem";
+          const rowLabel = isItem ? (cleanText(r.label || "") || (isCrypto ? "Kripto işlem" : "Bahis")) : (cleanText(r.label || "") || "Hedef");
+          const resultLabel = cleanText(r.resultLabel || "") || (Number(r.pnl || 0) < 0 ? "ZARAR" : (isCrypto ? "KÂR" : "KAZANDI"));
+          return `
           <tr>
             <td>${escapeHtml(formatDateTime(r.ts))}</td>
-            <td>${money(r.start)}</td>
+            <td><span class="v1037-target-history-label ${isItem ? "item" : "target"}">${escapeHtml(rowLabel)}</span>${isItem ? `<em class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${escapeHtml(resultLabel)}</em>` : ""}</td>
+            <td>${Number(r.start || 0) ? money(r.start) : "-"}</td>
             <td>${r.target ? money(r.target) : "-"}</td>
             <td>${money(r.current ?? (Number(r.start || 0) + Number(r.pnl || 0)))}</td>
             <td><span class="${Number(r.pnl || 0) >= 0 ? "pos" : "neg"}">${signedMoney(r.pnl)}</span></td>
             <td><button type="button" class="v757-history-delete" data-target-history-delete="${escapeHtml(r.id || "")}" title="Bu kasa hedefi kaydını sil"><i class="fa-solid fa-trash"></i></button></td>
-          </tr>`).join("")}</tbody>
+          </tr>`;
+        }).join("")}</tbody>
       </table>` : `<div class="v512-history-empty v985-target-history-empty">Seçilen tarih aralığında kasa hedefi geçmiş kaydı yok.</div>`;
     return `
       <div class="v512-history-overlay v985-target-history-overlay" data-target-history-overlay>
@@ -1329,11 +1369,11 @@
     tps.forEach((tp, idx) => {
       const target = cleanText(tp.target || '') || '-';
       const profit = tp.profit !== '' ? signedMoney(Number(tp.profit || 0)) : '+$0.00';
-      const status = tp.done || cleanText(item?.result || '') === 'tp' ? ' · KAZANDI' : '';
+      const status = tp.done || cleanText(item?.result || '') === 'tp' ? ' · KÂR' : '';
       pushRow(`TP ${idx + 1} · ${target}`, `${profit}${status}`, '#22c55e');
     });
     if (stopRaw || stopLoss) {
-      const status = cleanText(item?.result || '') === 'stop' ? ' · KAYBETTİ' : '';
+      const status = cleanText(item?.result || '') === 'stop' ? ' · ZARAR' : '';
       pushRow(`STOP · ${stopRaw || '-'}`, `${stopLoss ? '-' + money(stopLoss) : '-$0.00'}${status}`, '#dc2626');
     }
     const footerY = cursorY + 20;
@@ -1348,8 +1388,8 @@
       <rect x="${rowX}" y="${footerY}" width="${rowW}" height="${footerH}" rx="14" fill="#111827" stroke="#334155"/>
       <text x="64" y="${footerY + 34}" fill="#e5e7eb" font-size="19" font-family="Arial" font-weight="800">Tutar:</text>
       <text x="836" y="${footerY + 34}" text-anchor="end" fill="#e5e7eb" font-size="20" font-family="Arial" font-weight="900">${Number(item?.stake || 0) ? money(item.stake) : '-'}</text>
-      <text x="64" y="${footerY + 68}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Toplam TP Kârı:</text>
-      <text x="836" y="${footerY + 68}" text-anchor="end" fill="#22c55e" font-size="20" font-family="Arial" font-weight="900">${signedMoney(Number(v813CryptoTpProfitTotal(item) || 0))}</text>
+      <text x="64" y="${footerY + 68}" fill="#22c55e" font-size="19" font-family="Arial" font-weight="900">Güncel Kâr:</text>
+      <text x="836" y="${footerY + 68}" text-anchor="end" fill="${Number(v812CryptoNet(item) || 0) < 0 ? '#dc2626' : '#22c55e'}" font-size="20" font-family="Arial" font-weight="900">${signedMoney(Number(v812CryptoNet(item) || 0))}</text>
     </svg>`;
   }
   function v816BuildTargetItemPhotoData(mode, id) {
@@ -2392,6 +2432,7 @@ function escapeHtml(str) {
     }
     const state = loadState();
     host.dataset.rollingFloating = "1";
+    host.style.display = "block";
     host.innerHTML = `${renderPendingModal(state)}${renderLogCenterModal(state)}${renderTargetHistoryModal()}${renderConfirmDialog()}`;
     bindEvents(host, state);
   }
@@ -2958,6 +2999,20 @@ function escapeHtml(str) {
       saveTargetItems(latest);
       refresh();
     };
+    const finalizeCryptoTargetItem = (id, result) => {
+      const latest = loadTargetItems();
+      latest.crypto = Array.isArray(latest.crypto) ? latest.crypto : [];
+      const row = latest.crypto.find(item => String(item.id || "") === String(id));
+      if (!row) return;
+      row.tps = Array.isArray(row.tps) ? row.tps : [];
+      row.result = result === "stop" ? "stop" : "tp";
+      row.closedTs = row.closedTs || Date.now();
+      if (row.result === "stop") row.tps = row.tps.map(tp => ({ ...tp, done: false }));
+      if (row.result === "tp") row.tps = row.tps.map(tp => ({ ...tp, done: true }));
+      upsertTargetItemLogRecord("crypto", row, row.result);
+      saveTargetItems(latest);
+      refresh();
+    };
     const askTargetCleanup = (modeRaw, id, rowSnapshot, tone = "success") => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       const label = mode === "crypto" ? "işlemi" : "bahisi";
@@ -2998,11 +3053,7 @@ function escapeHtml(str) {
         okText: "Onayla",
         cancelText: "Vazgeç",
         tone: "success"
-      }, () => {
-        row.tps = row.tps.map((tp, idx) => ({ ...tp, done: idx === index ? true : !!tp.done }));
-        row.result = "tp";
-        removeTargetItemAfterResult("crypto", id, row);
-      });
+      }, () => finalizeCryptoTargetItem(id, "tp"));
     }));
     mount.querySelectorAll("[data-target-bet-leg-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw, resultRaw] = String(btn.dataset.targetBetLegResult || "bet:::").split(":");
@@ -3092,12 +3143,6 @@ function escapeHtml(str) {
         refresh();
         if (mode === "bet" && row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
       };
-      const applyAndCloseCrypto = () => {
-        row.result = result;
-        if (result === "stop" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: false }));
-        if (result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
-        removeTargetItemAfterResult("crypto", id, row);
-      };
       const willActivate = row.result !== result;
       if (!willActivate) { apply(); return; }
       if (mode === "crypto") {
@@ -3109,7 +3154,7 @@ function escapeHtml(str) {
           okText: "Onayla",
           cancelText: "Vazgeç",
           tone: result === "stop" ? "danger" : "success"
-        }, applyAndCloseCrypto);
+        }, () => finalizeCryptoTargetItem(id, result));
         return;
       }
       let message = 'Sonucu onaylıyor musun?';
@@ -3138,7 +3183,14 @@ function escapeHtml(str) {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
       if (!id) return;
       const store = loadTargetItems();
-      store[mode] = (store[mode] || []).filter(item => String(item.id || "") !== String(id));
+      store[mode] = Array.isArray(store[mode]) ? store[mode] : [];
+      const row = store[mode].find(item => String(item.id || "") === String(id));
+      if (mode === "crypto" && row && cleanText(row.result || "")) {
+        if (!row.closedPnlAdded) addTargetClosedPnl(mode, Number(v810TargetItemProfit(row, mode).value || 0));
+        row.closedPnlAdded = true;
+        upsertTargetItemLogRecord(mode, row, row.result);
+      }
+      store[mode] = store[mode].filter(item => String(item.id || "") !== String(id));
       saveTargetItems(store);
       refresh();
     }));

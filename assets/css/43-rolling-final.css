@@ -15761,3 +15761,46 @@ input.v1020-combo-stake-target {
 .rolling-v48-rail .v1032-crypto-meta-grid .stake b {
   color: #166534 !important;
 }
+
+/* ===============================
+   V1037 — Kripto Kasa Hedefi geçmiş/sonuç arşivi küçük düzeltme
+   - Floating host fotoğraf önizleme sonrası display:none kalınca Geçmiş açılmama riskini kapatır.
+   - Kasa hedefi geçmişindeki işlem kayıtlarını okunur yapar.
+================================ */
+#omega-rolling-feature-host .v512-history-overlay,
+#omega-rolling-feature-host .v985-target-history-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1001007 !important;
+  pointer-events: auto !important;
+}
+#omega-rolling-feature-host .v512-history-modal,
+#omega-rolling-feature-host .v985-target-history-modal {
+  z-index: 1001008 !important;
+  pointer-events: auto !important;
+}
+.v1037-target-history-table td:nth-child(2) {
+  min-width: 130px !important;
+}
+.v1037-target-history-label {
+  display: block !important;
+  max-width: 180px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: #e5e7eb !important;
+  font-weight: 950 !important;
+}
+.v1037-target-history-label.item {
+  color: #bfdbfe !important;
+}
+.v1037-target-history-table td:nth-child(2) em {
+  display: inline-flex !important;
+  margin-top: 4px !important;
+  font-style: normal !important;
+  font-size: 10px !important;
+  font-weight: 950 !important;
+  letter-spacing: .45px !important;
+}
+.v1037-target-history-table td:nth-child(2) em.pos { color: #22c55e !important; }
+.v1037-target-history-table td:nth-child(2) em.neg { color: #ef4444 !important; }
