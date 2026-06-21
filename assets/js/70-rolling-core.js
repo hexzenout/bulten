@@ -2106,7 +2106,7 @@
       window.omega_OpenRollingExcel(days);
       const raw = String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
       if (raw.startsWith("rolling")) {
-        try { history.replaceState({ tab: "rolling", mode: m, rollingDays: days }, "", `#rolling/${m}/rolling/${days}`); } catch {}
+        try { history.replaceState({ tab: "rolling", mode: m, rollingDays: days }, "", `#rolling/rolling/${days}`); } catch {}
       }
     }
     else alert("Rolling modülü bulunamadı.");
@@ -2127,11 +2127,19 @@
   }
   function v1041RouteRollingInfo() {
     const raw = String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
-    const match = raw.match(/(?:^|\/)rolling\/(bet|bahis|crypto)\/rolling\/(\d+)/);
-    if (!match) return null;
-    const mode = match[1] === "crypto" ? "crypto" : "bet";
-    const days = v1041NormalizeGrowthDays(Number(match[2] || 7));
-    return { mode, days };
+    let match = raw.match(/(?:^|\/)rolling\/(bet|bahis|crypto)\/rolling\/(\d+)/);
+    if (match) {
+      const mode = match[1] === "crypto" ? "crypto" : "bet";
+      const days = v1041NormalizeGrowthDays(Number(match[2] || 7));
+      return { mode, days };
+    }
+    match = raw.match(/(?:^|\/)rolling\/rolling\/(\d+)/) || raw.match(/(?:^|\/)finance\/rolling\/(\d+)/);
+    if (match) {
+      const mode = localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
+      const days = v1041NormalizeGrowthDays(Number(match[1] || 7));
+      return { mode, days };
+    }
+    return null;
   }
   function v1041GrowthPanelStore() {
     const raw = readJson(GROWTH_PANEL_OPEN_KEY, {});
@@ -2377,7 +2385,7 @@
       </div>
       <div class="v1040-growth-table-wrap v1046-growth-table-wrap">
         <table class="v1040-growth-table v1046-growth-table">
-          <thead><tr><th>Gün</th><th>Başlangıç Kasa</th><th>Bakiye</th><th>${growthLabel}</th><th>Güncel Kasa</th></tr></thead>
+          <thead><tr><th>Gün</th><th>BAKİYE</th><th>HEDEF</th><th>${growthLabel}</th><th>Güncel Kasa</th></tr></thead>
           <tbody>${rows.map(row => `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${money(row.profit)}</td><td><b>${money(row.after)}</b></td></tr>`).join("")}</tbody>
         </table>
       </div>
@@ -2575,7 +2583,7 @@
     localStorage.setItem("finance_rolling_mode", info.mode);
     localStorage.setItem(PAGE_MODE_KEY, info.mode);
     v1046RememberRollingRoute(info.mode, info.days);
-    try { history.replaceState({ tab: "rolling", mode: info.mode, rollingDays: info.days }, "", `#rolling/${info.mode}/rolling/${info.days}`); } catch {}
+    try { history.replaceState({ tab: "rolling", mode: info.mode, rollingDays: info.days }, "", `#rolling/rolling/${info.days}`); } catch {}
     try {
       if (typeof window.omega_SwitchMainTab === "function") {
         window.omega_SwitchMainTab("rolling", document.getElementById("nav-rolling"), false);

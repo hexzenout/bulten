@@ -12,6 +12,9 @@
                     var mode = m && m.length === 3 ? (m[1] === "crypto" ? "crypto" : "bet") : (localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet");
                     var days = m ? Number(m[m.length - 1] || 7) : 7;
                     sessionStorage.setItem("v1046_restore_rolling_excel_v1", JSON.stringify({ mode: mode, days: days, ts: Date.now() }));
+                    if (/^#rolling\/(bet|bahis|crypto)\/rolling\/\d+/i.test(h) || /^#finance\/rolling\/\d+/i.test(h)) {
+                        history.replaceState({ tab: "rolling", mode: mode, rollingDays: days }, "", "#rolling/rolling/" + days);
+                    }
                 }
             } catch(e) {}
         })();
@@ -30,7 +33,7 @@
   <link rel="stylesheet" href="assets/css/40-rolling-prep.css?v=v517">
   <link rel="stylesheet" href="assets/css/41-rolling-main.css?v=v517">
   <link rel="stylesheet" href="assets/css/42-rolling-route.css?v=v517">
-  <link rel="stylesheet" href="assets/css/43-rolling-final.css?v=v1046">
+  <link rel="stylesheet" href="assets/css/43-rolling-final.css?v=v1047">
   <link rel="stylesheet" href="assets/css/50-sound-center.css?v=v536">
   <link rel="stylesheet" href="assets/css/55-odds-terminal.css?v=v745">
   <link rel="stylesheet" href="assets/css/90-final-fixes.css?v=v971"> 
@@ -596,7 +599,7 @@ html.v536-sound-preboot #v28-sound-mount::before {
 <script src="assets/js/50-daily-trade-core.js?v=v517"></script>
 <script src="assets/js/55-odds-terminal.js?v=v748"></script>
     <script src="assets/js/60-crypto-core.js?v=v529"></script>
-<script src="assets/js/70-rolling-core.js?v=v1046"></script>
+<script src="assets/js/70-rolling-core.js?v=v1047"></script>
 <script src="assets/js/71-finance-ui.js?v=v972"></script>
 <script src="assets/js/72-crypto-ui.js?v=v517"></script>
 <script src="assets/js/73-crypto-alarm-audio.js?v=v517"></script>

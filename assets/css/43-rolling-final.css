@@ -16215,3 +16215,40 @@ input.v1020-combo-stake-target {
   #rolling-excel-overlay .v1046-growth-table td{font-size:9.5px!important;padding:6px 5px!important;}
   #rolling-excel-overlay .v1046-growth-config{flex-wrap:nowrap!important;}
 }
+
+
+/* V1047: Büyüme Planı tablo başlık/renk sıkılaştırma + route sonrası stabil görünüm */
+#rolling-excel-overlay #excel-growth-percent-input{
+  color:#7c3aed!important;
+  border-color:rgba(124,58,237,.46)!important;
+  box-shadow:inset 0 0 0 1px rgba(124,58,237,.12)!important;
+}
+#rolling-excel-overlay #excel-growth-percent-input:focus{
+  border-color:rgba(124,58,237,.78)!important;
+  box-shadow:0 0 0 2px rgba(124,58,237,.14), inset 0 0 0 1px rgba(124,58,237,.14)!important;
+}
+#rolling-excel-overlay .v1046-growth-table{
+  min-width:0!important;
+  table-layout:fixed!important;
+}
+#rolling-excel-overlay .v1046-growth-table th,
+#rolling-excel-overlay .v1046-growth-table td{
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(1),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(1){width:12%!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(2),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(2){width:18%!important;color:#bfdbfe!important;font-weight:900!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(3),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(3){width:18%!important;color:#bfdbfe!important;font-weight:900!important;}
+#rolling-excel-overlay .v1046-growth-table td:nth-child(3) strong{color:#bfdbfe!important;font-weight:900!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(4),
+#rolling-excel-overlay .v1046-growth-table th:nth-child(5){
+  color:#a78bfa!important;
+}
+#rolling-excel-overlay .v1046-growth-table td:nth-child(4){width:24%!important;color:#facc15!important;font-weight:950!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(4){width:24%!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(5),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(5){width:28%!important;}
+#rolling-excel-overlay .v1046-growth-table td:nth-child(5) b{color:#22c55e!important;font-weight:950!important;}
