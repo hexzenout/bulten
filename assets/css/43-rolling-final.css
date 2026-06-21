@@ -16131,3 +16131,87 @@ input.v1020-combo-stake-target {
   color:#22c55e!important;
   font-weight:950!important;
 }
+
+/* V1046: Rolling Büyüme Planı - kompakt tablo, üst kasa satırı entegrasyonu */
+#rolling-excel-overlay .v1046-growth-config{
+  display:flex!important;
+  align-items:center!important;
+  gap:7px!important;
+}
+#rolling-excel-overlay .v1046-growth-config label{
+  white-space:nowrap!important;
+}
+#rolling-excel-overlay #excel-growth-percent-input{
+  width:68px!important;
+  min-width:68px!important;
+  height:32px!important;
+  border:1px solid rgba(148,163,184,.28)!important;
+  border-radius:9px!important;
+  background:rgba(2,6,23,.62)!important;
+  color:#facc15!important;
+  font-family:'JetBrains Mono',monospace!important;
+  font-weight:950!important;
+  text-align:center!important;
+  outline:none!important;
+  padding:3px 6px!important;
+}
+#rolling-excel-overlay #excel-growth-percent-input:focus{
+  border-color:rgba(250,204,21,.72)!important;
+  box-shadow:0 0 0 2px rgba(250,204,21,.12)!important;
+}
+#rolling-excel-overlay #v1043-excel-growth-host{
+  width:min(720px, calc(100% - 48px))!important;
+  max-width:720px!important;
+}
+#rolling-excel-overlay .v1043-excel-growth-shell,
+#rolling-excel-overlay .v1040-growth-plan.v1044-growth-plan-compact.v1046-growth-plan-slim{
+  max-width:720px!important;
+}
+#rolling-excel-overlay .v1040-growth-plan.v1044-growth-plan-compact.v1046-growth-plan-slim{
+  padding:10px!important;
+}
+#rolling-excel-overlay .v1046-growth-actions-inline{
+  display:flex!important;
+  justify-content:flex-start!important;
+  gap:7px!important;
+  margin:0 0 8px!important;
+  flex-wrap:wrap!important;
+}
+#rolling-excel-overlay .v1046-growth-table-wrap{
+  max-height:none!important;
+  overflow:visible!important;
+  border-radius:12px!important;
+}
+#rolling-excel-overlay .v1046-growth-table{
+  width:100%!important;
+  min-width:0!important;
+  table-layout:fixed!important;
+}
+#rolling-excel-overlay .v1046-growth-table th,
+#rolling-excel-overlay .v1046-growth-table td{
+  padding:7px 7px!important;
+  font-size:10.5px!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(1),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(1){width:13%!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(2),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(2){width:23%!important;color:#bfdbfe!important;font-weight:900!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(3),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(3){width:20%!important;color:#bfdbfe!important;font-weight:900!important;}
+#rolling-excel-overlay .v1046-growth-table td:nth-child(3) strong{color:#bfdbfe!important;font-weight:900!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(4),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(4){width:20%!important;color:#facc15!important;font-weight:950!important;}
+#rolling-excel-overlay .v1046-growth-table th:nth-child(5),
+#rolling-excel-overlay .v1046-growth-table td:nth-child(5){width:24%!important;}
+#rolling-excel-overlay .v1046-growth-table td:nth-child(5) b{color:#22c55e!important;font-weight:950!important;}
+#rolling-excel-overlay .v1045-growth-day-goal{display:none!important;}
+@media (max-width:760px){
+  #rolling-excel-overlay #v1043-excel-growth-host{width:calc(100% - 28px)!important;max-width:none!important;}
+  #rolling-excel-overlay .v1043-excel-growth-shell,
+  #rolling-excel-overlay .v1040-growth-plan.v1044-growth-plan-compact.v1046-growth-plan-slim{max-width:none!important;}
+  #rolling-excel-overlay .v1046-growth-table th,
+  #rolling-excel-overlay .v1046-growth-table td{font-size:9.5px!important;padding:6px 5px!important;}
+  #rolling-excel-overlay .v1046-growth-config{flex-wrap:nowrap!important;}
+}
