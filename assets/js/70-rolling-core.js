@@ -2918,6 +2918,23 @@ function escapeHtml(str) {
         const saved = saveTargetSelfFromForm(autosaveMode);
         if (saved) refresh();
       });
+      if (autosaveMode === "bet") {
+        form.addEventListener('focusout', event => {
+          window.setTimeout(() => {
+            if (!mount.isConnected || !form.isConnected) return;
+            if (form.dataset.skipAutosaveOnce === '1') {
+              delete form.dataset.skipAutosaveOnce;
+              return;
+            }
+            const active = document.activeElement;
+            if (active && form.contains(active)) return;
+            const related = event.relatedTarget;
+            if (related instanceof Node && form.contains(related)) return;
+            const saved = saveTargetSelfFromForm(autosaveMode);
+            if (saved) refresh();
+          }, 0);
+        });
+      }
     });
     const removeTargetItemAfterResult = (modeRaw, id, rowSnapshot) => {
       const mode = modeRaw === "crypto" ? "crypto" : "bet";
