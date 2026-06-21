@@ -16368,3 +16368,21 @@ input.v1020-combo-stake-target {
   color:#64748b!important;
   font-weight:800!important;
 }
+
+
+/* V1050: Büyüme Planı gerçek gün sonucu + Gün renkleri */
+#rolling-excel-overlay .v1048-growth-table th:nth-child(1){
+  color:#bfdbfe!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(1){
+  color:#a78bfa!important;
+  font-weight:950!important;
+}
+#rolling-excel-overlay .v1048-growth-table .v1050-growth-delta.win{
+  color:#22c55e!important;
+  font-weight:950!important;
+}
+#rolling-excel-overlay .v1048-growth-table .v1050-growth-delta.loss{
+  color:#ef4444!important;
+  font-weight:950!important;
+}

@@ -2240,21 +2240,27 @@
     const d = v1041NormalizeGrowthDays(days || plan?.days);
     const targets = v1040GrowthRows(plan);
     const rollingPlan = v1048RollingPlanForMode(m, d);
-    let balance = Number(rollingPlan?.startBal ?? plan?.start ?? 0);
+    let runningBalance = Number(rollingPlan?.startBal ?? plan?.start ?? 0);
     const rows = [];
-    let hasPreviousResult = false;
     for (let day = 1; day <= d; day += 1) {
       const ops = Array.isArray(rollingPlan?.ops?.[day]) ? rollingPlan.ops[day].filter(Boolean) : [];
-      const dayEffect = ops.reduce((sum, op) => sum + v1048OpEffect(m, op), 0);
       const hasDayResult = ops.some(op => op && (op.res === "win" || op.res === "loss"));
-      const displayBalance = day === 1 || hasPreviousResult || hasDayResult ? balance + (hasDayResult ? dayEffect : 0) : null;
+      const dayEffect = hasDayResult ? ops.reduce((sum, op) => sum + v1048OpEffect(m, op), 0) : 0;
+      let displayBalance = null;
+      let displayEffect = null;
+      if (hasDayResult) {
+        runningBalance += dayEffect;
+        displayBalance = runningBalance;
+        displayEffect = dayEffect;
+      } else if (day === 1) {
+        displayBalance = runningBalance;
+      }
       rows.push({
         day,
         balance: Number.isFinite(displayBalance) ? displayBalance : null,
+        effect: Number.isFinite(displayEffect) ? displayEffect : null,
         target: targets[day - 1]?.after ?? null
       });
-      balance += dayEffect;
-      if (hasDayResult) hasPreviousResult = true;
     }
     return rows;
   }
@@ -2539,8 +2545,10 @@
           <thead><tr><th>Gün</th><th>BAKİYE</th><th>HEDEF</th><th>${growthLabel}</th><th>Güncel Kasa</th></tr></thead>
           <tbody>${targetRows.map((row, idx) => {
             const actual = actualRows[idx]?.balance;
+            const effect = actualRows[idx]?.effect;
             const currentValue = Number.isFinite(actual) ? actual : (row.day === 1 ? Number(plan.start || 0) : null);
-            return `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${blank}</td><td>${Number.isFinite(currentValue) ? `<b>${money(currentValue)}</b>` : blank}</td></tr>`;
+            const effectValue = Number.isFinite(effect) ? `<b class="v1050-growth-delta ${effect >= 0 ? "win" : "loss"}">${effect >= 0 ? "+" : ""}${money(effect)}</b>` : blank;
+            return `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${effectValue}</td><td>${Number.isFinite(currentValue) ? `<b>${money(currentValue)}</b>` : blank}</td></tr>`;
           }).join("")}</tbody>
         </table>
       </div>
