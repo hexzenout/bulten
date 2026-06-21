@@ -15647,7 +15647,7 @@ input.v1020-combo-stake-target {
 }
 
 .rolling-v48-rail .v1032-crypto-meta-grid .stake b {
-  color: #16a34a !important;
+  color: #166534 !important;
 }
 
 .rolling-v48-rail .v1032-crypto-meta-grid .entry em {
@@ -15754,4 +15754,10 @@ input.v1020-combo-stake-target {
 
 .rolling-v48-rail .v1033-crypto-stop-summary .stop-loss em {
   color: #ef4444 !important;
+}
+
+
+/* V1036: Kripto Kasa Hedefi - Tutar değerini koyu yeşil tut */
+.rolling-v48-rail .v1032-crypto-meta-grid .stake b {
+  color: #166534 !important;
 }

@@ -2982,21 +2982,27 @@ function escapeHtml(str) {
       if (!row.tps[index]) return;
       const nextDone = !row.tps[index].done;
       const allDoneAfter = row.tps.length > 0 && row.tps.every((tp, idx) => idx === index ? nextDone : !!tp.done);
-      const apply = () => {
+      const applyPartial = () => {
         row.tps[index].done = nextDone;
         if (row.tps[index].done && row.result === "stop") row.result = "";
         const allDone = row.tps.length > 0 && row.tps.every(tp => !!tp.done);
         row.result = allDone ? "tp" : (row.result === "tp" ? "" : row.result || "");
         saveTargetItems(store);
         refresh();
-        if (nextDone && allDone) askTargetCleanup("crypto", id, row, "success");
       };
-      if (!nextDone) { apply(); return; }
-      if (!allDoneAfter) {
-        apply();
-        return;
-      }
-      apply();
+      if (!nextDone) { applyPartial(); return; }
+      if (!allDoneAfter) { applyPartial(); return; }
+      openTargetResultConfirm({
+        title: "İşlemi kâr olarak kapat",
+        message: "TP'ler alındı. Bu işlemi kâr olarak kapatmak istediğinden emin misin?",
+        okText: "Onayla",
+        cancelText: "Vazgeç",
+        tone: "success"
+      }, () => {
+        row.tps = row.tps.map((tp, idx) => ({ ...tp, done: idx === index ? true : !!tp.done }));
+        row.result = "tp";
+        removeTargetItemAfterResult("crypto", id, row);
+      });
     }));
     mount.querySelectorAll("[data-target-bet-leg-result]").forEach(btn => btn.addEventListener("click", () => {
       const [modeRaw, id, indexRaw, resultRaw] = String(btn.dataset.targetBetLegResult || "bet:::").split(":");
@@ -3084,12 +3090,28 @@ function escapeHtml(str) {
         if (mode === "crypto" && row.result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
         saveTargetItems(store);
         refresh();
-        if (mode === "crypto" && row.result === "stop") askTargetCleanup("crypto", id, row, "danger");
-        if (mode === "crypto" && row.result === "tp") askTargetCleanup("crypto", id, row, "success");
         if (mode === "bet" && row.result) askTargetCleanup("bet", id, row, row.result === "loss" ? "danger" : "success");
+      };
+      const applyAndCloseCrypto = () => {
+        row.result = result;
+        if (result === "stop" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: false }));
+        if (result === "tp" && Array.isArray(row.tps)) row.tps = row.tps.map(tp => ({ ...tp, done: true }));
+        removeTargetItemAfterResult("crypto", id, row);
       };
       const willActivate = row.result !== result;
       if (!willActivate) { apply(); return; }
+      if (mode === "crypto") {
+        openTargetResultConfirm({
+          title: result === "stop" ? "Zarar olarak kapat" : "İşlemi kâr olarak kapat",
+          message: result === "stop"
+            ? "Bu işlemi zarar olarak kapatmak istediğinden emin misin?"
+            : "TP'ler alındı. Bu işlemi kâr olarak kapatmak istediğinden emin misin?",
+          okText: "Onayla",
+          cancelText: "Vazgeç",
+          tone: result === "stop" ? "danger" : "success"
+        }, applyAndCloseCrypto);
+        return;
+      }
       let message = 'Sonucu onaylıyor musun?';
       let title = 'Sonuç onayı';
       let tone = result === 'loss' || result === 'stop' ? 'danger' : 'success';
