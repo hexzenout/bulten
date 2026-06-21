@@ -15459,3 +15459,63 @@ input.v1020-combo-stake-target {
     align-items: start !important;
   }
 }
+
+/* V1028: Bahis Kasa Hedefi Detay - Tutar/Kazanç alt alta sade özet */
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-footer.bet {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 36px !important;
+  align-items: end !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-meta {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 5px !important;
+  margin: 0 !important;
+  max-width: 148px !important;
+}
+
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-meta span {
+  min-width: 0 !important;
+  padding: 6px 8px !important;
+  border-radius: 10px !important;
+  background: rgba(15,23,42,.78) !important;
+  border: 1px solid rgba(148,163,184,.16) !important;
+  color: #9ca3af !important;
+  font-size: .62rem !important;
+  font-weight: 900 !important;
+}
+
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-meta b {
+  display: block !important;
+  margin-top: 2px !important;
+  color: #f8fafc !important;
+  font-size: .70rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-meta span:nth-child(1) {
+  border-color: rgba(52,211,153,.28) !important;
+  background: linear-gradient(135deg, rgba(6,78,59,.30), rgba(15,23,42,.82)) !important;
+}
+
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-meta span:nth-child(1) b {
+  color: #34d399 !important;
+}
+
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-meta span:nth-child(2) {
+  border-color: rgba(251,191,36,.32) !important;
+  background: linear-gradient(135deg, rgba(120,53,15,.28), rgba(15,23,42,.82)) !important;
+}
+
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-meta span:nth-child(2) b {
+  color: #fbbf24 !important;
+}
+
+.rolling-v48-rail .v1028-bet-detail-row .v1028-bet-detail-footer .delete {
+  justify-self: end !important;
+}
