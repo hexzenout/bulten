@@ -15894,3 +15894,53 @@ input.v1020-combo-stake-target {
 @media (max-width: 760px){
   .v1042-roll-growth-entry{justify-content:flex-start}
 }
+
+/* V1043: Büyüme Planı sadece Rolling tam ekranı içinde görünür. */
+#rolling-excel-overlay #v1043-excel-growth-host{
+  flex-shrink:0;
+  background:#0b0b0b;
+  border-bottom:1px solid rgba(148,163,184,.12);
+  padding:10px 30px 12px;
+}
+#rolling-excel-overlay .v1043-excel-growth-shell{
+  width:100%;
+  max-width:none;
+  margin:0;
+}
+#rolling-excel-overlay .v1043-excel-growth-bar{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+}
+#rolling-excel-overlay .v1043-excel-growth-bar > span{
+  font-size:11px;
+  color:#94a3b8;
+  font-weight:850;
+  letter-spacing:.02em;
+}
+#rolling-excel-overlay .v1043-excel-growth-bar .v1041-growth-toggle{
+  min-height:34px;
+  padding:8px 13px!important;
+}
+#rolling-excel-overlay .v1040-growth-plan{
+  margin:10px 0 0!important;
+  border-color:rgba(34,197,94,.22)!important;
+  background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(2,6,23,.78))!important;
+  box-shadow:none!important;
+}
+#rolling-excel-overlay .v1040-growth-plan.crypto,
+#rolling-excel-overlay .v1040-growth-plan.bet{
+  border-color:rgba(34,197,94,.22)!important;
+}
+#rolling-excel-overlay .v1040-growth-total b,
+#rolling-excel-overlay .v1040-growth-table td:last-child b,
+#rolling-excel-overlay .v1040-growth-plan.crypto .v1040-growth-total b,
+#rolling-excel-overlay .v1040-growth-plan.crypto .v1040-growth-table td:last-child b{
+  color:#22c55e!important;
+}
+@media (max-width: 760px){
+  #rolling-excel-overlay #v1043-excel-growth-host{padding:10px 14px 12px}
+  #rolling-excel-overlay .v1043-excel-growth-bar{align-items:flex-start}
+}

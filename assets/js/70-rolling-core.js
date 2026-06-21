@@ -2236,11 +2236,161 @@
     </section>`;
   }
   function renderRollingGrowthEntry(mode, state) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const growthLabel = m === "crypto" ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
-    const growthActive = growthPanelOpen(m) ? " active" : "";
-    return `<div class="v1042-roll-growth-entry ${m}"><button type="button" class="v758-row-tool v1041-growth-toggle${growthActive}" data-growth-panel-toggle="${m}"><i class="fa-solid fa-chart-line"></i> ${growthLabel}</button></div>${growthPanelOpen(m) ? renderGrowthPlanPanel(m, state) : ""}`;
+    // V1043: Büyüme Planı artık ana Rolling kartında değil;
+    // sadece 7/15/30/60/90 Günlük Rolling tam ekranının içinde gösterilir.
+    return "";
   }
+
+  function v1043ExcelGrowthContext() {
+    const titleText = String(document.getElementById("excel-modal-title")?.textContent || "").toUpperCase();
+    const mode = titleText.includes("KRİPTO") || localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
+    const titleDays = Number((titleText.match(/(\d+)\s*GÜNLÜK/) || [])[1] || 0);
+    let activeDays = Number.isFinite(titleDays) && titleDays > 0 ? titleDays : 0;
+    if (!activeDays) {
+      try { activeDays = Number(window._ACTIVE_EXCEL_DAYS || 0); } catch { activeDays = 0; }
+    }
+    if (!activeDays) {
+      const store = v1040LoadGrowthPlans();
+      activeDays = Number(store.active?.[mode] || 7);
+    }
+    const days = v1041NormalizeGrowthDays(activeDays);
+    return { mode, days };
+  }
+
+  function v1043SaveGrowthFromOverlay(mode, days) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    const state = loadState();
+    const store = v1040LoadGrowthPlans();
+    const plan = v1040GetGrowthPlan(store, m, d, state);
+    const overlay = document.getElementById("rolling-excel-overlay") || document;
+    const startInput = overlay.querySelector(`[data-growth-input="${m}:${d}:start"]`);
+    const growthInput = overlay.querySelector(`[data-growth-input="${m}:${d}:growth"]`);
+    const start = Number(startInput?.value ?? plan.start);
+    const growth = Number(growthInput?.value ?? plan.growth);
+    plan.start = Number.isFinite(start) && start >= 0 ? start : plan.start;
+    plan.growth = Number.isFinite(growth) ? growth : plan.growth;
+    plan.days = d;
+    store.active[m] = d;
+    store[m][String(d)] = plan;
+    v1040SaveGrowthPlans(store);
+    return { state, store, plan };
+  }
+
+  function v1043ApplyGrowthPlanToExcel(mode, days, plan) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const finalValue = Number(v1040GrowthFinal(plan).toFixed(2));
+    const startValue = Number(Number(plan.start || 0).toFixed(2));
+    const startInput = document.getElementById("excel-start-bal");
+    const targetInput = document.getElementById("excel-target-bal-input");
+    if (startInput) startInput.value = String(startValue);
+    if (targetInput) targetInput.value = String(finalValue);
+    const state = loadState();
+    const quick = getModeQuickPlan(state, m);
+    quick.start = startValue;
+    quick.target = finalValue;
+    quick.currentOverride = "";
+    saveState(state);
+    if (typeof window.omega_UpdateExcelConfig === "function") window.omega_UpdateExcelConfig();
+    else if (typeof window.omega_RenderExcelTable === "function") window.omega_RenderExcelTable();
+    setTimeout(v1043InjectExcelGrowthPlan, 0);
+  }
+
+  function v1043InjectExcelGrowthPlan() {
+    const overlay = document.getElementById("rolling-excel-overlay");
+    if (!overlay || overlay.style.display === "none") return;
+    const config = overlay.querySelector(".modal-config-bar");
+    if (!config) return;
+    const { mode, days } = v1043ExcelGrowthContext();
+    const state = loadState();
+    const store = v1040LoadGrowthPlans();
+    store.active[mode] = days;
+    v1040GetGrowthPlan(store, mode, days, state);
+    v1040SaveGrowthPlans(store);
+    let host = overlay.querySelector("#v1043-excel-growth-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "v1043-excel-growth-host";
+      config.insertAdjacentElement("afterend", host);
+    }
+    const label = mode === "crypto" ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
+    const open = growthPanelOpen(mode);
+    host.innerHTML = `<section class="v1043-excel-growth-shell ${mode}" data-v1043-excel-growth-shell="${mode}:${days}">
+      <div class="v1043-excel-growth-bar">
+        <button type="button" class="v758-row-tool v1041-growth-toggle${open ? " active" : ""}" data-v1043-excel-growth-toggle="${mode}"><i class="fa-solid fa-chart-line"></i> ${label}</button>
+        <span>${days} Günlük Rolling içinde gösteriliyor</span>
+      </div>
+      ${open ? renderGrowthPlanPanel(mode, state) : ""}
+    </section>`;
+    v1043BindExcelGrowthPlan(host, mode, days);
+  }
+
+  function v1043BindExcelGrowthPlan(host, mode, days) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    host.querySelectorAll("[data-v1043-excel-growth-toggle]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      setGrowthPanelOpen(m, !growthPanelOpen(m));
+      v1043InjectExcelGrowthPlan();
+    }));
+    host.querySelectorAll("[data-growth-input]").forEach(input => input.addEventListener("input", () => {
+      const [modeRaw, daysRaw] = String(input.dataset.growthInput || `${m}:${d}:start`).split(":");
+      v1043SaveGrowthFromOverlay(modeRaw, Number(daysRaw || d));
+    }));
+    host.querySelectorAll("[data-growth-action]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const [modeRaw, daysRaw, action] = String(btn.dataset.growthAction || `${m}:${d}:calc`).split(":");
+      const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      const safeDays = v1041NormalizeGrowthDays(daysRaw || d);
+      if (action === "reset") {
+        const state = loadState();
+        const store = v1040LoadGrowthPlans();
+        const currentStart = Number(document.getElementById("excel-start-bal")?.value || 0);
+        const fallback = v1040DefaultGrowthPlan(safeMode, safeDays, state);
+        fallback.start = Number.isFinite(currentStart) && currentStart > 0 ? currentStart : fallback.start;
+        store.active[safeMode] = safeDays;
+        store[safeMode][String(safeDays)] = fallback;
+        v1040SaveGrowthPlans(store);
+        v1043InjectExcelGrowthPlan();
+        return;
+      }
+      const { plan } = v1043SaveGrowthFromOverlay(safeMode, safeDays);
+      if (action === "apply") v1043ApplyGrowthPlanToExcel(safeMode, safeDays, plan);
+      else v1043InjectExcelGrowthPlan();
+    }));
+  }
+
+  function v1043InstallExcelGrowthBridge() {
+    const openFn = window.omega_OpenRollingExcel;
+    if (typeof openFn === "function" && !openFn.__v1043GrowthWrapped) {
+      const originalOpen = openFn;
+      const wrappedOpen = function(...args) {
+        const result = originalOpen.apply(this, args);
+        setTimeout(v1043InjectExcelGrowthPlan, 0);
+        setTimeout(v1043InjectExcelGrowthPlan, 80);
+        return result;
+      };
+      wrappedOpen.__v1043GrowthWrapped = true;
+      window.omega_OpenRollingExcel = wrappedOpen;
+    }
+    const renderFn = window.omega_RenderExcelTable;
+    if (typeof renderFn === "function" && !renderFn.__v1043GrowthWrapped) {
+      const originalRender = renderFn;
+      const wrappedRender = function(...args) {
+        const result = originalRender.apply(this, args);
+        setTimeout(v1043InjectExcelGrowthPlan, 0);
+        return result;
+      };
+      wrappedRender.__v1043GrowthWrapped = true;
+      window.omega_RenderExcelTable = wrappedRender;
+    }
+  }
+
+  setTimeout(v1043InstallExcelGrowthBridge, 0);
+  setTimeout(v1043InstallExcelGrowthBridge, 350);
+  document.addEventListener("DOMContentLoaded", () => setTimeout(v1043InstallExcelGrowthBridge, 0));
 
   function renderRowControls(mode, state) {
     const count = Math.max(1, Math.min(20, Number(state.rowCounts?.[mode] || 20)));
