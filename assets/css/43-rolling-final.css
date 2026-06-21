@@ -16323,3 +16323,48 @@ input.v1020-combo-stake-target {
 @media (max-width:760px){
   #rolling-excel-overlay .v1048-growth-apply-top{font-size:10px!important;padding:6px 8px!important;}
 }
+
+/* V1049: Büyüme Planı düzeltmeleri - Bakiye geri, eski mor başlıklar, turuncu büyüme kutusu */
+#rolling-excel-overlay #excel-growth-percent-input{
+  width:68px!important;
+  min-width:68px!important;
+  height:32px!important;
+  background:rgba(2,6,23,.62)!important;
+  border:1px solid rgba(148,163,184,.28)!important;
+  border-radius:9px!important;
+  color:#f97316!important;
+  box-shadow:none!important;
+  font-family:'JetBrains Mono',monospace!important;
+  font-weight:950!important;
+  text-align:center!important;
+  padding:3px 6px!important;
+}
+#rolling-excel-overlay #excel-growth-percent-input:focus{
+  border-color:rgba(249,115,22,.62)!important;
+  box-shadow:0 0 0 2px rgba(249,115,22,.12)!important;
+}
+#rolling-excel-overlay .v1048-growth-table th:nth-child(4),
+#rolling-excel-overlay .v1048-growth-table th:nth-child(5){
+  color:#a78bfa!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(2){
+  color:#bfdbfe!important;
+  font-weight:900!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(3) strong{
+  color:#bfdbfe!important;
+  font-weight:900!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(4){
+  color:#64748b!important;
+  font-weight:800!important;
+}
+#rolling-excel-overlay .v1048-growth-table td:nth-child(5) b{
+  color:#22c55e!important;
+  font-weight:950!important;
+}
+#rolling-excel-overlay .v1048-growth-table .v1048-growth-empty{
+  opacity:.35!important;
+  color:#64748b!important;
+  font-weight:800!important;
+}

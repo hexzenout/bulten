@@ -2279,6 +2279,78 @@
     const text = Number.isInteger(clean) ? String(clean) : clean.toFixed(2).replace(/\.?0+$/, "");
     return `Büyüme %${text}`;
   }
+  function v1049RoundMoneyValue(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return 0;
+    return Number(n.toFixed(2));
+  }
+  function v1049InputNumberText(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return "0";
+    const fixed = Number(n.toFixed(2));
+    return Number.isInteger(fixed) ? String(fixed) : fixed.toFixed(2);
+  }
+  function v1049CalcTargetFromGrowth(start, growth, days) {
+    const s = Math.max(0, Number(start || 0));
+    const g = v1045SmartGrowthPercent(growth);
+    const d = v1041NormalizeGrowthDays(days);
+    if (!Number.isFinite(s) || s <= 0) return 0;
+    return v1049RoundMoneyValue(s * Math.pow(1 + (g / 100), d));
+  }
+  function v1049CalcGrowthFromTarget(start, target, days) {
+    const s = Number(start || 0);
+    const t = Number(target || 0);
+    const d = v1041NormalizeGrowthDays(days);
+    if (!Number.isFinite(s) || !Number.isFinite(t) || s <= 0 || t <= 0 || d <= 0) return 0;
+    const growth = (Math.pow(t / s, 1 / d) - 1) * 100;
+    return v1045SmartGrowthPercent(Number(growth.toFixed(4)));
+  }
+  function v1049UpdateGrowthStore(mode, days, updater) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    const state = loadState();
+    const store = v1040LoadGrowthPlans();
+    const plan = v1040GetGrowthPlan(store, m, d, state);
+    if (typeof updater === "function") updater(plan);
+    plan.days = d;
+    store.active[m] = d;
+    store[m][String(d)] = plan;
+    v1040SaveGrowthPlans(store);
+    return plan;
+  }
+  function v1049SyncExcelTargetGrowth(source) {
+    const overlay = document.getElementById("rolling-excel-overlay");
+    if (!overlay || overlay.style.display === "none") return;
+    const ctx = v1043ExcelGrowthContext();
+    const mode = ctx.mode === "crypto" ? "crypto" : "bet";
+    const days = v1041NormalizeGrowthDays(ctx.days);
+    const startInput = document.getElementById("excel-start-bal");
+    const targetInput = document.getElementById("excel-target-bal-input");
+    const growthInput = document.getElementById("excel-growth-percent-input");
+    if (!startInput || !targetInput || !growthInput) return;
+    const start = Math.max(0, Number(startInput.value || 0));
+    const currentTarget = Math.max(0, Number(targetInput.value || 0));
+    const currentGrowth = v1045SmartGrowthPercent(growthInput.value);
+    const plan = v1049UpdateGrowthStore(mode, days, pl => {
+      pl.start = v1049RoundMoneyValue(start);
+      if (source === "target") {
+        const computedGrowth = v1049CalcGrowthFromTarget(start, currentTarget, days);
+        pl.growth = computedGrowth;
+        if (document.activeElement !== growthInput) growthInput.value = v1049InputNumberText(computedGrowth);
+      } else {
+        pl.growth = currentGrowth;
+        const computedTarget = v1049CalcTargetFromGrowth(start, currentGrowth, days);
+        if (document.activeElement !== targetInput && computedTarget > 0) targetInput.value = v1049InputNumberText(computedTarget);
+      }
+    });
+    if (source === "target") {
+      const computedGrowth = v1049CalcGrowthFromTarget(start, currentTarget, days);
+      if (document.activeElement !== growthInput) growthInput.value = v1049InputNumberText(computedGrowth);
+    } else {
+      const computedTarget = v1049CalcTargetFromGrowth(start, plan.growth, days);
+      if (document.activeElement !== targetInput && computedTarget > 0) targetInput.value = v1049InputNumberText(computedTarget);
+    }
+  }
   function v1046RememberRollingRoute(mode, days) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const d = v1041NormalizeGrowthDays(days);
@@ -2363,21 +2435,30 @@
     overlay.querySelectorAll(".v1045-growth-day-goal").forEach(el => el.remove());
   }
   function v1045BindExcelHeaderSync() {
-    const input = document.getElementById("excel-start-bal");
-    if (!input || input.dataset.v1045GrowthStartSync === "1") return;
-    input.dataset.v1045GrowthStartSync = "1";
-    const sync = () => {
-      const { mode, days } = v1043ExcelGrowthContext();
-      v1045SyncOverlayStartToGrowthPlan(mode, days, input.value);
-      const overlay = document.getElementById("rolling-excel-overlay");
-      const growthInput = overlay?.querySelector(`[data-growth-input="${mode}:${days}:start"]`);
-      if (growthInput && document.activeElement !== growthInput) growthInput.value = input.value;
-    };
-    input.addEventListener("input", sync);
-    input.addEventListener("change", () => setTimeout(() => {
-      sync();
-      v1043InjectExcelGrowthPlan();
-    }, 0));
+    const startInput = document.getElementById("excel-start-bal");
+    const targetInput = document.getElementById("excel-target-bal-input");
+    if (startInput && startInput.dataset.v1045GrowthStartSync !== "1") {
+      startInput.dataset.v1045GrowthStartSync = "1";
+      const syncStart = () => {
+        v1049SyncExcelTargetGrowth("growth");
+      };
+      startInput.addEventListener("input", syncStart);
+      startInput.addEventListener("change", () => setTimeout(() => {
+        syncStart();
+        v1043InjectExcelGrowthPlan();
+      }, 0));
+    }
+    if (targetInput && targetInput.dataset.v1049GrowthTargetSync !== "1") {
+      targetInput.dataset.v1049GrowthTargetSync = "1";
+      let timer = 0;
+      const syncTarget = () => {
+        v1049SyncExcelTargetGrowth("target");
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => v1043InjectExcelGrowthPlan(), 120);
+      };
+      targetInput.addEventListener("input", syncTarget);
+      targetInput.addEventListener("change", () => { syncTarget(); v1043InjectExcelGrowthPlan(); });
+    }
   }
   function v1046EnsureExcelGrowthConfig(mode, days, state) {
     const overlay = document.getElementById("rolling-excel-overlay");
@@ -2398,7 +2479,11 @@
     const d = v1041NormalizeGrowthDays(days);
     const store = v1040LoadGrowthPlans();
     const plan = v1040GetGrowthPlan(store, m, d, state || loadState());
-    if (document.activeElement !== input) input.value = String(Number(plan.growth || 0));
+    if (document.activeElement !== input) input.value = v1049InputNumberText(plan.growth || 0);
+    if (document.activeElement !== targetInput) {
+      const computedTarget = v1049CalcTargetFromGrowth(Number(document.getElementById("excel-start-bal")?.value || plan.start || 0), plan.growth, d);
+      if (computedTarget > 0) targetInput.value = v1049InputNumberText(computedTarget);
+    }
     input.dataset.growthInput = `${m}:${d}:growth`;
     let applyBtn = item.querySelector('[data-v1048-growth-apply]');
     if (!applyBtn) {
@@ -2426,16 +2511,7 @@
       input.dataset.v1046GrowthBound = "1";
       let timer = 0;
       const sync = () => {
-        const ctx = v1043ExcelGrowthContext();
-        const sm = ctx.mode === "crypto" ? "crypto" : "bet";
-        const sd = v1041NormalizeGrowthDays(ctx.days);
-        const st = v1040LoadGrowthPlans();
-        const pl = v1040GetGrowthPlan(st, sm, sd, loadState());
-        pl.growth = v1045SmartGrowthPercent(input.value);
-        pl.days = sd;
-        st.active[sm] = sd;
-        st[sm][String(sd)] = pl;
-        v1040SaveGrowthPlans(st);
+        v1049SyncExcelTargetGrowth("growth");
         window.clearTimeout(timer);
         timer = window.setTimeout(() => v1043InjectExcelGrowthPlan(), 120);
       };
@@ -2453,14 +2529,19 @@
     store.active[m] = activeDays;
     v1040SaveGrowthPlans(store);
     const plan = v1040GetGrowthPlan(store, m, activeDays, state);
-    const rows = v1048GrowthActualRows(m, activeDays, plan);
+    const targetRows = v1040GrowthRows(plan);
+    const actualRows = v1048GrowthActualRows(m, activeDays, plan);
     const growthLabel = v1045GrowthColumnLabel(plan.growth);
     const blank = `<span class="v1048-growth-empty">—</span>`;
     return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean" data-growth-plan="${m}">
       <div class="v1040-growth-table-wrap v1046-growth-table-wrap">
         <table class="v1040-growth-table v1046-growth-table v1048-growth-table">
           <thead><tr><th>Gün</th><th>BAKİYE</th><th>HEDEF</th><th>${growthLabel}</th><th>Güncel Kasa</th></tr></thead>
-          <tbody>${rows.map(row => `<tr><td>${row.day}. Gün</td><td>${row.balance === null ? blank : money(row.balance)}</td><td><strong>${row.target === null ? "" : money(row.target)}</strong></td><td>${blank}</td><td>${blank}</td></tr>`).join("")}</tbody>
+          <tbody>${targetRows.map((row, idx) => {
+            const actual = actualRows[idx]?.balance;
+            const currentValue = Number.isFinite(actual) ? actual : (row.day === 1 ? Number(plan.start || 0) : null);
+            return `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${blank}</td><td>${Number.isFinite(currentValue) ? `<b>${money(currentValue)}</b>` : blank}</td></tr>`;
+          }).join("")}</tbody>
         </table>
       </div>
     </section>`;
@@ -2496,8 +2577,13 @@
     const overlay = document.getElementById("rolling-excel-overlay") || document;
     const startInput = document.getElementById("excel-start-bal") || overlay.querySelector(`[data-growth-input="${m}:${d}:start"]`);
     const growthInput = document.getElementById("excel-growth-percent-input") || overlay.querySelector(`[data-growth-input="${m}:${d}:growth"]`);
+    const targetInput = document.getElementById("excel-target-bal-input");
     const start = Number(startInput?.value ?? plan.start);
-    const growth = Number(growthInput?.value ?? plan.growth);
+    let growth = Number(growthInput?.value ?? plan.growth);
+    if (targetInput && document.activeElement === targetInput) {
+      growth = v1049CalcGrowthFromTarget(start, Number(targetInput.value || 0), d);
+      if (growthInput) growthInput.value = v1049InputNumberText(growth);
+    }
     plan.start = Number.isFinite(start) && start >= 0 ? Number(start.toFixed(2)) : plan.start;
     plan.growth = v1045SmartGrowthPercent(growth);
     plan.days = d;
