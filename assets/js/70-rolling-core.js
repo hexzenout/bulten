@@ -31,6 +31,7 @@
   const TARGET_CLOSED_PNL_KEY_CRYPTO = "v972_rolling_target_closed_pnl_crypto_v1";
   const GROWTH_PLAN_KEY = "v1040_rolling_growth_plan_v1";
   const GROWTH_PANEL_OPEN_KEY = "v1041_rolling_growth_panel_open_v1";
+  const GROWTH_PANEL_VIEW_KEY = "v1053_rolling_growth_panel_view_v1";
   const ROLLING_RESTORE_KEY = "v1046_restore_rolling_excel_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
@@ -2034,6 +2035,20 @@
   function loadRollingDb() {
     try { return JSON.parse(localStorage.getItem(ROLLING_KEY) || "{}"); } catch { return {}; }
   }
+  function v1053BetOpTotalOdds(op) {
+    const raw = Number(op?.odds || 0);
+    const comboRows = Array.isArray(op?.combo) ? op.combo : [];
+    const comboOdds = comboRows
+      .map(row => Number(row?.odds || 0))
+      .filter(n => Number.isFinite(n) && n > 0);
+    if (comboOdds.length) {
+      const product = comboOdds.reduce((p, n) => p * n, 1);
+      if (raw > 0 && comboOdds.length === 1) return raw * product;
+      return product;
+    }
+    return Number.isFinite(raw) && raw > 0 ? raw : 0;
+  }
+
   function rollingSummary(modeFilter = "all") {
     const db = loadRollingDb();
     let startTotal = 0, currentTotal = 0, pnlTotal = 0;
@@ -2047,8 +2062,7 @@
         if (!op) return;
         const amt = Number(op.amt || 0);
         const val = Number(op.odds || 0);
-        const comboRows = Array.isArray(op.combo) ? op.combo : [];
-        const totalOdds = comboRows.reduce((p, row) => p * (Number(row?.odds || 0) || 1), val || 0);
+        const totalOdds = v1053BetOpTotalOdds(op);
         const pnl = mode === "crypto"
           ? Math.abs(val)
           : (op.res === "win" ? (amt * totalOdds) - amt : amt);
@@ -2155,6 +2169,35 @@
     store[m] = open ? "1" : "0";
     writeJson(GROWTH_PANEL_OPEN_KEY, store);
   }
+  function v1053GrowthPanelViewStore() {
+    const raw = readJson(GROWTH_PANEL_VIEW_KEY, {});
+    return raw && typeof raw === "object" ? raw : {};
+  }
+  function growthPanelView(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    return v1053GrowthPanelViewStore()[m] === "daily" ? "daily" : "rolling";
+  }
+  function setGrowthPanelView(mode, view) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const store = v1053GrowthPanelViewStore();
+    store[m] = view === "daily" ? "daily" : "rolling";
+    writeJson(GROWTH_PANEL_VIEW_KEY, store);
+  }
+  function v1053TodayDateKey() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+  function v1053DailyLabel(plan, day) {
+    const baseRaw = String(plan?.dailyStart || "").trim() || v1053TodayDateKey();
+    const base = new Date(`${baseRaw}T12:00:00`);
+    if (Number.isNaN(base.getTime())) return `${day}. Gün`;
+    base.setDate(base.getDate() + Math.max(0, Number(day || 1) - 1));
+    const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    return `${months[base.getMonth()]} ${base.getDate()}`;
+  }
 
   function v1040DefaultGrowthPlan(mode, days, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2186,7 +2229,8 @@
     const plan = {
       start: Number.isFinite(start) && start > 0 ? start : fallback.start,
       growth,
-      days: d
+      days: d,
+      dailyStart: String(current.dailyStart || fallback.dailyStart || v1053TodayDateKey()).slice(0, 10)
     };
     store[m][String(d)] = plan;
     return plan;
@@ -2232,7 +2276,8 @@
         : Math.abs(amt * (raw / 100));
       return op.res === "win" ? pnl : -pnl;
     }
-    if (op.res === "win") return (amt * raw) - amt;
+    const totalOdds = v1053BetOpTotalOdds(op);
+    if (op.res === "win") return (amt * totalOdds) - amt;
     return -amt;
   }
   function v1048GrowthActualRows(mode, days, plan) {
@@ -2528,8 +2573,9 @@
     const targetRows = v1040GrowthRows(plan);
     const actualRows = v1048GrowthActualRows(m, activeDays, plan);
     const growthLabel = v1045GrowthColumnLabel(plan.growth);
+    const view = growthPanelView(m);
     const blank = `<span class="v1048-growth-empty">—</span>`;
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean" data-growth-plan="${m}">
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-${view}" data-growth-plan="${m}" data-growth-view="${view}">
       <div class="v1040-growth-table-wrap v1046-growth-table-wrap">
         <table class="v1040-growth-table v1046-growth-table v1048-growth-table">
           <thead><tr><th>Gün</th><th>BAKİYE</th><th>HEDEF</th><th>${growthLabel}</th><th>Güncel Kasa</th></tr></thead>
@@ -2540,7 +2586,8 @@
             const effectValue = Number.isFinite(effect) ? `<b class="v1050-growth-delta ${effect >= 0 ? "win" : "loss"}">${money(effect)}</b>` : blank;
             const baseStart = Number(plan.start || 0);
             const currentClass = Number.isFinite(currentValue) && currentValue < baseStart ? "v1051-current-balance down" : "v1051-current-balance";
-            return `<tr><td>${row.day}. Gün</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${effectValue}</td><td>${Number.isFinite(currentValue) ? `<b class="${currentClass}">${money(currentValue)}</b>` : blank}</td></tr>`;
+            const dayText = view === "daily" ? v1053DailyLabel(plan, row.day) : `${row.day}. Gün`;
+            return `<tr><td>${dayText}</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${effectValue}</td><td>${Number.isFinite(currentValue) ? `<b class="${currentClass}">${money(currentValue)}</b>` : blank}</td></tr>`;
           }).join("")}</tbody>
         </table>
       </div>
@@ -2642,11 +2689,13 @@
     if (host.parentElement !== body) body.insertBefore(host, body.firstChild);
     else if (body.firstElementChild !== host) body.insertBefore(host, body.firstChild);
     v1046EnsureExcelGrowthConfig(mode, days, state);
-    const label = mode === "crypto" ? "KRİPTO BÜYÜME PLANI" : "BAHİS BÜYÜME PLANI";
+    const baseLabel = mode === "crypto" ? "KRİPTO" : "BAHİS";
+    const view = growthPanelView(mode);
     const open = growthPanelOpen(mode);
     host.innerHTML = `<section class="v1043-excel-growth-shell ${mode}" data-v1043-excel-growth-shell="${mode}:${days}">
-      <div class="v1043-excel-growth-bar">
-        <button type="button" class="v758-row-tool v1041-growth-toggle${open ? " active" : ""}" data-v1043-excel-growth-toggle="${mode}"><i class="fa-solid fa-chart-line"></i> ${label}</button>
+      <div class="v1043-excel-growth-bar v1053-growth-mode-bar">
+        <button type="button" class="v758-row-tool v1041-growth-toggle v1053-growth-mode-btn${open && view === "rolling" ? " active" : ""}" data-v1053-excel-growth-view="${mode}:rolling"><i class="fa-solid fa-chart-line"></i> ${baseLabel} ROLLİNG BÜYÜME PLANI</button>
+        <button type="button" class="v758-row-tool v1041-growth-toggle v1053-growth-mode-btn${open && view === "daily" ? " active" : ""}" data-v1053-excel-growth-view="${mode}:daily"><i class="fa-solid fa-calendar-days"></i> ${baseLabel} GÜNLÜK BÜYÜME PLANI</button>
       </div>
       ${open ? renderGrowthPlanPanel(mode, state) : ""}
     </section>`;
@@ -2658,6 +2707,17 @@
   function v1043BindExcelGrowthPlan(host, mode, days) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const d = v1041NormalizeGrowthDays(days);
+    host.querySelectorAll("[data-v1053-excel-growth-view]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const [modeRaw, viewRaw] = String(btn.dataset.v1053ExcelGrowthView || `${m}:rolling`).split(":");
+      const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      const nextView = viewRaw === "daily" ? "daily" : "rolling";
+      const isSameOpen = growthPanelOpen(safeMode) && growthPanelView(safeMode) === nextView;
+      setGrowthPanelView(safeMode, nextView);
+      setGrowthPanelOpen(safeMode, !isSameOpen);
+      v1043InjectExcelGrowthPlan();
+    }));
     host.querySelectorAll("[data-v1043-excel-growth-toggle]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();

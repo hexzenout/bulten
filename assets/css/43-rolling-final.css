@@ -16422,3 +16422,21 @@ input.v1020-combo-stake-target {
   color:#cbd5e1!important;
   font-weight:950!important;
 }
+
+/* V1053: Rolling/Günlük Büyüme Planı sekmeleri + kompakt buton hizası */
+#rolling-excel-overlay .v1053-growth-mode-bar{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+}
+#rolling-excel-overlay .v1053-growth-mode-btn{
+  white-space:nowrap!important;
+  font-size:10.5px!important;
+  letter-spacing:.02em!important;
+  padding:7px 10px!important;
+}
+#rolling-excel-overlay .v1053-growth-view-daily .v1048-growth-table th:nth-child(1),
+#rolling-excel-overlay .v1053-growth-view-daily .v1048-growth-table td:nth-child(1){
+  width:18%!important;
+}
