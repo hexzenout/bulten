@@ -16494,3 +16494,58 @@ input.v1020-combo-stake-target {
   #rolling-excel-overlay .v1054-daily-table th,
   #rolling-excel-overlay .v1054-daily-table td{font-size:9.4px!important;padding:6px 4px!important;}
 }
+
+/* V1055: Günlük büyüme ayrı sekmeden kaldırıldı; Rolling plan altında açılır defter olarak gösterilir. */
+#rolling-excel-overlay .v1055-growth-mode-bar-single{
+  gap:8px!important;
+}
+#rolling-excel-overlay .v1055-growth-rolling-only{
+  display:block!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-details{
+  margin-top:10px!important;
+  border:1px solid rgba(148,163,184,.18)!important;
+  border-radius:12px!important;
+  background:rgba(2,6,23,.34)!important;
+  overflow:hidden!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-details summary{
+  cursor:pointer!important;
+  list-style:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  padding:9px 11px!important;
+  color:#c4b5fd!important;
+  font-weight:950!important;
+  letter-spacing:.02em!important;
+  background:linear-gradient(135deg, rgba(88,28,135,.22), rgba(15,23,42,.74))!important;
+  border-bottom:1px solid rgba(148,163,184,.12)!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-details summary::-webkit-details-marker{display:none!important;}
+#rolling-excel-overlay .v1055-daily-ledger-details summary span{
+  color:#f5d0fe!important;
+  font-size:11px!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-details summary em{
+  font-style:normal!important;
+  color:#93c5fd!important;
+  font-size:10px!important;
+  font-weight:850!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-details .v1054-daily-ledger{
+  margin:0!important;
+  max-width:none!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-details .v1054-daily-table-wrap{
+  border:0!important;
+  border-radius:0!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-details[open] summary{
+  border-bottom-color:rgba(192,132,252,.22)!important;
+}

@@ -2243,32 +2243,21 @@
     return plan;
   }
   function v1054ActiveGrowthView(mode) {
-    return growthPanelView(mode === "crypto" ? "crypto" : "bet") === "daily" ? "daily" : "rolling";
+    // V1055: Günlük plan ayrı sekme olmaktan çıkarıldı.
+    // Günlük defter, Rolling Büyüme Planı içinde "Daha Fazla Göster" olarak açılır.
+    return "rolling";
   }
   function v1054GetHeaderPlan(store, mode, days, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const view = v1054ActiveGrowthView(m);
-    return view === "daily" ? v1054GetDailyGrowthPlan(store, m, days, state) : v1040GetGrowthPlan(store, m, days, state);
+    return v1040GetGrowthPlan(store, m, days, state);
   }
   function v1054SaveHeaderPlan(store, mode, days, plan) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const d = v1041NormalizeGrowthDays(days);
-    const view = v1054ActiveGrowthView(m);
-    if (view === "daily") {
-      if (!store.daily || typeof store.daily !== "object") store.daily = {};
-      store.daily[m] = {
-        start: Number.isFinite(Number(plan.start)) ? Number(Number(plan.start).toFixed(2)) : 0,
-        growth: v1045SmartGrowthPercent(plan.growth),
-        target: Number.isFinite(Number(plan.target)) ? Number(Number(plan.target).toFixed(2)) : 0,
-        days: d,
-        dailyStart: String(plan.dailyStart || v1053TodayDateKey()).slice(0, 10)
-      };
-    } else {
-      if (!store[m] || typeof store[m] !== "object") store[m] = {};
-      plan.days = d;
-      store.active[m] = d;
-      store[m][String(d)] = plan;
-    }
+    if (!store[m] || typeof store[m] !== "object") store[m] = {};
+    plan.days = d;
+    store.active[m] = d;
+    store[m][String(d)] = plan;
   }
   function v1054DateLabelFromTs(ts) {
     const d = new Date(Number(ts || Date.now()));
@@ -2697,10 +2686,20 @@
     }
     return input;
   }
+  function v1055RenderInlineDailyLedger(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const rows = v1054DailyHistoryRows(m);
+    const label = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
+    const countText = rows.length ? `${rows.length} kayıt` : "kayıt yok";
+    return `<details class="v1055-daily-ledger-details">
+      <summary><span>Daha Fazla Göster</span><em>${label} · ${countText}</em></summary>
+      ${v1054RenderDailyPlanPanel(m)}
+    </details>`;
+  }
+
   function renderGrowthPlanPanel(mode, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const view = growthPanelView(m);
-    if (view === "daily") return v1054RenderDailyPlanPanel(m);
+    const view = "rolling";
     const store = v1040LoadGrowthPlans();
     const routeInfo = v1041RouteRollingInfo();
     const ctx = v1043ExcelGrowthContext();
@@ -2712,7 +2711,7 @@
     const actualRows = v1048GrowthActualRows(m, activeDays, plan);
     const growthLabel = v1045GrowthColumnLabel(plan.growth);
     const blank = `<span class="v1048-growth-empty">—</span>`;
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-${view}" data-growth-plan="${m}" data-growth-view="${view}">
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-${view} v1055-growth-rolling-only" data-growth-plan="${m}" data-growth-view="${view}">
       <div class="v1040-growth-table-wrap v1046-growth-table-wrap">
         <table class="v1040-growth-table v1046-growth-table v1048-growth-table">
           <thead><tr><th>Gün</th><th>BAKİYE</th><th>HEDEF</th><th>${growthLabel}</th><th>Güncel Kasa</th></tr></thead>
@@ -2728,6 +2727,7 @@
           }).join("")}</tbody>
         </table>
       </div>
+      ${v1055RenderInlineDailyLedger(m)}
     </section>`;
   }
   function renderRollingGrowthEntry(mode, state) {
@@ -2783,18 +2783,6 @@
   function v1043ApplyGrowthPlanToExcel(mode, days, plan) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const d = v1041NormalizeGrowthDays(days);
-    if (growthPanelView(m) === "daily") {
-      const store = v1040LoadGrowthPlans();
-      const targetInput = document.getElementById("excel-target-bal-input");
-      if (targetInput) {
-        const t = Number(targetInput.value || 0);
-        if (Number.isFinite(t) && t > 0) plan.target = Number(t.toFixed(2));
-      }
-      v1054SaveHeaderPlan(store, m, d, plan);
-      v1040SaveGrowthPlans(store);
-      v1043InjectExcelGrowthPlan();
-      return;
-    }
     const finalValue = Number(v1040GrowthFinal(plan).toFixed(2));
     const startValue = Number(Number(plan.start || 0).toFixed(2));
     v1045SetExcelConfigValues(m, d, startValue, finalValue);
@@ -2842,12 +2830,12 @@
     else if (body.firstElementChild !== host) body.insertBefore(host, body.firstChild);
     v1046EnsureExcelGrowthConfig(mode, days, state);
     const baseLabel = mode === "crypto" ? "KRİPTO" : "BAHİS";
-    const view = growthPanelView(mode);
+    setGrowthPanelView(mode, "rolling");
+    const view = "rolling";
     const open = growthPanelOpen(mode);
     host.innerHTML = `<section class="v1043-excel-growth-shell ${mode}" data-v1043-excel-growth-shell="${mode}:${days}">
-      <div class="v1043-excel-growth-bar v1053-growth-mode-bar">
-        <button type="button" class="v758-row-tool v1041-growth-toggle v1053-growth-mode-btn${open && view === "rolling" ? " active" : ""}" data-v1053-excel-growth-view="${mode}:rolling"><i class="fa-solid fa-chart-line"></i> ${baseLabel} ROLLİNG BÜYÜME PLANI</button>
-        <button type="button" class="v758-row-tool v1041-growth-toggle v1053-growth-mode-btn${open && view === "daily" ? " active" : ""}" data-v1053-excel-growth-view="${mode}:daily"><i class="fa-solid fa-calendar-days"></i> ${baseLabel} GÜNLÜK BÜYÜME PLANI</button>
+      <div class="v1043-excel-growth-bar v1053-growth-mode-bar v1055-growth-mode-bar-single">
+        <button type="button" class="v758-row-tool v1041-growth-toggle v1053-growth-mode-btn${open ? " active" : ""}" data-v1053-excel-growth-view="${mode}:rolling"><i class="fa-solid fa-chart-line"></i> ${baseLabel} ROLLİNG BÜYÜME PLANI</button>
       </div>
       ${open ? renderGrowthPlanPanel(mode, state) : ""}
     </section>`;
@@ -2865,7 +2853,7 @@
       const [modeRaw, viewRaw] = String(btn.dataset.v1053ExcelGrowthView || `${m}:rolling`).split(":");
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
       try { v1043SaveGrowthFromOverlay(safeMode, d); } catch {}
-      const nextView = viewRaw === "daily" ? "daily" : "rolling";
+      const nextView = "rolling";
       const isSameOpen = growthPanelOpen(safeMode) && growthPanelView(safeMode) === nextView;
       setGrowthPanelView(safeMode, nextView);
       setGrowthPanelOpen(safeMode, !isSameOpen);
