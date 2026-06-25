@@ -16549,3 +16549,148 @@ input.v1020-combo-stake-target {
 #rolling-excel-overlay .v1055-daily-ledger-details[open] summary{
   border-bottom-color:rgba(192,132,252,.22)!important;
 }
+
+/* V1056: Daha Fazla Göster ayrı defter ekranı + Büyüme tablosu kolon sıkılığı */
+#rolling-excel-overlay .v1055-daily-ledger-launch{
+  margin-top:9px!important;
+  display:flex!important;
+  justify-content:flex-start!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-open{
+  border:1px solid rgba(168,85,247,.42)!important;
+  border-radius:12px!important;
+  padding:8px 12px!important;
+  background:linear-gradient(135deg, rgba(88,28,135,.35), rgba(15,23,42,.86))!important;
+  color:#f5d0fe!important;
+  font-family:'JetBrains Mono',monospace!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  cursor:pointer!important;
+  box-shadow:0 8px 18px rgba(2,6,23,.18)!important;
+}
+#rolling-excel-overlay .v1055-daily-ledger-open:hover{
+  border-color:rgba(192,132,252,.72)!important;
+  background:linear-gradient(135deg, rgba(126,34,206,.48), rgba(30,41,59,.90))!important;
+  transform:translateY(-1px)!important;
+}
+#rolling-excel-overlay #v1043-excel-growth-host{
+  max-width:520px!important;
+  width:min(520px, calc(100% - 48px))!important;
+}
+#rolling-excel-overlay .v1043-excel-growth-shell,
+#rolling-excel-overlay .v1040-growth-plan.v1044-growth-plan-compact{
+  max-width:520px!important;
+}
+#rolling-excel-overlay .v1040-growth-table-wrap{
+  overflow:visible!important;
+  max-height:none!important;
+}
+#rolling-excel-overlay .v1056-growth-table-tight{
+  width:100%!important;
+  min-width:0!important;
+  table-layout:fixed!important;
+}
+#rolling-excel-overlay .v1056-growth-table-tight th,
+#rolling-excel-overlay .v1056-growth-table-tight td{
+  padding:7px 6px!important;
+  white-space:nowrap!important;
+}
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(1),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(1){width:17%!important;}
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(2),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(2){width:22%!important;}
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(3),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(3){width:22%!important;}
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(4),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(4){width:18%!important;}
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(5),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(5){width:21%!important;}
+.v1056-ledger-screen-overlay{
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483600!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:24px!important;
+  background:rgba(2,6,23,.78)!important;
+  backdrop-filter:blur(8px)!important;
+}
+.v1056-ledger-screen-modal{
+  width:min(1180px, calc(100vw - 48px))!important;
+  max-height:calc(100vh - 48px)!important;
+  border:1px solid rgba(168,85,247,.30)!important;
+  border-radius:18px!important;
+  background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.96))!important;
+  box-shadow:0 30px 80px rgba(0,0,0,.55)!important;
+  overflow:hidden!important;
+}
+.v1056-ledger-screen-head{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:14px!important;
+  padding:14px 16px!important;
+  border-bottom:1px solid rgba(148,163,184,.16)!important;
+  background:linear-gradient(135deg, rgba(88,28,135,.28), rgba(15,23,42,.90))!important;
+}
+.v1056-ledger-screen-head b{
+  display:block!important;
+  color:#f5d0fe!important;
+  font-weight:950!important;
+  letter-spacing:.03em!important;
+}
+.v1056-ledger-screen-head span{
+  display:block!important;
+  margin-top:3px!important;
+  color:#93c5fd!important;
+  font-size:11px!important;
+  font-weight:850!important;
+}
+.v1056-ledger-screen-head button{
+  width:34px!important;
+  height:34px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(248,113,113,.32)!important;
+  background:rgba(127,29,29,.25)!important;
+  color:#fecaca!important;
+  font-size:20px!important;
+  font-weight:950!important;
+  cursor:pointer!important;
+}
+.v1056-ledger-screen-body{
+  max-height:calc(100vh - 134px)!important;
+  overflow:auto!important;
+  padding:14px!important;
+}
+.v1056-ledger-screen-body .v1054-daily-ledger{
+  max-width:none!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.v1056-ledger-screen-body .v1054-daily-table-wrap{
+  overflow:visible!important;
+  max-height:none!important;
+  border-radius:14px!important;
+  border:1px solid rgba(148,163,184,.15)!important;
+}
+.v1056-ledger-screen-body .v1054-daily-table{
+  table-layout:fixed!important;
+  width:100%!important;
+  min-width:0!important;
+}
+.v1056-ledger-screen-body .v1054-daily-table th,
+.v1056-ledger-screen-body .v1054-daily-table td{
+  padding:9px 8px!important;
+  font-size:11px!important;
+}
+@media (max-width:760px){
+  .v1056-ledger-screen-overlay{padding:12px!important;}
+  .v1056-ledger-screen-modal{width:calc(100vw - 24px)!important;max-height:calc(100vh - 24px)!important;}
+  .v1056-ledger-screen-body{padding:10px!important;}
+  #rolling-excel-overlay #v1043-excel-growth-host{width:calc(100% - 28px)!important;max-width:none!important;}
+}

@@ -2298,28 +2298,34 @@
     const odds = Number(r?.odds || 0);
     return odds > 0 ? Number(odds.toFixed(4)).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 }) : "-";
   }
-  function v1054RenderDailyPlanPanel(mode) {
+  function v1056TimeLabelFromTs(ts) {
+    const d = new Date(Number(ts || Date.now()));
+    if (Number.isNaN(d.getTime())) return "-";
+    return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+  }
+  function v1054RenderDailyPlanPanel(mode, opts = {}) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const rows = v1054DailyHistoryRows(m);
-    const empty = `<tr><td colspan="7" class="v1054-daily-empty">Henüz günlük plana düşen kapatılmış kayıt yok.</td></tr>`;
+    const modal = !!opts.modal;
     let lastKey = "";
-    const body = rows.length ? rows.map((r, idx) => {
+    const body = rows.map((r, idx) => {
       const key = v1054DateKeyFromTs(r.ts);
       const dateText = key && key === lastKey ? "\u201d" : v1054DateLabelFromTs(r.ts);
       lastKey = key || lastKey;
       const pnl = Number(r.pnl || 0);
       const pnlClass = pnl >= 0 ? "win" : "loss";
+      const timeText = v1056TimeLabelFromTs(r.ts);
       if (m === "crypto") {
-        return `<tr><td>${idx + 1}</td><td>${escapeHtml(dateText)}</td><td>${escapeHtml(v1054CryptoCoinFromRecord(r))}</td><td>${escapeHtml(v1054CryptoDirectionFromRecord(r))}</td><td>${money(r.stake || 0)}</td><td>${escapeHtml(v1054DailyRoi(m, r))}</td><td><b class="v1054-daily-pnl ${pnlClass}">${money(pnl)}</b></td></tr>`;
+        return `<tr><td>${idx + 1}</td><td>${escapeHtml(dateText)}</td><td>${escapeHtml(timeText)}</td><td>${escapeHtml(v1054CryptoCoinFromRecord(r))}</td><td>${escapeHtml(v1054CryptoDirectionFromRecord(r))}</td><td>${money(r.stake || 0)}</td><td>${escapeHtml(v1054DailyRoi(m, r))}</td><td><b class="v1054-daily-pnl ${pnlClass}">${money(pnl)}</b></td></tr>`;
       }
       const name = cleanText(r.name || "Bahis / maç");
       const kind = /^kombine/i.test(name) ? "Kombine" : "Tek";
-      return `<tr><td>${idx + 1}</td><td>${escapeHtml(dateText)}</td><td title="${escapeHtml(name)}">${escapeHtml(name)}</td><td>${kind}</td><td>${money(r.stake || 0)}</td><td>${escapeHtml(v1054DailyRoi(m, r))}</td><td><b class="v1054-daily-pnl ${pnlClass}">${money(pnl)}</b></td></tr>`;
-    }).join("") : empty;
+      return `<tr><td>${idx + 1}</td><td>${escapeHtml(dateText)}</td><td>${escapeHtml(timeText)}</td><td title="${escapeHtml(name)}">${escapeHtml(name)}</td><td>${kind}</td><td>${money(r.stake || 0)}</td><td>${escapeHtml(v1054DailyRoi(m, r))}</td><td><b class="v1054-daily-pnl ${pnlClass}">${money(pnl)}</b></td></tr>`;
+    }).join("");
     const head = m === "crypto"
-      ? `<tr><th>No.</th><th>Tarih</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th></tr>`
-      : `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th></tr>`;
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger" data-growth-plan="${m}" data-growth-view="daily">
+      ? `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th></tr>`
+      : `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th></tr>`;
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
       <div class="v1040-growth-table-wrap v1046-growth-table-wrap v1054-daily-table-wrap">
         <table class="v1040-growth-table v1046-growth-table v1048-growth-table v1054-daily-table">
           <thead>${head}</thead>
@@ -2327,6 +2333,29 @@
         </table>
       </div>
     </section>`;
+  }
+  function v1056OpenDailyLedgerScreen(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    let host = document.getElementById("v1056-ledger-screen-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "v1056-ledger-screen-host";
+      document.body.appendChild(host);
+    }
+    const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
+    host.innerHTML = `<div class="v1056-ledger-screen-overlay" data-v1056-ledger-close>
+      <section class="v1056-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+        <header class="v1056-ledger-screen-head">
+          <div><b>${title}</b><span>Gerçek tarih/saat bazlı kapatılan kayıtlar</span></div>
+          <button type="button" data-v1056-ledger-close>×</button>
+        </header>
+        <div class="v1056-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div>
+      </section>
+    </div>`;
+    host.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !el.hasAttribute("data-v1056-ledger-close")) return;
+      host.innerHTML = "";
+    }));
   }
   function v1040GetGrowthPlan(store, mode, days, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2688,14 +2717,11 @@
   }
   function v1055RenderInlineDailyLedger(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const rows = v1054DailyHistoryRows(m);
-    const label = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
-    const countText = rows.length ? `${rows.length} kayıt` : "kayıt yok";
-    return `<details class="v1055-daily-ledger-details">
-      <summary><span>Daha Fazla Göster</span><em>${label} · ${countText}</em></summary>
-      ${v1054RenderDailyPlanPanel(m)}
-    </details>`;
+    return `<div class="v1055-daily-ledger-launch">
+      <button type="button" class="v1055-daily-ledger-open" data-v1056-ledger-open="${m}">Daha Fazla Göster</button>
+    </div>`;
   }
+
 
   function renderGrowthPlanPanel(mode, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2713,7 +2739,7 @@
     const blank = `<span class="v1048-growth-empty">—</span>`;
     return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-${view} v1055-growth-rolling-only" data-growth-plan="${m}" data-growth-view="${view}">
       <div class="v1040-growth-table-wrap v1046-growth-table-wrap">
-        <table class="v1040-growth-table v1046-growth-table v1048-growth-table">
+        <table class="v1040-growth-table v1046-growth-table v1048-growth-table v1056-growth-table-tight">
           <thead><tr><th>Gün</th><th>BAKİYE</th><th>HEDEF</th><th>${growthLabel}</th><th>Güncel Kasa</th></tr></thead>
           <tbody>${targetRows.map((row, idx) => {
             const actual = actualRows[idx]?.balance;
@@ -2858,6 +2884,11 @@
       setGrowthPanelView(safeMode, nextView);
       setGrowthPanelOpen(safeMode, !isSameOpen);
       v1043InjectExcelGrowthPlan();
+    }));
+    host.querySelectorAll("[data-v1056-ledger-open]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      v1056OpenDailyLedgerScreen(btn.dataset.v1056LedgerOpen === "crypto" ? "crypto" : "bet");
     }));
     host.querySelectorAll("[data-v1043-excel-growth-toggle]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
