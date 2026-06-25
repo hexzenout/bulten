@@ -2350,6 +2350,17 @@
     const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
     return `${day} ${months[d.getMonth()] || ""}`.trim();
   }
+  function v1061LedgerDateKey(row) {
+    const raw = String(row?.date || "").trim();
+    const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+    const d = new Date(Number(row?.ts || Date.now()));
+    if (Number.isNaN(d.getTime())) return "";
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function v1061LedgerHasContent(row) {
+    return ["item", "kind", "stake", "roi", "pnl"].some(field => String(row?.[field] ?? "").trim());
+  }
   function v1060LedgerCellText(text, extraClass = "") {
     return `<span class="v1060-ledger-cell-text ${extraClass}">${escapeHtml(String(text ?? ""))}</span>`;
   }
@@ -2470,13 +2481,17 @@
         if (!row?.id || modeEdits.deleted?.[row.id]) return;
         if (byId.has(row.id)) return;
         const override = modeEdits.overrides?.[row.id] || {};
-        byId.set(row.id, { ...row, ...override, manual: false });
+        const merged = { ...row, ...override, manual: false };
+        if (!v1061LedgerHasContent(merged)) return;
+        byId.set(row.id, merged);
       });
     (modeEdits.manual || []).forEach(row => {
       if (!row || !row.id || modeEdits.deleted?.[row.id]) return;
-      byId.set(row.id, { ts: Number(row.ts || Date.now()), source: "manual", no: "", date: "", time: "", item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, ...row, manual: true });
+      const merged = { ts: Number(row.ts || Date.now()), source: "manual", no: "", date: "", time: "", item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, ...row, manual: true };
+      if (!merged.force && !v1061LedgerHasContent(merged)) return;
+      byId.set(row.id, merged);
     });
-    return Array.from(byId.values()).sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0)).map((row, idx) => ({ ...row, no: row.no || idx + 1 }));
+    return Array.from(byId.values()).sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0)).map((row, idx) => ({ ...row, no: idx + 1 }));
   }
   function v1057DisplayValue(row, field) {
     if (field === "dateLabel") return v1057DateInputToLabel(row.date);
@@ -2516,18 +2531,22 @@
   function v1054RenderDailyPlanPanel(mode, opts = {}) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const rows = v1057LedgerRows(m);
-    const chunks = v1057LedgerChunks(rows, 25);
+    const decoratedRows = rows.map((row, idx, arr) => {
+      const key = v1061LedgerDateKey(row);
+      const prevKey = idx > 0 ? v1061LedgerDateKey(arr[idx - 1]) : "";
+      return { ...row, _displayDate: key && key === prevKey ? "”" : v1060LedgerDateLabel(row) };
+    });
+    const chunks = v1057LedgerChunks(decoratedRows, 25);
     const modal = !!opts.modal;
     const summary = v1059LedgerSummary(m, rows);
     const head = m === "crypto"
       ? `<tr><th>No.</th><th>Tarih</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th><th></th></tr>`
       : `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th><th></th></tr>`;
-    const summaryHtml = `<div class="v1059-ledger-summary v1060-ledger-summary-inline">
+    const summaryHtml = `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline">
         <div><span>Kasa Başlangıç</span><b>${money(summary.start)}</b></div>
         <div><span>Büyüme Oranı</span><b>${v1059LedgerPctText(summary.growth)}</b></div>
         <div><span>Güncel Kasa</span><b>${money(summary.current)}</b></div>
       </div>`;
-    const emptyRow = `<tr class="v1059-ledger-empty-row"><td colspan="8">Kayıt yok</td></tr>`;
     const blocks = chunks.map((chunk, blockIndex) => {
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
@@ -2535,8 +2554,8 @@
         const globalNo = blockIndex * 25 + localIndex + 1;
         const itemClass = m === "crypto" ? "coin" : "item";
         return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}">
-          <td>${v1060LedgerCellText(row.no || globalNo, "num")}</td>
-          <td>${v1060LedgerCellText(v1060LedgerDateLabel(row), "date")}</td>
+          <td>${v1060LedgerCellText(globalNo, "num")}</td>
+          <td>${v1060LedgerCellText(row._displayDate || "", "date")}</td>
           <td>${v1057LedgerInput(row, "item", itemClass)}</td>
           <td>${v1057LedgerInput(row, "kind")}</td>
           <td>${v1057LedgerInput(row, "stake", "money")}</td>
@@ -2545,14 +2564,14 @@
           <td><button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}">×</button></td>
         </tr>`;
       }).join("");
-      return `<section class="v1057-ledger-sheet">
-        ${blockIndex === 0 ? summaryHtml : `<div class="v1060-ledger-summary-spacer"></div>`}
-        <table class="v1057-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml || emptyRow}</tbody></table>
+      return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
+        ${blockIndex === 0 ? summaryHtml : `<div class="v1060-ledger-summary-spacer v1061-ledger-summary-spacer"></div>`}
+        <table class="v1057-ledger-excel-table v1061-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml}</tbody></table>
       </section>`;
     }).join("");
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
-      <div class="v1057-ledger-toolbar"><button type="button" data-v1057-ledger-add="${m}">+ Satır</button></div>
-      <div class="v1057-ledger-sheet-grid">${blocks}</div>
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
+      <div class="v1057-ledger-toolbar v1061-ledger-toolbar"><button type="button" data-v1057-ledger-add="${m}">+ Satır</button></div>
+      <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid">${blocks}</div>
     </section>`;
   }
   function v1060BuildLedgerPhotoSvg(mode) {
@@ -2597,7 +2616,7 @@
       const edits = v1057LoadLedgerEdits();
       const id = `manual_${Date.now()}_${Math.random().toString(36).slice(2)}`;
       const ts = Date.now();
-      edits[m].manual.push({ id, ts, no: "", date: v1057TodayDateInput(ts), time: v1056TimeLabelFromTs(ts), item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0 });
+      edits[m].manual.push({ id, ts, force: 1, no: "", date: v1057TodayDateInput(ts), time: v1056TimeLabelFromTs(ts), item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0 });
       v1057SaveLedgerEdits(edits);
       v1056OpenDailyLedgerScreen(m);
     }));
@@ -2638,11 +2657,11 @@
     }
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
     host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
-      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
         <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head">
           <div><b>${title}</b></div>
           <div class="v1060-ledger-head-actions">
-            <button type="button" class="v1060-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
+            <button type="button" class="v1060-ledger-photo v1061-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
             <button type="button" data-v1056-ledger-close>×</button>
           </div>
         </header>
