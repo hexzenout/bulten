@@ -2211,12 +2211,133 @@
     if (!store.active || typeof store.active !== "object") store.active = {};
     if (!store.bet || typeof store.bet !== "object") store.bet = {};
     if (!store.crypto || typeof store.crypto !== "object") store.crypto = {};
+    if (!store.daily || typeof store.daily !== "object") store.daily = {};
+    if (!store.daily.bet || typeof store.daily.bet !== "object") store.daily.bet = {};
+    if (!store.daily.crypto || typeof store.daily.crypto !== "object") store.daily.crypto = {};
     store.active.bet = v1041NormalizeGrowthDays(store.active.bet);
     store.active.crypto = v1041NormalizeGrowthDays(store.active.crypto);
     return store;
   }
   function v1040SaveGrowthPlans(store) {
     writeJson(GROWTH_PLAN_KEY, store && typeof store === "object" ? store : {});
+  }
+
+  function v1054GetDailyGrowthPlan(store, mode, days, state) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    if (!store.daily || typeof store.daily !== "object") store.daily = {};
+    if (!store.daily[m] || typeof store.daily[m] !== "object") store.daily[m] = {};
+    const fallback = v1040DefaultGrowthPlan(m, d, state);
+    const current = store.daily[m] && typeof store.daily[m] === "object" ? store.daily[m] : {};
+    const start = Number(current.start ?? fallback.start);
+    const growth = v1045SmartGrowthPercent(current.growth ?? fallback.growth);
+    const target = Number(current.target ?? v1049CalcTargetFromGrowth(Number.isFinite(start) && start > 0 ? start : fallback.start, growth, d));
+    const plan = {
+      start: Number.isFinite(start) && start >= 0 ? Number(start.toFixed(2)) : fallback.start,
+      growth,
+      target: Number.isFinite(target) && target > 0 ? Number(target.toFixed(2)) : Number(v1049CalcTargetFromGrowth(fallback.start, growth, d).toFixed(2)),
+      days: d,
+      dailyStart: String(current.dailyStart || fallback.dailyStart || v1053TodayDateKey()).slice(0, 10)
+    };
+    store.daily[m] = plan;
+    return plan;
+  }
+  function v1054ActiveGrowthView(mode) {
+    return growthPanelView(mode === "crypto" ? "crypto" : "bet") === "daily" ? "daily" : "rolling";
+  }
+  function v1054GetHeaderPlan(store, mode, days, state) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const view = v1054ActiveGrowthView(m);
+    return view === "daily" ? v1054GetDailyGrowthPlan(store, m, days, state) : v1040GetGrowthPlan(store, m, days, state);
+  }
+  function v1054SaveHeaderPlan(store, mode, days, plan) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days);
+    const view = v1054ActiveGrowthView(m);
+    if (view === "daily") {
+      if (!store.daily || typeof store.daily !== "object") store.daily = {};
+      store.daily[m] = {
+        start: Number.isFinite(Number(plan.start)) ? Number(Number(plan.start).toFixed(2)) : 0,
+        growth: v1045SmartGrowthPercent(plan.growth),
+        target: Number.isFinite(Number(plan.target)) ? Number(Number(plan.target).toFixed(2)) : 0,
+        days: d,
+        dailyStart: String(plan.dailyStart || v1053TodayDateKey()).slice(0, 10)
+      };
+    } else {
+      if (!store[m] || typeof store[m] !== "object") store[m] = {};
+      plan.days = d;
+      store.active[m] = d;
+      store[m][String(d)] = plan;
+    }
+  }
+  function v1054DateLabelFromTs(ts) {
+    const d = new Date(Number(ts || Date.now()));
+    if (Number.isNaN(d.getTime())) return "-";
+    const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    return `${d.getDate()} ${months[d.getMonth()]}`;
+  }
+  function v1054DateKeyFromTs(ts) {
+    const d = new Date(Number(ts || Date.now()));
+    if (Number.isNaN(d.getTime())) return "";
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function v1054CryptoDirectionFromRecord(r) {
+    const raw = cleanText(r?.side || r?.direction || r?.position || "");
+    if (raw) return raw;
+    const name = cleanText(r?.name || r?.label || "");
+    if (/\bshort\b/i.test(name)) return "Short";
+    if (/\blong\b/i.test(name)) return "Long";
+    return "-";
+  }
+  function v1054CryptoCoinFromRecord(r) {
+    const name = cleanText(r?.name || r?.label || "");
+    const first = name.split(/[\s\/\-]+/).filter(Boolean)[0] || "İşlem";
+    return first.toUpperCase();
+  }
+  function v1054DailyHistoryRows(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const rows = (loadHistory()[m] || []).filter(r => r && (r.status === "win" || r.status === "loss"));
+    return rows.slice().sort((a,b) => Number(a.ts || 0) - Number(b.ts || 0));
+  }
+  function v1054DailyRoi(mode, r) {
+    const stake = Math.abs(Number(r?.stake || 0));
+    const pnl = Number(r?.pnl || 0);
+    if (mode === "crypto") {
+      if (!stake) return "-";
+      return `${Number(((pnl / stake) * 100).toFixed(2)).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}%`;
+    }
+    const odds = Number(r?.odds || 0);
+    return odds > 0 ? Number(odds.toFixed(4)).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 }) : "-";
+  }
+  function v1054RenderDailyPlanPanel(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const rows = v1054DailyHistoryRows(m);
+    const empty = `<tr><td colspan="7" class="v1054-daily-empty">Henüz günlük plana düşen kapatılmış kayıt yok.</td></tr>`;
+    let lastKey = "";
+    const body = rows.length ? rows.map((r, idx) => {
+      const key = v1054DateKeyFromTs(r.ts);
+      const dateText = key && key === lastKey ? "\u201d" : v1054DateLabelFromTs(r.ts);
+      lastKey = key || lastKey;
+      const pnl = Number(r.pnl || 0);
+      const pnlClass = pnl >= 0 ? "win" : "loss";
+      if (m === "crypto") {
+        return `<tr><td>${idx + 1}</td><td>${escapeHtml(dateText)}</td><td>${escapeHtml(v1054CryptoCoinFromRecord(r))}</td><td>${escapeHtml(v1054CryptoDirectionFromRecord(r))}</td><td>${money(r.stake || 0)}</td><td>${escapeHtml(v1054DailyRoi(m, r))}</td><td><b class="v1054-daily-pnl ${pnlClass}">${money(pnl)}</b></td></tr>`;
+      }
+      const name = cleanText(r.name || "Bahis / maç");
+      const kind = /^kombine/i.test(name) ? "Kombine" : "Tek";
+      return `<tr><td>${idx + 1}</td><td>${escapeHtml(dateText)}</td><td title="${escapeHtml(name)}">${escapeHtml(name)}</td><td>${kind}</td><td>${money(r.stake || 0)}</td><td>${escapeHtml(v1054DailyRoi(m, r))}</td><td><b class="v1054-daily-pnl ${pnlClass}">${money(pnl)}</b></td></tr>`;
+    }).join("") : empty;
+    const head = m === "crypto"
+      ? `<tr><th>No.</th><th>Tarih</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th></tr>`
+      : `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th></tr>`;
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger" data-growth-plan="${m}" data-growth-view="daily">
+      <div class="v1040-growth-table-wrap v1046-growth-table-wrap v1054-daily-table-wrap">
+        <table class="v1040-growth-table v1046-growth-table v1048-growth-table v1054-daily-table">
+          <thead>${head}</thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>
+    </section>`;
   }
   function v1040GetGrowthPlan(store, mode, days, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2359,7 +2480,7 @@
     const d = v1041NormalizeGrowthDays(days);
     const state = loadState();
     const store = v1040LoadGrowthPlans();
-    const plan = v1040GetGrowthPlan(store, m, d, state);
+    const plan = v1054GetHeaderPlan(store, m, d, state);
     if (typeof updater === "function") updater(plan);
     plan.days = d;
     store.active[m] = d;
@@ -2400,6 +2521,15 @@
     overlay.dataset.v1052DraftMode = mode;
     overlay.dataset.v1052DraftDays = String(days);
     overlay.dataset.v1052DraftStart = v1049InputNumberText(start);
+    try {
+      const store = v1040LoadGrowthPlans();
+      const plan = v1054GetHeaderPlan(store, mode, days, loadState());
+      plan.start = Number.isFinite(start) ? Number(start.toFixed(2)) : plan.start;
+      plan.growth = v1045SmartGrowthPercent(growthInput.value);
+      plan.target = Number.isFinite(Number(targetInput.value || 0)) ? Number(Number(targetInput.value || 0).toFixed(2)) : plan.target;
+      v1054SaveHeaderPlan(store, mode, days, plan);
+      v1040SaveGrowthPlans(store);
+    } catch {}
   }
   function v1046RememberRollingRoute(mode, days) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2522,10 +2652,16 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     const d = v1041NormalizeGrowthDays(days);
     const store = v1040LoadGrowthPlans();
-    const plan = v1040GetGrowthPlan(store, m, d, state || loadState());
+    const plan = v1054GetHeaderPlan(store, m, d, state || loadState());
+    const startInput = document.getElementById("excel-start-bal");
+    if (startInput && document.activeElement !== startInput && Number.isFinite(Number(plan.start))) {
+      startInput.value = v1049InputNumberText(plan.start);
+    }
     if (document.activeElement !== input) input.value = v1049InputNumberText(plan.growth || 0);
     if (document.activeElement !== targetInput) {
-      const computedTarget = v1049CalcTargetFromGrowth(Number(document.getElementById("excel-start-bal")?.value || plan.start || 0), plan.growth, d);
+      const computedTarget = Number.isFinite(Number(plan.target)) && Number(plan.target) > 0
+        ? Number(plan.target)
+        : v1049CalcTargetFromGrowth(Number(startInput?.value || plan.start || 0), plan.growth, d);
       if (computedTarget > 0) targetInput.value = v1049InputNumberText(computedTarget);
     }
     input.dataset.growthInput = `${m}:${d}:growth`;
@@ -2563,6 +2699,8 @@
   }
   function renderGrowthPlanPanel(mode, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
+    const view = growthPanelView(m);
+    if (view === "daily") return v1054RenderDailyPlanPanel(m);
     const store = v1040LoadGrowthPlans();
     const routeInfo = v1041RouteRollingInfo();
     const ctx = v1043ExcelGrowthContext();
@@ -2573,7 +2711,6 @@
     const targetRows = v1040GrowthRows(plan);
     const actualRows = v1048GrowthActualRows(m, activeDays, plan);
     const growthLabel = v1045GrowthColumnLabel(plan.growth);
-    const view = growthPanelView(m);
     const blank = `<span class="v1048-growth-empty">—</span>`;
     return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-${view}" data-growth-plan="${m}" data-growth-view="${view}">
       <div class="v1040-growth-table-wrap v1046-growth-table-wrap">
@@ -2586,7 +2723,7 @@
             const effectValue = Number.isFinite(effect) ? `<b class="v1050-growth-delta ${effect >= 0 ? "win" : "loss"}">${money(effect)}</b>` : blank;
             const baseStart = Number(plan.start || 0);
             const currentClass = Number.isFinite(currentValue) && currentValue < baseStart ? "v1051-current-balance down" : "v1051-current-balance";
-            const dayText = view === "daily" ? v1053DailyLabel(plan, row.day) : `${row.day}. Gün`;
+            const dayText = `${row.day}. Gün`;
             return `<tr><td>${dayText}</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${effectValue}</td><td>${Number.isFinite(currentValue) ? `<b class="${currentClass}">${money(currentValue)}</b>` : blank}</td></tr>`;
           }).join("")}</tbody>
         </table>
@@ -2620,7 +2757,7 @@
     const d = v1041NormalizeGrowthDays(days);
     const state = loadState();
     const store = v1040LoadGrowthPlans();
-    const plan = v1040GetGrowthPlan(store, m, d, state);
+    const plan = v1054GetHeaderPlan(store, m, d, state);
     const overlay = document.getElementById("rolling-excel-overlay") || document;
     const startInput = document.getElementById("excel-start-bal") || overlay.querySelector(`[data-growth-input="${m}:${d}:start"]`);
     const growthInput = document.getElementById("excel-growth-percent-input") || overlay.querySelector(`[data-growth-input="${m}:${d}:growth"]`);
@@ -2633,9 +2770,12 @@
     }
     plan.start = Number.isFinite(start) && start >= 0 ? Number(start.toFixed(2)) : plan.start;
     plan.growth = v1045SmartGrowthPercent(growth);
+    if (targetInput) {
+      const target = Number(targetInput.value || 0);
+      if (Number.isFinite(target) && target > 0) plan.target = Number(target.toFixed(2));
+    }
     plan.days = d;
-    store.active[m] = d;
-    store[m][String(d)] = plan;
+    v1054SaveHeaderPlan(store, m, d, plan);
     v1040SaveGrowthPlans(store);
     return { state, store, plan };
   }
@@ -2643,6 +2783,18 @@
   function v1043ApplyGrowthPlanToExcel(mode, days, plan) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const d = v1041NormalizeGrowthDays(days);
+    if (growthPanelView(m) === "daily") {
+      const store = v1040LoadGrowthPlans();
+      const targetInput = document.getElementById("excel-target-bal-input");
+      if (targetInput) {
+        const t = Number(targetInput.value || 0);
+        if (Number.isFinite(t) && t > 0) plan.target = Number(t.toFixed(2));
+      }
+      v1054SaveHeaderPlan(store, m, d, plan);
+      v1040SaveGrowthPlans(store);
+      v1043InjectExcelGrowthPlan();
+      return;
+    }
     const finalValue = Number(v1040GrowthFinal(plan).toFixed(2));
     const startValue = Number(Number(plan.start || 0).toFixed(2));
     v1045SetExcelConfigValues(m, d, startValue, finalValue);
@@ -2712,6 +2864,7 @@
       event.stopPropagation();
       const [modeRaw, viewRaw] = String(btn.dataset.v1053ExcelGrowthView || `${m}:rolling`).split(":");
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      try { v1043SaveGrowthFromOverlay(safeMode, d); } catch {}
       const nextView = viewRaw === "daily" ? "daily" : "rolling";
       const isSameOpen = growthPanelOpen(safeMode) && growthPanelView(safeMode) === nextView;
       setGrowthPanelView(safeMode, nextView);
