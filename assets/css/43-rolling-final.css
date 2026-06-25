@@ -17461,3 +17461,26 @@ input.v1020-combo-stake-target {
   .v1061-ledger-pro .v1057-ledger-sheet,
   .v1061-ledger-sheet{flex-basis:650px!important;width:650px!important;max-width:650px!important;}
 }
+
+
+/* V1062: Kamera/fotoğraf önizleme katmanını tüm modalların üstüne ayır */
+#omega-rolling-photo-host{
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483647!important;
+  display:none;
+  pointer-events:none!important;
+}
+#omega-rolling-photo-host .v781-photo-overlay{
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483647!important;
+  pointer-events:auto!important;
+}
+#omega-rolling-photo-host .v781-photo-modal{
+  position:relative!important;
+  z-index:2147483647!important;
+}
+html.rolling-hash-boot body > #omega-rolling-photo-host{
+  display:block!important;
+}

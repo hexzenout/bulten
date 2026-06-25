@@ -1463,20 +1463,26 @@
       if (typeof onConfirm === "function") onConfirm();
     });
   }
-  function openRollingPhotoPreview(dataUrl, filename, title = "Fotoğraf", subtitle = "ROLLING") {
-    if (!dataUrl) return;
-    let host = document.getElementById("omega-rolling-feature-host");
+  function getRollingPhotoHost() {
+    let host = document.getElementById("omega-rolling-photo-host");
     if (!host) {
       host = document.createElement("div");
-      host.id = "omega-rolling-feature-host";
+      host.id = "omega-rolling-photo-host";
       document.body.appendChild(host);
     }
+    return host;
+  }
+  function openRollingPhotoPreview(dataUrl, filename, title = "Fotoğraf", subtitle = "ROLLING") {
+    if (!dataUrl) return;
+    const host = getRollingPhotoHost();
     host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${escapeHtml(title)}</b><span>${escapeHtml(subtitle)}</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${dataUrl}" alt="Rolling fotoğrafı"></section></div>`;
     host.style.display = "block";
+    host.setAttribute("aria-hidden", "false");
     host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
       host.innerHTML = "";
       host.style.display = "none";
+      host.setAttribute("aria-hidden", "true");
     }));
     host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
       v781DownloadPngFromSvg(dataUrl, filename);
@@ -1489,18 +1495,15 @@
       alert(mode === 'crypto' ? 'Fotoğraf için önce işlem gir.' : 'Fotoğraf için önce maç bilgisi gir.');
       return;
     }
-    let host = document.getElementById('omega-rolling-feature-host');
-    if (!host) {
-      host = document.createElement('div');
-      host.id = 'omega-rolling-feature-host';
-      document.body.appendChild(host);
-    }
+    const host = getRollingPhotoHost();
     host.innerHTML = `<div class="v781-photo-overlay" data-v781-photo-close><section class="v781-photo-modal" onclick="event.stopPropagation()"><div class="v776-photo-head"><div><b>${payload.label}</b><span>Kasa Hedefi</span></div><button type="button" data-v781-photo-close>×</button></div><div class="v776-photo-actions"><button type="button" data-v781-photo-download>Resmi İndir</button></div><img src="${payload.dataUrl}" alt="Kasa hedefi fotoğrafı"></section></div>`;
     host.style.display = 'block';
+    host.setAttribute('aria-hidden', 'false');
     host.querySelectorAll('[data-v781-photo-close]').forEach(el => el.addEventListener('click', event => {
       if (event.target !== el && !event.target.hasAttribute('data-v781-photo-close')) return;
       host.innerHTML = '';
       host.style.display = 'none';
+      host.setAttribute('aria-hidden', 'true');
     }));
     host.querySelector('[data-v781-photo-download]')?.addEventListener('click', () => {
       v781DownloadPngFromSvg(payload.dataUrl, payload.file);
