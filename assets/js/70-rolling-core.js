@@ -2472,26 +2472,46 @@
     const type = field === "date" ? "date" : "text";
     return `<input type="${type}" class="v1057-ledger-input ${extraClass}" value="${escapeHtml(value)}" data-v1057-ledger-id="${escapeHtml(row.id)}" data-v1057-ledger-field="${field}">`;
   }
-  function v1057LedgerChunks(rows, size = 30) {
+  function v1057LedgerChunks(rows, size = 25) {
     const chunks = [];
     for (let i = 0; i < rows.length; i += size) chunks.push(rows.slice(i, i + size));
     if (!chunks.length) chunks.push([]);
     return chunks;
   }
+  function v1059LedgerSummary(mode, rows) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const state = loadState();
+    const store = v1040LoadGrowthPlans();
+    const activeDays = v1041NormalizeGrowthDays(store.active?.[m] || 7);
+    const plan = v1040GetGrowthPlan(store, m, activeDays, state);
+    const start = Number(plan?.start || getModeQuickPlan(state, m)?.start || 0);
+    const totalPnl = (Array.isArray(rows) ? rows : []).reduce((sum, row) => sum + Number(row?.pnlRaw || 0), 0);
+    const current = start + totalPnl;
+    const growth = start ? (totalPnl / Math.abs(start)) * 100 : 0;
+    return {
+      start: Number.isFinite(start) ? start : 0,
+      current: Number.isFinite(current) ? current : 0,
+      growth: Number.isFinite(growth) ? growth : 0
+    };
+  }
+  function v1059LedgerPctText(value) {
+    const n = Number(value || 0);
+    return `${n.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+  }
   function v1054RenderDailyPlanPanel(mode, opts = {}) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const rows = v1057LedgerRows(m);
-    const chunks = v1057LedgerChunks(rows, 30);
+    const chunks = v1057LedgerChunks(rows, 25);
     const modal = !!opts.modal;
+    const summary = v1059LedgerSummary(m, rows);
     const head = m === "crypto"
       ? `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th><th></th></tr>`
       : `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th><th></th></tr>`;
-    const makeBlankRows = (count, startNo = 1) => Array.from({ length: count }, (_, i) => `<tr class="v1057-ledger-blank-row"><td>${startNo + i}</td><td colspan="8"></td></tr>`).join("");
     const blocks = chunks.map((chunk, blockIndex) => {
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
         const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
-        const globalNo = blockIndex * 30 + localIndex + 1;
+        const globalNo = blockIndex * 25 + localIndex + 1;
         return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}">
           <td>${v1057LedgerInput({ ...row, no: row.no || globalNo }, "no", "num")}</td>
           <td>${v1057LedgerInput(row, "date")}</td>
@@ -2504,15 +2524,19 @@
           <td><button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}">×</button></td>
         </tr>`;
       }).join("");
-      const blankCount = Math.max(0, 30 - chunk.length);
-      const blankRows = makeBlankRows(blankCount, blockIndex * 30 + chunk.length + 1);
+      const emptyRow = `<tr class="v1059-ledger-empty-row"><td colspan="9">Henüz kayıt yok</td></tr>`;
       return `<section class="v1057-ledger-sheet">
         <div class="v1057-ledger-sheet-title">REİSACADEMY</div>
-        <table class="v1057-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml}${blankRows}</tbody></table>
+        <table class="v1057-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml || emptyRow}</tbody></table>
       </section>`;
     }).join("");
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
-      <div class="v1057-ledger-toolbar"><button type="button" data-v1057-ledger-add="${m}">+ Satır Ekle</button><span>Otomatik gelen satırları istersen hücreden düzenleyebilirsin.</span></div>
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
+      <div class="v1059-ledger-summary">
+        <div><span>Kasa Başlangıç</span><b>${money(summary.start)}</b></div>
+        <div><span>Büyüme Oranı</span><b>${v1059LedgerPctText(summary.growth)}</b></div>
+        <div><span>Güncel Kasa</span><b>${money(summary.current)}</b></div>
+      </div>
+      <div class="v1057-ledger-toolbar"><button type="button" data-v1057-ledger-add="${m}">+ Satır</button></div>
       <div class="v1057-ledger-sheet-grid">${blocks}</div>
     </section>`;
   }
@@ -2567,7 +2591,7 @@
     host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
       <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
         <header class="v1056-ledger-screen-head v1057-ledger-screen-head">
-          <div><b>${title}</b><span>Excel defteri · tarih/saat bazlı otomatik kayıt + elle düzenleme</span></div>
+          <div><b>${title}</b></div>
           <button type="button" data-v1056-ledger-close>×</button>
         </header>
         <div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div>
