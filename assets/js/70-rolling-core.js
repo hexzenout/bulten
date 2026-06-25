@@ -2338,15 +2338,30 @@
     const d = new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
     return v1054DateLabelFromTs(d.getTime());
   }
+  function v1060LedgerDateLabel(row) {
+    const raw = String(row?.date || "").trim();
+    let d = null;
+    const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    if (!d || Number.isNaN(d.getTime())) {
+      d = new Date(Number(row?.ts || Date.now()));
+    }
+    const day = String(d.getDate()).padStart(2, "0");
+    const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    return `${day} ${months[d.getMonth()] || ""}`.trim();
+  }
+  function v1060LedgerCellText(text, extraClass = "") {
+    return `<span class="v1060-ledger-cell-text ${extraClass}">${escapeHtml(String(text ?? ""))}</span>`;
+  }
   function v1057OpName(mode, op) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m === "crypto") {
-      const raw = cleanText(op?.coin || op?.symbol || op?.sym || op?.asset || op?.name || op?.label || "");
+      const raw = cleanText(op?.coin || op?.symbol || op?.sym || op?.asset || op?.name || op?.label || op?.note || "");
       return raw ? raw.toUpperCase() : "İşlem";
     }
     const comboRows = Array.isArray(op?.combo) ? op.combo : [];
     const comboNames = comboRows.map(r => cleanText(r?.name || r?.match || r?.label || "")).filter(Boolean);
-    const main = cleanText(op?.name || op?.match || op?.label || "");
+    const main = cleanText(op?.name || op?.match || op?.label || op?.note || op?.title || "");
     if (comboNames.length) return comboNames.join(" + ");
     return main || "Bahis / maç";
   }
@@ -2505,18 +2520,24 @@
     const modal = !!opts.modal;
     const summary = v1059LedgerSummary(m, rows);
     const head = m === "crypto"
-      ? `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th><th></th></tr>`
-      : `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th><th></th></tr>`;
+      ? `<tr><th>No.</th><th>Tarih</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th><th></th></tr>`
+      : `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th><th></th></tr>`;
+    const summaryHtml = `<div class="v1059-ledger-summary v1060-ledger-summary-inline">
+        <div><span>Kasa Başlangıç</span><b>${money(summary.start)}</b></div>
+        <div><span>Büyüme Oranı</span><b>${v1059LedgerPctText(summary.growth)}</b></div>
+        <div><span>Güncel Kasa</span><b>${money(summary.current)}</b></div>
+      </div>`;
+    const emptyRow = `<tr class="v1059-ledger-empty-row"><td colspan="8">Kayıt yok</td></tr>`;
     const blocks = chunks.map((chunk, blockIndex) => {
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
         const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
         const globalNo = blockIndex * 25 + localIndex + 1;
+        const itemClass = m === "crypto" ? "coin" : "item";
         return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}">
-          <td>${v1057LedgerInput({ ...row, no: row.no || globalNo }, "no", "num")}</td>
-          <td>${v1057LedgerInput(row, "date")}</td>
-          <td>${v1057LedgerInput(row, "time")}</td>
-          <td>${v1057LedgerInput(row, "item")}</td>
+          <td>${v1060LedgerCellText(row.no || globalNo, "num")}</td>
+          <td>${v1060LedgerCellText(v1060LedgerDateLabel(row), "date")}</td>
+          <td>${v1057LedgerInput(row, "item", itemClass)}</td>
           <td>${v1057LedgerInput(row, "kind")}</td>
           <td>${v1057LedgerInput(row, "stake", "money")}</td>
           <td>${v1057LedgerInput(row, "roi")}</td>
@@ -2524,21 +2545,49 @@
           <td><button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}">×</button></td>
         </tr>`;
       }).join("");
-      const emptyRow = `<tr class="v1059-ledger-empty-row"><td colspan="9">Henüz kayıt yok</td></tr>`;
       return `<section class="v1057-ledger-sheet">
-        <div class="v1057-ledger-sheet-title">REİSACADEMY</div>
+        ${blockIndex === 0 ? summaryHtml : `<div class="v1060-ledger-summary-spacer"></div>`}
         <table class="v1057-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml || emptyRow}</tbody></table>
       </section>`;
     }).join("");
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
-      <div class="v1059-ledger-summary">
-        <div><span>Kasa Başlangıç</span><b>${money(summary.start)}</b></div>
-        <div><span>Büyüme Oranı</span><b>${v1059LedgerPctText(summary.growth)}</b></div>
-        <div><span>Güncel Kasa</span><b>${money(summary.current)}</b></div>
-      </div>
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
       <div class="v1057-ledger-toolbar"><button type="button" data-v1057-ledger-add="${m}">+ Satır</button></div>
       <div class="v1057-ledger-sheet-grid">${blocks}</div>
     </section>`;
+  }
+  function v1060BuildLedgerPhotoSvg(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const rows = v1057LedgerRows(m);
+    const summary = v1059LedgerSummary(m, rows);
+    const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
+    const cols = m === "crypto" ? ["No", "Tarih", "Coin", "Yön", "Tutar", "ROI", "Kar-zarar"] : ["No", "Tarih", "Maç / Kupon", "Tür", "Tutar", "Oran", "Kar-zarar"];
+    const widths = [52, 128, 270, 100, 120, 105, 130];
+    const safe = (value) => escapeHtml(String(value ?? ""));
+    const rowCount = Math.max(rows.length, 1);
+    const tableW = widths.reduce((a,b)=>a+b,0);
+    const width = tableW + 80;
+    const height = 210 + rowCount * 34;
+    let x = 40;
+    const headerCells = cols.map((c, i) => { const cell = `<rect x="${x}" y="142" width="${widths[i]}" height="30" fill="#d1d5db" stroke="#111827"/><text x="${x + widths[i]/2}" y="162" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">${safe(c)}</text>`; x += widths[i]; return cell; }).join("");
+    const body = (rows.length ? rows : [{ no: "", date: "", item: "Kayıt yok", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0 }]).map((r, idx) => {
+      const y = 172 + idx * 34;
+      const values = m === "crypto"
+        ? [r.no || idx + 1, v1060LedgerDateLabel(r), r.item || "", r.kind || "", r.stake || "", r.roi || "", r.pnl || ""]
+        : [r.no || idx + 1, v1060LedgerDateLabel(r), r.item || "", r.kind || "", r.stake || "", r.roi || "", r.pnl || ""];
+      let xx = 40;
+      return values.map((v, i) => {
+        const isPnl = i === 6;
+        const neg = isPnl && (/^-/.test(String(v)) || Number(r.pnlRaw || 0) < 0);
+        const fill = isPnl ? (neg ? "#dc2626" : "#16a34a") : "#f8fafc";
+        const color = isPnl ? "#ffffff" : "#111827";
+        const text = safe(String(v).slice(0, i === 2 ? 28 : 14));
+        const cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="34" fill="${fill}" stroke="#111827"/><text x="${xx + widths[i]/2}" y="${y + 22}" text-anchor="middle" fill="${color}" font-size="12" font-family="Arial" font-weight="850">${text}</text>`;
+        xx += widths[i];
+        return cell;
+      }).join("");
+    }).join("");
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="22" y="22" width="${width-44}" height="${height-44}" rx="18" fill="#0b1220" stroke="#334155"/><text x="40" y="62" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="950">${safe(title)}</text><rect x="40" y="82" width="${tableW}" height="42" fill="#c7f0a0" stroke="#111827"/><text x="${40 + tableW/6}" y="108" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">Kasa Başlangıç: ${safe(money(summary.start))}</text><text x="${40 + tableW/2}" y="108" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">Büyüme Oranı: ${safe(v1059LedgerPctText(summary.growth))}</text><text x="${40 + tableW*5/6}" y="108" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">Güncel Kasa: ${safe(money(summary.current))}</text>${headerCells}${body}</svg>`;
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2590,9 +2639,12 @@
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
     host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
       <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
-        <header class="v1056-ledger-screen-head v1057-ledger-screen-head">
+        <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head">
           <div><b>${title}</b></div>
-          <button type="button" data-v1056-ledger-close>×</button>
+          <div class="v1060-ledger-head-actions">
+            <button type="button" class="v1060-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
+            <button type="button" data-v1056-ledger-close>×</button>
+          </div>
         </header>
         <div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div>
       </section>
@@ -2600,6 +2652,13 @@
     host.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !el.hasAttribute("data-v1056-ledger-close")) return;
       host.innerHTML = "";
+    }));
+    host.querySelectorAll("[data-v1060-ledger-photo]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
+      const dataUrl = v1060BuildLedgerPhotoSvg(photoMode);
+      openRollingPhotoPreview(dataUrl, `${photoMode === "crypto" ? "kripto-islem" : "bahis-kupon"}-defteri-${new Date().toISOString().slice(0,10)}.png`, photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri", "Büyüme Planı Defteri");
     }));
     v1057BindLedgerScreen(host, m);
   }
