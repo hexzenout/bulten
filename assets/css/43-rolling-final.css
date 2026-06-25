@@ -17663,3 +17663,109 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   .v1063-ledger-pro .v1057-ledger-sheet,
   .v1061-ledger-sheet{flex-basis:650px!important;width:650px!important;max-width:650px!important;}
 }
+
+
+/* V1064: Defter UI temizlik - aktif bahis kamera stili, canlı saat, kırmızı X, dar aksiyon kolonu */
+.v1061-ledger-screen-modal .v1063-ledger-photo,
+.v1061-ledger-screen-modal .v1060-ledger-photo.v1063-ledger-photo,
+.v1063-ledger-head-actions .v1063-ledger-photo{
+  width:32px!important;
+  height:32px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(251,191,36,.48)!important;
+  background:rgba(15,23,42,.88)!important;
+  color:#fbbf24!important;
+  box-shadow:0 0 0 1px rgba(251,191,36,.10),0 6px 16px rgba(0,0,0,.22)!important;
+  transform:none!important;
+}
+.v1061-ledger-screen-modal .v1063-ledger-photo:hover,
+.v1063-ledger-head-actions .v1063-ledger-photo:hover{
+  background:rgba(30,41,59,.96)!important;
+  border-color:rgba(251,191,36,.74)!important;
+  color:#fbbf24!important;
+  transform:none!important;
+}
+.v1063-ledger-head-actions{
+  gap:8px!important;
+  align-items:center!important;
+}
+.v1063-ledger-clock{
+  min-width:178px!important;
+  height:30px!important;
+  padding:0 10px!important;
+  border:1px solid rgba(148,163,184,.28)!important;
+  border-radius:10px!important;
+  background:rgba(15,23,42,.70)!important;
+  color:#e2e8f0!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:11px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+  white-space:nowrap!important;
+  margin:0!important;
+}
+.v1063-ledger-pro .v1057-ledger-excel-table tr[data-v1063-ledger-goto]{
+  cursor:default!important;
+}
+.v1063-ledger-row-actions{
+  gap:0!important;
+  padding:0!important;
+}
+.v1063-ledger-pro .v1057-ledger-row-delete{
+  width:22px!important;
+  height:22px!important;
+  min-width:22px!important;
+  border-radius:7px!important;
+  border:1px solid #ef4444!important;
+  background:#7f1d1d!important;
+  color:#fecaca!important;
+  font-size:16px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0!important;
+  box-shadow:0 0 0 1px rgba(239,68,68,.16)!important;
+}
+.v1063-ledger-pro .v1057-ledger-row-delete:hover{
+  background:#ef4444!important;
+  border-color:#fca5a5!important;
+  color:#ffffff!important;
+  transform:none!important;
+}
+.v1063-ledger-goto{display:none!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(1),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(1){width:6%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(2),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(2){width:15%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(3),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(3){width:30%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(4),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(4){width:10%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(5),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(5){width:13%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(6),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(6){width:9%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(7),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(7){width:14%!important;background:#10b981!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(8),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(8){width:3%!important;background:#f8fafc!important;}
+.v1063-ledger-value.item,
+.v1063-ledger-value.coin{
+  padding-left:7px!important;
+  padding-right:6px!important;
+  font-size:12px!important;
+}
+.v1063-ledger-value.money,
+.v1063-ledger-value.win,
+.v1063-ledger-value.loss{
+  font-size:12px!important;
+  letter-spacing:-.01em!important;
+}
+@media (max-width:900px){
+  .v1063-ledger-clock{display:none!important;}
+}

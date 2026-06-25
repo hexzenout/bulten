@@ -2387,11 +2387,35 @@
     if (allNames.length > 1) return allNames.join(" + ");
     return allNames[0] || comboNames[0] || "Bahis / maç";
   }
+  function v1064CleanComboHistoryName(name) {
+    const raw = cleanText(name || "");
+    return raw.replace(/^kombine\s*:?\s*/i, "").trim();
+  }
+  function v1064HistoryBetMap() {
+    const h = loadHistory();
+    const rows = Array.isArray(h?.bet) ? h.bet : [];
+    const map = new Map();
+    rows.forEach(r => {
+      if (r && r.id) map.set(String(r.id), r);
+    });
+    return map;
+  }
+  function v1064LedgerOpItem(mode, op, historyRow) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m === "crypto") return v1057OpName(m, op);
+    const histName = v1064CleanComboHistoryName(historyRow?.name || "");
+    if (histName && /\s\+\s/.test(histName)) return histName;
+    const direct = v1057OpName(m, op);
+    if (direct && direct !== "Bahis / maç") return direct;
+    return histName || direct || "Bahis / maç";
+  }
   function v1057OpKind(mode, op) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m === "crypto") return v1054CryptoDirectionFromRecord(op);
     const comboRows = Array.isArray(op?.combo) ? op.combo : [];
-    return comboRows.length ? "Kombine" : "Tek";
+    if (comboRows.length) return "Kombine";
+    if (betCouponGroup(op) || Array.isArray(op?.extraMatches) && op.extraMatches.length) return "Kombine";
+    return "Tek";
   }
   function v1057OpRoi(mode, op, pnl) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2430,6 +2454,7 @@
     const m = mode === "crypto" ? "crypto" : "bet";
     v1057EnsureRollingResultTimestamps(m);
     const db = v1045ReadRollingDb();
+    const historyMap = m === "bet" ? v1064HistoryBetMap() : new Map();
     const rows = [];
     Object.entries(db || {}).forEach(([key, plan]) => {
       if (!plan || v1057PlanModeFromKey(key, plan) !== m) return;
@@ -2442,9 +2467,11 @@
           const pnl = v1048OpEffect(m, op);
           const ts = Number(op.resultTs || op.closedTs || op.ts || op.updatedAt || op.createdAt || Date.now());
           const planDays = v1041NormalizeGrowthDays(plan.days || (String(key).match(/(\d+)/)?.[1] || 7));
+          const hist = op?.historyId ? historyMap.get(String(op.historyId)) : null;
           rows.push({
             id: `auto_${m}_${v1057SafeLedgerId(key)}_${day}_${opIndex}`,
             source: "rolling",
+            historyId: op?.historyId || "",
             planKey: key,
             days: planDays,
             day,
@@ -2453,10 +2480,10 @@
             no: rows.length + 1,
             date: v1057TodayDateInput(ts),
             time: v1056TimeLabelFromTs(ts),
-            item: v1057OpName(m, op),
+            item: v1064LedgerOpItem(m, op, hist),
             kind: v1057OpKind(m, op),
-            stake: money(Math.abs(Number(op.amt || op.stake || 0))),
-            roi: v1057OpRoi(m, op, pnl),
+            stake: money(Math.abs(Number(hist?.stake ?? op.amt ?? op.stake ?? 0))),
+            roi: hist ? v1054DailyRoi(m, hist) : v1057OpRoi(m, op, pnl),
             pnl: money(pnl),
             pnlRaw: Number(pnl || 0)
           });
@@ -2472,6 +2499,7 @@
       const ts = Number(r.ts || Date.now());
       return {
         id: `hist_${m}_${v1057SafeLedgerId(r.id || idx)}`,
+        historyId: r.id || "",
         source: "history",
         ts,
         no: idx + 1,
@@ -2491,7 +2519,10 @@
     const edits = v1057LoadLedgerEdits();
     const modeEdits = edits[m] || { overrides: {}, manual: [], deleted: {} };
     const byId = new Map();
-    [...v1057CollectRollingLedgerRows(m), ...v1057CollectHistoryLedgerRows(m)]
+    const rollingRows = v1057CollectRollingLedgerRows(m);
+    const rollingHistoryIds = new Set(rollingRows.map(r => String(r.historyId || "")).filter(Boolean));
+    const historyRows = v1057CollectHistoryLedgerRows(m).filter(r => !(r.historyId && rollingHistoryIds.has(String(r.historyId))));
+    [...rollingRows, ...historyRows]
       .sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0))
       .forEach(row => {
         if (!row?.id || modeEdits.deleted?.[row.id]) return;
@@ -2638,10 +2669,7 @@
         const globalNo = blockIndex * 25 + localIndex + 1;
         const itemClass = m === "crypto" ? "coin" : "item";
         const gotoAttrs = v1063LedgerRowTargetAttrs(row, m);
-        const gotoBtn = row.source === "rolling"
-          ? `<button type="button" class="v1063-ledger-goto"${gotoAttrs} title="Kutuya git"><i class="fa-solid fa-location-arrow"></i></button>`
-          : `<button type="button" class="v1063-ledger-goto empty" disabled aria-hidden="true"> </button>`;
-        return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}"${gotoAttrs}>
+        return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}"${gotoAttrs}${gotoAttrs ? ` title="İlgili kutuya gitmek için satıra çift tıkla"` : ""}>
           <td>${v1060LedgerCellText(globalNo, "num")}</td>
           <td>${v1060LedgerCellText(row._displayDate || "", "date")}</td>
           <td>${v1063LedgerCell(row, "item", itemClass)}</td>
@@ -2649,7 +2677,7 @@
           <td>${v1063LedgerCell(row, "stake", "money")}</td>
           <td>${v1063LedgerCell(row, "roi")}</td>
           <td>${v1063LedgerCell(row, "pnl", isLoss ? "loss" : "win")}</td>
-          <td><div class="v1063-ledger-row-actions">${gotoBtn}<button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}" title="Satırı sil"><i class="fa-solid fa-trash-can"></i></button></div></td>
+          <td><div class="v1063-ledger-row-actions"><button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}" title="Satırı sil" aria-label="Satırı sil">×</button></div></td>
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
@@ -2753,10 +2781,16 @@
       v1057SaveLedgerEdits(edits);
       v1056OpenDailyLedgerScreen(m);
     }));
-    host.querySelectorAll("[data-v1063-ledger-goto]").forEach(btn => btn.addEventListener("click", event => {
+    host.querySelectorAll("button[data-v1063-ledger-goto]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
       const [modeRaw, daysRaw, dayRaw, opRaw] = String(btn.dataset.v1063LedgerGoto || "").split(":");
+      v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
+    }));
+    host.querySelectorAll("tr[data-v1063-ledger-goto]").forEach(row => row.addEventListener("dblclick", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const [modeRaw, daysRaw, dayRaw, opRaw] = String(row.dataset.v1063LedgerGoto || "").split(":");
       v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
     }));
   }
