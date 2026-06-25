@@ -16838,3 +16838,90 @@ input.v1020-combo-stake-target {
 #rolling-excel-overlay .v1056-growth-table-tight td:nth-child(5){width:19%!important;}
 @media (min-width:1500px){.v1057-ledger-sheet-grid{grid-template-columns:repeat(4, minmax(330px, 1fr))!important;}}
 @media (max-width:900px){.v1057-ledger-sheet-grid{grid-template-columns:1fr!important;}.v1057-ledger-screen-modal{width:calc(100vw - 18px)!important;}}
+
+
+/* V1058: Defter ekranını kompakt Excel modalına çevir */
+.v1057-ledger-screen-overlay{
+  padding:28px!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.v1057-ledger-screen-modal{
+  width:max-content!important;
+  min-width:min(620px, calc(100vw - 56px))!important;
+  max-width:min(1120px, calc(100vw - 56px))!important;
+  max-height:calc(100vh - 72px)!important;
+  border-radius:14px!important;
+  background:linear-gradient(180deg,#0b1220,#06111f)!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.55)!important;
+}
+.v1057-ledger-screen-head{
+  padding:12px 14px!important;
+  min-height:54px!important;
+}
+.v1057-ledger-screen-head b{font-size:15px!important;}
+.v1057-ledger-screen-head span{font-size:10px!important;}
+.v1057-ledger-screen-body{
+  max-height:calc(100vh - 142px)!important;
+  overflow:auto!important;
+  padding:12px!important;
+  background:#0b1220!important;
+}
+.v1057-ledger-excel{
+  width:max-content!important;
+  max-width:none!important;
+  min-width:0!important;
+}
+.v1057-ledger-toolbar{
+  width:max-content!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  justify-content:flex-start!important;
+  margin:0 0 8px!important;
+  white-space:nowrap!important;
+}
+.v1057-ledger-toolbar span{
+  max-width:460px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.v1057-ledger-sheet-grid{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  gap:12px!important;
+  align-items:flex-start!important;
+  width:max-content!important;
+  max-width:none!important;
+}
+.v1057-ledger-sheet{
+  flex:0 0 430px!important;
+  width:430px!important;
+  max-width:430px!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.20)!important;
+}
+.v1057-ledger-excel-table th,
+.v1057-ledger-excel-table td{
+  height:21px!important;
+  font-size:9px!important;
+}
+.v1057-ledger-input{
+  height:21px!important;
+  font-size:9px!important;
+  padding:0 2px!important;
+}
+.v1057-ledger-row-delete{height:21px!important;font-size:12px!important;}
+.v1057-ledger-excel-table th:nth-child(1), .v1057-ledger-excel-table td:nth-child(1){width:6%!important;}
+.v1057-ledger-excel-table th:nth-child(2), .v1057-ledger-excel-table td:nth-child(2){width:14%!important;}
+.v1057-ledger-excel-table th:nth-child(3), .v1057-ledger-excel-table td:nth-child(3){width:9%!important;}
+.v1057-ledger-excel-table th:nth-child(4), .v1057-ledger-excel-table td:nth-child(4){width:24%!important;}
+.v1057-ledger-excel-table th:nth-child(5), .v1057-ledger-excel-table td:nth-child(5){width:10%!important;}
+.v1057-ledger-excel-table th:nth-child(6), .v1057-ledger-excel-table td:nth-child(6){width:11%!important;}
+.v1057-ledger-excel-table th:nth-child(7), .v1057-ledger-excel-table td:nth-child(7){width:11%!important;}
+.v1057-ledger-excel-table th:nth-child(8), .v1057-ledger-excel-table td:nth-child(8){width:11%!important;}
+.v1057-ledger-excel-table th:nth-child(9), .v1057-ledger-excel-table td:nth-child(9){width:4%!important;}
+@media (max-width:900px){
+  .v1057-ledger-screen-overlay{padding:12px!important;}
+  .v1057-ledger-screen-modal{width:calc(100vw - 24px)!important;min-width:0!important;max-width:calc(100vw - 24px)!important;}
+  .v1057-ledger-sheet{flex:0 0 390px!important;width:390px!important;max-width:390px!important;}
+}

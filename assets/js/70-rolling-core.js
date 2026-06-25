@@ -2486,7 +2486,7 @@
     const head = m === "crypto"
       ? `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th><th></th></tr>`
       : `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th><th></th></tr>`;
-    const makeBlankRows = count => Array.from({ length: count }, (_, i) => `<tr class="v1057-ledger-blank-row"><td>${i + 1}</td><td colspan="8"></td></tr>`).join("");
+    const makeBlankRows = (count, startNo = 1) => Array.from({ length: count }, (_, i) => `<tr class="v1057-ledger-blank-row"><td>${startNo + i}</td><td colspan="8"></td></tr>`).join("");
     const blocks = chunks.map((chunk, blockIndex) => {
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
@@ -2504,9 +2504,11 @@
           <td><button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}">×</button></td>
         </tr>`;
       }).join("");
+      const blankCount = Math.max(0, 30 - chunk.length);
+      const blankRows = makeBlankRows(blankCount, blockIndex * 30 + chunk.length + 1);
       return `<section class="v1057-ledger-sheet">
         <div class="v1057-ledger-sheet-title">REİSACADEMY</div>
-        <table class="v1057-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml || makeBlankRows(10)}</tbody></table>
+        <table class="v1057-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml}${blankRows}</tbody></table>
       </section>`;
     }).join("");
     return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
