@@ -16694,3 +16694,147 @@ input.v1020-combo-stake-target {
   .v1056-ledger-screen-body{padding:10px!important;}
   #rolling-excel-overlay #v1043-excel-growth-host{width:calc(100% - 28px)!important;max-width:none!important;}
 }
+
+/* V1057: Daha Fazla Göster Excel defteri - 30'lu parçalı, otomatik + manuel düzenlenebilir */
+.v1057-ledger-screen-modal{
+  width:min(1760px, calc(100vw - 32px))!important;
+  max-height:calc(100vh - 32px)!important;
+  border-radius:12px!important;
+  border:1px solid rgba(148,163,184,.28)!important;
+  background:#06111f!important;
+}
+.v1057-ledger-screen-body{
+  max-height:calc(100vh - 104px)!important;
+  overflow:auto!important;
+  padding:10px!important;
+  background:#0b1220!important;
+}
+.v1057-ledger-screen-head{
+  background:linear-gradient(180deg,#1f2937,#111827)!important;
+  border-bottom:2px solid #111827!important;
+}
+.v1057-ledger-excel{
+  width:100%!important;
+  max-width:none!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+.v1057-ledger-toolbar{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin:0 0 10px!important;
+  color:#cbd5e1!important;
+  font-family:'JetBrains Mono',monospace!important;
+  font-size:11px!important;
+  font-weight:800!important;
+}
+.v1057-ledger-toolbar button{
+  border:1px solid rgba(34,197,94,.45)!important;
+  border-radius:8px!important;
+  background:rgba(22,101,52,.25)!important;
+  color:#bbf7d0!important;
+  padding:7px 11px!important;
+  font-family:'JetBrains Mono',monospace!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  cursor:pointer!important;
+}
+.v1057-ledger-toolbar button:hover{background:rgba(22,101,52,.38)!important;border-color:rgba(34,197,94,.72)!important;}
+.v1057-ledger-sheet-grid{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit, minmax(370px, 1fr))!important;
+  gap:10px!important;
+  align-items:start!important;
+}
+.v1057-ledger-sheet{
+  background:#e5e7eb!important;
+  border:1px solid #111827!important;
+  border-radius:0!important;
+  overflow:hidden!important;
+  box-shadow:0 10px 22px rgba(0,0,0,.22)!important;
+}
+.v1057-ledger-sheet-title{
+  background:#60a5fa!important;
+  color:#111827!important;
+  text-align:center!important;
+  font-family:Arial, sans-serif!important;
+  font-weight:900!important;
+  font-size:11px!important;
+  line-height:20px!important;
+  height:20px!important;
+  border-bottom:1px solid #111827!important;
+}
+.v1057-ledger-excel-table{
+  width:100%!important;
+  border-collapse:collapse!important;
+  table-layout:fixed!important;
+  background:#f8fafc!important;
+}
+.v1057-ledger-excel-table th,
+.v1057-ledger-excel-table td{
+  border:1px solid #111827!important;
+  padding:0!important;
+  height:23px!important;
+  color:#111827!important;
+  font-family:Arial, sans-serif!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  overflow:hidden!important;
+}
+.v1057-ledger-excel-table th{
+  background:#d1d5db!important;
+  text-align:center!important;
+  font-weight:900!important;
+}
+.v1057-ledger-excel-table th:nth-child(1), .v1057-ledger-excel-table td:nth-child(1){width:7%!important;}
+.v1057-ledger-excel-table th:nth-child(2), .v1057-ledger-excel-table td:nth-child(2){width:15%!important;}
+.v1057-ledger-excel-table th:nth-child(3), .v1057-ledger-excel-table td:nth-child(3){width:10%!important;}
+.v1057-ledger-excel-table th:nth-child(4), .v1057-ledger-excel-table td:nth-child(4){width:24%!important;}
+.v1057-ledger-excel-table th:nth-child(5), .v1057-ledger-excel-table td:nth-child(5){width:10%!important;}
+.v1057-ledger-excel-table th:nth-child(6), .v1057-ledger-excel-table td:nth-child(6){width:11%!important;}
+.v1057-ledger-excel-table th:nth-child(7), .v1057-ledger-excel-table td:nth-child(7){width:11%!important;}
+.v1057-ledger-excel-table th:nth-child(8), .v1057-ledger-excel-table td:nth-child(8){width:11%!important;background:#16a34a!important;}
+.v1057-ledger-excel-table th:nth-child(9), .v1057-ledger-excel-table td:nth-child(9){width:5%!important;}
+.v1057-ledger-input{
+  width:100%!important;
+  height:23px!important;
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  color:#111827!important;
+  text-align:center!important;
+  padding:0 3px!important;
+  font-family:Arial, sans-serif!important;
+  font-size:10px!important;
+  font-weight:750!important;
+  box-sizing:border-box!important;
+}
+.v1057-ledger-input:focus{
+  background:#fef3c7!important;
+  box-shadow:inset 0 0 0 2px #f59e0b!important;
+}
+.v1057-ledger-input.win{color:#ffffff!important;font-weight:900!important;}
+.v1057-ledger-input.loss{color:#ffffff!important;font-weight:900!important;background:#dc2626!important;}
+.v1057-ledger-input.money{font-weight:900!important;}
+.v1057-ledger-row-delete{
+  width:100%!important;
+  height:23px!important;
+  border:0!important;
+  background:#fee2e2!important;
+  color:#991b1b!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  cursor:pointer!important;
+}
+.v1057-ledger-row-delete:hover{background:#fecaca!important;}
+.v1057-ledger-blank-row td{background:#f8fafc!important;color:#64748b!important;text-align:center!important;}
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(4),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(4){width:16%!important;}
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(5),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(5){width:19%!important;}
+@media (min-width:1500px){.v1057-ledger-sheet-grid{grid-template-columns:repeat(4, minmax(330px, 1fr))!important;}}
+@media (max-width:900px){.v1057-ledger-sheet-grid{grid-template-columns:1fr!important;}.v1057-ledger-screen-modal{width:calc(100vw - 18px)!important;}}

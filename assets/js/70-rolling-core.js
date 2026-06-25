@@ -33,6 +33,7 @@
   const GROWTH_PANEL_OPEN_KEY = "v1041_rolling_growth_panel_open_v1";
   const GROWTH_PANEL_VIEW_KEY = "v1053_rolling_growth_panel_view_v1";
   const ROLLING_RESTORE_KEY = "v1046_restore_rolling_excel_v1";
+  const DAILY_LEDGER_EDIT_KEY = "v1057_rolling_daily_ledger_edits_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -2303,39 +2304,257 @@
     if (Number.isNaN(d.getTime())) return "-";
     return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
   }
+  function v1057LedgerBase() {
+    return { bet: { overrides: {}, manual: [], deleted: {} }, crypto: { overrides: {}, manual: [], deleted: {} } };
+  }
+  function v1057LoadLedgerEdits() {
+    const raw = readJson(DAILY_LEDGER_EDIT_KEY, v1057LedgerBase());
+    const base = v1057LedgerBase();
+    const out = raw && typeof raw === "object" ? raw : base;
+    ["bet", "crypto"].forEach(m => {
+      if (!out[m] || typeof out[m] !== "object") out[m] = { ...base[m] };
+      if (!out[m].overrides || typeof out[m].overrides !== "object") out[m].overrides = {};
+      if (!Array.isArray(out[m].manual)) out[m].manual = [];
+      if (!out[m].deleted || typeof out[m].deleted !== "object") out[m].deleted = {};
+    });
+    return out;
+  }
+  function v1057SaveLedgerEdits(store) {
+    writeJson(DAILY_LEDGER_EDIT_KEY, store && typeof store === "object" ? store : v1057LedgerBase());
+  }
+  function v1057SafeLedgerId(value) {
+    return String(value || "").replace(/[^a-zA-Z0-9_-]+/g, "_").slice(0, 110);
+  }
+  function v1057TodayDateInput(ts) {
+    const d = new Date(Number(ts || Date.now()));
+    if (Number.isNaN(d.getTime())) return "";
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function v1057DateInputToLabel(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!m) return raw;
+    const d = new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
+    return v1054DateLabelFromTs(d.getTime());
+  }
+  function v1057OpName(mode, op) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m === "crypto") {
+      const raw = cleanText(op?.coin || op?.symbol || op?.sym || op?.asset || op?.name || op?.label || "");
+      return raw ? raw.toUpperCase() : "İşlem";
+    }
+    const comboRows = Array.isArray(op?.combo) ? op.combo : [];
+    const comboNames = comboRows.map(r => cleanText(r?.name || r?.match || r?.label || "")).filter(Boolean);
+    const main = cleanText(op?.name || op?.match || op?.label || "");
+    if (comboNames.length) return comboNames.join(" + ");
+    return main || "Bahis / maç";
+  }
+  function v1057OpKind(mode, op) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m === "crypto") return v1054CryptoDirectionFromRecord(op);
+    const comboRows = Array.isArray(op?.combo) ? op.combo : [];
+    return comboRows.length ? "Kombine" : "Tek";
+  }
+  function v1057OpRoi(mode, op, pnl) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const stake = Math.abs(Number(op?.amt || op?.stake || 0));
+    if (m === "crypto") return stake ? `${Number(((Number(pnl || 0) / stake) * 100).toFixed(2)).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}%` : "-";
+    const odds = v1053BetOpTotalOdds(op);
+    return odds > 0 ? Number(odds.toFixed(4)).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 }) : "-";
+  }
+  function v1057PlanModeFromKey(key, plan) {
+    const raw = String(plan?.mode || "").toLowerCase();
+    if (raw === "crypto" || raw === "bet") return raw;
+    const k = String(key || "").toLowerCase();
+    return k.includes("crypto") ? "crypto" : "bet";
+  }
+  function v1057EnsureRollingResultTimestamps(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const db = v1045ReadRollingDb();
+    let touched = false;
+    Object.entries(db || {}).forEach(([key, plan]) => {
+      if (!plan || v1057PlanModeFromKey(key, plan) !== m) return;
+      const ops = plan.ops && typeof plan.ops === "object" ? plan.ops : {};
+      Object.values(ops).forEach(dayOps => {
+        if (!Array.isArray(dayOps)) return;
+        dayOps.forEach(op => {
+          if (!op || (op.res !== "win" && op.res !== "loss")) return;
+          if (!op.resultTs && !op.ts && !op.closedTs) {
+            op.resultTs = Date.now();
+            touched = true;
+          }
+        });
+      });
+    });
+    if (touched) v1045WriteRollingDb(db);
+  }
+  function v1057CollectRollingLedgerRows(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    v1057EnsureRollingResultTimestamps(m);
+    const db = v1045ReadRollingDb();
+    const rows = [];
+    Object.entries(db || {}).forEach(([key, plan]) => {
+      if (!plan || v1057PlanModeFromKey(key, plan) !== m) return;
+      const ops = plan.ops && typeof plan.ops === "object" ? plan.ops : {};
+      Object.entries(ops).forEach(([dayKey, dayOps]) => {
+        if (!Array.isArray(dayOps)) return;
+        dayOps.forEach((op, opIndex) => {
+          if (!op || (op.res !== "win" && op.res !== "loss")) return;
+          const day = Number(dayKey || 0);
+          const pnl = v1048OpEffect(m, op);
+          const ts = Number(op.resultTs || op.closedTs || op.ts || op.updatedAt || op.createdAt || Date.now());
+          rows.push({
+            id: `auto_${m}_${v1057SafeLedgerId(key)}_${day}_${opIndex}`,
+            source: "rolling",
+            ts,
+            no: rows.length + 1,
+            date: v1057TodayDateInput(ts),
+            time: v1056TimeLabelFromTs(ts),
+            item: v1057OpName(m, op),
+            kind: v1057OpKind(m, op),
+            stake: money(Math.abs(Number(op.amt || op.stake || 0))),
+            roi: v1057OpRoi(m, op, pnl),
+            pnl: money(pnl),
+            pnlRaw: Number(pnl || 0)
+          });
+        });
+      });
+    });
+    return rows;
+  }
+  function v1057CollectHistoryLedgerRows(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    return v1054DailyHistoryRows(m).map((r, idx) => {
+      const pnl = Number(r.pnl || 0);
+      const ts = Number(r.ts || Date.now());
+      return {
+        id: `hist_${m}_${v1057SafeLedgerId(r.id || idx)}`,
+        source: "history",
+        ts,
+        no: idx + 1,
+        date: v1057TodayDateInput(ts),
+        time: v1056TimeLabelFromTs(ts),
+        item: m === "crypto" ? v1054CryptoCoinFromRecord(r) : cleanText(r.name || "Bahis / maç"),
+        kind: m === "crypto" ? v1054CryptoDirectionFromRecord(r) : (/^kombine/i.test(cleanText(r.name || "")) ? "Kombine" : "Tek"),
+        stake: money(r.stake || 0),
+        roi: v1054DailyRoi(m, r),
+        pnl: money(pnl),
+        pnlRaw: pnl
+      };
+    });
+  }
+  function v1057LedgerRows(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const edits = v1057LoadLedgerEdits();
+    const modeEdits = edits[m] || { overrides: {}, manual: [], deleted: {} };
+    const byId = new Map();
+    [...v1057CollectRollingLedgerRows(m), ...v1057CollectHistoryLedgerRows(m)]
+      .sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0))
+      .forEach(row => {
+        if (!row?.id || modeEdits.deleted?.[row.id]) return;
+        if (byId.has(row.id)) return;
+        const override = modeEdits.overrides?.[row.id] || {};
+        byId.set(row.id, { ...row, ...override, manual: false });
+      });
+    (modeEdits.manual || []).forEach(row => {
+      if (!row || !row.id || modeEdits.deleted?.[row.id]) return;
+      byId.set(row.id, { ts: Number(row.ts || Date.now()), source: "manual", no: "", date: "", time: "", item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, ...row, manual: true });
+    });
+    return Array.from(byId.values()).sort((a, b) => Number(a.ts || 0) - Number(b.ts || 0)).map((row, idx) => ({ ...row, no: row.no || idx + 1 }));
+  }
+  function v1057DisplayValue(row, field) {
+    if (field === "dateLabel") return v1057DateInputToLabel(row.date);
+    return String(row?.[field] ?? "");
+  }
+  function v1057LedgerInput(row, field, extraClass = "") {
+    const value = field === "date" ? String(row.date || "") : v1057DisplayValue(row, field);
+    const type = field === "date" ? "date" : "text";
+    return `<input type="${type}" class="v1057-ledger-input ${extraClass}" value="${escapeHtml(value)}" data-v1057-ledger-id="${escapeHtml(row.id)}" data-v1057-ledger-field="${field}">`;
+  }
+  function v1057LedgerChunks(rows, size = 30) {
+    const chunks = [];
+    for (let i = 0; i < rows.length; i += size) chunks.push(rows.slice(i, i + size));
+    if (!chunks.length) chunks.push([]);
+    return chunks;
+  }
   function v1054RenderDailyPlanPanel(mode, opts = {}) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const rows = v1054DailyHistoryRows(m);
+    const rows = v1057LedgerRows(m);
+    const chunks = v1057LedgerChunks(rows, 30);
     const modal = !!opts.modal;
-    let lastKey = "";
-    const body = rows.map((r, idx) => {
-      const key = v1054DateKeyFromTs(r.ts);
-      const dateText = key && key === lastKey ? "\u201d" : v1054DateLabelFromTs(r.ts);
-      lastKey = key || lastKey;
-      const pnl = Number(r.pnl || 0);
-      const pnlClass = pnl >= 0 ? "win" : "loss";
-      const timeText = v1056TimeLabelFromTs(r.ts);
-      if (m === "crypto") {
-        return `<tr><td>${idx + 1}</td><td>${escapeHtml(dateText)}</td><td>${escapeHtml(timeText)}</td><td>${escapeHtml(v1054CryptoCoinFromRecord(r))}</td><td>${escapeHtml(v1054CryptoDirectionFromRecord(r))}</td><td>${money(r.stake || 0)}</td><td>${escapeHtml(v1054DailyRoi(m, r))}</td><td><b class="v1054-daily-pnl ${pnlClass}">${money(pnl)}</b></td></tr>`;
-      }
-      const name = cleanText(r.name || "Bahis / maç");
-      const kind = /^kombine/i.test(name) ? "Kombine" : "Tek";
-      return `<tr><td>${idx + 1}</td><td>${escapeHtml(dateText)}</td><td>${escapeHtml(timeText)}</td><td title="${escapeHtml(name)}">${escapeHtml(name)}</td><td>${kind}</td><td>${money(r.stake || 0)}</td><td>${escapeHtml(v1054DailyRoi(m, r))}</td><td><b class="v1054-daily-pnl ${pnlClass}">${money(pnl)}</b></td></tr>`;
-    }).join("");
     const head = m === "crypto"
-      ? `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th></tr>`
-      : `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th></tr>`;
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
-      <div class="v1040-growth-table-wrap v1046-growth-table-wrap v1054-daily-table-wrap">
-        <table class="v1040-growth-table v1046-growth-table v1048-growth-table v1054-daily-table">
-          <thead>${head}</thead>
-          <tbody>${body}</tbody>
-        </table>
-      </div>
+      ? `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th><th></th></tr>`
+      : `<tr><th>No.</th><th>Tarih</th><th>Saat</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th><th></th></tr>`;
+    const makeBlankRows = count => Array.from({ length: count }, (_, i) => `<tr class="v1057-ledger-blank-row"><td>${i + 1}</td><td colspan="8"></td></tr>`).join("");
+    const blocks = chunks.map((chunk, blockIndex) => {
+      const rowsHtml = chunk.map((row, localIndex) => {
+        const pnlText = String(row.pnl || "");
+        const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
+        const globalNo = blockIndex * 30 + localIndex + 1;
+        return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}">
+          <td>${v1057LedgerInput({ ...row, no: row.no || globalNo }, "no", "num")}</td>
+          <td>${v1057LedgerInput(row, "date")}</td>
+          <td>${v1057LedgerInput(row, "time")}</td>
+          <td>${v1057LedgerInput(row, "item")}</td>
+          <td>${v1057LedgerInput(row, "kind")}</td>
+          <td>${v1057LedgerInput(row, "stake", "money")}</td>
+          <td>${v1057LedgerInput(row, "roi")}</td>
+          <td>${v1057LedgerInput(row, "pnl", isLoss ? "loss" : "win")}</td>
+          <td><button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}">×</button></td>
+        </tr>`;
+      }).join("");
+      return `<section class="v1057-ledger-sheet">
+        <div class="v1057-ledger-sheet-title">REİSACADEMY</div>
+        <table class="v1057-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml || makeBlankRows(10)}</tbody></table>
+      </section>`;
+    }).join("");
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
+      <div class="v1057-ledger-toolbar"><button type="button" data-v1057-ledger-add="${m}">+ Satır Ekle</button><span>Otomatik gelen satırları istersen hücreden düzenleyebilirsin.</span></div>
+      <div class="v1057-ledger-sheet-grid">${blocks}</div>
     </section>`;
+  }
+  function v1057BindLedgerScreen(host, mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    host.querySelectorAll("[data-v1057-ledger-add]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const edits = v1057LoadLedgerEdits();
+      const id = `manual_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+      const ts = Date.now();
+      edits[m].manual.push({ id, ts, no: "", date: v1057TodayDateInput(ts), time: v1056TimeLabelFromTs(ts), item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0 });
+      v1057SaveLedgerEdits(edits);
+      v1056OpenDailyLedgerScreen(m);
+    }));
+    host.querySelectorAll("[data-v1057-ledger-field]").forEach(input => input.addEventListener("input", () => {
+      const id = input.dataset.v1057LedgerId || "";
+      const field = input.dataset.v1057LedgerField || "";
+      if (!id || !field) return;
+      const edits = v1057LoadLedgerEdits();
+      if (id.startsWith("manual_")) {
+        const row = (edits[m].manual || []).find(r => String(r.id) === id);
+        if (row) row[field] = input.value;
+      } else {
+        if (!edits[m].overrides[id]) edits[m].overrides[id] = {};
+        edits[m].overrides[id][field] = input.value;
+      }
+      v1057SaveLedgerEdits(edits);
+    }));
+    host.querySelectorAll("[data-v1057-ledger-delete]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const id = btn.dataset.v1057LedgerDelete || "";
+      if (!id) return;
+      const edits = v1057LoadLedgerEdits();
+      if (id.startsWith("manual_")) edits[m].manual = (edits[m].manual || []).filter(r => String(r.id) !== id);
+      else edits[m].deleted[id] = 1;
+      v1057SaveLedgerEdits(edits);
+      v1056OpenDailyLedgerScreen(m);
+    }));
   }
   function v1056OpenDailyLedgerScreen(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
+    v1057EnsureRollingResultTimestamps(m);
     let host = document.getElementById("v1056-ledger-screen-host");
     if (!host) {
       host = document.createElement("div");
@@ -2343,19 +2562,20 @@
       document.body.appendChild(host);
     }
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
-    host.innerHTML = `<div class="v1056-ledger-screen-overlay" data-v1056-ledger-close>
-      <section class="v1056-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
-        <header class="v1056-ledger-screen-head">
-          <div><b>${title}</b><span>Gerçek tarih/saat bazlı kapatılan kayıtlar</span></div>
+    host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
+      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+        <header class="v1056-ledger-screen-head v1057-ledger-screen-head">
+          <div><b>${title}</b><span>Excel defteri · tarih/saat bazlı otomatik kayıt + elle düzenleme</span></div>
           <button type="button" data-v1056-ledger-close>×</button>
         </header>
-        <div class="v1056-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div>
+        <div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div>
       </section>
     </div>`;
     host.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !el.hasAttribute("data-v1056-ledger-close")) return;
       host.innerHTML = "";
     }));
+    v1057BindLedgerScreen(host, m);
   }
   function v1040GetGrowthPlan(store, mode, days, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
