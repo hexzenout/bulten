@@ -43,6 +43,8 @@
   let CONFIRM_DIALOG = null;
   let CONFIRM_RETURN_PANEL_MODE = null;
   let ACTIVE_COMBO_DETAIL_SLOT = null;
+  let LEDGER_LAST_DELETE = null;
+  let LEDGER_CLOCK_TIMER = null;
 
   function restoreActivePanelAfterConfirm(mode) {
     const panelMode = mode === "crypto" ? "crypto" : "bet";
@@ -2373,11 +2375,17 @@
       const raw = cleanText(op?.coin || op?.symbol || op?.sym || op?.asset || op?.name || op?.label || op?.note || "");
       return raw ? raw.toUpperCase() : "İşlem";
     }
+    const fromSlotMatches = getSlotMatches(op || {}).map(r => cleanText(r?.name || r?.match || r?.label || "")).filter(Boolean);
+    if (fromSlotMatches.length > 1) return fromSlotMatches.join(" + ");
     const comboRows = Array.isArray(op?.combo) ? op.combo : [];
     const comboNames = comboRows.map(r => cleanText(r?.name || r?.match || r?.label || "")).filter(Boolean);
-    const main = cleanText(op?.name || op?.match || op?.label || op?.note || op?.title || "");
-    if (comboNames.length) return comboNames.join(" + ");
-    return main || "Bahis / maç";
+    if (comboNames.length > 1) return comboNames.join(" + ");
+    const extraRows = Array.isArray(op?.extraMatches) ? op.extraMatches : [];
+    const allNames = [cleanText(op?.name || op?.match || op?.label || op?.note || op?.title || "")]
+      .concat(extraRows.map(r => cleanText(r?.name || r?.match || r?.label || "")))
+      .filter(Boolean);
+    if (allNames.length > 1) return allNames.join(" + ");
+    return allNames[0] || comboNames[0] || "Bahis / maç";
   }
   function v1057OpKind(mode, op) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2433,9 +2441,14 @@
           const day = Number(dayKey || 0);
           const pnl = v1048OpEffect(m, op);
           const ts = Number(op.resultTs || op.closedTs || op.ts || op.updatedAt || op.createdAt || Date.now());
+          const planDays = v1041NormalizeGrowthDays(plan.days || (String(key).match(/(\d+)/)?.[1] || 7));
           rows.push({
             id: `auto_${m}_${v1057SafeLedgerId(key)}_${day}_${opIndex}`,
             source: "rolling",
+            planKey: key,
+            days: planDays,
+            day,
+            opIndex,
             ts,
             no: rows.length + 1,
             date: v1057TodayDateInput(ts),
@@ -2531,6 +2544,71 @@
     const n = Number(value || 0);
     return `${n.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
   }
+
+  function v1063LedgerLiveClockText() {
+    try {
+      return new Intl.DateTimeFormat("tr-TR", {
+        day: "2-digit", month: "long", year: "numeric",
+        hour: "2-digit", minute: "2-digit", second: "2-digit"
+      }).format(new Date());
+    } catch {
+      const d = new Date();
+      return `${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}.${d.getFullYear()} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}:${String(d.getSeconds()).padStart(2,"0")}`;
+    }
+  }
+  function v1063InstallLedgerClock(host) {
+    if (LEDGER_CLOCK_TIMER) {
+      try { clearInterval(LEDGER_CLOCK_TIMER); } catch {}
+      LEDGER_CLOCK_TIMER = null;
+    }
+    const tick = () => {
+      host.querySelectorAll("[data-v1063-ledger-clock]").forEach(el => { el.textContent = v1063LedgerLiveClockText(); });
+    };
+    tick();
+    LEDGER_CLOCK_TIMER = setInterval(tick, 1000);
+  }
+  function v1063LedgerCell(row, field, extraClass = "") {
+    const raw = field === "date" ? (row._displayDate || v1060LedgerDateLabel(row)) : String(row?.[field] ?? "");
+    const cls = `v1063-ledger-value ${extraClass}`.trim();
+    const title = String(raw || "");
+    return `<span class="${cls}" title="${escapeHtml(title)}">${escapeHtml(title)}</span>`;
+  }
+  function v1063LedgerRowTargetAttrs(row, mode) {
+    if (!row || row.source !== "rolling") return "";
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const days = v1041NormalizeGrowthDays(row.days || 7);
+    const day = Math.max(1, Number(row.day || 1));
+    const opIndex = Math.max(0, Number(row.opIndex || 0));
+    return ` data-v1063-ledger-goto="${m}:${days}:${day}:${opIndex}"`;
+  }
+  function v1063GotoLedgerRow(mode, days, day, opIndex) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const d = v1041NormalizeGrowthDays(days || 7);
+    const targetDay = Math.max(1, Number(day || 1));
+    const host = document.getElementById("v1056-ledger-screen-host");
+    if (host) host.innerHTML = "";
+    localStorage.setItem("finance_rolling_mode", m);
+    localStorage.setItem(PAGE_MODE_KEY, m);
+    v1046RememberRollingRoute(m, d);
+    try { history.replaceState({ tab: "rolling", mode: m, rollingDays: d }, "", `#rolling/rolling/${d}`); } catch {}
+    if (typeof window.omega_OpenRollingExcel === "function") {
+      window.omega_OpenRollingExcel(d, true);
+      setTimeout(v1043InjectExcelGrowthPlan, 40);
+    }
+    setTimeout(() => {
+      const needles = [`GÜN ${targetDay}`, `${targetDay}. GÜN`, `${targetDay}.GÜN`];
+      const nodes = Array.from(document.querySelectorAll("section,article,div,h1,h2,h3,b,strong,button"));
+      const found = nodes.find(el => {
+        const txt = String(el.textContent || "").toUpperCase().replace(/\s+/g, " ").trim();
+        return needles.some(n => txt.includes(n));
+      });
+      if (found && typeof found.scrollIntoView === "function") {
+        found.scrollIntoView({ behavior: "smooth", block: "center" });
+        found.classList.add("v1063-ledger-focus-pulse");
+        setTimeout(() => found.classList.remove("v1063-ledger-focus-pulse"), 1600);
+      }
+    }, 420);
+  }
   function v1054RenderDailyPlanPanel(mode, opts = {}) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const rows = v1057LedgerRows(m);
@@ -2550,21 +2628,28 @@
         <div><span>Büyüme Oranı</span><b>${v1059LedgerPctText(summary.growth)}</b></div>
         <div><span>Güncel Kasa</span><b>${money(summary.current)}</b></div>
       </div>`;
+    const undoHtml = LEDGER_LAST_DELETE && LEDGER_LAST_DELETE.mode === m
+      ? `<div class="v1063-ledger-undo"><span>Satır silindi.</span><button type="button" data-v1063-ledger-undo="${m}">Geri Al</button></div>`
+      : "";
     const blocks = chunks.map((chunk, blockIndex) => {
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
         const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
         const globalNo = blockIndex * 25 + localIndex + 1;
         const itemClass = m === "crypto" ? "coin" : "item";
-        return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}">
+        const gotoAttrs = v1063LedgerRowTargetAttrs(row, m);
+        const gotoBtn = row.source === "rolling"
+          ? `<button type="button" class="v1063-ledger-goto"${gotoAttrs} title="Kutuya git"><i class="fa-solid fa-location-arrow"></i></button>`
+          : `<button type="button" class="v1063-ledger-goto empty" disabled aria-hidden="true"> </button>`;
+        return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}"${gotoAttrs}>
           <td>${v1060LedgerCellText(globalNo, "num")}</td>
           <td>${v1060LedgerCellText(row._displayDate || "", "date")}</td>
-          <td>${v1057LedgerInput(row, "item", itemClass)}</td>
-          <td>${v1057LedgerInput(row, "kind")}</td>
-          <td>${v1057LedgerInput(row, "stake", "money")}</td>
-          <td>${v1057LedgerInput(row, "roi")}</td>
-          <td>${v1057LedgerInput(row, "pnl", isLoss ? "loss" : "win")}</td>
-          <td><button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}">×</button></td>
+          <td>${v1063LedgerCell(row, "item", itemClass)}</td>
+          <td>${v1063LedgerCell(row, "kind")}</td>
+          <td>${v1063LedgerCell(row, "stake", "money")}</td>
+          <td>${v1063LedgerCell(row, "roi")}</td>
+          <td>${v1063LedgerCell(row, "pnl", isLoss ? "loss" : "win")}</td>
+          <td><div class="v1063-ledger-row-actions">${gotoBtn}<button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}" title="Satırı sil"><i class="fa-solid fa-trash-can"></i></button></div></td>
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
@@ -2572,8 +2657,8 @@
         <table class="v1057-ledger-excel-table v1061-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml}</tbody></table>
       </section>`;
     }).join("");
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
-      <div class="v1057-ledger-toolbar v1061-ledger-toolbar"><button type="button" data-v1057-ledger-add="${m}">+ Satır</button></div>
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro v1063-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
+      ${undoHtml}
       <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid">${blocks}</div>
     </section>`;
   }
@@ -2642,11 +2727,37 @@
       event.stopPropagation();
       const id = btn.dataset.v1057LedgerDelete || "";
       if (!id) return;
+      const beforeRows = v1057LedgerRows(m);
+      const deletedRow = beforeRows.find(r => String(r.id) === id) || null;
       const edits = v1057LoadLedgerEdits();
       if (id.startsWith("manual_")) edits[m].manual = (edits[m].manual || []).filter(r => String(r.id) !== id);
       else edits[m].deleted[id] = 1;
+      LEDGER_LAST_DELETE = deletedRow ? { mode: m, row: deletedRow } : null;
       v1057SaveLedgerEdits(edits);
       v1056OpenDailyLedgerScreen(m);
+    }));
+    host.querySelectorAll("[data-v1063-ledger-undo]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const info = LEDGER_LAST_DELETE;
+      if (!info || info.mode !== m || !info.row?.id) return;
+      const edits = v1057LoadLedgerEdits();
+      const id = String(info.row.id);
+      if (id.startsWith("manual_")) {
+        const exists = (edits[m].manual || []).some(r => String(r.id) === id);
+        if (!exists) edits[m].manual.push({ ...info.row, manual: true });
+      } else if (edits[m].deleted) {
+        delete edits[m].deleted[id];
+      }
+      LEDGER_LAST_DELETE = null;
+      v1057SaveLedgerEdits(edits);
+      v1056OpenDailyLedgerScreen(m);
+    }));
+    host.querySelectorAll("[data-v1063-ledger-goto]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const [modeRaw, daysRaw, dayRaw, opRaw] = String(btn.dataset.v1063LedgerGoto || "").split(":");
+      v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
     }));
   }
   function v1056OpenDailyLedgerScreen(mode) {
@@ -2663,16 +2774,19 @@
       <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
         <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head">
           <div><b>${title}</b></div>
-          <div class="v1060-ledger-head-actions">
-            <button type="button" class="v1060-ledger-photo v1061-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
+          <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
+            <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
+            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
             <button type="button" data-v1056-ledger-close>×</button>
           </div>
         </header>
         <div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div>
       </section>
     </div>`;
+    v1063InstallLedgerClock(host);
     host.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !el.hasAttribute("data-v1056-ledger-close")) return;
+      if (LEDGER_CLOCK_TIMER) { try { clearInterval(LEDGER_CLOCK_TIMER); } catch {} LEDGER_CLOCK_TIMER = null; }
       host.innerHTML = "";
     }));
     host.querySelectorAll("[data-v1060-ledger-photo]").forEach(btn => btn.addEventListener("click", event => {

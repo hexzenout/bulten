@@ -17484,3 +17484,182 @@ input.v1020-combo-stake-target {
 html.rolling-hash-boot body > #omega-rolling-photo-host{
   display:block!important;
 }
+
+/* V1063: Defter kamera, canlı saat, düzenleme yerine kutuya git + daha net K/Z */
+.v1061-ledger-screen-modal .v1063-ledger-photo,
+.v1061-ledger-screen-modal .v1060-ledger-photo.v1063-ledger-photo,
+.v1063-ledger-head-actions .v1063-ledger-photo{
+  background:#facc15!important;
+  border:1px solid #f59e0b!important;
+  color:#111827!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.22) inset, 0 8px 20px rgba(250,204,21,.16)!important;
+}
+.v1061-ledger-screen-modal .v1063-ledger-photo:hover,
+.v1063-ledger-head-actions .v1063-ledger-photo:hover{
+  background:#fde047!important;
+  border-color:#eab308!important;
+  color:#0f172a!important;
+  transform:translateY(-1px)!important;
+}
+.v1063-ledger-head-actions{
+  gap:10px!important;
+}
+.v1063-ledger-clock{
+  min-width:168px!important;
+  height:30px!important;
+  padding:0 10px!important;
+  border:1px solid rgba(148,163,184,.24)!important;
+  border-radius:10px!important;
+  background:rgba(15,23,42,.72)!important;
+  color:#e2e8f0!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:11px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+  white-space:nowrap!important;
+}
+.v1063-ledger-pro .v1057-ledger-toolbar{display:none!important;}
+.v1063-ledger-value{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  height:31px!important;
+  padding:0 5px!important;
+  box-sizing:border-box!important;
+  color:#111827!important;
+  background:transparent!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.v1063-ledger-value.item,
+.v1063-ledger-value.coin{
+  justify-content:flex-start!important;
+  padding-left:8px!important;
+  font-weight:950!important;
+  font-size:12px!important;
+}
+.v1063-ledger-value.money{
+  font-size:11px!important;
+  letter-spacing:-.02em!important;
+}
+.v1063-ledger-value.win{
+  background:#10b981!important;
+  color:#ffffff!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.22)!important;
+}
+.v1063-ledger-value.loss{
+  background:#ef4444!important;
+  color:#ffffff!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.22)!important;
+}
+.v1063-ledger-row-actions{
+  height:31px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  padding:0 2px!important;
+  box-sizing:border-box!important;
+}
+.v1063-ledger-goto,
+.v1063-ledger-pro .v1057-ledger-row-delete{
+  width:24px!important;
+  height:24px!important;
+  min-width:24px!important;
+  border-radius:7px!important;
+  display:inline-grid!important;
+  place-items:center!important;
+  border:1px solid rgba(148,163,184,.45)!important;
+  background:rgba(15,23,42,.08)!important;
+  color:#0f172a!important;
+  font-size:11px!important;
+  cursor:pointer!important;
+  line-height:1!important;
+  padding:0!important;
+}
+.v1063-ledger-goto:hover{
+  background:#dbeafe!important;
+  border-color:#60a5fa!important;
+  color:#1d4ed8!important;
+}
+.v1063-ledger-goto.empty{
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+.v1063-ledger-pro .v1057-ledger-row-delete{
+  background:#fee2e2!important;
+  border-color:#fca5a5!important;
+  color:#991b1b!important;
+  font-size:12px!important;
+}
+.v1063-ledger-pro .v1057-ledger-row-delete:hover{
+  background:#ef4444!important;
+  color:#ffffff!important;
+  border-color:#dc2626!important;
+  transform:translateY(-1px)!important;
+}
+.v1063-ledger-undo{
+  margin:0 0 10px!important;
+  height:34px!important;
+  padding:0 12px!important;
+  border:1px solid rgba(250,204,21,.38)!important;
+  border-radius:10px!important;
+  background:rgba(113,63,18,.22)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  max-width:650px!important;
+  color:#fde68a!important;
+  font-size:12px!important;
+  font-weight:900!important;
+}
+.v1063-ledger-undo button{
+  height:25px!important;
+  padding:0 10px!important;
+  border-radius:8px!important;
+  border:1px solid rgba(34,197,94,.65)!important;
+  background:rgba(22,101,52,.35)!important;
+  color:#bbf7d0!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  cursor:pointer!important;
+}
+.v1063-ledger-undo button:hover{background:rgba(22,163,74,.55)!important;color:#fff!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(1),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(1){width:6%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(2),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(2){width:15%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(3),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(3){width:27%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(4),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(4){width:10%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(5),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(5){width:13%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(6),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(6){width:9%!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(7),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(7){width:14%!important;background:#10b981!important;}
+.v1063-ledger-pro .v1057-ledger-excel-table th:nth-child(8),
+.v1063-ledger-pro .v1057-ledger-excel-table td:nth-child(8){width:6%!important;background:#f8fafc!important;}
+.v1063-ledger-focus-pulse{
+  outline:2px solid rgba(250,204,21,.95)!important;
+  box-shadow:0 0 0 5px rgba(250,204,21,.16)!important;
+  border-radius:12px!important;
+}
+@media (max-width:900px){
+  .v1063-ledger-clock{display:none!important;}
+  .v1063-ledger-pro .v1057-ledger-sheet,
+  .v1061-ledger-sheet{flex-basis:650px!important;width:650px!important;max-width:650px!important;}
+}
