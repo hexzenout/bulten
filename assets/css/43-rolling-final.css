@@ -17769,3 +17769,177 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
 @media (max-width:900px){
   .v1063-ledger-clock{display:none!important;}
 }
+
+
+/* V1065: Defter profesyonel düzeltme - aksiyon kolonu yok, canlı saat görünür, özet koyu yeşil tonları */
+.v1065-ledger-screen-modal{
+  width:auto!important;
+  min-width:640px!important;
+  max-width:min(920px, calc(100vw - 32px))!important;
+  border:1px solid rgba(148,163,184,.28)!important;
+  border-radius:16px!important;
+  overflow:hidden!important;
+}
+.v1065-ledger-screen-head{
+  min-height:54px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+}
+.v1065-ledger-screen-head > div:first-child{min-width:0!important;}
+.v1065-ledger-screen-modal .v1063-ledger-head-actions{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  flex:0 0 auto!important;
+}
+.v1065-ledger-screen-modal .v1063-ledger-clock{
+  display:inline-flex!important;
+  min-width:186px!important;
+  max-width:220px!important;
+  height:30px!important;
+  color:#f8fafc!important;
+  border-color:rgba(251,191,36,.36)!important;
+  background:rgba(15,23,42,.88)!important;
+  font-size:11px!important;
+}
+.v1065-ledger-screen-modal .v1063-ledger-photo{
+  width:32px!important;
+  height:32px!important;
+  border-radius:10px!important;
+  background:rgba(15,23,42,.92)!important;
+  border:1px solid rgba(251,191,36,.55)!important;
+  color:#fbbf24!important;
+  box-shadow:0 0 0 1px rgba(251,191,36,.10),0 6px 14px rgba(0,0,0,.26)!important;
+}
+.v1065-ledger-screen-modal .v1063-ledger-photo:hover{
+  background:rgba(15,23,42,.92)!important;
+  border-color:rgba(251,191,36,.75)!important;
+  color:#fbbf24!important;
+}
+.v1065-ledger-pro .v1057-ledger-sheet-grid{
+  gap:14px!important;
+  align-items:flex-start!important;
+}
+.v1065-ledger-pro .v1057-ledger-sheet,
+.v1065-ledger-pro .v1061-ledger-sheet{
+  width:660px!important;
+  max-width:660px!important;
+  flex:0 0 660px!important;
+}
+.v1065-ledger-pro .v1059-ledger-summary,
+.v1065-ledger-pro .v1060-ledger-summary-inline,
+.v1065-ledger-pro .v1061-ledger-summary-inline{
+  width:100%!important;
+  height:48px!important;
+  margin:0!important;
+  border:1px solid #0f172a!important;
+  border-bottom:0!important;
+  border-radius:8px 8px 0 0!important;
+  overflow:hidden!important;
+}
+.v1065-ledger-pro .v1059-ledger-summary > div,
+.v1065-ledger-pro .v1060-ledger-summary-inline > div,
+.v1065-ledger-pro .v1061-ledger-summary-inline > div{
+  min-height:48px!important;
+  padding:5px 8px!important;
+  border-right:1px solid #0f172a!important;
+  color:#07120b!important;
+}
+.v1065-ledger-pro .v1059-ledger-summary > div:nth-child(1){background:#9fd27c!important;}
+.v1065-ledger-pro .v1059-ledger-summary > div:nth-child(2){background:#82bd5f!important;}
+.v1065-ledger-pro .v1059-ledger-summary > div:nth-child(3){background:#63a64a!important;}
+.v1065-ledger-pro .v1059-ledger-summary span{
+  color:#0f172a!important;
+  font-size:11px!important;
+  font-weight:900!important;
+}
+.v1065-ledger-pro .v1059-ledger-summary b{
+  color:#04110a!important;
+  font-size:18px!important;
+  line-height:1.05!important;
+  font-weight:950!important;
+}
+.v1065-ledger-pro .v1060-ledger-summary-spacer,
+.v1065-ledger-pro .v1061-ledger-summary-spacer{display:none!important;}
+.v1065-ledger-pro .v1057-ledger-excel-table,
+.v1065-ledger-pro .v1061-ledger-excel-table{
+  width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+  border:1px solid #0f172a!important;
+  border-top:0!important;
+  font-family:Arial, sans-serif!important;
+}
+.v1065-ledger-pro .v1057-ledger-excel-table th,
+.v1065-ledger-pro .v1057-ledger-excel-table td{
+  height:30px!important;
+  min-height:30px!important;
+  padding:0 4px!important;
+  border:1px solid #0f172a!important;
+  background:#f8fafc!important;
+  color:#111827!important;
+  font-size:12px!important;
+  font-weight:850!important;
+  overflow:hidden!important;
+}
+.v1065-ledger-pro .v1057-ledger-excel-table th{
+  height:27px!important;
+  background:#d5dbe4!important;
+  color:#0f172a!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  text-transform:none!important;
+  letter-spacing:0!important;
+}
+.v1065-ledger-pro .v1057-ledger-excel-table th:nth-child(1),
+.v1065-ledger-pro .v1057-ledger-excel-table td:nth-child(1){width:6%!important;}
+.v1065-ledger-pro .v1057-ledger-excel-table th:nth-child(2),
+.v1065-ledger-pro .v1057-ledger-excel-table td:nth-child(2){width:15%!important;}
+.v1065-ledger-pro .v1057-ledger-excel-table th:nth-child(3),
+.v1065-ledger-pro .v1057-ledger-excel-table td:nth-child(3){width:31%!important;}
+.v1065-ledger-pro .v1057-ledger-excel-table th:nth-child(4),
+.v1065-ledger-pro .v1057-ledger-excel-table td:nth-child(4){width:11%!important;}
+.v1065-ledger-pro .v1057-ledger-excel-table th:nth-child(5),
+.v1065-ledger-pro .v1057-ledger-excel-table td:nth-child(5){width:14%!important;}
+.v1065-ledger-pro .v1057-ledger-excel-table th:nth-child(6),
+.v1065-ledger-pro .v1057-ledger-excel-table td:nth-child(6){width:9%!important;}
+.v1065-ledger-pro .v1057-ledger-excel-table th:nth-child(7),
+.v1065-ledger-pro .v1057-ledger-excel-table td:nth-child(7){width:14%!important;background:#10b981!important;}
+.v1065-ledger-pro .v1063-ledger-value{
+  height:29px!important;
+  padding:0 4px!important;
+  font-size:12px!important;
+  font-weight:900!important;
+}
+.v1065-ledger-pro .v1063-ledger-value.item,
+.v1065-ledger-pro .v1063-ledger-value.coin{
+  justify-content:flex-start!important;
+  padding-left:7px!important;
+  font-size:12px!important;
+}
+.v1065-ledger-pro .v1063-ledger-value.money,
+.v1065-ledger-pro .v1063-ledger-value.win,
+.v1065-ledger-pro .v1063-ledger-value.loss{
+  font-size:12px!important;
+  letter-spacing:-.02em!important;
+}
+.v1065-ledger-pro .v1063-ledger-value.win{background:#059669!important;color:#fff!important;}
+.v1065-ledger-pro .v1063-ledger-value.loss{background:#dc2626!important;color:#fff!important;}
+.v1065-ledger-pro .v1063-ledger-row-actions,
+.v1065-ledger-pro .v1057-ledger-row-delete,
+.v1065-ledger-pro .v1063-ledger-goto{display:none!important;}
+@media (max-width:900px){
+  .v1065-ledger-screen-modal{min-width:0!important;width:calc(100vw - 24px)!important;max-width:calc(100vw - 24px)!important;}
+  .v1065-ledger-screen-modal .v1063-ledger-clock{display:inline-flex!important;min-width:145px!important;font-size:10px!important;}
+  .v1065-ledger-pro .v1057-ledger-sheet,.v1065-ledger-pro .v1061-ledger-sheet{width:650px!important;max-width:650px!important;flex-basis:650px!important;}
+}
+
+/* V1065: Rolling büyüme tablosunda BÜYÜME / Güncel Kasa için taşma payı */
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(4),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(4){width:20%!important;}
+#rolling-excel-overlay .v1056-growth-table-tight th:nth-child(5),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(5){width:24%!important;}
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(4),
+#rolling-excel-overlay .v1056-growth-table-tight td:nth-child(5){white-space:nowrap!important;}

@@ -2400,6 +2400,38 @@
     });
     return map;
   }
+  function v1065FindComboHistoryForOp(op, historyRows, ts, pnl) {
+    if (!op || !Array.isArray(historyRows) || !historyRows.length) return null;
+    const kind = v1057OpKind("bet", op);
+    if (kind !== "Kombine") return null;
+    const stake = Math.abs(Number(op?.amt || op?.stake || 0));
+    const odds = v1053BetOpTotalOdds(op);
+    const status = op?.res === "loss" ? "loss" : op?.res === "win" ? "win" : "";
+    const stamp = Number(ts || op?.resultTs || op?.closedTs || op?.ts || 0);
+    const candidates = historyRows
+      .filter(r => r && /^kombine/i.test(cleanText(r.name || "")))
+      .filter(r => !status || String(r.status || "") === status)
+      .map(r => {
+        let score = 0;
+        const hStake = Math.abs(Number(r.stake || 0));
+        const hOdds = Number(r.odds || 0);
+        const hPnl = Number(r.pnl || 0);
+        const hTs = Number(r.ts || 0);
+        if (stake && Math.abs(hStake - stake) < 0.01) score += 5;
+        if (odds && Math.abs(hOdds - odds) < 0.01) score += 4;
+        if (Number.isFinite(Number(pnl)) && Math.abs(hPnl - Number(pnl)) < 0.01) score += 3;
+        if (stamp && hTs) {
+          const diff = Math.abs(hTs - stamp);
+          if (diff < 10 * 60 * 1000) score += 3;
+          else if (diff < 24 * 60 * 60 * 1000) score += 1;
+        }
+        if (/\s\+\s/.test(cleanText(r.name || ""))) score += 2;
+        return { r, score };
+      })
+      .filter(x => x.score >= 5)
+      .sort((a,b) => b.score - a.score);
+    return candidates[0]?.r || null;
+  }
   function v1064LedgerOpItem(mode, op, historyRow) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m === "crypto") return v1057OpName(m, op);
@@ -2455,6 +2487,7 @@
     v1057EnsureRollingResultTimestamps(m);
     const db = v1045ReadRollingDb();
     const historyMap = m === "bet" ? v1064HistoryBetMap() : new Map();
+    const historyRowsForMatch = m === "bet" ? Array.from(historyMap.values()) : [];
     const rows = [];
     Object.entries(db || {}).forEach(([key, plan]) => {
       if (!plan || v1057PlanModeFromKey(key, plan) !== m) return;
@@ -2467,7 +2500,8 @@
           const pnl = v1048OpEffect(m, op);
           const ts = Number(op.resultTs || op.closedTs || op.ts || op.updatedAt || op.createdAt || Date.now());
           const planDays = v1041NormalizeGrowthDays(plan.days || (String(key).match(/(\d+)/)?.[1] || 7));
-          const hist = op?.historyId ? historyMap.get(String(op.historyId)) : null;
+          const directHist = op?.historyId ? historyMap.get(String(op.historyId)) : null;
+          const hist = directHist || v1065FindComboHistoryForOp(op, historyRowsForMatch, ts, pnl);
           rows.push({
             id: `auto_${m}_${v1057SafeLedgerId(key)}_${day}_${opIndex}`,
             source: "rolling",
@@ -2505,7 +2539,7 @@
         no: idx + 1,
         date: v1057TodayDateInput(ts),
         time: v1056TimeLabelFromTs(ts),
-        item: m === "crypto" ? v1054CryptoCoinFromRecord(r) : cleanText(r.name || "Bahis / maç"),
+        item: m === "crypto" ? v1054CryptoCoinFromRecord(r) : (v1064CleanComboHistoryName(r.name || "") || cleanText(r.name || "Bahis / maç")),
         kind: m === "crypto" ? v1054CryptoDirectionFromRecord(r) : (/^kombine/i.test(cleanText(r.name || "")) ? "Kombine" : "Tek"),
         stake: money(r.stake || 0),
         roi: v1054DailyRoi(m, r),
@@ -2652,8 +2686,8 @@
     const modal = !!opts.modal;
     const summary = v1059LedgerSummary(m, rows);
     const head = m === "crypto"
-      ? `<tr><th>No.</th><th>Tarih</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th><th></th></tr>`
-      : `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th><th></th></tr>`;
+      ? `<tr><th>No.</th><th>Tarih</th><th>Coin</th><th>Yön</th><th>Tutar</th><th>ROI</th><th>Kar-zarar</th></tr>`
+      : `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th></tr>`;
     const summaryHtml = `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline">
         <div><span>Kasa Başlangıç</span><b>${money(summary.start)}</b></div>
         <div><span>Büyüme Oranı</span><b>${v1059LedgerPctText(summary.growth)}</b></div>
@@ -2677,7 +2711,6 @@
           <td>${v1063LedgerCell(row, "stake", "money")}</td>
           <td>${v1063LedgerCell(row, "roi")}</td>
           <td>${v1063LedgerCell(row, "pnl", isLoss ? "loss" : "win")}</td>
-          <td><div class="v1063-ledger-row-actions"><button type="button" class="v1057-ledger-row-delete" data-v1057-ledger-delete="${escapeHtml(row.id)}" title="Satırı sil" aria-label="Satırı sil">×</button></div></td>
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
@@ -2685,7 +2718,7 @@
         <table class="v1057-ledger-excel-table v1061-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml}</tbody></table>
       </section>`;
     }).join("");
-    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro v1063-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
+    return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro v1063-ledger-pro v1065-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
       ${undoHtml}
       <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid">${blocks}</div>
     </section>`;
@@ -2805,8 +2838,8 @@
     }
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
     host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
-      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
-        <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head">
+      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+        <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head">
           <div><b>${title}</b></div>
           <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
             <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
