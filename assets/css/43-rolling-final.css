@@ -18445,3 +18445,31 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   text-shadow: none !important;
 }
 
+/* V1094: Kupon Defteri Maç / Kupon hücresi koyu kutu zemin testi
+   Sadece BAHİS / KUPON DEFTERİ Maç / Kupon sütunundaki beyaz hücre zemini değişir.
+   Kaynak zemin: Aktif bahis detayındaki kutu zemini (#0e1629).
+   Yapı/format/kamera/JS değişmez. */
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td:nth-child(3),
+.v1065-ledger-pro.bet .v1061-ledger-excel-table td:nth-child(3),
+.v1065-ledger-screen-modal.bet .v1057-ledger-excel-table td:nth-child(3),
+.v1065-ledger-screen-modal.bet .v1061-ledger-excel-table td:nth-child(3){
+  background:#0e1629!important;
+}
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td:nth-child(3) .v1063-ledger-value,
+.v1065-ledger-pro.bet .v1061-ledger-excel-table td:nth-child(3) .v1063-ledger-value,
+.v1065-ledger-screen-modal.bet .v1057-ledger-excel-table td:nth-child(3) .v1063-ledger-value,
+.v1065-ledger-screen-modal.bet .v1061-ledger-excel-table td:nth-child(3) .v1063-ledger-value,
+.v1065-ledger-pro.bet .v1078-ledger-match-text,
+.v1065-ledger-screen-modal.bet .v1078-ledger-match-text,
+.v1065-ledger-pro.bet .v1069-ledger-match-name,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-name{
+  color:#f8fafc!important;
+  -webkit-text-fill-color:#f8fafc!important;
+}
+.v1065-ledger-pro.bet .v1076-ledger-match-odd,
+.v1065-ledger-screen-modal.bet .v1076-ledger-match-odd{
+  color:#fbbf24!important;
+  -webkit-text-fill-color:#fbbf24!important;
+  text-shadow:none!important;
+}
+
