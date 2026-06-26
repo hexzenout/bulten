@@ -1614,8 +1614,8 @@
         ${renderBetInfoBar(row)}
         <ul class="v763-combo-match-list">${matchRows}</ul>
         <div class="v763-card-actions v801-bet-close-actions">
-          <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-status="win">Kupon Kazandı</button>
-          <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-status="loss">Kupon Kaybetti</button>
+          <button type="button" class="win" data-combo-coupon-status="${coupon.id}:${row.index}:win">Kupon Kazandı</button>
+          <button type="button" class="loss" data-combo-coupon-status="${coupon.id}:${row.index}:loss">Kupon Kaybetti</button>
         </div>
       </details>
     </article>`;
@@ -1709,7 +1709,39 @@
     const totals = rowBetTotals(row);
     const h = loadHistory();
     const now = Date.now();
-    const couponMatches = Array.isArray(coupon.matches) && coupon.matches.length ? coupon.matches : getSlotMatches(row);
+    const collectCouponMatches = () => {
+      const collected = [];
+      const addMatch = (match, fallbackIndex) => {
+        const name = cleanText(match?.name || match?.match || match?.label || "");
+        if (!name) return;
+        collected.push({
+          name,
+          odds: Number(match?.odds || 0),
+          index: Number(match?.index ?? fallbackIndex ?? collected.length),
+          status: cleanText(match?.status || "")
+        });
+      };
+      const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows.filter(Boolean) : [];
+      if (sourceRows.length >= 2) {
+        sourceRows.forEach((srcRow, rowIdx) => {
+          const rowMatches = getSlotMatches(srcRow);
+          if (rowMatches.length) rowMatches.forEach(match => addMatch(match, rowIdx));
+          else addMatch({ name: srcRow?.name || srcRow?.match || srcRow?.label, odds: srcRow?.odds, status: srcRow?.status }, rowIdx);
+        });
+      }
+      if (!collected.length && Array.isArray(coupon.matches) && coupon.matches.length) {
+        coupon.matches.forEach((match, idx) => addMatch(match, idx));
+      }
+      if (!collected.length) getSlotMatches(row).forEach((match, idx) => addMatch(match, idx));
+      const seen = new Set();
+      return collected.filter(match => {
+        const key = `${match.name}::${match.odds || ""}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    };
+    const couponMatches = collectCouponMatches();
     const names = couponMatches.map(m => cleanText(m?.name || "")).filter(Boolean);
     const finalStatus = status === "loss" ? "loss" : "win";
     const rec = {
@@ -1720,6 +1752,11 @@
       name: `Kombine: ${names.join(" + ") || "Bahis / maç"}`,
       matchLines: names,
       matchOdds: couponMatches.map(m => Number(m?.odds || 0)),
+      matches: couponMatches.map((m, idx) => ({
+        name: cleanText(m?.name || "") || `Maç ${idx + 1}`,
+        odds: Number(m?.odds || 0),
+        status: cleanText(m?.status || "")
+      })),
       combo: couponMatches.map((m, idx) => ({
         name: cleanText(m?.name || "") || `Maç ${idx + 1}`,
         odds: Number(m?.odds || 0),
@@ -5059,6 +5096,30 @@ function escapeHtml(str) {
           : `${matchName} için ${nextStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} sonucu kaydedilecek.`,
         detail: nextStatus === "pending" ? "Yanlış işaretleme yaptıysan bu maç aktif kupon içinde yeniden bekliyor olur." : "Kombine tüm maçlar sonuçlanana kadar aktif listede kalır.",
         confirmText: nextStatus === "pending" ? "BEKLİYOR olarak işaretle" : (nextStatus === "loss" ? "KAYBETTİ olarak işaretle" : "KAZANDI olarak işaretle")
+      };
+      refresh();
+    }));
+    mount.querySelectorAll("[data-combo-coupon-status]").forEach(btn => btn.addEventListener("click", () => {
+      const [couponIdRaw, slotRaw, statusRaw] = String(btn.dataset.comboCouponStatus || "1:0:win").split(":");
+      const couponId = Number(couponIdRaw || 1);
+      const slotIndex = Number(slotRaw || 0);
+      const status = statusRaw === "loss" ? "loss" : "win";
+      const coupon = getBetCouponGroups(state).coupons.find(c => c.id === couponId || Number(c.slotIndex ?? -1) === slotIndex);
+      if (!coupon) return;
+      const keepPanel = btn.closest(".v758-pending-modal") ? (PENDING_BOARD_OPEN_MODE || "bet") : (PENDING_BOARD_OPEN_MODE || null);
+      if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
+      ACTIVE_COMBO_DETAIL_SLOT = Number(coupon.slotIndex || slotIndex || 0);
+      CONFIRM_DIALOG = {
+        type: "settleCoupon",
+        couponId,
+        couponSlot: Number(coupon.slotIndex || slotIndex || 0),
+        status,
+        keepActivePanel: keepPanel,
+        tone: status === "loss" ? "danger" : "success",
+        title: "Kombine kupon sonucunu onayla",
+        message: `${coupon.label || "Kombine Kupon"} için sonuç: ${status === "loss" ? "KAYBETTİ" : "KAZANDI"}.`,
+        detail: "Kupondaki tüm maçlar tek history kaydına Maç / Kupon listesi olarak yazılacak.",
+        confirmText: status === "loss" ? "Kupon Kaybetti" : "Kupon Kazandı"
       };
       refresh();
     }));
