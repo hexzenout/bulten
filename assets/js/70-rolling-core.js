@@ -2932,12 +2932,12 @@
   function v1069LedgerStatusMark(status) {
     if (status === "loss") return "✕";
     if (status === "win") return "✓";
-    return "—";
+    return "–";
   }
   function v1076LedgerOddsText(value) {
     const n = Number(value || 0);
     if (!Number.isFinite(n) || n <= 0) return "";
-    return Number(n.toFixed(4)).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function v1069LedgerSplitItemText(text) {
     return String(text || "").split(/\s+\+\s+/).map(part => part.replace(/\s*\|\s*\d+(?:[.,]\d+)?\s*$/g, "").trim()).filter(Boolean);
@@ -3169,12 +3169,13 @@
             const mark = v1069LedgerStatusMark(status);
             const oddsText = v1076LedgerOddsText(line?.odds);
             const wrapped = (line.wrapped && line.wrapped.length) ? line.wrapped : wrapText(line.name || "Bahis / maç", oddsText ? 28 : 34, 4);
-            const firstY = y + 18 + textOffset;
+            const firstY = y + 17 + textOffset;
             const markColor = photoStatusColor(status);
-            const lineX = xx + 10;
-            const followX = xx + 28;
+            const markX = xx + 12;
+            const followX = xx + 25;
             const firstPart = wrapped[0] || "Bahis / maç";
-            const firstText = `<text x="${lineX}" y="${firstY}" fill="#111827" font-size="12" font-family="Arial" font-weight="900"><tspan fill="${markColor}" stroke="${markColor}" stroke-width="0.45" font-size="17" font-weight="1000">${safe(mark)}</tspan><tspan dx="5" fill="#111827" stroke="none" font-size="12" font-weight="900">${safe(firstPart)}</tspan>${oddsText ? `<tspan dx="6" fill="#b45309" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : ""}</text>`;
+            const markFont = status === "pending" ? 16 : 15;
+            const firstText = `<text x="${markX}" y="${firstY}" text-anchor="middle" dominant-baseline="middle" fill="${markColor}" stroke="${markColor}" stroke-width="0.4" font-size="${markFont}" font-family="Arial" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" dominant-baseline="middle" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oddsText ? `<tspan dx="5" fill="#f59e0b" stroke="none" font-size="12" font-weight="1000">${safe(oddsText)}</tspan>` : ""}</text>`;
             const restText = wrapped.slice(1).map((part, wrapIdx) => `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
             textOffset += Math.max(1, wrapped.length) * 15 + 3;
             return firstText + restText;

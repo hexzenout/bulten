@@ -18225,3 +18225,52 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   -webkit-text-stroke:.15px currentColor!important;
   text-shadow:none!important;
 }
+
+
+/* V1077: Defter/kamera maç oranı altın format + kısa kalın pending çizgi */
+.v1065-ledger-pro .v1069-ledger-match-line{
+  align-items:baseline!important;
+  gap:3px!important;
+  flex-wrap:wrap!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-name{
+  flex:0 1 auto!important;
+  display:inline!important;
+}
+.v1065-ledger-pro .v1076-ledger-match-odd{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 auto!important;
+  margin-left:3px!important;
+  padding:1px 5px!important;
+  min-height:15px!important;
+  border-radius:7px!important;
+  background:rgba(251,191,36,.16)!important;
+  border:1px solid rgba(245,158,11,.48)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24)!important;
+  color:#b45309!important;
+  font-size:11px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  vertical-align:baseline!important;
+}
+.v1065-ledger-pro .v1069-ledger-status-mark{
+  flex:0 0 15px!important;
+  width:15px!important;
+  min-width:15px!important;
+  height:16px!important;
+  line-height:15px!important;
+  font-size:16px!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
+  color:#475569!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:17px!important;
+  font-weight:1000!important;
+  line-height:14px!important;
+  -webkit-text-stroke:.45px currentColor!important;
+  text-shadow:0 0 .15px currentColor!important;
+  transform:translateY(-1px)!important;
+}
