@@ -3594,7 +3594,9 @@
 
   function v774SmartMemoryEnabled() {
     const mode = localStorage.getItem("finance_rolling_mode") === "crypto" ? "crypto" : "bet";
-    return mode === "bet" && (_ACTIVE_EXCEL_DAYS === 7 || _ACTIVE_EXCEL_DAYS === 15);
+    // Kombine maç bazlı sonuçları bütün BAHİS rolling planlarında sakla.
+    // Eski sınır (sadece 7/15 gün) 25/50/75/100 bloklarında seçilen ✓/× bilgisini final kupon sonucuna ezdiriyordu.
+    return mode === "bet";
   }
 
   function v774EnsurePending(plan) {

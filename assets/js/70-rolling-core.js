@@ -692,6 +692,22 @@
   function betKind(slot) {
     return betCouponGroup(slot) ? "combo" : "single";
   }
+  function v1073NormalizeBetMatchResult(value) {
+    const raw = cleanText(value || "").toLowerCase();
+    if (raw === "loss" || raw === "lost" || raw === "lose" || raw === "kaybetti" || raw === "kayıp" || raw === "zarar") return "loss";
+    if (raw === "win" || raw === "won" || raw === "kazandı" || raw === "kazanc" || raw === "kazanç" || raw === "kar" || raw === "kâr") return "win";
+    return "";
+  }
+  function v1073RowMatchStatus(row, index = 0) {
+    if (!row || typeof row !== "object") return "";
+    const idx = Math.max(0, Number(index || 0));
+    const combo = Array.isArray(row.comboResults) ? row.comboResults : [];
+    return v1073NormalizeBetMatchResult(combo[idx])
+      || v1073NormalizeBetMatchResult(row.matchResults?.[idx])
+      || v1073NormalizeBetMatchResult(row.status)
+      || v1073NormalizeBetMatchResult(row.result)
+      || v1073NormalizeBetMatchResult(row.res);
+  }
   function normalizeBetCouponGroups(slots) {
     const list = Array.isArray(slots) ? slots : [];
     list.forEach((slot, index) => {
@@ -729,7 +745,17 @@
     const ordered = (Array.isArray(rows) ? rows : []).filter(Boolean).sort((a, b) => Number(a.index || 0) - Number(b.index || 0));
     const first = ordered[0] || {};
     const stakeRow = ordered.find(row => Number(row.stake || 0));
-    const rest = ordered.slice(1).map(row => ({ name: cleanText(row.name), odds: row.odds, sourceIndex: row.index }));
+    const comboResults = Array.isArray(first.comboResults) ? first.comboResults.slice() : [];
+    ordered.forEach((row, idx) => {
+      const status = v1073NormalizeBetMatchResult(comboResults[idx]) || v1073NormalizeBetMatchResult(row?.comboResults?.[0]) || v1073RowMatchStatus(row, 0);
+      if (status) comboResults[idx] = status;
+    });
+    const rest = ordered.slice(1).map((row, idx) => ({
+      name: cleanText(row.name),
+      odds: row.odds,
+      sourceIndex: row.index,
+      status: comboResults[idx + 1] || v1073RowMatchStatus(row, 0)
+    }));
     return {
       ...first,
       stake: stakeRow ? stakeRow.stake : first.stake,
@@ -737,13 +763,23 @@
       manualCombo: true,
       autoComboRows: ordered.map(row => row.index),
       extraMatches: rest,
-      comboResults: Array.isArray(first.comboResults) ? first.comboResults.slice() : []
+      comboResults
     };
   }
   function buildAutoComboRow(base, preRows = [], postRows = []) {
     const ordered = [...(preRows || []), base, ...(postRows || [])].filter(Boolean);
     const first = ordered[0] || base;
-    const rest = ordered.slice(1).map(row => ({ name: cleanText(row.name), odds: row.odds, sourceIndex: row.index }));
+    const comboResults = Array.isArray(base?.comboResults) ? base.comboResults.slice() : [];
+    ordered.forEach((row, idx) => {
+      const status = v1073NormalizeBetMatchResult(comboResults[idx]) || v1073NormalizeBetMatchResult(row?.comboResults?.[0]) || v1073RowMatchStatus(row, 0);
+      if (status) comboResults[idx] = status;
+    });
+    const rest = ordered.slice(1).map((row, idx) => ({
+      name: cleanText(row.name),
+      odds: row.odds,
+      sourceIndex: row.index,
+      status: comboResults[idx + 1] || v1073RowMatchStatus(row, 0)
+    }));
     return {
       ...base,
       name: cleanText(first.name),
@@ -751,16 +787,19 @@
       autoCombo: true,
       autoComboRows: ordered.map(row => row.index),
       extraMatches: rest,
-      comboResults: Array.isArray(base.comboResults) ? base.comboResults.slice() : []
+      comboResults
     };
   }
   function getSlotMatches(slot) {
     const matches = [];
-    if (cleanText(slot?.name)) matches.push({ name: cleanText(slot.name), odds: slot.odds, index: 0, status: slot?.comboResults?.[0] || "" });
+    const comboResults = Array.isArray(slot?.comboResults) ? slot.comboResults : [];
+    const baseStatus = v1073NormalizeBetMatchResult(comboResults[0]) || v1073RowMatchStatus(slot, 0);
+    if (cleanText(slot?.name)) matches.push({ name: cleanText(slot.name), odds: slot.odds, index: 0, status: baseStatus });
     if (Array.isArray(slot?.extraMatches)) {
       slot.extraMatches.forEach((m, idx) => {
         if (!cleanText(m?.name)) return;
-        matches.push({ name: cleanText(m.name), odds: m.odds, index: idx + 1, status: slot?.comboResults?.[idx + 1] || "" });
+        const matchStatus = v1073NormalizeBetMatchResult(comboResults[idx + 1]) || v1073NormalizeBetMatchResult(m?.status || m?.result || m?.res);
+        matches.push({ name: cleanText(m.name), odds: m.odds, index: idx + 1, sourceIndex: m.sourceIndex, status: matchStatus });
       });
     }
     return matches;
@@ -1710,12 +1749,7 @@
     const h = loadHistory();
     const now = Date.now();
     const finalStatus = status === "loss" ? "loss" : "win";
-    const normalizeMatchResult = (value) => {
-      const raw = cleanText(value || "").toLowerCase();
-      if (raw === "loss" || raw === "lost" || raw === "lose" || raw === "kaybetti" || raw === "kayıp") return "loss";
-      if (raw === "win" || raw === "won" || raw === "kazandı" || raw === "kazanc" || raw === "kazanç") return "win";
-      return "";
-    };
+    const normalizeMatchResult = v1073NormalizeBetMatchResult;
     const comboResultAt = (idx) => {
       const i = Number(idx || 0);
       const pools = [
@@ -1728,11 +1762,18 @@
         const value = normalizeMatchResult(pool[i]);
         if (value) return value;
       }
+      const matchStatus = normalizeMatchResult(coupon?.matches?.[i]?.status || coupon?.matches?.[i]?.result || coupon?.matches?.[i]?.res);
+      if (matchStatus) return matchStatus;
+      const rowStatus = Array.isArray(coupon?.rows) ? normalizeMatchResult(coupon.rows[i]?.status || coupon.rows[i]?.result || coupon.rows[i]?.res || coupon.rows[i]?.comboResults?.[0]) : "";
+      if (rowStatus) return rowStatus;
       return "";
     };
     const hasManualMatchResults = () => {
       const pools = [coupon?.row?.comboResults, row?.comboResults, Array.isArray(coupon?.rows) && coupon.rows[0] ? coupon.rows[0].comboResults : null];
-      return pools.some(pool => Array.isArray(pool) && pool.some(item => !!normalizeMatchResult(item)));
+      if (pools.some(pool => Array.isArray(pool) && pool.some(item => !!normalizeMatchResult(item)))) return true;
+      if (Array.isArray(coupon?.matches) && coupon.matches.some(match => !!normalizeMatchResult(match?.status || match?.result || match?.res))) return true;
+      if (Array.isArray(coupon?.rows) && coupon.rows.some(src => !!normalizeMatchResult(src?.status || src?.result || src?.res || src?.comboResults?.[0]))) return true;
+      return false;
     };
     const manualResultsExist = hasManualMatchResults();
     const collectCouponMatches = () => {
@@ -2934,14 +2975,35 @@
     const cols = m === "crypto" ? ["No", "Tarih", "Coin", "Yön", "Tutar", "ROI", "Kar-zarar"] : ["No", "Tarih", "Maç / Kupon", "Tür", "Tutar", "Oran", "Kar-zarar"];
     const widths = [52, 128, 270, 100, 120, 105, 130];
     const safe = (value) => escapeHtml(String(value ?? ""));
-    const rowCount = Math.max(rows.length, 1);
+    const dataRows = rows.length ? rows : [{ no: "", date: "", item: "Kayıt yok", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, itemLines: [] }];
+    const photoStatusColor = (status) => status === "loss" ? "#7f1d1d" : status === "win" ? "#064e3b" : "#64748b";
+    const shortText = (value, limit = 28) => {
+      const raw = cleanText(value || "");
+      return raw.length > limit ? raw.slice(0, Math.max(0, limit - 1)) + "…" : raw;
+    };
+    const betPhotoLines = (row) => {
+      if (m !== "bet") return [];
+      const base = Array.isArray(row?.itemLines) ? row.itemLines : [];
+      let lines = base.map(line => ({ ...line, name: cleanText(line?.name || "") })).filter(line => line.name);
+      if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, status: row?.status || row?.result || row?.res || "" }));
+      if (!lines.length) lines = [{ name: cleanText(row?.item || "") || "Bahis / maç", status: row?.status || row?.result || row?.res || "" }];
+      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line) }));
+    };
+    const rowMeta = dataRows.map(row => {
+      const lines = betPhotoLines(row);
+      return { row, lines, height: m === "bet" ? Math.max(34, 16 + Math.max(1, lines.length) * 18) : 34 };
+    });
     const tableW = widths.reduce((a,b)=>a+b,0);
     const width = tableW + 80;
-    const height = 210 + rowCount * 34;
+    const bodyHeight = rowMeta.reduce((sum, meta) => sum + meta.height, 0);
+    const height = 210 + bodyHeight;
     let x = 40;
     const headerCells = cols.map((c, i) => { const cell = `<rect x="${x}" y="142" width="${widths[i]}" height="30" fill="#d1d5db" stroke="#111827"/><text x="${x + widths[i]/2}" y="162" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">${safe(c)}</text>`; x += widths[i]; return cell; }).join("");
-    const body = (rows.length ? rows : [{ no: "", date: "", item: "Kayıt yok", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0 }]).map((r, idx) => {
-      const y = 172 + idx * 34;
+    let yCursor = 172;
+    const body = rowMeta.map((meta, idx) => {
+      const r = meta.row;
+      const y = yCursor;
+      yCursor += meta.height;
       const values = m === "crypto"
         ? [r.no || idx + 1, v1060LedgerDateLabel(r), r.item || "", r.kind || "", r.stake || "", r.roi || "", r.pnl || ""]
         : [r.no || idx + 1, v1060LedgerDateLabel(r), r.item || "", r.kind || "", r.stake || "", r.roi || "", r.pnl || ""];
@@ -2949,10 +3011,20 @@
       return values.map((v, i) => {
         const isPnl = i === 6;
         const neg = isPnl && (/^-/.test(String(v)) || Number(r.pnlRaw || 0) < 0);
-        const fill = isPnl ? (neg ? "#dc2626" : "#16a34a") : "#f8fafc";
+        const fill = isPnl ? (neg ? "#7f1d1d" : "#064e3b") : "#f8fafc";
         const color = isPnl ? "#ffffff" : "#111827";
-        const text = safe(String(v).slice(0, i === 2 ? 28 : 14));
-        const cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="34" fill="${fill}" stroke="#111827"/><text x="${xx + widths[i]/2}" y="${y + 22}" text-anchor="middle" fill="${color}" font-size="12" font-family="Arial" font-weight="850">${text}</text>`;
+        let cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="${meta.height}" fill="${fill}" stroke="#111827"/>`;
+        if (m === "bet" && i === 2) {
+          const lines = meta.lines.length ? meta.lines : [{ name: String(v || ""), status: "pending" }];
+          cell += lines.map((line, lineIdx) => {
+            const mark = v1069LedgerStatusMark(line.status);
+            const ly = y + 21 + lineIdx * 18;
+            return `<text x="${xx + 10}" y="${ly}" fill="${photoStatusColor(line.status)}" font-size="14" font-family="Arial" font-weight="1000">${safe(mark)}</text><text x="${xx + 28}" y="${ly}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(shortText(line.name, 30))}</text>`;
+          }).join("");
+        } else {
+          const text = safe(String(v).slice(0, i === 2 ? 28 : 14));
+          cell += `<text x="${xx + widths[i]/2}" y="${y + Math.round(meta.height / 2) + 5}" text-anchor="middle" fill="${color}" font-size="12" font-family="Arial" font-weight="850">${text}</text>`;
+        }
         xx += widths[i];
         return cell;
       }).join("");
@@ -3938,6 +4010,7 @@ function escapeHtml(str) {
         name: coupon.matches.map(m => cleanText(m.name)).filter(Boolean).join(" + "),
         matchLines: coupon.matches.map(m => cleanText(m.name)).filter(Boolean),
         matchOdds: coupon.matches.map(m => Number(m.odds || 0)),
+        matchResults: coupon.matches.map(m => v1073NormalizeBetMatchResult(m.status || m.result || m.res)),
         stake: Number(coupon.row.stake || 0),
         odds: Number(totals.odds || 0),
         possible: Number(totals.possibleWin || 0)

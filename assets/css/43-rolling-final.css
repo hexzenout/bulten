@@ -18174,3 +18174,38 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
 .v1065-ledger-pro .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
   color:#64748b!important;
 }
+
+/* V1073: Defter kamera çıktısı + maç bazlı sonuç teması son sabitleme */
+.v1065-ledger-pro .v1057-ledger-excel-table td.v1069-ledger-pnl-cell.win,
+.v1065-ledger-pro .v1061-ledger-excel-table td.v1069-ledger-pnl-cell.win{
+  background:#064e3b!important;
+  color:#ffffff!important;
+}
+.v1065-ledger-pro .v1057-ledger-excel-table td.v1069-ledger-pnl-cell.loss,
+.v1065-ledger-pro .v1061-ledger-excel-table td.v1069-ledger-pnl-cell.loss{
+  background:#7f1d1d!important;
+  color:#ffffff!important;
+}
+.v1065-ledger-pro .v1069-ledger-status-mark{
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:16px!important;
+  font-weight:1000!important;
+  line-height:16px!important;
+  -webkit-text-stroke:.35px currentColor!important;
+  text-shadow:0 0 .25px currentColor!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#064e3b!important;}
+.v1065-ledger-pro .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#7f1d1d!important;}
+.v1065-ledger-pro .v1069-ledger-match-line.pending .v1069-ledger-status-mark{color:#64748b!important;}
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value,
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  color:#fff!important;
+}
