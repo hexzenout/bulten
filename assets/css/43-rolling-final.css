@@ -18567,3 +18567,93 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   border:1px solid rgba(148,163,184,.24)!important;
   background:#020617!important;
 }
+
+
+/* V1096: Kupon Defteri final ayrım + işaret hizası
+   - Kombine içindeki maçların arasına çizgi çekilmez.
+   - Çizgi sadece tablo satırları arasında görünür.
+   - ✓ / ✕ / - daha koyu, kalın ve hizalı görünür. */
+.v1065-ledger-pro.bet .v1069-ledger-match-line + .v1069-ledger-match-line,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line + .v1069-ledger-match-line{
+  border-top:0!important;
+  margin-top:0!important;
+  padding-top:1px!important;
+}
+.v1065-ledger-pro.bet .v1057-ledger-excel-table tbody tr + tr td:nth-child(3),
+.v1065-ledger-pro.bet .v1061-ledger-excel-table tbody tr + tr td:nth-child(3),
+.v1065-ledger-screen-modal.bet .v1057-ledger-excel-table tbody tr + tr td:nth-child(3),
+.v1065-ledger-screen-modal.bet .v1061-ledger-excel-table tbody tr + tr td:nth-child(3){
+  box-shadow:inset 0 1px 0 rgba(148,163,184,.46)!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line{
+  grid-template-columns:18px minmax(0,1fr)!important;
+  column-gap:2px!important;
+  align-items:start!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-status-mark{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  width:18px!important;
+  min-width:18px!important;
+  height:15px!important;
+  line-height:15px!important;
+  padding:0!important;
+  margin:0!important;
+  transform:translateY(-1px)!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:16px!important;
+  font-weight:1000!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark{
+  color:#064e3b!important;
+  -webkit-text-fill-color:#064e3b!important;
+  -webkit-text-stroke:.7px #064e3b!important;
+  text-shadow:.25px 0 #064e3b,-.25px 0 #064e3b,0 .25px #064e3b,0 -.25px #064e3b!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark{
+  color:#7f1d1d!important;
+  -webkit-text-fill-color:#7f1d1d!important;
+  -webkit-text-stroke:.7px #7f1d1d!important;
+  text-shadow:.25px 0 #7f1d1d,-.25px 0 #7f1d1d,0 .25px #7f1d1d,0 -.25px #7f1d1d!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
+  color:#334155!important;
+  -webkit-text-fill-color:#334155!important;
+  -webkit-text-stroke:.9px #334155!important;
+  font-size:19px!important;
+  line-height:13px!important;
+  transform:translate(4px,-2px) scaleX(1.74)!important;
+  transform-origin:center center!important;
+  text-shadow:.2px 0 #334155,-.2px 0 #334155!important;
+}
+
+/* V1096b: bekleyen (-) işareti yazı değil çizgi olarak çizilir; hizası sabit kalır. */
+.v1065-ledger-pro.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
+  position:relative!important;
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+  -webkit-text-stroke:0 transparent!important;
+  font-size:0!important;
+  line-height:1!important;
+  transform:translate(3px,0)!important;
+  text-shadow:none!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before{
+  content:""!important;
+  position:absolute!important;
+  left:1px!important;
+  top:6px!important;
+  width:15px!important;
+  height:3px!important;
+  border-radius:2px!important;
+  background:#334155!important;
+  box-shadow:.2px 0 #334155,-.2px 0 #334155!important;
+}

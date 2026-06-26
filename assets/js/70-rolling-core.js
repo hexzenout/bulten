@@ -3178,7 +3178,8 @@
         const neg = isPnl && (/^-/.test(String(v)) || Number(r.pnlRaw || 0) < 0);
         const fill = isPnl ? (neg ? "#7f1d1d" : "#064e3b") : (isBetItem ? "#0e1629" : "#f8fafc");
         const color = isPnl ? "#ffffff" : (isBetItem ? "#f8fafc" : "#111827");
-        let cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="${meta.height}" fill="${fill}" stroke="#0f172a"/>`;
+        const cellStroke = isBetItem ? "#334155" : "#0f172a";
+        let cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="${meta.height}" fill="${fill}" stroke="${cellStroke}"/>`;
         if (isBetItem) {
           const lines = meta.lines.length ? meta.lines : [{ name: String(v || "Bahis / maç"), status: "pending", wrapped: wrapText(v || "Bahis / maç", 34, 4) }];
           let textOffset = 0;
@@ -3192,16 +3193,19 @@
             const lineX = xx + 10 + (status === "pending" ? 3 : 0);
             const followX = xx + 28;
             const firstPart = wrapped[0] || "Bahis / maç";
-            const separator = lineIndex > 0 ? `<line x1="${xx + 8}" y1="${firstY - 12}" x2="${xx + widths[i] - 8}" y2="${firstY - 12}" stroke="#334155" stroke-width="1" opacity=".95"/>` : "";
-            const markSize = status === "pending" ? 17 : 14;
+            const separator = "";
+            const markSize = status === "pending" ? 19 : 16;
+            const markSvg = status === "pending"
+              ? `<line x1="${lineX - 1}" y1="${firstY - 4}" x2="${lineX + 12}" y2="${firstY - 4}" stroke="${markColor}" stroke-width="2.6" stroke-linecap="square"/>`
+              : `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="${markColor}" stroke-width="0.7" paint-order="stroke fill" font-size="${markSize}" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text>`;
             const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
-            const firstText = `${separator}<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="none" font-size="${markSize}" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#f8fafc" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
+            const firstText = `${separator}${markSvg}<text x="${followX}" y="${firstY}" fill="#f8fafc" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
             const restText = wrapped.slice(1).map((part, wrapIdx, rest) => {
               const isLast = wrapIdx === rest.length - 1;
               const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
               return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#f8fafc" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
             }).join("");
-            textOffset += Math.max(1, wrapped.length) * 15 + 5;
+            textOffset += Math.max(1, wrapped.length) * 15 + 2;
             return firstText + restText;
           }).join("");
         } else {
