@@ -133,66 +133,78 @@
       .v1104-ledger-grid-compact .v1059-ledger-summary,
       .v1104-ledger-grid-compact .v1060-ledger-summary-inline,
       .v1104-ledger-grid-compact .v1061-ledger-summary-inline{transform-origin:top left;}
-      .v1105-ledger-test-layout{width:min(var(--v1105-ledger-modal-width, calc(100vw - 18px)), calc(100vw - 18px))!important;max-width:calc(100vw - 18px)!important;}
-      .v1105-ledger-test-layout .v1056-ledger-screen-body,
-      .v1105-ledger-test-layout .v1057-ledger-screen-body{max-height:calc(100vh - 155px)!important;overflow:auto!important;padding:8px 10px 10px!important;}
-      .v1105-ledger-test-layout .v1057-ledger-sheet-grid,
-      .v1105-ledger-test-layout .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1105-ledger-cols,1), minmax(0,1fr))!important;gap:12px!important;align-items:start!important;overflow:visible!important;}
-      .v1105-ledger-test-layout .v1057-ledger-sheet,
-      .v1105-ledger-test-layout .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;}
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="1"] .v1057-ledger-sheet,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="1"] .v1061-ledger-sheet{max-width:720px!important;margin-inline:auto!important;}
-      .v1105-ledger-test-layout .v1059-ledger-summary,
-      .v1105-ledger-test-layout .v1060-ledger-summary-inline,
-      .v1105-ledger-test-layout .v1061-ledger-summary-inline,
-      .v1105-ledger-test-layout .v1104-ledger-summary-spacer-bars{height:42px!important;}
-      .v1105-ledger-test-layout .v1059-ledger-summary > div,
-      .v1105-ledger-test-layout .v1060-ledger-summary-inline > div,
-      .v1105-ledger-test-layout .v1061-ledger-summary-inline > div{min-height:42px!important;padding:4px 6px!important;}
-      .v1105-ledger-test-layout .v1059-ledger-summary span,
-      .v1105-ledger-test-layout .v1060-ledger-summary-inline span,
-      .v1105-ledger-test-layout .v1061-ledger-summary-inline span{font-size:10px!important;}
-      .v1105-ledger-test-layout .v1059-ledger-summary b,
-      .v1105-ledger-test-layout .v1060-ledger-summary-inline b,
-      .v1105-ledger-test-layout .v1061-ledger-summary-inline b{font-size:15px!important;line-height:1.0!important;}
-      .v1105-ledger-test-layout .v1057-ledger-excel-table,
-      .v1105-ledger-test-layout .v1061-ledger-excel-table{table-layout:fixed!important;width:100%!important;}
-      .v1105-ledger-test-layout .v1057-ledger-excel-table th,
-      .v1105-ledger-test-layout .v1057-ledger-excel-table td,
-      .v1105-ledger-test-layout .v1061-ledger-excel-table th,
-      .v1105-ledger-test-layout .v1061-ledger-excel-table td{font-size:11px!important;padding:0 3px!important;height:26px!important;min-height:26px!important;line-height:1.08!important;}
-      .v1105-ledger-test-layout .v1057-ledger-excel-table th,
-      .v1105-ledger-test-layout .v1061-ledger-excel-table th{font-size:10px!important;height:24px!important;min-height:24px!important;padding:0 2px!important;}
-      .v1105-ledger-test-layout .v1057-ledger-excel-table td:nth-child(3),
-      .v1105-ledger-test-layout .v1061-ledger-excel-table td:nth-child(3){padding:2px 4px!important;vertical-align:middle!important;}
-      .v1105-ledger-test-layout .v1063-ledger-value{height:24px!important;min-height:24px!important;font-size:11px!important;padding:0 2px!important;}
-      .v1105-ledger-test-layout .v1063-ledger-value.item,
-      .v1105-ledger-test-layout .v1063-ledger-value.coin{padding-left:4px!important;justify-content:flex-start!important;}
-      .v1105-ledger-test-layout .v1063-ledger-value.v1069-ledger-item-lines{min-height:20px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;}
-      .v1105-ledger-test-layout .v1063-ledger-value.v1069-ledger-item-lines.v1105-ledger-item-single{display:flex!important;align-items:flex-start!important;justify-content:center!important;}
-      .v1105-ledger-test-layout .v1069-ledger-match-line{gap:3px!important;min-height:13px!important;padding:0!important;line-height:1.06!important;align-items:flex-start!important;}
-      .v1105-ledger-test-layout .v1069-ledger-status-mark{flex:0 0 14px!important;width:14px!important;min-width:14px!important;height:14px!important;font-size:13px!important;line-height:13px!important;}
-      .v1105-ledger-test-layout .v1069-ledger-match-name,
-      .v1105-ledger-test-layout .v1076-ledger-match-odd,
-      .v1105-ledger-test-layout .v1078-ledger-match-text{font-size:10px!important;line-height:1.06!important;}
-      .v1105-ledger-test-layout .v1069-ledger-pnl-cell .v1063-ledger-value,
-      .v1105-ledger-test-layout .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{font-size:11px!important;height:24px!important;min-height:24px!important;}
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1057-ledger-excel-table th,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1057-ledger-excel-table td,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1061-ledger-excel-table th,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1061-ledger-excel-table td,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1057-ledger-excel-table th,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1057-ledger-excel-table td,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1061-ledger-excel-table th,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1061-ledger-excel-table td{font-size:10px!important;padding:0 2px!important;}
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1069-ledger-status-mark,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1069-ledger-status-mark{flex-basis:12px!important;width:12px!important;min-width:12px!important;font-size:12px!important;line-height:12px!important;}
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1069-ledger-match-name,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1076-ledger-match-odd,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1078-ledger-match-text,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1069-ledger-match-name,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1076-ledger-match-odd,
-      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1078-ledger-match-text{font-size:9px!important;line-height:1.03!important;}
+      .v1106-ledger-test-active{width:min(var(--v1106-ledger-modal-width, calc(100vw - 18px)), calc(100vw - 18px))!important;max-width:calc(100vw - 18px)!important;}
+      .v1106-ledger-test-active .v1056-ledger-screen-body,
+      .v1106-ledger-test-active .v1057-ledger-screen-body{max-height:calc(100vh - 146px)!important;overflow:auto!important;padding:6px 8px 8px!important;}
+      .v1106-ledger-test-active .v1057-ledger-sheet-grid,
+      .v1106-ledger-test-active .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1106-ledger-cols,1), minmax(0,1fr))!important;gap:10px!important;align-items:start!important;overflow:visible!important;}
+      .v1106-ledger-test-active .v1057-ledger-sheet,
+      .v1106-ledger-test-active .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;}
+      .v1106-ledger-test-active[data-v1106-ledger-cols="1"] .v1057-ledger-sheet,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="1"] .v1061-ledger-sheet{max-width:none!important;}
+      .v1106-ledger-test-active .v1059-ledger-summary,
+      .v1106-ledger-test-active .v1060-ledger-summary-inline,
+      .v1106-ledger-test-active .v1061-ledger-summary-inline,
+      .v1106-ledger-test-active .v1104-ledger-summary-spacer-bars{height:44px!important;}
+      .v1106-ledger-test-active .v1059-ledger-summary > div,
+      .v1106-ledger-test-active .v1060-ledger-summary-inline > div,
+      .v1106-ledger-test-active .v1061-ledger-summary-inline > div{min-height:44px!important;padding:4px 6px!important;}
+      .v1106-ledger-test-active .v1059-ledger-summary span,
+      .v1106-ledger-test-active .v1060-ledger-summary-inline span,
+      .v1106-ledger-test-active .v1061-ledger-summary-inline span{font-size:10px!important;}
+      .v1106-ledger-test-active .v1059-ledger-summary b,
+      .v1106-ledger-test-active .v1060-ledger-summary-inline b,
+      .v1106-ledger-test-active .v1061-ledger-summary-inline b{font-size:15px!important;line-height:1.0!important;}
+      .v1106-ledger-test-active .v1057-ledger-excel-table,
+      .v1106-ledger-test-active .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;}
+      .v1106-ledger-test-active .v1057-ledger-excel-table th,
+      .v1106-ledger-test-active .v1057-ledger-excel-table td,
+      .v1106-ledger-test-active .v1061-ledger-excel-table th,
+      .v1106-ledger-test-active .v1061-ledger-excel-table td{font-size:11px!important;height:27px!important;min-height:27px!important;line-height:1.08!important;padding:0 3px!important;}
+      .v1106-ledger-test-active .v1057-ledger-excel-table th,
+      .v1106-ledger-test-active .v1061-ledger-excel-table th{font-size:10px!important;height:24px!important;min-height:24px!important;padding:0 2px!important;}
+      .v1106-ledger-test-active .v1057-ledger-excel-table td:nth-child(3),
+      .v1106-ledger-test-active .v1061-ledger-excel-table td:nth-child(3){padding:2px 4px!important;vertical-align:middle!important;}
+      .v1106-ledger-test-active .v1063-ledger-value{height:25px!important;min-height:25px!important;padding:0 2px!important;font-size:11px!important;}
+      .v1106-ledger-test-active .v1063-ledger-value.v1069-ledger-item-lines{height:auto!important;min-height:18px!important;padding:0!important;}
+      .v1106-ledger-test-active .v1063-ledger-value.v1069-ledger-item-lines.v1106-ledger-item-single{display:flex!important;align-items:center!important;justify-content:flex-start!important;min-height:21px!important;}
+      .v1106-ledger-test-active .v1063-ledger-value.v1069-ledger-item-lines.v1106-ledger-item-single .v1069-ledger-match-line{align-items:center!important;min-height:18px!important;}
+      .v1106-ledger-test-active .v1069-ledger-match-line{gap:4px!important;min-height:14px!important;padding:0!important;line-height:1.06!important;}
+      .v1106-ledger-test-active .v1069-ledger-status-mark{flex:0 0 14px!important;width:14px!important;min-width:14px!important;height:14px!important;font-size:13px!important;line-height:13px!important;}
+      .v1106-ledger-test-active .v1069-ledger-match-name,
+      .v1106-ledger-test-active .v1076-ledger-match-odd,
+      .v1106-ledger-test-active .v1078-ledger-match-text{font-size:10px!important;line-height:1.06!important;opacity:1!important;}
+      .v1106-ledger-test-active .v1069-ledger-pnl-cell .v1063-ledger-value,
+      .v1106-ledger-test-active .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{height:25px!important;min-height:25px!important;font-size:11px!important;}
+      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1057-ledger-excel-table th,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1057-ledger-excel-table td,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1061-ledger-excel-table th,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1061-ledger-excel-table td{font-size:10px!important;}
+      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1069-ledger-match-name,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1076-ledger-match-odd,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1078-ledger-match-text{font-size:9.5px!important;line-height:1.04!important;}
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1057-ledger-excel-table th,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1057-ledger-excel-table td,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1061-ledger-excel-table th,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1061-ledger-excel-table td,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1057-ledger-excel-table th,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1057-ledger-excel-table td,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1061-ledger-excel-table th,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1061-ledger-excel-table td{font-size:9px!important;height:23px!important;min-height:23px!important;padding:0 2px!important;}
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1059-ledger-summary b,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1059-ledger-summary b,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1060-ledger-summary-inline b,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1060-ledger-summary-inline b,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1061-ledger-summary-inline b,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1061-ledger-summary-inline b{font-size:13px!important;}
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1069-ledger-status-mark,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1069-ledger-status-mark{flex-basis:11px!important;width:11px!important;min-width:11px!important;height:11px!important;font-size:11px!important;line-height:11px!important;}
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1069-ledger-match-name,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1076-ledger-match-odd,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1078-ledger-match-text,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1069-ledger-match-name,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1076-ledger-match-odd,
+      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1078-ledger-match-text{font-size:8px!important;line-height:1.0!important;}
     `;
     document.head.appendChild(style);
   }
@@ -273,38 +285,22 @@
       }
     });
   }
-  function v1105LedgerChunkColumns(chunkCount) {
-    const count = Math.max(1, Number(chunkCount || 1));
-    if (count <= 1) return 1;
-    if (count === 2) return 2;
-    if (count === 3) return 3;
-    if (count === 4) return 4;
-    return 3;
-  }
-  function v1105LedgerModalWidth(cols) {
-    if (cols >= 4) return '1680px';
-    if (cols === 3) return '1460px';
-    if (cols === 2) return '1200px';
-    return '780px';
-  }
   function v1104ApplyLedgerGridFit(scope) {
     const root = scope && scope.querySelectorAll ? scope : document;
     const modal = root.querySelector('.v1056-ledger-screen-modal');
-    const panel = root.querySelector('.v1054-daily-ledger');
     const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
-    if (!modal || !panel || !grid) return;
+    if (!modal || !grid) return;
     const chunkCount = Math.max(1, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1);
-    const testMode = v1103LedgerTestModeEnabled();
-    modal.classList.remove('v1105-ledger-test-layout');
-    modal.removeAttribute('data-v1105-ledger-cols');
-    modal.style.removeProperty('--v1105-ledger-cols');
-    modal.style.removeProperty('--v1105-ledger-modal-width');
-    if (!testMode) return;
-    const cols = v1105LedgerChunkColumns(chunkCount);
-    modal.classList.add('v1105-ledger-test-layout');
-    modal.setAttribute('data-v1105-ledger-cols', String(cols));
-    modal.style.setProperty('--v1105-ledger-cols', String(cols));
-    modal.style.setProperty('--v1105-ledger-modal-width', v1105LedgerModalWidth(cols));
+    modal.classList.remove('v1106-ledger-test-active');
+    modal.removeAttribute('data-v1106-ledger-cols');
+    modal.style.removeProperty('--v1106-ledger-cols');
+    modal.style.removeProperty('--v1106-ledger-modal-width');
+    if (!v1103LedgerTestModeEnabled()) return;
+    const cols = v1106LedgerChunkColumns(chunkCount);
+    modal.classList.add('v1106-ledger-test-active');
+    modal.setAttribute('data-v1106-ledger-cols', String(cols));
+    modal.style.setProperty('--v1106-ledger-cols', String(cols));
+    modal.style.setProperty('--v1106-ledger-modal-width', v1106LedgerModalWidth(cols));
   }
   function v1104FinalizeLedgerLayout(scope) {
     const run = () => {
@@ -317,6 +313,20 @@
     setTimeout(run, 0);
     setTimeout(run, 80);
     setTimeout(run, 180);
+  }
+  function v1106LedgerChunkColumns(chunkCount) {
+    const count = Math.max(1, Number(chunkCount || 1));
+    if (count <= 1) return 1;
+    if (count === 2) return 2;
+    if (count === 3) return 3;
+    if (count === 4) return 4;
+    return 3;
+  }
+  function v1106LedgerModalWidth(cols) {
+    if (cols >= 4) return '1700px';
+    if (cols === 3) return '1500px';
+    if (cols === 2) return '1380px';
+    return '760px';
   }
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
@@ -3265,7 +3275,7 @@
     }
     if (!lines.length) lines = [{ name: "Bahis / maç", odds: 0, status: row?.status || row?.result || row?.res || "" }];
     const singleLine = lines.length <= 1;
-    const cls = `v1063-ledger-value ${extraClass} v1069-ledger-item-lines ${singleLine ? "v1105-ledger-item-single" : "v1105-ledger-item-multi"}`.trim();
+    const cls = `v1063-ledger-value ${extraClass} v1069-ledger-item-lines ${singleLine ? "v1106-ledger-item-single" : "v1106-ledger-item-multi"}`.trim();
     if (singleLine) {
       const status = v1069LedgerLineStatus(row, lines[0]);
       const mark = v1069LedgerStatusMark(status);
