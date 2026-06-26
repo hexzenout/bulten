@@ -3267,8 +3267,9 @@
       v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
     }));
   }
-  function v1056OpenDailyLedgerScreen(mode) {
+  function v1056OpenDailyLedgerScreen(mode, opts = {}) {
     const m = mode === "crypto" ? "crypto" : "bet";
+    const photoMode = !!opts.photo;
     v1057EnsureRollingResultTimestamps(m);
     let host = document.getElementById("v1056-ledger-screen-host");
     if (!host) {
@@ -3277,13 +3278,15 @@
       document.body.appendChild(host);
     }
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
-    host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
-      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+    const photoDownload = photoMode ? `<button type="button" class="v1090-ledger-download" data-v1090-ledger-download="${m}"><i class="fa-solid fa-download"></i><span>Resmi İndir</span></button>` : "";
+    host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay ${photoMode ? "v1090-ledger-photo-overlay" : ""}" data-v1056-ledger-close>
+      ${photoDownload}
+      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal ${photoMode ? "v1090-ledger-photo-mode" : ""} ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
         <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head">
           <div><b>${title}</b></div>
           <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
             <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
-            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
+            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo ${photoMode ? "active" : ""}" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
             <button type="button" data-v1056-ledger-close>×</button>
           </div>
         </header>
@@ -3300,9 +3303,17 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      // V1088: Kamera ikonu ayrı SVG/fotoğraf önizlemesi açmayacak.
-      // Tek kaynak BAHİS / KUPON DEFTERİ ekranı kalacak; tasarım ikiye bölünmeyecek.
-      v1056OpenDailyLedgerScreen(photoMode);
+      // V1090: Kamera, ayrı önizleme yerine mevcut defter ekranını fotoğraf modunda açar.
+      // Sol üstteki Resmi İndir butonu aynı defter çıktısını indirir.
+      v1056OpenDailyLedgerScreen(photoMode, { photo: true });
+    }));
+    host.querySelectorAll("[data-v1090-ledger-download]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const downloadMode = btn.dataset.v1090LedgerDownload === "crypto" ? "crypto" : "bet";
+      const dataUrl = v1060BuildLedgerPhotoSvg(downloadMode);
+      if (!dataUrl) return;
+      v781DownloadPngFromSvg(dataUrl, `bulten-${downloadMode}-kupon-defteri-${new Date().toISOString().slice(0,10)}.png`);
     }));
     v1057BindLedgerScreen(host, m);
   }
