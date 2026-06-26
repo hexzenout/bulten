@@ -1614,8 +1614,8 @@
         ${renderBetInfoBar(row)}
         <ul class="v763-combo-match-list">${matchRows}</ul>
         <div class="v763-card-actions v801-bet-close-actions">
-          <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-status="win">Kupon Kazandı</button>
-          <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-status="loss">Kupon Kaybetti</button>
+          <button type="button" class="win" data-mode="bet" data-slot="${row.index}" data-coupon-settle="${escapeHtml(coupon.id || coupon.group || row.index)}" data-status="win">Kupon Kazandı</button>
+          <button type="button" class="loss" data-mode="bet" data-slot="${row.index}" data-coupon-settle="${escapeHtml(coupon.id || coupon.group || row.index)}" data-status="loss">Kupon Kaybetti</button>
         </div>
       </details>
     </article>`;
@@ -5133,6 +5133,24 @@ function escapeHtml(str) {
         if (keepPanel) CONFIRM_RETURN_PANEL_MODE = keepPanel;
         if (mode === "bet" && finalStatus !== "pending") {
           const coupon = getBetCouponForSlot(state, i);
+          const settleWholeCoupon = btn.hasAttribute("data-coupon-settle");
+          if (settleWholeCoupon && coupon && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
+            ACTIVE_COMBO_DETAIL_SLOT = Number(coupon.slotIndex || i || 0);
+            CONFIRM_DIALOG = {
+              type: "settleCoupon",
+              couponId: coupon.id,
+              couponSlot: coupon.slotIndex,
+              status: finalStatus,
+              keepActivePanel: keepPanel,
+              tone: finalStatus === "loss" ? "danger" : "success",
+              title: "Kombine kupon sonucunu onayla",
+              message: `Bu kombine kuponu ${finalStatus === "loss" ? "KAYBETTİ" : "KAZANDI"} olarak kapatılacak.`,
+              detail: "Kupondaki tüm maçlar tek geçmiş kaydına yazılır ve Bahis / Kupon Defteri içinde çok satırlı görünür.",
+              confirmText: finalStatus === "loss" ? "Kupon Kaybetti" : "Kupon Kazandı"
+            };
+            refresh();
+            return;
+          }
           if (coupon && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
             const matchIndex = getBetCouponMatchIndex(coupon, i);
             const matchName = coupon.matches[matchIndex]?.name || `Maç ${matchIndex + 1}`;
