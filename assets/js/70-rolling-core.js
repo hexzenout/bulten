@@ -3079,8 +3079,7 @@
     const widths = [52, 128, 300, 92, 118, 88, 130];
     const safe = (value) => escapeHtml(String(value ?? ""));
     const dataRows = rows.length ? rows : [{ no: "", date: "", _displayDate: "", item: "Kayıt yok", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, itemLines: [] }];
-    const ledgerOddGold = "#fbbf24";
-    const photoStatusColor = (status) => status === "loss" ? "#7f1d1d" : status === "win" ? "#064e3b" : "#475569";
+    const photoStatusColor = (status) => status === "loss" ? "#7f1d1d" : status === "win" ? "#064e3b" : "#64748b";
     const wrapText = (value, limit = 32, maxLines = 4) => {
       const raw = cleanText(value || "");
       if (!raw) return [""];
@@ -3118,17 +3117,12 @@
       let lines = base.map(line => ({ ...line, name: cleanText(line?.name || "") })).filter(line => line.name);
       if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, status: row?.status || row?.result || row?.res || "" }));
       if (!lines.length) lines = [{ name: cleanText(row?.item || "") || "Bahis / maç", status: row?.status || row?.result || row?.res || "" }];
-      return lines.map(line => {
-        const oddsText = v1076LedgerOddsText(line?.odds);
-        return { ...line, status: v1069LedgerLineStatus(row, line), oddsText, wrapped: wrapText(line.name, oddsText ? 30 : 34, 4) };
-      });
+      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line), wrapped: wrapText(line.name, 34, 4) }));
     };
-    const photoLineStep = 16;
-    const photoLineGap = 4;
     const rowMeta = dataRows.map(row => {
       const lines = betPhotoLines(row);
       const textLineCount = m === "bet" ? Math.max(1, lines.reduce((sum, line) => sum + Math.max(1, (line.wrapped || []).length), 0)) : 1;
-      const height = m === "bet" ? Math.max(36, 14 + textLineCount * photoLineStep + Math.max(0, lines.length - 1) * photoLineGap) : 34;
+      const height = m === "bet" ? Math.max(34, 14 + textLineCount * 15 + Math.max(0, lines.length - 1) * 3) : 34;
       return { row, lines, height };
     });
     const tableW = widths.reduce((a,b)=>a+b,0);
@@ -3173,22 +3167,21 @@
           cell += lines.map(line => {
             const status = line.status === "loss" ? "loss" : line.status === "win" ? "win" : "pending";
             const mark = v1069LedgerStatusMark(status);
-            const oddsText = line.oddsText || v1076LedgerOddsText(line?.odds);
-            const wrapped = (Array.isArray(line.wrapped) && line.wrapped.length) ? line.wrapped : wrapText(line.name || "Bahis / maç", oddsText ? 30 : 34, 4);
-            const firstY = y + 19 + textOffset;
+            const oddsText = v1076LedgerOddsText(line?.odds);
+            const wrapped = wrapText(line.name || "Bahis / maç", oddsText ? 30 : 34, 4);
+            const firstY = y + 18 + textOffset;
             const markColor = photoStatusColor(status);
-            const markStroke = status === "pending" ? ".55" : ".22";
             const lineX = xx + 10;
             const followX = xx + 28;
             const firstPart = wrapped[0] || "Bahis / maç";
-            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="${ledgerOddGold}" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
-            const firstText = `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="${markColor}" stroke-width="${markStroke}" paint-order="stroke fill" font-size="14" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
+            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#facc15" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+            const firstText = `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="none" font-size="14" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
             const restText = wrapped.slice(1).map((part, wrapIdx, rest) => {
               const isLast = wrapIdx === rest.length - 1;
-              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="${ledgerOddGold}" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
-              return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * photoLineStep}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
+              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#facc15" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+              return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
             }).join("");
-            textOffset += Math.max(1, wrapped.length) * photoLineStep + photoLineGap;
+            textOffset += Math.max(1, wrapped.length) * 15 + 3;
             return firstText + restText;
           }).join("");
         } else {
@@ -3290,7 +3283,7 @@
           <div><b>${title}</b></div>
           <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
             <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
-            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
+            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter ekranını aç"><i class="fa-solid fa-camera"></i></button>
             <button type="button" data-v1056-ledger-close>×</button>
           </div>
         </header>
@@ -3306,9 +3299,10 @@
     host.querySelectorAll("[data-v1060-ledger-photo]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
-      const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      const dataUrl = v1060BuildLedgerPhotoSvg(photoMode);
-      openRollingPhotoPreview(dataUrl, `${photoMode === "crypto" ? "kripto-islem" : "bahis-kupon"}-defteri-${new Date().toISOString().slice(0,10)}.png`, photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri", "Büyüme Planı Defteri");
+      const ledgerMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
+      // Kamera ikonunda ayrı SVG/fotoğraf ekranı üretme. Aynı defter HTML'ini aç/yenile.
+      // Böylece BAHİS / KUPON DEFTERİ ile kamera sonrası görünen ekran arasında ikinci bir tasarım yolu oluşmaz.
+      v1056OpenDailyLedgerScreen(ledgerMode);
     }));
     v1057BindLedgerScreen(host, m);
   }
