@@ -18545,3 +18545,103 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   white-space:nowrap!important;
   vertical-align:baseline!important;
 }
+
+
+/* V1081: Defter/kamera işaretleri stabil, oran tonu kutu oranıyla birebir (#fbbf24) */
+.v1065-ledger-pro .v1069-ledger-match-line{
+  display:grid!important;
+  grid-template-columns:15px minmax(0,1fr)!important;
+  align-items:start!important;
+  column-gap:3px!important;
+  row-gap:0!important;
+  width:100%!important;
+  min-height:16px!important;
+  margin:0!important;
+  padding:1px 0!important;
+  line-height:1.22!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  white-space:normal!important;
+  overflow:visible!important;
+}
+.v1065-ledger-pro .v1069-ledger-status-mark{
+  grid-column:1!important;
+  grid-row:1!important;
+  display:block!important;
+  width:15px!important;
+  min-width:15px!important;
+  height:15px!important;
+  margin:0!important;
+  padding:0!important;
+  line-height:14px!important;
+  text-align:center!important;
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  position:static!important;
+  top:auto!important;
+  transform:none!important;
+  vertical-align:top!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:15px!important;
+  font-weight:1000!important;
+  -webkit-text-stroke:0!important;
+  text-shadow:none!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.win .v1069-ledger-status-mark{
+  color:#064e3b!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.loss .v1069-ledger-status-mark{
+  color:#7f1d1d!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
+  color:#475569!important;
+  font-size:15px!important;
+  line-height:14px!important;
+  font-weight:1000!important;
+}
+.v1065-ledger-pro .v1078-ledger-match-text{
+  grid-column:2!important;
+  grid-row:1!important;
+  display:block!important;
+  min-width:0!important;
+  max-width:100%!important;
+  line-height:1.22!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-name{
+  display:inline!important;
+  color:#111827!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  line-height:1.22!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+.v1065-ledger-pro .v1076-ledger-match-odd{
+  display:inline!important;
+  margin-left:5px!important;
+  padding:0!important;
+  min-height:0!important;
+  min-width:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#fbbf24!important;
+  font-size:12px!important;
+  font-weight:1000!important;
+  line-height:1.22!important;
+  white-space:nowrap!important;
+  vertical-align:baseline!important;
+}

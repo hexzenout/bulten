@@ -2932,7 +2932,7 @@
   function v1069LedgerStatusMark(status) {
     if (status === "loss") return "✕";
     if (status === "win") return "✓";
-    return "-";
+    return "–";
   }
   function v1076LedgerOddsText(value) {
     const n = Number(value || 0);
@@ -3173,13 +3173,12 @@
             const markColor = photoStatusColor(status);
             const lineX = xx + 10;
             const followX = xx + 28;
-            const markStroke = status === "pending" ? "0.55" : "0.35";
             const firstPart = wrapped[0] || "Bahis / maç";
-            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#facc15" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
-            const firstText = `<text x="${lineX}" y="${firstY}" fill="#111827" font-size="12" font-family="Arial" font-weight="900"><tspan fill="${markColor}" stroke="${markColor}" stroke-width="${markStroke}" font-size="16" font-weight="1000">${safe(mark)}</tspan><tspan dx="5" fill="#111827" stroke="none" font-size="12" font-weight="900">${safe(firstPart)}</tspan>${oneLineOdds}</text>`;
+            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+            const firstText = `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="none" font-size="15" font-family="Arial" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
             const restText = wrapped.slice(1).map((part, wrapIdx, rest) => {
               const isLast = wrapIdx === rest.length - 1;
-              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#facc15" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
               return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
             }).join("");
             textOffset += Math.max(1, wrapped.length) * 15 + 3;
