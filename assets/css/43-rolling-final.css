@@ -18074,3 +18074,49 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   0%,100%{filter:none;transform:none;}
   45%{filter:brightness(1.18);transform:translateY(-1px);}
 }
+
+/* V1071: Defter durum rengi / maç tikleri / K-Z hücresi son düzeltme */
+.v1065-ledger-pro .v1069-ledger-status-mark{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  font-size:13px!important;
+  font-weight:1000!important;
+  line-height:1.15!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#064e3b!important;}
+.v1065-ledger-pro .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#7f1d1d!important;}
+.v1065-ledger-pro .v1069-ledger-match-line.pending .v1069-ledger-status-mark{color:#64748b!important;}
+.v1065-ledger-pro .v1069-ledger-match-name{
+  color:#111827!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.v1065-ledger-pro .v1069-ledger-pnl-cell.win{
+  background:#064e3b!important;
+  color:#ffffff!important;
+}
+.v1065-ledger-pro .v1069-ledger-pnl-cell.loss{
+  background:#7f1d1d!important;
+  color:#ffffff!important;
+}
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value,
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text,
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value.win,
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value.loss{
+  background:transparent!important;
+  color:#ffffff!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  padding:0 2px!important;
+  font-size:12px!important;
+  font-weight:1000!important;
+  letter-spacing:-.035em!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}

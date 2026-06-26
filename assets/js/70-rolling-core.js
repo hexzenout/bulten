@@ -1712,25 +1712,29 @@
     const collectCouponMatches = () => {
       const collected = [];
       const addMatch = (match, fallbackIndex) => {
-        const name = cleanText(match?.name || match?.match || match?.label || "");
+        const name = cleanText(match?.name || match?.match || match?.label || match?.note || "");
         if (!name) return;
         collected.push({
           name,
           odds: Number(match?.odds || 0),
           index: Number(match?.index ?? fallbackIndex ?? collected.length),
-          status: cleanText(match?.status || "")
+          status: cleanText(match?.status || match?.result || match?.res || "")
         });
       };
+      const couponMatches = Array.isArray(coupon.matches) ? coupon.matches.filter(Boolean) : [];
+      if (couponMatches.length >= 2) {
+        couponMatches.forEach((match, idx) => addMatch(match, idx));
+      }
       const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows.filter(Boolean) : [];
-      if (sourceRows.length >= 2) {
+      if (!collected.length && sourceRows.length >= 2) {
         sourceRows.forEach((srcRow, rowIdx) => {
           const rowMatches = getSlotMatches(srcRow);
           if (rowMatches.length) rowMatches.forEach(match => addMatch(match, rowIdx));
-          else addMatch({ name: srcRow?.name || srcRow?.match || srcRow?.label, odds: srcRow?.odds, status: srcRow?.status }, rowIdx);
+          else addMatch({ name: srcRow?.name || srcRow?.match || srcRow?.label || srcRow?.note, odds: srcRow?.odds, status: srcRow?.status || srcRow?.result || srcRow?.res }, rowIdx);
         });
       }
-      if (!collected.length && Array.isArray(coupon.matches) && coupon.matches.length) {
-        coupon.matches.forEach((match, idx) => addMatch(match, idx));
+      if (!collected.length && couponMatches.length) {
+        couponMatches.forEach((match, idx) => addMatch(match, idx));
       }
       if (!collected.length) getSlotMatches(row).forEach((match, idx) => addMatch(match, idx));
       const seen = new Set();
@@ -1752,6 +1756,7 @@
       name: `Kombine: ${names.join(" + ") || "Bahis / maç"}`,
       matchLines: names,
       matchOdds: couponMatches.map(m => Number(m?.odds || 0)),
+      matchResults: couponMatches.map(m => cleanText(m?.status || m?.result || m?.res || "")),
       combo: couponMatches.map((m, idx) => ({
         name: cleanText(m?.name || "") || `Maç ${idx + 1}`,
         odds: Number(m?.odds || 0),
@@ -2440,10 +2445,13 @@
     };
     if (!source || typeof source !== "object") return rows;
     if (Array.isArray(source.matchLines) && source.matchLines.length) {
+      const comboRowsForStatus = Array.isArray(source.combo) ? source.combo : [];
       source.matchLines.forEach((name, idx) => add(
         name,
         Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0,
-        Array.isArray(source.matchResults) ? source.matchResults[idx] : source.status || source.result || source.res || ""
+        Array.isArray(source.matchResults)
+          ? source.matchResults[idx]
+          : (comboRowsForStatus[idx]?.status || comboRowsForStatus[idx]?.result || comboRowsForStatus[idx]?.res || source.status || source.result || source.res || "")
       ));
     }
     if (Array.isArray(source.matches)) {
@@ -2746,21 +2754,25 @@
   function v1069LedgerPnlText(value) {
     const n = Number(value || 0);
     if (!Number.isFinite(n)) return "";
-    if (n < 0) return "-$" + Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    const abs = Math.abs(n);
+    if (n < 0) return "-$" + abs.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const opts = abs >= 1000 && Number.isInteger(abs)
+      ? { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+      : { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+    return "$" + abs.toLocaleString("en-US", opts);
   }
   function v1069LedgerLineStatus(row, line) {
     const raw = cleanText(line?.status || line?.result || line?.res || "").toLowerCase();
-    if (raw === "loss" || raw === "lost" || raw === "lose") return "loss";
-    if (raw === "win" || raw === "won") return "win";
+    if (raw === "loss" || raw === "lost" || raw === "lose" || raw === "kaybetti" || raw === "kayıp") return "loss";
+    if (raw === "win" || raw === "won" || raw === "kazandı" || raw === "kazanc") return "win";
     const rowStatus = cleanText(row?.status || row?.result || row?.res || "").toLowerCase();
-    if (rowStatus === "loss" || Number(row?.pnlRaw || 0) < 0) return "loss";
-    if (rowStatus === "win" || Number(row?.pnlRaw || 0) > 0) return "win";
+    if (rowStatus === "loss" || rowStatus === "kaybetti" || rowStatus === "kayıp" || Number(row?.pnlRaw || 0) < 0) return "loss";
+    if (rowStatus === "win" || rowStatus === "kazandı" || Number(row?.pnlRaw || 0) > 0) return "win";
     return "pending";
   }
   function v1069LedgerStatusMark(status) {
-    if (status === "loss") return "❌";
-    if (status === "win") return "✅";
+    if (status === "loss") return "✕";
+    if (status === "win") return "✓";
     return "—";
   }
   function v1069LedgerSplitItemText(text) {
