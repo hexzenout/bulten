@@ -2458,28 +2458,32 @@
       if (!cleanName) return;
       rows.push({ name: cleanName, odds: Number(odds || 0), status: v1068LegStatus(status) });
     };
+    const addSplitNames = (value, status) => {
+      const cleaned = v1064CleanComboHistoryName(value || "");
+      if (!cleaned) return;
+      const parts = /\s\+\s/.test(cleaned) ? cleaned.split(/\s\+\s/) : [cleaned];
+      parts.forEach(part => add(part, 0, status));
+    };
     if (!source || typeof source !== "object") return rows;
     if (Array.isArray(source.matchLines) && source.matchLines.length) {
-      source.matchLines.forEach((name, idx) => add(name, Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0, Array.isArray(source.matchResults) ? source.matchResults[idx] : source.status || source.result));
+      source.matchLines.forEach((name, idx) => addSplitNames(name, Array.isArray(source.matchResults) ? source.matchResults[idx] : source.status || source.result));
     }
     if (Array.isArray(source.matches)) {
-      source.matches.forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds, match?.status || match?.result || source.status || source.result));
+      source.matches.forEach(match => addSplitNames(match?.note || match?.name || match?.match || match?.label, match?.status || match?.result || source.status || source.result));
     }
     if (Array.isArray(source.rows)) {
-      source.rows.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || source.status || source.result));
+      source.rows.forEach(row => addSplitNames(row?.note || row?.name || row?.match || row?.label, row?.status || row?.result || source.status || source.result));
     }
     if (Array.isArray(source.combo)) {
-      add(source.note || source.name || source.match || source.label, source.odds, Array.isArray(source.comboResults) ? source.comboResults[0] : source.status || source.result);
-      source.combo.forEach((row, idx) => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
+      addSplitNames(source.note || source.name || source.match || source.label, Array.isArray(source.comboResults) ? source.comboResults[0] : source.status || source.result);
+      source.combo.forEach((row, idx) => addSplitNames(row?.note || row?.name || row?.match || row?.label, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
     }
     if (Array.isArray(source.extraMatches)) {
-      source.extraMatches.forEach((row, idx) => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
+      source.extraMatches.forEach((row, idx) => addSplitNames(row?.note || row?.name || row?.match || row?.label, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
     }
-    getSlotMatches(source).forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds, match?.status || match?.result || source.status || source.result));
+    getSlotMatches(source).forEach(match => addSplitNames(match?.note || match?.name || match?.match || match?.label, match?.status || match?.result || source.status || source.result));
     if (!rows.length) {
-      const cleaned = v1064CleanComboHistoryName(source.name || source.item || source.match || source.label || source.note || source.title || "");
-      if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0, source.status || source.result));
-      else add(cleaned, 0, source.status || source.result);
+      addSplitNames(source.name || source.item || source.match || source.label || source.note || source.title || "Bahis / maç", source.status || source.result);
     }
     const seen = new Set();
     return rows.filter(row => {
@@ -2633,7 +2637,7 @@
             kind: v1057OpKind(m, op),
             stake: money(Math.abs(Number(hist?.stake ?? op.amt ?? op.stake ?? 0))),
             roi: hist ? v1054DailyRoi(m, hist) : v1057OpRoi(m, op, pnl),
-            pnl: money(pnl),
+            pnl: m === "bet" ? v1071LedgerPnlMoney(pnl) : money(pnl),
             pnlRaw: Number(pnl || 0)
           });
         });
@@ -2660,7 +2664,7 @@
         kind: m === "crypto" ? v1054CryptoDirectionFromRecord(r) : (/^kombine/i.test(cleanText(r.name || "")) ? "Kombine" : "Tek"),
         stake: money(r.stake || 0),
         roi: v1054DailyRoi(m, r),
-        pnl: money(pnl),
+        pnl: m === "bet" ? v1071LedgerPnlMoney(pnl) : money(pnl),
         pnlRaw: pnl
       };
     });
@@ -2749,6 +2753,12 @@
     tick();
     LEDGER_CLOCK_TIMER = setInterval(tick, 1000);
   }
+  function v1071LedgerPnlMoney(value) {
+    const n = Number(value || 0);
+    const sign = n < 0 ? "-" : "";
+    const abs = Math.abs(n);
+    return `${sign}$${abs.toLocaleString("en-US", { minimumFractionDigits: Number.isInteger(abs) ? 0 : 0, maximumFractionDigits: 2 })}`;
+  }
   function v1063LedgerCell(row, field, extraClass = "") {
     const raw = field === "date" ? (row._displayDate || v1060LedgerDateLabel(row)) : String(row?.[field] ?? "");
     const cls = `v1063-ledger-value ${extraClass}`.trim();
@@ -2757,7 +2767,7 @@
   }
   function v1068LedgerItemCell(row, mode, extraClass = "") {
     const explicitLines = mode === "bet" && Array.isArray(row?.itemLines)
-      ? row.itemLines.map(line => ({ name: v1068CleanLedgerLineName(line?.name || ""), odds: Number(line?.odds || 0), status: v1068LegStatus(line?.status || line?.result, row?.status || row?.result) })).filter(line => line.name)
+      ? row.itemLines.map(line => ({ name: v1068CleanLedgerLineName(line?.name || line?.match || line?.note || line?.label || ""), odds: Number(line?.odds || 0), status: v1068LegStatus(line?.status || line?.result, row?.status || row?.result) })).filter(line => line.name)
       : [];
     const fallbackItem = cleanText(row?.item || row?.name || row?.note || "");
     const fallbackLines = mode === "bet" && !explicitLines.length
@@ -2849,7 +2859,7 @@
           <td>${v1063LedgerCell(row, "kind")}</td>
           <td>${v1063LedgerCell(row, "stake", "money")}</td>
           <td>${v1063LedgerCell(row, "roi")}</td>
-          <td>${v1063LedgerCell(row, "pnl", pnlClass)}</td>
+          <td class="${m === "bet" ? `v1071-ledger-pnl-cell ${pnlClass}` : ""}">${v1063LedgerCell(m === "bet" ? { ...row, pnl: v1071LedgerPnlMoney(pnlRaw) } : row, "pnl", pnlClass)}</td>
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">

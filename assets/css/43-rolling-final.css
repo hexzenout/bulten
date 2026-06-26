@@ -18119,3 +18119,59 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
 .v1065-ledger-pro.bet .v1063-ledger-value.win{background:#059669!important;}
 .v1065-ledger-pro.bet .v1063-ledger-value.loss{background:#dc2626!important;}
 .v1065-ledger-pro.bet .v1063-ledger-value.neutral{background:#475569!important;color:#f8fafc!important;}
+
+/* V1071: Bahis defteri K/Z tam hücre rengi ve oran eki temiz maç satırları */
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell{
+  color:#fff!important;
+  font-weight:950!important;
+  text-align:center!important;
+  vertical-align:middle!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  padding:0!important;
+}
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell.win{background:#047857!important;}
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell.loss{background:#991b1b!important;}
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell.neutral{background:#475569!important;}
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell .v1063-ledger-value.win,
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell .v1063-ledger-value.loss,
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell .v1063-ledger-value.neutral{
+  display:flex!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:30px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 6px!important;
+  margin:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  color:#fff!important;
+  font-weight:950!important;
+  line-height:1.15!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+.v1065-ledger-pro.bet .v1068-ledger-item-line,
+#rolling-excel-overlay .v763-combo-match-list li > span,
+#omega-rolling-feature-host .v763-combo-match-list li > span{
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+.v1065-ledger-pro.bet .v1068-ledger-status-icon,
+#rolling-excel-overlay .v763-combo-match-list .v1068-ledger-status-icon,
+#omega-rolling-feature-host .v763-combo-match-list .v1068-ledger-status-icon{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
