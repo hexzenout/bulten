@@ -18356,3 +18356,90 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   color:#7f1d1d!important;
   -webkit-text-stroke:.35px currentColor!important;
 }
+
+
+/* V1079: Defter/kamera oran tonu ve işaret hizası nihai düzeltme */
+.v1065-ledger-pro .v1069-ledger-match-line{
+  display:grid!important;
+  grid-template-columns:15px minmax(0,1fr)!important;
+  align-items:start!important;
+  column-gap:3px!important;
+  row-gap:0!important;
+  flex-wrap:nowrap!important;
+  line-height:1.18!important;
+}
+.v1065-ledger-pro .v1069-ledger-status-mark{
+  grid-column:1!important;
+  grid-row:1!important;
+  display:block!important;
+  width:15px!important;
+  min-width:15px!important;
+  height:16px!important;
+  line-height:15px!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:16px!important;
+  font-weight:1000!important;
+  transform:translateY(2px)!important;
+}
+.v1065-ledger-pro .v1078-ledger-match-text{
+  grid-column:2!important;
+  grid-row:1!important;
+  display:block!important;
+  min-width:0!important;
+  max-width:100%!important;
+  line-height:1.18!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  word-break:normal!important;
+  overflow-wrap:anywhere!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-name{
+  display:inline!important;
+  line-height:1.18!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  word-break:normal!important;
+  overflow-wrap:anywhere!important;
+}
+.v1065-ledger-pro .v1076-ledger-match-odd{
+  display:inline-block!important;
+  margin-left:5px!important;
+  padding:0!important;
+  min-height:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  color:#facc15!important;
+  font-size:12px!important;
+  font-weight:1000!important;
+  line-height:1.18!important;
+  white-space:nowrap!important;
+  vertical-align:baseline!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
+  color:#475569!important;
+  font-size:16px!important;
+  font-weight:1000!important;
+  line-height:15px!important;
+  -webkit-text-stroke:.75px currentColor!important;
+  text-shadow:0 0 .15px currentColor!important;
+  transform:translateY(2px)!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.win .v1069-ledger-status-mark{
+  color:#064e3b!important;
+  -webkit-text-stroke:.35px currentColor!important;
+  transform:translateY(2px)!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.loss .v1069-ledger-status-mark{
+  color:#7f1d1d!important;
+  -webkit-text-stroke:.35px currentColor!important;
+  transform:translateY(2px)!important;
+}

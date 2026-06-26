@@ -3117,7 +3117,7 @@
       let lines = base.map(line => ({ ...line, name: cleanText(line?.name || "") })).filter(line => line.name);
       if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, status: row?.status || row?.result || row?.res || "" }));
       if (!lines.length) lines = [{ name: cleanText(row?.item || "") || "Bahis / maç", status: row?.status || row?.result || row?.res || "" }];
-      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line), wrapped: wrapText(line.name, v1076LedgerOddsText(line?.odds) ? 28 : 34, 4) }));
+      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line), wrapped: wrapText(line.name, 34, 4) }));
     };
     const rowMeta = dataRows.map(row => {
       const lines = betPhotoLines(row);
@@ -3169,18 +3169,19 @@
             const mark = v1069LedgerStatusMark(status);
             const oddsText = v1076LedgerOddsText(line?.odds);
             const wrapped = (line.wrapped && line.wrapped.length) ? line.wrapped : wrapText(line.name || "Bahis / maç", oddsText ? 28 : 34, 4);
-            const firstY = y + 17 + textOffset;
+            const firstY = y + 18 + textOffset;
             const markColor = photoStatusColor(status);
             const markX = xx + 12;
             const followX = xx + 24;
-            const markFont = status === "pending" ? 15 : 16;
-            const markStroke = status === "pending" ? "0.65" : "0.45";
-            const markText = `<text x="${markX}" y="${firstY}" text-anchor="middle" fill="${markColor}" stroke="${markColor}" stroke-width="${markStroke}" font-size="${markFont}" font-family="Arial" font-weight="1000">${safe(mark)}</text>`;
-            const nameTexts = wrapped.map((part, wrapIdx) => `<text x="${followX}" y="${firstY + wrapIdx * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
+            const markFont = status === "pending" ? 16 : 16;
+            const markStroke = status === "pending" ? "0.75" : "0.45";
+            const markText = `<text x="${markX}" y="${firstY}" text-anchor="middle" dominant-baseline="alphabetic" fill="${markColor}" stroke="${markColor}" stroke-width="${markStroke}" font-size="${markFont}" font-family="Arial" font-weight="1000">${safe(mark)}</text>`;
+            const nameTexts = wrapped.map((part, wrapIdx) => `<text x="${followX}" y="${firstY + wrapIdx * 15}" dominant-baseline="alphabetic" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
             const lastLine = wrapped[wrapped.length - 1] || "Bahis / maç";
-            const oddX = Math.min(xx + widths[i] - 34, followX + Math.max(8, lastLine.length) * 6.3 + 6);
+            const estimatedLastW = Math.max(8, lastLine.length) * 6.4;
+            const oddX = Math.min(xx + widths[i] - 34, followX + estimatedLastW + 6);
             const oddY = firstY + (Math.max(1, wrapped.length) - 1) * 15;
-            const oddText = oddsText ? `<text x="${oddX}" y="${oddY}" fill="#fbbf24" stroke="none" font-size="12" font-family="Arial" font-weight="1000">${safe(oddsText)}</text>` : "";
+            const oddText = oddsText ? `<text x="${oddX}" y="${oddY}" dominant-baseline="alphabetic" fill="#facc15" stroke="none" font-size="12" font-family="Arial" font-weight="1000">${safe(oddsText)}</text>` : "";
             textOffset += Math.max(1, wrapped.length) * 15 + 3;
             return markText + nameTexts + oddText;
           }).join("");
