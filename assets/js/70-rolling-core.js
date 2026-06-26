@@ -133,78 +133,24 @@
       .v1104-ledger-grid-compact .v1059-ledger-summary,
       .v1104-ledger-grid-compact .v1060-ledger-summary-inline,
       .v1104-ledger-grid-compact .v1061-ledger-summary-inline{transform-origin:top left;}
-      .v1106-ledger-test-active{width:min(var(--v1106-ledger-modal-width, calc(100vw - 18px)), calc(100vw - 18px))!important;max-width:calc(100vw - 18px)!important;}
-      .v1106-ledger-test-active .v1056-ledger-screen-body,
-      .v1106-ledger-test-active .v1057-ledger-screen-body{max-height:calc(100vh - 146px)!important;overflow:auto!important;padding:6px 8px 8px!important;}
-      .v1106-ledger-test-active .v1057-ledger-sheet-grid,
-      .v1106-ledger-test-active .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1106-ledger-cols,1), minmax(0,1fr))!important;gap:10px!important;align-items:start!important;overflow:visible!important;}
-      .v1106-ledger-test-active .v1057-ledger-sheet,
-      .v1106-ledger-test-active .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;}
-      .v1106-ledger-test-active[data-v1106-ledger-cols="1"] .v1057-ledger-sheet,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="1"] .v1061-ledger-sheet{max-width:none!important;}
-      .v1106-ledger-test-active .v1059-ledger-summary,
-      .v1106-ledger-test-active .v1060-ledger-summary-inline,
-      .v1106-ledger-test-active .v1061-ledger-summary-inline,
-      .v1106-ledger-test-active .v1104-ledger-summary-spacer-bars{height:44px!important;}
-      .v1106-ledger-test-active .v1059-ledger-summary > div,
-      .v1106-ledger-test-active .v1060-ledger-summary-inline > div,
-      .v1106-ledger-test-active .v1061-ledger-summary-inline > div{min-height:44px!important;padding:4px 6px!important;}
-      .v1106-ledger-test-active .v1059-ledger-summary span,
-      .v1106-ledger-test-active .v1060-ledger-summary-inline span,
-      .v1106-ledger-test-active .v1061-ledger-summary-inline span{font-size:10px!important;}
-      .v1106-ledger-test-active .v1059-ledger-summary b,
-      .v1106-ledger-test-active .v1060-ledger-summary-inline b,
-      .v1106-ledger-test-active .v1061-ledger-summary-inline b{font-size:15px!important;line-height:1.0!important;}
-      .v1106-ledger-test-active .v1057-ledger-excel-table,
-      .v1106-ledger-test-active .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;}
-      .v1106-ledger-test-active .v1057-ledger-excel-table th,
-      .v1106-ledger-test-active .v1057-ledger-excel-table td,
-      .v1106-ledger-test-active .v1061-ledger-excel-table th,
-      .v1106-ledger-test-active .v1061-ledger-excel-table td{font-size:11px!important;height:27px!important;min-height:27px!important;line-height:1.08!important;padding:0 3px!important;}
-      .v1106-ledger-test-active .v1057-ledger-excel-table th,
-      .v1106-ledger-test-active .v1061-ledger-excel-table th{font-size:10px!important;height:24px!important;min-height:24px!important;padding:0 2px!important;}
-      .v1106-ledger-test-active .v1057-ledger-excel-table td:nth-child(3),
-      .v1106-ledger-test-active .v1061-ledger-excel-table td:nth-child(3){padding:2px 4px!important;vertical-align:middle!important;}
-      .v1106-ledger-test-active .v1063-ledger-value{height:25px!important;min-height:25px!important;padding:0 2px!important;font-size:11px!important;}
-      .v1106-ledger-test-active .v1063-ledger-value.v1069-ledger-item-lines{height:auto!important;min-height:18px!important;padding:0!important;}
-      .v1106-ledger-test-active .v1063-ledger-value.v1069-ledger-item-lines.v1106-ledger-item-single{display:flex!important;align-items:center!important;justify-content:flex-start!important;min-height:21px!important;}
-      .v1106-ledger-test-active .v1063-ledger-value.v1069-ledger-item-lines.v1106-ledger-item-single .v1069-ledger-match-line{align-items:center!important;min-height:18px!important;}
-      .v1106-ledger-test-active .v1069-ledger-match-line{gap:4px!important;min-height:14px!important;padding:0!important;line-height:1.06!important;}
-      .v1106-ledger-test-active .v1069-ledger-status-mark{flex:0 0 14px!important;width:14px!important;min-width:14px!important;height:14px!important;font-size:13px!important;line-height:13px!important;}
-      .v1106-ledger-test-active .v1069-ledger-match-name,
-      .v1106-ledger-test-active .v1076-ledger-match-odd,
-      .v1106-ledger-test-active .v1078-ledger-match-text{font-size:10px!important;line-height:1.06!important;opacity:1!important;}
-      .v1106-ledger-test-active .v1069-ledger-pnl-cell .v1063-ledger-value,
-      .v1106-ledger-test-active .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{height:25px!important;min-height:25px!important;font-size:11px!important;}
-      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1057-ledger-excel-table th,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1057-ledger-excel-table td,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1061-ledger-excel-table th,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1061-ledger-excel-table td{font-size:10px!important;}
-      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1069-ledger-match-name,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1076-ledger-match-odd,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="2"] .v1078-ledger-match-text{font-size:9.5px!important;line-height:1.04!important;}
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1057-ledger-excel-table th,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1057-ledger-excel-table td,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1061-ledger-excel-table th,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1061-ledger-excel-table td,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1057-ledger-excel-table th,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1057-ledger-excel-table td,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1061-ledger-excel-table th,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1061-ledger-excel-table td{font-size:9px!important;height:23px!important;min-height:23px!important;padding:0 2px!important;}
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1059-ledger-summary b,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1059-ledger-summary b,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1060-ledger-summary-inline b,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1060-ledger-summary-inline b,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1061-ledger-summary-inline b,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1061-ledger-summary-inline b{font-size:13px!important;}
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1069-ledger-status-mark,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1069-ledger-status-mark{flex-basis:11px!important;width:11px!important;min-width:11px!important;height:11px!important;font-size:11px!important;line-height:11px!important;}
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1069-ledger-match-name,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1076-ledger-match-odd,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="3"] .v1078-ledger-match-text,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1069-ledger-match-name,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1076-ledger-match-odd,
-      .v1106-ledger-test-active[data-v1106-ledger-cols="4"] .v1078-ledger-match-text{font-size:8px!important;line-height:1.0!important;}
+      .v1107-ledger-test-enabled .v1056-ledger-screen-body,
+      .v1107-ledger-test-enabled .v1057-ledger-screen-body{max-height:calc(100vh - 146px)!important;overflow:auto!important;padding:6px 8px 8px!important;}
+      .v1107-ledger-test-enabled .v1057-ledger-excel-table th,
+      .v1107-ledger-test-enabled .v1057-ledger-excel-table td,
+      .v1107-ledger-test-enabled .v1061-ledger-excel-table th,
+      .v1107-ledger-test-enabled .v1061-ledger-excel-table td{font-size:11px!important;height:27px!important;min-height:27px!important;padding:0 3px!important;line-height:1.08!important;}
+      .v1107-ledger-test-enabled .v1057-ledger-excel-table th,
+      .v1107-ledger-test-enabled .v1061-ledger-excel-table th{height:24px!important;min-height:24px!important;font-size:10px!important;padding:0 2px!important;}
+      .v1107-ledger-test-enabled .v1057-ledger-excel-table td:nth-child(3),
+      .v1107-ledger-test-enabled .v1061-ledger-excel-table td:nth-child(3){padding:2px 5px!important;vertical-align:middle!important;}
+      .v1107-ledger-test-enabled .v1063-ledger-value{height:25px!important;min-height:25px!important;font-size:11px!important;padding:0 2px!important;}
+      .v1107-ledger-test-enabled .v1063-ledger-value.v1069-ledger-item-lines{height:auto!important;min-height:20px!important;padding:0!important;}
+      .v1107-ledger-test-enabled .v1069-ledger-match-line{min-height:14px!important;padding:0!important;line-height:1.06!important;}
+      .v1107-ledger-test-enabled .v1069-ledger-match-name,
+      .v1107-ledger-test-enabled .v1076-ledger-match-odd,
+      .v1107-ledger-test-enabled .v1078-ledger-match-text{font-size:10px!important;line-height:1.06!important;opacity:1!important;}
+      .v1107-ledger-test-enabled .v1069-ledger-pnl-cell .v1063-ledger-value,
+      .v1107-ledger-test-enabled .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{height:25px!important;min-height:25px!important;font-size:11px!important;}
     `;
     document.head.appendChild(style);
   }
@@ -287,46 +233,46 @@
   }
   function v1104ApplyLedgerGridFit(scope) {
     const root = scope && scope.querySelectorAll ? scope : document;
-    const modal = root.querySelector('.v1056-ledger-screen-modal');
-    const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
-    if (!modal || !grid) return;
-    const chunkCount = Math.max(1, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1);
-    modal.classList.remove('v1106-ledger-test-active');
-    modal.removeAttribute('data-v1106-ledger-cols');
-    modal.style.removeProperty('--v1106-ledger-cols');
-    modal.style.removeProperty('--v1106-ledger-modal-width');
-    if (!v1103LedgerTestModeEnabled()) return;
-    const cols = v1106LedgerChunkColumns(chunkCount);
-    modal.classList.add('v1106-ledger-test-active');
-    modal.setAttribute('data-v1106-ledger-cols', String(cols));
-    modal.style.setProperty('--v1106-ledger-cols', String(cols));
-    modal.style.setProperty('--v1106-ledger-modal-width', v1106LedgerModalWidth(cols));
+    root.querySelectorAll('.v1056-ledger-screen-modal').forEach(modal => {
+      modal.classList.toggle('v1107-ledger-test-enabled', v1103LedgerTestModeEnabled());
+    });
+    root.querySelectorAll('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid').forEach(grid => {
+      grid.classList.remove('v1104-ledger-grid-compact');
+      grid.style.zoom = '';
+      const sections = Array.from(grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet'));
+      const chunkCount = sections.length;
+      const parent = grid.parentElement;
+      const availableWidth = Math.max(0, Number(parent?.clientWidth || grid.clientWidth || 0) - 10);
+      let scale = 1;
+      if (chunkCount >= 3) {
+        grid.classList.add('v1104-ledger-grid-compact');
+        scale = 0.86;
+      }
+      requestAnimationFrame(() => {
+        const naturalWidth = Math.ceil(grid.scrollWidth || 0);
+        if (availableWidth > 0 && naturalWidth > 0 && naturalWidth > availableWidth) {
+          const fitScale = availableWidth / naturalWidth;
+          scale = Math.min(scale, fitScale);
+        }
+        scale = Math.max(0.78, Math.min(1, scale));
+        if (scale < 0.995) grid.style.zoom = String(scale);
+        else grid.style.zoom = '1';
+        grid.style.overflow = 'visible';
+      });
+    });
   }
   function v1104FinalizeLedgerLayout(scope) {
     const run = () => {
+      v1104SyncLedgerRowHeights(scope);
       v1104ApplyLedgerGridFit(scope);
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         v1104SyncLedgerRowHeights(scope);
-      });
+        v1104ApplyLedgerGridFit(scope);
+      }, 60);
     };
     run();
     setTimeout(run, 0);
-    setTimeout(run, 80);
-    setTimeout(run, 180);
-  }
-  function v1106LedgerChunkColumns(chunkCount) {
-    const count = Math.max(1, Number(chunkCount || 1));
-    if (count <= 1) return 1;
-    if (count === 2) return 2;
-    if (count === 3) return 3;
-    if (count === 4) return 4;
-    return 3;
-  }
-  function v1106LedgerModalWidth(cols) {
-    if (cols >= 4) return '1700px';
-    if (cols === 3) return '1500px';
-    if (cols === 2) return '1380px';
-    return '760px';
+    setTimeout(run, 120);
   }
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
@@ -3174,6 +3120,22 @@
     if (!chunks.length) chunks.push([]);
     return chunks;
   }
+  function v1107LedgerDisplayChunks(rows) {
+    const list = Array.isArray(rows) ? rows : [];
+    const total = list.length;
+    if (total <= 75) return v1057LedgerChunks(list, 25);
+    const chunkCount = 3;
+    const base = Math.floor(total / chunkCount);
+    const extra = total % chunkCount;
+    const chunks = [];
+    let cursor = 0;
+    for (let i = 0; i < chunkCount; i += 1) {
+      const size = base + (i < extra ? 1 : 0);
+      chunks.push(list.slice(cursor, cursor + size));
+      cursor += size;
+    }
+    return chunks;
+  }
   function v1059LedgerSummary(mode, rows) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const state = loadState();
@@ -3274,9 +3236,8 @@
       lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, odds: 0, status: row?.status || row?.result || row?.res || "" }));
     }
     if (!lines.length) lines = [{ name: "Bahis / maç", odds: 0, status: row?.status || row?.result || row?.res || "" }];
-    const singleLine = lines.length <= 1;
-    const cls = `v1063-ledger-value ${extraClass} v1069-ledger-item-lines ${singleLine ? "v1106-ledger-item-single" : "v1106-ledger-item-multi"}`.trim();
-    if (singleLine) {
+    const cls = `v1063-ledger-value ${extraClass} v1069-ledger-item-lines`.trim();
+    if (lines.length <= 1) {
       const status = v1069LedgerLineStatus(row, lines[0]);
       const mark = v1069LedgerStatusMark(status);
       const name = lines[0].name || cleanText(row?.item || "") || "Bahis / maç";
@@ -3347,7 +3308,7 @@
       const prevKey = idx > 0 ? v1061LedgerDateKey(arr[idx - 1]) : "";
       return { ...row, _displayDate: key && key === prevKey ? "”" : v1060LedgerDateLabel(row) };
     });
-    const chunks = v1057LedgerChunks(decoratedRows, 25);
+    const chunks = v1107LedgerDisplayChunks(decoratedRows);
     const modal = !!opts.modal;
     const summary = v1059LedgerSummary(m, rows);
     const head = m === "crypto"
@@ -3365,7 +3326,7 @@
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
         const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
-        const globalNo = blockIndex * 25 + localIndex + 1;
+        const globalNo = Number(row.no || 0) || (blockIndex * 25 + localIndex + 1);
         const itemClass = m === "crypto" ? "coin" : "item";
         const gotoAttrs = v1063LedgerRowTargetAttrs(row, m);
         return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}"${gotoAttrs}${gotoAttrs ? ` title="İlgili kutuya gitmek için satıra çift tıkla"` : ""}>
