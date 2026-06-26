@@ -1717,7 +1717,6 @@
       ts: now,
       row: row.index + 1,
       name: `Kombine: ${names.join(" + ") || "Bahis / maç"}`,
-      matches: getSlotMatches(row).map(m => ({ name: cleanText(m.name || ""), odds: m.odds || "", index: m.index || 0 })).filter(m => m.name),
       stake: totals.stake,
       odds: Number((totals.odds || 0).toFixed(4)),
       status: finalStatus,
@@ -2433,34 +2432,11 @@
       .sort((a,b) => b.score - a.score);
     return candidates[0]?.r || null;
   }
-  function v1066BetMatchLines(op, historyRow) {
-    const normalizeLine = (line = {}) => {
-      const name = cleanText(line.name || line.match || line.label || line.text || line.title || "");
-      const odds = line.odds !== undefined && line.odds !== null && String(line.odds).trim() !== "" ? String(line.odds).trim() : "";
-      return name ? { name, odds } : null;
-    };
-    const histMatches = Array.isArray(historyRow?.matches) ? historyRow.matches.map(normalizeLine).filter(Boolean) : [];
-    if (histMatches.length) return histMatches;
-    const slotMatches = getSlotMatches(op || {}).map(normalizeLine).filter(Boolean);
-    if (slotMatches.length > 1) return slotMatches;
-    const comboRows = Array.isArray(op?.combo) ? op.combo.map(normalizeLine).filter(Boolean) : [];
-    if (comboRows.length > 1) return comboRows;
-    const extraRows = Array.isArray(op?.extraMatches) ? op.extraMatches.map(normalizeLine).filter(Boolean) : [];
-    const primary = normalizeLine(op || {});
-    const directRows = [primary].concat(extraRows).filter(Boolean);
-    if (directRows.length > 1) return directRows;
-    const histName = v1064CleanComboHistoryName(historyRow?.name || "");
-    if (histName && /\s\+\s/.test(histName)) {
-      return histName.split(/\s\+\s/).map(name => normalizeLine({ name })).filter(Boolean);
-    }
-    return directRows.length ? directRows : (comboRows.length ? comboRows : (histName ? [{ name: histName, odds: "" }] : []));
-  }
   function v1064LedgerOpItem(mode, op, historyRow) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m === "crypto") return v1057OpName(m, op);
-    const lines = v1066BetMatchLines(op, historyRow);
-    if (lines.length > 1) return lines.map(line => line.odds ? `${line.name} | ${line.odds}` : line.name).join(" + ");
     const histName = v1064CleanComboHistoryName(historyRow?.name || "");
+    if (histName && /\s\+\s/.test(histName)) return histName;
     const direct = v1057OpName(m, op);
     if (direct && direct !== "Bahis / maç") return direct;
     return histName || direct || "Bahis / maç";
@@ -2539,7 +2515,6 @@
             date: v1057TodayDateInput(ts),
             time: v1056TimeLabelFromTs(ts),
             item: v1064LedgerOpItem(m, op, hist),
-            itemLines: m === "bet" ? v1066BetMatchLines(op, hist) : [],
             kind: v1057OpKind(m, op),
             stake: money(Math.abs(Number(hist?.stake ?? op.amt ?? op.stake ?? 0))),
             roi: hist ? v1054DailyRoi(m, hist) : v1057OpRoi(m, op, pnl),
@@ -2565,7 +2540,6 @@
         date: v1057TodayDateInput(ts),
         time: v1056TimeLabelFromTs(ts),
         item: m === "crypto" ? v1054CryptoCoinFromRecord(r) : (v1064CleanComboHistoryName(r.name || "") || cleanText(r.name || "Bahis / maç")),
-        itemLines: m === "bet" ? v1066BetMatchLines(null, r) : [],
         kind: m === "crypto" ? v1054CryptoDirectionFromRecord(r) : (/^kombine/i.test(cleanText(r.name || "")) ? "Kombine" : "Tek"),
         stake: money(r.stake || 0),
         roi: v1054DailyRoi(m, r),
@@ -2662,14 +2636,6 @@
     const raw = field === "date" ? (row._displayDate || v1060LedgerDateLabel(row)) : String(row?.[field] ?? "");
     const cls = `v1063-ledger-value ${extraClass}`.trim();
     const title = String(raw || "");
-    if (field === "item" && Array.isArray(row?.itemLines) && row.itemLines.length > 1) {
-      const lines = row.itemLines.map((line, idx) => {
-        const name = cleanText(line?.name || "Bahis / maç");
-        const odds = line?.odds !== undefined && line?.odds !== null && String(line.odds).trim() !== "" ? ` | ${cleanText(line.odds)}` : "";
-        return `<li><span>${idx + 1}. ${escapeHtml(name)}${escapeHtml(odds)}</span></li>`;
-      }).join("");
-      return `<ol class="${cls} combo-lines" title="${escapeHtml(title)}">${lines}</ol>`;
-    }
     return `<span class="${cls}" title="${escapeHtml(title)}">${escapeHtml(title)}</span>`;
   }
   function v1063LedgerRowTargetAttrs(row, mode) {
@@ -2696,8 +2662,7 @@
     }
     setTimeout(() => {
       const needles = [`GÜN ${targetDay}`, `${targetDay}. GÜN`, `${targetDay}.GÜN`];
-      const exact = document.querySelector(`[data-v1066-growth-day="${m}:${d}:${targetDay}"]`);
-      const nodes = exact ? [exact] : Array.from(document.querySelectorAll("section,article,div,h1,h2,h3,b,strong,button"));
+      const nodes = Array.from(document.querySelectorAll("section,article,div,h1,h2,h3,b,strong,button"));
       const found = nodes.find(el => {
         const txt = String(el.textContent || "").toUpperCase().replace(/\s+/g, " ").trim();
         return needles.some(n => txt.includes(n));
@@ -3292,7 +3257,7 @@
             const baseStart = Number(plan.start || 0);
             const currentClass = Number.isFinite(currentValue) && currentValue < baseStart ? "v1051-current-balance down" : "v1051-current-balance";
             const dayText = `${row.day}. Gün`;
-            return `<tr data-v1066-growth-day="${m}:${activeDays}:${row.day}"><td>${dayText}</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${effectValue}</td><td>${Number.isFinite(currentValue) ? `<b class="${currentClass}">${money(currentValue)}</b>` : blank}</td></tr>`;
+            return `<tr><td>${dayText}</td><td>${money(row.before)}</td><td><strong>${money(row.after)}</strong></td><td>${effectValue}</td><td>${Number.isFinite(currentValue) ? `<b class="${currentClass}">${money(currentValue)}</b>` : blank}</td></tr>`;
           }).join("")}</tbody>
         </table>
       </div>
