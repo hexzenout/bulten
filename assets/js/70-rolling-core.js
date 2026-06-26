@@ -1709,7 +1709,8 @@
     const totals = rowBetTotals(row);
     const h = loadHistory();
     const now = Date.now();
-    const names = getSlotMatches(row).map(m => m.name).filter(Boolean);
+    const couponMatches = Array.isArray(coupon.matches) && coupon.matches.length ? coupon.matches : getSlotMatches(row);
+    const names = couponMatches.map(m => cleanText(m?.name || "")).filter(Boolean);
     const finalStatus = status === "loss" ? "loss" : "win";
     const rec = {
       id: "rh_" + now + "_coupon_" + Math.random().toString(36).slice(2),
@@ -1717,6 +1718,13 @@
       ts: now,
       row: row.index + 1,
       name: `Kombine: ${names.join(" + ") || "Bahis / maç"}`,
+      matchLines: names,
+      matchOdds: couponMatches.map(m => Number(m?.odds || 0)),
+      combo: couponMatches.map((m, idx) => ({
+        name: cleanText(m?.name || "") || `Maç ${idx + 1}`,
+        odds: Number(m?.odds || 0),
+        status: cleanText(m?.status || "")
+      })),
       stake: totals.stake,
       odds: Number((totals.odds || 0).toFixed(4)),
       status: finalStatus,
@@ -2387,6 +2395,46 @@
     if (allNames.length > 1) return allNames.join(" + ");
     return allNames[0] || comboNames[0] || "Bahis / maç";
   }
+  function v1068BetMatchLines(source) {
+    const rows = [];
+    const add = (name, odds) => {
+      const cleanName = cleanText(name || "");
+      if (!cleanName) return;
+      rows.push({ name: cleanName, odds: Number(odds || 0) });
+    };
+    if (!source || typeof source !== "object") return rows;
+    if (Array.isArray(source.matchLines) && source.matchLines.length) {
+      source.matchLines.forEach((name, idx) => add(name, Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0));
+    }
+    if (Array.isArray(source.matches)) {
+      source.matches.forEach(match => add(match?.name || match?.match || match?.label, match?.odds));
+    }
+    if (Array.isArray(source.rows)) {
+      source.rows.forEach(row => add(row?.name || row?.match || row?.label, row?.odds));
+    }
+    if (Array.isArray(source.combo)) {
+      source.combo.forEach(row => add(row?.name || row?.match || row?.label, row?.odds));
+    }
+    getSlotMatches(source).forEach(match => add(match?.name || match?.match || match?.label, match?.odds));
+    if (!rows.length) {
+      const cleaned = v1064CleanComboHistoryName(source.name || source.match || source.label || source.note || source.title || "");
+      if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0));
+    }
+    const seen = new Set();
+    return rows.filter(row => {
+      const key = `${row.name}::${row.odds || ""}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+  function v1068LedgerBetItemLines(op, historyRow) {
+    const histLines = v1068BetMatchLines(historyRow);
+    if (histLines.length > 1) return histLines;
+    const opLines = v1068BetMatchLines(op);
+    if (opLines.length > 1) return opLines;
+    return histLines.length ? histLines : opLines;
+  }
   function v1064CleanComboHistoryName(name) {
     const raw = cleanText(name || "");
     return raw.replace(/^kombine\s*:?\s*/i, "").trim();
@@ -2435,6 +2483,8 @@
   function v1064LedgerOpItem(mode, op, historyRow) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m === "crypto") return v1057OpName(m, op);
+    const lines = v1068LedgerBetItemLines(op, historyRow);
+    if (lines.length > 1) return lines.map(line => line.odds ? `${line.name} | ${Number(line.odds).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 })}` : line.name).join(" + ");
     const histName = v1064CleanComboHistoryName(historyRow?.name || "");
     if (histName && /\s\+\s/.test(histName)) return histName;
     const direct = v1057OpName(m, op);
@@ -2515,6 +2565,7 @@
             date: v1057TodayDateInput(ts),
             time: v1056TimeLabelFromTs(ts),
             item: v1064LedgerOpItem(m, op, hist),
+            itemLines: m === "bet" ? v1068LedgerBetItemLines(op, hist) : [],
             kind: v1057OpKind(m, op),
             stake: money(Math.abs(Number(hist?.stake ?? op.amt ?? op.stake ?? 0))),
             roi: hist ? v1054DailyRoi(m, hist) : v1057OpRoi(m, op, pnl),
@@ -2540,6 +2591,7 @@
         date: v1057TodayDateInput(ts),
         time: v1056TimeLabelFromTs(ts),
         item: m === "crypto" ? v1054CryptoCoinFromRecord(r) : (v1064CleanComboHistoryName(r.name || "") || cleanText(r.name || "Bahis / maç")),
+        itemLines: m === "bet" ? v1068BetMatchLines(r) : [],
         kind: m === "crypto" ? v1054CryptoDirectionFromRecord(r) : (/^kombine/i.test(cleanText(r.name || "")) ? "Kombine" : "Tek"),
         stake: money(r.stake || 0),
         roi: v1054DailyRoi(m, r),
@@ -2638,6 +2690,21 @@
     const title = String(raw || "");
     return `<span class="${cls}" title="${escapeHtml(title)}">${escapeHtml(title)}</span>`;
   }
+  function v1068LedgerItemCell(row, mode, extraClass = "") {
+    const lines = mode === "bet" && Array.isArray(row?.itemLines) ? row.itemLines.filter(line => cleanText(line?.name || "")) : [];
+    if (lines.length <= 1) return v1063LedgerCell(row, "item", extraClass);
+    const title = lines.map((line, idx) => {
+      const odds = Number(line?.odds || 0);
+      return `${idx + 1}. ${cleanText(line?.name || "")}${odds ? ` | ${odds.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 })}` : ""}`;
+    }).join("\n");
+    const body = lines.map((line, idx) => {
+      const odds = Number(line?.odds || 0);
+      const text = `${idx + 1}. ${cleanText(line?.name || "")}${odds ? ` | ${odds.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 })}` : ""}`;
+      return `<span>${escapeHtml(text)}</span>`;
+    }).join("<br>");
+    const cls = `v1063-ledger-value ${extraClass}`.trim();
+    return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
+  }
   function v1063LedgerRowTargetAttrs(row, mode) {
     if (!row || row.source !== "rolling") return "";
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2706,7 +2773,7 @@
         return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}"${gotoAttrs}${gotoAttrs ? ` title="İlgili kutuya gitmek için satıra çift tıkla"` : ""}>
           <td>${v1060LedgerCellText(globalNo, "num")}</td>
           <td>${v1060LedgerCellText(row._displayDate || "", "date")}</td>
-          <td>${v1063LedgerCell(row, "item", itemClass)}</td>
+          <td>${v1068LedgerItemCell(row, m, itemClass)}</td>
           <td>${v1063LedgerCell(row, "kind")}</td>
           <td>${v1063LedgerCell(row, "stake", "money")}</td>
           <td>${v1063LedgerCell(row, "roi")}</td>
