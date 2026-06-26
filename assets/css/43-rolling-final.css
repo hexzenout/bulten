@@ -18778,3 +18778,20 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
 #omega-rolling-photo-host .v1098-ledger-photo-clone .v1063-ledger-head-actions:empty{
   display:none!important;
 }
+
+
+/* V1099: Kupon Defteri kamera clone önizleme penceresi bir tık daha geniş.
+   Yazı, tablo, clone ölçeği ve sıkıştırma değiştirilmez; sadece açılan pencere alanı büyür. */
+#omega-rolling-photo-host .v1098-ledger-photo-overlay{
+  padding:8px!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-modal{
+  width:min(1180px, calc(100vw - 16px))!important;
+  max-width:calc(100vw - 16px)!important;
+  max-height:calc(100vh - 16px)!important;
+  padding:14px!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone-stage{
+  width:100%!important;
+  justify-content:center!important;
+}
