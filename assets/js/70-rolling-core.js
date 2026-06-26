@@ -46,6 +46,7 @@
   let ACTIVE_COMBO_DETAIL_SLOT = null;
   let LEDGER_LAST_DELETE = null;
   let LEDGER_CLOCK_TIMER = null;
+  const LEDGER_VIEW_PAGE = { bet: 0, crypto: 0 };
 
   function v1102InstallDailyLedgerOpenGuard() {
     if (window.__omegaV1102DailyLedgerOpenGuard) return;
@@ -151,6 +152,51 @@
       .v1107-ledger-test-enabled .v1078-ledger-match-text{font-size:10px!important;line-height:1.06!important;opacity:1!important;}
       .v1107-ledger-test-enabled .v1069-ledger-pnl-cell .v1063-ledger-value,
       .v1107-ledger-test-enabled .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{height:25px!important;min-height:25px!important;font-size:11px!important;}
+      .v1108-ledger-fit-enabled{width:min(var(--v1108-ledger-modal-width, calc(100vw - 16px)), calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;}
+      .v1108-ledger-fit-enabled .v1056-ledger-screen-body,
+      .v1108-ledger-fit-enabled .v1057-ledger-screen-body{max-height:calc(100vh - 136px)!important;overflow:hidden!important;padding:6px 8px 8px!important;}
+      .v1108-ledger-fit-enabled .v1057-ledger-sheet-grid,
+      .v1108-ledger-fit-enabled .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1108-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:start!important;overflow:hidden!important;width:100%!important;}
+      .v1108-ledger-fit-enabled .v1057-ledger-sheet,
+      .v1108-ledger-fit-enabled .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;}
+      .v1108-ledger-fit-enabled .v1059-ledger-summary,
+      .v1108-ledger-fit-enabled .v1060-ledger-summary-inline,
+      .v1108-ledger-fit-enabled .v1061-ledger-summary-inline,
+      .v1108-ledger-fit-enabled .v1104-ledger-summary-spacer-bars{height:36px!important;min-height:36px!important;}
+      .v1108-ledger-fit-enabled .v1060-ledger-summary-spacer,
+      .v1108-ledger-fit-enabled .v1061-ledger-summary-spacer,
+      .v1108-ledger-fit-enabled .v1104-ledger-summary-spacer{display:block!important;height:36px!important;min-height:36px!important;padding:0!important;margin:0!important;}
+      .v1108-ledger-fit-enabled .v1059-ledger-summary > div,
+      .v1108-ledger-fit-enabled .v1060-ledger-summary-inline > div,
+      .v1108-ledger-fit-enabled .v1061-ledger-summary-inline > div{min-height:36px!important;padding:3px 5px!important;}
+      .v1108-ledger-fit-enabled .v1059-ledger-summary span,
+      .v1108-ledger-fit-enabled .v1060-ledger-summary-inline span,
+      .v1108-ledger-fit-enabled .v1061-ledger-summary-inline span{font-size:9px!important;line-height:1!important;}
+      .v1108-ledger-fit-enabled .v1059-ledger-summary b,
+      .v1108-ledger-fit-enabled .v1060-ledger-summary-inline b,
+      .v1108-ledger-fit-enabled .v1061-ledger-summary-inline b{font-size:13px!important;line-height:1!important;}
+      .v1108-ledger-fit-enabled .v1057-ledger-excel-table,
+      .v1108-ledger-fit-enabled .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;}
+      .v1108-ledger-fit-enabled .v1057-ledger-excel-table th,
+      .v1108-ledger-fit-enabled .v1057-ledger-excel-table td,
+      .v1108-ledger-fit-enabled .v1061-ledger-excel-table th,
+      .v1108-ledger-fit-enabled .v1061-ledger-excel-table td{height:18px!important;min-height:18px!important;padding:0 2px!important;font-size:9px!important;line-height:1!important;overflow:hidden!important;}
+      .v1108-ledger-fit-enabled .v1057-ledger-excel-table th,
+      .v1108-ledger-fit-enabled .v1061-ledger-excel-table th{height:18px!important;min-height:18px!important;font-size:8.5px!important;padding:0 1px!important;}
+      .v1108-ledger-fit-enabled .v1057-ledger-excel-table td:nth-child(3),
+      .v1108-ledger-fit-enabled .v1061-ledger-excel-table td:nth-child(3){padding:1px 3px!important;vertical-align:middle!important;}
+      .v1108-ledger-fit-enabled .v1063-ledger-value{height:17px!important;min-height:17px!important;padding:0 1px!important;font-size:9px!important;line-height:1!important;}
+      .v1108-ledger-fit-enabled .v1063-ledger-value.v1069-ledger-item-lines{height:auto!important;min-height:16px!important;padding:0!important;overflow:hidden!important;}
+      .v1108-ledger-fit-enabled .v1069-ledger-match-line{min-height:8px!important;padding:0!important;line-height:1!important;gap:3px!important;white-space:nowrap!important;overflow:hidden!important;}
+      .v1108-ledger-fit-enabled .v1069-ledger-status-mark{flex:0 0 11px!important;width:11px!important;min-width:11px!important;height:9px!important;font-size:10px!important;line-height:9px!important;}
+      .v1108-ledger-fit-enabled .v1078-ledger-match-text{display:block!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;line-height:1!important;}
+      .v1108-ledger-fit-enabled .v1069-ledger-match-name,
+      .v1108-ledger-fit-enabled .v1076-ledger-match-odd{font-size:8px!important;line-height:1!important;white-space:nowrap!important;opacity:1!important;}
+      .v1108-ledger-fit-enabled .v1069-ledger-pnl-cell .v1063-ledger-value,
+      .v1108-ledger-fit-enabled .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{height:17px!important;min-height:17px!important;font-size:9px!important;}
+      .v1108-ledger-fit-enabled .v1108-ledger-page-nav{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;margin:0 0 6px!important;padding:4px 6px!important;border:1px solid rgba(148,163,184,.25)!important;border-radius:10px!important;background:rgba(15,23,42,.72)!important;color:#e5e7eb!important;font-size:11px!important;font-weight:900!important;}
+      .v1108-ledger-fit-enabled .v1108-ledger-page-nav button{height:24px!important;padding:0 10px!important;border-radius:8px!important;border:1px solid rgba(251,191,36,.45)!important;background:#111827!important;color:#f8fafc!important;font-size:11px!important;font-weight:950!important;cursor:pointer!important;}
+      .v1108-ledger-fit-enabled .v1108-ledger-page-nav button:disabled{opacity:.35!important;cursor:not-allowed!important;}
     `;
     document.head.appendChild(style);
   }
@@ -231,35 +277,27 @@
       }
     });
   }
+  function v1108LedgerModalWidth(cols) {
+    const c = Math.max(1, Number(cols || 1));
+    if (c >= 3) return '1540px';
+    if (c === 2) return '1160px';
+    return '780px';
+  }
   function v1104ApplyLedgerGridFit(scope) {
     const root = scope && scope.querySelectorAll ? scope : document;
-    root.querySelectorAll('.v1056-ledger-screen-modal').forEach(modal => {
-      modal.classList.toggle('v1107-ledger-test-enabled', v1103LedgerTestModeEnabled());
-    });
-    root.querySelectorAll('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid').forEach(grid => {
-      grid.classList.remove('v1104-ledger-grid-compact');
-      grid.style.zoom = '';
-      const sections = Array.from(grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet'));
-      const chunkCount = sections.length;
-      const parent = grid.parentElement;
-      const availableWidth = Math.max(0, Number(parent?.clientWidth || grid.clientWidth || 0) - 10);
-      let scale = 1;
-      if (chunkCount >= 3) {
-        grid.classList.add('v1104-ledger-grid-compact');
-        scale = 0.86;
-      }
-      requestAnimationFrame(() => {
-        const naturalWidth = Math.ceil(grid.scrollWidth || 0);
-        if (availableWidth > 0 && naturalWidth > 0 && naturalWidth > availableWidth) {
-          const fitScale = availableWidth / naturalWidth;
-          scale = Math.min(scale, fitScale);
-        }
-        scale = Math.max(0.78, Math.min(1, scale));
-        if (scale < 0.995) grid.style.zoom = String(scale);
-        else grid.style.zoom = '1';
-        grid.style.overflow = 'visible';
-      });
-    });
+    const modal = root.querySelector('.v1056-ledger-screen-modal');
+    const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
+    if (!modal || !grid) return;
+    const chunkCount = Math.max(1, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1);
+    const fitEnabled = v1103LedgerTestModeEnabled() || chunkCount > 1;
+    modal.classList.toggle('v1107-ledger-test-enabled', false);
+    modal.classList.toggle('v1108-ledger-fit-enabled', !!fitEnabled);
+    modal.setAttribute('data-v1108-ledger-cols', String(chunkCount));
+    modal.style.setProperty('--v1108-ledger-cols', String(chunkCount));
+    modal.style.setProperty('--v1108-ledger-modal-width', v1108LedgerModalWidth(chunkCount));
+    grid.classList.remove('v1104-ledger-grid-compact');
+    grid.style.zoom = '1';
+    grid.style.overflow = 'hidden';
   }
   function v1104FinalizeLedgerLayout(scope) {
     const run = () => {
@@ -277,7 +315,7 @@
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:25">25'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:50">50'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:75">75'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:125">125'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button><span>Gerçek satırlara dokunmaz.</span></div>`;
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:30">30'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:90">90'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button><span>Gerçek satırlara dokunmaz.</span></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3120,21 +3158,35 @@
     if (!chunks.length) chunks.push([]);
     return chunks;
   }
-  function v1107LedgerDisplayChunks(rows) {
+  function v1108LedgerPageInfo(mode, rows) {
+    const m = mode === "crypto" ? "crypto" : "bet";
     const list = Array.isArray(rows) ? rows : [];
+    const pageSize = 90;
+    const blockSize = 30;
     const total = list.length;
-    if (total <= 75) return v1057LedgerChunks(list, 25);
-    const chunkCount = 3;
-    const base = Math.floor(total / chunkCount);
-    const extra = total % chunkCount;
-    const chunks = [];
-    let cursor = 0;
-    for (let i = 0; i < chunkCount; i += 1) {
-      const size = base + (i < extra ? 1 : 0);
-      chunks.push(list.slice(cursor, cursor + size));
-      cursor += size;
-    }
-    return chunks;
+    const pageCount = Math.max(1, Math.ceil(Math.max(1, total) / pageSize));
+    const current = Math.min(pageCount - 1, Math.max(0, Number(LEDGER_VIEW_PAGE[m] || 0)));
+    LEDGER_VIEW_PAGE[m] = current;
+    const start = current * pageSize;
+    const pageRows = list.slice(start, start + pageSize);
+    return {
+      page: current,
+      pageCount,
+      total,
+      start,
+      end: Math.min(total, start + pageRows.length),
+      chunks: v1057LedgerChunks(pageRows, blockSize)
+    };
+  }
+  function v1108LedgerPageNavHtml(mode, info) {
+    if (!info || Number(info.pageCount || 1) <= 1) return "";
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const page = Number(info.page || 0);
+    const count = Number(info.pageCount || 1);
+    const start = Number(info.start || 0) + 1;
+    const end = Number(info.end || 0);
+    const total = Number(info.total || 0);
+    return `<div class="v1108-ledger-page-nav"><button type="button" data-v1108-ledger-page="${m}:${page - 1}" ${page <= 0 ? "disabled" : ""}>‹ Önceki</button><span>Sayfa ${page + 1}/${count} · ${start}-${end} / ${total}</span><button type="button" data-v1108-ledger-page="${m}:${page + 1}" ${page >= count - 1 ? "disabled" : ""}>Sonraki ›</button></div>`;
   }
   function v1059LedgerSummary(mode, rows) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -3308,7 +3360,9 @@
       const prevKey = idx > 0 ? v1061LedgerDateKey(arr[idx - 1]) : "";
       return { ...row, _displayDate: key && key === prevKey ? "”" : v1060LedgerDateLabel(row) };
     });
-    const chunks = v1107LedgerDisplayChunks(decoratedRows);
+    const pageInfo = v1108LedgerPageInfo(m, decoratedRows);
+    const chunks = pageInfo.chunks;
+    const pageNavHtml = v1108LedgerPageNavHtml(m, pageInfo);
     const modal = !!opts.modal;
     const summary = v1059LedgerSummary(m, rows);
     const head = m === "crypto"
@@ -3346,7 +3400,8 @@
     }).join("");
     return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro v1063-ledger-pro v1065-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
       ${undoHtml}
-      <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid">${blocks}</div>
+      ${pageNavHtml}
+      <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid" data-v1108-ledger-page="${pageInfo.page}" data-v1108-ledger-pages="${pageInfo.pageCount}">${blocks}</div>
     </section>`;
   }
   function v1060BuildLedgerPhotoSvg(mode) {
@@ -3491,12 +3546,22 @@
   }
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
+    host.querySelectorAll("[data-v1108-ledger-page]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (btn.disabled) return;
+      const [modeRaw, pageRaw] = String(btn.dataset.v1108LedgerPage || `${m}:0`).split(":");
+      const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      LEDGER_VIEW_PAGE[safeMode] = Math.max(0, Number(pageRaw || 0));
+      v1056OpenDailyLedgerScreen(safeMode);
+    }));
     host.querySelectorAll("[data-v1103-ledger-test-fill]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
       if (!v1103LedgerTestModeEnabled()) return;
       const [modeRaw, targetRaw] = String(btn.dataset.v1103LedgerTestFill || `${m}:60`).split(":");
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      LEDGER_VIEW_PAGE[safeMode] = 0;
       v1103FillLedgerTestRows(safeMode, Number(targetRaw || 60));
       v1056OpenDailyLedgerScreen(safeMode);
     }));
@@ -3504,6 +3569,7 @@
       event.preventDefault();
       event.stopPropagation();
       const safeMode = btn.dataset.v1103LedgerTestClear === "crypto" ? "crypto" : "bet";
+      LEDGER_VIEW_PAGE[safeMode] = 0;
       v1103ClearLedgerTestRows(safeMode);
       v1056OpenDailyLedgerScreen(safeMode);
     }));
@@ -3511,6 +3577,7 @@
       event.preventDefault();
       event.stopPropagation();
       const safeMode = btn.dataset.v1103LedgerTestDisable === "crypto" ? "crypto" : "bet";
+      LEDGER_VIEW_PAGE[safeMode] = 0;
       v1103ClearLedgerTestRows(safeMode);
       try { localStorage.removeItem(LEDGER_TEST_MODE_KEY); } catch {}
       v1056OpenDailyLedgerScreen(safeMode);
