@@ -46,6 +46,47 @@
   let LEDGER_LAST_DELETE = null;
   let LEDGER_CLOCK_TIMER = null;
 
+  function v1102InstallDailyLedgerOpenGuard() {
+    if (window.__omegaV1102DailyLedgerOpenGuard) return;
+    window.__omegaV1102DailyLedgerOpenGuard = true;
+    const handled = (event, btn) => {
+      if (!btn) return;
+      const mode = btn.dataset.v1056LedgerOpen === "crypto" ? "crypto" : "bet";
+      const now = Date.now();
+      const key = `daily-ledger:${mode}`;
+      if (window.__omegaV1102DailyLedgerLastKey === key && now - Number(window.__omegaV1102DailyLedgerLastTs || 0) < 420) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        return;
+      }
+      window.__omegaV1102DailyLedgerLastKey = key;
+      window.__omegaV1102DailyLedgerLastTs = now;
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+      v1056OpenDailyLedgerScreen(mode);
+    };
+    const findButton = event => event.target && event.target.closest ? event.target.closest("[data-v1056-ledger-open]") : null;
+    document.addEventListener("pointerdown", event => {
+      const btn = findButton(event);
+      if (!btn) return;
+      handled(event, btn);
+    }, true);
+    document.addEventListener("click", event => {
+      const btn = findButton(event);
+      if (!btn) return;
+      handled(event, btn);
+    }, true);
+    document.addEventListener("keydown", event => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const btn = findButton(event);
+      if (!btn) return;
+      handled(event, btn);
+    }, true);
+  }
+  v1102InstallDailyLedgerOpenGuard();
+
   function restoreActivePanelAfterConfirm(mode) {
     const panelMode = mode === "crypto" ? "crypto" : "bet";
     PENDING_BOARD_OPEN_MODE = panelMode;
