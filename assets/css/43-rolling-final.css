@@ -17944,234 +17944,133 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
 #rolling-excel-overlay .v1056-growth-table-tight td:nth-child(4),
 #rolling-excel-overlay .v1056-growth-table-tight td:nth-child(5){white-space:nowrap!important;}
 
-/* V1068: Bahis defteri kombine satırları ve güvenli çift tık seçimi */
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td:nth-child(3){
+/* V1069: Defter maç isimleri + Kar-Zarar hücre rengi + gerçek gün kutusu vurgusu */
+.v1065-ledger-pro .v1057-ledger-excel-table th:nth-child(7),
+.v1065-ledger-pro .v1061-ledger-excel-table th:nth-child(7){
+  background:#d5dbe4!important;
+  color:#0f172a!important;
+}
+.v1065-ledger-pro .v1057-ledger-excel-table td:nth-child(3),
+.v1065-ledger-pro .v1061-ledger-excel-table td:nth-child(3){
   height:auto!important;
   min-height:30px!important;
+  padding:3px 5px!important;
+  overflow:visible!important;
   vertical-align:middle!important;
-  overflow:visible!important;
 }
-.v1065-ledger-pro.bet .v1063-ledger-value.v1068-ledger-item-lines{
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:flex-start!important;
-  justify-content:center!important;
-  gap:3px!important;
+.v1065-ledger-pro .v1063-ledger-value.v1069-ledger-item-lines{
   height:auto!important;
-  min-height:31px!important;
-  padding-top:4px!important;
-  padding-bottom:4px!important;
-  white-space:normal!important;
-  overflow:visible!important;
-  text-overflow:clip!important;
-  line-height:1.22!important;
-}
-.v1065-ledger-pro.bet .v1068-ledger-item-line{
-  display:block!important;
-  max-width:100%!important;
-  white-space:normal!important;
-  overflow-wrap:anywhere!important;
-  word-break:normal!important;
-}
-.v1065-ledger-pro.bet .v1063-ledger-value.neutral{
-  background:#334155!important;
-  color:#f8fafc!important;
-  font-weight:950!important;
-}
-.v1065-ledger-pro.bet .v1063-ledger-value.win,
-.v1065-ledger-pro.bet .v1063-ledger-value.loss,
-.v1065-ledger-pro.bet .v1063-ledger-value.neutral{
-  min-width:0!important;
-  white-space:nowrap!important;
-  overflow:visible!important;
-  text-overflow:clip!important;
-}
-.v1065-ledger-pro.bet,
-.v1065-ledger-pro.bet .v1057-ledger-excel-table,
-.v1065-ledger-pro.bet .v1057-ledger-excel-table th,
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td,
-#rolling-excel-overlay .v1055-daily-ledger-open{
-  -webkit-user-select:none!important;
-  user-select:none!important;
-}
-.v1065-ledger-pro.bet input,
-.v1065-ledger-pro.bet textarea,
-.v1065-ledger-pro.bet [contenteditable="true"]{
-  -webkit-user-select:text!important;
-  user-select:text!important;
-}
-
-/* V1069: Defter kombine rozetleri, seçimsiz hızlı tık ve Kar-zarar okunurluğu */
-.v1065-ledger-pro.bet .v1057-ledger-excel-table th:nth-child(7){
-  background:#047857!important;
-  color:#ecfdf5!important;
-  font-weight:1000!important;
-  text-shadow:0 1px 0 rgba(0,0,0,.25)!important;
-  white-space:nowrap!important;
-}
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td:nth-child(7){
-  overflow:visible!important;
-  white-space:nowrap!important;
-}
-.v1065-ledger-pro.bet .v1063-ledger-value.win{
-  background:#047857!important;
-  color:#ecfdf5!important;
-  border-color:rgba(16,185,129,.8)!important;
-}
-.v1065-ledger-pro.bet .v1063-ledger-value.loss{
-  background:#b91c1c!important;
-  color:#fff1f2!important;
-  border-color:rgba(248,113,113,.85)!important;
-}
-.v1065-ledger-pro.bet .v1068-ledger-item-line{
-  color:#f8fafc!important;
-  font-weight:850!important;
-}
-.v1065-ledger-pro.bet .v1055-daily-ledger-launch,
-.v1065-ledger-pro.bet .v1057-ledger-sheet-grid,
-.v1065-ledger-screen-modal .v1057-ledger-screen-body,
-#rolling-excel-overlay .v1055-daily-ledger-launch{
-  -webkit-user-select:none!important;
-  user-select:none!important;
-}
-.v1065-ledger-screen-modal input,
-.v1065-ledger-screen-modal textarea,
-.v1065-ledger-screen-modal [contenteditable="true"]{
-  -webkit-user-select:text!important;
-  user-select:text!important;
-}
-
-/* V1070: Bahis defteri maç adı, kutusuz durum ikonu ve tek Kar-zarar rozeti */
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td:nth-child(7){
-  background:transparent!important;
-  overflow:visible!important;
-  white-space:nowrap!important;
-}
-.v1065-ledger-pro.bet .v1063-ledger-value.v1068-ledger-item-lines{
-  gap:4px!important;
-}
-.v1065-ledger-pro.bet .v1068-ledger-item-line,
-#rolling-excel-overlay .v763-combo-match-list li > span,
-#omega-rolling-feature-host .v763-combo-match-list li > span{
-  display:flex!important;
-  align-items:flex-start!important;
-  gap:6px!important;
-  max-width:100%!important;
-  white-space:normal!important;
-  overflow:visible!important;
-  text-overflow:clip!important;
-  overflow-wrap:anywhere!important;
-  word-break:normal!important;
-  color:#f8fafc!important;
-  font-weight:850!important;
-}
-.v1065-ledger-pro.bet .v1068-ledger-status-icon,
-#rolling-excel-overlay .v763-combo-match-list .v1068-ledger-status-icon,
-#omega-rolling-feature-host .v763-combo-match-list .v1068-ledger-status-icon{
-  display:inline-block!important;
-  flex:0 0 18px!important;
-  width:18px!important;
-  min-width:18px!important;
-  max-width:18px!important;
+  min-height:24px!important;
+  width:100%!important;
   padding:0!important;
-  margin:0!important;
+  display:block!important;
   background:transparent!important;
   border:0!important;
-  border-radius:0!important;
   box-shadow:none!important;
-  outline:0!important;
+  border-radius:0!important;
+  color:#111827!important;
+  line-height:1.25!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line{
+  display:flex!important;
+  align-items:flex-start!important;
+  gap:4px!important;
+  width:100%!important;
+  min-height:16px!important;
+  margin:0!important;
+  padding:1px 0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  color:#111827!important;
+  white-space:normal!important;
+  overflow:visible!important;
+}
+.v1065-ledger-pro .v1069-ledger-status-mark{
+  display:inline-block!important;
+  flex:0 0 16px!important;
+  width:16px!important;
+  min-width:16px!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
   color:inherit!important;
+  font-size:12px!important;
   line-height:1.25!important;
   text-align:center!important;
+  font-family:"Segoe UI Emoji","Apple Color Emoji",Arial,sans-serif!important;
 }
-.v1065-ledger-pro.bet .v1068-ledger-line-name,
-#rolling-excel-overlay .v763-combo-match-list .v1068-ledger-line-name,
-#omega-rolling-feature-host .v763-combo-match-list .v1068-ledger-line-name{
+.v1065-ledger-pro .v1069-ledger-match-name{
   display:inline!important;
   min-width:0!important;
-  max-width:100%!important;
+  color:#111827!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  line-height:1.25!important;
   white-space:normal!important;
   overflow:visible!important;
   text-overflow:clip!important;
-  overflow-wrap:anywhere!important;
-  word-break:normal!important;
+  word-break:break-word!important;
 }
-.v1065-ledger-pro.bet .v1063-ledger-value.win,
-.v1065-ledger-pro.bet .v1063-ledger-value.loss,
-.v1065-ledger-pro.bet .v1063-ledger-value.neutral{
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  width:auto!important;
-  min-width:96px!important;
-  max-width:none!important;
-  padding:5px 10px!important;
-  border:0!important;
-  box-shadow:none!important;
-  border-radius:999px!important;
-  color:#fff!important;
-  font-weight:950!important;
-  line-height:1.15!important;
-  white-space:nowrap!important;
-  overflow:visible!important;
-  text-overflow:clip!important;
-}
-.v1065-ledger-pro.bet .v1063-ledger-value.win{background:#059669!important;}
-.v1065-ledger-pro.bet .v1063-ledger-value.loss{background:#dc2626!important;}
-.v1065-ledger-pro.bet .v1063-ledger-value.neutral{background:#475569!important;color:#f8fafc!important;}
-
-/* V1071: Bahis defteri K/Z tam hücre rengi ve oran eki temiz maç satırları */
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell{
-  color:#fff!important;
-  font-weight:950!important;
+.v1065-ledger-pro .v1069-ledger-pnl-cell{
+  color:#ffffff!important;
   text-align:center!important;
   vertical-align:middle!important;
-  white-space:nowrap!important;
+  padding:0 4px!important;
   overflow:hidden!important;
-  padding:0!important;
 }
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell.win{background:#047857!important;}
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell.loss{background:#991b1b!important;}
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell.neutral{background:#475569!important;}
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell .v1063-ledger-value.win,
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell .v1063-ledger-value.loss,
-.v1065-ledger-pro.bet .v1057-ledger-excel-table td.v1071-ledger-pnl-cell .v1063-ledger-value.neutral{
-  display:flex!important;
+.v1065-ledger-pro .v1069-ledger-pnl-cell.win{background:#047857!important;}
+.v1065-ledger-pro .v1069-ledger-pnl-cell.loss{background:#991b1b!important;}
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value,
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text,
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value.win,
+.v1065-ledger-pro .v1069-ledger-pnl-cell .v1063-ledger-value.loss{
   width:100%!important;
-  min-width:0!important;
-  max-width:100%!important;
-  height:100%!important;
-  min-height:30px!important;
+  height:29px!important;
+  min-height:29px!important;
+  padding:0!important;
+  margin:0!important;
+  display:flex!important;
   align-items:center!important;
   justify-content:center!important;
-  padding:0 6px!important;
-  margin:0!important;
   background:transparent!important;
   border:0!important;
-  border-radius:0!important;
   box-shadow:none!important;
-  color:#fff!important;
+  border-radius:0!important;
+  color:#ffffff!important;
+  font-size:12px!important;
   font-weight:950!important;
-  line-height:1.15!important;
+  letter-spacing:-.03em!important;
   white-space:nowrap!important;
   overflow:hidden!important;
   text-overflow:clip!important;
 }
-.v1065-ledger-pro.bet .v1068-ledger-item-line,
-#rolling-excel-overlay .v763-combo-match-list li > span,
-#omega-rolling-feature-host .v763-combo-match-list li > span{
-  background:transparent!important;
-  border:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
+.v1065-ledger-pro,
+.v1065-ledger-pro .v1057-ledger-excel-table,
+.v1065-ledger-pro .v1057-ledger-excel-table td,
+.v1065-ledger-pro .v1057-ledger-excel-table th,
+.v1055-daily-ledger-open{
+  user-select:none!important;
 }
-.v1065-ledger-pro.bet .v1068-ledger-status-icon,
-#rolling-excel-overlay .v763-combo-match-list .v1068-ledger-status-icon,
-#omega-rolling-feature-host .v763-combo-match-list .v1068-ledger-status-icon{
-  appearance:none!important;
-  -webkit-appearance:none!important;
-  background:transparent!important;
-  border:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
+.v1065-ledger-pro input,
+.v1065-ledger-pro textarea{
+  user-select:text!important;
+}
+#rolling-excel-overlay .kapsul.v1063-ledger-focus-pulse{
+  outline:3px solid rgba(251,191,36,.95)!important;
+  outline-offset:3px!important;
+  box-shadow:0 0 0 5px rgba(251,191,36,.18),0 0 22px rgba(251,191,36,.58)!important;
+  animation:v1069-ledger-card-pulse 1.25s ease-in-out 1!important;
+}
+@keyframes v1069-ledger-card-pulse{
+  0%,100%{filter:none;transform:none;}
+  45%{filter:brightness(1.18);transform:translateY(-1px);}
 }
