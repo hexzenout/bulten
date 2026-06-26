@@ -18209,3 +18209,19 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   box-shadow:none!important;
   color:#fff!important;
 }
+
+/* V1076: Defter maç oran etiketi + pending çizgi sabitleme */
+.v1065-ledger-pro .v1076-ledger-match-odd{
+  display:inline-block!important;
+  margin-left:5px!important;
+  color:#b45309!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+}
+.v1065-ledger-pro .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
+  color:#64748b!important;
+  -webkit-text-stroke:.15px currentColor!important;
+  text-shadow:none!important;
+}

@@ -1751,28 +1751,44 @@
     const finalStatus = status === "loss" ? "loss" : "win";
     const normalizeMatchResult = v1073NormalizeBetMatchResult;
     const comboResultAt = (idx) => {
-      const i = Number(idx || 0);
+      const i = Math.max(0, Number(idx || 0));
+      const sourceRows = Array.isArray(coupon?.rows) ? coupon.rows.filter(Boolean) : [];
+      const baseIndex = Number(coupon?.slotIndex ?? row?.index ?? 0);
+      const freshBase = state?.modeSlots?.bet?.[baseIndex];
       const pools = [
+        freshBase?.comboResults,
         coupon?.row?.comboResults,
         row?.comboResults,
-        Array.isArray(coupon?.rows) && coupon.rows[0] ? coupon.rows[0].comboResults : null
+        sourceRows[0]?.comboResults
       ];
       for (const pool of pools) {
         if (!Array.isArray(pool)) continue;
         const value = normalizeMatchResult(pool[i]);
         if (value) return value;
       }
+      const directRow = sourceRows[i];
+      const directFresh = state?.modeSlots?.bet?.[Number(directRow?.index ?? -1)];
+      const directStatus = normalizeMatchResult(directFresh?.comboResults?.[0])
+        || normalizeMatchResult(directFresh?.comboResults?.[i])
+        || normalizeMatchResult(directRow?.comboResults?.[0])
+        || normalizeMatchResult(directRow?.comboResults?.[i])
+        || normalizeMatchResult(directRow?.status || directRow?.result || directRow?.res);
+      if (directStatus) return directStatus;
       const matchStatus = normalizeMatchResult(coupon?.matches?.[i]?.status || coupon?.matches?.[i]?.result || coupon?.matches?.[i]?.res);
       if (matchStatus) return matchStatus;
-      const rowStatus = Array.isArray(coupon?.rows) ? normalizeMatchResult(coupon.rows[i]?.status || coupon.rows[i]?.result || coupon.rows[i]?.res || coupon.rows[i]?.comboResults?.[0]) : "";
-      if (rowStatus) return rowStatus;
       return "";
     };
     const hasManualMatchResults = () => {
-      const pools = [coupon?.row?.comboResults, row?.comboResults, Array.isArray(coupon?.rows) && coupon.rows[0] ? coupon.rows[0].comboResults : null];
+      const sourceRows = Array.isArray(coupon?.rows) ? coupon.rows.filter(Boolean) : [];
+      const baseIndex = Number(coupon?.slotIndex ?? row?.index ?? 0);
+      const pools = [state?.modeSlots?.bet?.[baseIndex]?.comboResults, coupon?.row?.comboResults, row?.comboResults, sourceRows[0]?.comboResults];
       if (pools.some(pool => Array.isArray(pool) && pool.some(item => !!normalizeMatchResult(item)))) return true;
       if (Array.isArray(coupon?.matches) && coupon.matches.some(match => !!normalizeMatchResult(match?.status || match?.result || match?.res))) return true;
-      if (Array.isArray(coupon?.rows) && coupon.rows.some(src => !!normalizeMatchResult(src?.status || src?.result || src?.res || src?.comboResults?.[0]))) return true;
+      if (sourceRows.some((src, idx) => {
+        const fresh = state?.modeSlots?.bet?.[Number(src?.index ?? -1)];
+        return !!(normalizeMatchResult(src?.status || src?.result || src?.res || src?.comboResults?.[0] || src?.comboResults?.[idx])
+          || normalizeMatchResult(fresh?.comboResults?.[0] || fresh?.comboResults?.[idx] || fresh?.status || fresh?.result || fresh?.res));
+      })) return true;
       return false;
     };
     const manualResultsExist = hasManualMatchResults();
@@ -1784,7 +1800,7 @@
         const idx = Number(match?.index ?? fallbackIndex ?? collected.length);
         const ownStatus = normalizeMatchResult(match?.status || match?.result || match?.res);
         const comboStatus = comboResultAt(idx);
-        const lineStatus = ownStatus || comboStatus || (manualResultsExist ? "" : finalStatus);
+        const lineStatus = ownStatus || comboStatus || "";
         collected.push({
           name,
           odds: Number(match?.odds || 0),
@@ -1818,9 +1834,9 @@
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
-      }).map((match, idx, arr) => ({
+      }).map(match => ({
         ...match,
-        status: match.status || (arr.some(item => item.status === "win" || item.status === "loss") ? "" : finalStatus)
+        status: match.status || ""
       }));
     };
     const couponMatches = collectCouponMatches();
@@ -2540,19 +2556,19 @@
     const comboResults = Array.isArray(source.comboResults) ? source.comboResults.map(normalizeStatus) : [];
     const matchResults = Array.isArray(source.matchResults) ? source.matchResults.map(normalizeStatus) : [];
     const comboRowsForStatus = Array.isArray(source.combo) ? source.combo : [];
-    const hasManualResults = comboResults.some(Boolean)
-      || matchResults.some(Boolean)
-      || comboRowsForStatus.some(row => !!normalizeStatus(row?.status || row?.result || row?.res))
-      || (Array.isArray(source.matches) && source.matches.some(row => !!normalizeStatus(row?.status || row?.result || row?.res)))
-      || (Array.isArray(source.rows) && source.rows.some(row => !!normalizeStatus(row?.status || row?.result || row?.res || row?.comboResults?.[0])))
-      || (Array.isArray(source.extraMatches) && source.extraMatches.some(row => !!normalizeStatus(row?.status || row?.result || row?.res)));
+    const sourceLooksMulti = (Array.isArray(source.matchLines) && source.matchLines.length > 1)
+      || (Array.isArray(source.combo) && source.combo.length > 0)
+      || (Array.isArray(source.matches) && source.matches.length > 1)
+      || (Array.isArray(source.rows) && source.rows.length > 1)
+      || (Array.isArray(source.extraMatches) && source.extraMatches.length > 0)
+      || (Array.isArray(source.itemLines) && source.itemLines.length > 1);
     const finalStatus = normalizeStatus(source.status || source.result || source.res);
     const statusAt = (idx, fallback = "") => {
       const i = Math.max(0, Number(idx || 0));
       return comboResults[i]
         || matchResults[i]
         || normalizeStatus(fallback)
-        || (hasManualResults ? "" : finalStatus);
+        || (sourceLooksMulti ? "" : finalStatus);
     };
 
     // Rolling GÜN kutusu op kaydı: ana maç source.note, ek maçlar source.combo içindedir.
@@ -2904,8 +2920,9 @@
     };
     const explicit = normalize(line?.status || line?.result || line?.res || "");
     if (explicit) return explicit;
-    const hasLineLevelResults = Array.isArray(row?.itemLines) && row.itemLines.some(item => !!normalize(item?.status || item?.result || item?.res || ""));
-    if (hasLineLevelResults) return "pending";
+    const multiLineCombo = Array.isArray(row?.itemLines) && row.itemLines.length > 1;
+    const hasLineLevelResults = multiLineCombo && row.itemLines.some(item => !!normalize(item?.status || item?.result || item?.res || ""));
+    if (hasLineLevelResults || multiLineCombo) return "pending";
     const rowStatus = normalize(row?.status || row?.result || row?.res || "");
     if (rowStatus) return rowStatus;
     if (Number(row?.pnlRaw || 0) < 0) return "loss";
@@ -2916,6 +2933,11 @@
     if (status === "loss") return "✕";
     if (status === "win") return "✓";
     return "—";
+  }
+  function v1076LedgerOddsText(value) {
+    const n = Number(value || 0);
+    if (!Number.isFinite(n) || n <= 0) return "";
+    return Number(n.toFixed(4)).toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
   }
   function v1069LedgerSplitItemText(text) {
     return String(text || "").split(/\s+\+\s+/).map(part => part.replace(/\s*\|\s*\d+(?:[.,]\d+)?\s*$/g, "").trim()).filter(Boolean);
@@ -2936,14 +2958,18 @@
       const mark = v1069LedgerStatusMark(status);
       const name = lines[0].name || cleanText(row?.item || "") || "Bahis / maç";
       const title = `${mark} ${name}`;
-      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1069-ledger-match-name">${escapeHtml(name)}</span></span></span>`;
+      const odds = v1076LedgerOddsText(lines[0]?.odds);
+      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
+      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map(line => {
       const status = v1069LedgerLineStatus(row, line);
       const mark = v1069LedgerStatusMark(status);
       const name = line.name || "Bahis / maç";
-      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1069-ledger-match-name">${escapeHtml(name)}</span></span>`;
+      const odds = v1076LedgerOddsText(line?.odds);
+      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
+      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
@@ -3091,7 +3117,7 @@
       let lines = base.map(line => ({ ...line, name: cleanText(line?.name || "") })).filter(line => line.name);
       if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, status: row?.status || row?.result || row?.res || "" }));
       if (!lines.length) lines = [{ name: cleanText(row?.item || "") || "Bahis / maç", status: row?.status || row?.result || row?.res || "" }];
-      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line), wrapped: wrapText(line.name, 34, 4) }));
+      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line), wrapped: wrapText(line.name, v1076LedgerOddsText(line?.odds) ? 28 : 34, 4) }));
     };
     const rowMeta = dataRows.map(row => {
       const lines = betPhotoLines(row);
@@ -3141,15 +3167,17 @@
           cell += lines.map(line => {
             const status = line.status === "loss" ? "loss" : line.status === "win" ? "win" : "pending";
             const mark = v1069LedgerStatusMark(status);
-            const wrapped = (line.wrapped && line.wrapped.length) ? line.wrapped : wrapText(line.name || "Bahis / maç", 34, 4);
+            const oddsText = v1076LedgerOddsText(line?.odds);
+            const wrapped = (line.wrapped && line.wrapped.length) ? line.wrapped : wrapText(line.name || "Bahis / maç", oddsText ? 28 : 34, 4);
             const firstY = y + 18 + textOffset;
             const markColor = photoStatusColor(status);
-            const markX = xx + 13;
-            const nameX = xx + 24;
-            const markSvg = `<text x="${markX}" y="${firstY}" text-anchor="middle" fill="${markColor}" stroke="${markColor}" stroke-width="0.45" font-size="17" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text>`;
-            const nameSvg = wrapped.map((part, wrapIdx) => `<text x="${nameX}" y="${firstY + wrapIdx * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
-            textOffset += wrapped.length * 15 + 3;
-            return markSvg + nameSvg;
+            const lineX = xx + 10;
+            const followX = xx + 28;
+            const firstPart = wrapped[0] || "Bahis / maç";
+            const firstText = `<text x="${lineX}" y="${firstY}" fill="#111827" font-size="12" font-family="Arial" font-weight="900"><tspan fill="${markColor}" stroke="${markColor}" stroke-width="0.45" font-size="17" font-weight="1000">${safe(mark)}</tspan><tspan dx="5" fill="#111827" stroke="none" font-size="12" font-weight="900">${safe(firstPart)}</tspan>${oddsText ? `<tspan dx="6" fill="#b45309" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : ""}</text>`;
+            const restText = wrapped.slice(1).map((part, wrapIdx) => `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
+            textOffset += Math.max(1, wrapped.length) * 15 + 3;
+            return firstText + restText;
           }).join("");
         } else {
           const rawText = String(v ?? "");
