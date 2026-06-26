@@ -2458,32 +2458,36 @@
       if (!cleanName) return;
       rows.push({ name: cleanName, odds: Number(odds || 0), status: v1068LegStatus(status) });
     };
+    const addSplitNames = (value, status) => {
+      const cleaned = v1064CleanComboHistoryName(value || "");
+      if (!cleaned) return;
+      const parts = /\s\+\s/.test(cleaned) ? cleaned.split(/\s\+\s/) : [cleaned];
+      parts.forEach(part => add(part, 0, status));
+    };
     if (!source || typeof source !== "object") return rows;
     if (Array.isArray(source.matchLines) && source.matchLines.length) {
-      source.matchLines.forEach((name, idx) => add(name, Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0, Array.isArray(source.matchResults) ? source.matchResults[idx] : source.status || source.result));
+      source.matchLines.forEach((name, idx) => addSplitNames(name, Array.isArray(source.matchResults) ? source.matchResults[idx] : source.status || source.result));
     }
     if (Array.isArray(source.matches)) {
-      source.matches.forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds, match?.status || match?.result || source.status || source.result));
+      source.matches.forEach(match => addSplitNames(match?.note || match?.name || match?.match || match?.label, match?.status || match?.result || source.status || source.result));
     }
     if (Array.isArray(source.rows)) {
-      source.rows.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || source.status || source.result));
+      source.rows.forEach(row => addSplitNames(row?.note || row?.name || row?.match || row?.label, row?.status || row?.result || source.status || source.result));
     }
     if (Array.isArray(source.combo)) {
-      add(source.note || source.name || source.match || source.label, source.odds, Array.isArray(source.comboResults) ? source.comboResults[0] : source.status || source.result);
-      source.combo.forEach((row, idx) => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
+      addSplitNames(source.note || source.name || source.match || source.label, Array.isArray(source.comboResults) ? source.comboResults[0] : source.status || source.result);
+      source.combo.forEach((row, idx) => addSplitNames(row?.note || row?.name || row?.match || row?.label, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
     }
     if (Array.isArray(source.extraMatches)) {
-      source.extraMatches.forEach((row, idx) => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
+      source.extraMatches.forEach((row, idx) => addSplitNames(row?.note || row?.name || row?.match || row?.label, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
     }
-    getSlotMatches(source).forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds, match?.status || match?.result || source.status || source.result));
+    getSlotMatches(source).forEach(match => addSplitNames(match?.note || match?.name || match?.match || match?.label, match?.status || match?.result || source.status || source.result));
     if (!rows.length) {
-      const cleaned = v1064CleanComboHistoryName(source.name || source.item || source.match || source.label || source.note || source.title || "");
-      if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0, source.status || source.result));
-      else add(cleaned, 0, source.status || source.result);
+      addSplitNames(source.name || source.item || source.match || source.label || source.note || source.title || "Bahis / maç", source.status || source.result);
     }
     const seen = new Set();
     return rows.filter(row => {
-      const key = `${row.name}::${row.odds || ""}`;
+      const key = row.name;
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
@@ -2623,6 +2627,7 @@
             days: planDays,
             day,
             opIndex,
+            slotIndex: Number.isFinite(Number(op?.slotIndex)) ? Number(op.slotIndex) : Number.isFinite(Number(op?.index)) ? Number(op.index) : Number.isFinite(Number(op?.row)) ? Math.max(0, Number(op.row) - 1) : Number.isFinite(Number(hist?.row)) ? Math.max(0, Number(hist.row) - 1) : opIndex,
             ts,
             no: rows.length + 1,
             date: v1057TodayDateInput(ts),
@@ -2633,7 +2638,7 @@
             kind: v1057OpKind(m, op),
             stake: money(Math.abs(Number(hist?.stake ?? op.amt ?? op.stake ?? 0))),
             roi: hist ? v1054DailyRoi(m, hist) : v1057OpRoi(m, op, pnl),
-            pnl: money(pnl),
+            pnl: m === "bet" ? v1071LedgerPnlMoney(pnl) : money(pnl),
             pnlRaw: Number(pnl || 0)
           });
         });
@@ -2652,6 +2657,7 @@
         source: "history",
         ts,
         no: idx + 1,
+        slotIndex: Number.isFinite(Number(r.row)) ? Math.max(0, Number(r.row) - 1) : idx,
         date: v1057TodayDateInput(ts),
         time: v1056TimeLabelFromTs(ts),
         item: m === "crypto" ? v1054CryptoCoinFromRecord(r) : (v1064CleanComboHistoryName(r.name || "") || cleanText(r.name || "Bahis / maç")),
@@ -2660,7 +2666,7 @@
         kind: m === "crypto" ? v1054CryptoDirectionFromRecord(r) : (/^kombine/i.test(cleanText(r.name || "")) ? "Kombine" : "Tek"),
         stake: money(r.stake || 0),
         roi: v1054DailyRoi(m, r),
-        pnl: money(pnl),
+        pnl: m === "bet" ? v1071LedgerPnlMoney(pnl) : money(pnl),
         pnlRaw: pnl
       };
     });
@@ -2749,6 +2755,13 @@
     tick();
     LEDGER_CLOCK_TIMER = setInterval(tick, 1000);
   }
+  function v1071LedgerPnlMoney(value) {
+    const n = Number(value || 0);
+    const sign = n < 0 ? "-" : "";
+    const abs = Math.abs(n);
+    const digits = n < 0 ? 2 : Number.isInteger(abs) ? 0 : 2;
+    return `${sign}$${abs.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: 2 })}`;
+  }
   function v1063LedgerCell(row, field, extraClass = "") {
     const raw = field === "date" ? (row._displayDate || v1060LedgerDateLabel(row)) : String(row?.[field] ?? "");
     const cls = `v1063-ledger-value ${extraClass}`.trim();
@@ -2757,9 +2770,9 @@
   }
   function v1068LedgerItemCell(row, mode, extraClass = "") {
     const explicitLines = mode === "bet" && Array.isArray(row?.itemLines)
-      ? row.itemLines.map(line => ({ name: v1068CleanLedgerLineName(line?.name || ""), odds: Number(line?.odds || 0), status: v1068LegStatus(line?.status || line?.result, row?.status || row?.result) })).filter(line => line.name)
+      ? row.itemLines.map(line => ({ name: v1068CleanLedgerLineName(line?.name || line?.match || line?.note || line?.label || ""), odds: Number(line?.odds || 0), status: v1068LegStatus(line?.status || line?.result, row?.status || row?.result) })).filter(line => line.name)
       : [];
-    const fallbackItem = cleanText(row?.item || row?.name || row?.note || "");
+    const fallbackItem = cleanText(row?.item || row?.name || row?.note || row?.rec?.name || "") || (mode === "bet" ? "Bahis / maç" : "");
     const fallbackLines = mode === "bet" && !explicitLines.length
       ? (fallbackItem && /\s\+\s/.test(fallbackItem) ? fallbackItem.split(/\s\+\s/) : [fallbackItem])
         .map(name => ({ name: v1068CleanLedgerLineName(name), odds: 0, status: v1068LegStatus(row?.status || row?.result) }))
@@ -2783,9 +2796,36 @@
     const days = v1041NormalizeGrowthDays(row.days || 7);
     const day = Math.max(1, Number(row.day || 1));
     const opIndex = Math.max(0, Number(row.opIndex || 0));
-    return ` data-v1063-ledger-goto="${m}:${days}:${day}:${opIndex}"`;
+    const slotIndex = Number.isFinite(Number(row.slotIndex)) ? Math.max(0, Number(row.slotIndex)) : opIndex;
+    return ` data-v1063-ledger-goto="${m}:${days}:${day}:${opIndex}:${slotIndex}"`;
   }
-  function v1063GotoLedgerRow(mode, days, day, opIndex) {
+  function v1072FindRealRollingBetTarget(mode, slotIndex) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const safeSlot = Math.max(0, Number(slotIndex || 0));
+    const card = document.getElementById(`${m === "crypto" ? "v763-crypto-card" : "v763-bet-card"}-${safeSlot}`);
+    if (card && card.classList?.contains("v763-active-card")) return card;
+    if (m !== "bet") return null;
+    const input = document.querySelector(`#rolling-excel-overlay input[data-mode="bet"][data-slot="${safeSlot}"][data-key="name"]`);
+    const box = input?.closest?.(".v763-bet-kapsul,.kapsul.v32");
+    if (box && box.classList?.contains("v763-bet-kapsul")) return box;
+    return null;
+  }
+  function v1072OpenTargetContainers(target) {
+    if (!target) return;
+    target.closest?.("details")?.setAttribute("open", "");
+  }
+  function v1072PulseRealRollingTarget(target) {
+    if (!target || typeof target.scrollIntoView !== "function") return false;
+    v1072OpenTargetContainers(target);
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    target.classList.remove("v1072-real-ledger-target-pulse");
+    void target.offsetWidth;
+    target.classList.add("v1072-real-ledger-target-pulse");
+    window.clearTimeout(target.__bultenV1072PulseTimer);
+    target.__bultenV1072PulseTimer = window.setTimeout(() => target.classList.remove("v1072-real-ledger-target-pulse"), 1800);
+    return true;
+  }
+  function v1063GotoLedgerRow(mode, days, day, opIndex, slotIndex) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const d = v1041NormalizeGrowthDays(days || 7);
     const targetDay = Math.max(1, Number(day || 1));
@@ -2799,19 +2839,13 @@
       window.omega_OpenRollingExcel(d, true);
       setTimeout(v1043InjectExcelGrowthPlan, 40);
     }
-    setTimeout(() => {
-      const needles = [`GÜN ${targetDay}`, `${targetDay}. GÜN`, `${targetDay}.GÜN`];
-      const nodes = Array.from(document.querySelectorAll("section,article,div,h1,h2,h3,b,strong,button"));
-      const found = nodes.find(el => {
-        const txt = String(el.textContent || "").toUpperCase().replace(/\s+/g, " ").trim();
-        return needles.some(n => txt.includes(n));
-      });
-      if (found && typeof found.scrollIntoView === "function") {
-        found.scrollIntoView({ behavior: "smooth", block: "center" });
-        found.classList.add("v1063-ledger-focus-pulse");
-        setTimeout(() => found.classList.remove("v1063-ledger-focus-pulse"), 1600);
-      }
-    }, 420);
+    const targetSlot = Number.isFinite(Number(slotIndex)) ? Number(slotIndex) : Number(opIndex || 0);
+    const tryTarget = (attempt = 0) => {
+      const target = v1072FindRealRollingBetTarget(m, targetSlot);
+      if (v1072PulseRealRollingTarget(target)) return;
+      if (attempt < 6) window.setTimeout(() => tryTarget(attempt + 1), 180);
+    };
+    window.setTimeout(() => tryTarget(0), 320);
   }
   function v1054RenderDailyPlanPanel(mode, opts = {}) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2849,7 +2883,7 @@
           <td>${v1063LedgerCell(row, "kind")}</td>
           <td>${v1063LedgerCell(row, "stake", "money")}</td>
           <td>${v1063LedgerCell(row, "roi")}</td>
-          <td>${v1063LedgerCell(row, "pnl", pnlClass)}</td>
+          <td class="${m === "bet" ? `v1071-ledger-pnl-cell ${pnlClass}` : ""}">${v1063LedgerCell(m === "bet" ? { ...row, pnl: v1071LedgerPnlMoney(pnlRaw) } : row, "pnl", pnlClass)}</td>
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
@@ -2956,14 +2990,14 @@
     host.querySelectorAll("button[data-v1063-ledger-goto]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
-      const [modeRaw, daysRaw, dayRaw, opRaw] = String(btn.dataset.v1063LedgerGoto || "").split(":");
-      v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
+      const [modeRaw, daysRaw, dayRaw, opRaw, slotRaw] = String(btn.dataset.v1063LedgerGoto || "").split(":");
+      v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0, slotRaw);
     }));
     host.querySelectorAll("tr[data-v1063-ledger-goto]").forEach(row => row.addEventListener("dblclick", event => {
       event.preventDefault();
       event.stopPropagation();
-      const [modeRaw, daysRaw, dayRaw, opRaw] = String(row.dataset.v1063LedgerGoto || "").split(":");
-      v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
+      const [modeRaw, daysRaw, dayRaw, opRaw, slotRaw] = String(row.dataset.v1063LedgerGoto || "").split(":");
+      v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0, slotRaw);
     }));
   }
   function v1056OpenDailyLedgerScreen(mode) {
