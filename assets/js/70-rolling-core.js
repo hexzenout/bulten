@@ -3174,11 +3174,11 @@
             const lineX = xx + 10;
             const followX = xx + 28;
             const firstPart = wrapped[0] || "Bahis / maç";
-            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#facc15" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
             const firstText = `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="none" font-size="14" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
             const restText = wrapped.slice(1).map((part, wrapIdx, rest) => {
               const isLast = wrapIdx === rest.length - 1;
-              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#facc15" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
               return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
             }).join("");
             textOffset += Math.max(1, wrapped.length) * 15 + 3;
@@ -3197,6 +3197,41 @@
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="22" y="22" width="${width-44}" height="${height-44}" rx="18" fill="#0b1220" stroke="#334155"/><text x="40" y="${titleY}" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="950">${safe(title)}</text>${summaryCells}${headerCells}${body}</svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
+  function v1091OpenLedgerPhotoWindow(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const dataUrl = v1060BuildLedgerPhotoSvg(m);
+    if (!dataUrl) {
+      alert(m === "crypto" ? "Fotoğraf için önce işlem kaydı gerekli." : "Fotoğraf için önce bahis / kupon kaydı gerekli.");
+      return;
+    }
+    const host = getRollingPhotoHost();
+    const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
+    const filename = `bulten-${m === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
+    host.innerHTML = `<div class="v781-photo-overlay v1091-ledger-photo-window" data-v1091-ledger-photo-close>
+      <section class="v781-photo-modal v1091-ledger-photo-modal ${m}" role="dialog" aria-modal="true" aria-label="${escapeHtml(title)} fotoğraf penceresi" onclick="event.stopPropagation()">
+        <button type="button" class="v1091-ledger-photo-download" data-v1091-ledger-photo-download><i class="fa-solid fa-download" aria-hidden="true"></i><span>Resmi İndir</span></button>
+        <button type="button" class="v1091-ledger-photo-close" data-v1091-ledger-photo-close aria-label="Kapat">×</button>
+        <img class="v1091-ledger-photo-img" src="${dataUrl}" alt="${escapeHtml(title)} fotoğrafı">
+      </section>
+    </div>`;
+    host.style.display = "block";
+    host.setAttribute("aria-hidden", "false");
+    const close = () => {
+      host.innerHTML = "";
+      host.style.display = "none";
+      host.setAttribute("aria-hidden", "true");
+    };
+    host.querySelectorAll("[data-v1091-ledger-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v1091-ledger-photo-close")) return;
+      close();
+    }));
+    host.querySelector("[data-v1091-ledger-photo-download]")?.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      v781DownloadPngFromSvg(dataUrl, filename);
+    });
+  }
+
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     host.querySelectorAll("[data-v1057-ledger-add]").forEach(btn => btn.addEventListener("click", event => {
@@ -3267,9 +3302,8 @@
       v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
     }));
   }
-  function v1056OpenDailyLedgerScreen(mode, opts = {}) {
+  function v1056OpenDailyLedgerScreen(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const photoMode = !!opts.photo;
     v1057EnsureRollingResultTimestamps(m);
     let host = document.getElementById("v1056-ledger-screen-host");
     if (!host) {
@@ -3278,15 +3312,13 @@
       document.body.appendChild(host);
     }
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
-    const photoDownload = photoMode ? `<button type="button" class="v1090-ledger-download" data-v1090-ledger-download="${m}"><i class="fa-solid fa-download"></i><span>Resmi İndir</span></button>` : "";
-    host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay ${photoMode ? "v1090-ledger-photo-overlay" : ""}" data-v1056-ledger-close>
-      ${photoDownload}
-      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal ${photoMode ? "v1090-ledger-photo-mode" : ""} ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+    host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
+      <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
         <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head">
           <div><b>${title}</b></div>
           <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
             <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
-            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo ${photoMode ? "active" : ""}" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
+            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
             <button type="button" data-v1056-ledger-close>×</button>
           </div>
         </header>
@@ -3303,17 +3335,7 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      // V1090: Kamera, ayrı önizleme yerine mevcut defter ekranını fotoğraf modunda açar.
-      // Sol üstteki Resmi İndir butonu aynı defter çıktısını indirir.
-      v1056OpenDailyLedgerScreen(photoMode, { photo: true });
-    }));
-    host.querySelectorAll("[data-v1090-ledger-download]").forEach(btn => btn.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      const downloadMode = btn.dataset.v1090LedgerDownload === "crypto" ? "crypto" : "bet";
-      const dataUrl = v1060BuildLedgerPhotoSvg(downloadMode);
-      if (!dataUrl) return;
-      v781DownloadPngFromSvg(dataUrl, `bulten-${downloadMode}-kupon-defteri-${new Date().toISOString().slice(0,10)}.png`);
+      v1091OpenLedgerPhotoWindow(photoMode);
     }));
     v1057BindLedgerScreen(host, m);
   }

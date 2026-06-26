@@ -18433,55 +18433,87 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
 }
 
 
-/* V1090: Kupon Defteri maç yanındaki oran, 7 Günlük Rolling kutu oran rengiyle birebir aynı. */
+/* V1091: Kupon Defteri kamera ayrı fotoğraf penceresi + doğru altın oran tonu */
 .v1065-ledger-pro .v1076-ledger-match-odd{
-  color:#facc15!important;
+  color:#fbbf24!important;
   font-weight:950!important;
 }
-
-/* V1090: Kupon Defteri kamera modu - mevcut ekran + sol üst Resmi İndir. */
-.v1056-ledger-screen-overlay.v1090-ledger-photo-overlay{
-  position:fixed!important;
+#omega-rolling-photo-host .v1091-ledger-photo-window{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:22px!important;
+  background:rgba(2,6,23,.84)!important;
+  backdrop-filter:blur(5px)!important;
 }
-.v1090-ledger-download{
-  position:fixed!important;
-  top:18px!important;
-  left:18px!important;
-  z-index:1000001!important;
+#omega-rolling-photo-host .v1091-ledger-photo-modal{
+  position:relative!important;
+  width:min(1120px,96vw)!important;
+  max-height:92vh!important;
+  overflow:auto!important;
+  padding:58px 14px 14px!important;
+  border-radius:18px!important;
+  border:1px solid rgba(251,191,36,.28)!important;
+  background:#020617!important;
+  box-shadow:0 30px 90px rgba(0,0,0,.58)!important;
+}
+#omega-rolling-photo-host .v1091-ledger-photo-download{
+  position:absolute!important;
+  left:14px!important;
+  top:14px!important;
+  z-index:2!important;
+  min-height:34px!important;
+  padding:8px 12px!important;
+  border:1px solid rgba(251,191,36,.72)!important;
+  border-radius:999px!important;
+  background:rgba(251,191,36,.14)!important;
+  color:#fbbf24!important;
   display:inline-flex!important;
   align-items:center!important;
   justify-content:center!important;
   gap:7px!important;
-  min-height:34px!important;
-  padding:8px 12px!important;
-  border:1px solid rgba(250,204,21,.85)!important;
-  border-radius:999px!important;
-  background:linear-gradient(135deg, rgba(250,204,21,.96), rgba(245,158,11,.92))!important;
-  color:#0f172a!important;
   font-size:12px!important;
   font-weight:950!important;
-  letter-spacing:.02em!important;
-  box-shadow:0 14px 32px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.16) inset!important;
+  line-height:1!important;
+  cursor:pointer!important;
+  box-shadow:none!important;
+}
+#omega-rolling-photo-host .v1091-ledger-photo-download:hover{
+  background:rgba(251,191,36,.22)!important;
+  color:#fde68a!important;
+}
+#omega-rolling-photo-host .v1091-ledger-photo-close{
+  position:absolute!important;
+  right:14px!important;
+  top:14px!important;
+  z-index:2!important;
+  width:34px!important;
+  height:34px!important;
+  border-radius:11px!important;
+  border:1px solid rgba(148,163,184,.28)!important;
+  background:rgba(15,23,42,.86)!important;
+  color:#e5e7eb!important;
+  font-size:20px!important;
+  font-weight:900!important;
+  line-height:1!important;
   cursor:pointer!important;
 }
-.v1090-ledger-download:hover{
-  transform:translateY(-1px)!important;
-  filter:brightness(1.04)!important;
+#omega-rolling-photo-host .v1091-ledger-photo-close:hover{
+  border-color:rgba(251,191,36,.55)!important;
+  color:#fbbf24!important;
 }
-.v1065-ledger-screen-modal.v1090-ledger-photo-mode{
-  box-shadow:0 28px 80px rgba(0,0,0,.55),0 0 0 1px rgba(250,204,21,.24)!important;
-}
-.v1065-ledger-screen-modal .v1063-ledger-photo.active{
-  background:#facc15!important;
-  color:#0f172a!important;
-  border-color:#facc15!important;
+#omega-rolling-photo-host .v1091-ledger-photo-img{
+  display:block!important;
+  width:100%!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  margin:0!important;
+  border-radius:14px!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  background:#020617!important;
 }
 @media (max-width:760px){
-  .v1090-ledger-download{
-    top:10px!important;
-    left:10px!important;
-    min-height:31px!important;
-    padding:7px 10px!important;
-    font-size:11px!important;
-  }
+  #omega-rolling-photo-host .v1091-ledger-photo-window{padding:10px!important;}
+  #omega-rolling-photo-host .v1091-ledger-photo-modal{padding:54px 10px 10px!important;}
+  #omega-rolling-photo-host .v1091-ledger-photo-download{left:10px!important;top:10px!important;min-height:32px!important;font-size:11px!important;}
+  #omega-rolling-photo-host .v1091-ledger-photo-close{right:10px!important;top:10px!important;width:32px!important;height:32px!important;}
 }
