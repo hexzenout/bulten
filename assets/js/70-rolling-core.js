@@ -1709,16 +1709,46 @@
     const totals = rowBetTotals(row);
     const h = loadHistory();
     const now = Date.now();
+    const finalStatus = status === "loss" ? "loss" : "win";
+    const normalizeMatchResult = (value) => {
+      const raw = cleanText(value || "").toLowerCase();
+      if (raw === "loss" || raw === "lost" || raw === "lose" || raw === "kaybetti" || raw === "kayıp") return "loss";
+      if (raw === "win" || raw === "won" || raw === "kazandı" || raw === "kazanc" || raw === "kazanç") return "win";
+      return "";
+    };
+    const comboResultAt = (idx) => {
+      const i = Number(idx || 0);
+      const pools = [
+        coupon?.row?.comboResults,
+        row?.comboResults,
+        Array.isArray(coupon?.rows) && coupon.rows[0] ? coupon.rows[0].comboResults : null
+      ];
+      for (const pool of pools) {
+        if (!Array.isArray(pool)) continue;
+        const value = normalizeMatchResult(pool[i]);
+        if (value) return value;
+      }
+      return "";
+    };
+    const hasManualMatchResults = () => {
+      const pools = [coupon?.row?.comboResults, row?.comboResults, Array.isArray(coupon?.rows) && coupon.rows[0] ? coupon.rows[0].comboResults : null];
+      return pools.some(pool => Array.isArray(pool) && pool.some(item => !!normalizeMatchResult(item)));
+    };
+    const manualResultsExist = hasManualMatchResults();
     const collectCouponMatches = () => {
       const collected = [];
       const addMatch = (match, fallbackIndex) => {
         const name = cleanText(match?.name || match?.match || match?.label || match?.note || "");
         if (!name) return;
+        const idx = Number(match?.index ?? fallbackIndex ?? collected.length);
+        const ownStatus = normalizeMatchResult(match?.status || match?.result || match?.res);
+        const comboStatus = comboResultAt(idx);
+        const lineStatus = ownStatus || comboStatus || (manualResultsExist ? "" : finalStatus);
         collected.push({
           name,
           odds: Number(match?.odds || 0),
-          index: Number(match?.index ?? fallbackIndex ?? collected.length),
-          status: cleanText(match?.status || match?.result || match?.res || "")
+          index: idx,
+          status: lineStatus
         });
       };
       const couponMatches = Array.isArray(coupon.matches) ? coupon.matches.filter(Boolean) : [];
@@ -1730,7 +1760,11 @@
         sourceRows.forEach((srcRow, rowIdx) => {
           const rowMatches = getSlotMatches(srcRow);
           if (rowMatches.length) rowMatches.forEach(match => addMatch(match, rowIdx));
-          else addMatch({ name: srcRow?.name || srcRow?.match || srcRow?.label || srcRow?.note, odds: srcRow?.odds, status: srcRow?.status || srcRow?.result || srcRow?.res }, rowIdx);
+          else addMatch({
+            name: srcRow?.name || srcRow?.match || srcRow?.label || srcRow?.note,
+            odds: srcRow?.odds,
+            status: srcRow?.comboResults?.[rowIdx] || srcRow?.status || srcRow?.result || srcRow?.res
+          }, rowIdx);
         });
       }
       if (!collected.length && couponMatches.length) {
@@ -1743,11 +1777,13 @@
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
-      });
+      }).map((match, idx, arr) => ({
+        ...match,
+        status: match.status || (arr.some(item => item.status === "win" || item.status === "loss") ? "" : finalStatus)
+      }));
     };
     const couponMatches = collectCouponMatches();
     const names = couponMatches.map(m => cleanText(m?.name || "")).filter(Boolean);
-    const finalStatus = status === "loss" ? "loss" : "win";
     const rec = {
       id: "rh_" + now + "_coupon_" + Math.random().toString(36).slice(2),
       mode: "bet",
@@ -1756,11 +1792,11 @@
       name: `Kombine: ${names.join(" + ") || "Bahis / maç"}`,
       matchLines: names,
       matchOdds: couponMatches.map(m => Number(m?.odds || 0)),
-      matchResults: couponMatches.map(m => cleanText(m?.status || m?.result || m?.res || "")),
+      matchResults: couponMatches.map(m => normalizeMatchResult(m?.status || "")),
       combo: couponMatches.map((m, idx) => ({
         name: cleanText(m?.name || "") || `Maç ${idx + 1}`,
         odds: Number(m?.odds || 0),
-        status: cleanText(m?.status || "")
+        status: normalizeMatchResult(m?.status || "")
       })),
       stake: totals.stake,
       odds: Number((totals.odds || 0).toFixed(4)),
