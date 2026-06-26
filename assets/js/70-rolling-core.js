@@ -2932,7 +2932,7 @@
   function v1069LedgerStatusMark(status) {
     if (status === "loss") return "✕";
     if (status === "win") return "✓";
-    return "–";
+    return "-";
   }
   function v1076LedgerOddsText(value) {
     const n = Number(value || 0);
@@ -2960,7 +2960,7 @@
       const title = `${mark} ${name}`;
       const odds = v1076LedgerOddsText(lines[0]?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span>`;
+      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map(line => {
@@ -2969,7 +2969,7 @@
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span>`;
+      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
@@ -3172,13 +3172,17 @@
             const firstY = y + 17 + textOffset;
             const markColor = photoStatusColor(status);
             const markX = xx + 12;
-            const followX = xx + 25;
-            const firstPart = wrapped[0] || "Bahis / maç";
-            const markFont = status === "pending" ? 16 : 15;
-            const firstText = `<text x="${markX}" y="${firstY}" text-anchor="middle" dominant-baseline="middle" fill="${markColor}" stroke="${markColor}" stroke-width="0.4" font-size="${markFont}" font-family="Arial" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" dominant-baseline="middle" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oddsText ? `<tspan dx="5" fill="#f59e0b" stroke="none" font-size="12" font-weight="1000">${safe(oddsText)}</tspan>` : ""}</text>`;
-            const restText = wrapped.slice(1).map((part, wrapIdx) => `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
+            const followX = xx + 24;
+            const markFont = status === "pending" ? 15 : 16;
+            const markStroke = status === "pending" ? "0.65" : "0.45";
+            const markText = `<text x="${markX}" y="${firstY}" text-anchor="middle" fill="${markColor}" stroke="${markColor}" stroke-width="${markStroke}" font-size="${markFont}" font-family="Arial" font-weight="1000">${safe(mark)}</text>`;
+            const nameTexts = wrapped.map((part, wrapIdx) => `<text x="${followX}" y="${firstY + wrapIdx * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
+            const lastLine = wrapped[wrapped.length - 1] || "Bahis / maç";
+            const oddX = Math.min(xx + widths[i] - 34, followX + Math.max(8, lastLine.length) * 6.3 + 6);
+            const oddY = firstY + (Math.max(1, wrapped.length) - 1) * 15;
+            const oddText = oddsText ? `<text x="${oddX}" y="${oddY}" fill="#fbbf24" stroke="none" font-size="12" font-family="Arial" font-weight="1000">${safe(oddsText)}</text>` : "";
             textOffset += Math.max(1, wrapped.length) * 15 + 3;
-            return firstText + restText;
+            return markText + nameTexts + oddText;
           }).join("");
         } else {
           const rawText = String(v ?? "");
