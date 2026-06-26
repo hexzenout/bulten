@@ -2089,8 +2089,7 @@
       .filter(n => Number.isFinite(n) && n > 0);
     if (comboOdds.length) {
       const product = comboOdds.reduce((p, n) => p * n, 1);
-      if (raw > 0 && comboOdds.length === 1) return raw * product;
-      return product;
+      return raw > 0 ? raw * product : product;
     }
     return Number.isFinite(raw) && raw > 0 ? raw : 0;
   }
@@ -2415,14 +2414,16 @@
       const raw = cleanText(op?.coin || op?.symbol || op?.sym || op?.asset || op?.name || op?.label || op?.note || "");
       return raw ? raw.toUpperCase() : "İşlem";
     }
-    const fromSlotMatches = getSlotMatches(op || {}).map(r => cleanText(r?.name || r?.match || r?.label || "")).filter(Boolean);
+    const fromSlotMatches = getSlotMatches(op || {}).map(r => cleanText(r?.note || r?.name || r?.match || r?.label || "")).filter(Boolean);
     if (fromSlotMatches.length > 1) return fromSlotMatches.join(" + ");
     const comboRows = Array.isArray(op?.combo) ? op.combo : [];
-    const comboNames = comboRows.map(r => cleanText(r?.name || r?.match || r?.label || "")).filter(Boolean);
-    if (comboNames.length > 1) return comboNames.join(" + ");
+    const mainName = cleanText(op?.note || op?.name || op?.match || op?.label || op?.title || "");
+    const comboNames = comboRows.map(r => cleanText(r?.note || r?.name || r?.match || r?.label || "")).filter(Boolean);
+    const comboAllNames = [mainName].concat(comboNames).filter(Boolean);
+    if (comboAllNames.length > 1) return comboAllNames.join(" + ");
     const extraRows = Array.isArray(op?.extraMatches) ? op.extraMatches : [];
-    const allNames = [cleanText(op?.name || op?.match || op?.label || op?.note || op?.title || "")]
-      .concat(extraRows.map(r => cleanText(r?.name || r?.match || r?.label || "")))
+    const allNames = [mainName]
+      .concat(extraRows.map(r => cleanText(r?.note || r?.name || r?.match || r?.label || "")))
       .filter(Boolean);
     if (allNames.length > 1) return allNames.join(" + ");
     return allNames[0] || comboNames[0] || "Bahis / maç";
@@ -2439,15 +2440,19 @@
       source.matchLines.forEach((name, idx) => add(name, Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0));
     }
     if (Array.isArray(source.matches)) {
-      source.matches.forEach(match => add(match?.name || match?.match || match?.label, match?.odds));
+      source.matches.forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds));
     }
     if (Array.isArray(source.rows)) {
-      source.rows.forEach(row => add(row?.name || row?.match || row?.label, row?.odds));
+      source.rows.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
     }
     if (Array.isArray(source.combo)) {
-      source.combo.forEach(row => add(row?.name || row?.match || row?.label, row?.odds));
+      add(source.note || source.name || source.match || source.label, source.odds);
+      source.combo.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
     }
-    getSlotMatches(source).forEach(match => add(match?.name || match?.match || match?.label, match?.odds));
+    if (Array.isArray(source.extraMatches)) {
+      source.extraMatches.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
+    }
+    getSlotMatches(source).forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds));
     if (!rows.length) {
       const cleaned = v1064CleanComboHistoryName(source.name || source.match || source.label || source.note || source.title || "");
       if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0));
@@ -2723,7 +2728,14 @@
     return `<span class="${cls}" title="${escapeHtml(title)}">${escapeHtml(title)}</span>`;
   }
   function v1068LedgerItemCell(row, mode, extraClass = "") {
-    const lines = mode === "bet" && Array.isArray(row?.itemLines) ? row.itemLines.filter(line => cleanText(line?.name || "")) : [];
+    const explicitLines = mode === "bet" && Array.isArray(row?.itemLines)
+      ? row.itemLines.map(line => ({ name: cleanText(line?.name || ""), odds: Number(line?.odds || 0) })).filter(line => line.name)
+      : [];
+    const fallbackItem = cleanText(row?.item || "");
+    const fallbackLines = mode === "bet" && !explicitLines.length && /\s\+\s/.test(fallbackItem)
+      ? fallbackItem.split(/\s\+\s/).map(name => ({ name: cleanText(name), odds: 0 })).filter(line => line.name)
+      : [];
+    const lines = explicitLines.length ? explicitLines : fallbackLines;
     if (lines.length <= 1) return v1063LedgerCell(row, "item", extraClass);
     const title = lines.map((line, idx) => {
       const odds = Number(line?.odds || 0);
@@ -2732,9 +2744,9 @@
     const body = lines.map((line, idx) => {
       const odds = Number(line?.odds || 0);
       const text = `${idx + 1}. ${cleanText(line?.name || "")}${odds ? ` | ${odds.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 })}` : ""}`;
-      return `<span>${escapeHtml(text)}</span>`;
-    }).join("<br>");
-    const cls = `v1063-ledger-value ${extraClass}`.trim();
+      return `<span class="v1068-ledger-item-line">${escapeHtml(text)}</span>`;
+    }).join("");
+    const cls = `v1063-ledger-value v1068-ledger-item-lines ${extraClass}`.trim();
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
   function v1063LedgerRowTargetAttrs(row, mode) {
@@ -2797,8 +2809,8 @@
       : "";
     const blocks = chunks.map((chunk, blockIndex) => {
       const rowsHtml = chunk.map((row, localIndex) => {
-        const pnlText = String(row.pnl || "");
-        const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
+        const pnlRaw = Number(row.pnlRaw || 0);
+        const pnlClass = pnlRaw > 0 ? "win" : pnlRaw < 0 ? "loss" : "neutral";
         const globalNo = blockIndex * 25 + localIndex + 1;
         const itemClass = m === "crypto" ? "coin" : "item";
         const gotoAttrs = v1063LedgerRowTargetAttrs(row, m);
@@ -2809,7 +2821,7 @@
           <td>${v1063LedgerCell(row, "kind")}</td>
           <td>${v1063LedgerCell(row, "stake", "money")}</td>
           <td>${v1063LedgerCell(row, "roi")}</td>
-          <td>${v1063LedgerCell(row, "pnl", isLoss ? "loss" : "win")}</td>
+          <td>${v1063LedgerCell(row, "pnl", pnlClass)}</td>
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
@@ -5286,6 +5298,19 @@ function escapeHtml(str) {
     HISTORY_OPEN_MODE = null;
     renderModule();
   };
+
+  if (!window.__omegaV1068LedgerOpenDelegationBound) {
+    window.__omegaV1068LedgerOpenDelegationBound = true;
+    document.addEventListener("click", event => {
+      const btn = event.target?.closest && event.target.closest("[data-v1056-ledger-open]");
+      if (!btn) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+      v1056OpenDailyLedgerScreen(btn.dataset.v1056LedgerOpen === "crypto" ? "crypto" : "bet");
+    }, true);
+  }
+
   if (!window.__omegaV767RollingFeatureCoreDelegationBound) {
     window.__omegaV767RollingFeatureCoreDelegationBound = true;
     document.addEventListener("click", event => {
