@@ -1530,10 +1530,26 @@
     });
   }
 
-  function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı") {
-    if (!dataUrl) return;
+  function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {
+    if (!dataUrl && !sourceNode) return;
     const host = getRollingPhotoHost();
-    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar"><button type="button" data-v781-photo-download>Resmi İndir</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><img src="${dataUrl}" alt="${escapeHtml(title)}"></section></div>`;
+    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar"><button type="button" data-v781-photo-download>Resmi İndir</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1098-ledger-photo-clone-stage"></div></section></div>`;
+    const stage = host.querySelector(".v1098-ledger-photo-clone-stage");
+    if (stage && sourceNode && typeof sourceNode.cloneNode === "function") {
+      const clone = sourceNode.cloneNode(true);
+      clone.classList.add("v1098-ledger-photo-clone");
+      clone.removeAttribute("id");
+      clone.removeAttribute("role");
+      clone.removeAttribute("aria-modal");
+      clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+      clone.querySelectorAll("[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock]").forEach(el => el.remove());
+      clone.querySelectorAll(".v1060-ledger-head-actions, .v1063-ledger-head-actions").forEach(el => {
+        if (!el.children.length) el.remove();
+      });
+      stage.appendChild(clone);
+    } else if (stage && dataUrl) {
+      stage.innerHTML = `<img src="${dataUrl}" alt="${escapeHtml(title)}">`;
+    }
     host.style.display = "block";
     host.setAttribute("aria-hidden", "false");
     host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
@@ -1543,7 +1559,7 @@
       host.setAttribute("aria-hidden", "true");
     }));
     host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
-      v781DownloadPngFromSvg(dataUrl, filename);
+      if (dataUrl) v781DownloadPngFromSvg(dataUrl, filename);
     });
   }
 
@@ -3328,7 +3344,8 @@
       const dataUrl = v1060BuildLedgerPhotoSvg(photoMode);
       const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
       const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
-      openLedgerScreenPhotoPreview(dataUrl, filename, title);
+      const sourceModal = btn.closest(".v1056-ledger-screen-modal") || document.querySelector(".v1056-ledger-screen-modal");
+      openLedgerScreenPhotoPreview(dataUrl, filename, title, sourceModal);
     }));
     v1057BindLedgerScreen(host, m);
   }

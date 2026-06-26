@@ -18722,3 +18722,59 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   background:#475569!important;
   box-shadow:none!important;
 }
+
+/* V1098: Kupon Defteri kamera önizlemesi artık ayrı SVG görünümü değil,
+   ana BAHİS / KUPON DEFTERİ HTML ekranının clone'u olarak gösterilir.
+   Böylece ✓ / ✕ / - işaretleri, satır boşlukları ve hücre hizaları tek yerden yönetilir. */
+#omega-rolling-photo-host .v1098-ledger-photo-overlay{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:12px!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-modal{
+  width:auto!important;
+  max-width:calc(100vw - 24px)!important;
+  max-height:calc(100vh - 24px)!important;
+  overflow:auto!important;
+  padding:12px!important;
+  box-sizing:border-box!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-toolbar{
+  position:sticky!important;
+  top:0!important;
+  z-index:5!important;
+  margin:0 0 10px!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone-stage{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:max-content!important;
+  max-width:none!important;
+  margin:0!important;
+  overflow:visible!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone{
+  position:relative!important;
+  inset:auto!important;
+  margin:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  transform:none!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone .v1056-ledger-screen-body,
+#omega-rolling-photo-host .v1098-ledger-photo-clone .v1057-ledger-screen-body{
+  max-height:none!important;
+  overflow:visible!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone .v1057-ledger-sheet-grid,
+#omega-rolling-photo-host .v1098-ledger-photo-clone .v1061-ledger-sheet-grid{
+  overflow:visible!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone [data-v1060-ledger-photo],
+#omega-rolling-photo-host .v1098-ledger-photo-clone [data-v1056-ledger-close],
+#omega-rolling-photo-host .v1098-ledger-photo-clone [data-v1063-ledger-clock],
+#omega-rolling-photo-host .v1098-ledger-photo-clone .v1060-ledger-head-actions:empty,
+#omega-rolling-photo-host .v1098-ledger-photo-clone .v1063-ledger-head-actions:empty{
+  display:none!important;
+}
