@@ -1597,14 +1597,18 @@
     const matches = coupon.matches;
     const done = matches.filter(m => m.status === "win" || m.status === "loss").length;
     const keepOpen = ACTIVE_COMBO_DETAIL_SLOT === row.index || (done > 0 && done < matches.length);
-    const matchRows = matches.map((m, idx) => `<li class="${m.status || "pending"}">
-      <span>${idx + 1}. ${escapeHtml(m.name)}</span>
+    const matchRows = matches.map((m, idx) => {
+      const statusIcon = v1068LedgerStatusIcon(m.status);
+      const name = v1068CleanLedgerLineName(m.name || "") || "Maç";
+      return `<li class="${m.status || "pending"}">
+      <span><span class="v1068-ledger-status-icon" aria-hidden="true">${escapeHtml(statusIcon)}</span><span class="v1068-ledger-line-name">${escapeHtml(name)}</span></span>
       <b>${Number(m.odds || 0) ? Number(m.odds).toFixed(2) : "Oran eksik"}</b>
       <div>
         <button type="button" class="win ${m.status === "win" ? "selected" : ""}" data-combo-match-status="${row.index}:${idx}:win">KAZANDI</button>
         <button type="button" class="loss ${m.status === "loss" ? "selected" : ""}" data-combo-match-status="${row.index}:${idx}:loss">KAYBETTİ</button>
       </div>
-    </li>`).join("");
+    </li>`;
+    }).join("");
     return `<article class="v763-active-card bet combo v801-bet-card" id="${cardId}">
       <details ${keepOpen ? "open" : ""}>
         <summary>
@@ -2436,9 +2440,19 @@
   }
   function v1068LedgerStatusIcon(status) {
     const safe = v1068LegStatus(status);
-    if (safe === "win") return "✅";
-    if (safe === "loss") return "❌";
+    if (safe === "win") return "✓";
+    if (safe === "loss") return "✕";
     return "—";
+  }
+  function v1070LedgerPnlMoney(value) {
+    const n = Number(value || 0);
+    const sign = n < 0 ? "-$" : "$";
+    const abs = Math.abs(n);
+    const hasCents = Math.round(abs * 100) % 100 !== 0;
+    return sign + abs.toLocaleString("en-US", {
+      minimumFractionDigits: hasCents ? 2 : 0,
+      maximumFractionDigits: hasCents ? 2 : 0
+    });
   }
   function v1068CleanLedgerLineName(name) {
     return cleanText(name || "")
@@ -2473,8 +2487,9 @@
     }
     getSlotMatches(source).forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds, match?.status || match?.result || source.status || source.result));
     if (!rows.length) {
-      const cleaned = v1064CleanComboHistoryName(source.name || source.match || source.label || source.note || source.title || "");
-      if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0));
+      const cleaned = v1064CleanComboHistoryName(source.name || source.item || source.match || source.label || source.note || source.title || "");
+      if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0, source.status || source.result));
+      else add(cleaned, 0, source.status || source.result);
     }
     const seen = new Set();
     return rows.filter(row => {
@@ -2754,28 +2769,23 @@
     const explicitLines = mode === "bet" && Array.isArray(row?.itemLines)
       ? row.itemLines.map(line => ({ name: v1068CleanLedgerLineName(line?.name || ""), odds: Number(line?.odds || 0), status: v1068LegStatus(line?.status || line?.result, row?.status || row?.result) })).filter(line => line.name)
       : [];
-    const fallbackItem = cleanText(row?.item || "");
-    const fallbackLines = mode === "bet" && !explicitLines.length && /\s\+\s/.test(fallbackItem)
-      ? fallbackItem.split(/\s\+\s/).map(name => ({ name: v1068CleanLedgerLineName(name), odds: 0, status: v1068LegStatus(row?.status || row?.result) })).filter(line => line.name)
+    const fallbackItem = cleanText(row?.item || row?.name || row?.note || "");
+    const fallbackLines = mode === "bet" && !explicitLines.length
+      ? (fallbackItem && /\s\+\s/.test(fallbackItem) ? fallbackItem.split(/\s\+\s/) : [fallbackItem])
+        .map(name => ({ name: v1068CleanLedgerLineName(name), odds: 0, status: v1068LegStatus(row?.status || row?.result) }))
+        .filter(line => line.name)
       : [];
     const lines = explicitLines.length ? explicitLines : fallbackLines;
-    if (lines.length <= 1) {
-      const single = lines[0];
-      if (single?.name) {
-        const status = v1068LegStatus(single.status || row?.status || row?.result);
-        const text = `${v1068LedgerStatusIcon(status)} ${v1068CleanLedgerLineName(single.name)}`;
-        const cls = `v1063-ledger-value v1068-ledger-item-lines ${extraClass}`.trim();
-        return `<span class="${cls}" title="${escapeHtml(text)}"><span class="v1068-ledger-item-line">${escapeHtml(text)}</span></span>`;
-      }
-      return v1063LedgerCell({ ...row, item: v1068CleanLedgerLineName(row?.item || "") }, "item", extraClass);
-    }
-    const title = lines.map(line => `${v1068LedgerStatusIcon(line?.status)} ${v1068CleanLedgerLineName(line?.name || "")}`).join("\n");
-    const body = lines.map(line => {
-      const text = `${v1068LedgerStatusIcon(line?.status)} ${v1068CleanLedgerLineName(line?.name || "")}`;
-      return `<span class="v1068-ledger-item-line">${escapeHtml(text)}</span>`;
-    }).join("");
+    if (mode !== "bet" || !lines.length) return v1063LedgerCell({ ...row, item: v1068CleanLedgerLineName(row?.item || "") }, "item", extraClass);
+    const renderLine = line => {
+      const status = v1068LegStatus(line?.status || row?.status || row?.result);
+      const name = v1068CleanLedgerLineName(line?.name || "") || "Bahis / maç";
+      const icon = v1068LedgerStatusIcon(status);
+      return `<span class="v1068-ledger-item-line" title="${escapeHtml(`${icon} ${name}`)}"><span class="v1068-ledger-status-icon" aria-hidden="true">${escapeHtml(icon)}</span><span class="v1068-ledger-line-name">${escapeHtml(name)}</span></span>`;
+    };
+    const title = lines.map(line => `${v1068LedgerStatusIcon(line?.status || row?.status || row?.result)} ${v1068CleanLedgerLineName(line?.name || "") || "Bahis / maç"}`).join("\n");
     const cls = `v1063-ledger-value v1068-ledger-item-lines ${extraClass}`.trim();
-    return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
+    return `<span class="${cls}" title="${escapeHtml(title)}">${lines.map(renderLine).join("")}</span>`;
   }
   function v1063LedgerRowTargetAttrs(row, mode) {
     if (!row || row.source !== "rolling") return "";
@@ -2849,7 +2859,7 @@
           <td>${v1063LedgerCell(row, "kind")}</td>
           <td>${v1063LedgerCell(row, "stake", "money")}</td>
           <td>${v1063LedgerCell(row, "roi")}</td>
-          <td>${v1063LedgerCell(row, "pnl", pnlClass)}</td>
+          <td class="v1070-ledger-pnl-cell ${pnlClass}">${v1063LedgerCell({ ...row, pnl: v1070LedgerPnlMoney(pnlRaw) }, "pnl", pnlClass)}</td>
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
