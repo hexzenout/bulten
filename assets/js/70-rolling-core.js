@@ -35,6 +35,7 @@
   const ROLLING_RESTORE_KEY = "v1046_restore_rolling_excel_v1";
   const DAILY_LEDGER_EDIT_KEY = "v1057_rolling_daily_ledger_edits_v1";
   const LEDGER_TEST_MODE_KEY = "v1103_rolling_daily_ledger_test_mode_v1";
+  const LEDGER_TEST_PAGE_KEY = "v1110_rolling_daily_ledger_test_page_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -46,7 +47,6 @@
   let ACTIVE_COMBO_DETAIL_SLOT = null;
   let LEDGER_LAST_DELETE = null;
   let LEDGER_CLOCK_TIMER = null;
-  const LEDGER_VIEW_PAGE = { bet: 0, crypto: 0 };
 
   function v1102InstallDailyLedgerOpenGuard() {
     if (window.__omegaV1102DailyLedgerOpenGuard) return;
@@ -114,137 +114,61 @@
       .v1103-ledger-test-toolbar button:hover{border-color:rgba(251,191,36,.62);background:#1f2937;}
       .v1103-ledger-test-toolbar button.danger{border-color:rgba(248,113,113,.38);background:#3f1118;color:#fecaca;}
       .v1103-ledger-test-toolbar span{opacity:.78;}
-      .v1104-ledger-summary-spacer-bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));height:48px;border:1px solid #0f172a;border-radius:10px;overflow:hidden;background:#0b1220;}
-      .v1104-ledger-summary-spacer-bars > span:nth-child(1){background:#9fd27c;}
-      .v1104-ledger-summary-spacer-bars > span:nth-child(2){background:#82bd5f;}
-      .v1104-ledger-summary-spacer-bars > span:nth-child(3){background:#63a64a;}
-      .v1104-ledger-summary-spacer{padding:0 0 10px;}
-      .v1104-ledger-grid-compact .v1057-ledger-excel-table,
-      .v1104-ledger-grid-compact .v1061-ledger-excel-table{table-layout:fixed;}
-      .v1104-ledger-grid-compact .v1057-ledger-sheet,
-      .v1104-ledger-grid-compact .v1061-ledger-sheet{min-width:618px;}
-      .v1104-ledger-grid-compact .v1057-ledger-excel-table th,
-      .v1104-ledger-grid-compact .v1057-ledger-excel-table td,
-      .v1104-ledger-grid-compact .v1061-ledger-excel-table th,
-      .v1104-ledger-grid-compact .v1061-ledger-excel-table td{font-size:11px!important;padding:4px 5px!important;}
-      .v1104-ledger-grid-compact .v1069-ledger-match-line{grid-template-columns:18px minmax(0,1fr)!important;column-gap:3px!important;}
-      .v1104-ledger-grid-compact .v1078-ledger-match-text,
-      .v1104-ledger-grid-compact .v1069-ledger-match-name,
-      .v1104-ledger-grid-compact .v1076-ledger-match-odd{font-size:10px!important;line-height:1.1!important;}
-      .v1104-ledger-grid-compact .v1059-ledger-summary,
-      .v1104-ledger-grid-compact .v1060-ledger-summary-inline,
-      .v1104-ledger-grid-compact .v1061-ledger-summary-inline{transform-origin:top left;}
-      .v1107-ledger-test-enabled .v1056-ledger-screen-body,
-      .v1107-ledger-test-enabled .v1057-ledger-screen-body{max-height:calc(100vh - 146px)!important;overflow:auto!important;padding:6px 8px 8px!important;}
-      .v1107-ledger-test-enabled .v1057-ledger-excel-table th,
-      .v1107-ledger-test-enabled .v1057-ledger-excel-table td,
-      .v1107-ledger-test-enabled .v1061-ledger-excel-table th,
-      .v1107-ledger-test-enabled .v1061-ledger-excel-table td{font-size:11px!important;height:27px!important;min-height:27px!important;padding:0 3px!important;line-height:1.08!important;}
-      .v1107-ledger-test-enabled .v1057-ledger-excel-table th,
-      .v1107-ledger-test-enabled .v1061-ledger-excel-table th{height:24px!important;min-height:24px!important;font-size:10px!important;padding:0 2px!important;}
-      .v1107-ledger-test-enabled .v1057-ledger-excel-table td:nth-child(3),
-      .v1107-ledger-test-enabled .v1061-ledger-excel-table td:nth-child(3){padding:2px 5px!important;vertical-align:middle!important;}
-      .v1107-ledger-test-enabled .v1063-ledger-value{height:25px!important;min-height:25px!important;font-size:11px!important;padding:0 2px!important;}
-      .v1107-ledger-test-enabled .v1063-ledger-value.v1069-ledger-item-lines{height:auto!important;min-height:20px!important;padding:0!important;}
-      .v1107-ledger-test-enabled .v1069-ledger-match-line{min-height:14px!important;padding:0!important;line-height:1.06!important;}
-      .v1107-ledger-test-enabled .v1069-ledger-match-name,
-      .v1107-ledger-test-enabled .v1076-ledger-match-odd,
-      .v1107-ledger-test-enabled .v1078-ledger-match-text{font-size:10px!important;line-height:1.06!important;opacity:1!important;}
-      .v1107-ledger-test-enabled .v1069-ledger-pnl-cell .v1063-ledger-value,
-      .v1107-ledger-test-enabled .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{height:25px!important;min-height:25px!important;font-size:11px!important;}
-      .v1108-ledger-fit-enabled{width:min(var(--v1108-ledger-modal-width, calc(100vw - 16px)), calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;}
-      .v1108-ledger-fit-enabled .v1056-ledger-screen-body,
-      .v1108-ledger-fit-enabled .v1057-ledger-screen-body{max-height:calc(100vh - 136px)!important;overflow:hidden!important;padding:6px 8px 8px!important;}
-      .v1108-ledger-fit-enabled .v1057-ledger-sheet-grid,
-      .v1108-ledger-fit-enabled .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1108-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:start!important;overflow:hidden!important;width:100%!important;}
-      .v1108-ledger-fit-enabled .v1057-ledger-sheet,
-      .v1108-ledger-fit-enabled .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;}
-      .v1108-ledger-fit-enabled .v1059-ledger-summary,
-      .v1108-ledger-fit-enabled .v1060-ledger-summary-inline,
-      .v1108-ledger-fit-enabled .v1061-ledger-summary-inline,
-      .v1108-ledger-fit-enabled .v1104-ledger-summary-spacer-bars{height:36px!important;min-height:36px!important;}
-      .v1108-ledger-fit-enabled .v1060-ledger-summary-spacer,
-      .v1108-ledger-fit-enabled .v1061-ledger-summary-spacer,
-      .v1108-ledger-fit-enabled .v1104-ledger-summary-spacer{display:block!important;height:36px!important;min-height:36px!important;padding:0!important;margin:0!important;}
-      .v1108-ledger-fit-enabled .v1059-ledger-summary > div,
-      .v1108-ledger-fit-enabled .v1060-ledger-summary-inline > div,
-      .v1108-ledger-fit-enabled .v1061-ledger-summary-inline > div{min-height:36px!important;padding:3px 5px!important;}
-      .v1108-ledger-fit-enabled .v1059-ledger-summary span,
-      .v1108-ledger-fit-enabled .v1060-ledger-summary-inline span,
-      .v1108-ledger-fit-enabled .v1061-ledger-summary-inline span{font-size:9px!important;line-height:1!important;}
-      .v1108-ledger-fit-enabled .v1059-ledger-summary b,
-      .v1108-ledger-fit-enabled .v1060-ledger-summary-inline b,
-      .v1108-ledger-fit-enabled .v1061-ledger-summary-inline b{font-size:13px!important;line-height:1!important;}
-      .v1108-ledger-fit-enabled .v1057-ledger-excel-table,
-      .v1108-ledger-fit-enabled .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;}
-      .v1108-ledger-fit-enabled .v1057-ledger-excel-table th,
-      .v1108-ledger-fit-enabled .v1057-ledger-excel-table td,
-      .v1108-ledger-fit-enabled .v1061-ledger-excel-table th,
-      .v1108-ledger-fit-enabled .v1061-ledger-excel-table td{height:18px!important;min-height:18px!important;padding:0 2px!important;font-size:9px!important;line-height:1!important;overflow:hidden!important;}
-      .v1108-ledger-fit-enabled .v1057-ledger-excel-table th,
-      .v1108-ledger-fit-enabled .v1061-ledger-excel-table th{height:18px!important;min-height:18px!important;font-size:8.5px!important;padding:0 1px!important;}
-      .v1108-ledger-fit-enabled .v1057-ledger-excel-table td:nth-child(3),
-      .v1108-ledger-fit-enabled .v1061-ledger-excel-table td:nth-child(3){padding:1px 3px!important;vertical-align:middle!important;}
-      .v1108-ledger-fit-enabled .v1063-ledger-value{height:17px!important;min-height:17px!important;padding:0 1px!important;font-size:9px!important;line-height:1!important;}
-      .v1108-ledger-fit-enabled .v1063-ledger-value.v1069-ledger-item-lines{height:auto!important;min-height:16px!important;padding:0!important;overflow:hidden!important;}
-      .v1108-ledger-fit-enabled .v1069-ledger-match-line{min-height:8px!important;padding:0!important;line-height:1!important;gap:3px!important;white-space:nowrap!important;overflow:hidden!important;}
-      .v1108-ledger-fit-enabled .v1069-ledger-status-mark{flex:0 0 11px!important;width:11px!important;min-width:11px!important;height:9px!important;font-size:10px!important;line-height:9px!important;}
-      .v1108-ledger-fit-enabled .v1078-ledger-match-text{display:block!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;line-height:1!important;}
-      .v1108-ledger-fit-enabled .v1069-ledger-match-name,
-      .v1108-ledger-fit-enabled .v1076-ledger-match-odd{font-size:8px!important;line-height:1!important;white-space:nowrap!important;opacity:1!important;}
-      .v1108-ledger-fit-enabled .v1069-ledger-pnl-cell .v1063-ledger-value,
-      .v1108-ledger-fit-enabled .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{height:17px!important;min-height:17px!important;font-size:9px!important;}
-      .v1108-ledger-fit-enabled .v1108-ledger-page-nav{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;margin:0 0 6px!important;padding:4px 6px!important;border:1px solid rgba(148,163,184,.25)!important;border-radius:10px!important;background:rgba(15,23,42,.72)!important;color:#e5e7eb!important;font-size:11px!important;font-weight:900!important;}
-      .v1108-ledger-fit-enabled .v1108-ledger-page-nav button{height:24px!important;padding:0 10px!important;border-radius:8px!important;border:1px solid rgba(251,191,36,.45)!important;background:#111827!important;color:#f8fafc!important;font-size:11px!important;font-weight:950!important;cursor:pointer!important;}
-      .v1108-ledger-fit-enabled .v1108-ledger-page-nav button:disabled{opacity:.35!important;cursor:not-allowed!important;}
-      .v1109-ledger-fit-fixed{width:min(var(--v1108-ledger-modal-width, calc(100vw - 16px)), calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;}
-      .v1109-ledger-fit-fixed .v1056-ledger-screen-body,
-      .v1109-ledger-fit-fixed .v1057-ledger-screen-body{height:calc(100vh - 136px)!important;max-height:calc(100vh - 136px)!important;overflow:hidden!important;padding:5px 8px 7px!important;}
-      .v1109-ledger-fit-fixed .v1057-ledger-sheet-grid,
-      .v1109-ledger-fit-fixed .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1108-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:start!important;overflow:hidden!important;width:100%!important;height:100%!important;}
-      .v1109-ledger-fit-fixed .v1057-ledger-sheet,
-      .v1109-ledger-fit-fixed .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;}
-      .v1109-ledger-fit-fixed .v1059-ledger-summary,
-      .v1109-ledger-fit-fixed .v1060-ledger-summary-inline,
-      .v1109-ledger-fit-fixed .v1061-ledger-summary-inline{height:34px!important;min-height:34px!important;border-radius:8px 8px 0 0!important;}
-      .v1109-ledger-fit-fixed .v1060-ledger-summary-spacer,
-      .v1109-ledger-fit-fixed .v1061-ledger-summary-spacer,
-      .v1109-ledger-fit-fixed .v1104-ledger-summary-spacer{display:block!important;height:34px!important;min-height:34px!important;padding:0!important;margin:0!important;border:1px solid #0f172a!important;border-bottom:0!important;border-radius:8px 8px 0 0!important;overflow:hidden!important;background:linear-gradient(to right,#9fd27c 0%,#9fd27c 33.333%,#82bd5f 33.333%,#82bd5f 66.666%,#63a64a 66.666%,#63a64a 100%)!important;}
-      .v1109-ledger-fit-fixed .v1104-ledger-summary-spacer-bars{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important;height:34px!important;min-height:34px!important;border:0!important;border-radius:0!important;background:transparent!important;}
-      .v1109-ledger-fit-fixed .v1104-ledger-summary-spacer-bars > span:nth-child(1){display:block!important;background:#9fd27c!important;}
-      .v1109-ledger-fit-fixed .v1104-ledger-summary-spacer-bars > span:nth-child(2){display:block!important;background:#82bd5f!important;}
-      .v1109-ledger-fit-fixed .v1104-ledger-summary-spacer-bars > span:nth-child(3){display:block!important;background:#63a64a!important;}
-      .v1109-ledger-fit-fixed .v1059-ledger-summary > div,
-      .v1109-ledger-fit-fixed .v1060-ledger-summary-inline > div,
-      .v1109-ledger-fit-fixed .v1061-ledger-summary-inline > div{min-height:34px!important;height:34px!important;padding:2px 4px!important;}
-      .v1109-ledger-fit-fixed .v1059-ledger-summary span,
-      .v1109-ledger-fit-fixed .v1060-ledger-summary-inline span,
-      .v1109-ledger-fit-fixed .v1061-ledger-summary-inline span{font-size:8px!important;line-height:1!important;}
-      .v1109-ledger-fit-fixed .v1059-ledger-summary b,
-      .v1109-ledger-fit-fixed .v1060-ledger-summary-inline b,
-      .v1109-ledger-fit-fixed .v1061-ledger-summary-inline b{font-size:12px!important;line-height:1!important;}
-      .v1109-ledger-fit-fixed .v1057-ledger-excel-table,
-      .v1109-ledger-fit-fixed .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;}
-      .v1109-ledger-fit-fixed .v1057-ledger-excel-table thead tr,
-      .v1109-ledger-fit-fixed .v1061-ledger-excel-table thead tr,
-      .v1109-ledger-fit-fixed .v1057-ledger-excel-table th,
-      .v1109-ledger-fit-fixed .v1061-ledger-excel-table th{height:17px!important;min-height:17px!important;max-height:17px!important;font-size:7.5px!important;line-height:1!important;padding:0 1px!important;overflow:hidden!important;}
-      .v1109-ledger-fit-fixed .v1057-ledger-excel-table tbody tr,
-      .v1109-ledger-fit-fixed .v1061-ledger-excel-table tbody tr,
-      .v1109-ledger-fit-fixed .v1057-ledger-excel-table td,
-      .v1109-ledger-fit-fixed .v1061-ledger-excel-table td{height:17px!important;min-height:17px!important;max-height:17px!important;padding:0 2px!important;font-size:8px!important;line-height:1!important;overflow:hidden!important;vertical-align:middle!important;}
-      .v1109-ledger-fit-fixed .v1057-ledger-excel-table td:nth-child(3),
-      .v1109-ledger-fit-fixed .v1061-ledger-excel-table td:nth-child(3){padding:0 3px!important;vertical-align:middle!important;}
-      .v1109-ledger-fit-fixed .v1063-ledger-value{height:16px!important;min-height:16px!important;max-height:16px!important;padding:0 1px!important;font-size:8px!important;line-height:1!important;overflow:hidden!important;}
-      .v1109-ledger-fit-fixed .v1063-ledger-value.v1069-ledger-item-lines{height:16px!important;min-height:16px!important;max-height:16px!important;padding:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;justify-content:center!important;}
-      .v1109-ledger-fit-fixed .v1069-ledger-match-line{min-height:7px!important;height:7px!important;max-height:7px!important;padding:0!important;margin:0!important;line-height:1!important;gap:2px!important;white-space:nowrap!important;overflow:hidden!important;align-items:center!important;}
-      .v1109-ledger-fit-fixed .v1069-ledger-status-mark{flex:0 0 10px!important;width:10px!important;min-width:10px!important;height:8px!important;font-size:9px!important;line-height:8px!important;transform:none!important;}
-      .v1109-ledger-fit-fixed .v1078-ledger-match-text{display:block!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;line-height:1!important;}
-      .v1109-ledger-fit-fixed .v1069-ledger-match-name,
-      .v1109-ledger-fit-fixed .v1076-ledger-match-odd{font-size:7px!important;line-height:1!important;white-space:nowrap!important;opacity:1!important;}
-      .v1109-ledger-fit-fixed .v1069-ledger-pnl-cell .v1063-ledger-value,
-      .v1109-ledger-fit-fixed .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{height:16px!important;min-height:16px!important;max-height:16px!important;font-size:8px!important;line-height:1!important;}
-      .v1109-ledger-fit-fixed .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before{top:4px!important;width:8px!important;height:2px!important;}
+      .v1110-ledger-pager{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:0 12px 10px;padding:7px 10px;border:1px solid rgba(148,163,184,.26);border-radius:12px;background:rgba(2,6,23,.62);color:#e5e7eb;font-size:12px;font-weight:900;}
+      .v1110-ledger-pager button{height:28px;border-radius:9px;border:1px solid rgba(148,163,184,.36);background:#111827;color:#f8fafc;font-size:12px;font-weight:900;padding:0 10px;cursor:pointer;}
+      .v1110-ledger-pager button:disabled{opacity:.35;cursor:not-allowed;}
+      .v1110-ledger-pager b{color:#fbbf24;font-size:12px;font-weight:950;}
+      .v1110-ledger-pager span{opacity:.86;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal{width:min(1600px, calc(100vw - 18px))!important;max-width:calc(100vw - 18px)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-body{max-height:none!important;overflow:visible!important;padding:6px 8px 8px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1110-ledger-cols,1), minmax(0,1fr))!important;gap:10px!important;align-items:start!important;overflow:visible!important;width:100%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="1"]{width:min(760px, calc(100vw - 18px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="2"]{width:min(1360px, calc(100vw - 18px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"]{width:min(1600px, calc(100vw - 18px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-summary-inline{height:44px!important;min-height:44px!important;margin:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-summary-inline > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-summary-inline > div{min-height:44px!important;padding:4px 6px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary span{font-size:10px!important;line-height:1.05!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary b{font-size:15px!important;line-height:1.0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-summary-spacer{display:block!important;height:44px!important;min-height:44px!important;margin:0!important;padding:0!important;border:1px solid #0f172a!important;border-bottom:0!important;border-radius:8px 8px 0 0!important;overflow:hidden!important;background:transparent!important;}
+      #v1056-ledger-screen-host .v1110-ledger-summary-spacer-bars{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;height:44px!important;min-height:44px!important;width:100%!important;overflow:hidden!important;background:#0b1220!important;}
+      #v1056-ledger-screen-host .v1110-ledger-summary-spacer-bars > span:nth-child(1){display:block!important;background:#9fd27c!important;}
+      #v1056-ledger-screen-host .v1110-ledger-summary-spacer-bars > span:nth-child(2){display:block!important;background:#82bd5f!important;}
+      #v1056-ledger-screen-host .v1110-ledger-summary-spacer-bars > span:nth-child(3){display:block!important;background:#63a64a!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table th,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table th,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table td{font-size:11px!important;line-height:1.08!important;padding:0 3px!important;height:28px!important;min-height:28px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table th,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table th{font-size:10px!important;height:24px!important;min-height:24px!important;padding:0 2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table td:nth-child(3){vertical-align:middle!important;padding:2px 4px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value{height:26px!important;min-height:26px!important;font-size:11px!important;padding:0 2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines{height:auto!important;min-height:20px!important;padding:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;background:transparent!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{justify-content:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single .v1069-ledger-match-line{align-items:center!important;min-height:18px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line{gap:4px!important;min-height:14px!important;padding:0!important;line-height:1.08!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{flex:0 0 14px!important;width:14px!important;min-width:14px!important;height:14px!important;font-size:13px!important;line-height:13px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1076-ledger-match-odd,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{font-size:10px!important;line-height:1.08!important;opacity:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1057-ledger-excel-table th,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1057-ledger-excel-table td,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1061-ledger-excel-table th,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1061-ledger-excel-table td{font-size:10px!important;height:27px!important;min-height:27px!important;padding:0 2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1076-ledger-match-odd,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1078-ledger-match-text{font-size:9px!important;line-height:1.04!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1069-ledger-status-mark{flex-basis:12px!important;width:12px!important;min-width:12px!important;font-size:12px!important;line-height:12px!important;}
     `;
     document.head.appendChild(style);
   }
@@ -295,10 +219,58 @@
     for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts));
     v1057SaveLedgerEdits(edits);
   }
-  function v1104LedgerSummarySpacerHtml() {
-    return `<div class="v1060-ledger-summary-spacer v1061-ledger-summary-spacer v1104-ledger-summary-spacer"><div class="v1104-ledger-summary-spacer-bars" aria-hidden="true"><span></span><span></span><span></span></div></div>`;
+  function v1110LedgerSummarySpacerHtml() {
+    return `<div class="v1060-ledger-summary-spacer v1061-ledger-summary-spacer v1110-ledger-summary-spacer"><div class="v1110-ledger-summary-spacer-bars" aria-hidden="true"><span></span><span></span><span></span></div></div>`;
   }
-  function v1104SyncLedgerRowHeights(scope) {
+  function v1110LedgerTestPageKey(mode) {
+    return `${LEDGER_TEST_PAGE_KEY}_${mode === "crypto" ? "crypto" : "bet"}`;
+  }
+  function v1110GetLedgerTestPage(mode) {
+    try { return Math.max(0, Number(localStorage.getItem(v1110LedgerTestPageKey(mode)) || 0)); } catch { return 0; }
+  }
+  function v1110SetLedgerTestPage(mode, page) {
+    try { localStorage.setItem(v1110LedgerTestPageKey(mode), String(Math.max(0, Number(page || 0)))); } catch {}
+  }
+  function v1110LedgerPageInfo(rows, mode) {
+    const total = Array.isArray(rows) ? rows.length : 0;
+    const pageSize = 60;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    let page = v1110GetLedgerTestPage(mode);
+    if (page >= totalPages) {
+      page = totalPages - 1;
+      v1110SetLedgerTestPage(mode, page);
+    }
+    const start = page * pageSize;
+    const end = Math.min(total, start + pageSize);
+    return { total, page, totalPages, start, end, pageRows: (rows || []).slice(start, end) };
+  }
+  function v1110LedgerChunks(rows, mode) {
+    const activeRows = v1103LedgerTestModeEnabled() ? v1110LedgerPageInfo(rows, mode).pageRows : rows;
+    return v1057LedgerChunks(activeRows, v1103LedgerTestModeEnabled() ? 20 : 25);
+  }
+  function v1110LedgerPagerHtml(rows, mode) {
+    if (!v1103LedgerTestModeEnabled()) return "";
+    const info = v1110LedgerPageInfo(rows, mode);
+    if (info.totalPages <= 1) return "";
+    const from = info.total ? info.start + 1 : 0;
+    const to = info.end;
+    return `<div class="v1110-ledger-pager" data-v1110-ledger-pager="${mode}"><button type="button" data-v1110-ledger-page="${mode}:prev" ${info.page <= 0 ? "disabled" : ""}>Önceki</button><b>Sayfa ${info.page + 1} / ${info.totalPages}</b><span>${from}-${to} / ${info.total}</span><button type="button" data-v1110-ledger-page="${mode}:next" ${info.page >= info.totalPages - 1 ? "disabled" : ""}>Sonraki</button></div>`;
+  }
+  function v1110ApplyLedgerTestLayout(scope) {
+    const root = scope && scope.querySelectorAll ? scope : document;
+    const modal = root.querySelector('.v1056-ledger-screen-modal');
+    const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
+    if (!modal || !grid) return;
+    modal.classList.remove('v1110-ledger-test-modal');
+    modal.removeAttribute('data-v1110-ledger-cols');
+    modal.style.removeProperty('--v1110-ledger-cols');
+    if (!v1103LedgerTestModeEnabled()) return;
+    const cols = Math.max(1, Math.min(3, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1));
+    modal.classList.add('v1110-ledger-test-modal');
+    modal.setAttribute('data-v1110-ledger-cols', String(cols));
+    modal.style.setProperty('--v1110-ledger-cols', String(cols));
+  }
+  function v1110SyncLedgerRowHeights(scope) {
     const root = scope && scope.querySelectorAll ? scope : document;
     root.querySelectorAll('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid').forEach(grid => {
       const sections = Array.from(grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet'));
@@ -325,73 +297,19 @@
       }
     });
   }
-  function v1109LockLedgerFitRows(scope) {
-    const root = scope && scope.querySelectorAll ? scope : document;
-    const modal = root.querySelector('.v1056-ledger-screen-modal');
-    if (!modal || !modal.classList.contains('v1109-ledger-fit-fixed')) return;
-    root.querySelectorAll('.v1057-ledger-excel-table thead tr, .v1061-ledger-excel-table thead tr').forEach(row => {
-      row.style.setProperty('height', '17px', 'important');
-      row.style.setProperty('min-height', '17px', 'important');
-      row.style.setProperty('max-height', '17px', 'important');
-    });
-    root.querySelectorAll('.v1057-ledger-excel-table tbody tr, .v1061-ledger-excel-table tbody tr').forEach(row => {
-      row.style.setProperty('height', '17px', 'important');
-      row.style.setProperty('min-height', '17px', 'important');
-      row.style.setProperty('max-height', '17px', 'important');
-      row.querySelectorAll('td').forEach(td => {
-        td.style.setProperty('height', '17px', 'important');
-        td.style.setProperty('min-height', '17px', 'important');
-        td.style.setProperty('max-height', '17px', 'important');
-      });
-    });
-  }
-  function v1108LedgerModalWidth(cols) {
-    const c = Math.max(1, Number(cols || 1));
-    if (c >= 3) return '1540px';
-    if (c === 2) return '1160px';
-    return '780px';
-  }
-  function v1104ApplyLedgerGridFit(scope) {
-    const root = scope && scope.querySelectorAll ? scope : document;
-    const modal = root.querySelector('.v1056-ledger-screen-modal');
-    const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
-    if (!modal || !grid) return;
-    const chunkCount = Math.max(1, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1);
-    const fitEnabled = v1103LedgerTestModeEnabled() || chunkCount > 1;
-    modal.classList.toggle('v1107-ledger-test-enabled', false);
-    modal.classList.toggle('v1108-ledger-fit-enabled', false);
-    modal.classList.toggle('v1109-ledger-fit-fixed', !!fitEnabled);
-    modal.setAttribute('data-v1108-ledger-cols', String(chunkCount));
-    modal.style.setProperty('--v1108-ledger-cols', String(chunkCount));
-    modal.style.setProperty('--v1108-ledger-modal-width', v1108LedgerModalWidth(chunkCount));
-    grid.classList.remove('v1104-ledger-grid-compact');
-    grid.style.zoom = '1';
-    grid.style.overflow = 'hidden';
-  }
-  function v1104FinalizeLedgerLayout(scope) {
+  function v1110FinalizeLedgerLayout(scope) {
     const run = () => {
-      v1104ApplyLedgerGridFit(scope);
-      const root = scope && scope.querySelectorAll ? scope : document;
-      const modal = root.querySelector('.v1056-ledger-screen-modal');
-      if (modal && modal.classList.contains('v1109-ledger-fit-fixed')) {
-        requestAnimationFrame(() => v1109LockLedgerFitRows(scope));
-        setTimeout(() => v1109LockLedgerFitRows(scope), 40);
-        return;
-      }
-      v1104SyncLedgerRowHeights(scope);
-      setTimeout(() => {
-        v1104ApplyLedgerGridFit(scope);
-        v1104SyncLedgerRowHeights(scope);
-      }, 60);
+      v1110ApplyLedgerTestLayout(scope);
+      requestAnimationFrame(() => v1110SyncLedgerRowHeights(scope));
     };
     run();
     setTimeout(run, 0);
-    setTimeout(run, 120);
+    setTimeout(run, 90);
   }
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:30">30'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:90">90'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button><span>Gerçek satırlara dokunmaz.</span></div>`;
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:20">20'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:40">40'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:80">80'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button><span>20’li tam görünüm · 60 üstü sayfalı.</span></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3234,36 +3152,6 @@
     if (!chunks.length) chunks.push([]);
     return chunks;
   }
-  function v1108LedgerPageInfo(mode, rows) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const list = Array.isArray(rows) ? rows : [];
-    const pageSize = 90;
-    const blockSize = 30;
-    const total = list.length;
-    const pageCount = Math.max(1, Math.ceil(Math.max(1, total) / pageSize));
-    const current = Math.min(pageCount - 1, Math.max(0, Number(LEDGER_VIEW_PAGE[m] || 0)));
-    LEDGER_VIEW_PAGE[m] = current;
-    const start = current * pageSize;
-    const pageRows = list.slice(start, start + pageSize);
-    return {
-      page: current,
-      pageCount,
-      total,
-      start,
-      end: Math.min(total, start + pageRows.length),
-      chunks: v1057LedgerChunks(pageRows, blockSize)
-    };
-  }
-  function v1108LedgerPageNavHtml(mode, info) {
-    if (!info || Number(info.pageCount || 1) <= 1) return "";
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const page = Number(info.page || 0);
-    const count = Number(info.pageCount || 1);
-    const start = Number(info.start || 0) + 1;
-    const end = Number(info.end || 0);
-    const total = Number(info.total || 0);
-    return `<div class="v1108-ledger-page-nav"><button type="button" data-v1108-ledger-page="${m}:${page - 1}" ${page <= 0 ? "disabled" : ""}>‹ Önceki</button><span>Sayfa ${page + 1}/${count} · ${start}-${end} / ${total}</span><button type="button" data-v1108-ledger-page="${m}:${page + 1}" ${page >= count - 1 ? "disabled" : ""}>Sonraki ›</button></div>`;
-  }
   function v1059LedgerSummary(mode, rows) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const state = loadState();
@@ -3364,8 +3252,9 @@
       lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, odds: 0, status: row?.status || row?.result || row?.res || "" }));
     }
     if (!lines.length) lines = [{ name: "Bahis / maç", odds: 0, status: row?.status || row?.result || row?.res || "" }];
-    const cls = `v1063-ledger-value ${extraClass} v1069-ledger-item-lines`.trim();
-    if (lines.length <= 1) {
+    const singleLine = lines.length <= 1;
+    const cls = `v1063-ledger-value ${extraClass} v1069-ledger-item-lines ${singleLine ? "v1110-ledger-item-single" : "v1110-ledger-item-multi"}`.trim();
+    if (singleLine) {
       const status = v1069LedgerLineStatus(row, lines[0]);
       const mark = v1069LedgerStatusMark(status);
       const name = lines[0].name || cleanText(row?.item || "") || "Bahis / maç";
@@ -3436,9 +3325,8 @@
       const prevKey = idx > 0 ? v1061LedgerDateKey(arr[idx - 1]) : "";
       return { ...row, _displayDate: key && key === prevKey ? "”" : v1060LedgerDateLabel(row) };
     });
-    const pageInfo = v1108LedgerPageInfo(m, decoratedRows);
-    const chunks = pageInfo.chunks;
-    const pageNavHtml = v1108LedgerPageNavHtml(m, pageInfo);
+    const chunks = v1110LedgerChunks(decoratedRows, m);
+    const pageHtml = v1110LedgerPagerHtml(decoratedRows, m);
     const modal = !!opts.modal;
     const summary = v1059LedgerSummary(m, rows);
     const head = m === "crypto"
@@ -3456,7 +3344,9 @@
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
         const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
-        const globalNo = Number(row.no || 0) || (blockIndex * 25 + localIndex + 1);
+        const testPageInfo = v1103LedgerTestModeEnabled() ? v1110LedgerPageInfo(decoratedRows, m) : { start: 0 };
+        const chunkSize = v1103LedgerTestModeEnabled() ? 20 : 25;
+        const globalNo = Number(testPageInfo.start || 0) + blockIndex * chunkSize + localIndex + 1;
         const itemClass = m === "crypto" ? "coin" : "item";
         const gotoAttrs = v1063LedgerRowTargetAttrs(row, m);
         return `<tr data-v1057-ledger-row="${escapeHtml(row.id)}"${gotoAttrs}${gotoAttrs ? ` title="İlgili kutuya gitmek için satıra çift tıkla"` : ""}>
@@ -3470,14 +3360,14 @@
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
-        ${blockIndex === 0 ? summaryHtml : v1104LedgerSummarySpacerHtml()}
+        ${blockIndex === 0 ? summaryHtml : v1110LedgerSummarySpacerHtml()}
         <table class="v1057-ledger-excel-table v1061-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml}</tbody></table>
       </section>`;
     }).join("");
     return `<section class="v1040-growth-plan ${m} v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro v1063-ledger-pro v1065-ledger-pro${modal ? " v1056-ledger-modal-table" : ""}" data-growth-plan="${m}" data-growth-view="daily">
       ${undoHtml}
-      ${pageNavHtml}
-      <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid" data-v1108-ledger-page="${pageInfo.page}" data-v1108-ledger-pages="${pageInfo.pageCount}">${blocks}</div>
+      ${pageHtml}
+      <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid">${blocks}</div>
     </section>`;
   }
   function v1060BuildLedgerPhotoSvg(mode) {
@@ -3622,22 +3512,13 @@
   }
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    host.querySelectorAll("[data-v1108-ledger-page]").forEach(btn => btn.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (btn.disabled) return;
-      const [modeRaw, pageRaw] = String(btn.dataset.v1108LedgerPage || `${m}:0`).split(":");
-      const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
-      LEDGER_VIEW_PAGE[safeMode] = Math.max(0, Number(pageRaw || 0));
-      v1056OpenDailyLedgerScreen(safeMode);
-    }));
     host.querySelectorAll("[data-v1103-ledger-test-fill]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
       if (!v1103LedgerTestModeEnabled()) return;
       const [modeRaw, targetRaw] = String(btn.dataset.v1103LedgerTestFill || `${m}:60`).split(":");
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
-      LEDGER_VIEW_PAGE[safeMode] = 0;
+      v1110SetLedgerTestPage(safeMode, 0);
       v1103FillLedgerTestRows(safeMode, Number(targetRaw || 60));
       v1056OpenDailyLedgerScreen(safeMode);
     }));
@@ -3645,7 +3526,7 @@
       event.preventDefault();
       event.stopPropagation();
       const safeMode = btn.dataset.v1103LedgerTestClear === "crypto" ? "crypto" : "bet";
-      LEDGER_VIEW_PAGE[safeMode] = 0;
+      v1110SetLedgerTestPage(safeMode, 0);
       v1103ClearLedgerTestRows(safeMode);
       v1056OpenDailyLedgerScreen(safeMode);
     }));
@@ -3653,9 +3534,19 @@
       event.preventDefault();
       event.stopPropagation();
       const safeMode = btn.dataset.v1103LedgerTestDisable === "crypto" ? "crypto" : "bet";
-      LEDGER_VIEW_PAGE[safeMode] = 0;
+      v1110SetLedgerTestPage(safeMode, 0);
       v1103ClearLedgerTestRows(safeMode);
       try { localStorage.removeItem(LEDGER_TEST_MODE_KEY); } catch {}
+      v1056OpenDailyLedgerScreen(safeMode);
+    }));
+    host.querySelectorAll("[data-v1110-ledger-page]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (btn.disabled) return;
+      const [modeRaw, action] = String(btn.dataset.v1110LedgerPage || `${m}:next`).split(":");
+      const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      const current = v1110GetLedgerTestPage(safeMode);
+      v1110SetLedgerTestPage(safeMode, action === "prev" ? current - 1 : current + 1);
       v1056OpenDailyLedgerScreen(safeMode);
     }));
     host.querySelectorAll("[data-v1057-ledger-add]").forEach(btn => btn.addEventListener("click", event => {
@@ -3751,7 +3642,7 @@
       </section>
     </div>`;
     v1103EnsureLedgerTestStyles();
-    v1104FinalizeLedgerLayout(host);
+    v1110FinalizeLedgerLayout(host);
     v1063InstallLedgerClock(host);
     host.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !el.hasAttribute("data-v1056-ledger-close")) return;
