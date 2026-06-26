@@ -133,6 +133,66 @@
       .v1104-ledger-grid-compact .v1059-ledger-summary,
       .v1104-ledger-grid-compact .v1060-ledger-summary-inline,
       .v1104-ledger-grid-compact .v1061-ledger-summary-inline{transform-origin:top left;}
+      .v1105-ledger-test-layout{width:min(var(--v1105-ledger-modal-width, calc(100vw - 18px)), calc(100vw - 18px))!important;max-width:calc(100vw - 18px)!important;}
+      .v1105-ledger-test-layout .v1056-ledger-screen-body,
+      .v1105-ledger-test-layout .v1057-ledger-screen-body{max-height:calc(100vh - 155px)!important;overflow:auto!important;padding:8px 10px 10px!important;}
+      .v1105-ledger-test-layout .v1057-ledger-sheet-grid,
+      .v1105-ledger-test-layout .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1105-ledger-cols,1), minmax(0,1fr))!important;gap:12px!important;align-items:start!important;overflow:visible!important;}
+      .v1105-ledger-test-layout .v1057-ledger-sheet,
+      .v1105-ledger-test-layout .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;}
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="1"] .v1057-ledger-sheet,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="1"] .v1061-ledger-sheet{max-width:720px!important;margin-inline:auto!important;}
+      .v1105-ledger-test-layout .v1059-ledger-summary,
+      .v1105-ledger-test-layout .v1060-ledger-summary-inline,
+      .v1105-ledger-test-layout .v1061-ledger-summary-inline,
+      .v1105-ledger-test-layout .v1104-ledger-summary-spacer-bars{height:42px!important;}
+      .v1105-ledger-test-layout .v1059-ledger-summary > div,
+      .v1105-ledger-test-layout .v1060-ledger-summary-inline > div,
+      .v1105-ledger-test-layout .v1061-ledger-summary-inline > div{min-height:42px!important;padding:4px 6px!important;}
+      .v1105-ledger-test-layout .v1059-ledger-summary span,
+      .v1105-ledger-test-layout .v1060-ledger-summary-inline span,
+      .v1105-ledger-test-layout .v1061-ledger-summary-inline span{font-size:10px!important;}
+      .v1105-ledger-test-layout .v1059-ledger-summary b,
+      .v1105-ledger-test-layout .v1060-ledger-summary-inline b,
+      .v1105-ledger-test-layout .v1061-ledger-summary-inline b{font-size:15px!important;line-height:1.0!important;}
+      .v1105-ledger-test-layout .v1057-ledger-excel-table,
+      .v1105-ledger-test-layout .v1061-ledger-excel-table{table-layout:fixed!important;width:100%!important;}
+      .v1105-ledger-test-layout .v1057-ledger-excel-table th,
+      .v1105-ledger-test-layout .v1057-ledger-excel-table td,
+      .v1105-ledger-test-layout .v1061-ledger-excel-table th,
+      .v1105-ledger-test-layout .v1061-ledger-excel-table td{font-size:11px!important;padding:0 3px!important;height:26px!important;min-height:26px!important;line-height:1.08!important;}
+      .v1105-ledger-test-layout .v1057-ledger-excel-table th,
+      .v1105-ledger-test-layout .v1061-ledger-excel-table th{font-size:10px!important;height:24px!important;min-height:24px!important;padding:0 2px!important;}
+      .v1105-ledger-test-layout .v1057-ledger-excel-table td:nth-child(3),
+      .v1105-ledger-test-layout .v1061-ledger-excel-table td:nth-child(3){padding:2px 4px!important;vertical-align:middle!important;}
+      .v1105-ledger-test-layout .v1063-ledger-value{height:24px!important;min-height:24px!important;font-size:11px!important;padding:0 2px!important;}
+      .v1105-ledger-test-layout .v1063-ledger-value.item,
+      .v1105-ledger-test-layout .v1063-ledger-value.coin{padding-left:4px!important;justify-content:flex-start!important;}
+      .v1105-ledger-test-layout .v1063-ledger-value.v1069-ledger-item-lines{min-height:20px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;}
+      .v1105-ledger-test-layout .v1063-ledger-value.v1069-ledger-item-lines.v1105-ledger-item-single{display:flex!important;align-items:flex-start!important;justify-content:center!important;}
+      .v1105-ledger-test-layout .v1069-ledger-match-line{gap:3px!important;min-height:13px!important;padding:0!important;line-height:1.06!important;align-items:flex-start!important;}
+      .v1105-ledger-test-layout .v1069-ledger-status-mark{flex:0 0 14px!important;width:14px!important;min-width:14px!important;height:14px!important;font-size:13px!important;line-height:13px!important;}
+      .v1105-ledger-test-layout .v1069-ledger-match-name,
+      .v1105-ledger-test-layout .v1076-ledger-match-odd,
+      .v1105-ledger-test-layout .v1078-ledger-match-text{font-size:10px!important;line-height:1.06!important;}
+      .v1105-ledger-test-layout .v1069-ledger-pnl-cell .v1063-ledger-value,
+      .v1105-ledger-test-layout .v1069-ledger-pnl-cell .v1063-ledger-value.pnl-text{font-size:11px!important;height:24px!important;min-height:24px!important;}
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1057-ledger-excel-table th,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1057-ledger-excel-table td,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1061-ledger-excel-table th,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1061-ledger-excel-table td,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1057-ledger-excel-table th,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1057-ledger-excel-table td,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1061-ledger-excel-table th,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1061-ledger-excel-table td{font-size:10px!important;padding:0 2px!important;}
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1069-ledger-status-mark,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1069-ledger-status-mark{flex-basis:12px!important;width:12px!important;min-width:12px!important;font-size:12px!important;line-height:12px!important;}
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1069-ledger-match-name,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1076-ledger-match-odd,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="3"] .v1078-ledger-match-text,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1069-ledger-match-name,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1076-ledger-match-odd,
+      .v1105-ledger-test-layout[data-v1105-ledger-cols="4"] .v1078-ledger-match-text{font-size:9px!important;line-height:1.03!important;}
     `;
     document.head.appendChild(style);
   }
@@ -213,50 +273,55 @@
       }
     });
   }
+  function v1105LedgerChunkColumns(chunkCount) {
+    const count = Math.max(1, Number(chunkCount || 1));
+    if (count <= 1) return 1;
+    if (count === 2) return 2;
+    if (count === 3) return 3;
+    if (count === 4) return 4;
+    return 3;
+  }
+  function v1105LedgerModalWidth(cols) {
+    if (cols >= 4) return '1680px';
+    if (cols === 3) return '1460px';
+    if (cols === 2) return '1200px';
+    return '780px';
+  }
   function v1104ApplyLedgerGridFit(scope) {
     const root = scope && scope.querySelectorAll ? scope : document;
-    root.querySelectorAll('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid').forEach(grid => {
-      grid.classList.remove('v1104-ledger-grid-compact');
-      grid.style.zoom = '';
-      const sections = Array.from(grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet'));
-      const chunkCount = sections.length;
-      const parent = grid.parentElement;
-      const availableWidth = Math.max(0, Number(parent?.clientWidth || grid.clientWidth || 0) - 10);
-      let scale = 1;
-      if (chunkCount >= 3) {
-        grid.classList.add('v1104-ledger-grid-compact');
-        scale = chunkCount >= 4 ? 0.76 : 0.86;
-      }
-      requestAnimationFrame(() => {
-        const naturalWidth = Math.ceil(grid.scrollWidth || 0);
-        if (availableWidth > 0 && naturalWidth > 0 && naturalWidth > availableWidth) {
-          const fitScale = availableWidth / naturalWidth;
-          scale = Math.min(scale, fitScale);
-        }
-        scale = Math.max(0.72, Math.min(1, scale));
-        if (scale < 0.995) grid.style.zoom = String(scale);
-        else grid.style.zoom = '1';
-        grid.style.overflow = 'visible';
-      });
-    });
+    const modal = root.querySelector('.v1056-ledger-screen-modal');
+    const panel = root.querySelector('.v1054-daily-ledger');
+    const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
+    if (!modal || !panel || !grid) return;
+    const chunkCount = Math.max(1, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1);
+    const testMode = v1103LedgerTestModeEnabled();
+    modal.classList.remove('v1105-ledger-test-layout');
+    modal.removeAttribute('data-v1105-ledger-cols');
+    modal.style.removeProperty('--v1105-ledger-cols');
+    modal.style.removeProperty('--v1105-ledger-modal-width');
+    if (!testMode) return;
+    const cols = v1105LedgerChunkColumns(chunkCount);
+    modal.classList.add('v1105-ledger-test-layout');
+    modal.setAttribute('data-v1105-ledger-cols', String(cols));
+    modal.style.setProperty('--v1105-ledger-cols', String(cols));
+    modal.style.setProperty('--v1105-ledger-modal-width', v1105LedgerModalWidth(cols));
   }
   function v1104FinalizeLedgerLayout(scope) {
     const run = () => {
-      v1104SyncLedgerRowHeights(scope);
       v1104ApplyLedgerGridFit(scope);
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         v1104SyncLedgerRowHeights(scope);
-        v1104ApplyLedgerGridFit(scope);
-      }, 60);
+      });
     };
     run();
     setTimeout(run, 0);
-    setTimeout(run, 120);
+    setTimeout(run, 80);
+    setTimeout(run, 180);
   }
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:25">25'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button><span>Gerçek satırlara dokunmaz.</span></div>`;
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:25">25'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:50">50'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:75">75'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:125">125'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button><span>Gerçek satırlara dokunmaz.</span></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3199,8 +3264,9 @@
       lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, odds: 0, status: row?.status || row?.result || row?.res || "" }));
     }
     if (!lines.length) lines = [{ name: "Bahis / maç", odds: 0, status: row?.status || row?.result || row?.res || "" }];
-    const cls = `v1063-ledger-value ${extraClass} v1069-ledger-item-lines`.trim();
-    if (lines.length <= 1) {
+    const singleLine = lines.length <= 1;
+    const cls = `v1063-ledger-value ${extraClass} v1069-ledger-item-lines ${singleLine ? "v1105-ledger-item-single" : "v1105-ledger-item-multi"}`.trim();
+    if (singleLine) {
       const status = v1069LedgerLineStatus(row, lines[0]);
       const mark = v1069LedgerStatusMark(status);
       const name = lines[0].name || cleanText(row?.item || "") || "Bahis / maç";
