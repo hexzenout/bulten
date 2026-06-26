@@ -117,11 +117,13 @@
       .v1103-ledger-test-toolbar button:hover{border-color:rgba(251,191,36,.62);background:#1f2937;}
       .v1103-ledger-test-toolbar button.danger{border-color:rgba(248,113,113,.38);background:#3f1118;color:#fecaca;}
       .v1103-ledger-test-toolbar span{display:none!important;}
-      .v1110-ledger-header-pager{display:inline-flex;align-items:center;gap:6px;height:30px;margin-right:4px;padding:0 7px;border:1px solid rgba(251,191,36,.34);border-radius:10px;background:rgba(2,6,23,.70);color:#e5e7eb;font-size:11px;font-weight:900;white-space:nowrap;}
-      .v1110-ledger-header-pager button{height:23px;border-radius:7px;border:1px solid rgba(148,163,184,.36);background:#111827;color:#f8fafc;font-size:10px;font-weight:950;padding:0 6px;cursor:pointer;}
-      .v1110-ledger-header-pager button:disabled{opacity:.35;cursor:not-allowed;}
-      .v1110-ledger-header-pager b{color:#fbbf24;font-size:11px;font-weight:950;}
-      .v1110-ledger-header-pager span{opacity:.88;}
+      .v1112-ledger-title-row{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;}
+      .v1112-ledger-title-row > b{white-space:nowrap!important;flex:0 0 auto!important;}
+      .v1110-ledger-header-pager{position:static!important;transform:none!important;display:inline-flex!important;align-items:center!important;gap:5px!important;height:26px!important;margin:0 0 0 8px!important;padding:0 6px!important;border:1px solid rgba(251,191,36,.45)!important;border-radius:9px!important;background:rgba(15,23,42,.92)!important;color:#e5e7eb!important;font-size:11px!important;font-weight:900!important;white-space:nowrap!important;box-shadow:none!important;filter:none!important;opacity:1!important;}
+      .v1110-ledger-header-pager button{height:21px!important;border-radius:7px!important;border:1px solid rgba(148,163,184,.40)!important;background:#111827!important;color:#f8fafc!important;font-size:10px!important;font-weight:950!important;padding:0 6px!important;cursor:pointer!important;line-height:1!important;}
+      .v1110-ledger-header-pager button:disabled{opacity:.35!important;cursor:not-allowed!important;}
+      .v1110-ledger-header-pager b{color:#fbbf24!important;font-size:11px!important;font-weight:950!important;line-height:1!important;}
+      .v1110-ledger-header-pager span{opacity:.90!important;line-height:1!important;}
       .v1110-ledger-pager{display:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal{width:min(1500px, calc(100vw - 12px))!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 8px)!important;max-height:calc(100vh - 8px)!important;margin:4px auto!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="1"]{width:min(735px, calc(100vw - 12px))!important;}
@@ -169,32 +171,36 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3),
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table td:nth-child(3){vertical-align:middle!important;padding:0 5px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:6%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5%!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(2),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2){width:15%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2){width:16.5%!important;white-space:nowrap!important;font-size:11px!important;padding-left:2px!important;padding-right:2px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:36%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:34%!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:9%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:10%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5){width:13%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5){width:13.5%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:7%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:7%!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:14%!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value{height:auto!important;min-height:0!important;font-size:11px!important;line-height:1.05!important;padding:0 2px!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines{height:100%!important;min-height:0!important;padding:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;background:transparent!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:14%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value{height:auto!important;min-height:0!important;font-size:11px!important;line-height:1.04!important;padding:0 2px!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines{height:100%!important;min-height:0!important;padding:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:1px!important;background:transparent!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{justify-content:center!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line{display:grid!important;grid-template-columns:13px minmax(0,1fr)!important;column-gap:2px!important;align-items:start!important;min-height:0!important;margin:0!important;padding:0!important;line-height:1.05!important;overflow:visible!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-item-single .v1069-ledger-match-line{align-items:center!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{width:13px!important;min-width:13px!important;height:13px!important;font-size:13px!important;line-height:13px!important;margin:0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{font-size:10px!important;line-height:1.05!important;font-weight:900!important;overflow:visible!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-name,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1076-ledger-match-odd{font-size:10px!important;line-height:1.05!important;opacity:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line{display:grid!important;grid-template-columns:12px minmax(0,1fr)!important;column-gap:2px!important;align-items:center!important;min-height:0!important;width:100%!important;margin:0!important;padding:0!important;line-height:1.02!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-item-multi .v1069-ledger-match-line{align-items:start!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{width:12px!important;min-width:12px!important;height:12px!important;font-size:12px!important;line-height:12px!important;margin:0!important;text-align:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{display:block!important;min-width:0!important;font-size:10px!important;line-height:1.03!important;font-weight:900!important;white-space:normal!important;overflow:visible!important;overflow-wrap:normal!important;word-break:normal!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-name{display:inline!important;font-size:10px!important;line-height:1.03!important;opacity:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1076-ledger-match-odd{display:inline!important;margin-left:2px!important;font-size:10px!important;line-height:1.03!important;opacity:1!important;white-space:nowrap!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1112-ledger-soft-break{display:block!important;content:""!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-item-single .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-item-single .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-item-single .v1076-ledger-match-odd{font-size:10.5px!important;line-height:1.04!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1078-ledger-match-text,
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1069-ledger-match-name,
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1076-ledger-match-odd{font-size:9px!important;line-height:1.0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1069-ledger-status-mark{width:12px!important;min-width:12px!important;font-size:12px!important;line-height:12px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1069-ledger-status-mark{width:11px!important;min-width:11px!important;font-size:11px!important;line-height:11px!important;height:11px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-pnl-cell .v1063-ledger-value{color:#fff!important;font-weight:1000!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 8px)!important;max-width:calc(100vw - 8px)!important;}}
     `;
@@ -3284,6 +3290,14 @@
     if (!Number.isFinite(n) || n <= 0) return "";
     return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
+  function v1112LedgerMatchNameHtml(name) {
+    const safe = escapeHtml(cleanText(name || ""));
+    if (!safe) return "";
+    return safe
+      .replace(/\s+ve\s+(\d+\s+gol\s+atar(?:\s+\d+)*)/giu, '<br class="v1112-ledger-soft-break">ve $1')
+      .replace(/\s+ve\s+(\d+(?:[.,]\d+)?\s*(?:üst|alt)\b)/giu, '<br class="v1112-ledger-soft-break">ve $1')
+      .replace(/\s+(?:veya|ya da)\s+/giu, '<br class="v1112-ledger-soft-break">$&');
+  }
   function v1069LedgerSplitItemText(text) {
     return String(text || "").split(/\s+\+\s+/).map(part => part.replace(/\s*\|\s*\d+(?:[.,]\d+)?\s*$/g, "").trim()).filter(Boolean);
   }
@@ -3306,7 +3320,7 @@
       const title = `${mark} ${name}`;
       const odds = v1076LedgerOddsText(lines[0]?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span></span>`;
+      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map(line => {
@@ -3315,7 +3329,7 @@
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span>`;
+      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
@@ -3675,9 +3689,8 @@
     host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
       <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
         <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head">
-          <div><b>${title}</b></div>
+          <div class="v1112-ledger-title-row"><b>${title}</b>${v1110LedgerHeaderPagerHtml(m)}</div>
           <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
-            ${v1110LedgerHeaderPagerHtml(m)}
             <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
             <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
             <button type="button" data-v1056-ledger-close>×</button>
