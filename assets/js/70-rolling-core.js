@@ -34,6 +34,7 @@
   const GROWTH_PANEL_VIEW_KEY = "v1053_rolling_growth_panel_view_v1";
   const ROLLING_RESTORE_KEY = "v1046_restore_rolling_excel_v1";
   const DAILY_LEDGER_EDIT_KEY = "v1057_rolling_daily_ledger_edits_v1";
+  const LEDGER_TEST_MODE_KEY = "v1103_rolling_daily_ledger_test_mode_v1";
   let HISTORY_OPEN_MODE = null;
   let LOG_CENTER_OPEN_MODE = null;
   let REPORT_CENTER_OPEN_MODE = null;
@@ -86,6 +87,87 @@
     }, true);
   }
   v1102InstallDailyLedgerOpenGuard();
+
+  function v1103LedgerTestModeEnabled() {
+    let enabled = false;
+    try {
+      const href = String(window.location?.href || "");
+      if (/(?:[?&#]|^)ledgerTest=1(?:&|#|$)/.test(href)) localStorage.setItem(LEDGER_TEST_MODE_KEY, "1");
+      if (/(?:[?&#]|^)ledgerTest=0(?:&|#|$)/.test(href)) localStorage.removeItem(LEDGER_TEST_MODE_KEY);
+      enabled = localStorage.getItem(LEDGER_TEST_MODE_KEY) === "1";
+    } catch {}
+    return enabled;
+  }
+  function v1103IsLedgerTestRow(row) {
+    const id = String(row?.id || "");
+    return !!row?.testOnly || row?.source === "test" || id.startsWith("test_") || id.startsWith("ledger_test_");
+  }
+  function v1103EnsureLedgerTestStyles() {
+    if (!v1103LedgerTestModeEnabled() || document.getElementById("v1103-ledger-test-style")) return;
+    const style = document.createElement("style");
+    style.id = "v1103-ledger-test-style";
+    style.textContent = `
+      .v1103-ledger-test-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 12px 10px;padding:10px;border:1px dashed rgba(251,191,36,.42);border-radius:14px;background:rgba(15,23,42,.78);color:#e5e7eb;font-size:12px;font-weight:850;}
+      .v1103-ledger-test-toolbar strong{color:#fbbf24;font-size:12px;font-weight:950;margin-right:4px;}
+      .v1103-ledger-test-toolbar button{height:30px;border-radius:10px;border:1px solid rgba(148,163,184,.35);background:#111827;color:#f8fafc;font-size:12px;font-weight:900;padding:0 10px;cursor:pointer;}
+      .v1103-ledger-test-toolbar button:hover{border-color:rgba(251,191,36,.62);background:#1f2937;}
+      .v1103-ledger-test-toolbar button.danger{border-color:rgba(248,113,113,.38);background:#3f1118;color:#fecaca;}
+      .v1103-ledger-test-toolbar span{opacity:.78;}
+    `;
+    document.head.appendChild(style);
+  }
+  function v1103ClearLedgerTestRows(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const edits = v1057LoadLedgerEdits();
+    if (!edits[m] || typeof edits[m] !== "object") return;
+    edits[m].manual = (edits[m].manual || []).filter(row => !v1103IsLedgerTestRow(row));
+    v1057SaveLedgerEdits(edits);
+  }
+  function v1103BuildLedgerTestRow(mode, index, ts) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const n = index + 1;
+    const dayOffset = Math.floor(index / 4);
+    const dateObj = new Date(ts + dayOffset * 24 * 60 * 60 * 1000);
+    const date = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}`;
+    const id = `ledger_test_${m}_${ts}_${String(n).padStart(3, "0")}`;
+    if (m === "crypto") {
+      const side = index % 2 === 0 ? "Long" : "Short";
+      const pnl = index % 5 === 0 ? -18 : 24;
+      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `TEST${n}USDT`, kind: side, stake: "$100.00", roi: pnl > 0 ? "24%" : "-18%", pnl: v1069LedgerPnlText(pnl), pnlRaw: pnl, status: pnl > 0 ? "win" : "loss" };
+    }
+    const pattern = index % 4;
+    const stake = pattern === 2 ? 100 : pattern === 1 ? 50 : 25;
+    if (pattern === 1) {
+      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Gs ${n} + Test Bjk ${n}`, itemLines: [
+        { name: `Test Gs ${n}`, odds: 2, status: "pending" },
+        { name: `Test Bjk ${n}`, odds: 2, status: "pending" }
+      ], kind: "Kombine", stake: money(stake), roi: "4", pnl: v1069LedgerPnlText(150), pnlRaw: 150, status: "pending" };
+    }
+    if (pattern === 2) {
+      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Fenerbahçe kazanır ve 5 gol atar ${n} + Test Galatasaray çifte şans ${n}`, itemLines: [
+        { name: `Test Fenerbahçe kazanır ve 5 gol atar ${n}`, odds: 2, status: "win" },
+        { name: `Test Galatasaray çifte şans ${n}`, odds: 1.84, status: "loss" }
+      ], kind: "Kombine", stake: money(stake), roi: "3,68", pnl: v1069LedgerPnlText(268), pnlRaw: 268, status: "win" };
+    }
+    const won = pattern !== 3;
+    return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Tekli Maç ${n}`, itemLines: [{ name: `Test Tekli Maç ${n}`, odds: 2, status: won ? "win" : "loss" }], kind: "Tek", stake: money(stake), roi: "2", pnl: v1069LedgerPnlText(won ? stake : -stake), pnlRaw: won ? stake : -stake, status: won ? "win" : "loss" };
+  }
+  function v1103FillLedgerTestRows(mode, targetCount) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    v1103ClearLedgerTestRows(m);
+    const realCount = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row)).length;
+    const total = Math.max(0, Number(targetCount || 0));
+    const addCount = Math.max(0, total - realCount);
+    const edits = v1057LoadLedgerEdits();
+    const ts = Date.now() + 1000;
+    for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts));
+    v1057SaveLedgerEdits(edits);
+  }
+  function v1103LedgerTestToolbar(mode) {
+    if (!v1103LedgerTestModeEnabled()) return "";
+    const m = mode === "crypto" ? "crypto" : "bet";
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:25">25'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button><span>Gerçek satırlara dokunmaz.</span></div>`;
+  }
 
   function restoreActivePanelAfterConfirm(mode) {
     const panelMode = mode === "crypto" ? "crypto" : "bet";
@@ -2905,6 +2987,7 @@
       });
     (modeEdits.manual || []).forEach(row => {
       if (!row || !row.id || modeEdits.deleted?.[row.id]) return;
+      if (v1103IsLedgerTestRow(row) && !v1103LedgerTestModeEnabled()) return;
       const merged = { ts: Number(row.ts || Date.now()), source: "manual", no: "", date: "", time: "", item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, ...row, manual: true };
       if (!merged.force && !v1061LedgerHasContent(merged)) return;
       byId.set(row.id, merged);
@@ -3281,6 +3364,30 @@
   }
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
+    host.querySelectorAll("[data-v1103-ledger-test-fill]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!v1103LedgerTestModeEnabled()) return;
+      const [modeRaw, targetRaw] = String(btn.dataset.v1103LedgerTestFill || `${m}:60`).split(":");
+      const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      v1103FillLedgerTestRows(safeMode, Number(targetRaw || 60));
+      v1056OpenDailyLedgerScreen(safeMode);
+    }));
+    host.querySelectorAll("[data-v1103-ledger-test-clear]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const safeMode = btn.dataset.v1103LedgerTestClear === "crypto" ? "crypto" : "bet";
+      v1103ClearLedgerTestRows(safeMode);
+      v1056OpenDailyLedgerScreen(safeMode);
+    }));
+    host.querySelectorAll("[data-v1103-ledger-test-disable]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const safeMode = btn.dataset.v1103LedgerTestDisable === "crypto" ? "crypto" : "bet";
+      v1103ClearLedgerTestRows(safeMode);
+      try { localStorage.removeItem(LEDGER_TEST_MODE_KEY); } catch {}
+      v1056OpenDailyLedgerScreen(safeMode);
+    }));
     host.querySelectorAll("[data-v1057-ledger-add]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
@@ -3369,9 +3476,11 @@
             <button type="button" data-v1056-ledger-close>×</button>
           </div>
         </header>
+        ${v1103LedgerTestToolbar(m)}
         <div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div>
       </section>
     </div>`;
+    v1103EnsureLedgerTestStyles();
     v1063InstallLedgerClock(host);
     host.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !el.hasAttribute("data-v1056-ledger-close")) return;
