@@ -1709,7 +1709,39 @@
     const totals = rowBetTotals(row);
     const h = loadHistory();
     const now = Date.now();
-    const couponMatches = Array.isArray(coupon.matches) && coupon.matches.length ? coupon.matches : getSlotMatches(row);
+    const collectCouponMatches = () => {
+      const collected = [];
+      const addMatch = (match, fallbackIndex) => {
+        const name = cleanText(match?.name || match?.match || match?.label || "");
+        if (!name) return;
+        collected.push({
+          name,
+          odds: Number(match?.odds || 0),
+          index: Number(match?.index ?? fallbackIndex ?? collected.length),
+          status: cleanText(match?.status || "")
+        });
+      };
+      const sourceRows = Array.isArray(coupon.rows) && coupon.rows.length ? coupon.rows.filter(Boolean) : [];
+      if (sourceRows.length >= 2) {
+        sourceRows.forEach((srcRow, rowIdx) => {
+          const rowMatches = getSlotMatches(srcRow);
+          if (rowMatches.length) rowMatches.forEach(match => addMatch(match, rowIdx));
+          else addMatch({ name: srcRow?.name || srcRow?.match || srcRow?.label, odds: srcRow?.odds, status: srcRow?.status }, rowIdx);
+        });
+      }
+      if (!collected.length && Array.isArray(coupon.matches) && coupon.matches.length) {
+        coupon.matches.forEach((match, idx) => addMatch(match, idx));
+      }
+      if (!collected.length) getSlotMatches(row).forEach((match, idx) => addMatch(match, idx));
+      const seen = new Set();
+      return collected.filter(match => {
+        const key = `${match.name}::${match.odds || ""}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    };
+    const couponMatches = collectCouponMatches();
     const names = couponMatches.map(m => cleanText(m?.name || "")).filter(Boolean);
     const finalStatus = status === "loss" ? "loss" : "win";
     const rec = {
