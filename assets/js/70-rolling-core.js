@@ -3079,7 +3079,8 @@
     const widths = [52, 128, 300, 92, 118, 88, 130];
     const safe = (value) => escapeHtml(String(value ?? ""));
     const dataRows = rows.length ? rows : [{ no: "", date: "", _displayDate: "", item: "Kayıt yok", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, itemLines: [] }];
-    const photoStatusColor = (status) => status === "loss" ? "#7f1d1d" : status === "win" ? "#064e3b" : "#64748b";
+    const ledgerOddGold = "#fbbf24";
+    const photoStatusColor = (status) => status === "loss" ? "#7f1d1d" : status === "win" ? "#064e3b" : "#475569";
     const wrapText = (value, limit = 32, maxLines = 4) => {
       const raw = cleanText(value || "");
       if (!raw) return [""];
@@ -3117,17 +3118,17 @@
       let lines = base.map(line => ({ ...line, name: cleanText(line?.name || "") })).filter(line => line.name);
       if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, status: row?.status || row?.result || row?.res || "" }));
       if (!lines.length) lines = [{ name: cleanText(row?.item || "") || "Bahis / maç", status: row?.status || row?.result || row?.res || "" }];
-      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line), wrapped: wrapText(line.name, 34, 4) }));
+      return lines.map(line => {
+        const oddsText = v1076LedgerOddsText(line?.odds);
+        return { ...line, status: v1069LedgerLineStatus(row, line), oddsText, wrapped: wrapText(line.name, oddsText ? 30 : 34, 4) };
+      });
     };
+    const photoLineStep = 16;
+    const photoLineGap = 4;
     const rowMeta = dataRows.map(row => {
       const lines = betPhotoLines(row);
-      const textLineCount = m === "bet" ? Math.max(1, lines.reduce((sum, line) => {
-        const odds = v1076LedgerOddsText(line?.odds);
-        const wrapped = wrapText(line?.name || "Bahis / maç", odds ? 28 : 34, 4);
-        return sum + Math.max(1, wrapped.length);
-      }, 0)) : 1;
-      const lineGap = m === "bet" ? Math.max(0, lines.length - 1) * 6 : 0;
-      const height = m === "bet" ? Math.max(34, 18 + textLineCount * 17 + lineGap) : 34;
+      const textLineCount = m === "bet" ? Math.max(1, lines.reduce((sum, line) => sum + Math.max(1, (line.wrapped || []).length), 0)) : 1;
+      const height = m === "bet" ? Math.max(36, 14 + textLineCount * photoLineStep + Math.max(0, lines.length - 1) * photoLineGap) : 34;
       return { row, lines, height };
     });
     const tableW = widths.reduce((a,b)=>a+b,0);
@@ -3172,24 +3173,23 @@
           cell += lines.map(line => {
             const status = line.status === "loss" ? "loss" : line.status === "win" ? "win" : "pending";
             const mark = v1069LedgerStatusMark(status);
-            const oddsText = v1076LedgerOddsText(line?.odds);
-            const wrapped = wrapText(line.name || "Bahis / maç", oddsText ? 28 : 34, 4);
-            const firstY = y + 20 + textOffset;
+            const oddsText = line.oddsText || v1076LedgerOddsText(line?.odds);
+            const wrapped = (Array.isArray(line.wrapped) && line.wrapped.length) ? line.wrapped : wrapText(line.name || "Bahis / maç", oddsText ? 30 : 34, 4);
+            const firstY = y + 19 + textOffset;
             const markColor = photoStatusColor(status);
+            const markStroke = status === "pending" ? ".55" : ".22";
             const lineX = xx + 10;
             const followX = xx + 28;
             const firstPart = wrapped[0] || "Bahis / maç";
-            const lineStep = 17;
-            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="900">${safe(oddsText)}</tspan>` : "";
-            const markText = `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="none" font-size="15" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text>`;
-            const firstText = `<text x="${followX}" y="${firstY}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
+            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="${ledgerOddGold}" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+            const firstText = `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="${markColor}" stroke-width="${markStroke}" paint-order="stroke fill" font-size="14" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
             const restText = wrapped.slice(1).map((part, wrapIdx, rest) => {
               const isLast = wrapIdx === rest.length - 1;
-              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="900">${safe(oddsText)}</tspan>` : "";
-              return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * lineStep}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
+              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="${ledgerOddGold}" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+              return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * photoLineStep}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
             }).join("");
-            textOffset += Math.max(1, wrapped.length) * lineStep + 6;
-            return markText + firstText + restText;
+            textOffset += Math.max(1, wrapped.length) * photoLineStep + photoLineGap;
+            return firstText + restText;
           }).join("");
         } else {
           const rawText = String(v ?? "");
