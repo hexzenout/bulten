@@ -3197,7 +3197,7 @@
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="22" y="22" width="${width-44}" height="${height-44}" rx="18" fill="#0b1220" stroke="#334155"/><text x="40" y="${titleY}" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="950">${safe(title)}</text>${summaryCells}${headerCells}${body}</svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
-  function v1091OpenLedgerPhotoWindow(mode) {
+  function v1092OpenLedgerSnapshotWindow(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const dataUrl = v1060BuildLedgerPhotoSvg(m);
     if (!dataUrl) {
@@ -3207,11 +3207,11 @@
     const host = getRollingPhotoHost();
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
     const filename = `bulten-${m === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
-    host.innerHTML = `<div class="v781-photo-overlay v1091-ledger-photo-window" data-v1091-ledger-photo-close>
-      <section class="v781-photo-modal v1091-ledger-photo-modal ${m}" role="dialog" aria-modal="true" aria-label="${escapeHtml(title)} fotoğraf penceresi" onclick="event.stopPropagation()">
-        <button type="button" class="v1091-ledger-photo-download" data-v1091-ledger-photo-download><i class="fa-solid fa-download" aria-hidden="true"></i><span>Resmi İndir</span></button>
-        <button type="button" class="v1091-ledger-photo-close" data-v1091-ledger-photo-close aria-label="Kapat">×</button>
-        <img class="v1091-ledger-photo-img" src="${dataUrl}" alt="${escapeHtml(title)} fotoğrafı">
+    host.innerHTML = `<div class="v781-photo-overlay v1092-ledger-photo-overlay" data-v1092-ledger-photo-close>
+      <section class="v781-photo-modal v1092-ledger-photo-modal ${m}" role="dialog" aria-modal="true" aria-label="${escapeHtml(title)} fotoğraf penceresi" onclick="event.stopPropagation()">
+        <button type="button" class="v1092-ledger-photo-download" data-v1092-ledger-photo-download><i class="fa-solid fa-download" aria-hidden="true"></i><span>Resmi İndir</span></button>
+        <button type="button" class="v1092-ledger-photo-close" data-v1092-ledger-photo-close aria-label="Kapat">×</button>
+        <img class="v1092-ledger-photo-img" src="${dataUrl}" alt="${escapeHtml(title)} fotoğrafı">
       </section>
     </div>`;
     host.style.display = "block";
@@ -3221,11 +3221,11 @@
       host.style.display = "none";
       host.setAttribute("aria-hidden", "true");
     };
-    host.querySelectorAll("[data-v1091-ledger-photo-close]").forEach(el => el.addEventListener("click", event => {
-      if (event.target !== el && !event.target.hasAttribute("data-v1091-ledger-photo-close")) return;
+    host.querySelectorAll("[data-v1092-ledger-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v1092-ledger-photo-close")) return;
       close();
     }));
-    host.querySelector("[data-v1091-ledger-photo-download]")?.addEventListener("click", event => {
+    host.querySelector("[data-v1092-ledger-photo-download]")?.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
       v781DownloadPngFromSvg(dataUrl, filename);
@@ -3335,7 +3335,7 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      v1091OpenLedgerPhotoWindow(photoMode);
+      v1092OpenLedgerSnapshotWindow(photoMode);
     }));
     v1057BindLedgerScreen(host, m);
   }
