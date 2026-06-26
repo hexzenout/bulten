@@ -18210,39 +18210,40 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   color:#fff!important;
 }
 
-/* V1084: Defter + kamera maç işareti ve oran için temiz son katman
-   Kaynak oran tonu: aktif GÜN kutusundaki Oran değer tonu (#fbbf24).
-   Yapı: işaret sabit sol kolon, maç adı + oran sağ kolon. Alt satır işaret altına değil metin hizasına iner. */
+/* V1082: Defter/kamera maç işareti + oran final şeması
+   - İşaret sabit sol kolon: alt satırlar maç yazısı hizasından devam eder.
+   - Oran tonu, GÜN kutusundaki oran metniyle aynı kaynak ton: #fbbf24.
+   - Önceki V1076-V1081 işaret/oran override katmanları temizlenmiştir. */
 .v1065-ledger-pro .v1069-ledger-match-line{
-  display:grid!important;
-  grid-template-columns:16px minmax(0,1fr)!important;
-  column-gap:4px!important;
-  align-items:start!important;
+  display:block!important;
   width:100%!important;
   min-height:16px!important;
   margin:0!important;
-  padding:1px 0!important;
-  text-indent:0!important;
+  padding:1px 0 1px 18px!important;
+  text-indent:-18px!important;
   background:transparent!important;
   border:0!important;
   box-shadow:none!important;
   border-radius:0!important;
   color:#111827!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  line-height:1.24!important;
   white-space:normal!important;
   overflow:visible!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
 }
 .v1065-ledger-pro .v1069-ledger-status-mark{
-  grid-column:1!important;
-  display:block!important;
-  width:16px!important;
-  min-width:16px!important;
-  height:16px!important;
-  margin:0!important;
+  display:inline-block!important;
+  width:15px!important;
+  min-width:15px!important;
+  height:auto!important;
+  margin:0 3px 0 0!important;
   padding:0!important;
   text-indent:0!important;
   text-align:center!important;
-  align-self:start!important;
-  justify-self:center!important;
+  vertical-align:baseline!important;
   position:static!important;
   top:auto!important;
   transform:none!important;
@@ -18253,33 +18254,28 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   border-radius:0!important;
   appearance:none!important;
   -webkit-appearance:none!important;
-  font-family:"Arial Black",Arial,Helvetica,sans-serif!important;
-  font-size:15px!important;
-  font-weight:900!important;
-  line-height:15px!important;
-  vertical-align:top!important;
-  -webkit-text-stroke:.22px currentColor!important;
-  text-shadow:0 0 .12px currentColor!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:14px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  -webkit-text-stroke:.18px currentColor!important;
+  text-shadow:0 0 .08px currentColor!important;
 }
 .v1065-ledger-pro .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#064e3b!important;}
 .v1065-ledger-pro .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#7f1d1d!important;}
 .v1065-ledger-pro .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
   color:#475569!important;
-  font-size:15px!important;
-  font-weight:900!important;
-  -webkit-text-stroke:.55px currentColor!important;
+  font-size:14px!important;
+  font-weight:1000!important;
+  -webkit-text-stroke:.45px currentColor!important;
   text-shadow:none!important;
 }
 .v1065-ledger-pro .v1078-ledger-match-text{
-  grid-column:2!important;
-  display:block!important;
+  display:inline!important;
   min-width:0!important;
   max-width:100%!important;
   text-indent:0!important;
-  color:#111827!important;
-  font-size:12px!important;
-  font-weight:900!important;
-  line-height:1.22!important;
+  line-height:1.24!important;
   white-space:normal!important;
   overflow:visible!important;
   word-break:normal!important;
@@ -18290,7 +18286,7 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   color:#111827!important;
   font-size:12px!important;
   font-weight:900!important;
-  line-height:1.22!important;
+  line-height:1.24!important;
   white-space:normal!important;
   overflow:visible!important;
   text-overflow:clip!important;
@@ -18310,7 +18306,18 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   color:#fbbf24!important;
   font-size:12px!important;
   font-weight:950!important;
-  line-height:1.22!important;
+  line-height:1.24!important;
   white-space:nowrap!important;
   vertical-align:baseline!important;
+}
+
+
+/* V1086: BAHİS/KUPON DEFTERİ oran rengi - GÜN kutusundaki Oran metniyle birebir altın ton (#fbbf24). */
+.v1065-ledger-pro .v1076-ledger-match-odd,
+#v1056-ledger-screen-host .v1065-ledger-pro .v1076-ledger-match-odd{
+  color:#fbbf24!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
 }
