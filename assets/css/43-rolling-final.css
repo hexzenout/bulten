@@ -18473,3 +18473,97 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   text-shadow:none!important;
 }
 
+
+/* V1095: Kupon Defteri koyu hücre ince ayar + maç ayraçları + büyük görüntüle kamera */
+.v1065-ledger-pro.bet .v1069-ledger-match-line + .v1069-ledger-match-line,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line + .v1069-ledger-match-line{
+  border-top:1px solid rgba(148,163,184,.44)!important;
+  margin-top:3px!important;
+  padding-top:4px!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark{
+  color:#064e3b!important;
+  -webkit-text-fill-color:#064e3b!important;
+  -webkit-text-stroke:.45px #064e3b!important;
+  text-shadow:0 0 .08px #064e3b!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark{
+  color:#7f1d1d!important;
+  -webkit-text-fill-color:#7f1d1d!important;
+  -webkit-text-stroke:.45px #7f1d1d!important;
+  text-shadow:0 0 .08px #7f1d1d!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
+  color:#334155!important;
+  -webkit-text-fill-color:#334155!important;
+  font-size:18px!important;
+  font-weight:1000!important;
+  line-height:.9!important;
+  transform:translateX(3px) scaleX(1.16)!important;
+  -webkit-text-stroke:.78px #334155!important;
+  text-shadow:none!important;
+}
+#omega-rolling-photo-host .v1095-ledger-photo-overlay{
+  align-items:flex-start!important;
+  justify-content:center!important;
+  padding:18px!important;
+  background:rgba(2,6,23,.82)!important;
+}
+#omega-rolling-photo-host .v1095-ledger-photo-modal{
+  width:min(1040px,96vw)!important;
+  max-height:92vh!important;
+  overflow:auto!important;
+  box-sizing:border-box!important;
+  padding:12px!important;
+  border-radius:18px!important;
+  border:1px solid rgba(148,163,184,.28)!important;
+  background:#020617!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.62)!important;
+}
+#omega-rolling-photo-host .v1095-ledger-photo-toolbar{
+  position:sticky!important;
+  top:0!important;
+  z-index:2!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  padding:0 0 10px!important;
+  background:#020617!important;
+}
+#omega-rolling-photo-host .v1095-ledger-photo-toolbar [data-v781-photo-download]{
+  height:34px!important;
+  padding:0 14px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(251,191,36,.55)!important;
+  background:#fbbf24!important;
+  color:#111827!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  cursor:pointer!important;
+}
+#omega-rolling-photo-host .v1095-ledger-photo-close{
+  width:34px!important;
+  height:34px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(248,113,113,.34)!important;
+  background:rgba(127,29,29,.45)!important;
+  color:#fecaca!important;
+  font-size:20px!important;
+  font-weight:900!important;
+  cursor:pointer!important;
+}
+#omega-rolling-photo-host .v1095-ledger-photo-modal img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  margin:0!important;
+  border-radius:14px!important;
+  border:1px solid rgba(148,163,184,.24)!important;
+  background:#020617!important;
+}

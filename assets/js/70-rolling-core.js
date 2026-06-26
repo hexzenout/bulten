@@ -1530,6 +1530,23 @@
     });
   }
 
+  function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı") {
+    if (!dataUrl) return;
+    const host = getRollingPhotoHost();
+    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar"><button type="button" data-v781-photo-download>Resmi İndir</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><img src="${dataUrl}" alt="${escapeHtml(title)}"></section></div>`;
+    host.style.display = "block";
+    host.setAttribute("aria-hidden", "false");
+    host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
+      host.innerHTML = "";
+      host.style.display = "none";
+      host.setAttribute("aria-hidden", "true");
+    }));
+    host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
+      v781DownloadPngFromSvg(dataUrl, filename);
+    });
+  }
+
   function openTargetItemPhoto(mode, id) {
     const payload = v816BuildTargetItemPhotoData(mode, id);
     if (!payload) {
@@ -3079,7 +3096,7 @@
     const widths = [52, 128, 300, 92, 118, 88, 130];
     const safe = (value) => escapeHtml(String(value ?? ""));
     const dataRows = rows.length ? rows : [{ no: "", date: "", _displayDate: "", item: "Kayıt yok", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, itemLines: [] }];
-    const photoStatusColor = (status) => status === "loss" ? "#7f1d1d" : status === "win" ? "#064e3b" : "#64748b";
+    const photoStatusColor = (status) => status === "loss" ? "#7f1d1d" : status === "win" ? "#064e3b" : "#334155";
     const wrapText = (value, limit = 32, maxLines = 4) => {
       const raw = cleanText(value || "");
       if (!raw) return [""];
@@ -3122,7 +3139,7 @@
     const rowMeta = dataRows.map(row => {
       const lines = betPhotoLines(row);
       const textLineCount = m === "bet" ? Math.max(1, lines.reduce((sum, line) => sum + Math.max(1, (line.wrapped || []).length), 0)) : 1;
-      const height = m === "bet" ? Math.max(34, 14 + textLineCount * 15 + Math.max(0, lines.length - 1) * 3) : 34;
+      const height = m === "bet" ? Math.max(34, 14 + textLineCount * 15 + Math.max(0, lines.length - 1) * 5) : 34;
       return { row, lines, height };
     });
     const tableW = widths.reduce((a,b)=>a+b,0);
@@ -3157,31 +3174,34 @@
       let xx = 40;
       return values.map((v, i) => {
         const isPnl = i === 6;
+        const isBetItem = m === "bet" && i === 2;
         const neg = isPnl && (/^-/.test(String(v)) || Number(r.pnlRaw || 0) < 0);
-        const fill = isPnl ? (neg ? "#7f1d1d" : "#064e3b") : "#f8fafc";
-        const color = isPnl ? "#ffffff" : "#111827";
+        const fill = isPnl ? (neg ? "#7f1d1d" : "#064e3b") : (isBetItem ? "#0e1629" : "#f8fafc");
+        const color = isPnl ? "#ffffff" : (isBetItem ? "#f8fafc" : "#111827");
         let cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="${meta.height}" fill="${fill}" stroke="#0f172a"/>`;
-        if (m === "bet" && i === 2) {
+        if (isBetItem) {
           const lines = meta.lines.length ? meta.lines : [{ name: String(v || "Bahis / maç"), status: "pending", wrapped: wrapText(v || "Bahis / maç", 34, 4) }];
           let textOffset = 0;
-          cell += lines.map(line => {
+          cell += lines.map((line, lineIndex) => {
             const status = line.status === "loss" ? "loss" : line.status === "win" ? "win" : "pending";
             const mark = v1069LedgerStatusMark(status);
             const oddsText = v1076LedgerOddsText(line?.odds);
             const wrapped = wrapText(line.name || "Bahis / maç", oddsText ? 30 : 34, 4);
             const firstY = y + 18 + textOffset;
             const markColor = photoStatusColor(status);
-            const lineX = xx + 10;
+            const lineX = xx + 10 + (status === "pending" ? 3 : 0);
             const followX = xx + 28;
             const firstPart = wrapped[0] || "Bahis / maç";
+            const separator = lineIndex > 0 ? `<line x1="${xx + 8}" y1="${firstY - 12}" x2="${xx + widths[i] - 8}" y2="${firstY - 12}" stroke="#334155" stroke-width="1" opacity=".95"/>` : "";
+            const markSize = status === "pending" ? 17 : 14;
             const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
-            const firstText = `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="none" font-size="14" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
+            const firstText = `${separator}<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="none" font-size="${markSize}" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#f8fafc" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
             const restText = wrapped.slice(1).map((part, wrapIdx, rest) => {
               const isLast = wrapIdx === rest.length - 1;
               const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
-              return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
+              return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#f8fafc" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
             }).join("");
-            textOffset += Math.max(1, wrapped.length) * 15 + 3;
+            textOffset += Math.max(1, wrapped.length) * 15 + 5;
             return firstText + restText;
           }).join("");
         } else {
@@ -3197,41 +3217,6 @@
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="22" y="22" width="${width-44}" height="${height-44}" rx="18" fill="#0b1220" stroke="#334155"/><text x="40" y="${titleY}" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="950">${safe(title)}</text>${summaryCells}${headerCells}${body}</svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
-  function v1092OpenLedgerSnapshotWindow(mode) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const dataUrl = v1060BuildLedgerPhotoSvg(m);
-    if (!dataUrl) {
-      alert(m === "crypto" ? "Fotoğraf için önce işlem kaydı gerekli." : "Fotoğraf için önce bahis / kupon kaydı gerekli.");
-      return;
-    }
-    const host = getRollingPhotoHost();
-    const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
-    const filename = `bulten-${m === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
-    host.innerHTML = `<div class="v781-photo-overlay v1092-ledger-photo-overlay" data-v1092-ledger-photo-close>
-      <section class="v781-photo-modal v1092-ledger-photo-modal ${m}" role="dialog" aria-modal="true" aria-label="${escapeHtml(title)} fotoğraf penceresi" onclick="event.stopPropagation()">
-        <button type="button" class="v1092-ledger-photo-download" data-v1092-ledger-photo-download><i class="fa-solid fa-download" aria-hidden="true"></i><span>Resmi İndir</span></button>
-        <button type="button" class="v1092-ledger-photo-close" data-v1092-ledger-photo-close aria-label="Kapat">×</button>
-        <img class="v1092-ledger-photo-img" src="${dataUrl}" alt="${escapeHtml(title)} fotoğrafı">
-      </section>
-    </div>`;
-    host.style.display = "block";
-    host.setAttribute("aria-hidden", "false");
-    const close = () => {
-      host.innerHTML = "";
-      host.style.display = "none";
-      host.setAttribute("aria-hidden", "true");
-    };
-    host.querySelectorAll("[data-v1092-ledger-photo-close]").forEach(el => el.addEventListener("click", event => {
-      if (event.target !== el && !event.target.hasAttribute("data-v1092-ledger-photo-close")) return;
-      close();
-    }));
-    host.querySelector("[data-v1092-ledger-photo-download]")?.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      v781DownloadPngFromSvg(dataUrl, filename);
-    });
-  }
-
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     host.querySelectorAll("[data-v1057-ledger-add]").forEach(btn => btn.addEventListener("click", event => {
@@ -3335,7 +3320,10 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      v1092OpenLedgerSnapshotWindow(photoMode);
+      const dataUrl = v1060BuildLedgerPhotoSvg(photoMode);
+      const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
+      const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
+      openLedgerScreenPhotoPreview(dataUrl, filename, title);
     }));
     v1057BindLedgerScreen(host, m);
   }
