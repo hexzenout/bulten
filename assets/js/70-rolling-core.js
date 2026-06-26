@@ -103,7 +103,7 @@
     return !!row?.testOnly || row?.source === "test" || id.startsWith("test_") || id.startsWith("ledger_test_");
   }
   function v1103EnsureLedgerTestStyles() {
-    if (!v1103LedgerTestModeEnabled() || document.getElementById("v1103-ledger-test-style")) return;
+    if (document.getElementById("v1103-ledger-test-style")) return;
     const style = document.createElement("style");
     style.id = "v1103-ledger-test-style";
     style.textContent = `
@@ -113,6 +113,26 @@
       .v1103-ledger-test-toolbar button:hover{border-color:rgba(251,191,36,.62);background:#1f2937;}
       .v1103-ledger-test-toolbar button.danger{border-color:rgba(248,113,113,.38);background:#3f1118;color:#fecaca;}
       .v1103-ledger-test-toolbar span{opacity:.78;}
+      .v1104-ledger-summary-spacer-bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));height:48px;border:1px solid #0f172a;border-radius:10px;overflow:hidden;background:#0b1220;}
+      .v1104-ledger-summary-spacer-bars > span:nth-child(1){background:#9fd27c;}
+      .v1104-ledger-summary-spacer-bars > span:nth-child(2){background:#82bd5f;}
+      .v1104-ledger-summary-spacer-bars > span:nth-child(3){background:#63a64a;}
+      .v1104-ledger-summary-spacer{padding:0 0 10px;}
+      .v1104-ledger-grid-compact .v1057-ledger-excel-table,
+      .v1104-ledger-grid-compact .v1061-ledger-excel-table{table-layout:fixed;}
+      .v1104-ledger-grid-compact .v1057-ledger-sheet,
+      .v1104-ledger-grid-compact .v1061-ledger-sheet{min-width:618px;}
+      .v1104-ledger-grid-compact .v1057-ledger-excel-table th,
+      .v1104-ledger-grid-compact .v1057-ledger-excel-table td,
+      .v1104-ledger-grid-compact .v1061-ledger-excel-table th,
+      .v1104-ledger-grid-compact .v1061-ledger-excel-table td{font-size:11px!important;padding:4px 5px!important;}
+      .v1104-ledger-grid-compact .v1069-ledger-match-line{grid-template-columns:18px minmax(0,1fr)!important;column-gap:3px!important;}
+      .v1104-ledger-grid-compact .v1078-ledger-match-text,
+      .v1104-ledger-grid-compact .v1069-ledger-match-name,
+      .v1104-ledger-grid-compact .v1076-ledger-match-odd{font-size:10px!important;line-height:1.1!important;}
+      .v1104-ledger-grid-compact .v1059-ledger-summary,
+      .v1104-ledger-grid-compact .v1060-ledger-summary-inline,
+      .v1104-ledger-grid-compact .v1061-ledger-summary-inline{transform-origin:top left;}
     `;
     document.head.appendChild(style);
   }
@@ -162,6 +182,76 @@
     const ts = Date.now() + 1000;
     for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts));
     v1057SaveLedgerEdits(edits);
+  }
+  function v1104LedgerSummarySpacerHtml() {
+    return `<div class="v1060-ledger-summary-spacer v1061-ledger-summary-spacer v1104-ledger-summary-spacer"><div class="v1104-ledger-summary-spacer-bars" aria-hidden="true"><span></span><span></span><span></span></div></div>`;
+  }
+  function v1104SyncLedgerRowHeights(scope) {
+    const root = scope && scope.querySelectorAll ? scope : document;
+    root.querySelectorAll('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid').forEach(grid => {
+      const sections = Array.from(grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet'));
+      if (!sections.length) return;
+      const rowsBySection = sections.map(section => Array.from(section.querySelectorAll('tbody tr')));
+      rowsBySection.forEach(rows => rows.forEach(row => {
+        row.style.height = '';
+        row.querySelectorAll('td').forEach(td => td.style.height = '');
+      }));
+      const rowCount = Math.max(0, ...rowsBySection.map(rows => rows.length));
+      for (let idx = 0; idx < rowCount; idx += 1) {
+        const rowGroup = rowsBySection.map(rows => rows[idx]).filter(Boolean);
+        if (!rowGroup.length) continue;
+        let maxHeight = 0;
+        rowGroup.forEach(row => {
+          const h = Math.ceil(row.getBoundingClientRect().height || 0);
+          if (h > maxHeight) maxHeight = h;
+        });
+        if (maxHeight <= 0) continue;
+        rowGroup.forEach(row => {
+          row.style.height = `${maxHeight}px`;
+          row.querySelectorAll('td').forEach(td => td.style.height = `${maxHeight}px`);
+        });
+      }
+    });
+  }
+  function v1104ApplyLedgerGridFit(scope) {
+    const root = scope && scope.querySelectorAll ? scope : document;
+    root.querySelectorAll('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid').forEach(grid => {
+      grid.classList.remove('v1104-ledger-grid-compact');
+      grid.style.zoom = '';
+      const sections = Array.from(grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet'));
+      const chunkCount = sections.length;
+      const parent = grid.parentElement;
+      const availableWidth = Math.max(0, Number(parent?.clientWidth || grid.clientWidth || 0) - 10);
+      let scale = 1;
+      if (chunkCount >= 3) {
+        grid.classList.add('v1104-ledger-grid-compact');
+        scale = chunkCount >= 4 ? 0.76 : 0.86;
+      }
+      requestAnimationFrame(() => {
+        const naturalWidth = Math.ceil(grid.scrollWidth || 0);
+        if (availableWidth > 0 && naturalWidth > 0 && naturalWidth > availableWidth) {
+          const fitScale = availableWidth / naturalWidth;
+          scale = Math.min(scale, fitScale);
+        }
+        scale = Math.max(0.72, Math.min(1, scale));
+        if (scale < 0.995) grid.style.zoom = String(scale);
+        else grid.style.zoom = '1';
+        grid.style.overflow = 'visible';
+      });
+    });
+  }
+  function v1104FinalizeLedgerLayout(scope) {
+    const run = () => {
+      v1104SyncLedgerRowHeights(scope);
+      v1104ApplyLedgerGridFit(scope);
+      setTimeout(() => {
+        v1104SyncLedgerRowHeights(scope);
+        v1104ApplyLedgerGridFit(scope);
+      }, 60);
+    };
+    run();
+    setTimeout(run, 0);
+    setTimeout(run, 120);
   }
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
@@ -3213,7 +3303,7 @@
         </tr>`;
       }).join("");
       return `<section class="v1057-ledger-sheet v1061-ledger-sheet">
-        ${blockIndex === 0 ? summaryHtml : `<div class="v1060-ledger-summary-spacer v1061-ledger-summary-spacer"></div>`}
+        ${blockIndex === 0 ? summaryHtml : v1104LedgerSummarySpacerHtml()}
         <table class="v1057-ledger-excel-table v1061-ledger-excel-table"><thead>${head}</thead><tbody>${rowsHtml}</tbody></table>
       </section>`;
     }).join("");
@@ -3481,6 +3571,7 @@
       </section>
     </div>`;
     v1103EnsureLedgerTestStyles();
+    v1104FinalizeLedgerLayout(host);
     v1063InstallLedgerClock(host);
     host.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !el.hasAttribute("data-v1056-ledger-close")) return;
