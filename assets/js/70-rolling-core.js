@@ -2959,7 +2959,7 @@
       const name = lines[0].name || cleanText(row?.item || "") || "Bahis / maç";
       const title = `${mark} ${name}`;
       const odds = v1076LedgerOddsText(lines[0]?.odds);
-      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
+      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd v1087-ledger-source-odd">${escapeHtml(odds)}</span>` : "";
       return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
@@ -2968,7 +2968,7 @@
       const mark = v1069LedgerStatusMark(status);
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
-      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
+      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd v1087-ledger-source-odd">${escapeHtml(odds)}</span>` : "";
       return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;

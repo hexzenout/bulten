@@ -18321,3 +18321,28 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   box-shadow:none!important;
   text-shadow:none!important;
 }
+
+
+/* V1087: Defter maç oranı, GÜN kutusundaki "Oran: 1.66" değer stiliyle aynı kaynak tasarım.
+   Kaynak: #rolling-excel-overlay .v854-leg-result-meta b */
+#omega-rolling-feature-host .v1065-ledger-pro .v1076-ledger-match-odd.v1087-ledger-source-odd,
+#v1056-ledger-screen-host .v1065-ledger-pro .v1076-ledger-match-odd.v1087-ledger-source-odd,
+.v1065-ledger-pro .v1076-ledger-match-odd.v1087-ledger-source-odd{
+  display:inline!important;
+  margin-left:5px!important;
+  padding:0!important;
+  min-width:0!important;
+  min-height:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#fbbf24!important;
+  font-size:.72rem!important;
+  font-weight:950!important;
+  line-height:1.25!important;
+  letter-spacing:0!important;
+  text-shadow:none!important;
+  white-space:nowrap!important;
+  vertical-align:baseline!important;
+}
