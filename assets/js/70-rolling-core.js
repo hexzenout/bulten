@@ -2959,7 +2959,7 @@
       const name = lines[0].name || cleanText(row?.item || "") || "Bahis / maç";
       const title = `${mark} ${name}`;
       const odds = v1076LedgerOddsText(lines[0]?.odds);
-      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd v1087-ledger-source-odd">${escapeHtml(odds)}</span>` : "";
+      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
       return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
@@ -2968,7 +2968,7 @@
       const mark = v1069LedgerStatusMark(status);
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
-      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd v1087-ledger-source-odd">${escapeHtml(odds)}</span>` : "";
+      const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
       return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${escapeHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
@@ -3174,11 +3174,11 @@
             const lineX = xx + 10;
             const followX = xx + 28;
             const firstPart = wrapped[0] || "Bahis / maç";
-            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+            const oneLineOdds = oddsText && wrapped.length <= 1 ? `<tspan dx="5" fill="#facc15" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
             const firstText = `<text x="${lineX}" y="${firstY}" fill="${markColor}" stroke="none" font-size="14" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text><text x="${followX}" y="${firstY}" fill="#111827" stroke="none" font-size="12" font-family="Arial" font-weight="900">${safe(firstPart)}${oneLineOdds}</text>`;
             const restText = wrapped.slice(1).map((part, wrapIdx, rest) => {
               const isLast = wrapIdx === rest.length - 1;
-              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#fbbf24" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
+              const oddTspan = oddsText && isLast ? `<tspan dx="5" fill="#facc15" stroke="none" font-size="12" font-weight="950">${safe(oddsText)}</tspan>` : "";
               return `<text x="${followX}" y="${firstY + (wrapIdx + 1) * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}${oddTspan}</text>`;
             }).join("");
             textOffset += Math.max(1, wrapped.length) * 15 + 3;
@@ -3283,7 +3283,7 @@
           <div><b>${title}</b></div>
           <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
             <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
-            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter ekranını aç"><i class="fa-solid fa-camera"></i></button>
+            <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
             <button type="button" data-v1056-ledger-close>×</button>
           </div>
         </header>
@@ -3299,10 +3299,10 @@
     host.querySelectorAll("[data-v1060-ledger-photo]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
-      const ledgerMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      // Kamera ikonunda ayrı SVG/fotoğraf ekranı üretme. Aynı defter HTML'ini aç/yenile.
-      // Böylece BAHİS / KUPON DEFTERİ ile kamera sonrası görünen ekran arasında ikinci bir tasarım yolu oluşmaz.
-      v1056OpenDailyLedgerScreen(ledgerMode);
+      const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
+      // V1088: Kamera ikonu ayrı SVG/fotoğraf önizlemesi açmayacak.
+      // Tek kaynak BAHİS / KUPON DEFTERİ ekranı kalacak; tasarım ikiye bölünmeyecek.
+      v1056OpenDailyLedgerScreen(photoMode);
     }));
     v1057BindLedgerScreen(host, m);
   }
