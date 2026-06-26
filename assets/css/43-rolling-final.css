@@ -18432,87 +18432,16 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   text-shadow:none!important;
 }
 
+/* V1093: Kupon Defteri oran sarısı - kaynak sarı #fbbf24
+   Kaynak: Maç Sonuçları / TEKLİ BAHİS / KOMBİNE başlık tonu.
+   Hedef: BAHİS / KUPON DEFTERİ maç yanındaki oran + Aktif Bahisler oranları. */
+.v1065-ledger-pro.bet .v1076-ledger-match-odd,
+.v1065-ledger-screen-modal.bet .v1076-ledger-match-odd,
+#rolling-excel-overlay .v763-active-card.bet .v763-card-info span:first-child b,
+#omega-rolling-feature-host .v763-active-card.bet .v763-card-info span:first-child b,
+#rolling-excel-overlay .v763-combo-match-list li > b,
+#omega-rolling-feature-host .v763-combo-match-list li > b {
+  color: #fbbf24 !important;
+  text-shadow: none !important;
+}
 
-/* V1092: BAHİS / KUPON DEFTERİ kamera çıktısı ayrı pencere + sabit altın oran tonu */
-#omega-rolling-photo-host .v1092-ledger-photo-overlay{
-  align-items:flex-start!important;
-  justify-content:center!important;
-  padding:18px!important;
-  overflow:auto!important;
-  background:rgba(2,6,23,.84)!important;
-  backdrop-filter:blur(5px)!important;
-}
-#omega-rolling-photo-host .v1092-ledger-photo-modal{
-  position:relative!important;
-  width:min(1120px,96vw)!important;
-  max-height:none!important;
-  min-height:0!important;
-  overflow:visible!important;
-  padding:54px 12px 12px!important;
-  border-radius:18px!important;
-  border:1px solid rgba(251,191,36,.34)!important;
-  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(2,6,23,.98))!important;
-  box-shadow:0 30px 90px rgba(0,0,0,.58),0 0 0 1px rgba(251,191,36,.08)!important;
-}
-#omega-rolling-photo-host .v1092-ledger-photo-download{
-  position:absolute!important;
-  left:12px!important;
-  top:12px!important;
-  z-index:3!important;
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:7px!important;
-  min-height:34px!important;
-  padding:0 13px!important;
-  border-radius:999px!important;
-  border:1px solid rgba(251,191,36,.48)!important;
-  background:rgba(15,23,42,.96)!important;
-  color:#fbbf24!important;
-  font-size:12px!important;
-  font-weight:950!important;
-  letter-spacing:.01em!important;
-  cursor:pointer!important;
-  box-shadow:0 10px 22px rgba(0,0,0,.28)!important;
-}
-#omega-rolling-photo-host .v1092-ledger-photo-download:hover{
-  background:rgba(251,191,36,.14)!important;
-  transform:translateY(-1px)!important;
-}
-#omega-rolling-photo-host .v1092-ledger-photo-close{
-  position:absolute!important;
-  right:12px!important;
-  top:12px!important;
-  z-index:3!important;
-  width:34px!important;
-  height:34px!important;
-  border-radius:999px!important;
-  border:1px solid rgba(148,163,184,.32)!important;
-  background:rgba(15,23,42,.96)!important;
-  color:#e5e7eb!important;
-  font-size:22px!important;
-  font-weight:900!important;
-  line-height:1!important;
-  cursor:pointer!important;
-}
-#omega-rolling-photo-host .v1092-ledger-photo-close:hover{
-  border-color:rgba(251,191,36,.55)!important;
-  color:#fbbf24!important;
-}
-#omega-rolling-photo-host .v1092-ledger-photo-img{
-  display:block!important;
-  width:100%!important;
-  height:auto!important;
-  max-height:none!important;
-  margin:0!important;
-  object-fit:contain!important;
-  border-radius:12px!important;
-  border:1px solid rgba(255,255,255,.10)!important;
-  background:#020617!important;
-}
-@media (max-width:720px){
-  #omega-rolling-photo-host .v1092-ledger-photo-overlay{padding:10px!important;}
-  #omega-rolling-photo-host .v1092-ledger-photo-modal{width:calc(100vw - 20px)!important;padding:52px 9px 9px!important;}
-  #omega-rolling-photo-host .v1092-ledger-photo-download{left:9px!important;top:9px!important;min-height:32px!important;font-size:11px!important;}
-  #omega-rolling-photo-host .v1092-ledger-photo-close{right:9px!important;top:9px!important;width:32px!important;height:32px!important;}
-}
