@@ -2089,8 +2089,7 @@
       .filter(n => Number.isFinite(n) && n > 0);
     if (comboOdds.length) {
       const product = comboOdds.reduce((p, n) => p * n, 1);
-      if (raw > 0 && comboOdds.length === 1) return raw * product;
-      return product;
+      return raw > 0 ? raw * product : product;
     }
     return Number.isFinite(raw) && raw > 0 ? raw : 0;
   }
@@ -2415,14 +2414,16 @@
       const raw = cleanText(op?.coin || op?.symbol || op?.sym || op?.asset || op?.name || op?.label || op?.note || "");
       return raw ? raw.toUpperCase() : "İşlem";
     }
-    const fromSlotMatches = getSlotMatches(op || {}).map(r => cleanText(r?.name || r?.match || r?.label || "")).filter(Boolean);
+    const fromSlotMatches = getSlotMatches(op || {}).map(r => cleanText(r?.note || r?.name || r?.match || r?.label || "")).filter(Boolean);
     if (fromSlotMatches.length > 1) return fromSlotMatches.join(" + ");
     const comboRows = Array.isArray(op?.combo) ? op.combo : [];
-    const comboNames = comboRows.map(r => cleanText(r?.name || r?.match || r?.label || "")).filter(Boolean);
-    if (comboNames.length > 1) return comboNames.join(" + ");
+    const mainName = cleanText(op?.note || op?.name || op?.match || op?.label || op?.title || "");
+    const comboNames = comboRows.map(r => cleanText(r?.note || r?.name || r?.match || r?.label || "")).filter(Boolean);
+    const comboAllNames = [mainName].concat(comboNames).filter(Boolean);
+    if (comboAllNames.length > 1) return comboAllNames.join(" + ");
     const extraRows = Array.isArray(op?.extraMatches) ? op.extraMatches : [];
-    const allNames = [cleanText(op?.name || op?.match || op?.label || op?.note || op?.title || "")]
-      .concat(extraRows.map(r => cleanText(r?.name || r?.match || r?.label || "")))
+    const allNames = [mainName]
+      .concat(extraRows.map(r => cleanText(r?.note || r?.name || r?.match || r?.label || "")))
       .filter(Boolean);
     if (allNames.length > 1) return allNames.join(" + ");
     return allNames[0] || comboNames[0] || "Bahis / maç";
@@ -2439,15 +2440,19 @@
       source.matchLines.forEach((name, idx) => add(name, Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0));
     }
     if (Array.isArray(source.matches)) {
-      source.matches.forEach(match => add(match?.name || match?.match || match?.label, match?.odds));
+      source.matches.forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds));
     }
     if (Array.isArray(source.rows)) {
-      source.rows.forEach(row => add(row?.name || row?.match || row?.label, row?.odds));
+      source.rows.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
     }
     if (Array.isArray(source.combo)) {
-      source.combo.forEach(row => add(row?.name || row?.match || row?.label, row?.odds));
+      add(source.note || source.name || source.match || source.label, source.odds);
+      source.combo.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
     }
-    getSlotMatches(source).forEach(match => add(match?.name || match?.match || match?.label, match?.odds));
+    if (Array.isArray(source.extraMatches)) {
+      source.extraMatches.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
+    }
+    getSlotMatches(source).forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds));
     if (!rows.length) {
       const cleaned = v1064CleanComboHistoryName(source.name || source.match || source.label || source.note || source.title || "");
       if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0));
