@@ -5117,12 +5117,20 @@
     }
     const currentPlan = ensureRollingPlan();
     if (!currentPlan.ops[day]) currentPlan.ops[day] = [];
+    const savedBeforeResolve = currentPlan.ops?.[day]?.[slot] || null;
+    const comboResultsSource = Array.isArray(meta.comboResults)
+      ? meta.comboResults
+      : Array.isArray(pendingBeforeResolve?.comboResults)
+        ? pendingBeforeResolve.comboResults
+        : Array.isArray(savedBeforeResolve?.comboResults)
+          ? savedBeforeResolve.comboResults
+          : [];
     const comboResults = !isCrypto
-      ? (Array.isArray(meta.comboResults) ? meta.comboResults : Array.isArray(pendingBeforeResolve?.comboResults) ? pendingBeforeResolve.comboResults : [])
+      ? comboResultsSource
           .map(v => v === "loss" ? "loss" : v === "win" ? "win" : "")
           .slice(0, comboRows.length + 1)
       : [];
-    const opCreatedAt = Number(isCrypto ? (cryptoDraftBeforeResolve?.createdAt || cryptoDraftBeforeResolve?.updatedAt || Date.now()) : (pendingBeforeResolve?.createdAt || pendingBeforeResolve?.updatedAt || Date.now()));
+    const opCreatedAt = Number(isCrypto ? (cryptoDraftBeforeResolve?.createdAt || cryptoDraftBeforeResolve?.updatedAt || Date.now()) : (pendingBeforeResolve?.createdAt || savedBeforeResolve?.createdAt || savedBeforeResolve?.playedAt || pendingBeforeResolve?.updatedAt || Date.now()));
     currentPlan.ops[day][slot] = { note, amt, odds, combo: comboRows, comboResults, res: result, netMode: isCrypto ? "amount" : "odds", cryptoMeta, createdAt: opCreatedAt, settledAt: Date.now() };
     if (isCrypto) v954ClearCryptoDraft(day, slot);
     if (currentPlan.pending?.[day]) {

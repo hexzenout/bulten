@@ -2511,58 +2511,115 @@
   }
   function v1068BetMatchLines(source) {
     const rows = [];
+    const normalizeStatus = (value) => {
+      const raw = cleanText(value || "").toLowerCase();
+      if (raw === "loss" || raw === "lost" || raw === "lose" || raw === "kaybetti" || raw === "kayıp" || raw === "zarar") return "loss";
+      if (raw === "win" || raw === "won" || raw === "kazandı" || raw === "kazanc" || raw === "kazanç" || raw === "kar" || raw === "kâr") return "win";
+      return "";
+    };
     const add = (name, odds, status) => {
       const cleanName = cleanText(name || "");
       if (!cleanName) return;
       rows.push({
         name: cleanName,
         odds: Number(odds || 0),
-        status: cleanText(status || "")
+        status: normalizeStatus(status)
+      });
+    };
+    const dedupe = (list) => {
+      const seen = new Set();
+      return list.filter(row => {
+        const key = `${row.name}::${row.odds || ""}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
       });
     };
     if (!source || typeof source !== "object") return rows;
+
+    const comboResults = Array.isArray(source.comboResults) ? source.comboResults.map(normalizeStatus) : [];
+    const matchResults = Array.isArray(source.matchResults) ? source.matchResults.map(normalizeStatus) : [];
+    const comboRowsForStatus = Array.isArray(source.combo) ? source.combo : [];
+    const hasManualResults = comboResults.some(Boolean)
+      || matchResults.some(Boolean)
+      || comboRowsForStatus.some(row => !!normalizeStatus(row?.status || row?.result || row?.res))
+      || (Array.isArray(source.matches) && source.matches.some(row => !!normalizeStatus(row?.status || row?.result || row?.res)))
+      || (Array.isArray(source.rows) && source.rows.some(row => !!normalizeStatus(row?.status || row?.result || row?.res || row?.comboResults?.[0])))
+      || (Array.isArray(source.extraMatches) && source.extraMatches.some(row => !!normalizeStatus(row?.status || row?.result || row?.res)));
+    const finalStatus = normalizeStatus(source.status || source.result || source.res);
+    const statusAt = (idx, fallback = "") => {
+      const i = Math.max(0, Number(idx || 0));
+      return comboResults[i]
+        || matchResults[i]
+        || normalizeStatus(fallback)
+        || (hasManualResults ? "" : finalStatus);
+    };
+
+    // Rolling GÜN kutusu op kaydı: ana maç source.note, ek maçlar source.combo içindedir.
+    // Maç bazlı sonuçlar source.comboResults dizisinde tutulur; final kupon sonucu bu diziyi ezmemeli.
+    if (Array.isArray(source.combo) && cleanText(source.note || "")) {
+      add(source.note, source.odds, statusAt(0));
+      source.combo.forEach((row, idx) => add(
+        row?.name || row?.match || row?.label || row?.note,
+        row?.odds,
+        statusAt(idx + 1, row?.status || row?.result || row?.res)
+      ));
+      if (rows.length) return dedupe(rows);
+    }
+
     if (Array.isArray(source.matchLines) && source.matchLines.length) {
-      const comboRowsForStatus = Array.isArray(source.combo) ? source.combo : [];
       source.matchLines.forEach((name, idx) => add(
         name,
         Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0,
-        Array.isArray(source.matchResults)
-          ? source.matchResults[idx]
-          : (comboRowsForStatus[idx]?.status || comboRowsForStatus[idx]?.result || comboRowsForStatus[idx]?.res || source.status || source.result || source.res || "")
+        statusAt(idx, comboRowsForStatus[idx]?.status || comboRowsForStatus[idx]?.result || comboRowsForStatus[idx]?.res)
       ));
     }
     if (Array.isArray(source.matches)) {
-      source.matches.forEach(match => add(match?.name || match?.match || match?.label || match?.note, match?.odds, match?.status || match?.result || match?.res));
+      source.matches.forEach((match, idx) => add(
+        match?.name || match?.match || match?.label || match?.note,
+        match?.odds,
+        statusAt(idx, match?.status || match?.result || match?.res)
+      ));
     }
     if (Array.isArray(source.rows)) {
-      source.rows.forEach(row => add(row?.name || row?.match || row?.label || row?.note, row?.odds, row?.status || row?.result || row?.res));
+      source.rows.forEach((row, idx) => add(
+        row?.name || row?.match || row?.label || row?.note,
+        row?.odds,
+        statusAt(idx, row?.status || row?.result || row?.res || row?.comboResults?.[0])
+      ));
     }
     if (Array.isArray(source.combo)) {
-      source.combo.forEach(row => add(row?.name || row?.match || row?.label || row?.note, row?.odds, row?.status || row?.result || row?.res));
+      source.combo.forEach((row, idx) => add(
+        row?.name || row?.match || row?.label || row?.note,
+        row?.odds,
+        statusAt(idx, row?.status || row?.result || row?.res)
+      ));
     }
     if (Array.isArray(source.extraMatches)) {
-      source.extraMatches.forEach(row => add(row?.name || row?.match || row?.label || row?.note, row?.odds, row?.status || row?.result || row?.res));
+      source.extraMatches.forEach((row, idx) => add(
+        row?.name || row?.match || row?.label || row?.note,
+        row?.odds,
+        statusAt(idx + 1, row?.status || row?.result || row?.res)
+      ));
     }
-    getSlotMatches(source).forEach(match => add(match?.name || match?.match || match?.label || match?.note, match?.odds, match?.status || match?.result || match?.res));
+    getSlotMatches(source).forEach((match, idx) => add(
+      match?.name || match?.match || match?.label || match?.note,
+      match?.odds,
+      statusAt(idx, match?.status || match?.result || match?.res)
+    ));
     if (rows.length && cleanText(source.note || source.name || source.match || source.label || "")) {
       const firstName = cleanText(source.note || source.name || source.match || source.label || "");
       const hasFirst = rows.some(row => row.name === firstName);
       if (!hasFirst && (Array.isArray(source.combo) || Array.isArray(source.extraMatches))) {
-        rows.unshift({ name: firstName, odds: Number(source.odds || 0), status: cleanText(source.status || source.result || source.res || "") });
+        rows.unshift({ name: firstName, odds: Number(source.odds || 0), status: statusAt(0) });
       }
     }
     if (!rows.length) {
       const cleaned = v1064CleanComboHistoryName(source.name || source.match || source.label || source.note || source.title || "");
-      if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0, source.status || source.result || source.res || ""));
-      else if (cleaned) add(cleaned, source.odds, source.status || source.result || source.res || "");
+      if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach((name, idx) => add(name, 0, statusAt(idx)));
+      else if (cleaned) add(cleaned, source.odds, statusAt(0));
     }
-    const seen = new Set();
-    return rows.filter(row => {
-      const key = `${row.name}::${row.odds || ""}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
+    return dedupe(rows);
   }
   function v1068LedgerBetItemLines(op, historyRow) {
     const histLines = v1068BetMatchLines(historyRow);
@@ -2839,12 +2896,20 @@
     return "$" + abs.toLocaleString("en-US", opts);
   }
   function v1069LedgerLineStatus(row, line) {
-    const raw = cleanText(line?.status || line?.result || line?.res || "").toLowerCase();
-    if (raw === "loss" || raw === "lost" || raw === "lose" || raw === "kaybetti" || raw === "kayıp") return "loss";
-    if (raw === "win" || raw === "won" || raw === "kazandı" || raw === "kazanc") return "win";
-    const rowStatus = cleanText(row?.status || row?.result || row?.res || "").toLowerCase();
-    if (rowStatus === "loss" || rowStatus === "kaybetti" || rowStatus === "kayıp" || Number(row?.pnlRaw || 0) < 0) return "loss";
-    if (rowStatus === "win" || rowStatus === "kazandı" || Number(row?.pnlRaw || 0) > 0) return "win";
+    const normalize = (value) => {
+      const raw = cleanText(value || "").toLowerCase();
+      if (raw === "loss" || raw === "lost" || raw === "lose" || raw === "kaybetti" || raw === "kayıp" || raw === "zarar") return "loss";
+      if (raw === "win" || raw === "won" || raw === "kazandı" || raw === "kazanc" || raw === "kazanç" || raw === "kar" || raw === "kâr") return "win";
+      return "";
+    };
+    const explicit = normalize(line?.status || line?.result || line?.res || "");
+    if (explicit) return explicit;
+    const hasLineLevelResults = Array.isArray(row?.itemLines) && row.itemLines.some(item => !!normalize(item?.status || item?.result || item?.res || ""));
+    if (hasLineLevelResults) return "pending";
+    const rowStatus = normalize(row?.status || row?.result || row?.res || "");
+    if (rowStatus) return rowStatus;
+    if (Number(row?.pnlRaw || 0) < 0) return "loss";
+    if (Number(row?.pnlRaw || 0) > 0) return "win";
     return "pending";
   }
   function v1069LedgerStatusMark(status) {
@@ -2903,20 +2968,27 @@
     try { history.replaceState({ tab: "rolling", mode: m, rollingDays: d }, "", `#rolling/rolling/${d}`); } catch {}
     if (typeof window.omega_OpenRollingExcel === "function") {
       window.omega_OpenRollingExcel(d, true);
-      setTimeout(v1043InjectExcelGrowthPlan, 40);
+      setTimeout(v1043InjectExcelGrowthPlan, 20);
     }
-    setTimeout(() => {
+    const focusTarget = (attempt = 0) => {
       const overlay = document.getElementById("rolling-excel-overlay");
       const body = overlay?.querySelector("#excel-body-content") || document.getElementById("excel-body-content");
       const dayRows = Array.from(body?.querySelectorAll(".day-row-capsule") || []);
       const dayRow = dayRows[targetDay - 1] || null;
-      const capsules = Array.from(dayRow?.querySelectorAll(":scope .capsule-container > .kapsul") || []);
+      const capsulePool = Array.from(dayRow?.querySelectorAll(".capsule-container > .kapsul, .kapsul") || []);
+      const capsules = capsulePool.filter(el => !el.closest(".day-row-capsule") || el.closest(".day-row-capsule") === dayRow);
       const target = capsules[targetOp] || null;
-      if (!target || typeof target.scrollIntoView !== "function") return;
-      target.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-      target.classList.add("v1063-ledger-focus-pulse");
-      setTimeout(() => target.classList.remove("v1063-ledger-focus-pulse"), 1600);
-    }, 480);
+      if (target && typeof target.scrollIntoView === "function") {
+        target.scrollIntoView({ behavior: "auto", block: "center", inline: "center" });
+        target.classList.remove("v1063-ledger-focus-pulse");
+        void target.offsetWidth;
+        target.classList.add("v1063-ledger-focus-pulse");
+        setTimeout(() => target.classList.remove("v1063-ledger-focus-pulse"), 1250);
+        return;
+      }
+      if (attempt < 6) setTimeout(() => focusTarget(attempt + 1), 70 + attempt * 35);
+    };
+    setTimeout(() => focusTarget(0), 80);
   }
   function v1054RenderDailyPlanPanel(mode, opts = {}) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -3072,8 +3144,10 @@
             const wrapped = (line.wrapped && line.wrapped.length) ? line.wrapped : wrapText(line.name || "Bahis / maç", 34, 4);
             const firstY = y + 18 + textOffset;
             const markColor = photoStatusColor(status);
-            const markSvg = `<text x="${xx + 15}" y="${firstY}" text-anchor="middle" fill="${markColor}" stroke="${markColor}" stroke-width="0.35" font-size="17" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text>`;
-            const nameSvg = wrapped.map((part, wrapIdx) => `<text x="${xx + 30}" y="${firstY + wrapIdx * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
+            const markX = xx + 13;
+            const nameX = xx + 24;
+            const markSvg = `<text x="${markX}" y="${firstY}" text-anchor="middle" fill="${markColor}" stroke="${markColor}" stroke-width="0.45" font-size="17" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text>`;
+            const nameSvg = wrapped.map((part, wrapIdx) => `<text x="${nameX}" y="${firstY + wrapIdx * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
             textOffset += wrapped.length * 15 + 3;
             return markSvg + nameSvg;
           }).join("");
