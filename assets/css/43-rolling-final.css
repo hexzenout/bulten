@@ -18795,3 +18795,80 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   width:100%!important;
   justify-content:center!important;
 }
+
+
+/* V1100: Kupon Defteri kamera önizlemesi yanlış boş panel yerine
+   en-boy korunarak büyütülmüş gerçek clone kutusu olarak açılır.
+   Yazı, kolon ve satır sıkıştırması yoktur; sadece clone alanı orantılı büyür. */
+#omega-rolling-photo-host .v1098-ledger-photo-overlay{
+  padding:16px!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-modal{
+  width:max-content!important;
+  max-width:calc(100vw - 32px)!important;
+  max-height:calc(100vh - 32px)!important;
+  padding:14px!important;
+  overflow:auto!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone-stage{
+  width:max-content!important;
+  max-width:none!important;
+  justify-content:center!important;
+  transform:none!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone{
+  zoom:1.13!important;
+  width:max-content!important;
+  max-width:none!important;
+  transform:none!important;
+  transform-origin:center center!important;
+}
+@supports not (zoom: 1.13){
+  #omega-rolling-photo-host .v1098-ledger-photo-clone{
+    transform:scale(1.13)!important;
+  }
+  #omega-rolling-photo-host .v1098-ledger-photo-clone-stage{
+    padding:30px 54px!important;
+  }
+}
+
+
+/* V1101: Kupon Defteri kamera clone önizleme boyutu clone öncesi büyük fotoğraf ölçüsüne yaklaştırıldı.
+   Sıkıştırma yoktur; tablo/kolon/yazı düzeni değişmez, sadece clone kutusu en-boy korunarak büyür. */
+#omega-rolling-photo-host .v1098-ledger-photo-overlay{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:18px!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-modal{
+  width:max-content!important;
+  max-width:calc(100vw - 36px)!important;
+  max-height:calc(100vh - 36px)!important;
+  padding:14px!important;
+  overflow:auto!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone-stage{
+  width:max-content!important;
+  max-width:none!important;
+  justify-content:center!important;
+  align-items:center!important;
+  overflow:visible!important;
+  padding:0!important;
+  transform:none!important;
+}
+#omega-rolling-photo-host .v1098-ledger-photo-clone{
+  zoom:1.50!important;
+  width:max-content!important;
+  max-width:none!important;
+  transform:none!important;
+  transform-origin:center center!important;
+}
+@supports not (zoom: 1.50){
+  #omega-rolling-photo-host .v1098-ledger-photo-clone{
+    transform:scale(1.50)!important;
+    transform-origin:center center!important;
+  }
+  #omega-rolling-photo-host .v1098-ledger-photo-clone-stage{
+    padding:62px 112px!important;
+  }
+}
