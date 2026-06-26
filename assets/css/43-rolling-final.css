@@ -18657,3 +18657,68 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   background:#334155!important;
   box-shadow:.2px 0 #334155,-.2px 0 #334155!important;
 }
+
+/* V1097: Kupon Defteri fotoğraf ortalama + işaret ince ayarı
+   - Fotoğraf önizleme ekran ortasına gelir.
+   - Bekleyen (-) kısa ve metinden ayrı durur.
+   - Kazandı onayı PNL yeşiline yakın, biraz daha parlak görünür. */
+#omega-rolling-photo-host .v1095-ledger-photo-overlay{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:18px!important;
+}
+#omega-rolling-photo-host .v1095-ledger-photo-modal{
+  max-height:92vh!important;
+  margin:auto!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line{
+  grid-template-columns:20px minmax(0,1fr)!important;
+  column-gap:4px!important;
+  align-items:start!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-status-mark{
+  width:20px!important;
+  min-width:20px!important;
+  height:16px!important;
+  line-height:16px!important;
+  transform:translateY(-1px)!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark{
+  color:#059669!important;
+  -webkit-text-fill-color:#059669!important;
+  -webkit-text-stroke:.7px #047857!important;
+  text-shadow:.25px 0 #047857,-.25px 0 #047857,0 .25px #047857,0 -.25px #047857!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark{
+  color:#991b1b!important;
+  -webkit-text-fill-color:#991b1b!important;
+  -webkit-text-stroke:.7px #7f1d1d!important;
+  text-shadow:.25px 0 #7f1d1d,-.25px 0 #7f1d1d,0 .25px #7f1d1d,0 -.25px #7f1d1d!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark{
+  position:relative!important;
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+  -webkit-text-stroke:0 transparent!important;
+  font-size:0!important;
+  line-height:1!important;
+  transform:translate(0,0)!important;
+  text-shadow:none!important;
+}
+.v1065-ledger-pro.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+.v1065-ledger-screen-modal.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before{
+  content:""!important;
+  position:absolute!important;
+  left:4px!important;
+  top:7px!important;
+  width:11px!important;
+  height:3px!important;
+  border-radius:2px!important;
+  background:#475569!important;
+  box-shadow:none!important;
+}
