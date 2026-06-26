@@ -18000,3 +18000,43 @@ html.rolling-hash-boot body > #omega-rolling-photo-host{
   -webkit-user-select:text!important;
   user-select:text!important;
 }
+
+/* V1069: Defter kombine rozetleri, seçimsiz hızlı tık ve Kar-zarar okunurluğu */
+.v1065-ledger-pro.bet .v1057-ledger-excel-table th:nth-child(7){
+  background:#047857!important;
+  color:#ecfdf5!important;
+  font-weight:1000!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.25)!important;
+  white-space:nowrap!important;
+}
+.v1065-ledger-pro.bet .v1057-ledger-excel-table td:nth-child(7){
+  overflow:visible!important;
+  white-space:nowrap!important;
+}
+.v1065-ledger-pro.bet .v1063-ledger-value.win{
+  background:#047857!important;
+  color:#ecfdf5!important;
+  border-color:rgba(16,185,129,.8)!important;
+}
+.v1065-ledger-pro.bet .v1063-ledger-value.loss{
+  background:#b91c1c!important;
+  color:#fff1f2!important;
+  border-color:rgba(248,113,113,.85)!important;
+}
+.v1065-ledger-pro.bet .v1068-ledger-item-line{
+  color:#f8fafc!important;
+  font-weight:850!important;
+}
+.v1065-ledger-pro.bet .v1055-daily-ledger-launch,
+.v1065-ledger-pro.bet .v1057-ledger-sheet-grid,
+.v1065-ledger-screen-modal .v1057-ledger-screen-body,
+#rolling-excel-overlay .v1055-daily-ledger-launch{
+  -webkit-user-select:none!important;
+  user-select:none!important;
+}
+.v1065-ledger-screen-modal input,
+.v1065-ledger-screen-modal textarea,
+.v1065-ledger-screen-modal [contenteditable="true"]{
+  -webkit-user-select:text!important;
+  user-select:text!important;
+}

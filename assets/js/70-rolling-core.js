@@ -1055,8 +1055,8 @@
       const result = cleanText(leg.result || "");
       const id = escapeHtml(item?.id || "");
       return `<div class="v813-bet-match-line v819-bet-match-line v822-bet-match-line ${result ? "done " + result : ""}">
-        <span title="${escapeHtml(name)}">${escapeHtml(name)}</span>
-        <b>${escapeHtml(odds)}</b>
+        <span title="${escapeHtml(name)}">${escapeHtml(v1068LedgerStatusIcon(result))} ${escapeHtml(name)}</span>
+        <b>Oran: ${escapeHtml(odds)}</b>
         <div class="v819-leg-actions">
           <button type="button" class="leg-win ${result === "win" ? "active" : ""}" data-target-bet-leg-result="bet:${id}:${i}:win" title="Maç kazandı"><i class="fa-solid fa-check"></i></button>
           <button type="button" class="leg-loss ${result === "loss" ? "active" : ""}" data-target-bet-leg-result="bet:${id}:${i}:loss" title="Maç kaybetti"><i class="fa-solid fa-xmark"></i></button>
@@ -2428,31 +2428,50 @@
     if (allNames.length > 1) return allNames.join(" + ");
     return allNames[0] || comboNames[0] || "Bahis / maç";
   }
+  function v1068LegStatus(value, fallback = "") {
+    const raw = cleanText(value || fallback || "").toLowerCase();
+    if (["win", "won", "kazandı", "kazandi", "kazancli", "kârlı", "karli", "success"].includes(raw)) return "win";
+    if (["loss", "lost", "lose", "kaybetti", "kayip", "kayıp", "zarar", "fail"].includes(raw)) return "loss";
+    return "";
+  }
+  function v1068LedgerStatusIcon(status) {
+    const safe = v1068LegStatus(status);
+    if (safe === "win") return "✅";
+    if (safe === "loss") return "❌";
+    return "—";
+  }
+  function v1068CleanLedgerLineName(name) {
+    return cleanText(name || "")
+      .replace(/\s*\|\s*(?:oran\s*)?\d+(?:[.,]\d+)?\s*$/i, "")
+      .replace(/\s*\|\s*oran\s*$/i, "")
+      .replace(/\s*[+|]+\s*$/g, "")
+      .trim();
+  }
   function v1068BetMatchLines(source) {
     const rows = [];
-    const add = (name, odds) => {
-      const cleanName = cleanText(name || "");
+    const add = (name, odds, status) => {
+      const cleanName = v1068CleanLedgerLineName(name || "");
       if (!cleanName) return;
-      rows.push({ name: cleanName, odds: Number(odds || 0) });
+      rows.push({ name: cleanName, odds: Number(odds || 0), status: v1068LegStatus(status) });
     };
     if (!source || typeof source !== "object") return rows;
     if (Array.isArray(source.matchLines) && source.matchLines.length) {
-      source.matchLines.forEach((name, idx) => add(name, Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0));
+      source.matchLines.forEach((name, idx) => add(name, Array.isArray(source.matchOdds) ? source.matchOdds[idx] : 0, Array.isArray(source.matchResults) ? source.matchResults[idx] : source.status || source.result));
     }
     if (Array.isArray(source.matches)) {
-      source.matches.forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds));
+      source.matches.forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds, match?.status || match?.result || source.status || source.result));
     }
     if (Array.isArray(source.rows)) {
-      source.rows.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
+      source.rows.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || source.status || source.result));
     }
     if (Array.isArray(source.combo)) {
-      add(source.note || source.name || source.match || source.label, source.odds);
-      source.combo.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
+      add(source.note || source.name || source.match || source.label, source.odds, Array.isArray(source.comboResults) ? source.comboResults[0] : source.status || source.result);
+      source.combo.forEach((row, idx) => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
     }
     if (Array.isArray(source.extraMatches)) {
-      source.extraMatches.forEach(row => add(row?.note || row?.name || row?.match || row?.label, row?.odds));
+      source.extraMatches.forEach((row, idx) => add(row?.note || row?.name || row?.match || row?.label, row?.odds, row?.status || row?.result || (Array.isArray(source.comboResults) ? source.comboResults[idx + 1] : "") || source.status || source.result));
     }
-    getSlotMatches(source).forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds));
+    getSlotMatches(source).forEach(match => add(match?.note || match?.name || match?.match || match?.label, match?.odds, match?.status || match?.result || source.status || source.result));
     if (!rows.length) {
       const cleaned = v1064CleanComboHistoryName(source.name || source.match || source.label || source.note || source.title || "");
       if (/\s\+\s/.test(cleaned)) cleaned.split(/\s\+\s/).forEach(name => add(name, 0));
@@ -2467,10 +2486,12 @@
   }
   function v1068LedgerBetItemLines(op, historyRow) {
     const histLines = v1068BetMatchLines(historyRow);
-    if (histLines.length > 1) return histLines;
+    const fallbackStatus = v1068LegStatus(op?.res || op?.status || historyRow?.status || historyRow?.result);
+    const withFallback = lines => lines.map(line => ({ ...line, status: v1068LegStatus(line?.status, fallbackStatus) }));
+    if (histLines.length > 1) return withFallback(histLines);
     const opLines = v1068BetMatchLines(op);
-    if (opLines.length > 1) return opLines;
-    return histLines.length ? histLines : opLines;
+    if (opLines.length > 1) return withFallback(opLines);
+    return withFallback(histLines.length ? histLines : opLines);
   }
   function v1064CleanComboHistoryName(name) {
     const raw = cleanText(name || "");
@@ -2603,6 +2624,7 @@
             time: v1056TimeLabelFromTs(ts),
             item: v1064LedgerOpItem(m, op, hist),
             itemLines: m === "bet" ? v1068LedgerBetItemLines(op, hist) : [],
+            status: m === "bet" ? v1068LegStatus(op?.res || hist?.status || hist?.result) : "",
             kind: v1057OpKind(m, op),
             stake: money(Math.abs(Number(hist?.stake ?? op.amt ?? op.stake ?? 0))),
             roi: hist ? v1054DailyRoi(m, hist) : v1057OpRoi(m, op, pnl),
@@ -2628,7 +2650,8 @@
         date: v1057TodayDateInput(ts),
         time: v1056TimeLabelFromTs(ts),
         item: m === "crypto" ? v1054CryptoCoinFromRecord(r) : (v1064CleanComboHistoryName(r.name || "") || cleanText(r.name || "Bahis / maç")),
-        itemLines: m === "bet" ? v1068BetMatchLines(r) : [],
+        itemLines: m === "bet" ? v1068BetMatchLines(r).map(line => ({ ...line, status: v1068LegStatus(line?.status, r.status || r.result) })) : [],
+        status: m === "bet" ? v1068LegStatus(r.status || r.result) : "",
         kind: m === "crypto" ? v1054CryptoDirectionFromRecord(r) : (/^kombine/i.test(cleanText(r.name || "")) ? "Kombine" : "Tek"),
         stake: money(r.stake || 0),
         roi: v1054DailyRoi(m, r),
@@ -2729,21 +2752,26 @@
   }
   function v1068LedgerItemCell(row, mode, extraClass = "") {
     const explicitLines = mode === "bet" && Array.isArray(row?.itemLines)
-      ? row.itemLines.map(line => ({ name: cleanText(line?.name || ""), odds: Number(line?.odds || 0) })).filter(line => line.name)
+      ? row.itemLines.map(line => ({ name: v1068CleanLedgerLineName(line?.name || ""), odds: Number(line?.odds || 0), status: v1068LegStatus(line?.status || line?.result, row?.status || row?.result) })).filter(line => line.name)
       : [];
     const fallbackItem = cleanText(row?.item || "");
     const fallbackLines = mode === "bet" && !explicitLines.length && /\s\+\s/.test(fallbackItem)
-      ? fallbackItem.split(/\s\+\s/).map(name => ({ name: cleanText(name), odds: 0 })).filter(line => line.name)
+      ? fallbackItem.split(/\s\+\s/).map(name => ({ name: v1068CleanLedgerLineName(name), odds: 0, status: v1068LegStatus(row?.status || row?.result) })).filter(line => line.name)
       : [];
     const lines = explicitLines.length ? explicitLines : fallbackLines;
-    if (lines.length <= 1) return v1063LedgerCell(row, "item", extraClass);
-    const title = lines.map((line, idx) => {
-      const odds = Number(line?.odds || 0);
-      return `${idx + 1}. ${cleanText(line?.name || "")}${odds ? ` | ${odds.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 })}` : ""}`;
-    }).join("\n");
-    const body = lines.map((line, idx) => {
-      const odds = Number(line?.odds || 0);
-      const text = `${idx + 1}. ${cleanText(line?.name || "")}${odds ? ` | ${odds.toLocaleString("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 4 })}` : ""}`;
+    if (lines.length <= 1) {
+      const single = lines[0];
+      if (single?.name) {
+        const status = v1068LegStatus(single.status || row?.status || row?.result);
+        const text = `${v1068LedgerStatusIcon(status)} ${v1068CleanLedgerLineName(single.name)}`;
+        const cls = `v1063-ledger-value v1068-ledger-item-lines ${extraClass}`.trim();
+        return `<span class="${cls}" title="${escapeHtml(text)}"><span class="v1068-ledger-item-line">${escapeHtml(text)}</span></span>`;
+      }
+      return v1063LedgerCell({ ...row, item: v1068CleanLedgerLineName(row?.item || "") }, "item", extraClass);
+    }
+    const title = lines.map(line => `${v1068LedgerStatusIcon(line?.status)} ${v1068CleanLedgerLineName(line?.name || "")}`).join("\n");
+    const body = lines.map(line => {
+      const text = `${v1068LedgerStatusIcon(line?.status)} ${v1068CleanLedgerLineName(line?.name || "")}`;
       return `<span class="v1068-ledger-item-line">${escapeHtml(text)}</span>`;
     }).join("");
     const cls = `v1063-ledger-value v1068-ledger-item-lines ${extraClass}`.trim();
