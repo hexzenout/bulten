@@ -2969,17 +2969,49 @@
   }
   function v1060BuildLedgerPhotoSvg(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const rows = v1057LedgerRows(m);
+    const rawRows = v1057LedgerRows(m);
+    const rows = rawRows.map((row, idx, arr) => {
+      const key = v1061LedgerDateKey(row);
+      const prevKey = idx > 0 ? v1061LedgerDateKey(arr[idx - 1]) : "";
+      return { ...row, _displayDate: key && key === prevKey ? "”" : v1060LedgerDateLabel(row) };
+    });
     const summary = v1059LedgerSummary(m, rows);
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
     const cols = m === "crypto" ? ["No", "Tarih", "Coin", "Yön", "Tutar", "ROI", "Kar-zarar"] : ["No", "Tarih", "Maç / Kupon", "Tür", "Tutar", "Oran", "Kar-zarar"];
-    const widths = [52, 128, 270, 100, 120, 105, 130];
+    const widths = [52, 128, 300, 92, 118, 88, 130];
     const safe = (value) => escapeHtml(String(value ?? ""));
-    const dataRows = rows.length ? rows : [{ no: "", date: "", item: "Kayıt yok", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, itemLines: [] }];
+    const dataRows = rows.length ? rows : [{ no: "", date: "", _displayDate: "", item: "Kayıt yok", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, itemLines: [] }];
     const photoStatusColor = (status) => status === "loss" ? "#7f1d1d" : status === "win" ? "#064e3b" : "#64748b";
-    const shortText = (value, limit = 28) => {
+    const wrapText = (value, limit = 32, maxLines = 4) => {
       const raw = cleanText(value || "");
-      return raw.length > limit ? raw.slice(0, Math.max(0, limit - 1)) + "…" : raw;
+      if (!raw) return [""];
+      const words = raw.split(/\s+/).filter(Boolean);
+      const lines = [];
+      let line = "";
+      words.forEach(word => {
+        if (!line) {
+          line = word;
+          return;
+        }
+        if ((line + " " + word).length <= limit) line += " " + word;
+        else {
+          lines.push(line);
+          line = word;
+        }
+      });
+      if (line) lines.push(line);
+      const expanded = [];
+      lines.forEach(part => {
+        if (part.length <= limit) {
+          expanded.push(part);
+          return;
+        }
+        for (let i = 0; i < part.length; i += limit) expanded.push(part.slice(i, i + limit));
+      });
+      if (expanded.length <= maxLines) return expanded;
+      const clipped = expanded.slice(0, maxLines);
+      clipped[maxLines - 1] = clipped[maxLines - 1].replace(/…?$/, "") + "…";
+      return clipped;
     };
     const betPhotoLines = (row) => {
       if (m !== "bet") return [];
@@ -2987,49 +3019,75 @@
       let lines = base.map(line => ({ ...line, name: cleanText(line?.name || "") })).filter(line => line.name);
       if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, status: row?.status || row?.result || row?.res || "" }));
       if (!lines.length) lines = [{ name: cleanText(row?.item || "") || "Bahis / maç", status: row?.status || row?.result || row?.res || "" }];
-      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line) }));
+      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line), wrapped: wrapText(line.name, 34, 4) }));
     };
     const rowMeta = dataRows.map(row => {
       const lines = betPhotoLines(row);
-      return { row, lines, height: m === "bet" ? Math.max(34, 16 + Math.max(1, lines.length) * 18) : 34 };
+      const textLineCount = m === "bet" ? Math.max(1, lines.reduce((sum, line) => sum + Math.max(1, (line.wrapped || []).length), 0)) : 1;
+      const height = m === "bet" ? Math.max(34, 14 + textLineCount * 15 + Math.max(0, lines.length - 1) * 3) : 34;
+      return { row, lines, height };
     });
     const tableW = widths.reduce((a,b)=>a+b,0);
     const width = tableW + 80;
     const bodyHeight = rowMeta.reduce((sum, meta) => sum + meta.height, 0);
-    const height = 210 + bodyHeight;
+    const titleY = 62;
+    const summaryY = 82;
+    const summaryH = 48;
+    const headY = summaryY + summaryH;
+    const headH = 30;
+    const bodyStartY = headY + headH;
+    const height = bodyStartY + bodyHeight + 42;
     let x = 40;
-    const headerCells = cols.map((c, i) => { const cell = `<rect x="${x}" y="142" width="${widths[i]}" height="30" fill="#d1d5db" stroke="#111827"/><text x="${x + widths[i]/2}" y="162" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">${safe(c)}</text>`; x += widths[i]; return cell; }).join("");
-    let yCursor = 172;
+    const headerCells = cols.map((c, i) => { const cell = `<rect x="${x}" y="${headY}" width="${widths[i]}" height="${headH}" fill="#d5dbe4" stroke="#0f172a"/><text x="${x + widths[i]/2}" y="${headY + 20}" text-anchor="middle" fill="#0f172a" font-size="12" font-family="Arial" font-weight="950">${safe(c)}</text>`; x += widths[i]; return cell; }).join("");
+    const summaryLabels = ["Kasa Başlangıç", "Büyüme Oranı", "Güncel Kasa"];
+    const summaryValues = [money(summary.start), v1059LedgerPctText(summary.growth), money(summary.current)];
+    const summaryColors = ["#9fd27c", "#82bd5f", "#63a64a"];
+    const summaryCellW = tableW / 3;
+    const summaryCells = summaryLabels.map((label, i) => {
+      const sx = 40 + i * summaryCellW;
+      const sw = i === 2 ? tableW - summaryCellW * 2 : summaryCellW;
+      return `<rect x="${sx}" y="${summaryY}" width="${sw}" height="${summaryH}" fill="${summaryColors[i]}" stroke="#0f172a"/><text x="${sx + sw/2}" y="${summaryY + 19}" text-anchor="middle" fill="#0f172a" font-size="12" font-family="Arial" font-weight="900">${safe(label)}</text><text x="${sx + sw/2}" y="${summaryY + 39}" text-anchor="middle" fill="#04110a" font-size="20" font-family="Arial" font-weight="950">${safe(summaryValues[i])}</text>`;
+    }).join("");
+    let yCursor = bodyStartY;
     const body = rowMeta.map((meta, idx) => {
       const r = meta.row;
       const y = yCursor;
       yCursor += meta.height;
       const values = m === "crypto"
-        ? [r.no || idx + 1, v1060LedgerDateLabel(r), r.item || "", r.kind || "", r.stake || "", r.roi || "", r.pnl || ""]
-        : [r.no || idx + 1, v1060LedgerDateLabel(r), r.item || "", r.kind || "", r.stake || "", r.roi || "", r.pnl || ""];
+        ? [r.no || idx + 1, r._displayDate || v1060LedgerDateLabel(r), r.item || "", r.kind || "", r.stake || "", r.roi || "", r.pnl || ""]
+        : [r.no || idx + 1, r._displayDate || v1060LedgerDateLabel(r), r.item || "", r.kind || "", r.stake || "", r.roi || "", r.pnl || ""];
       let xx = 40;
       return values.map((v, i) => {
         const isPnl = i === 6;
         const neg = isPnl && (/^-/.test(String(v)) || Number(r.pnlRaw || 0) < 0);
         const fill = isPnl ? (neg ? "#7f1d1d" : "#064e3b") : "#f8fafc";
         const color = isPnl ? "#ffffff" : "#111827";
-        let cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="${meta.height}" fill="${fill}" stroke="#111827"/>`;
+        let cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="${meta.height}" fill="${fill}" stroke="#0f172a"/>`;
         if (m === "bet" && i === 2) {
-          const lines = meta.lines.length ? meta.lines : [{ name: String(v || ""), status: "pending" }];
-          cell += lines.map((line, lineIdx) => {
-            const mark = v1069LedgerStatusMark(line.status);
-            const ly = y + 21 + lineIdx * 18;
-            return `<text x="${xx + 10}" y="${ly}" fill="${photoStatusColor(line.status)}" font-size="14" font-family="Arial" font-weight="1000">${safe(mark)}</text><text x="${xx + 28}" y="${ly}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(shortText(line.name, 30))}</text>`;
+          const lines = meta.lines.length ? meta.lines : [{ name: String(v || "Bahis / maç"), status: "pending", wrapped: wrapText(v || "Bahis / maç", 34, 4) }];
+          let textOffset = 0;
+          cell += lines.map(line => {
+            const status = line.status === "loss" ? "loss" : line.status === "win" ? "win" : "pending";
+            const mark = v1069LedgerStatusMark(status);
+            const wrapped = (line.wrapped && line.wrapped.length) ? line.wrapped : wrapText(line.name || "Bahis / maç", 34, 4);
+            const firstY = y + 18 + textOffset;
+            const markColor = photoStatusColor(status);
+            const markSvg = `<text x="${xx + 15}" y="${firstY}" text-anchor="middle" fill="${markColor}" stroke="${markColor}" stroke-width="0.35" font-size="17" font-family="Arial, Helvetica, sans-serif" font-weight="1000">${safe(mark)}</text>`;
+            const nameSvg = wrapped.map((part, wrapIdx) => `<text x="${xx + 30}" y="${firstY + wrapIdx * 15}" fill="#111827" font-size="12" font-family="Arial" font-weight="900">${safe(part)}</text>`).join("");
+            textOffset += wrapped.length * 15 + 3;
+            return markSvg + nameSvg;
           }).join("");
         } else {
-          const text = safe(String(v).slice(0, i === 2 ? 28 : 14));
+          const rawText = String(v ?? "");
+          const limit = i === 2 ? 30 : i === 1 ? 14 : 16;
+          const text = safe(rawText.length > limit ? rawText.slice(0, Math.max(0, limit - 1)) + "…" : rawText);
           cell += `<text x="${xx + widths[i]/2}" y="${y + Math.round(meta.height / 2) + 5}" text-anchor="middle" fill="${color}" font-size="12" font-family="Arial" font-weight="850">${text}</text>`;
         }
         xx += widths[i];
         return cell;
       }).join("");
     }).join("");
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="22" y="22" width="${width-44}" height="${height-44}" rx="18" fill="#0b1220" stroke="#334155"/><text x="40" y="62" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="950">${safe(title)}</text><rect x="40" y="82" width="${tableW}" height="42" fill="#c7f0a0" stroke="#111827"/><text x="${40 + tableW/6}" y="108" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">Kasa Başlangıç: ${safe(money(summary.start))}</text><text x="${40 + tableW/2}" y="108" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">Büyüme Oranı: ${safe(v1059LedgerPctText(summary.growth))}</text><text x="${40 + tableW*5/6}" y="108" text-anchor="middle" fill="#111827" font-size="13" font-family="Arial" font-weight="900">Güncel Kasa: ${safe(money(summary.current))}</text>${headerCells}${body}</svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="22" y="22" width="${width-44}" height="${height-44}" rx="18" fill="#0b1220" stroke="#334155"/><text x="40" y="${titleY}" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="950">${safe(title)}</text>${summaryCells}${headerCells}${body}</svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
   function v1057BindLedgerScreen(host, mode) {
