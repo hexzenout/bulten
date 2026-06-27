@@ -171,19 +171,19 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3),
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table td:nth-child(3){vertical-align:middle!important;padding:0 2px!important 0 4px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:4.5%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.8%!important;min-width:30px!important;font-size:10.5px!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(2),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2){width:17%!important;white-space:nowrap!important;font-size:10.5px!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2){width:17.2%!important;white-space:nowrap!important;font-size:10.5px!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:36.5%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:35.2%!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:12.5%!important;white-space:nowrap!important;font-size:9.6px!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:12.2%!important;white-space:nowrap!important;font-size:9.6px!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5){width:11.5%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5){width:11.1%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:6%!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.8%!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:12.5%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:12.7%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value{height:auto!important;min-height:0!important;font-size:11px!important;line-height:1.04!important;padding:0 2px!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines{height:100%!important;min-height:0!important;padding:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;gap:0!important;background:transparent!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{justify-content:center!important;}
@@ -209,32 +209,36 @@
 
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-pnl-cell .v1063-ledger-value{color:#fff!important;font-weight:1000!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:29px!important;min-height:29px!important;max-height:29px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:26px!important;min-height:26px!important;max-height:26px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo td{height:31px!important;min-height:31px!important;max-height:31px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo td{height:32px!important;min-height:32px!important;max-height:32px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo td{height:36px!important;min-height:36px!important;max-height:36px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo td{height:37px!important;min-height:37px!important;max-height:37px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:2px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line + .v1069-ledger-match-line,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:3px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line{align-items:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{align-items:flex-start!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;height:10px!important;margin:0!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;line-height:10px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;height:11px!important;margin:0!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;line-height:11px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#10b981!important;font-size:11px!important;transform:translateY(-.5px)!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#dc2626!important;font-size:11px!important;transform:translateY(-.5px)!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;font-size:13px!important;line-height:8px!important;transform:translateY(-1px)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;line-height:11px!important;transform:translateY(0)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1119-ledger-dash{display:block!important;width:6px!important;height:2px!important;border-radius:999px!important;background:#64748b!important;margin:0 auto!important;transform:translateY(.5px)!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{line-height:1.02!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1.0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3){padding-left:3px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td{height:var(--v1119-filler-h,0px)!important;min-height:var(--v1119-filler-h,0px)!important;max-height:var(--v1119-filler-h,0px)!important;padding:0!important;line-height:0!important;color:transparent!important;background:#eef2f7!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td:nth-child(3){background:#0f172a!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:4.2%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.8%!important;min-width:30px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.7%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.8%!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 4px)!important;max-width:calc(100vw - 4px)!important;}}
     `;
   }
@@ -297,22 +301,77 @@
   function v1110SetLedgerTestPage(mode, page) {
     try { localStorage.setItem(v1110LedgerTestPageKey(mode), String(Math.max(0, Number(page || 0)))); } catch {}
   }
+  function v1119LedgerRowWeight(row, mode) {
+    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 1;
+    const info = v1118LedgerBetLineInfo(row);
+    if (info.count <= 1) return 0.82;
+    return info.isLong ? 1.22 : 1.0;
+  }
+  function v1119LedgerBuildPages(rows, mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (!v1103LedgerTestModeEnabled()) {
+      return [{ chunks: v1057LedgerChunks(rows, 25), start: 0, end: Array.isArray(rows) ? rows.length : 0 }];
+    }
+    const source = Array.isArray(rows) ? rows : [];
+    const capacity = 20;
+    const pages = [];
+    let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+    const commitPage = () => {
+      page.chunks = page.chunks.filter(chunk => chunk.length);
+      if (!page.chunks.length) page.chunks = [[]];
+      const maxWeight = Math.max(...(page.weights || [0]), capacity);
+      page.chunks = page.chunks.map((chunk, i) => {
+        const used = Number(page.weights?.[i] || 0);
+        const missing = Math.max(0, maxWeight - used);
+        if (missing > 0.08) {
+          return chunk.concat([{ _v1119Filler: true, _v1119FillerPx: Math.round(missing * 31) }]);
+        }
+        return chunk;
+      });
+      pages.push(page);
+    };
+    source.forEach((row, idx) => {
+      const weightedRow = { ...row, _ledgerNo: idx + 1 };
+      const weight = v1119LedgerRowWeight(weightedRow, m);
+      let col = page.chunks.length - 1;
+      if (page.chunks[col].length && page.weights[col] + weight > capacity) {
+        if (page.chunks.length >= 3) {
+          page.end = idx;
+          commitPage();
+          page = { chunks: [[]], weights: [0], start: idx, end: idx };
+          col = 0;
+        } else {
+          page.chunks.push([]);
+          page.weights.push(0);
+          col += 1;
+        }
+      }
+      page.chunks[col].push(weightedRow);
+      page.weights[col] += weight;
+      page.end = idx + 1;
+    });
+    if (!source.length) {
+      page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+    }
+    commitPage();
+    return pages;
+  }
   function v1110LedgerPageInfo(rows, mode) {
     const total = Array.isArray(rows) ? rows.length : 0;
-    const pageSize = 60;
-    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const pages = v1119LedgerBuildPages(rows, mode);
+    const totalPages = Math.max(1, pages.length || 1);
     let page = v1110GetLedgerTestPage(mode);
     if (page >= totalPages) {
       page = totalPages - 1;
       v1110SetLedgerTestPage(mode, page);
     }
-    const start = page * pageSize;
-    const end = Math.min(total, start + pageSize);
-    return { total, page, totalPages, start, end, pageRows: (rows || []).slice(start, end) };
+    const current = pages[page] || pages[0] || { chunks: [[]], start: 0, end: 0 };
+    const pageRows = (current.chunks || []).flat().filter(row => !row?._v1119Filler);
+    return { total, page, totalPages, start: current.start || 0, end: current.end || 0, pageRows, chunks: current.chunks || [[]] };
   }
   function v1110LedgerChunks(rows, mode) {
-    const activeRows = v1103LedgerTestModeEnabled() ? v1110LedgerPageInfo(rows, mode).pageRows : rows;
-    return v1057LedgerChunks(activeRows, v1103LedgerTestModeEnabled() ? 20 : 25);
+    if (!v1103LedgerTestModeEnabled()) return v1057LedgerChunks(rows, 25);
+    return v1110LedgerPageInfo(rows, mode).chunks;
   }
   function v1110LedgerPagerHtml(rows, mode) {
     return "";
@@ -3337,6 +3396,10 @@
     if (status === "win") return "✓";
     return "–";
   }
+  function v1119LedgerStatusMarkHtml(status) {
+    if (status === "loss" || status === "win") return escapeHtml(v1069LedgerStatusMark(status));
+    return '<span class="v1119-ledger-dash" aria-hidden="true"></span>';
+  }
   function v1076LedgerOddsText(value) {
     const n = Number(value || 0);
     if (!Number.isFinite(n) || n <= 0) return "";
@@ -3372,7 +3435,7 @@
       const title = `${mark} ${name}`;
       const odds = v1076LedgerOddsText(lines[0]?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span></span>`;
+      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map(line => {
@@ -3381,7 +3444,7 @@
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${escapeHtml(mark)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
+      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
@@ -3398,7 +3461,7 @@
     let lines = sourceLines.map(line => cleanText(line?.name || "")).filter(Boolean);
     if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "");
     const count = Math.max(1, lines.length || 1);
-    const isLong = lines.some(name => /ve|veya|ya da|gol atar|çifte şans/iu.test(name || ""));
+    const isLong = lines.some(name => /\bve\b|\bveya\b|\bya da\b|gol atar|çifte şans/iu.test(name || ""));
     return { count, isLong };
   }
   function v1118LedgerRowClass(row, mode) {
@@ -3470,9 +3533,11 @@
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
         const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
-        const testPageInfo = v1103LedgerTestModeEnabled() ? v1110LedgerPageInfo(decoratedRows, m) : { start: 0 };
-        const chunkSize = v1103LedgerTestModeEnabled() ? 20 : 25;
-        const globalNo = Number(testPageInfo.start || 0) + blockIndex * chunkSize + localIndex + 1;
+        if (row?._v1119Filler) {
+          const fillerH = Math.max(0, Number(row._v1119FillerPx || 0));
+          return `<tr class="v1119-ledger-row-filler" style="--v1119-filler-h:${fillerH}px"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+        }
+        const globalNo = Number(row._ledgerNo || row.no || (blockIndex * 25 + localIndex + 1));
         const itemClass = m === "crypto" ? "coin" : "item";
         const gotoAttrs = v1063LedgerRowTargetAttrs(row, m);
         const rowClass = v1118LedgerRowClass(row, m);
