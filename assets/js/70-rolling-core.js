@@ -185,9 +185,9 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:12.7%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value{height:auto!important;min-height:0!important;font-size:11px!important;line-height:1.04!important;padding:0 2px!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines{height:100%!important;min-height:0!important;padding:1px 0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;gap:0!important;background:transparent!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines{height:100%!important;min-height:0!important;padding:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;gap:0!important;background:transparent!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{justify-content:center!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line{display:inline-flex!important;align-items:center!important;column-gap:3px!important;min-height:0!important;width:auto!important;max-width:100%!important;margin:0!important;padding:0!important;line-height:1.02!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line{display:inline-flex!important;align-items:flex-start!important;column-gap:2px!important;min-height:0!important;width:auto!important;max-width:100%!important;margin:0!important;padding:0!important;line-height:1!important;overflow:visible!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-item-multi .v1069-ledger-match-line{align-items:flex-start!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{width:11px!important;min-width:11px!important;height:11px!important;font-size:12px!important;line-height:11px!important;margin:0!important;text-align:center!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;transform:translateY(0)!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{display:inline-block!important;min-width:0!important;max-width:100%!important;font-size:10px!important;line-height:1!important;font-weight:900!important;white-space:normal!important;overflow:visible!important;overflow-wrap:normal!important;word-break:normal!important;}
@@ -216,35 +216,66 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo td{height:37px!important;min-height:37px!important;max-height:37px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1063-ledger-value{padding-top:0!important;padding-bottom:0!important;line-height:1!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:1px!important;padding-top:1px!important;padding-bottom:1px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:1px!important;padding-top:1px!important;padding-bottom:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line + .v1069-ledger-match-line,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:3px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line{align-items:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{align-items:center!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 11px!important;width:11px!important;min-width:11px!important;height:12px!important;margin:0!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;line-height:12px!important;position:relative!important;top:-0.2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;height:11px!important;margin:0!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;line-height:11px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#10b981!important;font-size:11px!important;transform:none!important;background:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#dc2626!important;font-size:11px!important;transform:none!important;background:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{position:relative!important;color:transparent!important;font-size:0!important;line-height:12px!important;transform:none!important;background:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{position:relative!important;color:transparent!important;font-size:0!important;line-height:1!important;transform:none!important;background:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{content:""!important;display:block!important;width:8px!important;height:2px!important;border-radius:999px!important;background:#64748b!important;position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{content:""!important;display:block!important;width:8.5px!important;height:2.4px!important;border-radius:999px!important;background:#64748b!important;position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark.v1123-ledger-status-empty::before{display:none!important;content:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1119-ledger-dash{display:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{line-height:1.05!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{line-height:1.02!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1.0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3){padding-left:3px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td{height:var(--v1119-filler-h,0px)!important;min-height:var(--v1119-filler-h,0px)!important;max-height:var(--v1119-filler-h,0px)!important;padding:0!important;line-height:0!important;color:transparent!important;background:transparent!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td{height:var(--v1119-filler-h,0px)!important;min-height:var(--v1119-filler-h,0px)!important;max-height:var(--v1119-filler-h,0px)!important;padding:0!important;line-height:0!important;color:transparent!important;background:#eef2f7!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td:nth-child(3){background:#0f172a!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.8%!important;min-width:30px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.8%!important;}
-      @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 4px)!important;max-width:calc(100vw - 4px)!important;}}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single td{height:21px!important;min-height:21px!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1063-ledger-value{height:21px!important;min-height:0!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{height:21px!important;padding:0!important;justify-content:center!important;gap:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1069-ledger-match-line{height:13px!important;min-height:13px!important;align-items:center!important;line-height:1!important;column-gap:3px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1069-ledger-status-mark{flex:0 0 11px!important;width:11px!important;min-width:11px!important;height:12px!important;line-height:12px!important;top:0!important;transform:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1076-ledger-match-odd{font-size:10px!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-2,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-2 td{height:36px!important;min-height:36px!important;max-height:36px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-3,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-3 td{height:48px!important;min-height:48px!important;max-height:48px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-4,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-4 td{height:60px!important;min-height:60px!important;max-height:60px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-5,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-5 td{height:72px!important;min-height:72px!important;max-height:72px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-6,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-6 td,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-6plus,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-6plus td{height:84px!important;min-height:84px!important;max-height:84px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[class*="v1131-ledger-row-combo-"] .v1063-ledger-value.v1069-ledger-item-lines{height:100%!important;padding:2px 0!important;justify-content:center!important;gap:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[class*="v1131-ledger-row-combo-"] .v1069-ledger-match-line{align-items:center!important;line-height:1.05!important;column-gap:3px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[class*="v1131-ledger-row-combo-"] .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[class*="v1131-ledger-row-combo-"] .v1069-ledger-status-mark{flex:0 0 11px!important;width:11px!important;min-width:11px!important;height:12px!important;line-height:12px!important;transform:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{width:8px!important;height:2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td{height:0!important;min-height:0!important;max-height:0!important;padding:0!important;line-height:0!important;background:transparent!important;color:transparent!important;border:0!important;}
+            @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 4px)!important;max-width:calc(100vw - 4px)!important;}}
     `;
   }
   function v1103ClearLedgerTestRows(mode) {
@@ -254,36 +285,72 @@
     edits[m].manual = (edits[m].manual || []).filter(row => !v1103IsLedgerTestRow(row));
     v1057SaveLedgerEdits(edits);
   }
-  function v1103BuildLedgerTestRow(mode, index, ts) {
+  function v1131LedgerTestKindConfig(kind) {
+    const key = String(kind || "mixed").toLowerCase();
+    const map = {
+      single: { count: 72, lines: 1 },
+      combo2: { count: 30, lines: 2 },
+      combo3: { count: 24, lines: 3 },
+      combo4: { count: 18, lines: 4 },
+      combo5: { count: 15, lines: 5 },
+      combo6: { count: 12, lines: 6 },
+      mixed: { count: 18, lines: 0 }
+    };
+    return map[key] || map.mixed;
+  }
+  function v1131LedgerTestLineCount(kind, index) {
+    const cfg = v1131LedgerTestKindConfig(kind);
+    if (cfg.lines > 0) return cfg.lines;
+    const pattern = [1, 2, 3, 4, 5, 6];
+    return pattern[Math.max(0, Number(index || 0)) % pattern.length] || 1;
+  }
+  function v1131LedgerTestLineStatus(lineIndex, rowIndex, lineCount) {
+    if (lineCount <= 1) return ["win", "loss", "pending"][Math.max(0, Number(rowIndex || 0)) % 3] || "pending";
+    if (rowIndex % 3 === 0) return "pending";
+    return ["win", "loss", "pending", "win", "loss", "pending"][Math.max(0, Number(lineIndex || 0)) % 6] || "pending";
+  }
+  function v1131LedgerTestLineName(lineIndex, rowNo) {
+    const n = Number(rowNo || 1);
+    const names = [
+      `Test GS ${n}`,
+      `Test BJK ${n}`,
+      `Test Fenerbahçe kazanır`,
+      `Test Galatasaray çifte şans`,
+      `Test Beşiktaş korner üst`,
+      `Test Trabzonspor gol atar`
+    ];
+    return names[Math.max(0, Number(lineIndex || 0)) % names.length] || `Test Maç ${n}`;
+  }
+  function v1103BuildLedgerTestRow(mode, index, ts, kind = "mixed") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const n = index + 1;
     const dayOffset = Math.floor(index / 4);
     const dateObj = new Date(ts + dayOffset * 24 * 60 * 60 * 1000);
     const date = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}`;
-    const id = `ledger_test_${m}_${ts}_${String(n).padStart(3, "0")}`;
+    const id = `ledger_test_${m}_${String(kind || "mixed")}_${ts}_${String(n).padStart(3, "0")}`;
     if (m === "crypto") {
       const side = index % 2 === 0 ? "Long" : "Short";
       const pnl = index % 5 === 0 ? -18 : 24;
       return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `TEST${n}USDT`, kind: side, stake: "$100.00", roi: pnl > 0 ? "24%" : "-18%", pnl: v1069LedgerPnlText(pnl), pnlRaw: pnl, status: pnl > 0 ? "win" : "loss" };
     }
-    const pattern = index % 4;
-    const stake = pattern === 2 ? 100 : pattern === 1 ? 50 : 25;
-    if (pattern === 1) {
-      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Gs ${n} + Test Bjk ${n}`, itemLines: [
-        { name: `Test Gs ${n}`, odds: 2, status: "pending" },
-        { name: `Test Bjk ${n}`, odds: 2, status: "pending" }
-      ], kind: "Kombine", stake: money(stake), roi: "4", pnl: v1069LedgerPnlText(150), pnlRaw: 150, status: "pending" };
+    const lineCount = v1131LedgerTestLineCount(kind, index);
+    const stake = lineCount >= 3 ? 100 : lineCount === 2 ? 50 : 25;
+    if (lineCount <= 1) {
+      const status = v1131LedgerTestLineStatus(0, index, 1);
+      const pnlRaw = status === "loss" ? -stake : status === "win" ? stake : 0;
+      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Tekli Maç ${n}`, itemLines: [{ name: `Test Tekli Maç ${n}`, odds: 2, status }], kind: "Tek", stake: money(stake), roi: "2", pnl: v1069LedgerPnlText(pnlRaw), pnlRaw, status };
     }
-    if (pattern === 2) {
-      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Fenerbahçe kazanır ve 5 gol atar ${n} + Test Galatasaray çifte şans ${n}`, itemLines: [
-        { name: `Test Fenerbahçe kazanır ve 5 gol atar ${n}`, odds: 2, status: "win" },
-        { name: `Test Galatasaray çifte şans ${n}`, odds: 1.84, status: "loss" }
-      ], kind: "Kombine", stake: money(stake), roi: "3,68", pnl: v1069LedgerPnlText(268), pnlRaw: 268, status: "win" };
-    }
-    const won = pattern !== 3;
-    return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Tekli Maç ${n}`, itemLines: [{ name: `Test Tekli Maç ${n}`, odds: 2, status: won ? "win" : "loss" }], kind: "Tek", stake: money(stake), roi: "2", pnl: v1069LedgerPnlText(won ? stake : -stake), pnlRaw: won ? stake : -stake, status: won ? "win" : "loss" };
+    const itemLines = Array.from({ length: lineCount }, (_, lineIndex) => ({
+      name: v1131LedgerTestLineName(lineIndex, n),
+      odds: lineIndex === 1 ? 2 : lineIndex === 3 ? 1.84 : 2,
+      status: v1131LedgerTestLineStatus(lineIndex, index, lineCount)
+    }));
+    const rowStatus = itemLines.some(line => line.status === "loss") ? "loss" : itemLines.every(line => line.status === "win") ? "win" : "pending";
+    const pnlRaw = rowStatus === "loss" ? -stake : rowStatus === "win" ? stake * 2 : 0;
+    const roiText = lineCount === 2 ? "4" : lineCount === 3 ? "8" : lineCount === 4 ? "16" : lineCount === 5 ? "32" : "64";
+    return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: itemLines.map(line => line.name).join(" + "), itemLines, kind: `Kombine ${lineCount} Maç`, stake: money(stake), roi: roiText, pnl: v1069LedgerPnlText(pnlRaw), pnlRaw, status: rowStatus };
   }
-  function v1103FillLedgerTestRows(mode, targetCount) {
+  function v1103FillLedgerTestRows(mode, targetCount, kind = "mixed") {
     const m = mode === "crypto" ? "crypto" : "bet";
     v1103ClearLedgerTestRows(m);
     const realCount = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row)).length;
@@ -291,8 +358,12 @@
     const addCount = Math.max(0, total - realCount);
     const edits = v1057LoadLedgerEdits();
     const ts = Date.now() + 1000;
-    for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts));
+    for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts, kind));
     v1057SaveLedgerEdits(edits);
+  }
+  function v1103FillLedgerTestRowsByKind(mode, kind) {
+    const cfg = v1131LedgerTestKindConfig(kind);
+    v1103FillLedgerTestRows(mode, cfg.count, kind);
   }
   function v1110LedgerSummarySpacerHtml() {
     return `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline v1110-ledger-summary-blank" aria-hidden="true"><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div></div>`;
@@ -309,44 +380,12 @@
   function v1119LedgerRowWeight(row, mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 1;
     const info = v1118LedgerBetLineInfo(row);
-    if (info.count <= 1) return 1;
-    return info.isLong ? 1.61 : 1.39;
-  }
-  function v1130LedgerTableCapacity(mode) {
-    return mode === "bet" && v1103LedgerTestModeEnabled() ? 31 : 20;
-  }
-  function v1130LedgerFlatChunks(pages) {
-    return (Array.isArray(pages) ? pages : []).flatMap(page => Array.isArray(page?.chunks) ? page.chunks : []).filter(chunk => Array.isArray(chunk) && chunk.length);
-  }
-  function v1130LedgerChunkWeight(chunk, mode) {
-    return (Array.isArray(chunk) ? chunk : []).reduce((sum, row) => sum + v1119LedgerRowWeight(row, mode), 0);
-  }
-  function v1130LedgerTargetTotalForTables(mode, tableCount) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const safeTables = Math.max(1, Math.min(5, Number(tableCount || 1)));
-    const realRows = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row));
-    const capacity = v1130LedgerTableCapacity(m);
-    let targetTotal = realRows.length;
-    let addCount = 0;
-    const ts = Date.now() + 1000;
-    for (let i = 0; i < 400; i += 1) {
-      const candidateRows = realRows.slice();
-      for (let j = 0; j < addCount; j += 1) candidateRows.push(v1103BuildLedgerTestRow(m, j, ts));
-      const chunks = v1130LedgerFlatChunks(v1119LedgerBuildPages(candidateRows, m));
-      const targetChunk = chunks[safeTables - 1] || null;
-      if (chunks.length > safeTables) return Math.max(realRows.length, targetTotal);
-      if (targetChunk) {
-        targetTotal = candidateRows.length;
-        if (v1130LedgerChunkWeight(targetChunk, m) >= capacity - 0.18) return targetTotal;
-      }
-      addCount += 1;
-    }
-    return targetTotal;
-  }
-  function v1103FillLedgerTestRowsByTable(mode, tableCount) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const total = v1130LedgerTargetTotalForTables(m, tableCount);
-    v1103FillLedgerTestRows(m, total);
+    if (info.count <= 1) return 0.83;
+    if (info.count === 2) return 2.0;
+    if (info.count === 3) return 2.5;
+    if (info.count === 4) return 3.3;
+    if (info.count === 5) return 4.0;
+    return 5.0;
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -354,7 +393,7 @@
       return [{ chunks: v1057LedgerChunks(rows, 25), start: 0, end: Array.isArray(rows) ? rows.length : 0 }];
     }
     const source = Array.isArray(rows) ? rows : [];
-    const capacity = v1130LedgerTableCapacity(m);
+    const capacity = 20;
     const pages = [];
     let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
     const commitPage = () => {
@@ -503,7 +542,7 @@
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-table="${m}:1">1. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill-table="${m}:2">2. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill-table="${m}:3">3. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill-table="${m}:4">4. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill-table="${m}:5">5. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-kind="${m}:single">Tekli Doldur</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo2">2'li Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo3">3'lü Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo4">4'lü Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo5">5'li Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo6">6'lı Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:mixed">Karışık</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3476,7 +3515,6 @@
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map((line, lineIndex) => {
       const status = v1069LedgerLineStatus(row, line);
-      const pendingLike = status === "pending" || status === "push" || status === "open";
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
@@ -3503,8 +3541,10 @@
   function v1118LedgerRowClass(row, mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return "";
     const info = v1118LedgerBetLineInfo(row);
-    if (info.count <= 1) return "v1118-ledger-row-single";
-    return info.isLong ? "v1118-ledger-row-longcombo" : "v1118-ledger-row-combo";
+    if (info.count <= 1) return "v1118-ledger-row-single v1131-ledger-row-single";
+    const capped = Math.min(6, Math.max(2, Number(info.count || 2)));
+    const legacy = info.isLong ? "v1118-ledger-row-longcombo" : "v1118-ledger-row-combo";
+    return `${legacy} v1131-ledger-row-combo-${capped}${info.count >= 6 ? " v1131-ledger-row-combo-6plus" : ""}`;
   }
 
   function v1063GotoLedgerRow(mode, days, day, opIndex) {
@@ -3736,14 +3776,15 @@
   }
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    host.querySelectorAll("[data-v1103-ledger-test-fill-table]").forEach(btn => btn.addEventListener("click", event => {
+    host.querySelectorAll("[data-v1103-ledger-test-fill-kind]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
       if (!v1103LedgerTestModeEnabled()) return;
-      const [modeRaw, tableRaw] = String(btn.dataset.v1103LedgerTestFillTable || `${m}:1`).split(":");
+      const [modeRaw, kindRaw] = String(btn.dataset.v1103LedgerTestFillKind || `${m}:mixed`).split(":");
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      const safeKind = kindRaw || "mixed";
       v1110SetLedgerTestPage(safeMode, 0);
-      v1103FillLedgerTestRowsByTable(safeMode, Number(tableRaw || 1));
+      v1103FillLedgerTestRowsByKind(safeMode, safeKind);
       v1056OpenDailyLedgerScreen(safeMode);
     }));
     host.querySelectorAll("[data-v1103-ledger-test-clear]").forEach(btn => btn.addEventListener("click", event => {
