@@ -209,7 +209,7 @@
 
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-pnl-cell .v1063-ledger-value{color:#fff!important;font-weight:1000!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:21px!important;min-height:21px!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:20px!important;min-height:20px!important;max-height:20px!important;padding-top:0!important;padding-bottom:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo td{height:32px!important;min-height:32px!important;max-height:32px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo,
@@ -220,9 +220,9 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line + .v1069-ledger-match-line,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:3px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line{align-items:center!important;height:13px!important;line-height:13px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-status-mark{height:13px!important;line-height:13px!important;align-items:center!important;transform:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1078-ledger-match-text{height:13px!important;line-height:13px!important;display:inline-flex!important;align-items:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line{align-items:center!important;height:12px!important;line-height:12px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-status-mark{height:12px!important;line-height:12px!important;align-items:center!important;justify-content:center!important;transform:translateY(-1px)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1078-ledger-match-text{height:12px!important;line-height:12px!important;display:inline-flex!important;align-items:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{align-items:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;height:11px!important;margin:0!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;line-height:11px!important;}
@@ -295,6 +295,29 @@
     for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts));
     v1057SaveLedgerEdits(edits);
   }
+  function v1127LedgerTableCount(pages) {
+    return (Array.isArray(pages) ? pages : []).reduce((sum, page) => {
+      const chunks = Array.isArray(page?.chunks) ? page.chunks.filter(chunk => Array.isArray(chunk) && chunk.length) : [];
+      return sum + Math.max(1, chunks.length || 0);
+    }, 0) || 1;
+  }
+  function v1127LedgerTargetForTables(mode, tableTarget) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const wantedTables = Math.max(1, Math.min(5, Number(tableTarget || 1)));
+    const realRows = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row));
+    const ts = Date.now() + 1000;
+    const simulated = realRows.map((row, idx) => ({ ...row, _ledgerNo: idx + 1 }));
+    let best = simulated.length;
+    const maxAdd = 360;
+    for (let addIndex = 0; addIndex <= maxAdd; addIndex += 1) {
+      const pages = v1119LedgerBuildPages(simulated, m);
+      const tableCount = v1127LedgerTableCount(pages);
+      if (tableCount <= wantedTables) best = simulated.length;
+      if (tableCount > wantedTables) break;
+      simulated.push(v1103BuildLedgerTestRow(m, addIndex, ts));
+    }
+    return Math.max(realRows.length, best);
+  }
   function v1110LedgerSummarySpacerHtml() {
     return `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline v1110-ledger-summary-blank" aria-hidden="true"><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div></div>`;
   }
@@ -310,7 +333,7 @@
   function v1119LedgerRowPx(row, mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
     const info = v1118LedgerBetLineInfo(row);
-    if (info.count <= 1) return 21;
+    if (info.count <= 1) return 20;
     return info.isLong ? 37 : 32;
   }
   function v1119LedgerColumnLimitPx(mode) {
@@ -473,7 +496,7 @@
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:20">20'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:40">40'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:80">80'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:table:1">1. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:table:2">2. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:table:3">3. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:table:4">4. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:table:5">5. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3715,10 +3738,14 @@
       event.preventDefault();
       event.stopPropagation();
       if (!v1103LedgerTestModeEnabled()) return;
-      const [modeRaw, targetRaw] = String(btn.dataset.v1103LedgerTestFill || `${m}:60`).split(":");
+      const parts = String(btn.dataset.v1103LedgerTestFill || `${m}:table:3`).split(":");
+      const modeRaw = parts[0];
+      const targetKind = parts[1];
+      const targetRaw = parts[2] || parts[1];
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      const targetCount = targetKind === "table" ? v1127LedgerTargetForTables(safeMode, Number(targetRaw || 3)) : Number(targetRaw || 60);
       v1110SetLedgerTestPage(safeMode, 0);
-      v1103FillLedgerTestRows(safeMode, Number(targetRaw || 60));
+      v1103FillLedgerTestRows(safeMode, targetCount);
       v1056OpenDailyLedgerScreen(safeMode);
     }));
     host.querySelectorAll("[data-v1103-ledger-test-clear]").forEach(btn => btn.addEventListener("click", event => {
