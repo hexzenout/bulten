@@ -205,15 +205,16 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#ef4444!important;transform:translateY(-0.2px)!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;font-size:12px!important;line-height:9px!important;transform:translateY(-1px)!important scaleX(0.98)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#475569!important;font-size:0!important;line-height:11px!important;transform:translateY(0)!important;}
 
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-pnl-cell .v1063-ledger-value{color:#fff!important;font-weight:1000!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:26px!important;min-height:26px!important;max-height:26px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:23px!important;min-height:23px!important;max-height:23px!important;padding-top:0!important;padding-bottom:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo td{height:32px!important;min-height:32px!important;max-height:32px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo td{height:37px!important;min-height:37px!important;max-height:37px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1063-ledger-value{padding-top:0!important;padding-bottom:0!important;line-height:1!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
@@ -227,8 +228,8 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#dc2626!important;font-size:11px!important;transform:translateY(-.5px)!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;line-height:11px!important;transform:translateY(0)!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1119-ledger-dash{display:block!important;width:6px!important;height:2px!important;border-radius:999px!important;background:#64748b!important;margin:0 auto!important;transform:translateY(.5px)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#475569!important;font-size:0!important;line-height:11px!important;transform:translateY(0)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1119-ledger-dash{display:block!important;width:9px!important;height:2.5px!important;min-height:2.5px!important;border-radius:999px!important;background:#475569!important;margin:0 auto!important;box-shadow:none!important;transform:translateY(0)!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{line-height:1.02!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1.0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3){padding-left:3px!important;padding-right:1px!important;}
@@ -319,11 +320,11 @@
     const commitPage = () => {
       page.chunks = page.chunks.filter(chunk => chunk.length);
       if (!page.chunks.length) page.chunks = [[]];
-      const maxWeight = Math.max(...(page.weights || [0]), capacity);
+      const maxWeight = Math.max(...(page.weights || [0]));
       page.chunks = page.chunks.map((chunk, i) => {
         const used = Number(page.weights?.[i] || 0);
         const missing = Math.max(0, maxWeight - used);
-        if (missing > 0.08) {
+        if (page.chunks.length > 1 && missing > 0.08) {
           return chunk.concat([{ _v1119Filler: true, _v1119FillerPx: Math.round(missing * 31) }]);
         }
         return chunk;
