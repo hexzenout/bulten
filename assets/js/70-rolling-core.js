@@ -313,6 +313,10 @@
       .v1098-ledger-photo-modal{max-width:calc(100vw - 28px)!important;max-height:calc(100vh - 28px)!important;overflow:hidden!important;}
       .v1098-ledger-photo-clone-stage{max-width:calc(100vw - 42px)!important;max-height:calc(100vh - 96px)!important;overflow:auto!important;background:#020617!important;border-radius:12px!important;}
       .v1098-ledger-photo-clone-stage img.v1143-ledger-photo-img{display:block!important;max-width:none!important;width:auto!important;height:auto!important;min-width:100%!important;background:#020617!important;cursor:context-menu!important;}
+      .v1160-ledger-inline-photo-modal{width:auto!important;max-width:calc(100vw - 28px)!important;max-height:calc(100vh - 28px)!important;}
+      .v1160-ledger-inline-photo-stage{max-width:calc(100vw - 42px)!important;max-height:calc(100vh - 76px)!important;overflow:auto!important;padding:0!important;margin:0!important;background:#020617!important;}
+      .v1160-ledger-inline-export{background:#0b1220!important;border-radius:14px!important;box-shadow:none!important;margin:0!important;width:max-content!important;max-width:none!important;}
+      .v1160-ledger-inline-export .v1056-ledger-screen-body,.v1160-ledger-inline-export .v1057-ledger-screen-body{overflow:visible!important;max-height:none!important;height:auto!important;min-height:0!important;padding-bottom:0!important;margin-bottom:0!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2605,20 +2609,34 @@
   function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {
     if (!dataUrl && !sourceNode) return;
     const host = getRollingPhotoHost();
-    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar"><button type="button" data-v781-photo-download>Resmi İndir</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1098-ledger-photo-clone-stage"></div></section></div>`;
+    const downloadButton = dataUrl ? `<button type="button" data-v781-photo-download>Resmi İndir</button>` : "";
+    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal v1160-ledger-inline-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar">${downloadButton}<button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1098-ledger-photo-clone-stage v1160-ledger-inline-photo-stage"></div></section></div>`;
     const stage = host.querySelector(".v1098-ledger-photo-clone-stage");
     if (stage && dataUrl) {
       stage.innerHTML = `<img class="v1143-ledger-photo-img" src="${dataUrl}" alt="${escapeHtml(title)}">`;
     } else if (stage && sourceNode && typeof sourceNode.cloneNode === "function") {
       const clone = sourceNode.cloneNode(true);
-      clone.classList.add("v1098-ledger-photo-clone");
+      clone.classList.add("v1098-ledger-photo-clone", "v1160-ledger-inline-export");
       clone.removeAttribute("id");
       clone.removeAttribute("role");
       clone.removeAttribute("aria-modal");
       clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
-      clone.querySelectorAll("[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock]").forEach(el => el.remove());
-      clone.querySelectorAll(".v1060-ledger-head-actions, .v1063-ledger-head-actions").forEach(el => {
-        if (!el.children.length) el.remove();
+      clone.querySelectorAll("script").forEach(el => el.remove());
+      clone.querySelectorAll(".v1056-ledger-screen-head, .v1057-ledger-screen-head, .v1060-ledger-screen-head, .v1065-ledger-screen-head").forEach(el => el.remove());
+      clone.querySelectorAll("[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock], .v1060-ledger-head-actions, .v1063-ledger-head-actions").forEach(el => el.remove());
+      clone.querySelectorAll(".v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark").forEach(mark => {
+        mark.classList.remove("v1123-ledger-status-empty");
+        mark.textContent = "–";
+      });
+      clone.style.position = "relative";
+      clone.style.transform = "none";
+      clone.style.margin = "0";
+      clone.style.maxWidth = "none";
+      clone.querySelectorAll(".v1056-ledger-screen-body, .v1057-ledger-screen-body").forEach(body => {
+        body.style.overflow = "visible";
+        body.style.maxHeight = "none";
+        body.style.height = "auto";
+        body.style.paddingBottom = "0";
       });
       stage.appendChild(clone);
     }
@@ -4646,11 +4664,9 @@
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
       const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
-      const dataUrl = v1143BuildLedgerScreenPhotoSvg(photoMode) || v1060BuildLedgerPhotoSvg(photoMode);
       const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
       const sourceModal = btn.closest(".v1056-ledger-screen-modal") || document.querySelector(".v1056-ledger-screen-modal");
-      if (v1144OpenLedgerImageTab(dataUrl, title, filename, sourceModal, photoMode)) return;
-      openLedgerScreenPhotoPreview(dataUrl, filename, title, sourceModal);
+      openLedgerScreenPhotoPreview("", filename, title, sourceModal);
     }));
     v1057BindLedgerScreen(host, m);
   }
