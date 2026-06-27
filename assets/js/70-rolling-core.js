@@ -272,6 +272,10 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1078-ledger-match-text,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-name,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1076-ledger-match-odd{line-height:1!important;}
+
+      /* V1135: kombine ilk maç üst çizgiye yapışmasın; satır yüksekliği ve tekli hizaya dokunmaz. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{transform:translateY(1.5px)!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 4px)!important;max-width:calc(100vw - 4px)!important;}}
     `;
   }
@@ -340,34 +344,122 @@
     if (info.count <= 1) return 0.82;
     return info.isLong ? 1.22 : 1.0;
   }
+  function v1135LedgerRowPx(row, mode) {
+    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
+    const info = v1118LedgerBetLineInfo(row);
+    const count = Math.max(1, Number(info.count || 1));
+    if (count <= 1) return 21;
+    if (count === 2) return info.isLong ? 37 : 32;
+    return Math.min(92, 18 + count * 11 + (info.isLong ? 4 : 0));
+  }
+  function v1135LedgerTableBodyPx() {
+    const modal = document.querySelector('#v1056-ledger-screen-host .v1056-ledger-screen-modal');
+    const body = document.querySelector('#v1056-ledger-screen-host .v1056-ledger-screen-body, #v1056-ledger-screen-host .v1057-ledger-screen-body');
+    const toolbar = document.querySelector('#v1056-ledger-screen-host [data-v1103-ledger-test-toolbar]');
+    let bodyH = 0;
+    try { bodyH = Math.floor(body?.getBoundingClientRect?.().height || 0); } catch {}
+    if (!bodyH) {
+      const viewportH = Math.max(720, Math.floor(window.innerHeight || document.documentElement?.clientHeight || 900));
+      const toolbarH = Math.ceil(toolbar?.getBoundingClientRect?.().height || 38);
+      bodyH = Math.max(480, viewportH - 4 - 48 - toolbarH - 6);
+    }
+    const summaryH = 42;
+    const headH = 22;
+    const safety = 14;
+    return Math.max(360, bodyH - summaryH - headH - safety);
+  }
+  function v1135LedgerFlatChunks(pages) {
+    return (Array.isArray(pages) ? pages : []).flatMap(page => Array.isArray(page?.chunks) ? page.chunks : []).filter(chunk => Array.isArray(chunk) && chunk.length);
+  }
+  function v1135LedgerChunkPx(chunk, mode) {
+    return (Array.isArray(chunk) ? chunk : []).reduce((sum, row) => sum + v1135LedgerRowPx(row, mode), 0);
+  }
+  function v1135LedgerTargetTotalForTables(mode, tableCount) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const safeTables = Math.max(1, Math.min(6, Number(tableCount || 1)));
+    const realRows = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row));
+    if (m !== "bet") return safeTables * 20;
+    let lastGoodTotal = realRows.length;
+    const ts = Date.now() + 1000;
+    for (let addCount = 0; addCount <= 500; addCount += 1) {
+      const candidateRows = realRows.slice();
+      for (let j = 0; j < addCount; j += 1) candidateRows.push(v1103BuildLedgerTestRow(m, j, ts));
+      const chunks = v1135LedgerFlatChunks(v1119LedgerBuildPages(candidateRows, m));
+      if (chunks.length > safeTables) return Math.max(realRows.length, lastGoodTotal);
+      if (chunks.length === safeTables) lastGoodTotal = candidateRows.length;
+    }
+    return Math.max(realRows.length, lastGoodTotal);
+  }
+  function v1103FillLedgerTestRowsByTable(mode, tableCount) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const total = v1135LedgerTargetTotalForTables(m, tableCount);
+    v1103FillLedgerTestRows(m, total);
+  }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (!v1103LedgerTestModeEnabled()) {
       return [{ chunks: v1057LedgerChunks(rows, 25), start: 0, end: Array.isArray(rows) ? rows.length : 0 }];
     }
     const source = Array.isArray(rows) ? rows : [];
-    const capacity = 20;
+    if (m !== "bet") {
+      const capacity = 20;
+      const pages = [];
+      let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+      const commitPage = () => {
+        page.chunks = page.chunks.filter(chunk => chunk.length);
+        if (!page.chunks.length) page.chunks = [[]];
+        const maxWeight = Math.max(...(page.weights || [0]));
+        page.chunks = page.chunks.map((chunk, i) => {
+          const used = Number(page.weights?.[i] || 0);
+          const missing = Math.max(0, maxWeight - used);
+          if (page.chunks.length > 1 && missing > 0.08) {
+            return chunk.concat([{ _v1119Filler: true, _v1119FillerPx: Math.round(missing * 31) }]);
+          }
+          return chunk;
+        });
+        pages.push(page);
+      };
+      source.forEach((row, idx) => {
+        const weightedRow = { ...row, _ledgerNo: idx + 1 };
+        const weight = v1119LedgerRowWeight(weightedRow, m);
+        let col = page.chunks.length - 1;
+        if (page.chunks[col].length && page.weights[col] + weight > capacity) {
+          if (page.chunks.length >= 3) {
+            page.end = idx;
+            commitPage();
+            page = { chunks: [[]], weights: [0], start: idx, end: idx };
+            col = 0;
+          } else {
+            page.chunks.push([]);
+            page.weights.push(0);
+            col += 1;
+          }
+        }
+        page.chunks[col].push(weightedRow);
+        page.weights[col] += weight;
+        page.end = idx + 1;
+      });
+      if (!source.length) page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+      commitPage();
+      return pages;
+    }
+    const capacityPx = v1135LedgerTableBodyPx();
     const pages = [];
     let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
     const commitPage = () => {
       page.chunks = page.chunks.filter(chunk => chunk.length);
-      if (!page.chunks.length) page.chunks = [[]];
-      const maxWeight = Math.max(...(page.weights || [0]));
-      page.chunks = page.chunks.map((chunk, i) => {
-        const used = Number(page.weights?.[i] || 0);
-        const missing = Math.max(0, maxWeight - used);
-        if (page.chunks.length > 1 && missing > 0.08) {
-          return chunk.concat([{ _v1119Filler: true, _v1119FillerPx: Math.round(missing * 31) }]);
-        }
-        return chunk;
-      });
+      page.weights = (page.weights || []).slice(0, page.chunks.length);
+      if (!page.chunks.length) {
+        page.chunks = [[]];
+        page.weights = [0];
+      }
       pages.push(page);
     };
     source.forEach((row, idx) => {
       const weightedRow = { ...row, _ledgerNo: idx + 1 };
-      const weight = v1119LedgerRowWeight(weightedRow, m);
+      const rowPx = v1135LedgerRowPx(weightedRow, m);
       let col = page.chunks.length - 1;
-      if (page.chunks[col].length && page.weights[col] + weight > capacity) {
+      if (page.chunks[col].length && page.weights[col] + rowPx > capacityPx) {
         if (page.chunks.length >= 3) {
           page.end = idx;
           commitPage();
@@ -380,12 +472,10 @@
         }
       }
       page.chunks[col].push(weightedRow);
-      page.weights[col] += weight;
+      page.weights[col] += rowPx;
       page.end = idx + 1;
     });
-    if (!source.length) {
-      page = { chunks: [[]], weights: [0], start: 0, end: 0 };
-    }
+    if (!source.length) page = { chunks: [[]], weights: [0], start: 0, end: 0 };
     commitPage();
     return pages;
   }
@@ -500,7 +590,10 @@
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:20">20'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:40">40'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:80">80'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+    if (m === "crypto") {
+      return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:20">20'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:40">40'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:80">80'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+    }
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-table="${m}:1">1. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:2">2. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:3">3. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:4">4. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:5">5. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:6">6. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3738,6 +3831,16 @@
   }
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
+    host.querySelectorAll("[data-v1103-ledger-test-fill-table]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!v1103LedgerTestModeEnabled()) return;
+      const [modeRaw, tableRaw] = String(btn.dataset.v1103LedgerTestFillTable || `${m}:1`).split(":");
+      const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      v1110SetLedgerTestPage(safeMode, 0);
+      v1103FillLedgerTestRowsByTable(safeMode, Number(tableRaw || 1));
+      v1056OpenDailyLedgerScreen(safeMode);
+    }));
     host.querySelectorAll("[data-v1103-ledger-test-fill]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
