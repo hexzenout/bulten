@@ -379,6 +379,9 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::after,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::after,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after{content:none!important;display:none!important;}
+      /* V1172: Dash ekranda kesin görünsün diye glyph içi ayrıca zorlanır. */
+      #v1056-ledger-screen-host .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -4374,9 +4377,14 @@
   function v1171LedgerStatusMarkAttrs(status) {
     const s = String(status || "");
     if (s !== "pending" && s !== "push" && s !== "open") return "";
-    return ' style="color:#64748b!important;font-size:12px!important;line-height:11px!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:11px!important;min-width:11px!important;height:11px!important;flex:0 0 11px!important;background:none!important;transform:none!important;position:static!important;visibility:visible!important;opacity:1!important;overflow:visible!important;white-space:nowrap!important;"';
+    return ' style="color:#94a3b8!important;font-size:15px!important;line-height:9px!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:12px!important;min-width:12px!important;height:12px!important;flex:0 0 12px!important;background:none!important;transform:none!important;position:static!important;visibility:visible!important;opacity:1!important;overflow:visible!important;white-space:nowrap!important;text-align:center!important;margin:0!important;padding:0!important;"';
+  }
+  function v1172LedgerDashHtml() {
+    return '<span class="v1172-ledger-dash-glyph" style="display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;">-</span>';
   }
   function v1119LedgerStatusMarkHtml(status) {
+    const s = String(status || "");
+    if (s === "pending" || s === "push" || s === "open") return v1172LedgerDashHtml();
     return escapeHtml(v1069LedgerStatusMark(status));
   }
   function v1076LedgerOddsText(value) {
