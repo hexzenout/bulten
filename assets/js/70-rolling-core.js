@@ -47,6 +47,8 @@
   let ACTIVE_COMBO_DETAIL_SLOT = null;
   let LEDGER_LAST_DELETE = null;
   let LEDGER_CLOCK_TIMER = null;
+  const LEDGER_SCREEN_SESSION_KEY = "bulten-ledger-screen-open";
+  let LEDGER_SCREEN_RESTORE_DONE = false;
 
   function v1102InstallDailyLedgerOpenGuard() {
     if (window.__omegaV1102DailyLedgerOpenGuard) return;
@@ -2362,6 +2364,73 @@
     }
   }
 
+  function v1157PersistLedgerScreenState(mode) {
+    try {
+      sessionStorage.setItem(LEDGER_SCREEN_SESSION_KEY, JSON.stringify({ mode: mode === "crypto" ? "crypto" : "bet" }));
+    } catch {}
+  }
+
+  function v1157ClearLedgerScreenState() {
+    try { sessionStorage.removeItem(LEDGER_SCREEN_SESSION_KEY); } catch {}
+    LEDGER_SCREEN_RESTORE_DONE = false;
+  }
+
+  function v1157RestoreLedgerScreenState() {
+    if (LEDGER_SCREEN_RESTORE_DONE) return;
+    let payload = null;
+    try { payload = JSON.parse(sessionStorage.getItem(LEDGER_SCREEN_SESSION_KEY) || "null"); } catch {}
+    if (!payload) return;
+    const mount = document.getElementById("omega-rolling-render");
+    if (!mount) return;
+    if (document.querySelector("#v1056-ledger-screen-host .v1056-ledger-screen-modal")) {
+      LEDGER_SCREEN_RESTORE_DONE = true;
+      return;
+    }
+    LEDGER_SCREEN_RESTORE_DONE = true;
+    const mode = payload.mode === "crypto" ? "crypto" : "bet";
+    setTimeout(() => {
+      if (!document.getElementById("omega-rolling-render")) {
+        LEDGER_SCREEN_RESTORE_DONE = false;
+        return;
+      }
+      if (document.querySelector("#v1056-ledger-screen-host .v1056-ledger-screen-modal")) return;
+      v1056OpenDailyLedgerScreen(mode);
+    }, 0);
+  }
+
+  function v1157PrepareLedgerCaptureNode(sourceRoot) {
+    if (!sourceRoot) return null;
+    sourceRoot.querySelectorAll("script").forEach(el => el.remove());
+    sourceRoot.querySelectorAll(".v1056-ledger-screen-head, .v1057-ledger-screen-head, .v1060-ledger-screen-head, .v1065-ledger-screen-head").forEach(el => el.remove());
+    sourceRoot.querySelectorAll('.v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark').forEach(mark => {
+      if (!(mark instanceof Element)) return;
+      mark.textContent = "–";
+      mark.style.color = "#64748b";
+      mark.style.fontSize = "11px";
+      mark.style.lineHeight = "1";
+      mark.style.fontWeight = "1000";
+      mark.style.position = "static";
+      mark.style.background = "none";
+      mark.style.transform = "none";
+      mark.style.display = "inline-flex";
+      mark.style.alignItems = "center";
+      mark.style.justifyContent = "center";
+      mark.style.width = mark.style.width || "10px";
+      mark.style.minWidth = mark.style.minWidth || "10px";
+      mark.style.height = mark.style.height || "11px";
+    });
+    sourceRoot.querySelectorAll('.v1069-ledger-status-mark.v1123-ledger-status-empty').forEach(mark => {
+      if (!(mark instanceof Element)) return;
+      mark.classList.remove('v1123-ledger-status-empty');
+      if (!String(mark.textContent || '').trim()) mark.textContent = '–';
+      mark.style.color = "#64748b";
+      mark.style.fontSize = "11px";
+      mark.style.lineHeight = "1";
+      mark.style.position = "static";
+    });
+    return sourceRoot;
+  }
+
   function v1156SyncScrollTree(sourceRoot, cloneRoot) {
     const sourceNodes = [sourceRoot, ...sourceRoot.querySelectorAll("*")];
     const cloneNodes = [cloneRoot, ...cloneRoot.querySelectorAll("*")];
@@ -2380,17 +2449,18 @@
       try {
         const modalNode = sourceNode?.closest?.(".v1056-ledger-screen-modal") || (sourceNode?.classList?.contains("v1056-ledger-screen-modal") ? sourceNode : null) || document.querySelector(".v1056-ledger-screen-modal");
         if (!modalNode || typeof modalNode.cloneNode !== "function") throw new Error("Kupon Defteri ekranı bulunamadı.");
-        const rect = modalNode.getBoundingClientRect();
-        const width = Math.max(320, Math.ceil(rect.width || modalNode.offsetWidth || 0));
-        const height = Math.max(160, Math.ceil(rect.height || modalNode.offsetHeight || 0));
-        const clone = modalNode.cloneNode(true);
+        const sourceCaptureNode = modalNode.querySelector(".v1056-ledger-screen-body") || modalNode;
+        const rect = sourceCaptureNode.getBoundingClientRect();
+        const width = Math.max(320, Math.ceil(rect.width || sourceCaptureNode.offsetWidth || 0));
+        const height = Math.max(160, Math.ceil(rect.height || sourceCaptureNode.offsetHeight || 0));
+        const clone = sourceCaptureNode.cloneNode(true);
         [clone, ...clone.querySelectorAll("*")].forEach(el => {
           if (!(el instanceof Element)) return;
           el.removeAttribute("id");
           el.removeAttribute("data-v1060-ledger-photo");
         });
-        clone.querySelectorAll("script").forEach(el => el.remove());
-        v1156CopyComputedTree(modalNode, clone);
+        v1156CopyComputedTree(sourceCaptureNode, clone);
+        v1157PrepareLedgerCaptureNode(clone);
         clone.style.width = `${width}px`;
         clone.style.minWidth = `${width}px`;
         clone.style.maxWidth = `${width}px`;
@@ -2418,7 +2488,8 @@
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             try {
-              v1156SyncScrollTree(modalNode, clone);
+              v1156SyncScrollTree(sourceCaptureNode, clone);
+              v1157PrepareLedgerCaptureNode(clone);
               const serialized = new XMLSerializer().serializeToString(clone);
               const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${serialized}</foreignObject></svg>`;
               const img = new Image();
@@ -4527,10 +4598,12 @@
     </div>`;
     v1103EnsureLedgerTestStyles();
     v1110FinalizeLedgerLayout(host);
+    v1157PersistLedgerScreenState(m);
     v1063InstallLedgerClock(host);
     host.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !el.hasAttribute("data-v1056-ledger-close")) return;
       if (LEDGER_CLOCK_TIMER) { try { clearInterval(LEDGER_CLOCK_TIMER); } catch {} LEDGER_CLOCK_TIMER = null; }
+      v1157ClearLedgerScreenState();
       host.innerHTML = "";
     }));
     host.querySelectorAll("[data-v1060-ledger-photo]").forEach(btn => btn.addEventListener("click", event => {
@@ -5381,6 +5454,7 @@ function escapeHtml(str) {
         ${renderConfirmDialog()}
       </div>`;
     bindEvents(mount, state);
+    v1157RestoreLedgerScreenState();
   }
   function applySlotResult(state, mode, i, nextStatus) {
     const list = mode === "crypto" ? state.modeSlots.crypto : state.modeSlots.bet;
