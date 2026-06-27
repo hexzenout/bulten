@@ -2324,86 +2324,142 @@
     return chunks.join("\n");
   }
 
+  function v1156StyleToText(style) {
+    let out = "";
+    if (!style) return out;
+    for (let i = 0; i < style.length; i += 1) {
+      const prop = style[i];
+      if (!prop) continue;
+      const value = style.getPropertyValue(prop);
+      if (!value) continue;
+      const priority = style.getPropertyPriority(prop);
+      out += `${prop}:${value}${priority ? " !important" : ""};`;
+    }
+    return out;
+  }
+
+  function v1156CopyComputedTree(sourceRoot, cloneRoot) {
+    const sourceNodes = [sourceRoot, ...sourceRoot.querySelectorAll("*")];
+    const cloneNodes = [cloneRoot, ...cloneRoot.querySelectorAll("*")];
+    const count = Math.min(sourceNodes.length, cloneNodes.length);
+    for (let i = 0; i < count; i += 1) {
+      const src = sourceNodes[i];
+      const dst = cloneNodes[i];
+      if (!(src instanceof Element) || !(dst instanceof Element)) continue;
+      const style = window.getComputedStyle(src);
+      let cssText = v1156StyleToText(style);
+      if (/^(HTML|BODY)$/i.test(dst.tagName)) cssText += "margin:0;";
+      dst.setAttribute("style", cssText);
+      if (src instanceof HTMLTextAreaElement && dst instanceof HTMLTextAreaElement) {
+        dst.value = src.value;
+        dst.textContent = src.value;
+      } else if (src instanceof HTMLInputElement && dst instanceof HTMLInputElement) {
+        dst.value = src.value;
+        dst.setAttribute("value", src.value);
+      } else if (src instanceof HTMLSelectElement && dst instanceof HTMLSelectElement) {
+        dst.value = src.value;
+      }
+    }
+  }
+
+  function v1156SyncScrollTree(sourceRoot, cloneRoot) {
+    const sourceNodes = [sourceRoot, ...sourceRoot.querySelectorAll("*")];
+    const cloneNodes = [cloneRoot, ...cloneRoot.querySelectorAll("*")];
+    const count = Math.min(sourceNodes.length, cloneNodes.length);
+    for (let i = 0; i < count; i += 1) {
+      const src = sourceNodes[i];
+      const dst = cloneNodes[i];
+      if (!(src instanceof Element) || !(dst instanceof Element)) continue;
+      if (src.scrollTop) dst.scrollTop = src.scrollTop;
+      if (src.scrollLeft) dst.scrollLeft = src.scrollLeft;
+    }
+  }
+
   function v1155BuildLedgerScreenPhotoPng(sourceNode, mode) {
     return new Promise((resolve, reject) => {
       try {
-        const m = mode === "crypto" ? "crypto" : "bet";
-        const bodyNode = sourceNode?.querySelector(".v1056-ledger-screen-body, .v1057-ledger-screen-body") || document.querySelector(".v1056-ledger-screen-body, .v1057-ledger-screen-body");
-        if (!bodyNode || typeof bodyNode.cloneNode !== "function") throw new Error("Kupon Defteri gövdesi bulunamadı.");
-        const rect = bodyNode.getBoundingClientRect();
-        const baseW = Math.ceil(Math.max(bodyNode.scrollWidth || 0, rect.width || 0, bodyNode.offsetWidth || 0));
-        const baseH = Math.ceil(Math.max(bodyNode.scrollHeight || 0, rect.height || 0, bodyNode.offsetHeight || 0));
-        const width = Math.max(320, baseW);
-        const height = Math.max(160, baseH);
-        const clone = bodyNode.cloneNode(true);
-        clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
-        clone.querySelectorAll("[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock], .v1060-ledger-head-actions, .v1063-ledger-head-actions").forEach(el => el.remove());
-        clone.querySelectorAll(".v1110-ledger-pager, .v1110-ledger-page-badge, .v1110-ledger-page-prev, .v1110-ledger-page-next, .v1112-ledger-pager").forEach(el => el.remove());
-        const captureRoot = document.createElement("div");
-        captureRoot.className = `v1155-ledger-capture-root ${m}`;
-        captureRoot.style.width = `${width}px`;
-        captureRoot.style.minWidth = `${width}px`;
-        captureRoot.style.height = "auto";
-        captureRoot.style.minHeight = `${height}px`;
-        captureRoot.appendChild(clone);
+        const modalNode = sourceNode?.closest?.(".v1056-ledger-screen-modal") || (sourceNode?.classList?.contains("v1056-ledger-screen-modal") ? sourceNode : null) || document.querySelector(".v1056-ledger-screen-modal");
+        if (!modalNode || typeof modalNode.cloneNode !== "function") throw new Error("Kupon Defteri ekranı bulunamadı.");
+        const rect = modalNode.getBoundingClientRect();
+        const width = Math.max(320, Math.ceil(rect.width || modalNode.offsetWidth || 0));
+        const height = Math.max(160, Math.ceil(rect.height || modalNode.offsetHeight || 0));
+        const clone = modalNode.cloneNode(true);
+        [clone, ...clone.querySelectorAll("*")].forEach(el => {
+          if (!(el instanceof Element)) return;
+          el.removeAttribute("id");
+          el.removeAttribute("data-v1060-ledger-photo");
+        });
+        clone.querySelectorAll("script").forEach(el => el.remove());
+        v1156CopyComputedTree(modalNode, clone);
+        clone.style.width = `${width}px`;
+        clone.style.minWidth = `${width}px`;
+        clone.style.maxWidth = `${width}px`;
+        clone.style.height = `${height}px`;
+        clone.style.minHeight = `${height}px`;
+        clone.style.maxHeight = `${height}px`;
+        clone.style.boxSizing = "border-box";
+        clone.style.margin = "0";
+        clone.style.transform = "none";
+        clone.style.position = "relative";
 
         const tempHost = document.createElement("div");
         tempHost.style.position = "fixed";
-        tempHost.style.left = "-99999px";
+        tempHost.style.left = "-100000px";
         tempHost.style.top = "0";
         tempHost.style.width = `${width}px`;
-        tempHost.style.height = "auto";
-        tempHost.style.overflow = "visible";
+        tempHost.style.height = `${height}px`;
+        tempHost.style.overflow = "hidden";
         tempHost.style.background = "#020617";
-        tempHost.appendChild(captureRoot);
+        tempHost.style.padding = "0";
+        tempHost.style.margin = "0";
+        tempHost.appendChild(clone);
         document.body.appendChild(tempHost);
 
         requestAnimationFrame(() => {
-          try {
-            const finalW = Math.ceil(Math.max(width, captureRoot.scrollWidth || 0, captureRoot.getBoundingClientRect().width || 0));
-            const finalH = Math.ceil(Math.max(height, captureRoot.scrollHeight || 0, captureRoot.getBoundingClientRect().height || 0));
-            const serialized = new XMLSerializer().serializeToString(captureRoot);
-            const cssText = v1155EscapeCssText(v1155CollectCaptureCss());
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${finalW}" height="${finalH}" viewBox="0 0 ${finalW} ${finalH}">
-              <foreignObject x="0" y="0" width="${finalW}" height="${finalH}">
-                <div xmlns="http://www.w3.org/1999/xhtml">
-                  <style>${cssText}</style>${serialized}
-                </div>
-              </foreignObject>
-            </svg>`;
-            const img = new Image();
-            img.onload = () => {
-              try {
-                const canvas = document.createElement("canvas");
-                canvas.width = finalW;
-                canvas.height = finalH;
-                const ctx = canvas.getContext("2d");
-                ctx.fillStyle = "#020617";
-                ctx.fillRect(0, 0, finalW, finalH);
-                ctx.drawImage(img, 0, 0);
-                const png = canvas.toDataURL("image/png");
+          requestAnimationFrame(() => {
+            try {
+              v1156SyncScrollTree(modalNode, clone);
+              const serialized = new XMLSerializer().serializeToString(clone);
+              const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${serialized}</foreignObject></svg>`;
+              const img = new Image();
+              img.onload = () => {
+                try {
+                  const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+                  const canvas = document.createElement("canvas");
+                  canvas.width = Math.ceil(width * scale);
+                  canvas.height = Math.ceil(height * scale);
+                  const ctx = canvas.getContext("2d");
+                  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+                  ctx.imageSmoothingEnabled = true;
+                  ctx.imageSmoothingQuality = "high";
+                  ctx.fillStyle = "#020617";
+                  ctx.fillRect(0, 0, width, height);
+                  ctx.drawImage(img, 0, 0, width, height);
+                  const png = canvas.toDataURL("image/png");
+                  tempHost.remove();
+                  resolve(png);
+                } catch (error) {
+                  tempHost.remove();
+                  reject(error);
+                }
+              };
+              img.onerror = () => {
                 tempHost.remove();
-                resolve(png);
-              } catch (error) {
-                tempHost.remove();
-                reject(error);
-              }
-            };
-            img.onerror = () => {
+                reject(new Error("PNG üretilemedi."));
+              };
+              img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+            } catch (error) {
               tempHost.remove();
-              reject(new Error("PNG üretilemedi."));
-            };
-            img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-          } catch (error) {
-            tempHost.remove();
-            reject(error);
-          }
+              reject(error);
+            }
+          });
         });
       } catch (error) {
         reject(error);
       }
     });
   }
+
 
   function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı", filename = "bulten-kupon-defteri.png", sourceNode = null, mode = "bet") {
     if (!dataUrl && !sourceNode) return false;
