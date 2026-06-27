@@ -17,12 +17,13 @@
   <style>
     html,body{margin:0!important;padding:0!important;background:#020617!important;color:#e5e7eb!important;min-height:100%!important;font-family:Arial,Helvetica,sans-serif!important;}
     body{overflow:auto!important;}
-    .v1163-viewer-toolbar{position:sticky!important;top:0!important;z-index:50!important;display:flex!important;align-items:center!important;gap:8px!important;padding:8px 10px!important;background:#020617!important;border-bottom:1px solid rgba(148,163,184,.18)!important;box-shadow:0 10px 28px rgba(2,6,23,.34)!important;}
-    .v1163-viewer-toolbar button{appearance:none!important;-webkit-appearance:none!important;border-radius:10px!important;border:1px solid rgba(251,191,36,.55)!important;background:#111827!important;color:#fde68a!important;font-size:12px!important;font-weight:950!important;line-height:1!important;padding:8px 11px!important;cursor:pointer!important;white-space:nowrap!important;}
+    .v1163-viewer-toolbar{position:fixed!important;top:10px!important;right:10px!important;left:auto!important;z-index:50!important;display:flex!important;align-items:center!important;gap:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;pointer-events:none!important;}
+    .v1163-viewer-toolbar button{appearance:none!important;-webkit-appearance:none!important;width:36px!important;height:34px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border-radius:10px!important;border:1px solid rgba(251,191,36,.55)!important;background:rgba(17,24,39,.88)!important;color:#facc15!important;font-size:17px!important;font-weight:1000!important;line-height:1!important;padding:0!important;cursor:pointer!important;white-space:nowrap!important;box-shadow:0 10px 24px rgba(0,0,0,.32)!important;pointer-events:auto!important;}
     .v1163-viewer-toolbar button:hover{background:#1f2937!important;color:#fff!important;}
-    .v1163-viewer-title{font-size:12px!important;font-weight:950!important;color:#e5e7eb!important;margin-right:auto!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
-    .v1163-viewer-note{color:#94a3b8!important;font-size:11px!important;font-weight:800!important;white-space:nowrap!important;}
-    .v1163-viewer-stage{display:block!important;overflow:auto!important;width:100%!important;min-height:calc(100vh - 43px)!important;background:#020617!important;margin:0!important;padding:0!important;}
+    #v1163-open{display:none!important;}
+    .v1163-viewer-title{display:none!important;}
+    .v1163-viewer-note{display:none!important;}
+    .v1163-viewer-stage{display:block!important;overflow:auto!important;width:100%!important;min-height:100vh!important;background:#020617!important;margin:0!important;padding:0!important;}
     .v1163-output-wrap{display:block!important;width:max-content!important;margin:0!important;padding:0!important;background:#020617!important;}
     .v1163-error{padding:18px!important;color:#fecaca!important;font-size:13px!important;font-weight:900!important;}
     .v1162-ledger-output-modal{position:relative!important;display:block!important;width:max-content!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#020617!important;box-shadow:none!important;transform:none!important;overflow:visible!important;}
@@ -34,20 +35,18 @@
     .v1162-ledger-output-modal .v1119-ledger-row-filler,.v1162-ledger-output-modal .v1119-ledger-row-filler td{height:0!important;min-height:0!important;max-height:0!important;padding:0!important;border:0!important;line-height:0!important;overflow:hidden!important;}
 
     .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
-    .v1163-context-menu{position:fixed!important;z-index:2147483647!important;display:none!important;min-width:178px!important;padding:6px!important;border:1px solid rgba(251,191,36,.38)!important;border-radius:12px!important;background:#020617!important;box-shadow:0 18px 48px rgba(0,0,0,.48)!important;}
+    .v1163-context-menu{position:fixed!important;z-index:2147483647!important;display:none!important;min-width:136px!important;padding:6px!important;border:1px solid rgba(251,191,36,.38)!important;border-radius:12px!important;background:#020617!important;box-shadow:0 18px 48px rgba(0,0,0,.48)!important;}
     .v1163-context-menu button{display:block!important;width:100%!important;border:0!important;background:transparent!important;color:#e5e7eb!important;text-align:left!important;border-radius:8px!important;padding:9px 10px!important;font-size:12px!important;font-weight:900!important;cursor:pointer!important;}
     .v1163-context-menu button:hover{background:rgba(251,191,36,.12)!important;color:#fde68a!important;}
   </style>
 </head>
 <body>
-  <div class="v1163-viewer-toolbar">
+  <div class="v1163-viewer-toolbar" aria-label="Çıktı araçları">
     <span class="v1163-viewer-title" id="v1163-title">BULTEN Kupon Defteri Çıktısı</span>
-    <button type="button" id="v1163-download">PNG indir</button>
-    <button type="button" id="v1163-open">PNG yeni sekmede aç</button>
-    <span class="v1163-viewer-note">Sağ tık: PNG indir / yeni sekmede aç</span>
+    <button type="button" id="v1163-download" title="PNG indir" aria-label="PNG indir">⬇</button>
   </div>
   <main class="v1163-viewer-stage" id="v1163-stage"><div class="v1163-error">Çıktı hazırlanıyor...</div></main>
-  <div class="v1163-context-menu" id="v1163-menu"><button type="button" id="v1163-menu-download">PNG olarak indir</button><button type="button" id="v1163-menu-open">PNG yeni sekmede aç</button></div>
+  <div class="v1163-context-menu" id="v1163-menu"><button type="button" id="v1163-menu-download">PNG indir</button></div>
 <script>
 (function(){
   "use strict";
@@ -248,13 +247,11 @@
   }, 100);
 
   document.getElementById("v1163-download")?.addEventListener("click", e => exportPng("download", e.currentTarget));
-  document.getElementById("v1163-open")?.addEventListener("click", e => exportPng("open", e.currentTarget));
   document.getElementById("v1163-menu-download")?.addEventListener("click", e => { hideMenu(); exportPng("download", e.currentTarget); });
-  document.getElementById("v1163-menu-open")?.addEventListener("click", e => { hideMenu(); exportPng("open", e.currentTarget); });
   stage.addEventListener("contextmenu", event => {
     event.preventDefault();
     if(!menu) return;
-    const x=Math.min(event.clientX, window.innerWidth - 192);
+    const x=Math.min(event.clientX, window.innerWidth - 150);
     const y=Math.min(event.clientY, window.innerHeight - 94);
     menu.style.left=`${Math.max(8,x)}px`;
     menu.style.top=`${Math.max(8,y)}px`;
