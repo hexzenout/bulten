@@ -148,7 +148,7 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-head-actions,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-head-actions{flex:0 0 auto!important;position:relative!important;z-index:5!important;margin-left:auto!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1056-ledger-screen-body,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding:0 6px 10px!important;display:flex!important;flex-direction:column!important;overscroll-behavior:contain!important;scrollbar-width:thin!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding:0 6px 0!important;display:flex!important;flex-direction:column!important;overscroll-behavior:contain!important;scrollbar-width:thin!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger{height:auto!important;min-height:100%!important;overflow:visible!important;display:flex!important;flex-direction:column!important;margin:0!important;padding:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet-grid,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1110-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:start!important;overflow:visible!important;width:100%!important;height:auto!important;min-height:0!important;}
@@ -541,7 +541,7 @@
     const summaryH = 40;
     const headH = 21;
     // Test bar başlık satırında ve artık ayrı dikey alan yemiyor. Güvenlik payı sadece son satır kesilmesin diye bırakılır.
-    const safety = 40;
+    const safety = 8;
     return Math.max(340, bodyH - summaryH - headH - safety);
   }
   function v1135LedgerFlatChunks(pages) {
