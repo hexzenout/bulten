@@ -419,6 +419,34 @@
       /* V1172: Dash ekranda kesin görünsün diye glyph içi ayrıca zorlanır. */
       #v1056-ledger-screen-host .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
       .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+
+      /* V1178: Kripto işlem defteri kutularındaki gereksiz boşlukları azalt; 25'li mantığa dokunmaz. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline{height:34px!important;min-height:34px!important;max-height:34px!important;flex:0 0 34px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-summary-inline > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline > div{height:34px!important;min-height:34px!important;max-height:34px!important;padding:1px 5px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary span,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-summary-inline span,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline span{font-size:9px!important;line-height:.95!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary b,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-summary-inline b,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline b{font-size:13px!important;line-height:.98!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1057-ledger-excel-table thead,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table thead{height:18px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1057-ledger-excel-table th,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table th{height:18px!important;min-height:18px!important;max-height:18px!important;font-size:9.2px!important;line-height:1!important;padding:0 1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1057-ledger-excel-table tr,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table tr,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1057-ledger-excel-table td,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table td{height:23px!important;min-height:23px!important;max-height:23px!important;padding-top:0!important;padding-bottom:0!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-cell-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1063-ledger-value{height:23px!important;min-height:23px!important;max-height:23px!important;padding:0 1px!important;font-size:10.2px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{font-size:10.5px!important;font-weight:950!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(4) .v1063-ledger-value{overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(4) .v1063-ledger-value{line-height:1.12!important;padding-bottom:1px!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2919,7 +2947,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1177-crypto-ledger-25-color-polish&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1178-crypto-ledger-compact-cells&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
