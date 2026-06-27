@@ -5,23 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BULTEN Kupon Defteri</title>
   <style>
-    html,body{margin:0;min-height:100%;background:#020617;color:#e5e7eb;font-family:Arial,Helvetica,sans-serif;}
+    html,body{margin:0;min-height:100%;background:#020617!important;background-image:none!important;color:#e5e7eb;font-family:Arial,Helvetica,sans-serif;}
+    html::before,html::after,body::before,body::after{display:none!important;content:none!important;background:none!important;}
     body{overflow:auto;padding:8px;box-sizing:border-box;}
-    .photo-shell{min-width:max-content;min-height:calc(100vh - 16px);display:flex;align-items:flex-start;justify-content:center;box-sizing:border-box;}
+    .photo-shell{min-width:max-content;min-height:0;display:flex;align-items:flex-start;justify-content:center;box-sizing:border-box;background:#020617!important;background-image:none!important;}
     .photo-shell img{display:block;width:auto;height:auto;max-width:none;max-height:none;background:#020617;}
     .empty-state,.loading-state{min-height:calc(100vh - 16px);display:grid;place-items:center;padding:24px;box-sizing:border-box;text-align:center;font-size:14px;font-weight:900;}
     .empty-state{color:#cbd5e1}.loading-state{color:#fbbf24;letter-spacing:.02em;}
-    .v1158-ledger-export-host{width:max-content;max-width:none;margin:0 auto;}
-    .v1158-ledger-export-overlay{position:relative!important;inset:auto!important;width:max-content!important;min-height:0!important;background:transparent!important;padding:0!important;margin:0!important;display:block!important;overflow:visible!important;}
+    .v1158-ledger-export-host{width:max-content;max-width:none;margin:0 auto;background:#020617!important;background-image:none!important;}
+    .v1158-ledger-export-overlay{position:relative!important;inset:auto!important;width:max-content!important;min-height:0!important;background:transparent!important;background-image:none!important;padding:0!important;margin:0!important;display:block!important;overflow:visible!important;}
     .v1158-ledger-export-host .v1056-ledger-screen-head,.v1158-ledger-export-host .v1057-ledger-screen-head,.v1158-ledger-export-host .v1060-ledger-screen-head,.v1158-ledger-export-host .v1065-ledger-screen-head{display:none!important;}
-    .v1158-ledger-export-host .v1056-ledger-screen-modal,.v1158-ledger-export-host .v1057-ledger-screen-modal{max-width:none!important;max-height:none!important;overflow:visible!important;}
-    .v1158-ledger-export-host .v1056-ledger-screen-body,.v1158-ledger-export-host .v1057-ledger-screen-body{overflow:visible!important;max-height:none!important;height:auto!important;}
-    .v1158-ledger-export-host .v1069-ledger-match-line.pending .v1069-ledger-status-mark,.v1158-ledger-export-host .v1069-ledger-match-line.push .v1069-ledger-status-mark,.v1158-ledger-export-host .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;font-size:11px!important;line-height:1!important;background:none!important;position:static!important;transform:none!important;}
+    .v1158-ledger-export-host .v1056-ledger-screen-modal,.v1158-ledger-export-host .v1057-ledger-screen-modal{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;margin-bottom:0!important;background:#0b1220!important;}
+    .v1158-ledger-export-host .v1056-ledger-screen-body,.v1158-ledger-export-host .v1057-ledger-screen-body{overflow:visible!important;max-height:none!important;height:auto!important;min-height:0!important;padding-bottom:0!important;margin-bottom:0!important;background:transparent!important;}
+    .v1158-ledger-export-host .v1057-ledger-sheet-grid,.v1158-ledger-export-host .v1061-ledger-sheet-grid{height:auto!important;min-height:0!important;align-items:start!important;overflow:visible!important;margin-bottom:0!important;}
+    .v1158-ledger-export-host .v1057-ledger-sheet,.v1158-ledger-export-host .v1061-ledger-sheet,.v1158-ledger-export-host .v1054-daily-ledger,.v1158-ledger-export-host .v1063-ledger-pro,.v1158-ledger-export-host .v1065-ledger-pro{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;margin-bottom:0!important;}
+    .v1158-ledger-export-host .v1057-ledger-excel-table,.v1158-ledger-export-host .v1061-ledger-excel-table{height:auto!important;min-height:0!important;margin-bottom:0!important;}
+    .v1158-ledger-export-host .v1069-ledger-match-line.pending .v1069-ledger-status-mark,.v1158-ledger-export-host .v1069-ledger-match-line.push .v1069-ledger-status-mark,.v1158-ledger-export-host .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;font-size:11px!important;line-height:1!important;background:none!important;position:static!important;transform:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;}
     .v1158-ledger-export-host .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,.v1158-ledger-export-host .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,.v1158-ledger-export-host .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{display:none!important;content:none!important;}
+    .viewer-context-menu{position:fixed;z-index:999999;display:none;min-width:180px;padding:6px;border:1px solid rgba(148,163,184,.32);border-radius:12px;background:#0f172a;box-shadow:0 18px 48px rgba(0,0,0,.45);font-family:Arial,Helvetica,sans-serif;}
+    .viewer-context-menu.open{display:block;}
+    .viewer-context-menu button{display:block;width:100%;border:0;border-radius:9px;background:transparent;color:#e5e7eb;text-align:left;padding:9px 10px;font-size:12px;font-weight:900;cursor:pointer;}
+    .viewer-context-menu button:hover{background:rgba(251,191,36,.14);color:#fbbf24;}
   </style>
 </head>
 <body>
   <main class="photo-shell" data-stage></main>
+  <div class="viewer-context-menu" data-context-menu>
+    <button type="button" data-png-download>PNG olarak indir</button>
+    <button type="button" data-png-open>PNG yeni sekmede aç</button>
+  </div>
   <script>
     (function(){
       const params=new URLSearchParams(location.search);
@@ -29,20 +41,48 @@
       const fileParam=params.get('file')||'bulten-kupon-defteri.png';
       const safeFile=String(fileParam).replace(/[^a-z0-9._-]+/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')||'bulten-kupon-defteri.png';
       const stage=document.querySelector('[data-stage]');
+      const menu=document.querySelector('[data-context-menu]');
       let rendered='';
+      let currentFilename=safeFile;
       document.title=safeFile;
       function readPayload(){try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null}}
+      function restorePendingMarks(root){
+        if(!root||!root.querySelectorAll)return;
+        root.querySelectorAll('.v1069-ledger-match-line.pending .v1069-ledger-status-mark,.v1069-ledger-match-line.push .v1069-ledger-status-mark,.v1069-ledger-match-line.open .v1069-ledger-status-mark').forEach(mark=>{
+          mark.classList.remove('v1123-ledger-status-empty');
+          if(!String(mark.textContent||'').trim()) mark.textContent='–';
+          mark.style.color='#64748b';
+          mark.style.fontSize='11px';
+          mark.style.lineHeight='1';
+          mark.style.background='none';
+          mark.style.position='static';
+          mark.style.transform='none';
+          mark.style.display='inline-flex';
+          mark.style.alignItems='center';
+          mark.style.justifyContent='center';
+        });
+      }
+      function injectHardResetStyle(){
+        if(document.getElementById('v1159-viewer-hard-reset')) return;
+        const style=document.createElement('style');
+        style.id='v1159-viewer-hard-reset';
+        style.textContent='html,body{background:#020617!important;background-image:none!important;}html:before,html:after,body:before,body:after{display:none!important;content:none!important;background:none!important}.photo-shell{background:#020617!important;background-image:none!important}.v1158-ledger-export-host{background:#020617!important;background-image:none!important}.v1158-ledger-export-host .v1056-ledger-screen-modal,.v1158-ledger-export-host .v1057-ledger-screen-modal{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;margin-bottom:0!important}.v1158-ledger-export-host .v1056-ledger-screen-body,.v1158-ledger-export-host .v1057-ledger-screen-body{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;padding-bottom:0!important;margin-bottom:0!important}.v1158-ledger-export-host .v1057-ledger-sheet-grid,.v1158-ledger-export-host .v1061-ledger-sheet-grid,.v1158-ledger-export-host .v1057-ledger-sheet,.v1158-ledger-export-host .v1061-ledger-sheet,.v1158-ledger-export-host .v1054-daily-ledger{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;margin-bottom:0!important}';
+        document.head.appendChild(style);
+      }
       function renderPayload(){
         const payload=readPayload();
         if(!payload){stage.innerHTML='<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';return false;}
         const filename=String(payload.filename||safeFile).replace(/[^a-z0-9._-]+/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')||safeFile;
+        currentFilename=filename;
         document.title=filename;
         if(payload.html){
           const token='html:'+payload.ts+':'+payload.html.length;
           if(rendered===token) return true;
           rendered=token;
           if(payload.headHtml){try{document.head.insertAdjacentHTML('beforeend',String(payload.headHtml||''))}catch{}}
+          injectHardResetStyle();
           stage.innerHTML=String(payload.html||'');
+          restorePendingMarks(stage);
           return true;
         }
         if(!payload.dataUrl){stage.innerHTML='<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';return false;}
@@ -51,7 +91,83 @@
         const img=new Image(); img.alt=payload.title||filename; img.decoding='sync'; img.src=payload.dataUrl;
         stage.textContent=''; stage.appendChild(img); return true;
       }
+      function styleToText(style){
+        let out='';
+        if(!style) return out;
+        for(let i=0;i<style.length;i+=1){
+          const prop=style[i];
+          const value=style.getPropertyValue(prop);
+          if(!prop||!value) continue;
+          const priority=style.getPropertyPriority(prop);
+          out+=prop+':'+value+(priority?' !important':'')+';';
+        }
+        return out;
+      }
+      function copyComputedTree(srcRoot,dstRoot){
+        const src=[srcRoot,...srcRoot.querySelectorAll('*')];
+        const dst=[dstRoot,...dstRoot.querySelectorAll('*')];
+        const count=Math.min(src.length,dst.length);
+        for(let i=0;i<count;i+=1){
+          if(!(src[i] instanceof Element)||!(dst[i] instanceof Element)) continue;
+          dst[i].setAttribute('style',styleToText(getComputedStyle(src[i])));
+        }
+      }
+      function domToPngBlob(openInstead){
+        const img=stage.querySelector('img');
+        if(img&&img.src){
+          if(openInstead){ window.open(img.src,'_blank'); return; }
+          const a=document.createElement('a'); a.href=img.src; a.download=currentFilename; document.body.appendChild(a); a.click(); a.remove(); return;
+        }
+        const target=stage.querySelector('.v1158-ledger-export-host')||stage.firstElementChild;
+        if(!target) return;
+        const rect=target.getBoundingClientRect();
+        const width=Math.max(320,Math.ceil(Math.max(target.scrollWidth||0,rect.width||0)));
+        const height=Math.max(160,Math.ceil(Math.max(target.scrollHeight||0,rect.height||0)));
+        const clone=target.cloneNode(true);
+        clone.querySelectorAll('script,.viewer-context-menu').forEach(el=>el.remove());
+        copyComputedTree(target,clone);
+        restorePendingMarks(clone);
+        clone.style.width=width+'px';
+        clone.style.minWidth=width+'px';
+        clone.style.maxWidth=width+'px';
+        clone.style.height=height+'px';
+        clone.style.minHeight=height+'px';
+        clone.style.maxHeight=height+'px';
+        clone.style.margin='0';
+        clone.style.background='#020617';
+        const serialized=new XMLSerializer().serializeToString(clone);
+        const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+width+'" height="'+height+'" viewBox="0 0 '+width+' '+height+'"><foreignObject x="0" y="0" width="'+width+'" height="'+height+'"><div xmlns="http://www.w3.org/1999/xhtml">'+serialized+'</div></foreignObject></svg>';
+        const image=new Image();
+        image.onload=function(){
+          const scale=Math.max(1,Math.min(2,Math.round(window.devicePixelRatio||1)));
+          const canvas=document.createElement('canvas');
+          canvas.width=Math.ceil(width*scale); canvas.height=Math.ceil(height*scale);
+          const ctx=canvas.getContext('2d');
+          ctx.setTransform(scale,0,0,scale,0,0);
+          ctx.fillStyle='#020617'; ctx.fillRect(0,0,width,height);
+          ctx.drawImage(image,0,0,width,height);
+          canvas.toBlob(function(blob){
+            if(!blob) return;
+            const url=URL.createObjectURL(blob);
+            if(openInstead){ window.open(url,'_blank'); setTimeout(()=>URL.revokeObjectURL(url),60000); return; }
+            const a=document.createElement('a'); a.href=url; a.download=currentFilename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),30000);
+          },'image/png');
+        };
+        image.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      }
+      function closeMenu(){menu&&menu.classList.remove('open')}
+      function openMenu(x,y){
+        if(!menu) return;
+        menu.style.left=Math.min(x,window.innerWidth-200)+'px';
+        menu.style.top=Math.min(y,window.innerHeight-96)+'px';
+        menu.classList.add('open');
+      }
       renderPayload();
+      stage.addEventListener('contextmenu',event=>{event.preventDefault();openMenu(event.clientX,event.clientY)});
+      document.addEventListener('click',closeMenu);
+      document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu()});
+      menu?.querySelector('[data-png-download]')?.addEventListener('click',event=>{event.preventDefault();closeMenu();domToPngBlob(false)});
+      menu?.querySelector('[data-png-open]')?.addEventListener('click',event=>{event.preventDefault();closeMenu();domToPngBlob(true)});
       window.addEventListener('storage',event=>{if(event.key===key)renderPayload()});
     })();
   </script>

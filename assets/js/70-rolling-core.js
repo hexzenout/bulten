@@ -2592,6 +2592,7 @@
     } catch { return false; }
     try {
       const url = new URL("photo-viewer.html", window.location.href);
+      url.searchParams.set("v", "v1159");
       url.searchParams.set("file", safeFilename);
       url.searchParams.set("key", key);
       const win = window.open(url.toString(), "_blank");
