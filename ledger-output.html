@@ -24,8 +24,6 @@
     .v1163-viewer-note{color:#94a3b8!important;font-size:11px!important;font-weight:800!important;white-space:nowrap!important;}
     .v1163-viewer-stage{display:block!important;overflow:auto!important;width:100%!important;min-height:calc(100vh - 43px)!important;background:#020617!important;margin:0!important;padding:0!important;}
     .v1163-output-wrap{display:block!important;width:max-content!important;margin:0!important;padding:0!important;background:#020617!important;}
-    .v1164-png-preview{display:block!important;width:max-content!important;max-width:none!important;margin:0!important;padding:0!important;background:#020617!important;}
-    .v1164-png-img{display:block!important;width:auto!important;height:auto!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;background:#020617!important;cursor:context-menu!important;}
     .v1163-error{padding:18px!important;color:#fecaca!important;font-size:13px!important;font-weight:900!important;}
     .v1162-ledger-output-modal{position:relative!important;display:block!important;width:max-content!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#020617!important;box-shadow:none!important;transform:none!important;overflow:visible!important;}
     .v1162-ledger-output-modal .v1056-ledger-screen-body,.v1162-ledger-output-modal .v1057-ledger-screen-body{display:block!important;width:max-content!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;margin:0!important;padding:0!important;background:#020617!important;}
@@ -34,6 +32,8 @@
     .v1162-ledger-output-modal .v1057-ledger-sheet,.v1162-ledger-output-modal .v1061-ledger-sheet{height:auto!important;min-height:0!important;max-height:none!important;align-self:start!important;margin-bottom:0!important;}
     .v1162-ledger-output-modal .v1057-ledger-excel-table,.v1162-ledger-output-modal .v1061-ledger-excel-table{height:auto!important;min-height:0!important;max-height:none!important;margin-bottom:0!important;}
     .v1162-ledger-output-modal .v1119-ledger-row-filler,.v1162-ledger-output-modal .v1119-ledger-row-filler td{height:0!important;min-height:0!important;max-height:0!important;padding:0!important;border:0!important;line-height:0!important;overflow:hidden!important;}
+
+    .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
     .v1163-context-menu{position:fixed!important;z-index:2147483647!important;display:none!important;min-width:178px!important;padding:6px!important;border:1px solid rgba(251,191,36,.38)!important;border-radius:12px!important;background:#020617!important;box-shadow:0 18px 48px rgba(0,0,0,.48)!important;}
     .v1163-context-menu button{display:block!important;width:100%!important;border:0!important;background:transparent!important;color:#e5e7eb!important;text-align:left!important;border-radius:8px!important;padding:9px 10px!important;font-size:12px!important;font-weight:900!important;cursor:pointer!important;}
     .v1163-context-menu button:hover{background:rgba(251,191,36,.12)!important;color:#fde68a!important;}
@@ -53,26 +53,19 @@
   "use strict";
   const params = new URLSearchParams(location.search || "");
   const key = params.get("key") || "";
-  const viewMode = String(params.get("view") || "").toLowerCase();
-  const autoPngPreview = viewMode === "png" || params.get("autopng") === "1";
-  const blobPreview = viewMode === "blob";
   const stage = document.getElementById("v1163-stage");
   const titleEl = document.getElementById("v1163-title");
   const menu = document.getElementById("v1163-menu");
   let payload = null;
   let outputNode = null;
-  let currentPngDataUrl = "";
-  let currentBlobUrl = "";
-  let autoPngStarted = false;
 
   function localDateStamp(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
   function safeFilename(name){ return String(name || `bulten-bahis-kupon-defteri-${localDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi,"-").replace(/-+/g,"-").replace(/^-|-$/g,"") || `bulten-bahis-kupon-defteri-${localDateStamp()}.png`; }
-  function getFilename(){ return safeFilename((payload && payload.filename) || params.get("file")); }
-  function escapeAttr(value){
-    return String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch] || ch));
-  }
+  function getFilename(){ return safeFilename(payload && payload.filename); }
 
   function hideMenu(){ if(menu) menu.style.display = "none"; }
+
+  function dashHtml(){ return '<span class="v1172-ledger-dash-glyph" style="display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;">-</span>'; }
 
   function prepareOutputNode(node){
     if(!node || !(node instanceof Element)) return;
@@ -90,8 +83,8 @@
       const line = mark.closest(".v1069-ledger-match-line");
       if(line && (line.classList.contains("pending") || line.classList.contains("open") || line.classList.contains("push"))){
         mark.classList.remove("v1123-ledger-status-empty");
-        mark.textContent = "-";
-        mark.style.setProperty("color", "#64748b", "important");
+        mark.innerHTML = dashHtml();
+        mark.style.setProperty("color", "#94a3b8", "important");
         mark.style.setProperty("font-size", "11px", "important");
         mark.style.setProperty("line-height", "1", "important");
         mark.style.setProperty("font-weight", "1000", "important");
@@ -100,11 +93,13 @@
         mark.style.setProperty("justify-content", "center", "important");
         mark.style.setProperty("background", "none", "important");
         mark.style.setProperty("transform", "none", "important");
-        mark.style.setProperty("width", "11px", "important");
-        mark.style.setProperty("min-width", "11px", "important");
-        mark.style.setProperty("height", "11px", "important");
-        mark.style.setProperty("flex", "0 0 11px", "important");
-        mark.style.setProperty("position", "static", "important");
+        mark.style.setProperty("width", "12px", "important");
+        mark.style.setProperty("min-width", "12px", "important");
+        mark.style.setProperty("height", "12px", "important");
+        mark.style.setProperty("flex", "0 0 12px", "important");
+        mark.style.setProperty("visibility", "visible", "important");
+        mark.style.setProperty("opacity", "1", "important");
+        mark.style.setProperty("overflow", "visible", "important");
       }
     });
   }
@@ -168,10 +163,8 @@
       const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${serialized}</foreignObject></svg>`;
       const img=new Image();
       const svgUrl="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
-      await new Promise((resolve,reject)=>{ img.onload=resolve; img.onerror=()=>reject(new Error("PNG üretilemedi.")); img.src=svgUrl; });
-      const pixelRatio=Math.max(1, Number(window.devicePixelRatio || 1));
-      const area=width*height;
-      const scale=area > 2200000 ? 1 : Math.max(1, Math.min(2, Math.round(pixelRatio)));
+      await new Promise((resolve,reject)=>{ const timer=setTimeout(()=>reject(new Error("PNG üretimi zaman aşımına uğradı.")),14000); img.onload=()=>{clearTimeout(timer);resolve();}; img.onerror=()=>{clearTimeout(timer);reject(new Error("PNG üretilemedi."));}; img.src=svgUrl; });
+      const scale=Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
       const canvas=document.createElement("canvas");
       canvas.width=Math.ceil(width*scale);
       canvas.height=Math.ceil(height*scale);
@@ -195,16 +188,6 @@
     a.remove();
   }
 
-  function downloadBlobUrl(blobUrl, filename){
-    if(!blobUrl) return;
-    const a=document.createElement("a");
-    a.href=blobUrl;
-    a.download=safeFilename(filename);
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
-
   function dataUrlToObjectUrl(dataUrl){
     const parts=String(dataUrl).split(",");
     const meta=parts[0] || "";
@@ -216,16 +199,11 @@
   }
 
   async function exportPng(action, button){
-    if(currentBlobUrl){
-      if(action === "open") window.open(currentBlobUrl, "_blank");
-      else downloadBlobUrl(currentBlobUrl, getFilename());
-      return;
-    }
-    if(!outputNode && !currentPngDataUrl) return;
+    if(!outputNode) return;
     const old=button ? button.textContent : "";
     if(button){ button.disabled=true; button.textContent="PNG hazırlanıyor..."; }
     try{
-      const dataUrl=currentPngDataUrl || await nodeToPngDataUrl(outputNode);
+      const dataUrl=await nodeToPngDataUrl(outputNode);
       if(action === "open"){
         const objectUrl=dataUrlToObjectUrl(dataUrl);
         window.open(objectUrl, "_blank");
@@ -240,50 +218,17 @@
     }
   }
 
-  async function renderAutoPngPreview(){
-    if(autoPngStarted || !outputNode) return;
-    autoPngStarted = true;
-    const filename = getFilename();
-    stage.innerHTML = '<div class="v1163-error">PNG hazırlanıyor...</div>';
-    try{
-      currentPngDataUrl = await nodeToPngDataUrl(outputNode);
-      outputNode = null;
-      titleEl.textContent = `PNG Önizleme · ${filename}`;
-      document.title = filename;
-      stage.innerHTML = `<div class="v1164-png-preview"><img class="v1164-png-img" src="${currentPngDataUrl}" alt="${escapeAttr(filename)}"></div>`;
-    }catch(e){
-      autoPngStarted = false;
-      stage.innerHTML = '<div class="v1163-error">PNG hazırlanamadı. Sayfayı yenileyip tekrar dene.</div>';
-    }
-  }
-
-  function renderBlobPayload(data){
-    if(!data || !data.blobUrl) return false;
-    payload = { filename: data.filename || params.get("file") || `bulten-bahis-kupon-defteri-${localDateStamp()}.png` };
-    currentBlobUrl = String(data.blobUrl || "");
-    currentPngDataUrl = "";
-    outputNode = null;
-    const filename = getFilename();
-    titleEl.textContent = `PNG Önizleme · ${filename}`;
-    document.title = filename;
-    stage.innerHTML = `<div class="v1164-png-preview"><img class="v1164-png-img" src="${escapeAttr(currentBlobUrl)}" alt="${escapeAttr(filename)}"></div>`;
-    return true;
-  }
-
   function renderPayload(data){
     payload=data || {};
     if(payload.error){ stage.innerHTML=`<div class="v1163-error">${payload.error}</div>`; return true; }
     if(!payload.html) return false;
-    currentPngDataUrl = "";
-    autoPngStarted = false;
-    titleEl.textContent = autoPngPreview ? "PNG hazırlanıyor..." : (payload.title || "BULTEN Kupon Defteri Çıktısı");
+    titleEl.textContent = payload.title || "BULTEN Kupon Defteri Çıktısı";
     document.title = `${payload.title || "BULTEN Çıktı"} - ${getFilename()}`;
     stage.innerHTML = `<div class="v1163-output-wrap">${payload.html}</div>`;
     outputNode = stage.querySelector("[data-v1163-output-node], [data-v1162-output-node], .v1162-ledger-output-modal");
     prepareOutputNode(outputNode);
     setTimeout(() => prepareOutputNode(outputNode), 120);
     setTimeout(() => prepareOutputNode(outputNode), 320);
-    if(autoPngPreview) setTimeout(renderAutoPngPreview, 180);
     return true;
   }
 
@@ -296,12 +241,11 @@
   const timer=setInterval(() => {
     tries++;
     const data=readStored();
-    const ok = blobPreview ? renderBlobPayload(data) : renderPayload(data);
-    if(ok || tries > 60){
+    if(renderPayload(data) || tries > 60){
       clearInterval(timer);
       if(!data && tries > 60) stage.innerHTML='<div class="v1163-error">Çıktı bulunamadı. Kupon Defteri ekranından kameraya tekrar bas.</div>';
     }
-  }, 80);
+  }, 100);
 
   document.getElementById("v1163-download")?.addEventListener("click", e => exportPng("download", e.currentTarget));
   document.getElementById("v1163-open")?.addEventListener("click", e => exportPng("open", e.currentTarget));

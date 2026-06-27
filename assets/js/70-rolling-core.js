@@ -2606,8 +2606,8 @@
       const emptyLike = !String(mark.textContent || "").trim() || mark.classList.contains("v1123-ledger-status-empty");
       if (pendingLike || emptyLike) {
         mark.classList.remove("v1123-ledger-status-empty");
-        mark.textContent = "−";
-        mark.style.setProperty("color", "#64748b", "important");
+        mark.innerHTML = v1172LedgerDashHtml();
+        mark.style.setProperty("color", "#94a3b8", "important");
       }
       mark.style.setProperty("font-size", "11px", "important");
       mark.style.setProperty("line-height", "1", "important");
@@ -2848,8 +2848,8 @@
           const line = mark.closest(".v1069-ledger-match-line");
           if (line && (line.classList.contains("pending") || line.classList.contains("open") || line.classList.contains("push"))) {
             mark.classList.remove("v1123-ledger-status-empty");
-            mark.textContent = "−";
-            mark.style.setProperty("color", "#64748b", "important");
+            mark.innerHTML = v1172LedgerDashHtml();
+            mark.style.setProperty("color", "#94a3b8", "important");
             mark.style.setProperty("font-size", "11px", "important");
             mark.style.setProperty("line-height", "1", "important");
             mark.style.setProperty("font-weight", "1000", "important");
@@ -2868,7 +2868,23 @@
   }
 
   function v1163OpenLedgerOutputTab(mode = "bet") {
-    v1165OpenLedgerDirectPngTab(mode);
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const key = v1163LedgerOutputStorageKey();
+    const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
+    const filename = v1162LedgerFilename(m);
+    const payload = { mode: m, title, filename, html: v1163BuildLedgerOutputHtml(m), ts: Date.now(), v: "1173" };
+    if (!payload.html) {
+      alert("Kupon Defteri çıktısı hazırlanamadı. Defteri kapatıp tekrar aç.");
+      return;
+    }
+    try { localStorage.setItem(key, JSON.stringify(payload)); }
+    catch (error) {
+      alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
+      return;
+    }
+    const url = `ledger-output.html?v=v1173-ledger-html-output&key=${encodeURIComponent(key)}`;
+    const win = window.open(url, "_blank");
+    if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
 
   function v1162OpenLedgerOutputPreview(mode = "bet") {
