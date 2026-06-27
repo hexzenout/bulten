@@ -2297,22 +2297,24 @@
     });
   }
 
-  function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı") {
+  function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı", filename = "bulten-kupon-defteri.png") {
     if (!dataUrl) return false;
-    const win = window.open("about:blank", "_blank");
+    const win = window.open("", "_blank");
     if (!win) return false;
+    const safeTitle = escapeHtml(title || "Defter Fotoğrafı");
+    const safeFilename = escapeHtml(filename || "bulten-kupon-defteri.png");
     try {
       win.document.open();
-      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>html,body{margin:0;min-height:100%;background:#020617;color:#e5e7eb;}body{display:flex;align-items:flex-start;justify-content:center;padding:14px;font:700 13px Arial,sans-serif;box-sizing:border-box;}</style></head><body>Resim hazırlanıyor…</body></html>`);
+      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${safeFilename}</title><style>html,body{margin:0;min-height:100%;background:#020617;color:#e5e7eb;}body{display:flex;align-items:flex-start;justify-content:center;padding:14px;font:700 13px Arial,sans-serif;box-sizing:border-box;}</style></head><body>PNG hazırlanıyor…</body></html>`);
       win.document.close();
       try { win.focus(); } catch {}
     } catch {}
-    v1147SvgToPngBlob(dataUrl, 1).then(blob => {
-      const url = URL.createObjectURL(blob);
-      win.document.open();
-      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>html,body{margin:0;min-height:100%;background:#020617;}body{display:flex;align-items:flex-start;justify-content:center;padding:0;overflow:auto;box-sizing:border-box;}img{display:block;width:90%;height:auto;max-width:none;background:#020617;image-rendering:auto;}</style></head><body><img src="${url}" alt="${escapeHtml(title)}"></body></html>`);
-      win.document.close();
-      setTimeout(() => { try { URL.revokeObjectURL(url); } catch {} }, 10 * 60 * 1000);
+    v1147SvgToPngBlob(dataUrl, 2).then(blob => {
+      const pngFile = new File([blob], filename || "bulten-kupon-defteri.png", { type: "image/png" });
+      const imageUrl = URL.createObjectURL(pngFile);
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>${safeFilename}</title><style>html,body{margin:0;min-height:100%;background:#020617;}body{display:flex;align-items:flex-start;justify-content:center;padding:0;overflow:auto;box-sizing:border-box;}img{display:block;width:90%;height:auto;max-width:none;background:#020617;image-rendering:auto;}</style></head><body><img src="${imageUrl}" alt="${safeTitle}" title="${safeFilename}"></body></html>`;
+      const htmlUrl = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+      try { win.location.replace(htmlUrl); } catch { win.location.href = htmlUrl; }
     }).catch(() => {
       try { win.location.href = dataUrl; } catch {}
     });
@@ -4363,7 +4365,7 @@
       const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
       const dataUrl = v1143BuildLedgerScreenPhotoSvg(photoMode) || v1060BuildLedgerPhotoSvg(photoMode);
       const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
-      if (v1144OpenLedgerImageTab(dataUrl, title)) return;
+      if (v1144OpenLedgerImageTab(dataUrl, title, filename)) return;
       const sourceModal = btn.closest(".v1056-ledger-screen-modal") || document.querySelector(".v1056-ledger-screen-modal");
       openLedgerScreenPhotoPreview(dataUrl, filename, title, sourceModal);
     }));
