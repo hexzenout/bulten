@@ -159,7 +159,7 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-summary-spacer,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-summary-spacer{display:grid!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;flex:1 1 auto!important;height:auto!important;min-height:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;flex:0 0 auto!important;height:auto!important;min-height:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table thead,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table thead{height:22px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table th,
@@ -209,7 +209,7 @@
 
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-pnl-cell .v1063-ledger-value{color:#fff!important;font-weight:1000!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:23px!important;min-height:23px!important;max-height:23px!important;padding-top:0!important;padding-bottom:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:21px!important;min-height:21px!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo td{height:32px!important;min-height:32px!important;max-height:32px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo,
@@ -228,7 +228,11 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#dc2626!important;font-size:11px!important;transform:translateY(-.5px)!important;background:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:transparent!important;font-size:0!important;line-height:1!important;transform:translateY(0)!important;background:linear-gradient(#64748b,#64748b) center 52% / 8px 2.4px no-repeat!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{position:relative!important;color:transparent!important;font-size:0!important;line-height:1!important;transform:translateY(0)!important;background:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{content:""!important;display:block!important;width:8px!important;height:2.2px!important;border-radius:999px!important;background:#64748b!important;position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark.v1122-ledger-status-empty::before{display:none!important;content:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1119-ledger-dash{display:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{line-height:1.02!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1.0!important;}
@@ -3439,13 +3443,14 @@
       return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
-    const body = lines.map(line => {
+    const body = lines.map((line, lineIndex) => {
       const status = v1069LedgerLineStatus(row, line);
-      const mark = v1069LedgerStatusMark(status);
+      const pendingLike = status === "pending" || status === "push" || status === "open";
+      const markClass = pendingLike && lineIndex > 0 ? " v1122-ledger-status-empty" : "";
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
+      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark${markClass}">${pendingLike && lineIndex > 0 ? "" : v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
