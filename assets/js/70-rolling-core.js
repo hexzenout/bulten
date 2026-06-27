@@ -321,6 +321,23 @@
       .v1161-ledger-capture-stage{max-width:calc(100vw - 40px)!important;max-height:calc(100vh - 92px)!important;overflow:auto!important;background:#020617!important;border-radius:12px!important;}
       .v1161-ledger-capture-stage img{display:block!important;width:auto!important;height:auto!important;max-width:none!important;max-height:none!important;background:#020617!important;}
       .v1161-ledger-capture-help{color:#94a3b8!important;font-size:11px!important;font-weight:800!important;padding:0 8px!important;white-space:nowrap!important;}
+      .v1162-ledger-output-shell{width:auto!important;max-width:calc(100vw - 24px)!important;max-height:calc(100vh - 24px)!important;overflow:hidden!important;border-radius:16px!important;background:#020617!important;}
+      .v1162-ledger-output-toolbar{display:flex!important;align-items:center!important;gap:8px!important;padding:8px 10px!important;background:#020617!important;border-bottom:1px solid rgba(148,163,184,.18)!important;}
+      .v1162-ledger-output-toolbar button{appearance:none!important;-webkit-appearance:none!important;border-radius:10px!important;border:1px solid rgba(251,191,36,.55)!important;background:#111827!important;color:#fde68a!important;font-size:12px!important;font-weight:950!important;line-height:1!important;padding:8px 11px!important;cursor:pointer!important;white-space:nowrap!important;}
+      .v1162-ledger-output-toolbar button:hover{background:#1f2937!important;color:#fff!important;}
+      .v1162-ledger-output-toolbar .v1162-output-close{margin-left:auto!important;border-color:rgba(148,163,184,.32)!important;color:#e5e7eb!important;min-width:34px!important;padding-left:0!important;padding-right:0!important;font-size:18px!important;}
+      .v1162-ledger-output-note{color:#94a3b8!important;font-size:11px!important;font-weight:800!important;white-space:nowrap!important;}
+      .v1162-ledger-output-stage{max-width:calc(100vw - 40px)!important;max-height:calc(100vh - 86px)!important;overflow:auto!important;padding:0!important;margin:0!important;background:#020617!important;}
+      .v1162-ledger-output-modal{position:relative!important;display:block!important;width:max-content!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#020617!important;box-shadow:none!important;transform:none!important;overflow:visible!important;}
+      .v1162-ledger-output-modal .v1056-ledger-screen-body,.v1162-ledger-output-modal .v1057-ledger-screen-body{display:block!important;width:max-content!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;margin:0!important;padding:0!important;background:#020617!important;}
+      .v1162-ledger-output-modal .v1040-growth-plan{margin:0!important;border-radius:0!important;box-shadow:none!important;}
+      .v1162-ledger-output-modal .v1057-ledger-sheet-grid,.v1162-ledger-output-modal .v1061-ledger-sheet-grid{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;align-items:start!important;align-content:start!important;margin-bottom:0!important;padding-bottom:0!important;}
+      .v1162-ledger-output-modal .v1057-ledger-sheet,.v1162-ledger-output-modal .v1061-ledger-sheet{height:auto!important;min-height:0!important;max-height:none!important;align-self:start!important;margin-bottom:0!important;}
+      .v1162-ledger-output-modal .v1057-ledger-excel-table,.v1162-ledger-output-modal .v1061-ledger-excel-table{height:auto!important;min-height:0!important;max-height:none!important;margin-bottom:0!important;}
+      .v1162-ledger-output-modal .v1119-ledger-row-filler,.v1162-ledger-output-modal .v1119-ledger-row-filler td{height:0!important;min-height:0!important;max-height:0!important;padding:0!important;border:0!important;line-height:0!important;overflow:hidden!important;}
+      .v1162-ledger-context-menu{position:fixed!important;z-index:2147483647!important;display:none!important;min-width:178px!important;padding:6px!important;border:1px solid rgba(251,191,36,.38)!important;border-radius:12px!important;background:#020617!important;box-shadow:0 18px 48px rgba(0,0,0,.48)!important;}
+      .v1162-ledger-context-menu button{display:block!important;width:100%!important;border:0!important;background:transparent!important;color:#e5e7eb!important;text-align:left!important;border-radius:8px!important;padding:9px 10px!important;font-size:12px!important;font-weight:900!important;cursor:pointer!important;}
+      .v1162-ledger-context-menu button:hover{background:rgba(251,191,36,.12)!important;color:#fde68a!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2279,26 +2296,6 @@
     });
   }
 
-  function v1152LedgerPhotoStorageKey(filename) {
-    const safeName = cleanText(filename || "bulten-kupon-defteri.png").replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "bulten-kupon-defteri.png";
-    return `bulten_ledger_photo_${safeName}`;
-  }
-
-  function v1152CleanupOldLedgerPhotos() {
-    try {
-      const now = Date.now();
-      Object.keys(localStorage).forEach(key => {
-        if (!key.startsWith("bulten_ledger_photo_")) return;
-        try {
-          const payload = JSON.parse(localStorage.getItem(key) || "{}");
-          if (!payload?.ts || now - Number(payload.ts || 0) > 1000 * 60 * 60 * 24 * 2) localStorage.removeItem(key);
-        } catch {
-          localStorage.removeItem(key);
-        }
-      });
-    } catch {}
-  }
-
   function v1155EscapeCssText(value) {
     return String(value || "").replace(/<\/style/gi, "<\\/style");
   }
@@ -2540,161 +2537,197 @@
   }
 
 
-  function v1158CollectViewerHeadHtml() {
-    try {
-      const parts = [];
-      document.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
-        if (node.tagName === 'LINK') {
-          const href = node.getAttribute('href');
-          if (!href) return;
-          parts.push(`<link rel="stylesheet" href="${escapeHtml(new URL(href, window.location.href).href)}">`);
-          return;
-        }
-        const css = String(node.textContent || '').trim();
-        if (css) parts.push(`<style>${css}</style>`);
-      });
-      return parts.join('\n');
-    } catch { return ''; }
+  function v1162LocalDateStamp() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   }
 
-  function v1158PrepareLedgerHtmlClone(sourceNode, mode) {
-    try {
-      const modal = sourceNode?.closest?.('.v1056-ledger-screen-modal') || (sourceNode?.classList?.contains('v1056-ledger-screen-modal') ? sourceNode : null) || document.querySelector('.v1056-ledger-screen-modal');
-      if (!modal || typeof modal.cloneNode !== 'function') return null;
-      const rect = modal.getBoundingClientRect();
-      const clone = modal.cloneNode(true);
-      clone.removeAttribute('role');
-      clone.removeAttribute('aria-modal');
-      clone.removeAttribute('id');
-      clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
-      clone.querySelectorAll('script').forEach(el => el.remove());
-      clone.querySelectorAll('.v1056-ledger-screen-head, .v1057-ledger-screen-head, .v1060-ledger-screen-head, .v1065-ledger-screen-head').forEach(el => el.remove());
-      clone.querySelectorAll('[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock], .v1060-ledger-head-actions, .v1063-ledger-head-actions').forEach(el => el.remove());
-      clone.querySelectorAll('.v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark').forEach(mark => {
-        mark.classList.remove('v1123-ledger-status-empty');
-        mark.textContent = '–';
-      });
-      clone.style.width = `${Math.ceil(Math.max(rect.width || 0, modal.offsetWidth || 0, modal.scrollWidth || 0))}px`;
-      clone.style.maxWidth = 'none';
-      clone.style.margin = '0 auto';
-      clone.style.transform = 'none';
-      clone.style.position = 'relative';
-      clone.style.overflow = 'visible';
-      clone.querySelectorAll('.v1056-ledger-screen-body, .v1057-ledger-screen-body').forEach(body => {
-        body.style.overflow = 'visible';
-        body.style.maxHeight = 'none';
-        body.style.height = 'auto';
-      });
-      return `<div id="v1056-ledger-screen-host" class="v1158-ledger-export-host"><div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay v1158-ledger-export-overlay">${clone.outerHTML}</div></div>`;
-    } catch { return null; }
+  function v1162LedgerFilename(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    return `bulten-${m === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${v1162LocalDateStamp()}.png`;
   }
 
-  function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı", filename = "bulten-kupon-defteri.png", sourceNode = null, mode = "bet") {
-    const html = v1158PrepareLedgerHtmlClone(sourceNode, mode);
-    if (!html && !dataUrl) return false;
-    const safeFilename = cleanText(filename || "bulten-kupon-defteri.png").replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "bulten-kupon-defteri.png";
-    const key = v1152LedgerPhotoStorageKey(safeFilename);
-    try {
-      v1152CleanupOldLedgerPhotos();
-      localStorage.setItem(key, JSON.stringify({ html, headHtml: v1158CollectViewerHeadHtml(), dataUrl: html ? "" : dataUrl, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
-    } catch { return false; }
-    try {
-      const url = new URL("photo-viewer.html", window.location.href);
-      url.searchParams.set("v", "v1159");
-      url.searchParams.set("file", safeFilename);
-      url.searchParams.set("key", key);
-      const win = window.open(url.toString(), "_blank");
-      if (!win) return false;
-      try { win.focus(); } catch {}
-      return true;
-    } catch { return false; }
+  function v1162HideContextMenu(menu) {
+    if (!menu) return;
+    menu.style.display = "none";
   }
 
-  function v1161DownloadPngDataUrl(dataUrl, filename) {
+  function v1162PrepareOutputNode(node) {
+    if (!node || !(node instanceof Element)) return node;
+    node.querySelectorAll("script").forEach(el => el.remove());
+    node.querySelectorAll(".v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark").forEach(mark => {
+      mark.classList.remove("v1123-ledger-status-empty");
+      mark.textContent = "–";
+      mark.style.color = "#64748b";
+      mark.style.fontSize = "11px";
+      mark.style.lineHeight = "1";
+      mark.style.fontWeight = "1000";
+      mark.style.display = "inline-flex";
+      mark.style.alignItems = "center";
+      mark.style.justifyContent = "center";
+      mark.style.background = "none";
+      mark.style.transform = "none";
+    });
+    node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
+    node.querySelectorAll(".v1056-ledger-screen-body, .v1057-ledger-screen-body, .v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid, .v1057-ledger-sheet, .v1061-ledger-sheet").forEach(el => {
+      el.style.overflow = "visible";
+      el.style.maxHeight = "none";
+      el.style.height = "auto";
+      el.style.minHeight = "0";
+      el.style.marginBottom = "0";
+      el.style.paddingBottom = "0";
+    });
+    return node;
+  }
+
+  async function v1162NodeToPngDataUrl(node) {
+    if (!node || !(node instanceof Element)) throw new Error("Çıktı alanı bulunamadı.");
+    try { await document.fonts?.ready; } catch {}
+    const rect = node.getBoundingClientRect();
+    const width = Math.max(320, Math.ceil(node.scrollWidth || rect.width || node.offsetWidth || 0));
+    const height = Math.max(120, Math.ceil(node.scrollHeight || rect.height || node.offsetHeight || 0));
+    const clone = node.cloneNode(true);
+    v1156CopyComputedTree(node, clone);
+    v1162PrepareOutputNode(clone);
+    clone.removeAttribute("id");
+    clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+    clone.style.width = `${width}px`;
+    clone.style.minWidth = `${width}px`;
+    clone.style.maxWidth = `${width}px`;
+    clone.style.height = `${height}px`;
+    clone.style.minHeight = `${height}px`;
+    clone.style.maxHeight = `${height}px`;
+    clone.style.margin = "0";
+    clone.style.padding = "0";
+    clone.style.transform = "none";
+    clone.style.position = "relative";
+    clone.style.overflow = "visible";
+    clone.style.background = "#020617";
+
+    const tempHost = document.createElement("div");
+    tempHost.style.position = "fixed";
+    tempHost.style.left = "-100000px";
+    tempHost.style.top = "0";
+    tempHost.style.width = `${width}px`;
+    tempHost.style.height = `${height}px`;
+    tempHost.style.overflow = "hidden";
+    tempHost.style.background = "#020617";
+    tempHost.style.margin = "0";
+    tempHost.style.padding = "0";
+    tempHost.appendChild(clone);
+    document.body.appendChild(tempHost);
+
+    try {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const serialized = new XMLSerializer().serializeToString(clone);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${serialized}</foreignObject></svg>`;
+      const img = new Image();
+      const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = () => reject(new Error("PNG üretilemedi."));
+        img.src = svgUrl;
+      });
+      const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.ceil(width * scale);
+      canvas.height = Math.ceil(height * scale);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      return canvas.toDataURL("image/png");
+    } finally {
+      tempHost.remove();
+    }
+  }
+
+  function v1162DownloadDataUrl(dataUrl, filename) {
     if (!dataUrl) return;
     const a = document.createElement("a");
     a.href = dataUrl;
-    a.download = filename || `bulten-kupon-defteri-${new Date().toISOString().slice(0,10)}.png`;
+    a.download = cleanText(filename || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`;
     document.body.appendChild(a);
     a.click();
     a.remove();
   }
 
-  function v1161OpenLedgerCapturePreview(dataUrl, filename, title = "Defter Fotoğrafı") {
-    if (!dataUrl) return;
+  async function v1162ExportOutputNode(node, filename, action, triggerButton = null) {
+    if (!node) return;
+    const oldText = triggerButton ? triggerButton.textContent : "";
+    if (triggerButton) {
+      triggerButton.disabled = true;
+      triggerButton.textContent = "PNG hazırlanıyor...";
+    }
+    try {
+      const dataUrl = await v1162NodeToPngDataUrl(node);
+      if (action === "open") {
+        const win = window.open("", "_blank");
+        if (win) {
+          win.document.open();
+          win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(filename)}</title><style>html,body{margin:0;background:#020617;}img{display:block;width:auto;height:auto;max-width:none;}</style></head><body><img src="${dataUrl}" alt="${escapeHtml(filename)}"></body></html>`);
+          win.document.close();
+        }
+      } else {
+        v1162DownloadDataUrl(dataUrl, filename);
+      }
+    } catch (error) {
+      alert("PNG hazırlanamadı. Çıktı penceresi açıkken tekrar dene.");
+    } finally {
+      if (triggerButton) {
+        triggerButton.disabled = false;
+        triggerButton.textContent = oldText;
+      }
+    }
+  }
+
+  function v1162OpenLedgerOutputPreview(mode = "bet") {
+    const m = mode === "crypto" ? "crypto" : "bet";
     const host = getRollingPhotoHost();
-    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal v1161-ledger-capture-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar"><button type="button" data-v1161-photo-download>Resmi İndir</button><span class="v1161-ledger-capture-help">Ekranda gördüğün alanın birebir görüntüsü</span><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1161-ledger-capture-stage"><img src="${dataUrl}" alt="${escapeHtml(title)}"></div></section></div>`;
+    const filename = v1162LedgerFilename(m);
+    const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
+    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal v1162-ledger-output-shell" onclick="event.stopPropagation()"><div class="v1162-ledger-output-toolbar"><button type="button" data-v1162-output-download>PNG indir</button><button type="button" data-v1162-output-open>PNG yeni sekmede aç</button><span class="v1162-ledger-output-note">Sağ tık: PNG indir / yeni sekmede aç</span><button type="button" class="v1162-output-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1162-ledger-output-stage" data-v1162-output-stage><section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal v1162-ledger-output-modal ${m}" data-v1162-output-node><div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div></section></div><div class="v1162-ledger-context-menu" data-v1162-context-menu><button type="button" data-v1162-context-download>PNG olarak indir</button><button type="button" data-v1162-context-open>PNG yeni sekmede aç</button></div></section></div>`;
     host.style.display = "block";
     host.setAttribute("aria-hidden", "false");
+    v1103EnsureLedgerTestStyles();
+    v1110FinalizeLedgerLayout(host);
+    const outputNode = host.querySelector("[data-v1162-output-node]");
+    const stage = host.querySelector("[data-v1162-output-stage]");
+    const menu = host.querySelector("[data-v1162-context-menu]");
+    v1162PrepareOutputNode(outputNode);
     host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
       if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
       host.innerHTML = "";
       host.style.display = "none";
       host.setAttribute("aria-hidden", "true");
     }));
-    host.querySelector("[data-v1161-photo-download]")?.addEventListener("click", () => v1161DownloadPngDataUrl(dataUrl, filename));
-  }
-
-  async function v1161CaptureLedgerVisiblePixels(sourceModal, filename, title = "Defter Fotoğrafı") {
-    const target = sourceModal && typeof sourceModal.getBoundingClientRect === "function"
-      ? sourceModal
-      : document.querySelector(".v1056-ledger-screen-modal");
-    if (!target) {
-      alert("Kupon Defteri ekranı bulunamadı.");
-      return;
-    }
-    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getDisplayMedia !== "function") {
-      alert("Bu tarayıcı gerçek ekran yakalamayı desteklemiyor. Chrome / Edge ile dene.");
-      return;
-    }
-    let stream = null;
-    try {
-      stream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          displaySurface: "browser",
-          preferCurrentTab: true,
-          selfBrowserSurface: "include",
-          surfaceSwitching: "exclude",
-          frameRate: 1
-        },
-        audio: false
-      });
-      const video = document.createElement("video");
-      video.muted = true;
-      video.playsInline = true;
-      video.srcObject = stream;
-      await new Promise((resolve, reject) => {
-        video.onloadedmetadata = resolve;
-        video.onerror = reject;
-      });
-      await video.play();
-      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-      const rect = target.getBoundingClientRect();
-      const vw = Math.max(1, video.videoWidth || 0);
-      const vh = Math.max(1, video.videoHeight || 0);
-      const scaleX = vw / Math.max(1, window.innerWidth || document.documentElement.clientWidth || 1);
-      const scaleY = vh / Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
-      const sx = Math.max(0, Math.floor(rect.left * scaleX));
-      const sy = Math.max(0, Math.floor(rect.top * scaleY));
-      const sw = Math.max(1, Math.min(vw - sx, Math.ceil(rect.width * scaleX)));
-      const sh = Math.max(1, Math.min(vh - sy, Math.ceil(rect.height * scaleY)));
-      const canvas = document.createElement("canvas");
-      canvas.width = sw;
-      canvas.height = sh;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, sw, sh);
-      const dataUrl = canvas.toDataURL("image/png");
-      v1161OpenLedgerCapturePreview(dataUrl, filename, title);
-    } catch (error) {
-      if (error && error.name === "NotAllowedError") {
-        alert("Ekran yakalama iptal edildi. Birebir görüntü için açılan pencerede bu BULTEN sekmesini seçmen gerekiyor.");
-      } else {
-        alert("Ekran görüntüsü alınamadı. Açılan pencerede bu BULTEN sekmesini seçerek tekrar dene.");
-      }
-    } finally {
-      try { stream?.getTracks?.().forEach(track => track.stop()); } catch {}
-    }
+    host.querySelector("[data-v1162-output-download]")?.addEventListener("click", event => v1162ExportOutputNode(outputNode, filename, "download", event.currentTarget));
+    host.querySelector("[data-v1162-output-open]")?.addEventListener("click", event => v1162ExportOutputNode(outputNode, filename, "open", event.currentTarget));
+    stage?.addEventListener("contextmenu", event => {
+      event.preventDefault();
+      if (!menu) return;
+      const x = Math.min(event.clientX, window.innerWidth - 192);
+      const y = Math.min(event.clientY, window.innerHeight - 94);
+      menu.style.left = `${Math.max(8, x)}px`;
+      menu.style.top = `${Math.max(8, y)}px`;
+      menu.style.display = "block";
+    });
+    document.addEventListener("click", () => v1162HideContextMenu(menu), { once: true, capture: true });
+    menu?.querySelector("[data-v1162-context-download]")?.addEventListener("click", event => {
+      event.stopPropagation();
+      v1162HideContextMenu(menu);
+      v1162ExportOutputNode(outputNode, filename, "download", event.currentTarget);
+    });
+    menu?.querySelector("[data-v1162-context-open]")?.addEventListener("click", event => {
+      event.stopPropagation();
+      v1162HideContextMenu(menu);
+      v1162ExportOutputNode(outputNode, filename, "open", event.currentTarget);
+    });
+    setTimeout(() => v1162PrepareOutputNode(outputNode), 120);
+    setTimeout(() => v1162PrepareOutputNode(outputNode), 300);
   }
 
   function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {
@@ -4754,10 +4787,7 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
-      const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
-      const sourceModal = btn.closest(".v1056-ledger-screen-modal") || document.querySelector(".v1056-ledger-screen-modal");
-      v1161CaptureLedgerVisiblePixels(sourceModal, filename, title);
+      v1162OpenLedgerOutputPreview(photoMode);
     }));
     v1057BindLedgerScreen(host, m);
   }
