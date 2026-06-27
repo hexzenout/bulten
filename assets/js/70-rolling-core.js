@@ -492,6 +492,25 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(7),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(7){width:80px!important;min-width:80px!important;max-width:80px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:10.7px!important;letter-spacing:0!important;}
+      /* V1182: Kripto test butonları dar pencerede kaybolmasın; TEST MODU açılır panel olsun. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1056-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1057-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1060-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1065-ledger-screen-head{overflow:visible!important;position:relative!important;z-index:60!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1112-ledger-title-row{overflow:visible!important;flex:0 1 auto!important;gap:6px!important;z-index:70!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1112-ledger-title-row > b{font-size:16px!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1103-ledger-test-toolbar.v1182-crypto-test-toolbar{flex:0 0 auto!important;width:auto!important;max-width:none!important;height:26px!important;min-height:26px!important;margin:0 0 0 4px!important;padding:0!important;overflow:visible!important;position:relative!important;z-index:80!important;display:inline-flex!important;align-items:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1103-ledger-test-toolbar.v1182-crypto-test-toolbar .v1182-crypto-test-toggle{height:24px!important;min-height:24px!important;max-height:24px!important;padding:0 8px!important;border-radius:8px!important;border:1px solid rgba(251,191,36,.48)!important;background:#111827!important;color:#fbbf24!important;font-size:10px!important;font-weight:1000!important;letter-spacing:.01em!important;white-space:nowrap!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1103-ledger-test-toolbar.v1182-crypto-test-toolbar .v1182-crypto-test-panel{display:none!important;position:absolute!important;top:29px!important;left:0!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;width:260px!important;max-width:calc(100vw - 24px)!important;padding:8px!important;border:1px solid rgba(251,191,36,.45)!important;border-radius:12px!important;background:rgba(15,23,42,.98)!important;box-shadow:0 14px 34px rgba(0,0,0,.38)!important;z-index:120!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1103-ledger-test-toolbar.v1182-crypto-test-toolbar:hover .v1182-crypto-test-panel,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1103-ledger-test-toolbar.v1182-crypto-test-toolbar:focus-within .v1182-crypto-test-panel{display:grid!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1182-crypto-test-panel strong{display:block!important;grid-column:1/-1!important;margin:0 0 2px!important;color:#fbbf24!important;font-size:10.5px!important;font-weight:1000!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1182-crypto-test-panel button{width:100%!important;height:26px!important;min-height:26px!important;max-height:26px!important;padding:0 7px!important;border-radius:8px!important;font-size:10px!important;justify-content:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1060-ledger-head-actions,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1063-ledger-head-actions{z-index:65!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"]{width:min(500px, calc(100vw - 4px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1057-ledger-screen-body{padding-left:4px!important;padding-right:4px!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -961,7 +980,7 @@
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m === "crypto") {
-      return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:35">35'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:70">70'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:105">105'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:140">140'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:175">175'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:210">210'a Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+      return `<div class="v1103-ledger-test-toolbar v1182-crypto-test-toolbar" data-v1103-ledger-test-toolbar><button type="button" class="v1182-crypto-test-toggle" aria-label="Kripto test paneli">TEST MODU ▾</button><div class="v1182-crypto-test-panel" data-v1182-crypto-test-panel><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:35">35'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:70">70'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:105">105'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:140">140'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:175">175'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:210">210'a Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div></div>`;
     }
     return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-table="${m}:1">1. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:2">2. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:3">3. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:4">4. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:5">5. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:6">6. Tabloyu Doldur</button><button type="button" data-v1139-ledger-long-combo-test="${m}:3">4/5/6 Test</button><button type="button" data-v1140-ledger-full-mix-test="${m}:3">Tam Karışık</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
   }
@@ -2992,7 +3011,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1181-crypto-ledger-narrow-fit&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1182-crypto-test-menu-fit&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
