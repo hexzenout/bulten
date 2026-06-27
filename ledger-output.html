@@ -36,6 +36,13 @@
     .v1162-ledger-output-modal .v1119-ledger-row-filler,.v1162-ledger-output-modal .v1119-ledger-row-filler td{height:0!important;min-height:0!important;max-height:0!important;padding:0!important;border:0!important;line-height:0!important;overflow:hidden!important;}
 
     .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+    .v1162-ledger-output-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+    .v1162-ledger-output-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+    .v1162-ledger-output-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+    .v1162-ledger-output-modal .v1069-ledger-status-mark.v1123-ledger-status-empty::before{content:none!important;display:none!important;width:0!important;height:0!important;background:transparent!important;}
+    .v1162-ledger-output-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+    .v1162-ledger-output-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+    .v1162-ledger-output-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark{position:static!important;color:#94a3b8!important;font-size:11px!important;line-height:1!important;overflow:visible!important;}
     .v1163-context-menu{position:fixed!important;z-index:2147483647!important;display:none!important;min-width:136px!important;padding:6px!important;border:1px solid rgba(251,191,36,.38)!important;border-radius:12px!important;background:#020617!important;box-shadow:0 18px 48px rgba(0,0,0,.48)!important;}
     .v1163-context-menu button{display:block!important;width:100%!important;border:0!important;background:transparent!important;color:#e5e7eb!important;text-align:left!important;border-radius:8px!important;padding:9px 10px!important;font-size:12px!important;font-weight:900!important;cursor:pointer!important;}
     .v1163-context-menu button:hover{background:rgba(251,191,36,.12)!important;color:#fde68a!important;}
@@ -70,6 +77,7 @@
   function prepareOutputNode(node){
     if(!node || !(node instanceof Element)) return;
     node.querySelectorAll("script").forEach(el => el.remove());
+    node.querySelectorAll("[title]").forEach(el => el.removeAttribute("title"));
     node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
     node.querySelectorAll(".v1056-ledger-screen-body,.v1057-ledger-screen-body,.v1057-ledger-sheet-grid,.v1061-ledger-sheet-grid,.v1057-ledger-sheet,.v1061-ledger-sheet").forEach(el => {
       el.style.setProperty("overflow","visible","important");
@@ -100,6 +108,7 @@
         mark.style.setProperty("visibility", "visible", "important");
         mark.style.setProperty("opacity", "1", "important");
         mark.style.setProperty("overflow", "visible", "important");
+        mark.style.setProperty("position", "static", "important");
       }
     });
   }
