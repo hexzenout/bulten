@@ -2872,7 +2872,7 @@
     const key = v1163LedgerOutputStorageKey();
     const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
     const filename = v1162LedgerFilename(m);
-    const payload = { mode: m, title, filename, html: v1163BuildLedgerOutputHtml(m), ts: Date.now(), v: "1174" };
+    const payload = { mode: m, title, filename, html: v1163BuildLedgerOutputHtml(m), ts: Date.now(), v: "1175" };
     if (!payload.html) {
       alert("Kupon Defteri çıktısı hazırlanamadı. Defteri kapatıp tekrar aç.");
       return;
@@ -2882,7 +2882,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1174-ledger-clean-output&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1175-ledger-output-polish&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
