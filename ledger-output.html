@@ -73,9 +73,9 @@
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table tr,
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tr,
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td,
-    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td{height:21px!important;min-height:21px!important;max-height:21px!important;padding:0 2px!important;line-height:1.12!important;overflow:hidden!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td{height:21.5px!important;min-height:21.5px!important;max-height:21.5px!important;padding:0 2px!important;line-height:1.12!important;overflow:hidden!important;}
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1060-ledger-cell-text,
-    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1063-ledger-value{height:21px!important;min-height:21px!important;max-height:21px!important;padding:0 2px!important;font-size:10.9px!important;line-height:1.16!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1063-ledger-value{height:21.5px!important;min-height:21.5px!important;max-height:21.5px!important;padding:0 2px!important;font-size:10.9px!important;line-height:1.16!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important;}
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{font-size:11px!important;font-weight:950!important;letter-spacing:.005em!important;}
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(4),
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(4) .v1063-ledger-value{overflow:visible!important;}
@@ -83,6 +83,51 @@
 
 
     .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+    /* V1181: Kripto çıktı sayfasında Coin kolonunu daralt + 35 satır alt boşluğu kapat. */
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-sheet-grid,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-sheet-grid{grid-template-columns:repeat(var(--v1110-ledger-cols,3), 468px)!important;width:max-content!important;max-width:none!important;justify-content:start!important;gap:8px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-sheet,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-sheet,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1059-ledger-summary,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1060-ledger-summary-inline,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-summary-inline,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table{width:468px!important;min-width:468px!important;max-width:468px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(1),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(1),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(1),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(1){width:32px!important;min-width:32px!important;max-width:32px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(2),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(2),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(2),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(2){width:74px!important;min-width:74px!important;max-width:74px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(3),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(3),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(3),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(3){width:108px!important;min-width:108px!important;max-width:108px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(4),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(4),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(4),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(4){width:58px!important;min-width:58px!important;max-width:58px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(5),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(5),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(5),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(5){width:68px!important;min-width:68px!important;max-width:68px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(6),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(6),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(6),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(6){width:48px!important;min-width:48px!important;max-width:48px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(7),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(7),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(7),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(7){width:80px!important;min-width:80px!important;max-width:80px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table tr,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tr,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table td,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td{height:21.5px!important;min-height:21.5px!important;max-height:21.5px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1060-ledger-cell-text,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1063-ledger-value{height:21.5px!important;min-height:21.5px!important;max-height:21.5px!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:10.7px!important;letter-spacing:0!important;}
     .v1162-ledger-output-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
     .v1162-ledger-output-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
     .v1162-ledger-output-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
