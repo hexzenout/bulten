@@ -2310,7 +2310,7 @@
     v1147SvgToPngBlob(dataUrl, 1).then(blob => {
       const url = URL.createObjectURL(blob);
       win.document.open();
-      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>html,body{margin:0;min-height:100%;background:#020617;}body{display:flex;align-items:flex-start;justify-content:center;padding:0;overflow:auto;box-sizing:border-box;}img{display:block;width:80%;height:auto;max-width:none;background:#020617;image-rendering:auto;}</style></head><body><img src="${url}" alt="${escapeHtml(title)}"></body></html>`);
+      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>html,body{margin:0;min-height:100%;background:#020617;}body{display:flex;align-items:flex-start;justify-content:center;padding:0;overflow:auto;box-sizing:border-box;}img{display:block;width:90%;height:auto;max-width:none;background:#020617;image-rendering:auto;}</style></head><body><img src="${url}" alt="${escapeHtml(title)}"></body></html>`);
       win.document.close();
       setTimeout(() => { try { URL.revokeObjectURL(url); } catch {} }, 10 * 60 * 1000);
     }).catch(() => {
