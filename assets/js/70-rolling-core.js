@@ -2301,20 +2301,20 @@
     if (!dataUrl) return false;
     const win = window.open("", "_blank");
     if (!win) return false;
-    const safeTitle = escapeHtml(title || "Defter Fotoğrafı");
-    const safeFilename = escapeHtml(filename || "bulten-kupon-defteri.png");
+    const safeFilename = String(filename || "bulten-kupon-defteri.png").replace(/[\/:*?"<>|]+/g, "-");
     try {
       win.document.open();
-      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${safeFilename}</title><style>html,body{margin:0;min-height:100%;background:#020617;color:#e5e7eb;}body{display:flex;align-items:flex-start;justify-content:center;padding:14px;font:700 13px Arial,sans-serif;box-sizing:border-box;}</style></head><body>PNG hazırlanıyor…</body></html>`);
+      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(safeFilename)}</title></head><body style="margin:0;background:#020617;color:#e5e7eb;font:700 13px Arial,sans-serif;">PNG hazırlanıyor…</body></html>`);
       win.document.close();
       try { win.focus(); } catch {}
     } catch {}
-    v1147SvgToPngBlob(dataUrl, 2).then(blob => {
-      const pngFile = new File([blob], filename || "bulten-kupon-defteri.png", { type: "image/png" });
+    v1147SvgToPngBlob(dataUrl, 1).then(blob => {
+      let pngFile = blob;
+      try {
+        pngFile = new File([blob], safeFilename, { type: "image/png", lastModified: Date.now() });
+      } catch {}
       const imageUrl = URL.createObjectURL(pngFile);
-      const html = `<!doctype html><html><head><meta charset="utf-8"><title>${safeFilename}</title><style>html,body{margin:0;min-height:100%;background:#020617;}body{display:flex;align-items:flex-start;justify-content:center;padding:0;overflow:auto;box-sizing:border-box;}img{display:block;width:90%;height:auto;max-width:none;background:#020617;image-rendering:auto;}</style></head><body><img src="${imageUrl}" alt="${safeTitle}" title="${safeFilename}"></body></html>`;
-      const htmlUrl = URL.createObjectURL(new Blob([html], { type: "text/html" }));
-      try { win.location.replace(htmlUrl); } catch { win.location.href = htmlUrl; }
+      try { win.location.replace(imageUrl); } catch { win.location.href = imageUrl; }
     }).catch(() => {
       try { win.location.href = dataUrl; } catch {}
     });
