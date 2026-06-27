@@ -420,33 +420,33 @@
       #v1056-ledger-screen-host .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
       .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
 
-      /* V1178: Kripto işlem defteri kutularındaki gereksiz boşlukları azalt; 25'li mantığa dokunmaz. */
+      /* V1179: Kripto işlem defteri 30'lu sisteme sığsın; yazılar okunaklı kalsın. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-summary-inline,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline{height:34px!important;min-height:34px!important;max-height:34px!important;flex:0 0 34px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary > div,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-summary-inline > div,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline > div{height:34px!important;min-height:34px!important;max-height:34px!important;padding:1px 5px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline > div{height:34px!important;min-height:34px!important;max-height:34px!important;padding:2px 6px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary span,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-summary-inline span,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline span{font-size:9px!important;line-height:.95!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline span{font-size:9.5px!important;line-height:1.05!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary b,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-summary-inline b,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline b{font-size:13px!important;line-height:.98!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-summary-inline b{font-size:14px!important;line-height:1.04!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1057-ledger-excel-table thead,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table thead{height:18px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1057-ledger-excel-table th,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table th{height:18px!important;min-height:18px!important;max-height:18px!important;font-size:9.2px!important;line-height:1!important;padding:0 1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table th{height:18px!important;min-height:18px!important;max-height:18px!important;font-size:9.6px!important;line-height:1.08!important;padding:0 2px!important;overflow:visible!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1057-ledger-excel-table tr,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table tr,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1057-ledger-excel-table td,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table td{height:23px!important;min-height:23px!important;max-height:23px!important;padding-top:0!important;padding-bottom:0!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1061-ledger-excel-table td{height:22px!important;min-height:22px!important;max-height:22px!important;padding:0 2px!important;line-height:1.12!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1060-ledger-cell-text,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1063-ledger-value{height:23px!important;min-height:23px!important;max-height:23px!important;padding:0 1px!important;font-size:10.2px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{font-size:10.5px!important;font-weight:950!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1063-ledger-value{height:22px!important;min-height:22px!important;max-height:22px!important;padding:0 2px!important;font-size:11px!important;line-height:1.14!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{font-size:11.2px!important;font-weight:950!important;letter-spacing:.01em!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(4),
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(4) .v1063-ledger-value{overflow:visible!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(4) .v1063-ledger-value{line-height:1.12!important;padding-bottom:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto td:nth-child(4) .v1063-ledger-value{line-height:1.22!important;padding-bottom:2px!important;font-size:10.8px!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -722,7 +722,7 @@
     }
     const source = Array.isArray(rows) ? rows : [];
     if (m !== "bet") {
-      const capacity = 25;
+      const capacity = 30;
       const pages = [];
       let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
       const commitPage = () => {
@@ -887,7 +887,7 @@
     const headHeight = Math.ceil(thead?.getBoundingClientRect?.().height || 22);
     const safety = 4;
     const available = Math.max(0, bodyHeight - summaryHeight - headHeight - safety);
-    const rowH = Math.max(27, Math.min(38, Math.floor(available / rowCount)));
+    const rowH = Math.max(22, Math.min(34, Math.floor(available / rowCount)));
     grid.style.setProperty('--v1110-row-h', `${rowH}px`);
     sections.forEach(section => {
       const table = section.querySelector('table');
@@ -916,7 +916,7 @@
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m === "crypto") {
-      return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:25">25'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:50">50'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:75">75'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:125">125'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+      return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:30">30'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:90">90'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:180">180'e Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
     }
     return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-table="${m}:1">1. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:2">2. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:3">3. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:4">4. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:5">5. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:6">6. Tabloyu Doldur</button><button type="button" data-v1139-ledger-long-combo-test="${m}:3">4/5/6 Test</button><button type="button" data-v1140-ledger-full-mix-test="${m}:3">Tam Karışık</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
   }
@@ -2947,7 +2947,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1178-crypto-ledger-compact-cells&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1179-crypto-ledger-30-readable-cells&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
