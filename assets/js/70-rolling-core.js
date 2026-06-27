@@ -412,6 +412,93 @@
     edits[m].manual.push(...lastGoodRows.filter(row => v1103IsLedgerTestRow(row)));
     v1057SaveLedgerEdits(edits);
   }
+  function v1140BuildLedgerFullMixedTestRow(mode, index, ts) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet") return v1103BuildLedgerTestRow(m, index, ts);
+    const n = index + 1;
+    const pattern = index % 10;
+    const comboSize = pattern === 0 || pattern === 5 ? 1 : pattern === 1 || pattern === 2 || pattern === 7 ? 2 : pattern === 3 ? 3 : pattern === 4 ? 4 : pattern === 6 ? 5 : pattern === 8 ? 6 : 3;
+    const dayOffset = Math.floor(index / 4);
+    const dateObj = new Date(ts + dayOffset * 24 * 60 * 60 * 1000);
+    const date = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}`;
+    const id = `ledger_test_full_mix_${m}_${ts}_${String(n).padStart(3, "0")}`;
+    const baseTs = ts + index * 1000;
+    if (comboSize <= 1) {
+      const status = pattern === 5 ? "loss" : pattern === 9 ? "pending" : "win";
+      const stake = pattern === 5 ? 25 : 50;
+      const pnlRaw = status === "loss" ? -stake : status === "pending" ? 0 : stake;
+      return {
+        id,
+        ts: baseTs,
+        source: "test",
+        testOnly: 1,
+        force: 1,
+        date,
+        time: v1056TimeLabelFromTs(baseTs),
+        item: `Tam Karışık Tekli Maç ${n}`,
+        itemLines: [{ name: `Tam Karışık Tekli Maç ${n}`, odds: 2, status }],
+        kind: "Tek",
+        stake: money(stake),
+        roi: "2",
+        pnl: v1069LedgerPnlText(pnlRaw),
+        pnlRaw,
+        status
+      };
+    }
+    const teams = ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Trabzonspor", "Başakşehir", "Adana Demirspor"];
+    const statusSets = [
+      ["pending", "pending", "pending", "pending", "pending", "pending"],
+      ["win", "loss", "pending", "win", "loss", "pending"],
+      ["win", "win", "loss", "pending", "win", "loss"],
+      ["loss", "win", "pending", "win", "pending", "loss"]
+    ];
+    const statuses = statusSets[index % statusSets.length];
+    const itemLines = teams.slice(0, comboSize).map((team, lineIndex) => ({
+      name: `Tam Karışık ${team} ${lineIndex + 1}. maç ${n}`,
+      odds: lineIndex % 3 === 0 ? 2 : lineIndex % 3 === 1 ? 1.84 : 1.72,
+      status: statuses[lineIndex] || "pending"
+    }));
+    const roiMap = { 2: "4", 3: "8", 4: "16", 5: "32", 6: "64" };
+    const pnlCycle = [150, 268, -50, -100, 0];
+    const pnlRaw = pnlCycle[index % pnlCycle.length];
+    return {
+      id,
+      ts: baseTs,
+      source: "test",
+      testOnly: 1,
+      force: 1,
+      date,
+      time: v1056TimeLabelFromTs(baseTs),
+      item: itemLines.map(line => line.name).join(" + "),
+      itemLines,
+      kind: "Kombine",
+      stake: money(comboSize >= 3 ? 100 : 50),
+      roi: roiMap[comboSize] || "4",
+      pnl: v1069LedgerPnlText(pnlRaw),
+      pnlRaw,
+      status: pnlRaw < 0 ? "loss" : pnlRaw > 0 ? "win" : "pending"
+    };
+  }
+  function v1140FillLedgerFullMixedTestRows(mode, tableCount) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet") return v1103FillLedgerTestRowsByTable(m, tableCount);
+    v1103ClearLedgerTestRows(m);
+    const realRows = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row));
+    const safeTables = Math.max(1, Math.min(6, Number(tableCount || 3)));
+    let lastGoodRows = realRows.slice();
+    const ts = Date.now() + 1000;
+    for (let addCount = 0; addCount <= 220; addCount += 1) {
+      const candidateRows = realRows.slice();
+      for (let j = 0; j < addCount; j += 1) candidateRows.push(v1140BuildLedgerFullMixedTestRow(m, j, ts));
+      const chunks = v1135LedgerFlatChunks(v1119LedgerBuildPages(candidateRows, m));
+      if (chunks.length > safeTables) break;
+      if (chunks.length === safeTables) lastGoodRows = candidateRows;
+    }
+    const edits = v1057LoadLedgerEdits();
+    edits[m].manual = (edits[m].manual || []).filter(row => !v1103IsLedgerTestRow(row));
+    edits[m].manual.push(...lastGoodRows.filter(row => v1103IsLedgerTestRow(row)));
+    v1057SaveLedgerEdits(edits);
+  }
   function v1110LedgerSummarySpacerHtml() {
     return `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline v1110-ledger-summary-blank" aria-hidden="true"><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div></div>`;
   }
@@ -677,7 +764,7 @@
     if (m === "crypto") {
       return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:20">20'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:40">40'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:80">80'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
     }
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-table="${m}:1">1. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:2">2. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:3">3. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:4">4. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:5">5. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:6">6. Tabloyu Doldur</button><button type="button" data-v1139-ledger-long-combo-test="${m}:3">4/5/6 Test</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-table="${m}:1">1. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:2">2. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:3">3. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:4">4. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:5">5. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:6">6. Tabloyu Doldur</button><button type="button" data-v1139-ledger-long-combo-test="${m}:3">4/5/6 Test</button><button type="button" data-v1140-ledger-full-mix-test="${m}:3">Tam Karışık</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3943,6 +4030,16 @@
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
       v1110SetLedgerTestPage(safeMode, 0);
       v1139FillLedgerLongComboTestRows(safeMode, Number(tableRaw || 3));
+      v1056OpenDailyLedgerScreen(safeMode);
+    }));
+    host.querySelectorAll("[data-v1140-ledger-full-mix-test]").forEach(btn => btn.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!v1103LedgerTestModeEnabled()) return;
+      const [modeRaw, tableRaw] = String(btn.dataset.v1140LedgerFullMixTest || `${m}:3`).split(":");
+      const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
+      v1110SetLedgerTestPage(safeMode, 0);
+      v1140FillLedgerFullMixedTestRows(safeMode, Number(tableRaw || 3));
       v1056OpenDailyLedgerScreen(safeMode);
     }));
     host.querySelectorAll("[data-v1103-ledger-test-clear]").forEach(btn => btn.addEventListener("click", event => {
