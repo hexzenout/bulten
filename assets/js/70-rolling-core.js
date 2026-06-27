@@ -111,9 +111,10 @@
       document.head.appendChild(style);
     }
     style.textContent = `
-      .v1103-ledger-test-toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 12px 6px;padding:6px 8px;border:1px dashed rgba(251,191,36,.42);border-radius:12px;background:rgba(15,23,42,.78);color:#e5e7eb;font-size:12px;font-weight:850;flex:0 0 auto;}
-      .v1103-ledger-test-toolbar strong{color:#fbbf24;font-size:12px;font-weight:950;margin-right:4px;line-height:1;}
-      .v1103-ledger-test-toolbar button{height:28px;border-radius:9px;border:1px solid rgba(148,163,184,.35);background:#111827;color:#f8fafc;font-size:12px;font-weight:900;padding:0 9px;cursor:pointer;line-height:1;}
+      .v1103-ledger-test-toolbar{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;margin:0 0 0 10px;padding:0;border:0;border-radius:0;background:transparent;color:#e5e7eb;font-size:11px;font-weight:850;flex:1 1 auto;min-width:0;max-width:100%;height:30px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;}
+      .v1112-ledger-title-row > .v1103-ledger-test-toolbar{align-self:center;}
+      .v1103-ledger-test-toolbar strong{color:#fbbf24;font-size:11px;font-weight:950;margin-right:3px;line-height:1;white-space:nowrap;flex:0 0 auto;}
+      .v1103-ledger-test-toolbar button{height:24px;border-radius:8px;border:1px solid rgba(148,163,184,.35);background:#111827;color:#f8fafc;font-size:11px;font-weight:900;padding:0 7px;cursor:pointer;line-height:1;white-space:nowrap;flex:0 0 auto;}
       .v1103-ledger-test-toolbar button:hover{border-color:rgba(251,191,36,.62);background:#1f2937;}
       .v1103-ledger-test-toolbar button.danger{border-color:rgba(248,113,113,.38);background:#3f1118;color:#fecaca;}
       .v1103-ledger-test-toolbar span{display:none!important;}
@@ -273,9 +274,13 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-name,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1076-ledger-match-odd{line-height:1!important;}
 
-      /* V1135: kombine ilk maç üst çizgiye yapışmasın; satır yüksekliği ve tekli hizaya dokunmaz. */
+      /* V1136: kombineyi yukarı/aşağı taşımadan kendi satırında ortala; alta yapışmayı engelle. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{transform:translateY(1.5px)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{transform:none!important;justify-content:center!important;padding-top:1px!important;padding-bottom:1px!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line + .v1069-ledger-match-line,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1.03!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 4px)!important;max-width:calc(100vw - 4px)!important;}}
     `;
   }
@@ -355,13 +360,11 @@
   function v1135LedgerTableBodyPx() {
     const modal = document.querySelector('#v1056-ledger-screen-host .v1056-ledger-screen-modal');
     const body = document.querySelector('#v1056-ledger-screen-host .v1056-ledger-screen-body, #v1056-ledger-screen-host .v1057-ledger-screen-body');
-    const toolbar = document.querySelector('#v1056-ledger-screen-host [data-v1103-ledger-test-toolbar]');
     let bodyH = 0;
     try { bodyH = Math.floor(body?.getBoundingClientRect?.().height || 0); } catch {}
     if (!bodyH) {
       const viewportH = Math.max(720, Math.floor(window.innerHeight || document.documentElement?.clientHeight || 900));
-      const toolbarH = Math.ceil(toolbar?.getBoundingClientRect?.().height || 38);
-      bodyH = Math.max(480, viewportH - 4 - 48 - toolbarH - 6);
+      bodyH = Math.max(480, viewportH - 4 - 48 - 6);
     }
     const summaryH = 42;
     const headH = 22;
@@ -3959,14 +3962,13 @@
     host.innerHTML = `<div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay" data-v1056-ledger-close>
       <section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
         <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head">
-          <div class="v1112-ledger-title-row"><b>${title}</b>${v1110LedgerHeaderPagerHtml(m)}</div>
+          <div class="v1112-ledger-title-row"><b>${title}</b>${v1103LedgerTestToolbar(m)}${v1110LedgerHeaderPagerHtml(m)}</div>
           <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
             <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
             <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
             <button type="button" data-v1056-ledger-close>×</button>
           </div>
         </header>
-        ${v1103LedgerTestToolbar(m)}
         <div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div>
       </section>
     </div>`;
