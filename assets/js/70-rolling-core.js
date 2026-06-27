@@ -135,11 +135,11 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1065-ledger-screen-head{min-height:48px!important;height:48px!important;padding-top:0!important;padding-bottom:0!important;flex:0 0 48px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1056-ledger-screen-body,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;height:auto!important;overflow:hidden!important;padding:0 6px 6px!important;display:flex!important;flex-direction:column!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger{height:auto!important;min-height:0!important;overflow:visible!important;display:block!important;margin:0!important;padding:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger{height:100%!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;margin:0!important;padding:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet-grid,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1110-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:start!important;overflow:visible!important;width:100%!important;height:auto!important;min-height:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1110-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:stretch!important;overflow:hidden!important;width:100%!important;height:100%!important;min-height:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:0 0 auto!important;overflow:hidden!important;height:auto!important;display:block!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;height:100%!important;display:flex!important;flex-direction:column!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-summary-inline,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-summary-inline{height:42px!important;min-height:42px!important;max-height:42px!important;margin:0!important;flex:0 0 42px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;border:1px solid #0f172a!important;border-bottom:0!important;border-radius:8px 8px 0 0!important;overflow:hidden!important;}
@@ -159,7 +159,7 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-summary-spacer,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-summary-spacer{display:grid!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;flex:0 0 auto!important;height:auto!important;min-height:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table{width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;flex:1 1 auto!important;height:auto!important;min-height:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table thead,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-excel-table thead{height:22px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table th,
@@ -209,20 +209,18 @@
 
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-pnl-cell .v1063-ledger-value{color:#fff!important;font-weight:1000!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:20px!important;min-height:20px!important;max-height:20px!important;padding-top:0!important;padding-bottom:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-single td{height:23px!important;min-height:23px!important;max-height:23px!important;padding-top:0!important;padding-bottom:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-combo td{height:32px!important;min-height:32px!important;max-height:32px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1118-ledger-row-longcombo td{height:37px!important;min-height:37px!important;max-height:37px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1063-ledger-value{padding-top:0!important;padding-bottom:0!important;line-height:1!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;align-items:flex-start!important;gap:0!important;height:100%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{justify-content:center!important;gap:3px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line + .v1069-ledger-match-line,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:3px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line{align-items:center!important;height:12px!important;line-height:12px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-status-mark{height:12px!important;line-height:12px!important;align-items:center!important;justify-content:center!important;transform:translateY(-1px)!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1078-ledger-match-text{height:12px!important;line-height:12px!important;display:inline-flex!important;align-items:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line{align-items:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{align-items:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;height:11px!important;margin:0!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;line-height:11px!important;}
@@ -240,11 +238,8 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1.0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3){padding-left:3px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td{display:none!important;height:0!important;min-height:0!important;max-height:0!important;padding:0!important;line-height:0!important;border:0!important;background:transparent!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line.win .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line.loss .v1069-ledger-status-mark{transform:translateY(-1px)!important;align-self:center!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line{height:11px!important;min-height:11px!important;line-height:11px!important;align-items:center!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1078-ledger-match-text{height:11px!important;line-height:11px!important;align-items:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td{height:var(--v1119-filler-h,0px)!important;min-height:var(--v1119-filler-h,0px)!important;max-height:var(--v1119-filler-h,0px)!important;padding:0!important;line-height:0!important;color:transparent!important;background:#eef2f7!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td:nth-child(3){background:#0f172a!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.8%!important;min-width:30px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
@@ -299,29 +294,6 @@
     for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts));
     v1057SaveLedgerEdits(edits);
   }
-  function v1127LedgerTableCount(pages) {
-    return (Array.isArray(pages) ? pages : []).reduce((sum, page) => {
-      const chunks = Array.isArray(page?.chunks) ? page.chunks.filter(chunk => Array.isArray(chunk) && chunk.length) : [];
-      return sum + Math.max(1, chunks.length || 0);
-    }, 0) || 1;
-  }
-  function v1127LedgerTargetForTables(mode, tableTarget) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const wantedTables = Math.max(1, Math.min(5, Number(tableTarget || 1)));
-    const realRows = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row));
-    const ts = Date.now() + 1000;
-    const simulated = realRows.map((row, idx) => ({ ...row, _ledgerNo: idx + 1 }));
-    let best = simulated.length;
-    const maxAdd = 360;
-    for (let addIndex = 0; addIndex <= maxAdd; addIndex += 1) {
-      const pages = v1119LedgerBuildPages(simulated, m);
-      const tableCount = v1127LedgerTableCount(pages);
-      if (tableCount <= wantedTables) best = simulated.length;
-      if (tableCount > wantedTables) break;
-      simulated.push(v1103BuildLedgerTestRow(m, addIndex, ts));
-    }
-    return Math.max(realRows.length, best);
-  }
   function v1110LedgerSummarySpacerHtml() {
     return `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline v1110-ledger-summary-blank" aria-hidden="true"><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div></div>`;
   }
@@ -334,25 +306,11 @@
   function v1110SetLedgerTestPage(mode, page) {
     try { localStorage.setItem(v1110LedgerTestPageKey(mode), String(Math.max(0, Number(page || 0)))); } catch {}
   }
-  function v1119LedgerRowPx(row, mode) {
-    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
+  function v1119LedgerRowWeight(row, mode) {
+    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 1;
     const info = v1118LedgerBetLineInfo(row);
-    // These are packing estimates, intentionally a little higher than the CSS height.
-    // Otherwise "Tabloyu Tamamla" can overfill the visible modal and cut the last rows.
-    if (info.count <= 1) return 23;
-    return info.isLong ? 42 : 35;
-  }
-  function v1119LedgerColumnLimitPx(mode) {
-    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 25 * 32;
-    try {
-      const host = document.getElementById("v1056-ledger-screen-host");
-      const body = host?.querySelector?.(".v1056-ledger-screen-body, .v1057-ledger-screen-body");
-      const h = Math.floor(body?.clientHeight || body?.getBoundingClientRect?.().height || 0);
-      // Never trust the full body height for packing: the modal/header/toolbar math can report
-      // more room than the visible table actually has. Cap it so rows do not get cut at the bottom.
-      if (h > 260) return Math.max(500, Math.min(610, h - 42 - 22 - 26));
-    } catch {}
-    return 590;
+    if (info.count <= 1) return 0.82;
+    return info.isLong ? 1.22 : 1.0;
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -360,35 +318,46 @@
       return [{ chunks: v1057LedgerChunks(rows, 25), start: 0, end: Array.isArray(rows) ? rows.length : 0 }];
     }
     const source = Array.isArray(rows) ? rows : [];
-    if (!source.length) return [{ chunks: [[]], start: 0, end: 0 }];
-    const limitPx = v1119LedgerColumnLimitPx(m);
+    const capacity = 20;
     const pages = [];
-    let page = { chunks: [[]], heights: [0], start: 0, end: 0 };
+    let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
     const commitPage = () => {
       page.chunks = page.chunks.filter(chunk => chunk.length);
       if (!page.chunks.length) page.chunks = [[]];
-      pages.push({ chunks: page.chunks, start: page.start, end: page.end });
+      const maxWeight = Math.max(...(page.weights || [0]));
+      page.chunks = page.chunks.map((chunk, i) => {
+        const used = Number(page.weights?.[i] || 0);
+        const missing = Math.max(0, maxWeight - used);
+        if (page.chunks.length > 1 && missing > 0.08) {
+          return chunk.concat([{ _v1119Filler: true, _v1119FillerPx: Math.round(missing * 31) }]);
+        }
+        return chunk;
+      });
+      pages.push(page);
     };
     source.forEach((row, idx) => {
-      const nextRow = { ...row, _ledgerNo: idx + 1 };
-      const rowPx = v1119LedgerRowPx(nextRow, m);
+      const weightedRow = { ...row, _ledgerNo: idx + 1 };
+      const weight = v1119LedgerRowWeight(weightedRow, m);
       let col = page.chunks.length - 1;
-      if (page.chunks[col].length && page.heights[col] + rowPx > limitPx) {
+      if (page.chunks[col].length && page.weights[col] + weight > capacity) {
         if (page.chunks.length >= 3) {
           page.end = idx;
           commitPage();
-          page = { chunks: [[]], heights: [0], start: idx, end: idx };
+          page = { chunks: [[]], weights: [0], start: idx, end: idx };
           col = 0;
         } else {
           page.chunks.push([]);
-          page.heights.push(0);
+          page.weights.push(0);
           col += 1;
         }
       }
-      page.chunks[col].push(nextRow);
-      page.heights[col] += rowPx;
+      page.chunks[col].push(weightedRow);
+      page.weights[col] += weight;
       page.end = idx + 1;
     });
+    if (!source.length) {
+      page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+    }
     commitPage();
     return pages;
   }
@@ -503,7 +472,7 @@
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:table:1">1. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:table:2">2. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:table:3">3. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:table:4">4. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:table:5">5. Tabloyu Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:20">20'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:40">40'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:80">80'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3745,14 +3714,10 @@
       event.preventDefault();
       event.stopPropagation();
       if (!v1103LedgerTestModeEnabled()) return;
-      const parts = String(btn.dataset.v1103LedgerTestFill || `${m}:table:3`).split(":");
-      const modeRaw = parts[0];
-      const targetKind = parts[1];
-      const targetRaw = parts[2] || parts[1];
+      const [modeRaw, targetRaw] = String(btn.dataset.v1103LedgerTestFill || `${m}:60`).split(":");
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
-      const targetCount = targetKind === "table" ? v1127LedgerTargetForTables(safeMode, Number(targetRaw || 3)) : Number(targetRaw || 60);
       v1110SetLedgerTestPage(safeMode, 0);
-      v1103FillLedgerTestRows(safeMode, targetCount);
+      v1103FillLedgerTestRows(safeMode, Number(targetRaw || 60));
       v1056OpenDailyLedgerScreen(safeMode);
     }));
     host.querySelectorAll("[data-v1103-ledger-test-clear]").forEach(btn => btn.addEventListener("click", event => {
