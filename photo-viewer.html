@@ -14,14 +14,15 @@
     }
     body {
       overflow: auto;
+      padding: 8px;
+      box-sizing: border-box;
     }
     .photo-shell {
       min-width: max-content;
-      min-height: 100vh;
+      min-height: calc(100vh - 16px);
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding: 0;
       box-sizing: border-box;
     }
     .photo-shell img {
@@ -32,51 +33,54 @@
       max-height: none;
       background: #020617;
     }
-    .photo-actions {
-      position: fixed;
-      right: 12px;
-      top: 12px;
-      z-index: 10;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      opacity: .12;
-      transition: opacity .16s ease;
+    .v1153-photo-viewer-modal {
+      margin: 0 auto !important;
+      width: max-content !important;
+      max-width: none !important;
+      background: #0b1220 !important;
+      border: 1px solid #334155 !important;
+      border-radius: 16px !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
     }
-    .photo-actions:hover,
-    .photo-actions:focus-within {
-      opacity: 1;
+    .v1153-photo-viewer-modal .v1056-ledger-screen-head,
+    .v1153-photo-viewer-modal .v1057-ledger-screen-head,
+    .v1153-photo-viewer-modal .v1060-ledger-screen-head,
+    .v1153-photo-viewer-modal .v1065-ledger-screen-head,
+    .v1153-photo-viewer-modal .v1112-ledger-title-row,
+    .v1153-photo-viewer-modal .v1060-ledger-head-actions,
+    .v1153-photo-viewer-modal .v1063-ledger-head-actions {
+      display: none !important;
     }
-    .photo-name {
-      max-width: 420px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      border: 1px solid rgba(148, 163, 184, .45);
-      border-radius: 999px;
-      background: rgba(15, 23, 42, .84);
-      color: #e5e7eb;
-      padding: 7px 11px;
-      font-size: 12px;
-      font-weight: 800;
-      box-shadow: 0 12px 30px rgba(0,0,0,.3);
+    .v1153-photo-viewer-modal .v1056-ledger-screen-body,
+    .v1153-photo-viewer-modal .v1057-ledger-screen-body,
+    .v1153-photo-viewer-modal .v1153-photo-viewer-body {
+      overflow: visible !important;
+      max-height: none !important;
+      height: auto !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
     }
-    .photo-actions button {
-      border: 1px solid rgba(245, 158, 11, .72);
-      border-radius: 999px;
-      background: rgba(15, 23, 42, .92);
-      color: #fbbf24;
-      padding: 7px 11px;
-      font-size: 12px;
-      font-weight: 950;
-      cursor: pointer;
-      box-shadow: 0 12px 30px rgba(0,0,0,.3);
+    .v1153-photo-viewer-modal .v1056-ledger-modal-table,
+    .v1153-photo-viewer-modal .v1054-daily-ledger,
+    .v1153-photo-viewer-modal .v1057-ledger-excel,
+    .v1153-photo-viewer-modal .v1063-ledger-pro,
+    .v1153-photo-viewer-modal .v1065-ledger-pro {
+      overflow: visible !important;
+      max-height: none !important;
+      height: auto !important;
+      margin: 0 !important;
     }
-    .photo-actions button:hover {
-      background: rgba(30, 41, 59, .96);
+    .v1153-photo-viewer-modal .v1110-ledger-pager,
+    .v1153-photo-viewer-modal .v1110-ledger-page-badge,
+    .v1153-photo-viewer-modal .v1110-ledger-page-prev,
+    .v1153-photo-viewer-modal .v1110-ledger-page-next,
+    .v1153-photo-viewer-modal .v1112-ledger-pager {
+      display: none !important;
     }
     .empty-state {
-      min-height: 100vh;
+      min-height: calc(100vh - 16px);
       display: grid;
       place-items: center;
       padding: 24px;
@@ -89,10 +93,6 @@
   </style>
 </head>
 <body>
-  <div class="photo-actions" aria-label="Fotoğraf işlemleri">
-    <span class="photo-name" data-photo-name>BULTEN</span>
-    <button type="button" data-download>PNG indir</button>
-  </div>
   <main class="photo-shell" data-stage></main>
   <script>
     (function () {
@@ -101,69 +101,30 @@
       const fileParam = params.get("file") || "bulten-kupon-defteri.png";
       const safeFile = String(fileParam).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "bulten-kupon-defteri.png";
       const stage = document.querySelector("[data-stage]");
-      const nameEl = document.querySelector("[data-photo-name]");
-      const button = document.querySelector("[data-download]");
       let payload = null;
       try { payload = JSON.parse(localStorage.getItem(key) || "null"); } catch {}
-      if (!payload || !payload.dataUrl) {
-        document.title = safeFile;
-        if (nameEl) nameEl.textContent = safeFile;
+      document.title = safeFile;
+      if (!payload || (!payload.html && !payload.dataUrl)) {
         if (stage) stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
         return;
       }
-      const filename = String(payload.filename || safeFile).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || safeFile;
-      const title = payload.title || filename;
-      document.title = filename;
-      if (nameEl) nameEl.textContent = filename;
-      const img = new Image();
-      img.alt = title;
-      img.decoding = "sync";
-      img.src = payload.dataUrl;
-      if (stage) {
-        stage.textContent = "";
+      if (payload.headHtml) {
+        try { document.head.insertAdjacentHTML('beforeend', String(payload.headHtml || '')); } catch {}
+      }
+      if (payload.html) {
+        stage.innerHTML = String(payload.html || '');
+        return;
+      }
+      if (payload.dataUrl) {
+        const img = new Image();
+        img.alt = payload.title || safeFile;
+        img.decoding = 'sync';
+        img.src = payload.dataUrl;
+        stage.textContent = '';
         stage.appendChild(img);
+        return;
       }
-      const svgToPng = function (dataUrl) {
-        return new Promise((resolve, reject) => {
-          const image = new Image();
-          image.onload = () => {
-            try {
-              const canvas = document.createElement("canvas");
-              canvas.width = Math.max(1, image.naturalWidth || image.width || 1);
-              canvas.height = Math.max(1, image.naturalHeight || image.height || 1);
-              const ctx = canvas.getContext("2d");
-              ctx.fillStyle = "#020617";
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              ctx.drawImage(image, 0, 0);
-              canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("PNG üretilemedi")), "image/png");
-            } catch (error) { reject(error); }
-          };
-          image.onerror = () => reject(new Error("Görsel okunamadı"));
-          image.src = dataUrl;
-        });
-      };
-      const downloadBlob = function (blob) {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename.toLowerCase().endsWith(".png") ? filename : filename + ".png";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1200);
-      };
-      if (button) {
-        button.addEventListener("click", () => {
-          svgToPng(payload.dataUrl).then(downloadBlob).catch(() => {
-            const a = document.createElement("a");
-            a.href = payload.dataUrl;
-            a.download = filename.toLowerCase().endsWith(".png") ? filename : filename + ".png";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-          });
-        });
-      }
+      stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
     })();
   </script>
 </body>
