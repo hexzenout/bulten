@@ -2665,12 +2665,10 @@
     try {
       const dataUrl = await v1162NodeToPngDataUrl(node);
       if (action === "open") {
-        const win = window.open("", "_blank");
-        if (win) {
-          win.document.open();
-          win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(filename)}</title><style>html,body{margin:0;background:#020617;}img{display:block;width:auto;height:auto;max-width:none;}</style></head><body><img src="${dataUrl}" alt="${escapeHtml(filename)}"></body></html>`);
-          win.document.close();
-        }
+        const objectUrl = v1165DataUrlToObjectUrl(dataUrl, filename);
+        const win = window.open(objectUrl, "_blank");
+        if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 120000);
       } else {
         v1162DownloadDataUrl(dataUrl, filename);
       }
@@ -2681,6 +2679,74 @@
         triggerButton.disabled = false;
         triggerButton.textContent = oldText;
       }
+    }
+  }
+
+
+  function v1165DataUrlToObjectUrl(dataUrl, filename) {
+    const text = String(dataUrl || "");
+    const parts = text.split(",");
+    const meta = parts[0] || "";
+    const mime = (meta.match(/data:([^;]+)/) || [])[1] || "image/png";
+    const raw = parts.slice(1).join(",");
+    const binary = meta.includes(";base64") ? atob(raw) : decodeURIComponent(raw);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const cleanName = cleanText(filename || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`;
+    try {
+      return URL.createObjectURL(new File([bytes], cleanName, { type: mime }));
+    } catch {
+      return URL.createObjectURL(new Blob([bytes], { type: mime }));
+    }
+  }
+
+  function v1165WriteTabMessage(tab, message) {
+    if (!tab) return;
+    try {
+      tab.document.open();
+      tab.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>BULTEN PNG</title><style>html,body{margin:0;background:#020617;color:#fde68a;font-family:Arial,sans-serif;font-weight:900;}body{display:grid;place-items:center;min-height:100vh;padding:24px;box-sizing:border-box;}div{border:1px solid rgba(251,191,36,.32);border-radius:14px;padding:16px 18px;background:#0f172a;box-shadow:0 18px 48px rgba(0,0,0,.35);}</style></head><body><div>${escapeHtml(message)}</div></body></html>`);
+      tab.document.close();
+    } catch {}
+  }
+
+  async function v1165OpenLedgerDirectPngTab(mode = "bet") {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const filename = v1162LedgerFilename(m);
+    const tab = window.open("", "_blank");
+    if (!tab) {
+      alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
+      return;
+    }
+    v1165WriteTabMessage(tab, "PNG hazırlanıyor...");
+
+    const tempHost = document.createElement("div");
+    tempHost.style.position = "fixed";
+    tempHost.style.left = "-100000px";
+    tempHost.style.top = "0";
+    tempHost.style.width = "max-content";
+    tempHost.style.height = "auto";
+    tempHost.style.overflow = "visible";
+    tempHost.style.background = "#020617";
+    tempHost.style.pointerEvents = "none";
+    tempHost.setAttribute("aria-hidden", "true");
+    tempHost.innerHTML = `<section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal v1162-ledger-output-modal ${m}" data-v1165-output-node><div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div></section>`;
+    document.body.appendChild(tempHost);
+
+    try {
+      v1103EnsureLedgerTestStyles();
+      v1110FinalizeLedgerLayout(tempHost);
+      const node = tempHost.querySelector("[data-v1165-output-node]");
+      v1162PrepareOutputNode(node);
+      setTimeout(() => v1162PrepareOutputNode(node), 80);
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const dataUrl = await v1162NodeToPngDataUrl(node);
+      const objectUrl = v1165DataUrlToObjectUrl(dataUrl, filename);
+      try { tab.location.replace(objectUrl); } catch { tab.location.href = objectUrl; }
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 120000);
+    } catch (error) {
+      v1165WriteTabMessage(tab, "PNG hazırlanamadı. Kupon Defteri ekranından tekrar dene.");
+    } finally {
+      tempHost.remove();
     }
   }
 
@@ -2733,38 +2799,7 @@
   }
 
   function v1163OpenLedgerOutputTab(mode = "bet") {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const key = v1163LedgerOutputStorageKey();
-    const filename = v1162LedgerFilename(m);
-    const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
-    const url = `ledger-output.html?v=v1163&key=${encodeURIComponent(key)}`;
-    const tab = window.open(url, "_blank");
-    try {
-      const html = v1163BuildLedgerOutputHtml(m);
-      if (!html) throw new Error("Çıktı HTML üretilemedi.");
-      localStorage.setItem(key, JSON.stringify({
-        version: "v1163",
-        mode: m,
-        title,
-        filename,
-        html,
-        createdAt: Date.now()
-      }));
-      if (!tab) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
-    } catch (error) {
-      try {
-        localStorage.setItem(key, JSON.stringify({
-          version: "v1163",
-          mode: m,
-          title,
-          filename,
-          html: "",
-          error: "Kupon Defteri çıktısı hazırlanamadı.",
-          createdAt: Date.now()
-        }));
-      } catch {}
-      alert("Kupon Defteri çıktısı hazırlanamadı. Sayfayı yenileyip tekrar dene.");
-    }
+    v1165OpenLedgerDirectPngTab(mode);
   }
 
   function v1162OpenLedgerOutputPreview(mode = "bet") {
