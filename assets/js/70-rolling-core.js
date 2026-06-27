@@ -351,6 +351,34 @@
       .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
       .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
       .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{content:none!important;display:none!important;}
+      /* V1171: gerçek minus işareti eski gizleme kurallarını kesin ezer; kalın ve aynı hizada kalır. */
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;font-size:12px!important;line-height:11px!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;position:static!important;top:auto!important;width:11px!important;min-width:11px!important;height:11px!important;flex:0 0 11px!important;background:none!important;transform:none!important;visibility:visible!important;opacity:1!important;overflow:visible!important;white-space:nowrap!important;text-align:center!important;margin:0!important;padding:0!important;}
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::after,
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::after,
+      #v1056-ledger-screen-host .v1056-ledger-screen-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::after,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::after,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::after,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::after,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after{content:none!important;display:none!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2422,7 +2450,7 @@
     sourceRoot.querySelectorAll(".v1056-ledger-screen-head, .v1057-ledger-screen-head, .v1060-ledger-screen-head, .v1065-ledger-screen-head").forEach(el => el.remove());
     sourceRoot.querySelectorAll('.v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark').forEach(mark => {
       if (!(mark instanceof Element)) return;
-      mark.textContent = "–";
+      mark.textContent = "−";
       mark.style.color = "#64748b";
       mark.style.fontSize = "11px";
       mark.style.lineHeight = "1";
@@ -2440,7 +2468,7 @@
     sourceRoot.querySelectorAll('.v1069-ledger-status-mark.v1123-ledger-status-empty').forEach(mark => {
       if (!(mark instanceof Element)) return;
       mark.classList.remove('v1123-ledger-status-empty');
-      if (!String(mark.textContent || '').trim()) mark.textContent = '–';
+      if (!String(mark.textContent || '').trim()) mark.textContent = '−';
       mark.style.color = "#64748b";
       mark.style.fontSize = "11px";
       mark.style.lineHeight = "1";
@@ -2575,7 +2603,7 @@
       const emptyLike = !String(mark.textContent || "").trim() || mark.classList.contains("v1123-ledger-status-empty");
       if (pendingLike || emptyLike) {
         mark.classList.remove("v1123-ledger-status-empty");
-        mark.textContent = "-";
+        mark.textContent = "−";
         mark.style.setProperty("color", "#64748b", "important");
       }
       mark.style.setProperty("font-size", "11px", "important");
@@ -2817,7 +2845,7 @@
           const line = mark.closest(".v1069-ledger-match-line");
           if (line && (line.classList.contains("pending") || line.classList.contains("open") || line.classList.contains("push"))) {
             mark.classList.remove("v1123-ledger-status-empty");
-            mark.textContent = "–";
+            mark.textContent = "−";
             mark.style.setProperty("color", "#64748b", "important");
             mark.style.setProperty("font-size", "11px", "important");
             mark.style.setProperty("line-height", "1", "important");
@@ -2906,7 +2934,7 @@
       clone.querySelectorAll("[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock], .v1060-ledger-head-actions, .v1063-ledger-head-actions").forEach(el => el.remove());
       clone.querySelectorAll(".v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark").forEach(mark => {
         mark.classList.remove("v1123-ledger-status-empty");
-        mark.textContent = "–";
+        mark.textContent = "−";
       });
       clone.style.position = "relative";
       clone.style.transform = "none";
@@ -4341,7 +4369,12 @@
   function v1069LedgerStatusMark(status) {
     if (status === "loss") return "✕";
     if (status === "win") return "✓";
-    return "-";
+    return "−";
+  }
+  function v1171LedgerStatusMarkAttrs(status) {
+    const s = String(status || "");
+    if (s !== "pending" && s !== "push" && s !== "open") return "";
+    return ' style="color:#64748b!important;font-size:12px!important;line-height:11px!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:11px!important;min-width:11px!important;height:11px!important;flex:0 0 11px!important;background:none!important;transform:none!important;position:static!important;visibility:visible!important;opacity:1!important;overflow:visible!important;white-space:nowrap!important;"';
   }
   function v1119LedgerStatusMarkHtml(status) {
     return escapeHtml(v1069LedgerStatusMark(status));
@@ -4381,7 +4414,7 @@
       const title = `${mark} ${name}`;
       const odds = v1076LedgerOddsText(lines[0]?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span></span>`;
+      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark"${v1171LedgerStatusMarkAttrs(status)}>${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map((line, lineIndex) => {
@@ -4389,7 +4422,7 @@
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
+      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark"${v1171LedgerStatusMarkAttrs(status)}>${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
