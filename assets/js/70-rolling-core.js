@@ -499,6 +499,34 @@
     edits[m].manual.push(...lastGoodRows.filter(row => v1103IsLedgerTestRow(row)));
     v1057SaveLedgerEdits(edits);
   }
+  function v1141IsLedgerFullMixedRow(row) {
+    return String(row?.id || "").startsWith("ledger_test_full_mix_");
+  }
+  function v1141HasLedgerFullMixedRows(rows) {
+    return Array.isArray(rows) && rows.some(v1141IsLedgerFullMixedRow);
+  }
+  function v1141LedgerFullMixedChunkSizes() {
+    // Tam Karışık testinde 4/5/6'lı kombine satırlar yüksek olduğu için
+    // ekranda son satır gömülmesin diye ilk sayfa 16 / 14 / 14 bloklanır.
+    return [16, 14, 14];
+  }
+  function v1141LedgerBuildFullMixedPages(rows) {
+    const source = Array.isArray(rows) ? rows : [];
+    const plan = v1141LedgerFullMixedChunkSizes();
+    const pages = [];
+    let idx = 0;
+    if (!source.length) return [{ chunks: [[]], weights: [0], start: 0, end: 0 }];
+    while (idx < source.length) {
+      const pageStart = idx;
+      const chunks = plan.map(size => {
+        const chunk = source.slice(idx, idx + size).map((row, offset) => ({ ...row, _ledgerNo: idx + offset + 1 }));
+        idx += chunk.length;
+        return chunk;
+      }).filter(chunk => chunk.length);
+      pages.push({ chunks: chunks.length ? chunks : [[]], weights: chunks.map(chunk => chunk.length), start: pageStart, end: idx });
+    }
+    return pages;
+  }
   function v1110LedgerSummarySpacerHtml() {
     return `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline v1110-ledger-summary-blank" aria-hidden="true"><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div></div>`;
   }
@@ -572,6 +600,9 @@
       return [{ chunks: v1057LedgerChunks(rows, 25), start: 0, end: Array.isArray(rows) ? rows.length : 0 }];
     }
     const source = Array.isArray(rows) ? rows : [];
+    if (m === "bet" && v1141HasLedgerFullMixedRows(source)) {
+      return v1141LedgerBuildFullMixedPages(source);
+    }
     if (m !== "bet") {
       const capacity = 20;
       const pages = [];
