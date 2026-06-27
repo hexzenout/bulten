@@ -224,12 +224,12 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-combo .v1069-ledger-match-line,
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{align-items:flex-start!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-status-mark{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;height:11px!important;margin:0!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;line-height:11px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#10b981!important;font-size:11px!important;transform:translateY(-.5px)!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#dc2626!important;font-size:11px!important;transform:translateY(-.5px)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#10b981!important;font-size:11px!important;transform:translateY(-.5px)!important;background:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#dc2626!important;font-size:11px!important;transform:translateY(-.5px)!important;background:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#475569!important;font-size:0!important;line-height:11px!important;transform:translateY(0)!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1119-ledger-dash{display:block!important;width:9px!important;height:2.5px!important;min-height:2.5px!important;border-radius:999px!important;background:#475569!important;margin:0 auto!important;box-shadow:none!important;transform:translateY(0)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:transparent!important;font-size:0!important;line-height:1!important;transform:translateY(0)!important;background:linear-gradient(#64748b,#64748b) center 52% / 8px 2.4px no-repeat!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1119-ledger-dash{display:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1078-ledger-match-text{line-height:1.02!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1.0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3){padding-left:3px!important;padding-right:1px!important;}
@@ -3399,7 +3399,7 @@
   }
   function v1119LedgerStatusMarkHtml(status) {
     if (status === "loss" || status === "win") return escapeHtml(v1069LedgerStatusMark(status));
-    return '<span class="v1119-ledger-dash" aria-hidden="true"></span>';
+    return "";
   }
   function v1076LedgerOddsText(value) {
     const n = Number(value || 0);
