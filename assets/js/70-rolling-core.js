@@ -338,6 +338,19 @@
       .v1162-ledger-context-menu{position:fixed!important;z-index:2147483647!important;display:none!important;min-width:178px!important;padding:6px!important;border:1px solid rgba(251,191,36,.38)!important;border-radius:12px!important;background:#020617!important;box-shadow:0 18px 48px rgba(0,0,0,.48)!important;}
       .v1162-ledger-context-menu button{display:block!important;width:100%!important;border:0!important;background:transparent!important;color:#e5e7eb!important;text-align:left!important;border-radius:8px!important;padding:9px 10px!important;font-size:12px!important;font-weight:900!important;cursor:pointer!important;}
       .v1162-ledger-context-menu button:hover{background:rgba(251,191,36,.12)!important;color:#fde68a!important;}
+      /* V1170: pending/open/push çizgisi artık pseudo değil, gerçek '-' karakteridir. */
+      #v1056-ledger-screen-host .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;font-size:11px!important;line-height:11px!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;position:static!important;width:11px!important;min-width:11px!important;height:11px!important;flex:0 0 11px!important;background:none!important;transform:none!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{content:none!important;display:none!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -4328,11 +4341,10 @@
   function v1069LedgerStatusMark(status) {
     if (status === "loss") return "✕";
     if (status === "win") return "✓";
-    return "–";
+    return "-";
   }
   function v1119LedgerStatusMarkHtml(status) {
-    if (status === "loss" || status === "win") return escapeHtml(v1069LedgerStatusMark(status));
-    return "";
+    return escapeHtml(v1069LedgerStatusMark(status));
   }
   function v1076LedgerOddsText(value) {
     const n = Number(value || 0);
@@ -4374,12 +4386,10 @@
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map((line, lineIndex) => {
       const status = v1069LedgerLineStatus(row, line);
-      const pendingLike = status === "pending" || status === "push" || status === "open";
-      const markClass = pendingLike && lineIndex > 0 ? " v1123-ledger-status-empty" : "";
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark${markClass}">${pendingLike && lineIndex > 0 ? "" : v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
+      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
