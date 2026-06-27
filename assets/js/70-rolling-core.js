@@ -550,6 +550,14 @@
   function v1135LedgerChunkPx(chunk, mode) {
     return (Array.isArray(chunk) ? chunk : []).reduce((sum, row) => sum + v1135LedgerRowPx(row, mode), 0);
   }
+  function v1146LedgerScrollOverflowAllowancePx(row, mode) {
+    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 0;
+    const info = v1118LedgerBetLineInfo(row);
+    const count = Math.max(1, Number(info.count || 1));
+    if (count >= 5) return 118;
+    if (count >= 3) return 104;
+    return 72;
+  }
   function v1135LedgerTargetTotalForTables(mode, tableCount) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const safeTables = Math.max(1, Math.min(6, Number(tableCount || 1)));
@@ -635,7 +643,12 @@
       const weightedRow = { ...row, _ledgerNo: idx + 1 };
       const rowPx = v1135LedgerRowPx(weightedRow, m);
       let col = page.chunks.length - 1;
-      if (page.chunks[col].length && page.weights[col] + rowPx > capacityPx) {
+      const usedPx = Number(page.weights[col] || 0);
+      const wouldOverflow = page.chunks[col].length && usedPx + rowPx > capacityPx;
+      const prevChunkCount = col > 0 ? Number(page.chunks[col - 1]?.length || 0) : 0;
+      const currentChunkCount = Number(page.chunks[col]?.length || 0);
+      const allowScrollOverflow = wouldOverflow && col > 0 && prevChunkCount > 0 && currentChunkCount < prevChunkCount && usedPx + rowPx <= capacityPx + v1146LedgerScrollOverflowAllowancePx(weightedRow, m);
+      if (wouldOverflow && !allowScrollOverflow) {
         if (page.chunks.length >= 3) {
           page.end = idx;
           commitPage();
