@@ -317,6 +317,10 @@
       .v1160-ledger-inline-photo-stage{max-width:calc(100vw - 42px)!important;max-height:calc(100vh - 76px)!important;overflow:auto!important;padding:0!important;margin:0!important;background:#020617!important;}
       .v1160-ledger-inline-export{background:#0b1220!important;border-radius:14px!important;box-shadow:none!important;margin:0!important;width:max-content!important;max-width:none!important;}
       .v1160-ledger-inline-export .v1056-ledger-screen-body,.v1160-ledger-inline-export .v1057-ledger-screen-body{overflow:visible!important;max-height:none!important;height:auto!important;min-height:0!important;padding-bottom:0!important;margin-bottom:0!important;}
+      .v1161-ledger-capture-modal{width:auto!important;max-width:calc(100vw - 24px)!important;max-height:calc(100vh - 24px)!important;overflow:hidden!important;}
+      .v1161-ledger-capture-stage{max-width:calc(100vw - 40px)!important;max-height:calc(100vh - 92px)!important;overflow:auto!important;background:#020617!important;border-radius:12px!important;}
+      .v1161-ledger-capture-stage img{display:block!important;width:auto!important;height:auto!important;max-width:none!important;max-height:none!important;background:#020617!important;}
+      .v1161-ledger-capture-help{color:#94a3b8!important;font-size:11px!important;font-weight:800!important;padding:0 8px!important;white-space:nowrap!important;}
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2606,6 +2610,93 @@
     } catch { return false; }
   }
 
+  function v1161DownloadPngDataUrl(dataUrl, filename) {
+    if (!dataUrl) return;
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = filename || `bulten-kupon-defteri-${new Date().toISOString().slice(0,10)}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function v1161OpenLedgerCapturePreview(dataUrl, filename, title = "Defter Fotoğrafı") {
+    if (!dataUrl) return;
+    const host = getRollingPhotoHost();
+    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal v1161-ledger-capture-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar"><button type="button" data-v1161-photo-download>Resmi İndir</button><span class="v1161-ledger-capture-help">Ekranda gördüğün alanın birebir görüntüsü</span><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1161-ledger-capture-stage"><img src="${dataUrl}" alt="${escapeHtml(title)}"></div></section></div>`;
+    host.style.display = "block";
+    host.setAttribute("aria-hidden", "false");
+    host.querySelectorAll("[data-v781-photo-close]").forEach(el => el.addEventListener("click", event => {
+      if (event.target !== el && !event.target.hasAttribute("data-v781-photo-close")) return;
+      host.innerHTML = "";
+      host.style.display = "none";
+      host.setAttribute("aria-hidden", "true");
+    }));
+    host.querySelector("[data-v1161-photo-download]")?.addEventListener("click", () => v1161DownloadPngDataUrl(dataUrl, filename));
+  }
+
+  async function v1161CaptureLedgerVisiblePixels(sourceModal, filename, title = "Defter Fotoğrafı") {
+    const target = sourceModal && typeof sourceModal.getBoundingClientRect === "function"
+      ? sourceModal
+      : document.querySelector(".v1056-ledger-screen-modal");
+    if (!target) {
+      alert("Kupon Defteri ekranı bulunamadı.");
+      return;
+    }
+    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getDisplayMedia !== "function") {
+      alert("Bu tarayıcı gerçek ekran yakalamayı desteklemiyor. Chrome / Edge ile dene.");
+      return;
+    }
+    let stream = null;
+    try {
+      stream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          displaySurface: "browser",
+          preferCurrentTab: true,
+          selfBrowserSurface: "include",
+          surfaceSwitching: "exclude",
+          frameRate: 1
+        },
+        audio: false
+      });
+      const video = document.createElement("video");
+      video.muted = true;
+      video.playsInline = true;
+      video.srcObject = stream;
+      await new Promise((resolve, reject) => {
+        video.onloadedmetadata = resolve;
+        video.onerror = reject;
+      });
+      await video.play();
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+      const rect = target.getBoundingClientRect();
+      const vw = Math.max(1, video.videoWidth || 0);
+      const vh = Math.max(1, video.videoHeight || 0);
+      const scaleX = vw / Math.max(1, window.innerWidth || document.documentElement.clientWidth || 1);
+      const scaleY = vh / Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
+      const sx = Math.max(0, Math.floor(rect.left * scaleX));
+      const sy = Math.max(0, Math.floor(rect.top * scaleY));
+      const sw = Math.max(1, Math.min(vw - sx, Math.ceil(rect.width * scaleX)));
+      const sh = Math.max(1, Math.min(vh - sy, Math.ceil(rect.height * scaleY)));
+      const canvas = document.createElement("canvas");
+      canvas.width = sw;
+      canvas.height = sh;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, sw, sh);
+      const dataUrl = canvas.toDataURL("image/png");
+      v1161OpenLedgerCapturePreview(dataUrl, filename, title);
+    } catch (error) {
+      if (error && error.name === "NotAllowedError") {
+        alert("Ekran yakalama iptal edildi. Birebir görüntü için açılan pencerede bu BULTEN sekmesini seçmen gerekiyor.");
+      } else {
+        alert("Ekran görüntüsü alınamadı. Açılan pencerede bu BULTEN sekmesini seçerek tekrar dene.");
+      }
+    } finally {
+      try { stream?.getTracks?.().forEach(track => track.stop()); } catch {}
+    }
+  }
+
   function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {
     if (!dataUrl && !sourceNode) return;
     const host = getRollingPhotoHost();
@@ -4666,7 +4757,7 @@
       const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
       const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
       const sourceModal = btn.closest(".v1056-ledger-screen-modal") || document.querySelector(".v1056-ledger-screen-modal");
-      openLedgerScreenPhotoPreview("", filename, title, sourceModal);
+      v1161CaptureLedgerVisiblePixels(sourceModal, filename, title);
     }));
     v1057BindLedgerScreen(host, m);
   }
