@@ -2563,24 +2563,24 @@
       if (pendingLike || emptyLike) {
         mark.classList.remove("v1123-ledger-status-empty");
         mark.textContent = "-";
+        mark.style.setProperty("color", "#64748b", "important");
       }
-      mark.style.color = pendingLike || emptyLike ? "#64748b" : (mark.style.color || "");
-      mark.style.fontSize = "11px";
-      mark.style.lineHeight = "1";
-      mark.style.fontWeight = "1000";
-      mark.style.fontFamily = "Arial, Helvetica, sans-serif";
-      mark.style.display = "inline-flex";
-      mark.style.alignItems = "center";
-      mark.style.justifyContent = "center";
-      mark.style.background = "none";
-      mark.style.transform = "none";
-      mark.style.width = "12px";
-      mark.style.minWidth = "12px";
-      mark.style.height = "12px";
-      mark.style.flex = "0 0 12px";
-      mark.style.whiteSpace = "nowrap";
-      mark.style.overflow = "visible";
-      mark.style.position = "static";
+      mark.style.setProperty("font-size", "11px", "important");
+      mark.style.setProperty("line-height", "1", "important");
+      mark.style.setProperty("font-weight", "1000", "important");
+      mark.style.setProperty("font-family", "Arial, Helvetica, sans-serif", "important");
+      mark.style.setProperty("display", "inline-flex", "important");
+      mark.style.setProperty("align-items", "center", "important");
+      mark.style.setProperty("justify-content", "center", "important");
+      mark.style.setProperty("background", "none", "important");
+      mark.style.setProperty("transform", "none", "important");
+      mark.style.setProperty("width", "12px", "important");
+      mark.style.setProperty("min-width", "12px", "important");
+      mark.style.setProperty("height", "12px", "important");
+      mark.style.setProperty("flex", "0 0 12px", "important");
+      mark.style.setProperty("white-space", "nowrap", "important");
+      mark.style.setProperty("overflow", "visible", "important");
+      mark.style.setProperty("position", "static", "important");
     });
     node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
     node.querySelectorAll(".v1056-ledger-screen-body, .v1057-ledger-screen-body, .v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid, .v1057-ledger-sheet, .v1061-ledger-sheet").forEach(el => {
@@ -2638,8 +2638,9 @@
       const img = new Image();
       const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
       await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = () => reject(new Error("PNG üretilemedi."));
+        const timer = setTimeout(() => reject(new Error("PNG üretimi zaman aşımına uğradı.")), 14000);
+        img.onload = () => { clearTimeout(timer); resolve(); };
+        img.onerror = () => { clearTimeout(timer); reject(new Error("PNG üretilemedi.")); };
         img.src = svgUrl;
       });
       const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
@@ -2714,6 +2715,18 @@
     }
   }
 
+  function v1169WritePngViewerTab(tab, dataUrl, filename) {
+    if (!tab) return;
+    const safeName = cleanText(filename || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`;
+    try {
+      tab.document.open();
+      tab.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(safeName)}</title><style>html,body{margin:0;background:#020617;color:#e5e7eb;font-family:Arial,sans-serif;}body{min-height:100vh;} .bar{position:sticky;top:0;z-index:2;display:flex;gap:10px;align-items:center;padding:10px 12px;background:#020617;border-bottom:1px solid rgba(148,163,184,.25);} .bar a{appearance:none;border:1px solid rgba(251,191,36,.45);background:#111827;color:#fde68a;border-radius:10px;padding:8px 12px;font-weight:900;text-decoration:none;} .bar span{font-size:12px;color:#94a3b8;font-weight:800;} .wrap{padding:0;} img{display:block;max-width:none;height:auto;margin:0;}</style></head><body><div class="bar"><a id="download" href="${dataUrl}" download="${escapeHtml(safeName)}">PNG indir</a><span>Sağ tık: tarihli PNG indir</span></div><div class="wrap"><img src="${dataUrl}" alt="${escapeHtml(safeName)}"></div><script>document.addEventListener('contextmenu',function(e){e.preventDefault();var a=document.getElementById('download');if(a)a.click();});</script></body></html>`);
+      tab.document.close();
+    } catch {
+      try { tab.location.href = dataUrl; } catch {}
+    }
+  }
+
   function v1165WriteTabMessage(tab, message) {
     if (!tab) return;
     try {
@@ -2754,9 +2767,7 @@
       setTimeout(() => v1162PrepareOutputNode(node), 80);
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       const dataUrl = await v1162NodeToPngDataUrl(node);
-      const objectUrl = v1165DataUrlToObjectUrl(dataUrl, filename);
-      try { tab.location.replace(objectUrl); } catch { tab.location.href = objectUrl; }
-      setTimeout(() => URL.revokeObjectURL(objectUrl), 120000);
+      v1169WritePngViewerTab(tab, dataUrl, filename);
     } catch (error) {
       v1165WriteTabMessage(tab, "PNG hazırlanamadı. Kupon Defteri ekranından tekrar dene.");
     } finally {
