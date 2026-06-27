@@ -148,12 +148,12 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-head-actions,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-head-actions{flex:0 0 auto!important;position:relative!important;z-index:5!important;margin-left:auto!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1056-ledger-screen-body,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding:0 6px 4px!important;display:flex!important;flex-direction:column!important;overscroll-behavior:contain!important;scrollbar-width:thin!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger{height:100%!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;margin:0!important;padding:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding:0 6px 10px!important;display:flex!important;flex-direction:column!important;overscroll-behavior:contain!important;scrollbar-width:thin!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger{height:auto!important;min-height:100%!important;overflow:visible!important;display:flex!important;flex-direction:column!important;margin:0!important;padding:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet-grid,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1110-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:start!important;overflow:visible!important;width:100%!important;height:auto!important;min-height:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;height:100%!important;display:flex!important;flex-direction:column!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:0 0 auto!important;overflow:visible!important;height:auto!important;display:flex!important;flex-direction:column!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-summary-inline,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-summary-inline{height:40px!important;min-height:40px!important;max-height:40px!important;margin:0!important;flex:0 0 40px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;border:1px solid #0f172a!important;border-bottom:0!important;border-radius:8px 8px 0 0!important;overflow:hidden!important;}
@@ -2256,10 +2256,26 @@
     });
   }
 
+  function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı") {
+    if (!dataUrl) return false;
+    const win = window.open("about:blank", "_blank");
+    if (!win) return false;
+    try {
+      win.document.open();
+      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>html,body{margin:0;min-height:100%;background:#020617;}body{display:flex;align-items:flex-start;justify-content:center;padding:0;}img{display:block;max-width:none;width:auto;height:auto;background:#020617;}</style></head><body><img src="${escapeHtml(dataUrl)}" alt="${escapeHtml(title)}"></body></html>`);
+      win.document.close();
+      try { win.focus(); } catch {}
+      return true;
+    } catch {
+      try { win.location.href = dataUrl; return true; } catch {}
+    }
+    return false;
+  }
+
   function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {
     if (!dataUrl && !sourceNode) return;
     const host = getRollingPhotoHost();
-    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar"><button type="button" data-v781-photo-download>Resmi İndir</button><button type="button" data-v781-photo-open>Resmi Yeni Sekmede Aç</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1098-ledger-photo-clone-stage"></div></section></div>`;
+    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar"><button type="button" data-v781-photo-download>Resmi İndir</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1098-ledger-photo-clone-stage"></div></section></div>`;
     const stage = host.querySelector(".v1098-ledger-photo-clone-stage");
     if (stage && dataUrl) {
       stage.innerHTML = `<img class="v1143-ledger-photo-img" src="${dataUrl}" alt="${escapeHtml(title)}">`;
@@ -2286,17 +2302,6 @@
     }));
     host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
       if (dataUrl) v781DownloadPngFromSvg(dataUrl, filename);
-    });
-    host.querySelector("[data-v781-photo-open]")?.addEventListener("click", () => {
-      if (!dataUrl) return;
-      const win = window.open("about:blank", "_blank", "noopener,noreferrer");
-      if (!win) return;
-      try {
-        win.document.write(`<title>${escapeHtml(title)}</title><body style="margin:0;background:#020617;display:flex;align-items:flex-start;justify-content:center;"><img src="${dataUrl}" alt="${escapeHtml(title)}" style="display:block;max-width:none;height:auto;"></body>`);
-        win.document.close();
-      } catch {
-        try { win.location.href = dataUrl; } catch {}
-      }
     });
   }
 
@@ -4309,9 +4314,10 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      const dataUrl = v1143BuildLedgerScreenPhotoSvg(photoMode) || v1060BuildLedgerPhotoSvg(photoMode);
       const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
+      const dataUrl = v1143BuildLedgerScreenPhotoSvg(photoMode) || v1060BuildLedgerPhotoSvg(photoMode);
       const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
+      if (v1144OpenLedgerImageTab(dataUrl, title)) return;
       const sourceModal = btn.closest(".v1056-ledger-screen-modal") || document.querySelector(".v1056-ledger-screen-modal");
       openLedgerScreenPhotoPreview(dataUrl, filename, title, sourceModal);
     }));
