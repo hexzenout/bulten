@@ -244,38 +244,7 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.8%!important;min-width:30px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.8%!important;}
-
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single td{height:21px!important;min-height:21px!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1063-ledger-value{height:21px!important;min-height:0!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;line-height:1!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{height:21px!important;padding:0!important;justify-content:center!important;gap:0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1069-ledger-match-line{height:13px!important;min-height:13px!important;align-items:center!important;line-height:1!important;column-gap:3px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1069-ledger-status-mark{flex:0 0 11px!important;width:11px!important;min-width:11px!important;height:12px!important;line-height:12px!important;top:0!important;transform:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1078-ledger-match-text,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1069-ledger-match-name,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-single .v1076-ledger-match-odd{font-size:10px!important;line-height:1!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-2,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-2 td{height:36px!important;min-height:36px!important;max-height:36px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-3,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-3 td{height:48px!important;min-height:48px!important;max-height:48px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-4,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-4 td{height:60px!important;min-height:60px!important;max-height:60px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-5,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-5 td{height:72px!important;min-height:72px!important;max-height:72px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-6,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-6 td,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-6plus,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1131-ledger-row-combo-6plus td{height:84px!important;min-height:84px!important;max-height:84px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[class*="v1131-ledger-row-combo-"] .v1063-ledger-value.v1069-ledger-item-lines{height:100%!important;padding:2px 0!important;justify-content:center!important;gap:1px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[class*="v1131-ledger-row-combo-"] .v1069-ledger-match-line{align-items:center!important;line-height:1.05!important;column-gap:3px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[class*="v1131-ledger-row-combo-"] .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:1px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[class*="v1131-ledger-row-combo-"] .v1069-ledger-status-mark{flex:0 0 11px!important;width:11px!important;min-width:11px!important;height:12px!important;line-height:12px!important;transform:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{width:8px!important;height:2px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td{height:0!important;min-height:0!important;max-height:0!important;padding:0!important;line-height:0!important;background:transparent!important;color:transparent!important;border:0!important;}
-            @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 4px)!important;max-width:calc(100vw - 4px)!important;}}
+      @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 4px)!important;max-width:calc(100vw - 4px)!important;}}
     `;
   }
   function v1103ClearLedgerTestRows(mode) {
@@ -285,72 +254,36 @@
     edits[m].manual = (edits[m].manual || []).filter(row => !v1103IsLedgerTestRow(row));
     v1057SaveLedgerEdits(edits);
   }
-  function v1131LedgerTestKindConfig(kind) {
-    const key = String(kind || "mixed").toLowerCase();
-    const map = {
-      single: { count: 72, lines: 1 },
-      combo2: { count: 30, lines: 2 },
-      combo3: { count: 24, lines: 3 },
-      combo4: { count: 18, lines: 4 },
-      combo5: { count: 15, lines: 5 },
-      combo6: { count: 12, lines: 6 },
-      mixed: { count: 18, lines: 0 }
-    };
-    return map[key] || map.mixed;
-  }
-  function v1131LedgerTestLineCount(kind, index) {
-    const cfg = v1131LedgerTestKindConfig(kind);
-    if (cfg.lines > 0) return cfg.lines;
-    const pattern = [1, 2, 3, 4, 5, 6];
-    return pattern[Math.max(0, Number(index || 0)) % pattern.length] || 1;
-  }
-  function v1131LedgerTestLineStatus(lineIndex, rowIndex, lineCount) {
-    if (lineCount <= 1) return ["win", "loss", "pending"][Math.max(0, Number(rowIndex || 0)) % 3] || "pending";
-    if (rowIndex % 3 === 0) return "pending";
-    return ["win", "loss", "pending", "win", "loss", "pending"][Math.max(0, Number(lineIndex || 0)) % 6] || "pending";
-  }
-  function v1131LedgerTestLineName(lineIndex, rowNo) {
-    const n = Number(rowNo || 1);
-    const names = [
-      `Test GS ${n}`,
-      `Test BJK ${n}`,
-      `Test Fenerbahçe kazanır`,
-      `Test Galatasaray çifte şans`,
-      `Test Beşiktaş korner üst`,
-      `Test Trabzonspor gol atar`
-    ];
-    return names[Math.max(0, Number(lineIndex || 0)) % names.length] || `Test Maç ${n}`;
-  }
-  function v1103BuildLedgerTestRow(mode, index, ts, kind = "mixed") {
+  function v1103BuildLedgerTestRow(mode, index, ts) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const n = index + 1;
     const dayOffset = Math.floor(index / 4);
     const dateObj = new Date(ts + dayOffset * 24 * 60 * 60 * 1000);
     const date = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}`;
-    const id = `ledger_test_${m}_${String(kind || "mixed")}_${ts}_${String(n).padStart(3, "0")}`;
+    const id = `ledger_test_${m}_${ts}_${String(n).padStart(3, "0")}`;
     if (m === "crypto") {
       const side = index % 2 === 0 ? "Long" : "Short";
       const pnl = index % 5 === 0 ? -18 : 24;
       return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `TEST${n}USDT`, kind: side, stake: "$100.00", roi: pnl > 0 ? "24%" : "-18%", pnl: v1069LedgerPnlText(pnl), pnlRaw: pnl, status: pnl > 0 ? "win" : "loss" };
     }
-    const lineCount = v1131LedgerTestLineCount(kind, index);
-    const stake = lineCount >= 3 ? 100 : lineCount === 2 ? 50 : 25;
-    if (lineCount <= 1) {
-      const status = v1131LedgerTestLineStatus(0, index, 1);
-      const pnlRaw = status === "loss" ? -stake : status === "win" ? stake : 0;
-      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Tekli Maç ${n}`, itemLines: [{ name: `Test Tekli Maç ${n}`, odds: 2, status }], kind: "Tek", stake: money(stake), roi: "2", pnl: v1069LedgerPnlText(pnlRaw), pnlRaw, status };
+    const pattern = index % 4;
+    const stake = pattern === 2 ? 100 : pattern === 1 ? 50 : 25;
+    if (pattern === 1) {
+      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Gs ${n} + Test Bjk ${n}`, itemLines: [
+        { name: `Test Gs ${n}`, odds: 2, status: "pending" },
+        { name: `Test Bjk ${n}`, odds: 2, status: "pending" }
+      ], kind: "Kombine", stake: money(stake), roi: "4", pnl: v1069LedgerPnlText(150), pnlRaw: 150, status: "pending" };
     }
-    const itemLines = Array.from({ length: lineCount }, (_, lineIndex) => ({
-      name: v1131LedgerTestLineName(lineIndex, n),
-      odds: lineIndex === 1 ? 2 : lineIndex === 3 ? 1.84 : 2,
-      status: v1131LedgerTestLineStatus(lineIndex, index, lineCount)
-    }));
-    const rowStatus = itemLines.some(line => line.status === "loss") ? "loss" : itemLines.every(line => line.status === "win") ? "win" : "pending";
-    const pnlRaw = rowStatus === "loss" ? -stake : rowStatus === "win" ? stake * 2 : 0;
-    const roiText = lineCount === 2 ? "4" : lineCount === 3 ? "8" : lineCount === 4 ? "16" : lineCount === 5 ? "32" : "64";
-    return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: itemLines.map(line => line.name).join(" + "), itemLines, kind: `Kombine ${lineCount} Maç`, stake: money(stake), roi: roiText, pnl: v1069LedgerPnlText(pnlRaw), pnlRaw, status: rowStatus };
+    if (pattern === 2) {
+      return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Fenerbahçe kazanır ve 5 gol atar ${n} + Test Galatasaray çifte şans ${n}`, itemLines: [
+        { name: `Test Fenerbahçe kazanır ve 5 gol atar ${n}`, odds: 2, status: "win" },
+        { name: `Test Galatasaray çifte şans ${n}`, odds: 1.84, status: "loss" }
+      ], kind: "Kombine", stake: money(stake), roi: "3,68", pnl: v1069LedgerPnlText(268), pnlRaw: 268, status: "win" };
+    }
+    const won = pattern !== 3;
+    return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Tekli Maç ${n}`, itemLines: [{ name: `Test Tekli Maç ${n}`, odds: 2, status: won ? "win" : "loss" }], kind: "Tek", stake: money(stake), roi: "2", pnl: v1069LedgerPnlText(won ? stake : -stake), pnlRaw: won ? stake : -stake, status: won ? "win" : "loss" };
   }
-  function v1103FillLedgerTestRows(mode, targetCount, kind = "mixed") {
+  function v1103FillLedgerTestRows(mode, targetCount) {
     const m = mode === "crypto" ? "crypto" : "bet";
     v1103ClearLedgerTestRows(m);
     const realCount = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row)).length;
@@ -358,12 +291,8 @@
     const addCount = Math.max(0, total - realCount);
     const edits = v1057LoadLedgerEdits();
     const ts = Date.now() + 1000;
-    for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts, kind));
+    for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts));
     v1057SaveLedgerEdits(edits);
-  }
-  function v1103FillLedgerTestRowsByKind(mode, kind) {
-    const cfg = v1131LedgerTestKindConfig(kind);
-    v1103FillLedgerTestRows(mode, cfg.count, kind);
   }
   function v1110LedgerSummarySpacerHtml() {
     return `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline v1110-ledger-summary-blank" aria-hidden="true"><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div></div>`;
@@ -380,12 +309,8 @@
   function v1119LedgerRowWeight(row, mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 1;
     const info = v1118LedgerBetLineInfo(row);
-    if (info.count <= 1) return 0.83;
-    if (info.count === 2) return 2.0;
-    if (info.count === 3) return 2.5;
-    if (info.count === 4) return 3.3;
-    if (info.count === 5) return 4.0;
-    return 5.0;
+    if (info.count <= 1) return 0.82;
+    return info.isLong ? 1.22 : 1.0;
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -398,11 +323,16 @@
     let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
     const commitPage = () => {
       page.chunks = page.chunks.filter(chunk => chunk.length);
-      page.weights = (page.weights || []).slice(0, page.chunks.length);
-      if (!page.chunks.length) {
-        page.chunks = [[]];
-        page.weights = [0];
-      }
+      if (!page.chunks.length) page.chunks = [[]];
+      const maxWeight = Math.max(...(page.weights || [0]));
+      page.chunks = page.chunks.map((chunk, i) => {
+        const used = Number(page.weights?.[i] || 0);
+        const missing = Math.max(0, maxWeight - used);
+        if (page.chunks.length > 1 && missing > 0.08) {
+          return chunk.concat([{ _v1119Filler: true, _v1119FillerPx: Math.round(missing * 31) }]);
+        }
+        return chunk;
+      });
       pages.push(page);
     };
     source.forEach((row, idx) => {
@@ -441,7 +371,7 @@
       v1110SetLedgerTestPage(mode, page);
     }
     const current = pages[page] || pages[0] || { chunks: [[]], start: 0, end: 0 };
-    const pageRows = (current.chunks || []).flat();
+    const pageRows = (current.chunks || []).flat().filter(row => !row?._v1119Filler);
     return { total, page, totalPages, start: current.start || 0, end: current.end || 0, pageRows, chunks: current.chunks || [[]] };
   }
   function v1110LedgerChunks(rows, mode) {
@@ -542,7 +472,7 @@
   function v1103LedgerTestToolbar(mode) {
     if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-kind="${m}:single">Tekli Doldur</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo2">2'li Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo3">3'lü Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo4">4'lü Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo5">5'li Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:combo6">6'lı Kombine</button><button type="button" data-v1103-ledger-test-fill-kind="${m}:mixed">Karışık</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
+    return `<div class="v1103-ledger-test-toolbar" data-v1103-ledger-test-toolbar><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:20">20'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:40">40'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:60">60'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:80">80'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:100">100'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:120">120'ye Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:150">150'ye Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -3515,10 +3445,12 @@
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map((line, lineIndex) => {
       const status = v1069LedgerLineStatus(row, line);
+      const pendingLike = status === "pending" || status === "push" || status === "open";
+      const markClass = pendingLike && lineIndex > 0 ? " v1123-ledger-status-empty" : "";
       const name = line.name || "Bahis / maç";
       const odds = v1076LedgerOddsText(line?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark">${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
+      return `<span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark${markClass}">${pendingLike && lineIndex > 0 ? "" : v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span>`;
     }).join("");
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
@@ -3541,10 +3473,8 @@
   function v1118LedgerRowClass(row, mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return "";
     const info = v1118LedgerBetLineInfo(row);
-    if (info.count <= 1) return "v1118-ledger-row-single v1131-ledger-row-single";
-    const capped = Math.min(6, Math.max(2, Number(info.count || 2)));
-    const legacy = info.isLong ? "v1118-ledger-row-longcombo" : "v1118-ledger-row-combo";
-    return `${legacy} v1131-ledger-row-combo-${capped}${info.count >= 6 ? " v1131-ledger-row-combo-6plus" : ""}`;
+    if (info.count <= 1) return "v1118-ledger-row-single";
+    return info.isLong ? "v1118-ledger-row-longcombo" : "v1118-ledger-row-combo";
   }
 
   function v1063GotoLedgerRow(mode, days, day, opIndex) {
@@ -3609,6 +3539,10 @@
       const rowsHtml = chunk.map((row, localIndex) => {
         const pnlText = String(row.pnl || "");
         const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
+        if (row?._v1119Filler) {
+          const fillerH = Math.max(0, Number(row._v1119FillerPx || 0));
+          return `<tr class="v1119-ledger-row-filler" style="--v1119-filler-h:${fillerH}px"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+        }
         const globalNo = Number(row._ledgerNo || row.no || (blockIndex * 25 + localIndex + 1));
         const itemClass = m === "crypto" ? "coin" : "item";
         const gotoAttrs = v1063LedgerRowTargetAttrs(row, m);
@@ -3776,15 +3710,14 @@
   }
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    host.querySelectorAll("[data-v1103-ledger-test-fill-kind]").forEach(btn => btn.addEventListener("click", event => {
+    host.querySelectorAll("[data-v1103-ledger-test-fill]").forEach(btn => btn.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
       if (!v1103LedgerTestModeEnabled()) return;
-      const [modeRaw, kindRaw] = String(btn.dataset.v1103LedgerTestFillKind || `${m}:mixed`).split(":");
+      const [modeRaw, targetRaw] = String(btn.dataset.v1103LedgerTestFill || `${m}:60`).split(":");
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
-      const safeKind = kindRaw || "mixed";
       v1110SetLedgerTestPage(safeMode, 0);
-      v1103FillLedgerTestRowsByKind(safeMode, safeKind);
+      v1103FillLedgerTestRows(safeMode, Number(targetRaw || 60));
       v1056OpenDailyLedgerScreen(safeMode);
     }));
     host.querySelectorAll("[data-v1103-ledger-test-clear]").forEach(btn => btn.addEventListener("click", event => {
