@@ -2410,16 +2410,16 @@
     sourceRoot.querySelectorAll('.v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark').forEach(mark => {
       if (!(mark instanceof Element)) return;
       mark.textContent = "–";
-      mark.style.color = "#64748b";
-      mark.style.fontSize = "11px";
-      mark.style.lineHeight = "1";
-      mark.style.fontWeight = "1000";
-      mark.style.position = "static";
-      mark.style.background = "none";
-      mark.style.transform = "none";
-      mark.style.display = "inline-flex";
-      mark.style.alignItems = "center";
-      mark.style.justifyContent = "center";
+      mark.style.setProperty("color", "#64748b", "important");
+      mark.style.setProperty("font-size", "11px", "important");
+      mark.style.setProperty("line-height", "1", "important");
+      mark.style.setProperty("font-weight", "1000", "important");
+      mark.style.setProperty("position", "static", "important");
+      mark.style.setProperty("background", "none", "important");
+      mark.style.setProperty("transform", "none", "important");
+      mark.style.setProperty("display", "inline-flex", "important");
+      mark.style.setProperty("align-items", "center", "important");
+      mark.style.setProperty("justify-content", "center", "important");
       mark.style.width = mark.style.width || "10px";
       mark.style.minWidth = mark.style.minWidth || "10px";
       mark.style.height = mark.style.height || "11px";
@@ -2428,10 +2428,10 @@
       if (!(mark instanceof Element)) return;
       mark.classList.remove('v1123-ledger-status-empty');
       if (!String(mark.textContent || '').trim()) mark.textContent = '–';
-      mark.style.color = "#64748b";
-      mark.style.fontSize = "11px";
-      mark.style.lineHeight = "1";
-      mark.style.position = "static";
+      mark.style.setProperty("color", "#64748b", "important");
+      mark.style.setProperty("font-size", "11px", "important");
+      mark.style.setProperty("line-height", "1", "important");
+      mark.style.setProperty("position", "static", "important");
     });
     return sourceRoot;
   }
@@ -2564,39 +2564,39 @@
       if (!pendingLike) return;
       mark.classList.remove("v1123-ledger-status-empty");
       mark.textContent = "-";
-      mark.style.color = "#64748b";
-      mark.style.fontSize = "11px";
-      mark.style.lineHeight = "1";
-      mark.style.fontWeight = "1000";
-      mark.style.display = "inline-flex";
-      mark.style.alignItems = "center";
-      mark.style.justifyContent = "center";
-      mark.style.background = "none";
-      mark.style.transform = "none";
-      mark.style.width = "11px";
-      mark.style.minWidth = "11px";
-      mark.style.height = "11px";
-      mark.style.flex = "0 0 11px";
-      mark.style.letterSpacing = "0";
-      mark.style.whiteSpace = "nowrap";
-      mark.style.position = "static";
+      mark.style.setProperty("color", "#64748b", "important");
+      mark.style.setProperty("font-size", "11px", "important");
+      mark.style.setProperty("line-height", "1", "important");
+      mark.style.setProperty("font-weight", "1000", "important");
+      mark.style.setProperty("display", "inline-flex", "important");
+      mark.style.setProperty("align-items", "center", "important");
+      mark.style.setProperty("justify-content", "center", "important");
+      mark.style.setProperty("background", "none", "important");
+      mark.style.setProperty("transform", "none", "important");
+      mark.style.setProperty("width", "11px", "important");
+      mark.style.setProperty("min-width", "11px", "important");
+      mark.style.setProperty("height", "11px", "important");
+      mark.style.setProperty("flex", "0 0 11px", "important");
+      mark.style.setProperty("letter-spacing", "0", "important");
+      mark.style.setProperty("white-space", "nowrap", "important");
+      mark.style.setProperty("position", "static", "important");
     });
     node.querySelectorAll(".v1069-ledger-status-mark.v1123-ledger-status-empty").forEach(mark => {
       if (!String(mark.textContent || "").trim()) mark.textContent = "-";
       mark.classList.remove("v1123-ledger-status-empty");
-      mark.style.color = "#64748b";
-      mark.style.fontSize = "11px";
-      mark.style.fontWeight = "1000";
-      mark.style.display = "inline-flex";
-      mark.style.alignItems = "center";
-      mark.style.justifyContent = "center";
-      mark.style.width = "11px";
-      mark.style.minWidth = "11px";
-      mark.style.height = "11px";
-      mark.style.flex = "0 0 11px";
-      mark.style.background = "none";
-      mark.style.transform = "none";
-      mark.style.position = "static";
+      mark.style.setProperty("color", "#64748b", "important");
+      mark.style.setProperty("font-size", "11px", "important");
+      mark.style.setProperty("font-weight", "1000", "important");
+      mark.style.setProperty("display", "inline-flex", "important");
+      mark.style.setProperty("align-items", "center", "important");
+      mark.style.setProperty("justify-content", "center", "important");
+      mark.style.setProperty("width", "11px", "important");
+      mark.style.setProperty("min-width", "11px", "important");
+      mark.style.setProperty("height", "11px", "important");
+      mark.style.setProperty("flex", "0 0 11px", "important");
+      mark.style.setProperty("background", "none", "important");
+      mark.style.setProperty("transform", "none", "important");
+      mark.style.setProperty("position", "static", "important");
     });
     node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
     node.querySelectorAll(".v1056-ledger-screen-body, .v1057-ledger-screen-body, .v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid, .v1057-ledger-sheet, .v1061-ledger-sheet").forEach(el => {
@@ -2741,6 +2741,18 @@
     return modal.querySelector('.v1056-ledger-screen-body, .v1057-ledger-screen-body') || null;
   }
 
+  function v1167OpenLedgerBlobViewer(tab, objectUrl, filename, mode) {
+    const key = `bulten_ledger_blob_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    const payload = { blobUrl: objectUrl, filename: filename || v1162LedgerFilename(mode), mode: mode === "crypto" ? "crypto" : "bet", ts: Date.now() };
+    try { localStorage.setItem(key, JSON.stringify(payload)); } catch {}
+    const url = new URL("ledger-output.html", window.location.href);
+    url.searchParams.set("v", "v1167");
+    url.searchParams.set("view", "blob");
+    url.searchParams.set("key", key);
+    url.searchParams.set("file", payload.filename);
+    try { tab.location.replace(url.toString()); } catch { tab.location.href = url.toString(); }
+  }
+
   function v1165WriteTabMessage(tab, message) {
     if (!tab) return;
     try {
@@ -2766,8 +2778,8 @@
         const dataUrl = await v1162NodeToPngDataUrl(activeNode);
         v1162DownloadDataUrl(dataUrl, filename);
         const objectUrl = v1165DataUrlToObjectUrl(dataUrl, filename);
-        try { tab.location.replace(objectUrl); } catch { tab.location.href = objectUrl; }
-        setTimeout(() => URL.revokeObjectURL(objectUrl), 120000);
+        v1167OpenLedgerBlobViewer(tab, objectUrl, filename, m);
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 180000);
       } catch (error) {
         v1165WriteTabMessage(tab, "PNG hazırlanamadı. Kupon Defteri ekranından tekrar dene.");
       }
@@ -2796,8 +2808,8 @@
       const dataUrl = await v1162NodeToPngDataUrl(node);
       v1162DownloadDataUrl(dataUrl, filename);
       const objectUrl = v1165DataUrlToObjectUrl(dataUrl, filename);
-      try { tab.location.replace(objectUrl); } catch { tab.location.href = objectUrl; }
-      setTimeout(() => URL.revokeObjectURL(objectUrl), 120000);
+      v1167OpenLedgerBlobViewer(tab, objectUrl, filename, m);
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 180000);
     } catch (error) {
       v1165WriteTabMessage(tab, "PNG hazırlanamadı. Kupon Defteri ekranından tekrar dene.");
     } finally {
