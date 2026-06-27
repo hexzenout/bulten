@@ -137,7 +137,7 @@
       .v1110-ledger-header-pager b{color:#fbbf24!important;font-size:11px!important;font-weight:950!important;line-height:1!important;letter-spacing:.01em!important;}
       .v1110-ledger-header-pager span{display:none!important;}
       .v1110-ledger-pager{display:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal{width:min(1760px, calc(100vw - 4px))!important;max-width:calc(100vw - 4px)!important;height:calc(100vh - 4px)!important;max-height:calc(100vh - 4px)!important;margin:2px auto!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal{width:min(1760px, calc(100vw - 12px))!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 34px)!important;max-height:calc(100vh - 34px)!important;margin:17px auto!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="1"]{width:min(780px, calc(100vw - 4px))!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="2"]{width:min(1480px, calc(100vw - 4px))!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"]{width:min(1760px, calc(100vw - 4px))!important;}
@@ -148,10 +148,10 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-head-actions,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1063-ledger-head-actions{flex:0 0 auto!important;position:relative!important;z-index:5!important;margin-left:auto!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1056-ledger-screen-body,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;height:auto!important;overflow:hidden!important;padding:0 6px 4px!important;display:flex!important;flex-direction:column!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding:0 6px 4px!important;display:flex!important;flex-direction:column!important;overscroll-behavior:contain!important;scrollbar-width:thin!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger{height:100%!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;margin:0!important;padding:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet-grid,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1110-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:stretch!important;overflow:hidden!important;width:100%!important;height:100%!important;min-height:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet-grid{display:grid!important;grid-template-columns:repeat(var(--v1110-ledger-cols,1), minmax(0,1fr))!important;gap:8px!important;align-items:start!important;overflow:visible!important;width:100%!important;height:auto!important;min-height:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet{width:auto!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;overflow:hidden!important;height:100%!important;display:flex!important;flex-direction:column!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary,
@@ -307,7 +307,12 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-sheet-grid,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-sheet-grid{align-content:start!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-summary-blank{opacity:1!important;}
-      @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 4px)!important;max-width:calc(100vw - 4px)!important;}}
+      .v1095-ledger-photo-modal,
+      .v1098-ledger-photo-modal{max-width:calc(100vw - 28px)!important;max-height:calc(100vh - 28px)!important;overflow:hidden!important;}
+      .v1098-ledger-photo-clone-stage{max-width:calc(100vw - 42px)!important;max-height:calc(100vh - 96px)!important;overflow:auto!important;background:#020617!important;border-radius:12px!important;}
+      .v1098-ledger-photo-clone-stage img.v1143-ledger-photo-img{display:block!important;max-width:none!important;width:auto!important;height:auto!important;min-width:100%!important;background:#020617!important;cursor:context-menu!important;}
+      .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
+      @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
   }
   function v1103ClearLedgerTestRows(mode) {
@@ -522,8 +527,8 @@
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
     if (count <= 1) return 21;
-    if (count === 2) return info.isLong ? 37 : 32;
-    return Math.min(96, 20 + count * 12 + (info.isLong ? 4 : 0));
+    if (count === 2) return info.isLong ? 39 : 34;
+    return Math.min(122, 23 + count * 15 + (info.isLong ? 5 : 0));
   }
   function v1135LedgerTableBodyPx() {
     const body = document.querySelector('#v1056-ledger-screen-host .v1056-ledger-screen-body, #v1056-ledger-screen-host .v1057-ledger-screen-body');
@@ -536,7 +541,7 @@
     const summaryH = 40;
     const headH = 21;
     // Test bar başlık satırında ve artık ayrı dikey alan yemiyor. Güvenlik payı sadece son satır kesilmesin diye bırakılır.
-    const safety = 32;
+    const safety = 40;
     return Math.max(340, bodyH - summaryH - headH - safety);
   }
   function v1135LedgerFlatChunks(pages) {
@@ -2254,9 +2259,11 @@
   function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {
     if (!dataUrl && !sourceNode) return;
     const host = getRollingPhotoHost();
-    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar"><button type="button" data-v781-photo-download>Resmi İndir</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1098-ledger-photo-clone-stage"></div></section></div>`;
+    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar"><button type="button" data-v781-photo-download>Resmi İndir</button><button type="button" data-v781-photo-open>Resmi Yeni Sekmede Aç</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div><div class="v1098-ledger-photo-clone-stage"></div></section></div>`;
     const stage = host.querySelector(".v1098-ledger-photo-clone-stage");
-    if (stage && sourceNode && typeof sourceNode.cloneNode === "function") {
+    if (stage && dataUrl) {
+      stage.innerHTML = `<img class="v1143-ledger-photo-img" src="${dataUrl}" alt="${escapeHtml(title)}">`;
+    } else if (stage && sourceNode && typeof sourceNode.cloneNode === "function") {
       const clone = sourceNode.cloneNode(true);
       clone.classList.add("v1098-ledger-photo-clone");
       clone.removeAttribute("id");
@@ -2268,8 +2275,6 @@
         if (!el.children.length) el.remove();
       });
       stage.appendChild(clone);
-    } else if (stage && dataUrl) {
-      stage.innerHTML = `<img src="${dataUrl}" alt="${escapeHtml(title)}">`;
     }
     host.style.display = "block";
     host.setAttribute("aria-hidden", "false");
@@ -2282,7 +2287,19 @@
     host.querySelector("[data-v781-photo-download]")?.addEventListener("click", () => {
       if (dataUrl) v781DownloadPngFromSvg(dataUrl, filename);
     });
+    host.querySelector("[data-v781-photo-open]")?.addEventListener("click", () => {
+      if (!dataUrl) return;
+      const win = window.open("about:blank", "_blank", "noopener,noreferrer");
+      if (!win) return;
+      try {
+        win.document.write(`<title>${escapeHtml(title)}</title><body style="margin:0;background:#020617;display:flex;align-items:flex-start;justify-content:center;"><img src="${dataUrl}" alt="${escapeHtml(title)}" style="display:block;max-width:none;height:auto;"></body>`);
+        win.document.close();
+      } catch {
+        try { win.location.href = dataUrl; } catch {}
+      }
+    });
   }
+
 
   function openTargetItemPhoto(mode, id) {
     const payload = v816BuildTargetItemPhotoData(mode, id);
@@ -4000,6 +4017,126 @@
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#020617"/><rect x="22" y="22" width="${width-44}" height="${height-44}" rx="18" fill="#0b1220" stroke="#334155"/><text x="40" y="${titleY}" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="950">${safe(title)}</text>${summaryCells}${headerCells}${body}</svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
+  function v1143BuildLedgerScreenPhotoSvg(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const rawRows = v1057LedgerRows(m);
+    const rows = rawRows.map((row, idx, arr) => {
+      const key = v1061LedgerDateKey(row);
+      const prevKey = idx > 0 ? v1061LedgerDateKey(arr[idx - 1]) : "";
+      return { ...row, _displayDate: key && key === prevKey ? "”" : v1060LedgerDateLabel(row) };
+    });
+    const info = v1110LedgerPageInfo(rows, m);
+    const chunks = (info.chunks || [[]]).map(chunk => (Array.isArray(chunk) ? chunk : []).filter(row => !row?._v1119Filler));
+    const cols = m === "crypto" ? ["No.", "Tarih", "Coin", "Yön", "Tutar", "ROI", "Kar-zarar"] : ["No.", "Tarih", "Maç / Kupon", "Tür", "Tutar", "Oran", "Kar-zarar"];
+    const widths = m === "crypto" ? [42, 92, 218, 68, 72, 54, 92] : [42, 92, 248, 72, 66, 44, 90];
+    const tableW = widths.reduce((sum, width) => sum + width, 0);
+    const gap = 14;
+    const margin = 24;
+    const titleH = 40;
+    const summaryH = 42;
+    const headH = 26;
+    const padBottom = 28;
+    const summary = v1059LedgerSummary(m, rawRows);
+    const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
+    const safe = (value) => escapeHtml(String(value ?? ""));
+    const markColor = status => status === "loss" ? "#ef4444" : status === "win" ? "#10b981" : "#64748b";
+    const trimText = (value, limit = 34) => {
+      const raw = cleanText(value || "");
+      return raw.length > limit ? raw.slice(0, Math.max(0, limit - 1)) + "…" : raw;
+    };
+    const betLines = row => {
+      if (m !== "bet") return [];
+      const base = Array.isArray(row?.itemLines) ? row.itemLines : [];
+      let lines = base.map(line => ({ ...line, name: cleanText(line?.name || "") })).filter(line => line.name);
+      if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name, odds: 0, status: row?.status || row?.result || row?.res || "" }));
+      if (!lines.length) lines = [{ name: cleanText(row?.item || "") || "Bahis / maç", odds: 0, status: row?.status || row?.result || row?.res || "" }];
+      return lines.map(line => ({ ...line, status: v1069LedgerLineStatus(row, line) }));
+    };
+    const rowH = row => {
+      if (m !== "bet") return 24;
+      return Math.max(v1135LedgerRowPx(row, m), 22 + Math.max(1, betLines(row).length) * 15);
+    };
+    const chunkHeights = chunks.map(chunk => summaryH + headH + chunk.reduce((sum, row) => sum + rowH(row), 0));
+    const width = margin * 2 + chunks.length * tableW + Math.max(0, chunks.length - 1) * gap;
+    const height = margin + titleH + Math.max(...chunkHeights, summaryH + headH + 24) + padBottom;
+    const renderSummary = (x, y, blank = false) => {
+      const labels = ["Kasa Başlangıç", "Büyüme Oranı", "Güncel Kasa"];
+      const values = [money(summary.start), v1059LedgerPctText(summary.growth), money(summary.current)];
+      const colors = ["#9fd27c", "#82bd5f", "#63a64a"];
+      const w = tableW / 3;
+      return labels.map((label, i) => {
+        const sx = x + i * w;
+        const sw = i === 2 ? tableW - w * 2 : w;
+        const text = blank ? "" : `<text x="${sx + sw / 2}" y="${y + 17}" text-anchor="middle" fill="#0f172a" font-size="10" font-family="Arial" font-weight="950">${safe(label)}</text><text x="${sx + sw / 2}" y="${y + 34}" text-anchor="middle" fill="#04110a" font-size="16" font-family="Arial" font-weight="1000">${safe(values[i])}</text>`;
+        return `<rect x="${sx}" y="${y}" width="${sw}" height="${summaryH}" fill="${colors[i]}" stroke="#0f172a"/>${text}`;
+      }).join("");
+    };
+    const renderHead = (x, y) => {
+      let xx = x;
+      return cols.map((label, i) => {
+        const cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="${headH}" fill="#d5dbe4" stroke="#0f172a"/><text x="${xx + widths[i] / 2}" y="${y + 17}" text-anchor="middle" fill="#0f172a" font-size="10" font-family="Arial" font-weight="950">${safe(label)}</text>`;
+        xx += widths[i];
+        return cell;
+      }).join("");
+    };
+    const renderRow = (row, rowIndex, x, y, h) => {
+      const pnlText = String(row.pnl || "");
+      const isLoss = /^-/.test(pnlText) || Number(row.pnlRaw || 0) < 0;
+      const values = m === "crypto"
+        ? [row._ledgerNo || row.no || rowIndex + 1, row._displayDate || "", row.item || "", row.kind || "", row.stake || "", row.roi || "", row.pnl || ""]
+        : [row._ledgerNo || row.no || rowIndex + 1, row._displayDate || "", row.item || "", row.kind || "", row.stake || "", row.roi || "", row.pnl || ""];
+      let xx = x;
+      return values.map((value, i) => {
+        const isItem = m === "bet" && i === 2;
+        const isPnl = i === 6;
+        const fill = isPnl ? (isLoss ? "#8b1d1d" : "#065f46") : (isItem ? "#0f172a" : "#f8fafc");
+        const stroke = isItem ? "#334155" : "#0f172a";
+        let cell = `<rect x="${xx}" y="${y}" width="${widths[i]}" height="${h}" fill="${fill}" stroke="${stroke}"/>`;
+        if (isItem) {
+          const lines = betLines(row);
+          const lineCount = Math.max(1, lines.length);
+          const startY = y + Math.max(13, Math.round((h - lineCount * 14) / 2) + 10);
+          cell += lines.map((line, lineIndex) => {
+            const status = line.status === "loss" ? "loss" : line.status === "win" ? "win" : "pending";
+            const color = markColor(status);
+            const ty = startY + lineIndex * 14;
+            const mx = xx + 10;
+            const tx = xx + 27;
+            const odds = v1076LedgerOddsText(line?.odds);
+            const name = `${trimText(line.name || "Bahis / maç", odds ? 28 : 31)}`;
+            const mark = status === "pending" ? `<line x1="${mx}" y1="${ty - 4}" x2="${mx + 8}" y2="${ty - 4}" stroke="${color}" stroke-width="2" stroke-linecap="round"/>` : `<text x="${mx - 1}" y="${ty}" fill="${color}" font-size="13" font-family="Arial" font-weight="1000">${safe(v1069LedgerStatusMark(status))}</text>`;
+            const odd = odds ? `<tspan dx="4" fill="#fbbf24" font-weight="1000">${safe(odds)}</tspan>` : "";
+            return `${mark}<text x="${tx}" y="${ty}" fill="#f8fafc" font-size="10" font-family="Arial" font-weight="900">${safe(name)}${odd}</text>`;
+          }).join("");
+        } else {
+          const color = isPnl ? "#ffffff" : "#111827";
+          const limit = i === 1 ? 12 : i === 3 ? 10 : 16;
+          cell += `<text x="${xx + widths[i] / 2}" y="${y + Math.round(h / 2) + 4}" text-anchor="middle" fill="${color}" font-size="10" font-family="Arial" font-weight="900">${safe(trimText(value, limit))}</text>`;
+        }
+        xx += widths[i];
+        return cell;
+      }).join("");
+    };
+    let content = `<rect width="${width}" height="${height}" fill="#020617"/><rect x="8" y="8" width="${width - 16}" height="${height - 16}" rx="16" fill="#0b1220" stroke="#334155"/><text x="${margin}" y="${margin + 24}" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="1000">${safe(title)}</text>`;
+    if (info.totalPages > 1) content += `<text x="${width - margin}" y="${margin + 24}" text-anchor="end" fill="#fbbf24" font-size="15" font-family="Arial" font-weight="1000">Sayfa ${info.page + 1}/${info.totalPages}</text>`;
+    let x = margin;
+    const topY = margin + titleH;
+    chunks.forEach((chunk, chunkIndex) => {
+      let y = topY;
+      content += renderSummary(x, y, chunkIndex > 0);
+      y += summaryH;
+      content += renderHead(x, y);
+      y += headH;
+      chunk.forEach((row, localIndex) => {
+        const h = rowH(row);
+        content += renderRow(row, localIndex, x, y, h);
+        y += h;
+      });
+      x += tableW + gap;
+    });
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${content}</svg>`)}`;
+  }
+
   function v1057BindLedgerScreen(host, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
     host.querySelectorAll("[data-v1103-ledger-test-fill-table]").forEach(btn => btn.addEventListener("click", event => {
@@ -4172,7 +4309,7 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      const dataUrl = v1060BuildLedgerPhotoSvg(photoMode);
+      const dataUrl = v1143BuildLedgerScreenPhotoSvg(photoMode) || v1060BuildLedgerPhotoSvg(photoMode);
       const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
       const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
       const sourceModal = btn.closest(".v1056-ledger-screen-modal") || document.querySelector(".v1056-ledger-screen-modal");
