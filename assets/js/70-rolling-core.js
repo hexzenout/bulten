@@ -2269,20 +2269,54 @@
     });
   }
 
+  function v1147SvgToPngBlob(svgUri, scale = 1) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const sourceW = img.naturalWidth || img.width || 1080;
+          const sourceH = img.naturalHeight || img.height || 720;
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(sourceW * Math.max(0.2, Number(scale || 1))));
+          canvas.height = Math.max(1, Math.round(sourceH * Math.max(0.2, Number(scale || 1))));
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            reject(new Error("canvas"));
+            return;
+          }
+          ctx.fillStyle = "#020617";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("blob")), "image/png");
+        } catch (error) {
+          reject(error);
+        }
+      };
+      img.onerror = () => reject(new Error("image"));
+      img.src = svgUri;
+    });
+  }
+
   function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı") {
     if (!dataUrl) return false;
     const win = window.open("about:blank", "_blank");
     if (!win) return false;
     try {
       win.document.open();
-      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>html,body{margin:0;min-height:100%;background:#020617;}body{display:flex;align-items:flex-start;justify-content:center;padding:0;}img{display:block;max-width:none;width:auto;height:auto;background:#020617;}</style></head><body><img src="${escapeHtml(dataUrl)}" alt="${escapeHtml(title)}"></body></html>`);
+      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>html,body{margin:0;min-height:100%;background:#020617;color:#e5e7eb;}body{display:flex;align-items:flex-start;justify-content:center;padding:14px;font:700 13px Arial,sans-serif;box-sizing:border-box;}</style></head><body>Resim hazırlanıyor…</body></html>`);
       win.document.close();
       try { win.focus(); } catch {}
-      return true;
-    } catch {
-      try { win.location.href = dataUrl; return true; } catch {}
-    }
-    return false;
+    } catch {}
+    v1147SvgToPngBlob(dataUrl, 1).then(blob => {
+      const url = URL.createObjectURL(blob);
+      win.document.open();
+      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>html,body{margin:0;min-height:100%;background:#020617;}body{display:flex;align-items:flex-start;justify-content:center;padding:0;overflow:auto;box-sizing:border-box;}img{display:block;width:80%;height:auto;max-width:none;background:#020617;image-rendering:auto;}</style></head><body><img src="${url}" alt="${escapeHtml(title)}"></body></html>`);
+      win.document.close();
+      setTimeout(() => { try { URL.revokeObjectURL(url); } catch {} }, 10 * 60 * 1000);
+    }).catch(() => {
+      try { win.location.href = dataUrl; } catch {}
+    });
+    return true;
   }
 
   function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {
@@ -4050,7 +4084,7 @@
     const tableW = widths.reduce((sum, width) => sum + width, 0);
     const gap = 14;
     const margin = 24;
-    const titleH = 40;
+    const titleH = 0;
     const summaryH = 42;
     const headH = 26;
     const padBottom = 28;
@@ -4135,8 +4169,7 @@
         return cell;
       }).join("");
     };
-    let content = `<rect width="${width}" height="${height}" fill="#020617"/><rect x="8" y="8" width="${width - 16}" height="${height - 16}" rx="16" fill="#0b1220" stroke="#334155"/><text x="${margin}" y="${margin + 24}" fill="#f5d0fe" font-size="22" font-family="Arial" font-weight="1000">${safe(title)}</text>`;
-    if (info.totalPages > 1) content += `<text x="${width - margin}" y="${margin + 24}" text-anchor="end" fill="#fbbf24" font-size="15" font-family="Arial" font-weight="1000">Sayfa ${info.page + 1}/${info.totalPages}</text>`;
+    let content = `<rect width="${width}" height="${height}" fill="#020617"/><rect x="8" y="8" width="${width - 16}" height="${height - 16}" rx="16" fill="#0b1220" stroke="#334155"/>`;
     let x = margin;
     const topY = margin + titleH;
     chunks.forEach((chunk, chunkIndex) => {
