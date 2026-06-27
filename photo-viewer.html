@@ -12,17 +12,14 @@
       color: #e5e7eb;
       font-family: Arial, Helvetica, sans-serif;
     }
-    body {
-      overflow: auto;
-      padding: 8px;
-      box-sizing: border-box;
-    }
+    body { overflow: auto; }
     .photo-shell {
       min-width: max-content;
-      min-height: calc(100vh - 16px);
+      min-height: 100vh;
       display: flex;
       align-items: flex-start;
       justify-content: center;
+      padding: 0;
       box-sizing: border-box;
     }
     .photo-shell img {
@@ -33,54 +30,8 @@
       max-height: none;
       background: #020617;
     }
-    .v1153-photo-viewer-modal {
-      margin: 0 auto !important;
-      width: max-content !important;
-      max-width: none !important;
-      background: #0b1220 !important;
-      border: 1px solid #334155 !important;
-      border-radius: 16px !important;
-      box-shadow: none !important;
-      overflow: hidden !important;
-    }
-    .v1153-photo-viewer-modal .v1056-ledger-screen-head,
-    .v1153-photo-viewer-modal .v1057-ledger-screen-head,
-    .v1153-photo-viewer-modal .v1060-ledger-screen-head,
-    .v1153-photo-viewer-modal .v1065-ledger-screen-head,
-    .v1153-photo-viewer-modal .v1112-ledger-title-row,
-    .v1153-photo-viewer-modal .v1060-ledger-head-actions,
-    .v1153-photo-viewer-modal .v1063-ledger-head-actions {
-      display: none !important;
-    }
-    .v1153-photo-viewer-modal .v1056-ledger-screen-body,
-    .v1153-photo-viewer-modal .v1057-ledger-screen-body,
-    .v1153-photo-viewer-modal .v1153-photo-viewer-body {
-      overflow: visible !important;
-      max-height: none !important;
-      height: auto !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      background: transparent !important;
-    }
-    .v1153-photo-viewer-modal .v1056-ledger-modal-table,
-    .v1153-photo-viewer-modal .v1054-daily-ledger,
-    .v1153-photo-viewer-modal .v1057-ledger-excel,
-    .v1153-photo-viewer-modal .v1063-ledger-pro,
-    .v1153-photo-viewer-modal .v1065-ledger-pro {
-      overflow: visible !important;
-      max-height: none !important;
-      height: auto !important;
-      margin: 0 !important;
-    }
-    .v1153-photo-viewer-modal .v1110-ledger-pager,
-    .v1153-photo-viewer-modal .v1110-ledger-page-badge,
-    .v1153-photo-viewer-modal .v1110-ledger-page-prev,
-    .v1153-photo-viewer-modal .v1110-ledger-page-next,
-    .v1153-photo-viewer-modal .v1112-ledger-pager {
-      display: none !important;
-    }
     .empty-state {
-      min-height: calc(100vh - 16px);
+      min-height: 100vh;
       display: grid;
       place-items: center;
       padding: 24px;
@@ -104,27 +55,18 @@
       let payload = null;
       try { payload = JSON.parse(localStorage.getItem(key) || "null"); } catch {}
       document.title = safeFile;
-      if (!payload || (!payload.html && !payload.dataUrl)) {
+      if (!payload || !payload.dataUrl) {
         if (stage) stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
         return;
       }
-      if (payload.headHtml) {
-        try { document.head.insertAdjacentHTML('beforeend', String(payload.headHtml || '')); } catch {}
-      }
-      if (payload.html) {
-        stage.innerHTML = String(payload.html || '');
-        return;
-      }
-      if (payload.dataUrl) {
-        const img = new Image();
-        img.alt = payload.title || safeFile;
-        img.decoding = 'sync';
-        img.src = payload.dataUrl;
-        stage.textContent = '';
+      const img = new Image();
+      img.alt = payload.title || safeFile;
+      img.decoding = "sync";
+      img.src = payload.dataUrl;
+      if (stage) {
+        stage.textContent = "";
         stage.appendChild(img);
-        return;
       }
-      stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
     })();
   </script>
 </body>
