@@ -2532,39 +2532,73 @@
   }
 
 
+  function v1158CollectViewerHeadHtml() {
+    try {
+      const parts = [];
+      document.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
+        if (node.tagName === 'LINK') {
+          const href = node.getAttribute('href');
+          if (!href) return;
+          parts.push(`<link rel="stylesheet" href="${escapeHtml(new URL(href, window.location.href).href)}">`);
+          return;
+        }
+        const css = String(node.textContent || '').trim();
+        if (css) parts.push(`<style>${css}</style>`);
+      });
+      return parts.join('\n');
+    } catch { return ''; }
+  }
+
+  function v1158PrepareLedgerHtmlClone(sourceNode, mode) {
+    try {
+      const modal = sourceNode?.closest?.('.v1056-ledger-screen-modal') || (sourceNode?.classList?.contains('v1056-ledger-screen-modal') ? sourceNode : null) || document.querySelector('.v1056-ledger-screen-modal');
+      if (!modal || typeof modal.cloneNode !== 'function') return null;
+      const rect = modal.getBoundingClientRect();
+      const clone = modal.cloneNode(true);
+      clone.removeAttribute('role');
+      clone.removeAttribute('aria-modal');
+      clone.removeAttribute('id');
+      clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+      clone.querySelectorAll('script').forEach(el => el.remove());
+      clone.querySelectorAll('.v1056-ledger-screen-head, .v1057-ledger-screen-head, .v1060-ledger-screen-head, .v1065-ledger-screen-head').forEach(el => el.remove());
+      clone.querySelectorAll('[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock], .v1060-ledger-head-actions, .v1063-ledger-head-actions').forEach(el => el.remove());
+      clone.querySelectorAll('.v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark').forEach(mark => {
+        mark.classList.remove('v1123-ledger-status-empty');
+        mark.textContent = '–';
+      });
+      clone.style.width = `${Math.ceil(Math.max(rect.width || 0, modal.offsetWidth || 0, modal.scrollWidth || 0))}px`;
+      clone.style.maxWidth = 'none';
+      clone.style.margin = '0 auto';
+      clone.style.transform = 'none';
+      clone.style.position = 'relative';
+      clone.style.overflow = 'visible';
+      clone.querySelectorAll('.v1056-ledger-screen-body, .v1057-ledger-screen-body').forEach(body => {
+        body.style.overflow = 'visible';
+        body.style.maxHeight = 'none';
+        body.style.height = 'auto';
+      });
+      return `<div id="v1056-ledger-screen-host" class="v1158-ledger-export-host"><div class="v1056-ledger-screen-overlay v1057-ledger-screen-overlay v1158-ledger-export-overlay">${clone.outerHTML}</div></div>`;
+    } catch { return null; }
+  }
+
   function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı", filename = "bulten-kupon-defteri.png", sourceNode = null, mode = "bet") {
-    if (!dataUrl && !sourceNode) return false;
+    const html = v1158PrepareLedgerHtmlClone(sourceNode, mode);
+    if (!html && !dataUrl) return false;
     const safeFilename = cleanText(filename || "bulten-kupon-defteri.png").replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "bulten-kupon-defteri.png";
     const key = v1152LedgerPhotoStorageKey(safeFilename);
     try {
       v1152CleanupOldLedgerPhotos();
-      localStorage.setItem(key, JSON.stringify({ pending: true, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
-    } catch {
-      return false;
-    }
-    let win = null;
+      localStorage.setItem(key, JSON.stringify({ html, headHtml: v1158CollectViewerHeadHtml(), dataUrl: html ? "" : dataUrl, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
+    } catch { return false; }
     try {
       const url = new URL("photo-viewer.html", window.location.href);
       url.searchParams.set("file", safeFilename);
       url.searchParams.set("key", key);
-      win = window.open(url.toString(), "_blank");
+      const win = window.open(url.toString(), "_blank");
       if (!win) return false;
       try { win.focus(); } catch {}
-    } catch {
-      return false;
-    }
-    v1155BuildLedgerScreenPhotoPng(sourceNode, mode).then(pngUrl => {
-      try {
-        localStorage.setItem(key, JSON.stringify({ dataUrl: pngUrl, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
-      } catch {}
-      try { win.postMessage({ type: "bulten-ledger-photo-ready", key }, window.location.origin); } catch {}
-    }).catch(() => {
-      try {
-        localStorage.setItem(key, JSON.stringify({ dataUrl, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
-      } catch {}
-      try { win.postMessage({ type: "bulten-ledger-photo-ready", key }, window.location.origin); } catch {}
-    });
-    return true;
+      return true;
+    } catch { return false; }
   }
 
   function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {

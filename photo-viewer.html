@@ -5,122 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BULTEN Kupon Defteri</title>
   <style>
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      background: #020617;
-      color: #e5e7eb;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    body { overflow: auto; }
-    .photo-shell {
-      min-width: max-content;
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    .photo-shell img {
-      display: block;
-      width: auto;
-      height: auto;
-      max-width: none;
-      max-height: none;
-      background: #020617;
-    }
-    .empty-state {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      box-sizing: border-box;
-      text-align: center;
-      color: #cbd5e1;
-      font-size: 14px;
-      font-weight: 800;
-    }
-    .loading-state {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      box-sizing: border-box;
-      text-align: center;
-      color: #fbbf24;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: .02em;
-    }
+    html,body{margin:0;min-height:100%;background:#020617;color:#e5e7eb;font-family:Arial,Helvetica,sans-serif;}
+    body{overflow:auto;padding:8px;box-sizing:border-box;}
+    .photo-shell{min-width:max-content;min-height:calc(100vh - 16px);display:flex;align-items:flex-start;justify-content:center;box-sizing:border-box;}
+    .photo-shell img{display:block;width:auto;height:auto;max-width:none;max-height:none;background:#020617;}
+    .empty-state,.loading-state{min-height:calc(100vh - 16px);display:grid;place-items:center;padding:24px;box-sizing:border-box;text-align:center;font-size:14px;font-weight:900;}
+    .empty-state{color:#cbd5e1}.loading-state{color:#fbbf24;letter-spacing:.02em;}
+    .v1158-ledger-export-host{width:max-content;max-width:none;margin:0 auto;}
+    .v1158-ledger-export-overlay{position:relative!important;inset:auto!important;width:max-content!important;min-height:0!important;background:transparent!important;padding:0!important;margin:0!important;display:block!important;overflow:visible!important;}
+    .v1158-ledger-export-host .v1056-ledger-screen-head,.v1158-ledger-export-host .v1057-ledger-screen-head,.v1158-ledger-export-host .v1060-ledger-screen-head,.v1158-ledger-export-host .v1065-ledger-screen-head{display:none!important;}
+    .v1158-ledger-export-host .v1056-ledger-screen-modal,.v1158-ledger-export-host .v1057-ledger-screen-modal{max-width:none!important;max-height:none!important;overflow:visible!important;}
+    .v1158-ledger-export-host .v1056-ledger-screen-body,.v1158-ledger-export-host .v1057-ledger-screen-body{overflow:visible!important;max-height:none!important;height:auto!important;}
+    .v1158-ledger-export-host .v1069-ledger-match-line.pending .v1069-ledger-status-mark,.v1158-ledger-export-host .v1069-ledger-match-line.push .v1069-ledger-status-mark,.v1158-ledger-export-host .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#64748b!important;font-size:11px!important;line-height:1!important;background:none!important;position:static!important;transform:none!important;}
+    .v1158-ledger-export-host .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,.v1158-ledger-export-host .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,.v1158-ledger-export-host .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{display:none!important;content:none!important;}
   </style>
 </head>
 <body>
   <main class="photo-shell" data-stage></main>
   <script>
-    (function () {
-      const params = new URLSearchParams(location.search);
-      const key = params.get("key") || "";
-      const fileParam = params.get("file") || "bulten-kupon-defteri.png";
-      const safeFile = String(fileParam).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "bulten-kupon-defteri.png";
-      const stage = document.querySelector("[data-stage]");
-      let renderedDataUrl = "";
-
-      document.title = safeFile;
-
-      function readPayload() {
-        try { return JSON.parse(localStorage.getItem(key) || "null"); } catch { return null; }
+    (function(){
+      const params=new URLSearchParams(location.search);
+      const key=params.get('key')||'';
+      const fileParam=params.get('file')||'bulten-kupon-defteri.png';
+      const safeFile=String(fileParam).replace(/[^a-z0-9._-]+/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')||'bulten-kupon-defteri.png';
+      const stage=document.querySelector('[data-stage]');
+      let rendered='';
+      document.title=safeFile;
+      function readPayload(){try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null}}
+      function renderPayload(){
+        const payload=readPayload();
+        if(!payload){stage.innerHTML='<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';return false;}
+        const filename=String(payload.filename||safeFile).replace(/[^a-z0-9._-]+/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')||safeFile;
+        document.title=filename;
+        if(payload.html){
+          const token='html:'+payload.ts+':'+payload.html.length;
+          if(rendered===token) return true;
+          rendered=token;
+          if(payload.headHtml){try{document.head.insertAdjacentHTML('beforeend',String(payload.headHtml||''))}catch{}}
+          stage.innerHTML=String(payload.html||'');
+          return true;
+        }
+        if(!payload.dataUrl){stage.innerHTML='<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';return false;}
+        if(rendered===payload.dataUrl&&stage.querySelector('img'))return true;
+        rendered=payload.dataUrl;
+        const img=new Image(); img.alt=payload.title||filename; img.decoding='sync'; img.src=payload.dataUrl;
+        stage.textContent=''; stage.appendChild(img); return true;
       }
-
-      function renderPayload() {
-        const payload = readPayload();
-        if (!payload) {
-          if (stage) stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
-          return false;
-        }
-        if (payload.pending && !payload.dataUrl) {
-          if (stage && !stage.querySelector(".loading-state")) {
-            stage.innerHTML = '<div class="loading-state">Görsel hazırlanıyor...</div>';
-          }
-          return false;
-        }
-        if (!payload.dataUrl) {
-          if (stage) stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
-          return false;
-        }
-        if (payload.dataUrl === renderedDataUrl && stage.querySelector("img")) return true;
-        const filename = String(payload.filename || safeFile).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || safeFile;
-        document.title = filename;
-        renderedDataUrl = payload.dataUrl;
-        const img = new Image();
-        img.alt = payload.title || filename;
-        img.decoding = "sync";
-        img.src = payload.dataUrl;
-        if (stage) {
-          stage.textContent = "";
-          stage.appendChild(img);
-        }
-        return true;
-      }
-
       renderPayload();
-
-      let attempts = 0;
-      const timer = setInterval(() => {
-        attempts += 1;
-        if (renderPayload() || attempts > 80) clearInterval(timer);
-      }, 250);
-
-      window.addEventListener("message", event => {
-        if (event.origin !== location.origin) return;
-        if (!event.data || event.data.type !== "bulten-ledger-photo-ready") return;
-        if (event.data.key && event.data.key !== key) return;
-        renderPayload();
-      });
-
-      window.addEventListener("storage", event => {
-        if (event.key === key) renderPayload();
-      });
+      window.addEventListener('storage',event=>{if(event.key===key)renderPayload()});
     })();
   </script>
 </body>
