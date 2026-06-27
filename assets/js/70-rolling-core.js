@@ -241,6 +241,10 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table td:nth-child(3){padding-left:3px!important;padding-right:1px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-excel-table tr.v1119-ledger-row-filler td{display:none!important;height:0!important;min-height:0!important;max-height:0!important;padding:0!important;line-height:0!important;border:0!important;background:transparent!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line.loss .v1069-ledger-status-mark{transform:translateY(-1px)!important;align-self:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1069-ledger-match-line{height:11px!important;min-height:11px!important;line-height:11px!important;align-items:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr.v1118-ledger-row-single .v1078-ledger-match-text{height:11px!important;line-height:11px!important;align-items:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.8%!important;min-width:30px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
@@ -333,8 +337,10 @@
   function v1119LedgerRowPx(row, mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
     const info = v1118LedgerBetLineInfo(row);
-    if (info.count <= 1) return 20;
-    return info.isLong ? 37 : 32;
+    // These are packing estimates, intentionally a little higher than the CSS height.
+    // Otherwise "Tabloyu Tamamla" can overfill the visible modal and cut the last rows.
+    if (info.count <= 1) return 23;
+    return info.isLong ? 42 : 35;
   }
   function v1119LedgerColumnLimitPx(mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 25 * 32;
@@ -342,10 +348,11 @@
       const host = document.getElementById("v1056-ledger-screen-host");
       const body = host?.querySelector?.(".v1056-ledger-screen-body, .v1057-ledger-screen-body");
       const h = Math.floor(body?.clientHeight || body?.getBoundingClientRect?.().height || 0);
-      // Header, green summary and table header are outside row area. Keep a small safety margin.
-      if (h > 260) return Math.max(460, h - 42 - 22 - 10);
+      // Never trust the full body height for packing: the modal/header/toolbar math can report
+      // more room than the visible table actually has. Cap it so rows do not get cut at the bottom.
+      if (h > 260) return Math.max(500, Math.min(610, h - 42 - 22 - 26));
     } catch {}
-    return 610;
+    return 590;
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
