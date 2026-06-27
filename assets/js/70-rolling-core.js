@@ -2684,6 +2684,89 @@
     }
   }
 
+
+  function v1163LedgerOutputStorageKey() {
+    return `bulten_ledger_output_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+  }
+
+  function v1163BuildLedgerOutputHtml(mode = "bet") {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const tempHost = document.createElement("div");
+    tempHost.style.position = "fixed";
+    tempHost.style.left = "-100000px";
+    tempHost.style.top = "0";
+    tempHost.style.width = "max-content";
+    tempHost.style.height = "auto";
+    tempHost.style.overflow = "visible";
+    tempHost.style.background = "#020617";
+    tempHost.style.pointerEvents = "none";
+    tempHost.setAttribute("aria-hidden", "true");
+    tempHost.innerHTML = `<section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal v1162-ledger-output-modal ${m}" data-v1163-output-node><div class="v1056-ledger-screen-body v1057-ledger-screen-body">${v1054RenderDailyPlanPanel(m, { modal: true })}</div></section>`;
+    document.body.appendChild(tempHost);
+    try {
+      v1103EnsureLedgerTestStyles();
+      v1110FinalizeLedgerLayout(tempHost);
+      const node = tempHost.querySelector("[data-v1163-output-node]");
+      v1162PrepareOutputNode(node);
+      if (node) {
+        node.querySelectorAll(".v1069-ledger-status-mark").forEach(mark => {
+          const line = mark.closest(".v1069-ledger-match-line");
+          if (line && (line.classList.contains("pending") || line.classList.contains("open") || line.classList.contains("push"))) {
+            mark.classList.remove("v1123-ledger-status-empty");
+            mark.textContent = "–";
+            mark.style.setProperty("color", "#64748b", "important");
+            mark.style.setProperty("font-size", "11px", "important");
+            mark.style.setProperty("line-height", "1", "important");
+            mark.style.setProperty("font-weight", "1000", "important");
+            mark.style.setProperty("display", "inline-flex", "important");
+            mark.style.setProperty("align-items", "center", "important");
+            mark.style.setProperty("justify-content", "center", "important");
+            mark.style.setProperty("background", "none", "important");
+            mark.style.setProperty("transform", "none", "important");
+          }
+        });
+      }
+      return node ? node.outerHTML : "";
+    } finally {
+      tempHost.remove();
+    }
+  }
+
+  function v1163OpenLedgerOutputTab(mode = "bet") {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const key = v1163LedgerOutputStorageKey();
+    const filename = v1162LedgerFilename(m);
+    const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
+    const url = `ledger-output.html?v=v1163&key=${encodeURIComponent(key)}`;
+    const tab = window.open(url, "_blank");
+    try {
+      const html = v1163BuildLedgerOutputHtml(m);
+      if (!html) throw new Error("Çıktı HTML üretilemedi.");
+      localStorage.setItem(key, JSON.stringify({
+        version: "v1163",
+        mode: m,
+        title,
+        filename,
+        html,
+        createdAt: Date.now()
+      }));
+      if (!tab) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
+    } catch (error) {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          version: "v1163",
+          mode: m,
+          title,
+          filename,
+          html: "",
+          error: "Kupon Defteri çıktısı hazırlanamadı.",
+          createdAt: Date.now()
+        }));
+      } catch {}
+      alert("Kupon Defteri çıktısı hazırlanamadı. Sayfayı yenileyip tekrar dene.");
+    }
+  }
+
   function v1162OpenLedgerOutputPreview(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const host = getRollingPhotoHost();
@@ -4787,7 +4870,7 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      v1162OpenLedgerOutputPreview(photoMode);
+      v1163OpenLedgerOutputTab(photoMode);
     }));
     v1057BindLedgerScreen(host, m);
   }

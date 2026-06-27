@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BULTEN Kupon Defteri Çıktısı</title>
+  <link rel="stylesheet" href="assets/css/00-base.css?v=v517">
+  <link rel="stylesheet" href="assets/css/10-route-crypto.css?v=v517">
+  <link rel="stylesheet" href="assets/css/20-module-helpers.css?v=v517">
+  <link rel="stylesheet" href="assets/css/30-finance-core.css?v=v517">
+  <link rel="stylesheet" href="assets/css/31-finance-panels.css?v=v753">
+  <link rel="stylesheet" href="assets/css/40-rolling-prep.css?v=v517">
+  <link rel="stylesheet" href="assets/css/41-rolling-main.css?v=v517">
+  <link rel="stylesheet" href="assets/css/42-rolling-route.css?v=v517">
+  <link rel="stylesheet" href="assets/css/43-rolling-final.css?v=v1101">
+  <link rel="stylesheet" href="assets/css/90-final-fixes.css?v=v971">
+  <style>
+    html,body{margin:0!important;padding:0!important;background:#020617!important;color:#e5e7eb!important;min-height:100%!important;font-family:Arial,Helvetica,sans-serif!important;}
+    body{overflow:auto!important;}
+    .v1163-viewer-toolbar{position:sticky!important;top:0!important;z-index:50!important;display:flex!important;align-items:center!important;gap:8px!important;padding:8px 10px!important;background:#020617!important;border-bottom:1px solid rgba(148,163,184,.18)!important;box-shadow:0 10px 28px rgba(2,6,23,.34)!important;}
+    .v1163-viewer-toolbar button{appearance:none!important;-webkit-appearance:none!important;border-radius:10px!important;border:1px solid rgba(251,191,36,.55)!important;background:#111827!important;color:#fde68a!important;font-size:12px!important;font-weight:950!important;line-height:1!important;padding:8px 11px!important;cursor:pointer!important;white-space:nowrap!important;}
+    .v1163-viewer-toolbar button:hover{background:#1f2937!important;color:#fff!important;}
+    .v1163-viewer-title{font-size:12px!important;font-weight:950!important;color:#e5e7eb!important;margin-right:auto!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+    .v1163-viewer-note{color:#94a3b8!important;font-size:11px!important;font-weight:800!important;white-space:nowrap!important;}
+    .v1163-viewer-stage{display:block!important;overflow:auto!important;width:100%!important;min-height:calc(100vh - 43px)!important;background:#020617!important;margin:0!important;padding:0!important;}
+    .v1163-output-wrap{display:block!important;width:max-content!important;margin:0!important;padding:0!important;background:#020617!important;}
+    .v1163-error{padding:18px!important;color:#fecaca!important;font-size:13px!important;font-weight:900!important;}
+    .v1162-ledger-output-modal{position:relative!important;display:block!important;width:max-content!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#020617!important;box-shadow:none!important;transform:none!important;overflow:visible!important;}
+    .v1162-ledger-output-modal .v1056-ledger-screen-body,.v1162-ledger-output-modal .v1057-ledger-screen-body{display:block!important;width:max-content!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;margin:0!important;padding:0!important;background:#020617!important;}
+    .v1162-ledger-output-modal .v1040-growth-plan{margin:0!important;border-radius:0!important;box-shadow:none!important;}
+    .v1162-ledger-output-modal .v1057-ledger-sheet-grid,.v1162-ledger-output-modal .v1061-ledger-sheet-grid{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;align-items:start!important;align-content:start!important;margin-bottom:0!important;padding-bottom:0!important;}
+    .v1162-ledger-output-modal .v1057-ledger-sheet,.v1162-ledger-output-modal .v1061-ledger-sheet{height:auto!important;min-height:0!important;max-height:none!important;align-self:start!important;margin-bottom:0!important;}
+    .v1162-ledger-output-modal .v1057-ledger-excel-table,.v1162-ledger-output-modal .v1061-ledger-excel-table{height:auto!important;min-height:0!important;max-height:none!important;margin-bottom:0!important;}
+    .v1162-ledger-output-modal .v1119-ledger-row-filler,.v1162-ledger-output-modal .v1119-ledger-row-filler td{height:0!important;min-height:0!important;max-height:0!important;padding:0!important;border:0!important;line-height:0!important;overflow:hidden!important;}
+    .v1163-context-menu{position:fixed!important;z-index:2147483647!important;display:none!important;min-width:178px!important;padding:6px!important;border:1px solid rgba(251,191,36,.38)!important;border-radius:12px!important;background:#020617!important;box-shadow:0 18px 48px rgba(0,0,0,.48)!important;}
+    .v1163-context-menu button{display:block!important;width:100%!important;border:0!important;background:transparent!important;color:#e5e7eb!important;text-align:left!important;border-radius:8px!important;padding:9px 10px!important;font-size:12px!important;font-weight:900!important;cursor:pointer!important;}
+    .v1163-context-menu button:hover{background:rgba(251,191,36,.12)!important;color:#fde68a!important;}
+  </style>
+</head>
+<body>
+  <div class="v1163-viewer-toolbar">
+    <span class="v1163-viewer-title" id="v1163-title">BULTEN Kupon Defteri Çıktısı</span>
+    <button type="button" id="v1163-download">PNG indir</button>
+    <button type="button" id="v1163-open">PNG yeni sekmede aç</button>
+    <span class="v1163-viewer-note">Sağ tık: PNG indir / yeni sekmede aç</span>
+  </div>
+  <main class="v1163-viewer-stage" id="v1163-stage"><div class="v1163-error">Çıktı hazırlanıyor...</div></main>
+  <div class="v1163-context-menu" id="v1163-menu"><button type="button" id="v1163-menu-download">PNG olarak indir</button><button type="button" id="v1163-menu-open">PNG yeni sekmede aç</button></div>
+<script>
+(function(){
+  "use strict";
+  const params = new URLSearchParams(location.search || "");
+  const key = params.get("key") || "";
+  const stage = document.getElementById("v1163-stage");
+  const titleEl = document.getElementById("v1163-title");
+  const menu = document.getElementById("v1163-menu");
+  let payload = null;
+  let outputNode = null;
+
+  function localDateStamp(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+  function safeFilename(name){ return String(name || `bulten-bahis-kupon-defteri-${localDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi,"-").replace(/-+/g,"-").replace(/^-|-$/g,"") || `bulten-bahis-kupon-defteri-${localDateStamp()}.png`; }
+  function getFilename(){ return safeFilename(payload && payload.filename); }
+
+  function hideMenu(){ if(menu) menu.style.display = "none"; }
+
+  function prepareOutputNode(node){
+    if(!node || !(node instanceof Element)) return;
+    node.querySelectorAll("script").forEach(el => el.remove());
+    node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
+    node.querySelectorAll(".v1056-ledger-screen-body,.v1057-ledger-screen-body,.v1057-ledger-sheet-grid,.v1061-ledger-sheet-grid,.v1057-ledger-sheet,.v1061-ledger-sheet").forEach(el => {
+      el.style.setProperty("overflow","visible","important");
+      el.style.setProperty("max-height","none","important");
+      el.style.setProperty("height","auto","important");
+      el.style.setProperty("min-height","0","important");
+      el.style.setProperty("margin-bottom","0","important");
+      el.style.setProperty("padding-bottom","0","important");
+    });
+    node.querySelectorAll(".v1069-ledger-status-mark").forEach(mark => {
+      const line = mark.closest(".v1069-ledger-match-line");
+      if(line && (line.classList.contains("pending") || line.classList.contains("open") || line.classList.contains("push"))){
+        mark.classList.remove("v1123-ledger-status-empty");
+        mark.textContent = "–";
+        mark.style.setProperty("color", "#64748b", "important");
+        mark.style.setProperty("font-size", "11px", "important");
+        mark.style.setProperty("line-height", "1", "important");
+        mark.style.setProperty("font-weight", "1000", "important");
+        mark.style.setProperty("display", "inline-flex", "important");
+        mark.style.setProperty("align-items", "center", "important");
+        mark.style.setProperty("justify-content", "center", "important");
+        mark.style.setProperty("background", "none", "important");
+        mark.style.setProperty("transform", "none", "important");
+      }
+    });
+  }
+
+  function styleToText(style){
+    if(!style) return "";
+    const parts=[];
+    for(let i=0;i<style.length;i++){
+      const prop=style[i];
+      const value=style.getPropertyValue(prop);
+      if(!value) continue;
+      const priority=style.getPropertyPriority(prop);
+      parts.push(`${prop}:${value}${priority?" !"+priority:""};`);
+    }
+    return parts.join("");
+  }
+
+  function copyComputedTree(sourceRoot, cloneRoot){
+    if(!sourceRoot || !cloneRoot) return;
+    const sourceEls=[sourceRoot,...sourceRoot.querySelectorAll("*")];
+    const cloneEls=[cloneRoot,...cloneRoot.querySelectorAll("*")];
+    sourceEls.forEach((sourceEl, i) => {
+      const cloneEl=cloneEls[i];
+      if(!cloneEl || !(sourceEl instanceof Element)) return;
+      const style=window.getComputedStyle(sourceEl);
+      cloneEl.setAttribute("style", styleToText(style));
+    });
+  }
+
+  async function nodeToPngDataUrl(node){
+    if(!node || !(node instanceof Element)) throw new Error("Çıktı alanı bulunamadı.");
+    try { await document.fonts?.ready; } catch(e) {}
+    prepareOutputNode(node);
+    const rect=node.getBoundingClientRect();
+    const width=Math.max(320, Math.ceil(node.scrollWidth || rect.width || node.offsetWidth || 0));
+    const height=Math.max(120, Math.ceil(node.scrollHeight || rect.height || node.offsetHeight || 0));
+    const clone=node.cloneNode(true);
+    copyComputedTree(node, clone);
+    prepareOutputNode(clone);
+    clone.removeAttribute("id");
+    clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+    clone.style.setProperty("width", `${width}px`, "important");
+    clone.style.setProperty("min-width", `${width}px`, "important");
+    clone.style.setProperty("max-width", `${width}px`, "important");
+    clone.style.setProperty("height", `${height}px`, "important");
+    clone.style.setProperty("min-height", `${height}px`, "important");
+    clone.style.setProperty("max-height", `${height}px`, "important");
+    clone.style.setProperty("margin", "0", "important");
+    clone.style.setProperty("padding", "0", "important");
+    clone.style.setProperty("transform", "none", "important");
+    clone.style.setProperty("position", "relative", "important");
+    clone.style.setProperty("overflow", "visible", "important");
+    clone.style.setProperty("background", "#020617", "important");
+    const tempHost=document.createElement("div");
+    tempHost.style.cssText=`position:fixed;left:-100000px;top:0;width:${width}px;height:${height}px;overflow:hidden;background:#020617;margin:0;padding:0;`;
+    tempHost.appendChild(clone);
+    document.body.appendChild(tempHost);
+    try{
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const serialized=new XMLSerializer().serializeToString(clone);
+      const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${serialized}</foreignObject></svg>`;
+      const img=new Image();
+      const svgUrl="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+      await new Promise((resolve,reject)=>{ img.onload=resolve; img.onerror=()=>reject(new Error("PNG üretilemedi.")); img.src=svgUrl; });
+      const scale=Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+      const canvas=document.createElement("canvas");
+      canvas.width=Math.ceil(width*scale);
+      canvas.height=Math.ceil(height*scale);
+      const ctx=canvas.getContext("2d");
+      ctx.setTransform(scale,0,0,scale,0,0);
+      ctx.imageSmoothingEnabled=true;
+      ctx.imageSmoothingQuality="high";
+      ctx.fillStyle="#020617";
+      ctx.fillRect(0,0,width,height);
+      ctx.drawImage(img,0,0,width,height);
+      return canvas.toDataURL("image/png");
+    } finally { tempHost.remove(); }
+  }
+
+  function downloadDataUrl(dataUrl, filename){
+    const a=document.createElement("a");
+    a.href=dataUrl;
+    a.download=safeFilename(filename);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function dataUrlToObjectUrl(dataUrl){
+    const parts=String(dataUrl).split(",");
+    const meta=parts[0] || "";
+    const mime=(meta.match(/data:([^;]+)/)||[])[1] || "image/png";
+    const binary=atob(parts.slice(1).join(","));
+    const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    return URL.createObjectURL(new Blob([bytes], { type:mime }));
+  }
+
+  async function exportPng(action, button){
+    if(!outputNode) return;
+    const old=button ? button.textContent : "";
+    if(button){ button.disabled=true; button.textContent="PNG hazırlanıyor..."; }
+    try{
+      const dataUrl=await nodeToPngDataUrl(outputNode);
+      if(action === "open"){
+        const objectUrl=dataUrlToObjectUrl(dataUrl);
+        window.open(objectUrl, "_blank");
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+      } else {
+        downloadDataUrl(dataUrl, getFilename());
+      }
+    }catch(e){
+      alert("PNG hazırlanamadı. Sayfayı yenileyip tekrar dene.");
+    }finally{
+      if(button){ button.disabled=false; button.textContent=old; }
+    }
+  }
+
+  function renderPayload(data){
+    payload=data || {};
+    if(payload.error){ stage.innerHTML=`<div class="v1163-error">${payload.error}</div>`; return true; }
+    if(!payload.html) return false;
+    titleEl.textContent = payload.title || "BULTEN Kupon Defteri Çıktısı";
+    document.title = `${payload.title || "BULTEN Çıktı"} - ${getFilename()}`;
+    stage.innerHTML = `<div class="v1163-output-wrap">${payload.html}</div>`;
+    outputNode = stage.querySelector("[data-v1163-output-node], [data-v1162-output-node], .v1162-ledger-output-modal");
+    prepareOutputNode(outputNode);
+    setTimeout(() => prepareOutputNode(outputNode), 120);
+    setTimeout(() => prepareOutputNode(outputNode), 320);
+    return true;
+  }
+
+  function readStored(){
+    if(!key) return null;
+    try { return JSON.parse(localStorage.getItem(key) || "null"); } catch(e){ return null; }
+  }
+
+  let tries=0;
+  const timer=setInterval(() => {
+    tries++;
+    const data=readStored();
+    if(renderPayload(data) || tries > 60){
+      clearInterval(timer);
+      if(!data && tries > 60) stage.innerHTML='<div class="v1163-error">Çıktı bulunamadı. Kupon Defteri ekranından kameraya tekrar bas.</div>';
+    }
+  }, 100);
+
+  document.getElementById("v1163-download")?.addEventListener("click", e => exportPng("download", e.currentTarget));
+  document.getElementById("v1163-open")?.addEventListener("click", e => exportPng("open", e.currentTarget));
+  document.getElementById("v1163-menu-download")?.addEventListener("click", e => { hideMenu(); exportPng("download", e.currentTarget); });
+  document.getElementById("v1163-menu-open")?.addEventListener("click", e => { hideMenu(); exportPng("open", e.currentTarget); });
+  stage.addEventListener("contextmenu", event => {
+    event.preventDefault();
+    if(!menu) return;
+    const x=Math.min(event.clientX, window.innerWidth - 192);
+    const y=Math.min(event.clientY, window.innerHeight - 94);
+    menu.style.left=`${Math.max(8,x)}px`;
+    menu.style.top=`${Math.max(8,y)}px`;
+    menu.style.display="block";
+  });
+  document.addEventListener("click", hideMenu, true);
+})();
+</script>
+</body>
+</html>
