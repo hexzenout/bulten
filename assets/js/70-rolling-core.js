@@ -2500,7 +2500,9 @@
               const img = new Image();
               img.onload = () => {
                 try {
-                  const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+                  const pixelRatio = Math.max(1, Number(window.devicePixelRatio || 1));
+      const area = width * height;
+      const scale = area > 2200000 ? 1 : Math.max(1, Math.min(2, Math.round(pixelRatio)));
                   const canvas = document.createElement("canvas");
                   canvas.width = Math.ceil(width * scale);
                   canvas.height = Math.ceil(height * scale);
@@ -2555,9 +2557,13 @@
   function v1162PrepareOutputNode(node) {
     if (!node || !(node instanceof Element)) return node;
     node.querySelectorAll("script").forEach(el => el.remove());
-    node.querySelectorAll(".v1069-ledger-match-line.pending .v1069-ledger-status-mark, .v1069-ledger-match-line.push .v1069-ledger-status-mark, .v1069-ledger-match-line.open .v1069-ledger-status-mark").forEach(mark => {
+    node.querySelectorAll(".v1069-ledger-match-line").forEach(line => {
+      const mark = line.querySelector(".v1069-ledger-status-mark");
+      if (!mark) return;
+      const pendingLike = line.classList.contains("pending") || line.classList.contains("push") || line.classList.contains("open");
+      if (!pendingLike) return;
       mark.classList.remove("v1123-ledger-status-empty");
-      mark.textContent = "–";
+      mark.textContent = "-";
       mark.style.color = "#64748b";
       mark.style.fontSize = "11px";
       mark.style.lineHeight = "1";
@@ -2567,6 +2573,30 @@
       mark.style.justifyContent = "center";
       mark.style.background = "none";
       mark.style.transform = "none";
+      mark.style.width = "11px";
+      mark.style.minWidth = "11px";
+      mark.style.height = "11px";
+      mark.style.flex = "0 0 11px";
+      mark.style.letterSpacing = "0";
+      mark.style.whiteSpace = "nowrap";
+      mark.style.position = "static";
+    });
+    node.querySelectorAll(".v1069-ledger-status-mark.v1123-ledger-status-empty").forEach(mark => {
+      if (!String(mark.textContent || "").trim()) mark.textContent = "-";
+      mark.classList.remove("v1123-ledger-status-empty");
+      mark.style.color = "#64748b";
+      mark.style.fontSize = "11px";
+      mark.style.fontWeight = "1000";
+      mark.style.display = "inline-flex";
+      mark.style.alignItems = "center";
+      mark.style.justifyContent = "center";
+      mark.style.width = "11px";
+      mark.style.minWidth = "11px";
+      mark.style.height = "11px";
+      mark.style.flex = "0 0 11px";
+      mark.style.background = "none";
+      mark.style.transform = "none";
+      mark.style.position = "static";
     });
     node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
     node.querySelectorAll(".v1056-ledger-screen-body, .v1057-ledger-screen-body, .v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid, .v1057-ledger-sheet, .v1061-ledger-sheet").forEach(el => {
@@ -2628,7 +2658,9 @@
         img.onerror = () => reject(new Error("PNG üretilemedi."));
         img.src = svgUrl;
       });
-      const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+      const pixelRatio = Math.max(1, Number(window.devicePixelRatio || 1));
+      const area = width * height;
+      const scale = area > 2200000 ? 1 : Math.max(1, Math.min(2, Math.round(pixelRatio)));
       const canvas = document.createElement("canvas");
       canvas.width = Math.ceil(width * scale);
       canvas.height = Math.ceil(height * scale);
@@ -2700,6 +2732,15 @@
     }
   }
 
+  function v1166GetActiveLedgerOutputNode(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const host = document.getElementById("v1056-ledger-screen-host");
+    if (!host) return null;
+    const modal = host.querySelector(`.v1056-ledger-screen-modal.${m}`) || host.querySelector('.v1056-ledger-screen-modal');
+    if (!modal) return null;
+    return modal.querySelector('.v1056-ledger-screen-body, .v1057-ledger-screen-body') || null;
+  }
+
   function v1165WriteTabMessage(tab, message) {
     if (!tab) return;
     try {
@@ -2719,6 +2760,20 @@
     }
     v1165WriteTabMessage(tab, "PNG hazırlanıyor...");
 
+    const activeNode = v1166GetActiveLedgerOutputNode(m);
+    if (activeNode) {
+      try {
+        const dataUrl = await v1162NodeToPngDataUrl(activeNode);
+        v1162DownloadDataUrl(dataUrl, filename);
+        const objectUrl = v1165DataUrlToObjectUrl(dataUrl, filename);
+        try { tab.location.replace(objectUrl); } catch { tab.location.href = objectUrl; }
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 120000);
+      } catch (error) {
+        v1165WriteTabMessage(tab, "PNG hazırlanamadı. Kupon Defteri ekranından tekrar dene.");
+      }
+      return;
+    }
+
     const tempHost = document.createElement("div");
     tempHost.style.position = "fixed";
     tempHost.style.left = "-100000px";
@@ -2737,9 +2792,9 @@
       v1110FinalizeLedgerLayout(tempHost);
       const node = tempHost.querySelector("[data-v1165-output-node]");
       v1162PrepareOutputNode(node);
-      setTimeout(() => v1162PrepareOutputNode(node), 80);
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       const dataUrl = await v1162NodeToPngDataUrl(node);
+      v1162DownloadDataUrl(dataUrl, filename);
       const objectUrl = v1165DataUrlToObjectUrl(dataUrl, filename);
       try { tab.location.replace(objectUrl); } catch { tab.location.href = objectUrl; }
       setTimeout(() => URL.revokeObjectURL(objectUrl), 120000);
