@@ -2289,27 +2289,155 @@
     } catch {}
   }
 
-  function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı", filename = "bulten-kupon-defteri.png") {
-    if (!dataUrl) return false;
+  function v1155EscapeCssText(value) {
+    return String(value || "").replace(/<\/style/gi, "<\\/style");
+  }
+
+  function v1155CollectCaptureCss() {
+    const chunks = [];
+    try {
+      Array.from(document.styleSheets || []).forEach(sheet => {
+        try {
+          const rules = Array.from(sheet.cssRules || []);
+          const css = rules.map(rule => rule.cssText || "").filter(Boolean).join("\n");
+          if (css) chunks.push(css);
+        } catch {}
+      });
+    } catch {}
+    chunks.push(`
+      html,body{margin:0;padding:0;background:#020617;color:#e5e7eb;font-family:Arial,Helvetica,sans-serif;}
+      *{box-sizing:border-box;}
+      .v1155-ledger-capture-root{display:block;background:#020617;margin:0;padding:0;overflow:visible;width:max-content;height:max-content;}
+      .v1155-ledger-capture-root .v1056-ledger-screen-body,
+      .v1155-ledger-capture-root .v1057-ledger-screen-body{overflow:visible!important;max-height:none!important;height:auto!important;padding:0!important;margin:0!important;background:transparent!important;}
+      .v1155-ledger-capture-root .v1056-ledger-modal-table,
+      .v1155-ledger-capture-root .v1054-daily-ledger,
+      .v1155-ledger-capture-root .v1057-ledger-excel,
+      .v1155-ledger-capture-root .v1063-ledger-pro,
+      .v1155-ledger-capture-root .v1065-ledger-pro{overflow:visible!important;max-height:none!important;height:auto!important;margin:0!important;}
+      .v1155-ledger-capture-root .v1110-ledger-pager,
+      .v1155-ledger-capture-root .v1110-ledger-page-badge,
+      .v1155-ledger-capture-root .v1110-ledger-page-prev,
+      .v1155-ledger-capture-root .v1110-ledger-page-next,
+      .v1155-ledger-capture-root .v1112-ledger-pager{display:none!important;}
+    `);
+    return chunks.join("\n");
+  }
+
+  function v1155BuildLedgerScreenPhotoPng(sourceNode, mode) {
+    return new Promise((resolve, reject) => {
+      try {
+        const m = mode === "crypto" ? "crypto" : "bet";
+        const bodyNode = sourceNode?.querySelector(".v1056-ledger-screen-body, .v1057-ledger-screen-body") || document.querySelector(".v1056-ledger-screen-body, .v1057-ledger-screen-body");
+        if (!bodyNode || typeof bodyNode.cloneNode !== "function") throw new Error("Kupon Defteri gövdesi bulunamadı.");
+        const rect = bodyNode.getBoundingClientRect();
+        const baseW = Math.ceil(Math.max(bodyNode.scrollWidth || 0, rect.width || 0, bodyNode.offsetWidth || 0));
+        const baseH = Math.ceil(Math.max(bodyNode.scrollHeight || 0, rect.height || 0, bodyNode.offsetHeight || 0));
+        const width = Math.max(320, baseW);
+        const height = Math.max(160, baseH);
+        const clone = bodyNode.cloneNode(true);
+        clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+        clone.querySelectorAll("[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock], .v1060-ledger-head-actions, .v1063-ledger-head-actions").forEach(el => el.remove());
+        clone.querySelectorAll(".v1110-ledger-pager, .v1110-ledger-page-badge, .v1110-ledger-page-prev, .v1110-ledger-page-next, .v1112-ledger-pager").forEach(el => el.remove());
+        const captureRoot = document.createElement("div");
+        captureRoot.className = `v1155-ledger-capture-root ${m}`;
+        captureRoot.style.width = `${width}px`;
+        captureRoot.style.minWidth = `${width}px`;
+        captureRoot.style.height = "auto";
+        captureRoot.style.minHeight = `${height}px`;
+        captureRoot.appendChild(clone);
+
+        const tempHost = document.createElement("div");
+        tempHost.style.position = "fixed";
+        tempHost.style.left = "-99999px";
+        tempHost.style.top = "0";
+        tempHost.style.width = `${width}px`;
+        tempHost.style.height = "auto";
+        tempHost.style.overflow = "visible";
+        tempHost.style.background = "#020617";
+        tempHost.appendChild(captureRoot);
+        document.body.appendChild(tempHost);
+
+        requestAnimationFrame(() => {
+          try {
+            const finalW = Math.ceil(Math.max(width, captureRoot.scrollWidth || 0, captureRoot.getBoundingClientRect().width || 0));
+            const finalH = Math.ceil(Math.max(height, captureRoot.scrollHeight || 0, captureRoot.getBoundingClientRect().height || 0));
+            const serialized = new XMLSerializer().serializeToString(captureRoot);
+            const cssText = v1155EscapeCssText(v1155CollectCaptureCss());
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${finalW}" height="${finalH}" viewBox="0 0 ${finalW} ${finalH}">
+              <foreignObject x="0" y="0" width="${finalW}" height="${finalH}">
+                <div xmlns="http://www.w3.org/1999/xhtml">
+                  <style>${cssText}</style>${serialized}
+                </div>
+              </foreignObject>
+            </svg>`;
+            const img = new Image();
+            img.onload = () => {
+              try {
+                const canvas = document.createElement("canvas");
+                canvas.width = finalW;
+                canvas.height = finalH;
+                const ctx = canvas.getContext("2d");
+                ctx.fillStyle = "#020617";
+                ctx.fillRect(0, 0, finalW, finalH);
+                ctx.drawImage(img, 0, 0);
+                const png = canvas.toDataURL("image/png");
+                tempHost.remove();
+                resolve(png);
+              } catch (error) {
+                tempHost.remove();
+                reject(error);
+              }
+            };
+            img.onerror = () => {
+              tempHost.remove();
+              reject(new Error("PNG üretilemedi."));
+            };
+            img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+          } catch (error) {
+            tempHost.remove();
+            reject(error);
+          }
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  function v1144OpenLedgerImageTab(dataUrl, title = "Defter Fotoğrafı", filename = "bulten-kupon-defteri.png", sourceNode = null, mode = "bet") {
+    if (!dataUrl && !sourceNode) return false;
     const safeFilename = cleanText(filename || "bulten-kupon-defteri.png").replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "bulten-kupon-defteri.png";
     const key = v1152LedgerPhotoStorageKey(safeFilename);
     try {
       v1152CleanupOldLedgerPhotos();
-      localStorage.setItem(key, JSON.stringify({ dataUrl, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
+      localStorage.setItem(key, JSON.stringify({ pending: true, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
     } catch {
       return false;
     }
+    let win = null;
     try {
       const url = new URL("photo-viewer.html", window.location.href);
       url.searchParams.set("file", safeFilename);
       url.searchParams.set("key", key);
-      const win = window.open(url.toString(), "_blank");
+      win = window.open(url.toString(), "_blank");
       if (!win) return false;
       try { win.focus(); } catch {}
-      return true;
     } catch {
       return false;
     }
+    v1155BuildLedgerScreenPhotoPng(sourceNode, mode).then(pngUrl => {
+      try {
+        localStorage.setItem(key, JSON.stringify({ dataUrl: pngUrl, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
+      } catch {}
+      try { win.postMessage({ type: "bulten-ledger-photo-ready", key }, window.location.origin); } catch {}
+    }).catch(() => {
+      try {
+        localStorage.setItem(key, JSON.stringify({ dataUrl, filename: safeFilename, title: cleanText(title || "Defter Fotoğrafı"), ts: Date.now() }));
+      } catch {}
+      try { win.postMessage({ type: "bulten-ledger-photo-ready", key }, window.location.origin); } catch {}
+    });
+    return true;
   }
 
   function openLedgerScreenPhotoPreview(dataUrl, filename, title = "Defter Fotoğrafı", sourceNode = null) {
@@ -4356,8 +4484,8 @@
       const title = photoMode === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
       const dataUrl = v1143BuildLedgerScreenPhotoSvg(photoMode) || v1060BuildLedgerPhotoSvg(photoMode);
       const filename = `bulten-${photoMode === "crypto" ? "kripto-islem-defteri" : "bahis-kupon-defteri"}-${new Date().toISOString().slice(0,10)}.png`;
-      if (v1144OpenLedgerImageTab(dataUrl, title, filename)) return;
       const sourceModal = btn.closest(".v1056-ledger-screen-modal") || document.querySelector(".v1056-ledger-screen-modal");
+      if (v1144OpenLedgerImageTab(dataUrl, title, filename, sourceModal, photoMode)) return;
       openLedgerScreenPhotoPreview(dataUrl, filename, title, sourceModal);
     }));
     v1057BindLedgerScreen(host, m);

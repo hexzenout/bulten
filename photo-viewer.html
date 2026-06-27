@@ -41,6 +41,18 @@
       font-size: 14px;
       font-weight: 800;
     }
+    .loading-state {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      box-sizing: border-box;
+      text-align: center;
+      color: #fbbf24;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .02em;
+    }
   </style>
 </head>
 <body>
@@ -52,21 +64,63 @@
       const fileParam = params.get("file") || "bulten-kupon-defteri.png";
       const safeFile = String(fileParam).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "bulten-kupon-defteri.png";
       const stage = document.querySelector("[data-stage]");
-      let payload = null;
-      try { payload = JSON.parse(localStorage.getItem(key) || "null"); } catch {}
+      let renderedDataUrl = "";
+
       document.title = safeFile;
-      if (!payload || !payload.dataUrl) {
-        if (stage) stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
-        return;
+
+      function readPayload() {
+        try { return JSON.parse(localStorage.getItem(key) || "null"); } catch { return null; }
       }
-      const img = new Image();
-      img.alt = payload.title || safeFile;
-      img.decoding = "sync";
-      img.src = payload.dataUrl;
-      if (stage) {
-        stage.textContent = "";
-        stage.appendChild(img);
+
+      function renderPayload() {
+        const payload = readPayload();
+        if (!payload) {
+          if (stage) stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
+          return false;
+        }
+        if (payload.pending && !payload.dataUrl) {
+          if (stage && !stage.querySelector(".loading-state")) {
+            stage.innerHTML = '<div class="loading-state">Görsel hazırlanıyor...</div>';
+          }
+          return false;
+        }
+        if (!payload.dataUrl) {
+          if (stage) stage.innerHTML = '<div class="empty-state">Görsel bulunamadı. Kupon Defteri ekranından kamera ikonuna tekrar bas.</div>';
+          return false;
+        }
+        if (payload.dataUrl === renderedDataUrl && stage.querySelector("img")) return true;
+        const filename = String(payload.filename || safeFile).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || safeFile;
+        document.title = filename;
+        renderedDataUrl = payload.dataUrl;
+        const img = new Image();
+        img.alt = payload.title || filename;
+        img.decoding = "sync";
+        img.src = payload.dataUrl;
+        if (stage) {
+          stage.textContent = "";
+          stage.appendChild(img);
+        }
+        return true;
       }
+
+      renderPayload();
+
+      let attempts = 0;
+      const timer = setInterval(() => {
+        attempts += 1;
+        if (renderPayload() || attempts > 80) clearInterval(timer);
+      }, 250);
+
+      window.addEventListener("message", event => {
+        if (event.origin !== location.origin) return;
+        if (!event.data || event.data.type !== "bulten-ledger-photo-ready") return;
+        if (event.data.key && event.data.key !== key) return;
+        renderPayload();
+      });
+
+      window.addEventListener("storage", event => {
+        if (event.key === key) renderPayload();
+      });
     })();
   </script>
 </body>
