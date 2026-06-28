@@ -616,17 +616,53 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(7),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(7){width:84px!important;min-width:84px!important;max-width:84px!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{font-size:10.95px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;letter-spacing:0!important;}
-      /* V1185: Kripto tek tablo gerçek sola otursun; sağ boşluk kalksın; Tarih/Saat → Kamera → X header sırası korunsun. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"]{width:min(470px, calc(100vw - 10px))!important;max-width:min(470px, calc(100vw - 10px))!important;}
+      /* V1186: Kripto tek tablo modal min-width kaynaklı sağ boşluğu kapat; tabloyu hafif büyütüp Kar-zarar taşmasını önle. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"]{width:min(508px, calc(100vw - 10px))!important;min-width:min(508px, calc(100vw - 10px))!important;max-width:min(508px, calc(100vw - 10px))!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1056-ledger-screen-head,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1057-ledger-screen-head,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1060-ledger-screen-head,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1065-ledger-screen-head{width:460px!important;min-width:460px!important;max-width:460px!important;box-sizing:border-box!important;padding-left:0!important;padding-right:0!important;margin-left:0!important;margin-right:0!important;align-self:flex-start!important;justify-content:space-between!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1065-ledger-screen-head{width:492px!important;min-width:492px!important;max-width:492px!important;box-sizing:border-box!important;padding-left:0!important;padding-right:0!important;margin-left:0!important;margin-right:0!important;align-self:flex-start!important;justify-content:space-between!important;overflow:visible!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1056-ledger-screen-body,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1057-ledger-screen-body{padding-left:0!important;padding-right:0!important;align-items:flex-start!important;overflow-x:hidden!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto{margin-left:0!important;margin-right:0!important;align-self:flex-start!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1057-ledger-screen-body{width:508px!important;min-width:508px!important;max-width:508px!important;box-sizing:border-box!important;padding-left:0!important;padding-right:16px!important;align-items:flex-start!important;overflow-x:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto{margin-left:0!important;margin-right:0!important;align-self:flex-start!important;width:max-content!important;max-width:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1057-ledger-sheet-grid,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1061-ledger-sheet-grid{margin-left:0!important;margin-right:0!important;justify-content:start!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1061-ledger-sheet-grid{grid-template-columns:492px!important;width:492px!important;min-width:492px!important;max-width:492px!important;margin-left:0!important;margin-right:0!important;justify-content:start!important;gap:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1057-ledger-sheet,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1061-ledger-sheet,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1059-ledger-summary,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1060-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1061-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1057-ledger-excel-table,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1061-ledger-excel-table{width:492px!important;min-width:492px!important;max-width:492px!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(1){width:32px!important;min-width:32px!important;max-width:32px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(2){width:76px!important;min-width:76px!important;max-width:76px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(3){width:108px!important;min-width:108px!important;max-width:108px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(4){width:58px!important;min-width:58px!important;max-width:58px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(5){width:68px!important;min-width:68px!important;max-width:68px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(6){width:48px!important;min-width:48px!important;max-width:48px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(7){width:96px!important;min-width:96px!important;max-width:96px!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{font-size:10.95px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;letter-spacing:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1060-ledger-head-actions,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1063-ledger-head-actions{position:static!important;margin-left:auto!important;display:inline-flex!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;flex:0 0 auto!important;z-index:240!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"] .v1060-ledger-head-actions > *,
@@ -3133,7 +3169,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1185-crypto-left-header-actions-fit&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1186-crypto-modal-width-fit&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
