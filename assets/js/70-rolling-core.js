@@ -2219,6 +2219,23 @@
         #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{overflow-y:auto!important;}
       }
 
+      /* V1214: Bahis test tablolarında scroll çalışsın ama kaydırma çubuğu görünmesin. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{
+        overflow-y:auto!important;
+        overflow-x:hidden!important;
+        scrollbar-width:none!important;
+        -ms-overflow-style:none!important;
+        scrollbar-gutter:auto!important;
+        overscroll-behavior:contain!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body::-webkit-scrollbar,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body::-webkit-scrollbar{
+        width:0!important;
+        height:0!important;
+        display:none!important;
+      }
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
