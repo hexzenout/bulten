@@ -143,10 +143,6 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="1"]{width:min(780px, calc(100vw - 4px))!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="2"]{width:min(1480px, calc(100vw - 4px))!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols="3"]{width:min(1760px, calc(100vw - 4px))!important;}
-      /* V1217: Bahis test defteri ekranda eski fotoğraf/çıktı genişliğine yakın kalsın; tablo gereksiz sağa esneyip yazı kırpmasın. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"]{width:min(540px, calc(100vw - 12px))!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"]{width:min(1068px, calc(100vw - 12px))!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="3"]{width:min(1596px, calc(100vw - 12px))!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1056-ledger-screen-head,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1057-ledger-screen-head,
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-screen-head,
@@ -2246,27 +2242,17 @@
 
 
 
-      /* V1216: Test satırı ve manuel/gerçek satır yazılarını aynı stile kilitle. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3){
-        color:#071827!important;
-        text-shadow:none!important;
-      }
+      /* V1217: Bahis Maç/Kupon stiline dokunma; sadece kripto Coin manuel/test yazısını eşitle. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3){
         background:#dbeafe!important;
         color:#071827!important;
         text-shadow:none!important;
       }
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1057-ledger-input,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-line,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1078-ledger-match-text,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-name,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{
         color:#071827!important;
         font-family:Arial,Helvetica,sans-serif!important;
-        font-size:10.8px!important;
+        font-size:10.7px!important;
         font-weight:900!important;
         letter-spacing:0!important;
         line-height:1.16!important;
@@ -2276,18 +2262,6 @@
         text-transform:none!important;
         font-style:normal!important;
         opacity:1!important;
-      }
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1057-ledger-input,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-name{
-        font-size:10.7px!important;
-        font-weight:900!important;
-      }
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{
-        font-size:10.7px!important;
-        font-weight:900!important;
         overflow:hidden!important;
         text-overflow:ellipsis!important;
       }
@@ -4806,7 +4780,7 @@
     const key = v1163LedgerOutputStorageKey();
     const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
     const filename = v1162LedgerFilename(m);
-    const payload = { mode: m, title, filename, html: v1163BuildLedgerOutputHtml(m), ts: Date.now(), v: "1217" };
+    const payload = { mode: m, title, filename, html: v1163BuildLedgerOutputHtml(m), ts: Date.now(), v: "1209" };
     if (!payload.html) {
       alert("Kupon Defteri çıktısı hazırlanamadı. Defteri kapatıp tekrar aç.");
       return;
@@ -4816,7 +4790,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1217-ledger-width-hover-freeze-fix&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1217-bet-match-style-restore&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }

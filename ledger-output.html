@@ -792,17 +792,11 @@
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3) .v1057-ledger-input{color:#071827!important;text-shadow:none!important;font-size:10.9px!important;font-weight:950!important;letter-spacing:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;background:transparent!important;}
 
 
-    /* V1216: Çıktı sayfasında manuel/test yazı stili aynı kalsın. */
-    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3){color:#071827!important;text-shadow:none!important;}
+    /* V1217: Çıktıda bahis Maç/Kupon stilini koru; sadece kripto Coin manuel/test yazısını eşitle. */
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3){background:#dbeafe!important;color:#071827!important;text-shadow:none!important;}
-    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
-    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines,
-    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-line,
-    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1078-ledger-match-text,
-    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-name,
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{
-      color:#071827!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.7px!important;font-weight:900!important;letter-spacing:0!important;line-height:1.16!important;text-shadow:none!important;background:transparent!important;white-space:nowrap!important;text-transform:none!important;font-style:normal!important;opacity:1!important;
+      color:#071827!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.7px!important;font-weight:900!important;letter-spacing:0!important;line-height:1.16!important;text-shadow:none!important;background:transparent!important;white-space:nowrap!important;text-transform:none!important;font-style:normal!important;opacity:1!important;overflow:hidden!important;text-overflow:ellipsis!important;
     }
 
   </style>
@@ -1040,6 +1034,7 @@
     clearPngWarmCache();
     setTimeout(() => prepareOutputNode(outputNode), 120);
     setTimeout(() => prepareOutputNode(outputNode), 320);
+    setTimeout(() => { ensurePngBlob().catch(() => {}); }, 420);
     return true;
   }
 
