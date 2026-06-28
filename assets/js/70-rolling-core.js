@@ -2581,6 +2581,27 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(4) .v1063-ledger-value,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(4) .v1063-ledger-value{white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;font-size:9.6px!important;letter-spacing:-.01em!important;}
 
+
+      /* V1235: 2/3 tablo ve çıktı tarafında kısa kolon altta boş kutu gibi uzamasın; satır yüksekliği/kolon genişliği değişmez. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet{height:auto!important;min-height:0!important;max-height:none!important;align-self:flex-start!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-sheet-grid,
+      .v1162-ledger-output-modal.bet .v1057-ledger-sheet-grid,
+      .v1162-ledger-output-modal.bet .v1061-ledger-sheet-grid{align-items:start!important;align-content:start!important;grid-auto-rows:max-content!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-sheet,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-sheet,
+      .v1162-ledger-output-modal.bet .v1057-ledger-sheet,
+      .v1162-ledger-output-modal.bet .v1061-ledger-sheet{height:max-content!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;align-self:flex-start!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-excel-table,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-excel-table,
+      .v1162-ledger-output-modal.bet .v1057-ledger-excel-table,
+      .v1162-ledger-output-modal.bet .v1061-ledger-excel-table{height:auto!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;align-self:flex-start!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-excel-table tbody,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-excel-table tbody,
+      .v1162-ledger-output-modal.bet .v1057-ledger-excel-table tbody,
+      .v1162-ledger-output-modal.bet .v1061-ledger-excel-table tbody{height:auto!important;min-height:0!important;max-height:none!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
