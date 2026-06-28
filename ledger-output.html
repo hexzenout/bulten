@@ -985,6 +985,18 @@
     .v1162-ledger-output-modal.crypto tr.v1225-ledger-row-longcoin td:nth-child(3) .v1063-ledger-value,
     .v1162-ledger-output-modal.crypto tr.v1225-ledger-row-longcoin td:nth-child(3) .v1057-ledger-input{height:100%!important;min-height:0!important;max-height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:1px 2px!important;box-sizing:border-box!important;font-size:10.25px!important;line-height:1.05!important;white-space:normal!important;overflow:hidden!important;text-overflow:clip!important;}
 
+    /* V1228: çıktı tarafında tekli yazılar satır yüksekliğini büyütmeden aynı fontla dikey ortada kalır. */
+    .v1162-ledger-output-modal.bet tr.v1118-ledger-row-single,
+    .v1162-ledger-output-modal.bet tr.v1118-ledger-row-single td{height:21px!important;min-height:21px!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;vertical-align:middle!important;}
+    .v1162-ledger-output-modal.bet .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0 2px!important;box-sizing:border-box!important;overflow:hidden!important;}
+    .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-line{height:21px!important;min-height:21px!important;max-height:21px!important;width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:3px!important;overflow:hidden!important;line-height:1!important;}
+    .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1078-ledger-match-text{display:inline-flex!important;align-items:center!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:clip!important;line-height:1!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.5px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:0!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+    .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-name{display:inline-block!important;min-width:0!important;max-width:calc(100% - 34px)!important;overflow:hidden!important;text-overflow:clip!important;white-space:nowrap!important;vertical-align:middle!important;line-height:1!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.5px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:0!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+    .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1076-ledger-match-odd{display:inline-block!important;flex:0 0 auto!important;margin-left:3px!important;white-space:nowrap!important;line-height:1!important;font-size:10.5px!important;font-weight:1000!important;vertical-align:middle!important;letter-spacing:0!important;color:#fbbf24!important;text-shadow:none!important;filter:none!important;}
+    .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1112-ledger-soft-break{display:none!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{height:100%!important;min-height:0!important;max-height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.55px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:0!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;text-shadow:none!important;filter:none!important;background:transparent!important;}
+
   </style>
 </head>
 <body>
@@ -999,6 +1011,7 @@
   "use strict";
   const params = new URLSearchParams(location.search || "");
   const key = params.get("key") || "";
+  const storeHint = params.get("store") || "";
   const stage = document.getElementById("v1163-stage");
   const titleEl = document.getElementById("v1163-title");
   const menu = document.getElementById("v1163-menu");
@@ -1225,18 +1238,36 @@
     return true;
   }
 
+  function parseStoredRaw(raw){
+    if(!raw) return null;
+    try { return JSON.parse(raw || "null"); } catch(e){ return null; }
+  }
   function readStored(){
     if(!key) return null;
-    try { return JSON.parse(localStorage.getItem(key) || "null"); } catch(e){ return null; }
+    if(storeHint === "s") {
+      const fromSession = parseStoredRaw(sessionStorage.getItem(key));
+      if(fromSession) return fromSession;
+    }
+    const fromLocal = parseStoredRaw(localStorage.getItem(key));
+    if(fromLocal) return fromLocal;
+    return parseStoredRaw(sessionStorage.getItem(key));
+  }
+  function clearStored(){
+    if(!key) return;
+    try { localStorage.removeItem(key); } catch(e){}
+    try { sessionStorage.removeItem(key); } catch(e){}
   }
 
   let tries=0;
   const timer=setInterval(() => {
     tries++;
     const data=readStored();
-    if(renderPayload(data) || tries > 60){
+    if(renderPayload(data)){
+      clearStored();
       clearInterval(timer);
-      if(!data && tries > 60) stage.innerHTML='<div class="v1163-error">Çıktı bulunamadı. Kupon Defteri ekranından kameraya tekrar bas.</div>';
+    } else if(tries > 60){
+      clearInterval(timer);
+      stage.innerHTML='<div class="v1163-error">Çıktı bulunamadı. Kupon Defteri ekranından kameraya tekrar bas.</div>';
     }
   }, 100);
 

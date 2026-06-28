@@ -2489,6 +2489,28 @@
       .v1162-ledger-output-modal.crypto tr.v1225-ledger-row-longcoin td:nth-child(3) .v1063-ledger-value,
       .v1162-ledger-output-modal.crypto tr.v1225-ledger-row-longcoin td:nth-child(3) .v1057-ledger-input{height:100%!important;min-height:0!important;max-height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:1px 2px!important;box-sizing:border-box!important;font-size:10.25px!important;line-height:1.05!important;white-space:normal!important;overflow:hidden!important;text-overflow:clip!important;}
 
+      /* V1228: tüm manuel/test tekli yazılar aynı fontla, satır yüksekliğini büyütmeden dikey ortada kalsın. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-single,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-single td,
+      .v1162-ledger-output-modal.bet tr.v1118-ledger-row-single,
+      .v1162-ledger-output-modal.bet tr.v1118-ledger-row-single td{height:21px!important;min-height:21px!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;vertical-align:middle!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
+      .v1162-ledger-output-modal.bet .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0 2px!important;box-sizing:border-box!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-line{height:21px!important;min-height:21px!important;max-height:21px!important;width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:3px!important;overflow:hidden!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1078-ledger-match-text{display:inline-flex!important;align-items:center!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:clip!important;line-height:1!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.5px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:0!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-name{display:inline-block!important;min-width:0!important;max-width:calc(100% - 34px)!important;overflow:hidden!important;text-overflow:clip!important;white-space:nowrap!important;vertical-align:middle!important;line-height:1!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.5px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:0!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1076-ledger-match-odd{display:inline-block!important;flex:0 0 auto!important;margin-left:3px!important;white-space:nowrap!important;line-height:1!important;font-size:10.5px!important;font-weight:1000!important;vertical-align:middle!important;letter-spacing:0!important;color:#fbbf24!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1112-ledger-soft-break,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1112-ledger-soft-break{display:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input,
+      .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
+      .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{height:100%!important;min-height:0!important;max-height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.55px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:0!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;text-shadow:none!important;filter:none!important;background:transparent!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -4955,6 +4977,30 @@
     return `bulten_ledger_output_${Date.now()}_${Math.random().toString(16).slice(2)}`;
   }
 
+  function v1163CleanupLedgerOutputStorage() {
+    const cleanStore = (store) => {
+      if (!store) return;
+      try {
+        const keys = [];
+        for (let i = 0; i < store.length; i += 1) {
+          const k = store.key(i);
+          if (k && k.startsWith("bulten_ledger_output_")) keys.push(k);
+        }
+        keys.forEach(k => { try { store.removeItem(k); } catch {} });
+      } catch {}
+    };
+    cleanStore(localStorage);
+    cleanStore(sessionStorage);
+  }
+
+  function v1163WriteLedgerOutputPayload(key, payload) {
+    const raw = JSON.stringify(payload);
+    v1163CleanupLedgerOutputStorage();
+    try { localStorage.setItem(key, raw); return "l"; } catch {}
+    try { sessionStorage.setItem(key, raw); return "s"; } catch {}
+    return "";
+  }
+
   function v1163BuildLedgerOutputHtml(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const tempHost = document.createElement("div");
@@ -5008,12 +5054,12 @@
       alert("Kupon Defteri çıktısı hazırlanamadı. Defteri kapatıp tekrar aç.");
       return;
     }
-    try { localStorage.setItem(key, JSON.stringify(payload)); }
-    catch (error) {
-      alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
+    const store = v1163WriteLedgerOutputPayload(key, payload);
+    if (!store) {
+      alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1225-ledger-long-text-wrap&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1228-ledger-single-text-storage&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
@@ -6547,6 +6593,9 @@
       .replace(/\s+ve\s+(\d+(?:[.,]\d+)?\s*(?:üst|alt)\b)/giu, '<br class="v1112-ledger-soft-break">ve $1')
       .replace(/\s+(?:veya|ya da)\s+/giu, '<br class="v1112-ledger-soft-break">$&');
   }
+  function v1228LedgerSingleMatchNameHtml(name) {
+    return escapeHtml(cleanText(name || ""));
+  }
   function v1069LedgerSplitItemText(text) {
     return String(text || "").split(/\s+\+\s+/).map(part => part.replace(/\s*\|\s*\d+(?:[.,]\d+)?\s*$/g, "").trim()).filter(Boolean);
   }
@@ -6569,7 +6618,7 @@
       const title = `${mark} ${name}`;
       const odds = v1076LedgerOddsText(lines[0]?.odds);
       const oddsHtml = odds ? `<span class="v1076-ledger-match-odd">${escapeHtml(odds)}</span>` : "";
-      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark"${v1171LedgerStatusMarkAttrs(status)}>${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1112LedgerMatchNameHtml(name)}</span>${oddsHtml}</span></span></span>`;
+      return `<span class="${cls}" title="${escapeHtml(title)}"><span class="v1069-ledger-match-line ${status}"><span class="v1069-ledger-status-mark"${v1171LedgerStatusMarkAttrs(status)}>${v1119LedgerStatusMarkHtml(status)}</span><span class="v1078-ledger-match-text"><span class="v1069-ledger-match-name">${v1228LedgerSingleMatchNameHtml(name)}</span>${oddsHtml}</span></span></span>`;
     }
     const title = lines.map(line => `${v1069LedgerStatusMark(v1069LedgerLineStatus(row, line))} ${line.name}`).join("\n");
     const body = lines.map((line, lineIndex) => {
@@ -6619,7 +6668,7 @@
     }
     if (mode !== "bet") return "";
     const info = v1118LedgerBetLineInfo(row);
-    if (info.count <= 1) return info.isLong ? "v1118-ledger-row-longcombo v1118-ledger-row-longsingle" : "v1118-ledger-row-single";
+    if (info.count <= 1) return "v1118-ledger-row-single";
     return info.isLong ? "v1118-ledger-row-longcombo" : "v1118-ledger-row-combo";
   }
 
