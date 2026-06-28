@@ -2526,6 +2526,26 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1112-ledger-soft-break,
       .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1112-ledger-soft-break{display:block!important;content:""!important;height:0!important;line-height:0!important;margin:0!important;padding:0!important;}
 
+      /* V1230: tekli manuel metin birebir basılır; satır yüksekliği ve tablo sığma mantığı değişmez. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-single,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-single td,
+      .v1162-ledger-output-modal.bet tr.v1118-ledger-row-single,
+      .v1162-ledger-output-modal.bet tr.v1118-ledger-row-single td{height:21px!important;min-height:21px!important;max-height:21px!important;padding-top:0!important;padding-bottom:0!important;vertical-align:middle!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
+      .v1162-ledger-output-modal.bet .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0 2px!important;box-sizing:border-box!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-line{height:21px!important;min-height:21px!important;max-height:21px!important;width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:3px!important;overflow:hidden!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1078-ledger-match-text{display:flex!important;align-items:center!important;min-width:0!important;max-width:100%!important;width:100%!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:clip!important;line-height:1!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.35px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:-.006em!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-name{display:block!important;flex:1 1 auto!important;min-width:0!important;max-width:none!important;overflow:hidden!important;text-overflow:clip!important;white-space:nowrap!important;vertical-align:middle!important;line-height:1!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.35px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:-.006em!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1076-ledger-match-odd{display:block!important;flex:0 0 auto!important;margin-left:3px!important;white-space:nowrap!important;line-height:1!important;font-size:10.35px!important;font-weight:1000!important;vertical-align:middle!important;color:#fbbf24!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1229-ledger-compact-break,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1112-ledger-soft-break,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1229-ledger-compact-break,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1112-ledger-soft-break{display:none!important;content:none!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -5074,7 +5094,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1229-ledger-single-compact-text&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1230-single-manual-exact-text&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
@@ -6611,23 +6631,7 @@
   function v1228LedgerSingleMatchNameHtml(name) {
     const text = cleanText(name || "");
     if (!text) return "";
-    const safeBreak = (left, right) => `${escapeHtml(left)}<br class="v1229-ledger-compact-break">${escapeHtml(right)}`;
-    const known = v1112LedgerMatchNameHtml(text);
-    if (known.includes("v1112-ledger-soft-break")) return known.replace(/v1112-ledger-soft-break/g, "v1229-ledger-compact-break");
-    if (text.length <= 18) return escapeHtml(text);
-    const words = text.split(/\s+/).filter(Boolean);
-    if (words.length <= 1) return escapeHtml(text);
-    let left = words[0];
-    let splitAt = 1;
-    for (let i = 1; i < words.length; i += 1) {
-      const candidate = `${left} ${words[i]}`;
-      if (candidate.length > 18) break;
-      left = candidate;
-      splitAt = i + 1;
-    }
-    const right = words.slice(splitAt).join(" ").trim();
-    if (!right || left.length < 8) return escapeHtml(text);
-    return safeBreak(left, right);
+    return escapeHtml(text);
   }
   function v1069LedgerSplitItemText(text) {
     return String(text || "").split(/\s+\+\s+/).map(part => part.replace(/\s*\|\s*\d+(?:[.,]\d+)?\s*$/g, "").trim()).filter(Boolean);
