@@ -1517,6 +1517,168 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(7) .v1063-ledger-value{font-size:10.65px!important;letter-spacing:-.018em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
 
 
+      /* V1199: Kripto modalı kolon kısmadan büyüt; yeşil summary ile Kar-zarar bitişini tek genişlik referansına kilitle. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto{
+        --v1199-crypto-sheet:560px;
+        --v1199-crypto-gap:8px;
+        --v1199-crypto-scroll:17px;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="1"]{--v1199-crypto-content:560px;--v1199-crypto-modal:577px;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="2"]{--v1199-crypto-content:1128px;--v1199-crypto-modal:1145px;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols="3"]{--v1199-crypto-content:1696px;--v1199-crypto-modal:1713px;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols]{
+        width:min(var(--v1199-crypto-modal), calc(100vw - 10px))!important;
+        min-width:min(var(--v1199-crypto-modal), calc(100vw - 10px))!important;
+        max-width:min(var(--v1199-crypto-modal), calc(100vw - 10px))!important;
+        overflow:hidden!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1056-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1065-ledger-screen-head{
+        width:var(--v1199-crypto-content)!important;
+        min-width:var(--v1199-crypto-content)!important;
+        max-width:var(--v1199-crypto-content)!important;
+        box-sizing:border-box!important;
+        padding:0!important;
+        margin:0!important;
+        align-self:flex-start!important;
+        display:flex!important;
+        align-items:center!important;
+        justify-content:space-between!important;
+        overflow:visible!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-head-actions,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1063-ledger-head-actions{
+        position:static!important;
+        margin-left:auto!important;
+        margin-right:0!important;
+        display:inline-flex!important;
+        align-items:center!important;
+        justify-content:flex-end!important;
+        gap:6px!important;
+        flex:0 0 auto!important;
+        overflow:visible!important;
+        z-index:380!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-head-actions > *,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1063-ledger-head-actions > *{
+        position:static!important;
+        inset:auto!important;
+        margin:0!important;
+        flex:0 0 auto!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-head-actions > button[data-v1056-ledger-close],
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1063-ledger-head-actions > button[data-v1056-ledger-close]{
+        width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-screen-body{
+        width:var(--v1199-crypto-modal)!important;
+        min-width:var(--v1199-crypto-modal)!important;
+        max-width:var(--v1199-crypto-modal)!important;
+        box-sizing:border-box!important;
+        padding:0!important;
+        margin:0!important;
+        align-items:flex-start!important;
+        overflow-x:hidden!important;
+        overflow-y:auto!important;
+        scrollbar-gutter:stable!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto{
+        width:var(--v1199-crypto-content)!important;
+        min-width:var(--v1199-crypto-content)!important;
+        max-width:var(--v1199-crypto-content)!important;
+        align-self:flex-start!important;
+        margin:0!important;
+        overflow:visible!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-sheet-grid{
+        grid-template-columns:repeat(var(--v1110-ledger-cols,1), var(--v1199-crypto-sheet))!important;
+        width:var(--v1199-crypto-content)!important;
+        min-width:var(--v1199-crypto-content)!important;
+        max-width:var(--v1199-crypto-content)!important;
+        gap:var(--v1199-crypto-gap)!important;
+        justify-content:start!important;
+        align-items:start!important;
+        margin:0!important;
+        overflow:visible!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-sheet,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-sheet,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1059-ledger-summary,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-excel-table,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-excel-table{
+        width:var(--v1199-crypto-sheet)!important;
+        min-width:var(--v1199-crypto-sheet)!important;
+        max-width:var(--v1199-crypto-sheet)!important;
+        box-sizing:border-box!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1059-ledger-summary,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-summary-inline{
+        display:grid!important;
+        grid-template-columns:repeat(3,1fr)!important;
+        gap:0!important;
+        border-left:1px solid #0f172a!important;
+        border-right:1px solid #0f172a!important;
+        border-bottom:0!important;
+        background:transparent!important;
+        box-sizing:border-box!important;
+        overflow:hidden!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1059-ledger-summary > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-summary-inline > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-summary-inline > div{
+        width:auto!important;
+        min-width:0!important;
+        max-width:none!important;
+        border-right:1px solid #0f172a!important;
+        box-sizing:border-box!important;
+        overflow:hidden!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1059-ledger-summary > div:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-summary-inline > div:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-summary-inline > div:nth-child(1){background:#9ccc7c!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1059-ledger-summary > div:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-summary-inline > div:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-summary-inline > div:nth-child(2){background:#7fbd5d!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1059-ledger-summary > div:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1060-ledger-summary-inline > div:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-summary-inline > div:nth-child(3){background:#63a64a!important;border-right:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-excel-table,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-excel-table{
+        table-layout:fixed!important;
+        border-collapse:collapse!important;
+        border-right:1px solid #0f172a!important;
+        box-sizing:border-box!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-excel-table th,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-excel-table td,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-excel-table th,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-excel-table td{box-sizing:border-box!important;padding-left:2px!important;padding-right:2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(1){width:34px!important;min-width:34px!important;max-width:34px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(2){width:78px!important;min-width:78px!important;max-width:78px!important;white-space:nowrap!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3){width:126px!important;min-width:126px!important;max-width:126px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(4){width:56px!important;min-width:56px!important;max-width:56px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(5){width:70px!important;min-width:70px!important;max-width:70px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(6){width:84px!important;min-width:84px!important;max-width:84px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(7){width:112px!important;min-width:112px!important;max-width:112px!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{font-size:10.8px!important;letter-spacing:-.018em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(6) .v1063-ledger-value{font-size:10.55px!important;letter-spacing:-.02em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(7) .v1063-ledger-value{font-size:10.75px!important;letter-spacing:-.012em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
+
+
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
