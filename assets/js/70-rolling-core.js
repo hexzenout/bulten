@@ -907,6 +907,17 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(6) .v1063-ledger-value{font-size:10.55px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;letter-spacing:-.02em!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(7) .v1063-ledger-value{font-size:10.75px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
 
+
+      /* V1192: Bahis + kripto üst kasa kutularındaki sol/sağ köşe izini temizle; layout genişliğine dokunma. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-summary-inline,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-summary-blank{border-radius:0!important;outline:0!important;box-shadow:none!important;clip-path:inset(0)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1059-ledger-summary > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1060-ledger-summary-inline > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1061-ledger-summary-inline > div,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal .v1110-ledger-summary-blank > div{border-radius:0!important;outline:0!important;box-shadow:none!important;}
+
       .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
