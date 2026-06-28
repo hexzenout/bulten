@@ -2573,6 +2573,21 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1076-ledger-match-odd,
       .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1076-ledger-match-odd{display:inline!important;margin-left:3px!important;white-space:nowrap!important;line-height:.88!important;font-size:10px!important;font-weight:1000!important;color:#fbbf24!important;letter-spacing:-.004em!important;text-shadow:none!important;filter:none!important;}
 
+      /* V1233: ekranda boş hizalama kutuları görünmesin; gerçek satır nerede bittiyse tablo orada biter. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1119-ledger-row-filler,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1119-ledger-row-filler td{display:none!important;height:0!important;min-height:0!important;max-height:0!important;padding:0!important;border:0!important;line-height:0!important;overflow:hidden!important;}
+      /* V1233: kamera çıktısı ile ekrandaki bahis tip hücresi aynı okunurlukta kalsın. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:31.6%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:12.8%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(4) .v1063-ledger-value,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(4) .v1063-ledger-value{white-space:nowrap!important;overflow:visible!important;font-size:9.8px!important;letter-spacing:-.01em!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2900,14 +2915,8 @@
         page.chunks = [[]];
         page.weights = [0];
       }
-      if (m === "bet" && v1103LedgerTestModeEnabled() && page.chunks.length > 1) {
-        const maxPx = Math.max(...(page.weights || [0]).map(v => Number(v || 0)));
-        page.chunks = page.chunks.map((chunk, i) => {
-          const usedPx = Number(page.weights?.[i] || 0);
-          const missingPx = Math.max(0, maxPx - usedPx);
-          return missingPx > 0.5 ? chunk.concat([{ _v1119Filler: true, _v1119FillerPx: Math.round(missingPx) }]) : chunk;
-        });
-      }
+      /* V1233: bahis tarafında alt hizalama için boş/filler kutu üretme.
+         Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
       pages.push(page);
     };
     source.forEach((row, idx) => {
@@ -5137,7 +5146,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1232-single-long-center-autofit&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1233-no-empty-filler-output-fit&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
