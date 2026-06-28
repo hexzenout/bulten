@@ -202,15 +202,15 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:12.7%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
 
       /* V1218: Bahis kupon defteri tekli/ikili/üçlü görünümde aynı sheet mantığıyla daralsın; Maç / Kupon alanı gereksiz uzamasın. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"]{--v1218-bet-sheet:560px;--v1218-bet-gap:8px;--v1218-bet-content:560px;--v1218-bet-modal:572px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"]{--v1218-bet-sheet:560px;--v1218-bet-gap:8px;--v1218-bet-content:1128px;--v1218-bet-modal:1140px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="3"]{--v1218-bet-sheet:560px;--v1218-bet-gap:8px;--v1218-bet-content:1696px;--v1218-bet-modal:1708px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:524px;--v1218-bet-modal:544px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:1056px;--v1218-bet-modal:1076px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="3"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:1588px;--v1218-bet-modal:1608px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-head,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-head,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1060-ledger-screen-head,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1065-ledger-screen-head{width:var(--v1218-bet-content)!important;min-width:var(--v1218-bet-content)!important;max-width:var(--v1218-bet-content)!important;box-sizing:border-box!important;padding-left:0!important;padding-right:0!important;margin-left:0!important;margin-right:0!important;align-self:flex-start!important;justify-content:space-between!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1065-ledger-screen-head{width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;box-sizing:border-box!important;padding-left:10px!important;padding-right:10px!important;margin-left:0!important;margin-right:0!important;align-self:flex-start!important;justify-content:space-between!important;overflow:visible!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;box-sizing:border-box!important;padding-left:0!important;padding-right:0!important;align-items:flex-start!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-gutter:stable!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;box-sizing:border-box!important;padding-left:10px!important;padding-right:10px!important;align-items:flex-start!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-gutter:stable!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet{margin-left:0!important;margin-right:0!important;align-self:flex-start!important;width:max-content!important;max-width:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-sheet-grid,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-sheet-grid{grid-template-columns:repeat(var(--v1110-ledger-cols,1), var(--v1218-bet-sheet))!important;width:max-content!important;min-width:0!important;max-width:none!important;justify-content:start!important;align-items:start!important;gap:var(--v1218-bet-gap)!important;margin:0!important;}
@@ -222,6 +222,22 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-summary-blank,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-excel-table,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-excel-table{width:var(--v1218-bet-sheet)!important;min-width:var(--v1218-bet-sheet)!important;max-width:var(--v1218-bet-sheet)!important;box-sizing:border-box!important;}
+
+      /* V1219: Bahis sheet daralırken sadece Maç / Kupon boşluğunu azalt; diğer kolonlar okunur kalır. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:6.1%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2){width:16.1%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:32.4%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:12%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5){width:10.9%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.7%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:16.8%!important;}
       /* V1177: Kripto işlem defteri 25'li test düzeni + coin/diğer hücre renkleri */
       #v1056-ledger-screen-host .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(1),
       #v1056-ledger-screen-host .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(2),
@@ -2064,7 +2080,7 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1103-ledger-test-toolbar.v1210-bet-test-toolbar .v1210-bet-test-panel{
         display:none!important;
         position:absolute!important;
-        top:29px!important;
+        top:24px!important;
         left:0!important;
         grid-template-columns:repeat(2,minmax(0,1fr))!important;
         gap:6px!important;
@@ -2077,6 +2093,7 @@
         box-shadow:0 14px 34px rgba(0,0,0,.38)!important;
         z-index:140!important;
       }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1103-ledger-test-toolbar.v1210-bet-test-toolbar::after{content:""!important;position:absolute!important;left:0!important;top:22px!important;width:360px!important;max-width:calc(100vw - 24px)!important;height:10px!important;background:transparent!important;display:block!important;pointer-events:auto!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1103-ledger-test-toolbar.v1210-bet-test-toolbar:hover .v1210-bet-test-panel,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1103-ledger-test-toolbar.v1210-bet-test-toolbar:focus-within .v1210-bet-test-panel{display:grid!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1210-bet-test-panel strong{
