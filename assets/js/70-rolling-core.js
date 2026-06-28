@@ -2561,6 +2561,18 @@
       .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1229-ledger-compact-break,
       .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1112-ledger-soft-break{display:none!important;content:none!important;}
 
+      /* V1232: uzun tekli manuel yazı satır yüksekliğini bozmaz; 21px içinde dikey ortada kalır. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
+      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0 2px!important;overflow:hidden!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-line{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;overflow:hidden!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1078-ledger-match-text{display:block!important;position:relative!important;top:1px!important;max-height:18px!important;min-width:0!important;width:100%!important;overflow:hidden!important;white-space:normal!important;text-overflow:clip!important;line-height:.88!important;font-size:10px!important;font-weight:950!important;letter-spacing:-.004em!important;color:#f8fafc!important;text-align:left!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-name{display:inline!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:.88!important;font-size:10px!important;font-weight:950!important;letter-spacing:-.004em!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1076-ledger-match-odd{display:inline!important;margin-left:3px!important;white-space:nowrap!important;line-height:.88!important;font-size:10px!important;font-weight:1000!important;color:#fbbf24!important;letter-spacing:-.004em!important;text-shadow:none!important;filter:none!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2601,7 +2613,7 @@
     const won = pattern !== 3;
     return { id, ts: ts + index * 1000, source: "test", testOnly: 1, force: 1, date, time: v1056TimeLabelFromTs(ts + index * 1000), item: `Test Tekli Maç ${n}`, itemLines: [{ name: `Test Tekli Maç ${n}`, odds: 2, status: won ? "win" : "loss" }], kind: "Tek", stake: money(stake), roi: "2", pnl: v1069LedgerPnlText(won ? stake : -stake), pnlRaw: won ? stake : -stake, status: won ? "win" : "loss" };
   }
-  function v1103FillLedgerTestRows(mode, targetCount) {
+  function v1103FillLedgerTestRows(mode, targetCount, rowBuilder) {
     const m = mode === "crypto" ? "crypto" : "bet";
     v1103ClearLedgerTestRows(m);
     const realCount = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row)).length;
@@ -2609,7 +2621,8 @@
     const addCount = Math.max(0, total - realCount);
     const edits = v1057LoadLedgerEdits();
     const ts = Date.now() + 1000;
-    for (let i = 0; i < addCount; i += 1) edits[m].manual.push(v1103BuildLedgerTestRow(m, i, ts));
+    const buildRow = typeof rowBuilder === "function" ? rowBuilder : v1103BuildLedgerTestRow;
+    for (let i = 0; i < addCount; i += 1) edits[m].manual.push(buildRow(m, i, ts));
     v1057SaveLedgerEdits(edits);
   }
   function v1139BuildLedgerLongComboTestRow(mode, index, ts) {
@@ -2734,6 +2747,11 @@
       status: pnlRaw < 0 ? "loss" : pnlRaw > 0 ? "win" : "pending"
     };
   }
+  function v1232BuildLedgerAutoFitTestRow(mode, index, ts) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet") return v1103BuildLedgerTestRow(m, index, ts);
+    return v1140BuildLedgerFullMixedTestRow(m, index, ts);
+  }
   function v1140FillLedgerFullMixedTestRows(mode, tableCount) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m !== "bet") return v1103FillLedgerTestRowsByTable(m, tableCount);
@@ -2801,16 +2819,17 @@
     if (count >= 3) return 104;
     return 72;
   }
-  function v1135LedgerTargetTotalForTables(mode, tableCount) {
+  function v1135LedgerTargetTotalForTables(mode, tableCount, rowBuilder) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const safeTables = Math.max(1, Math.min(6, Number(tableCount || 1)));
     const realRows = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row));
     if (m !== "bet") return safeTables * 35;
     let lastGoodTotal = realRows.length;
     const ts = Date.now() + 1000;
+    const buildRow = typeof rowBuilder === "function" ? rowBuilder : v1103BuildLedgerTestRow;
     for (let addCount = 0; addCount <= 500; addCount += 1) {
       const candidateRows = realRows.slice();
-      for (let j = 0; j < addCount; j += 1) candidateRows.push(v1103BuildLedgerTestRow(m, j, ts));
+      for (let j = 0; j < addCount; j += 1) candidateRows.push(buildRow(m, j, ts));
       const chunks = v1135LedgerFlatChunks(v1119LedgerBuildPages(candidateRows, m));
       if (chunks.length > safeTables) return Math.max(realRows.length, lastGoodTotal);
       if (chunks.length === safeTables) lastGoodTotal = candidateRows.length;
@@ -2819,8 +2838,9 @@
   }
   function v1103FillLedgerTestRowsByTable(mode, tableCount) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const total = v1135LedgerTargetTotalForTables(m, tableCount);
-    v1103FillLedgerTestRows(m, total);
+    const rowBuilder = m === "bet" ? v1232BuildLedgerAutoFitTestRow : null;
+    const total = v1135LedgerTargetTotalForTables(m, tableCount, rowBuilder);
+    v1103FillLedgerTestRows(m, total, rowBuilder);
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2879,6 +2899,14 @@
       if (!page.chunks.length) {
         page.chunks = [[]];
         page.weights = [0];
+      }
+      if (m === "bet" && v1103LedgerTestModeEnabled() && page.chunks.length > 1) {
+        const maxPx = Math.max(...(page.weights || [0]).map(v => Number(v || 0)));
+        page.chunks = page.chunks.map((chunk, i) => {
+          const usedPx = Number(page.weights?.[i] || 0);
+          const missingPx = Math.max(0, maxPx - usedPx);
+          return missingPx > 0.5 ? chunk.concat([{ _v1119Filler: true, _v1119FillerPx: Math.round(missingPx) }]) : chunk;
+        });
       }
       pages.push(page);
     };
@@ -5109,7 +5137,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1231-single-inline-odds-flow&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1232-single-long-center-autofit&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
@@ -6720,7 +6748,7 @@
     }
     if (mode !== "bet") return "";
     const info = v1118LedgerBetLineInfo(row);
-    if (info.count <= 1) return "v1118-ledger-row-single";
+    if (info.count <= 1) return info.isLong ? "v1118-ledger-row-single v1232-ledger-row-single-long" : "v1118-ledger-row-single";
     return info.isLong ? "v1118-ledger-row-longcombo" : "v1118-ledger-row-combo";
   }
 
