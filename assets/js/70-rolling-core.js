@@ -2422,6 +2422,40 @@
       .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(3) .v1057-ledger-input,
       .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3) .v1057-ledger-input{color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;text-shadow:none!important;font-weight:950!important;background:transparent!important;}
 
+      /* V1224: Manuel büyük harf / uzun yazı hücreleri test stiliyle aynı kalsın; üst çizgiye yapışmasın ve yazılar net görünsün. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols] .v1057-ledger-excel-table,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols] .v1061-ledger-excel-table,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols] .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols] .v1060-ledger-cell-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols] .v1057-ledger-input,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols] .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols] .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal[data-v1110-ledger-cols] .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal .v1057-ledger-excel-table,
+      .v1162-ledger-output-modal .v1061-ledger-excel-table,
+      .v1162-ledger-output-modal .v1063-ledger-value,
+      .v1162-ledger-output-modal .v1060-ledger-cell-text,
+      .v1162-ledger-output-modal .v1057-ledger-input,
+      .v1162-ledger-output-modal .v1078-ledger-match-text,
+      .v1162-ledger-output-modal .v1069-ledger-match-name,
+      .v1162-ledger-output-modal .v1076-ledger-match-odd{-webkit-font-smoothing:antialiased!important;text-rendering:optimizeLegibility!important;text-shadow:none!important;filter:none!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
+      .v1162-ledger-output-modal.bet .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{height:100%!important;min-height:0!important;max-height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;padding-top:0!important;padding-bottom:0!important;overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-line{width:100%!important;max-width:100%!important;min-width:0!important;height:100%!important;display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:3px!important;overflow:hidden!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1078-ledger-match-text{display:inline-flex!important;align-items:center!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;white-space:nowrap!important;line-height:1.04!important;font-style:normal!important;text-transform:none!important;letter-spacing:-.008em!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-name{display:inline-block!important;min-width:0!important;max-width:calc(100% - 33px)!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;vertical-align:middle!important;line-height:1.04!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.5px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;color:#f8fafc!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1076-ledger-match-odd{flex:0 0 auto!important;display:inline-block!important;margin-left:3px!important;white-space:nowrap!important;line-height:1.04!important;font-size:10.5px!important;font-weight:1000!important;vertical-align:middle!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input,
+      .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
+      .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{width:100%!important;max-width:100%!important;min-width:0!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;line-height:1.06!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.55px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:-.01em!important;color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;background:transparent!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -4946,7 +4980,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1217-bet-match-style-restore&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1224-ledger-long-text-crisp&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
