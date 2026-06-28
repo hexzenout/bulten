@@ -2546,6 +2546,21 @@
       .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1229-ledger-compact-break,
       .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1112-ledger-soft-break{display:none!important;content:none!important;}
 
+
+      /* V1231: Tekli bahis metni + oran aynı akışta kalsın; oran sağa kaçmasın, manuel metin kırpılıp Tür kolonu ile karışmasın. Satır yüksekliği değişmez. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-line{height:21px!important;min-height:21px!important;max-height:21px!important;width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:3px!important;overflow:hidden!important;line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1078-ledger-match-text{display:block!important;flex:1 1 auto!important;min-width:0!important;max-width:100%!important;width:auto!important;height:auto!important;max-height:20px!important;overflow:hidden!important;white-space:normal!important;text-overflow:clip!important;line-height:.92!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.2px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:0!important;color:#f8fafc!important;text-align:left!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1069-ledger-match-name{display:inline!important;flex:0 1 auto!important;min-width:0!important;max-width:none!important;width:auto!important;overflow:visible!important;text-overflow:clip!important;white-space:normal!important;vertical-align:baseline!important;line-height:.92!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.2px!important;font-weight:950!important;font-style:normal!important;text-transform:none!important;letter-spacing:0!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1076-ledger-match-odd{display:inline!important;flex:0 0 auto!important;margin-left:3px!important;white-space:nowrap!important;line-height:.92!important;font-size:10.2px!important;font-weight:1000!important;vertical-align:baseline!important;color:#fbbf24!important;letter-spacing:0!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1229-ledger-compact-break,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1110-ledger-item-single .v1112-ledger-soft-break,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1229-ledger-compact-break,
+      .v1162-ledger-output-modal.bet .v1110-ledger-item-single .v1112-ledger-soft-break{display:none!important;content:none!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -5094,7 +5109,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1230-single-manual-exact-text&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1231-single-inline-odds-flow&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
