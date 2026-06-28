@@ -2266,6 +2266,37 @@
         text-overflow:ellipsis!important;
       }
 
+
+      /* V1218: Bahis 1/2 tablo görünümünde Maç/Kupon kolonu 3'lü görünümle aynı görsel orana çekildi. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.8%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2){width:15.5%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:28%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:13%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5){width:12%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.8%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:19.9%!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2377,7 +2408,8 @@
     if (m !== "bet") return v1103BuildLedgerTestRow(m, index, ts);
     const n = index + 1;
     const pattern = index % 10;
-    const comboSize = pattern === 0 || pattern === 5 ? 1 : pattern === 1 || pattern === 2 || pattern === 7 ? 2 : pattern === 3 ? 3 : pattern === 4 ? 4 : pattern === 6 ? 5 : pattern === 8 ? 6 : 3;
+    // V1218: Ana tablo doldurma testleri tekli/2'li/3'lü/4'lü/5'li karışık bassın; 6'lı ayrı taşma üretmesin.
+    const comboSize = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5][pattern] || 3;
     const dayOffset = Math.floor(index / 4);
     const dateObj = new Date(ts + dayOffset * 24 * 60 * 60 * 1000);
     const date = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}`;
@@ -2748,7 +2780,7 @@
     if (m === "crypto") {
       return `<div class="v1103-ledger-test-toolbar v1182-crypto-test-toolbar" data-v1103-ledger-test-toolbar><button type="button" class="v1182-crypto-test-toggle" aria-label="Kripto test paneli">TEST MODU ▾</button><div class="v1182-crypto-test-panel" data-v1182-crypto-test-panel><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:35">35'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:70">70'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:105">105'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:140">140'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:175">175'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:210">210'a Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div></div>`;
     }
-    return `<div class="v1103-ledger-test-toolbar v1210-bet-test-toolbar" data-v1103-ledger-test-toolbar><button type="button" class="v1210-bet-test-toggle" aria-label="Bahis test paneli">TEST MODU ▾</button><div class="v1210-bet-test-panel" data-v1210-bet-test-panel><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-table="${m}:1">1. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:2">2. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:3">3. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:4">4. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:5">5. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:6">6. Tabloyu Doldur</button><button type="button" data-v1139-ledger-long-combo-test="${m}:3">4/5/6 Test</button><button type="button" data-v1140-ledger-full-mix-test="${m}:3">Tam Karışık</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div></div>`;
+    return `<div class="v1103-ledger-test-toolbar v1210-bet-test-toolbar" data-v1103-ledger-test-toolbar><button type="button" class="v1210-bet-test-toggle" aria-label="Bahis test paneli">TEST MODU ▾</button><div class="v1210-bet-test-panel" data-v1210-bet-test-panel><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill-table="${m}:1">1. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:2">2. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:3">3. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:4">4. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:5">5. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-fill-table="${m}:6">6. Tabloyu Doldur</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div></div>`;
   }
 
   function restoreActivePanelAfterConfirm(mode) {
@@ -4790,7 +4822,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1217-bet-match-style-restore&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1218-bet-fit-mixed-tests&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
@@ -6740,7 +6772,8 @@
       const [modeRaw, tableRaw] = String(btn.dataset.v1103LedgerTestFillTable || `${m}:1`).split(":");
       const safeMode = modeRaw === "crypto" ? "crypto" : "bet";
       v1110SetLedgerTestPage(safeMode, 0);
-      v1103FillLedgerTestRowsByTable(safeMode, Number(tableRaw || 1));
+      if (safeMode === "bet") v1140FillLedgerFullMixedTestRows(safeMode, Number(tableRaw || 1));
+      else v1103FillLedgerTestRowsByTable(safeMode, Number(tableRaw || 1));
       v1056OpenDailyLedgerScreen(safeMode);
     }));
     host.querySelectorAll("[data-v1103-ledger-test-fill]").forEach(btn => btn.addEventListener("click", event => {
