@@ -1936,23 +1936,23 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(3),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3){width:92px!important;min-width:92px!important;max-width:92px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(3),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3){background:linear-gradient(180deg,#182230 0%,#101827 100%)!important;color:#e5edf8!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{color:#e5edf8!important;text-shadow:0 1px 0 rgba(0,0,0,.42)!important;font-size:10.6px!important;letter-spacing:-.032em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3){background:linear-gradient(180deg,#2b3038 0%,#20262d 100%)!important;color:#f1f5f9!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{color:#f1f5f9!important;text-shadow:0 1px 0 rgba(0,0,0,.42)!important;font-size:10.6px!important;letter-spacing:-.032em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
 
-      /* V1206: Kömür Slate Coin hücrelerinde çizgileri belirginleştir; renk aynı kalır. */
+      /* V1207: Kripto Coin hücrelerini koyu gri yap; çizgiler koyu temada okunaklı kalsın. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1057-ledger-excel-table th:nth-child(3),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1061-ledger-excel-table th:nth-child(3),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1057-ledger-excel-table td:nth-child(3),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1061-ledger-excel-table td:nth-child(3){
-        border-color:#334155!important;
-        border-left:1px solid #334155!important;
-        border-right:1px solid #334155!important;
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.055), inset 0 -1px 0 rgba(0,0,0,.38)!important;
+        border-color:#4b5563!important;
+        border-left:1px solid #4b5563!important;
+        border-right:1px solid #4b5563!important;
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.075), inset 0 -1px 0 rgba(0,0,0,.42)!important;
       }
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(3),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3){
-        border-top:1px solid rgba(148,163,184,.24)!important;
-        border-bottom:1px solid rgba(2,6,23,.78)!important;
+        border-top:1px solid rgba(203,213,225,.22)!important;
+        border-bottom:1px solid rgba(2,6,23,.72)!important;
       }
 
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
