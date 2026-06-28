@@ -470,15 +470,15 @@
 
     /* V1218: Bahis çıktı görünümünde 1/2/3 tablo aynı sheet mantığıyla kalsın; Maç / Kupon alanı gereksiz uzamasın. */
     .v1162-ledger-output-modal.bet{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;}
-    .v1162-ledger-output-modal.bet[data-v1110-ledger-cols="1"]{--v1218-bet-content:524px;--v1218-bet-modal:544px;}
-    .v1162-ledger-output-modal.bet[data-v1110-ledger-cols="2"]{--v1218-bet-content:1056px;--v1218-bet-modal:1076px;}
-    .v1162-ledger-output-modal.bet[data-v1110-ledger-cols="3"]{--v1218-bet-content:1588px;--v1218-bet-modal:1608px;}
+    .v1162-ledger-output-modal.bet[data-v1110-ledger-cols="1"]{--v1218-bet-content:524px;--v1218-bet-modal:540px;}
+    .v1162-ledger-output-modal.bet[data-v1110-ledger-cols="2"]{--v1218-bet-content:1056px;--v1218-bet-modal:1072px;}
+    .v1162-ledger-output-modal.bet[data-v1110-ledger-cols="3"]{--v1218-bet-content:1588px;--v1218-bet-modal:1604px;}
     .v1162-ledger-output-modal.bet .v1056-ledger-screen-head,
     .v1162-ledger-output-modal.bet .v1057-ledger-screen-head,
     .v1162-ledger-output-modal.bet .v1060-ledger-screen-head,
-    .v1162-ledger-output-modal.bet .v1065-ledger-screen-head{width:var(--v1218-bet-modal)!important;min-width:var(--v1218-bet-modal)!important;max-width:var(--v1218-bet-modal)!important;box-sizing:border-box!important;padding-left:10px!important;padding-right:10px!important;margin:0!important;align-self:flex-start!important;justify-content:space-between!important;overflow:visible!important;}
+    .v1162-ledger-output-modal.bet .v1065-ledger-screen-head{width:var(--v1218-bet-modal)!important;min-width:var(--v1218-bet-modal)!important;max-width:var(--v1218-bet-modal)!important;box-sizing:border-box!important;padding-left:8px!important;padding-right:8px!important;margin:0!important;align-self:flex-start!important;justify-content:space-between!important;overflow:visible!important;}
     .v1162-ledger-output-modal.bet .v1056-ledger-screen-body,
-    .v1162-ledger-output-modal.bet .v1057-ledger-screen-body{width:var(--v1218-bet-modal)!important;min-width:var(--v1218-bet-modal)!important;max-width:var(--v1218-bet-modal)!important;box-sizing:border-box!important;padding-left:10px!important;padding-right:10px!important;align-items:flex-start!important;overflow:visible!important;}
+    .v1162-ledger-output-modal.bet .v1057-ledger-screen-body{width:var(--v1218-bet-modal)!important;min-width:var(--v1218-bet-modal)!important;max-width:var(--v1218-bet-modal)!important;box-sizing:border-box!important;padding-left:8px!important;padding-right:8px!important;align-items:flex-start!important;overflow:visible!important;}
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet{margin:0!important;align-self:flex-start!important;width:max-content!important;max-width:none!important;}
     .v1162-ledger-output-modal.bet .v1057-ledger-sheet-grid,
     .v1162-ledger-output-modal.bet .v1061-ledger-sheet-grid{grid-template-columns:repeat(var(--v1110-ledger-cols,1), var(--v1218-bet-sheet))!important;width:max-content!important;min-width:0!important;max-width:none!important;justify-content:start!important;align-items:start!important;gap:var(--v1218-bet-gap)!important;margin:0!important;overflow:visible!important;}
@@ -506,6 +506,9 @@
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.7%!important;}
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:16.8%!important;}
+
+    /* V1220: Bahis çıktı iç boşlukları 8/8 eşitlendi. */
+    .v1162-ledger-output-modal.bet{margin-left:auto!important;margin-right:auto!important;}
 
     .v1163-context-menu{position:fixed!important;z-index:2147483647!important;display:none!important;min-width:136px!important;padding:6px!important;border:1px solid rgba(251,191,36,.38)!important;border-radius:12px!important;background:#020617!important;box-shadow:0 18px 48px rgba(0,0,0,.48)!important;}
     .v1163-context-menu button{display:block!important;width:100%!important;border:0!important;background:transparent!important;color:#e5e7eb!important;text-align:left!important;border-radius:8px!important;padding:9px 10px!important;font-size:12px!important;font-weight:900!important;cursor:pointer!important;}

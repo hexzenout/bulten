@@ -202,15 +202,15 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:12.7%!important;white-space:nowrap!important;font-size:10px!important;padding-left:1px!important;padding-right:1px!important;}
 
       /* V1218: Bahis kupon defteri tekli/ikili/üçlü görünümde aynı sheet mantığıyla daralsın; Maç / Kupon alanı gereksiz uzamasın. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:524px;--v1218-bet-modal:544px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:1056px;--v1218-bet-modal:1076px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="3"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:1588px;--v1218-bet-modal:1608px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:524px;--v1218-bet-modal:540px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:1056px;--v1218-bet-modal:1072px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="3"]{--v1218-bet-sheet:524px;--v1218-bet-gap:8px;--v1218-bet-content:1588px;--v1218-bet-modal:1604px;width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-head,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-head,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1060-ledger-screen-head,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1065-ledger-screen-head{width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;box-sizing:border-box!important;padding-left:10px!important;padding-right:10px!important;margin-left:0!important;margin-right:0!important;align-self:flex-start!important;justify-content:space-between!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1065-ledger-screen-head{width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;box-sizing:border-box!important;padding-left:8px!important;padding-right:8px!important;margin-left:0!important;margin-right:0!important;align-self:flex-start!important;justify-content:space-between!important;overflow:visible!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;box-sizing:border-box!important;padding-left:10px!important;padding-right:10px!important;align-items:flex-start!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-gutter:stable!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;min-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;max-width:min(var(--v1218-bet-modal), calc(100vw - 10px))!important;box-sizing:border-box!important;padding-left:8px!important;padding-right:8px!important;align-items:flex-start!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-gutter:stable!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet{margin-left:0!important;margin-right:0!important;align-self:flex-start!important;width:max-content!important;max-width:none!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-sheet-grid,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-sheet-grid{grid-template-columns:repeat(var(--v1110-ledger-cols,1), var(--v1218-bet-sheet))!important;width:max-content!important;min-width:0!important;max-width:none!important;justify-content:start!important;align-items:start!important;gap:var(--v1218-bet-gap)!important;margin:0!important;}
@@ -238,6 +238,10 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:5.7%!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:16.8%!important;}
+      /* V1220: Bahis defteri iç boşlukları 8/8 eşitlendi; tablo ekran ortasında kalır ve çift tıklanabilir satır belli olur. */
+      #v1056-ledger-screen-host .v1056-ledger-screen-overlay{justify-content:center!important;align-items:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols]{margin-left:auto!important;margin-right:auto!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal tr[data-v1063-ledger-goto]{cursor:pointer!important;}
       /* V1177: Kripto işlem defteri 25'li test düzeni + coin/diğer hücre renkleri */
       #v1056-ledger-screen-host .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(1),
       #v1056-ledger-screen-host .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(2),
@@ -6398,11 +6402,22 @@
     return `<span class="${cls}" title="${escapeHtml(title)}">${body}</span>`;
   }
   function v1063LedgerRowTargetAttrs(row, mode) {
-    if (!row || row.source !== "rolling") return "";
+    if (!row) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    const days = v1041NormalizeGrowthDays(row.days || 7);
-    const day = Math.max(1, Number(row.day || 1));
-    const opIndex = Math.max(0, Number(row.opIndex || 0));
+    const routeInfo = typeof v1041RouteRollingInfo === "function" ? v1041RouteRollingInfo() : null;
+    let daysRaw = row.days || 0;
+    if (!daysRaw && routeInfo && routeInfo.mode === m) daysRaw = routeInfo.days;
+    if (!daysRaw) {
+      try {
+        const store = v1040LoadGrowthPlans();
+        daysRaw = store?.active?.[m] || 7;
+      } catch { daysRaw = 7; }
+    }
+    const days = v1041NormalizeGrowthDays(daysRaw || 7);
+    const hasDirectTarget = row.source === "rolling" && Number(row.day || 0) > 0;
+    const rowNo = Math.max(1, Number(row._ledgerNo || row.no || 1));
+    const day = hasDirectTarget ? Math.max(1, Number(row.day || 1)) : Math.max(1, Math.floor((rowNo - 1) / 20) + 1);
+    const opIndex = hasDirectTarget ? Math.max(0, Number(row.opIndex || 0)) : Math.max(0, (rowNo - 1) % 20);
     return ` data-v1063-ledger-goto="${m}:${days}:${day}:${opIndex}"`;
   }
   function v1118LedgerBetLineInfo(row) {
@@ -6906,6 +6921,17 @@
       const [modeRaw, daysRaw, dayRaw, opRaw] = String(row.dataset.v1063LedgerGoto || "").split(":");
       v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
     }));
+    if (!host.dataset.v1220LedgerRowGotoBound) {
+      host.dataset.v1220LedgerRowGotoBound = "1";
+      host.addEventListener("dblclick", event => {
+        const row = event.target && event.target.closest ? event.target.closest("tr[data-v1063-ledger-goto]") : null;
+        if (!row || !host.contains(row)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const [modeRaw, daysRaw, dayRaw, opRaw] = String(row.dataset.v1063LedgerGoto || "").split(":");
+        v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
+      }, true);
+    }
   }
   function v1056OpenDailyLedgerScreen(mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
