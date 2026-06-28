@@ -2219,9 +2219,11 @@
         #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{overflow-y:auto!important;}
       }
 
-      /* V1214: Bahis test tablolarında scroll çalışsın ama kaydırma çubuğu görünmesin. */
+      /* V1214/V1215: Bahis + kripto test tablolarında scroll çalışsın ama kaydırma çubuğu görünmesin. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-screen-body{
         overflow-y:auto!important;
         overflow-x:hidden!important;
         scrollbar-width:none!important;
@@ -2230,7 +2232,9 @@
         overscroll-behavior:contain!important;
       }
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body::-webkit-scrollbar,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body::-webkit-scrollbar{
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body::-webkit-scrollbar,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1056-ledger-screen-body::-webkit-scrollbar,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-screen-body::-webkit-scrollbar{
         width:0!important;
         height:0!important;
         display:none!important;
