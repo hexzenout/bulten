@@ -2938,11 +2938,11 @@
       const rowPx = v1135LedgerRowPx(weightedRow, m);
       let col = page.chunks.length - 1;
       const usedPx = Number(page.weights[col] || 0);
-      const wouldOverflow = page.chunks[col].length && usedPx + rowPx > capacityPx;
-      const prevChunkCount = col > 0 ? Number(page.chunks[col - 1]?.length || 0) : 0;
-      const currentChunkCount = Number(page.chunks[col]?.length || 0);
-      const allowScrollOverflow = wouldOverflow && col > 0 && prevChunkCount > 0 && currentChunkCount < prevChunkCount && usedPx + rowPx <= capacityPx + v1146LedgerScrollOverflowAllowancePx(weightedRow, m);
-      if (wouldOverflow && !allowScrollOverflow) {
+      const prevColLimitPx = col > 0 ? Number(page.weights[col - 1] || capacityPx) : capacityPx;
+      const limitPx = col > 0 ? Math.min(capacityPx, prevColLimitPx) : capacityPx;
+      // V1237: 2./3. tablo, solundaki kolonun alt hizasını geçecek ekstra satır basmaz.
+      const wouldOverflow = page.chunks[col].length && usedPx + rowPx > limitPx;
+      if (wouldOverflow) {
         if (page.chunks.length >= 3) {
           page.end = idx;
           commitPage();
@@ -5160,7 +5160,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1234-output-same-size&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1237-output-icon-stop&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }

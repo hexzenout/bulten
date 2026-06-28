@@ -1059,6 +1059,13 @@
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(6) .v1060-ledger-cell-text,
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(6) .v1063-ledger-value{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;max-width:none!important;padding:0!important;margin:0!important;overflow:visible!important;white-space:nowrap!important;text-overflow:clip!important;font-size:8.6px!important;letter-spacing:-.055em!important;line-height:1!important;text-align:center!important;}
 
+
+    /* V1237: Kamera çıktısında bahis ikon-yazı aralığı normal tabloyla aynı dar akışta kalsın; tablo/kolon/satır ölçüsü değişmez. */
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{column-gap:1px!important;gap:1px!important;align-items:flex-start!important;}
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{width:9px!important;min-width:9px!important;max-width:9px!important;flex:0 0 9px!important;height:10px!important;min-height:10px!important;max-height:10px!important;line-height:10px!important;margin:0!important;padding:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important;}
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark .v1172-ledger-dash-glyph{width:7px!important;min-width:7px!important;max-width:7px!important;font-size:13px!important;line-height:8px!important;transform:translateY(-1px) scaleX(1.12)!important;}
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text{margin-left:0!important;}
+
   </style>
 </head>
 <body>
@@ -1086,7 +1093,7 @@
 
   function hideMenu(){ if(menu) menu.style.display = "none"; }
 
-  function dashHtml(){ return '<span class="v1172-ledger-dash-glyph" style="display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;">-</span>'; }
+  function dashHtml(){ return '<span class="v1172-ledger-dash-glyph" style="display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:13px!important;font-weight:1000!important;line-height:8px!important;width:7px!important;min-width:7px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.12)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;">-</span>'; }
 
   function prepareOutputNode(node){
     if(!node || !(node instanceof Element)) return;
@@ -1129,10 +1136,10 @@
         mark.style.setProperty("justify-content", "center", "important");
         mark.style.setProperty("background", "none", "important");
         mark.style.setProperty("transform", "none", "important");
-        mark.style.setProperty("width", "12px", "important");
-        mark.style.setProperty("min-width", "12px", "important");
-        mark.style.setProperty("height", "12px", "important");
-        mark.style.setProperty("flex", "0 0 12px", "important");
+        mark.style.setProperty("width", "9px", "important");
+        mark.style.setProperty("min-width", "9px", "important");
+        mark.style.setProperty("height", "10px", "important");
+        mark.style.setProperty("flex", "0 0 9px", "important");
         mark.style.setProperty("visibility", "visible", "important");
         mark.style.setProperty("opacity", "1", "important");
         mark.style.setProperty("overflow", "visible", "important");
