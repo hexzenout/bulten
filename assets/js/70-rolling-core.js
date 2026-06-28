@@ -2172,6 +2172,53 @@
         #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-screen-body{overflow-y:auto!important;}
       }
 
+      /* V1213: Bahis 1/2/3 tablo modu tek dikey mantık. Menü geçişi ve F5 restore aynı kapasiteyi kullanır; modal içerik kadar kapanır. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols]{
+        height:auto!important;
+        min-height:0!important;
+        max-height:calc(100vh - 24px)!important;
+        margin:12px auto!important;
+        display:flex!important;
+        flex-direction:column!important;
+        overflow:hidden!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{
+        flex:0 0 auto!important;
+        height:auto!important;
+        min-height:0!important;
+        max-height:calc(100vh - 64px)!important;
+        padding-top:0!important;
+        padding-bottom:6px!important;
+        overflow-x:hidden!important;
+        overflow-y:hidden!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-sheet,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-sheet{
+        flex:0 0 auto!important;
+        height:auto!important;
+        min-height:0!important;
+        max-height:none!important;
+        align-items:start!important;
+        align-content:start!important;
+        align-self:start!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet{min-height:0!important;width:100%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-excel-table,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1061-ledger-excel-table{
+        height:auto!important;
+        min-height:0!important;
+        max-height:none!important;
+        flex:0 0 auto!important;
+      }
+      @media (max-height:880px){
+        #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body,
+        #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{overflow-y:auto!important;}
+      }
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2388,22 +2435,15 @@
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
     if (count <= 1) return 21;
-    if (count === 2) return info.isLong ? 39 : 34;
+    if (count === 2) return info.isLong ? 37 : 32;
     return Math.min(122, 23 + count * 15 + (info.isLong ? 5 : 0));
   }
   function v1135LedgerTableBodyPx() {
-    const body = document.querySelector('#v1056-ledger-screen-host .v1056-ledger-screen-body, #v1056-ledger-screen-host .v1057-ledger-screen-body');
-    let bodyH = 0;
-    try { bodyH = Math.floor(body?.getBoundingClientRect?.().height || 0); } catch {}
-    if (!bodyH) {
-      const viewportH = Math.max(720, Math.floor(window.innerHeight || document.documentElement?.clientHeight || 900));
-      bodyH = Math.max(480, viewportH - 4 - 40 - 4);
-    }
-    const summaryH = 40;
-    const headH = 21;
-    // Test bar başlık satırında ve artık ayrı dikey alan yemiyor. Güvenlik payı sadece son satır kesilmesin diye bırakılır.
-    const safety = 8;
-    return Math.max(340, bodyH - summaryH - headH - safety);
+    const viewportH = Math.max(720, Math.floor(window.innerHeight || document.documentElement?.clientHeight || 900));
+    // V1213: Bahis test görünümü F5 sonrası DOM ölçüsüne göre değişmesin.
+    // Menüden geçiş ve restore aynı deterministic tablo kapasitesini kullanır.
+    if (viewportH >= 860) return 770;
+    return Math.max(620, Math.min(770, viewportH - 92));
   }
   function v1135LedgerFlatChunks(pages) {
     return (Array.isArray(pages) ? pages : []).flatMap(page => Array.isArray(page?.chunks) ? page.chunks : []).filter(chunk => Array.isArray(chunk) && chunk.length);
