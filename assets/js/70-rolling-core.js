@@ -2130,6 +2130,48 @@
         --v1203-crypto-pad-bottom:6px;
       }
 
+      /* V1212: Kripto 35/70/105 aynı dikey mantık. F5 sonrası yeniden hesaplanan row-height farkını kapat; alt boşluk her görünümde sağ/sol nefes payı kadar kalsın. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols]{
+        height:auto!important;
+        min-height:0!important;
+        max-height:calc(100vh - 10px)!important;
+        margin:5px auto!important;
+        display:flex!important;
+        flex-direction:column!important;
+        overflow:hidden!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-screen-body{
+        flex:0 0 auto!important;
+        height:auto!important;
+        min-height:0!important;
+        max-height:calc(100vh - 54px)!important;
+        padding-bottom:6px!important;
+        overflow-x:hidden!important;
+        overflow-y:hidden!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-sheet-grid{
+        flex:0 0 auto!important;
+        height:auto!important;
+        min-height:0!important;
+        max-height:none!important;
+        align-items:start!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-excel-table tr,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-excel-table tr,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-excel-table td,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1061-ledger-excel-table td{
+        height:22px!important;
+        min-height:22px!important;
+        max-height:22px!important;
+      }
+      @media (max-height:860px){
+        #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1056-ledger-screen-body,
+        #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1057-ledger-screen-body{overflow-y:auto!important;}
+      }
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2561,6 +2603,24 @@
       return;
     }
     const rowCount = Math.max(1, ...sections.map(section => section.querySelectorAll('tbody tr').length || 0));
+    const isCryptoTest = modal.classList.contains('crypto');
+    if (isCryptoTest) {
+      const rowH = 22;
+      grid.style.setProperty('--v1110-row-h', `${rowH}px`);
+      sections.forEach(section => {
+        const table = section.querySelector('table');
+        if (table) table.style.setProperty('--v1110-row-h', `${rowH}px`);
+        section.querySelectorAll('tbody tr').forEach(row => {
+          row.style.height = `${rowH}px`;
+          row.style.maxHeight = `${rowH}px`;
+          row.querySelectorAll('td').forEach(td => {
+            td.style.height = `${rowH}px`;
+            td.style.maxHeight = `${rowH}px`;
+          });
+        });
+      });
+      return;
+    }
     const first = sections[0];
     if (!first) return;
     const summary = first.querySelector('.v1059-ledger-summary, .v1060-ledger-summary-inline, .v1061-ledger-summary-inline');
