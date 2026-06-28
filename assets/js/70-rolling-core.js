@@ -2076,6 +2076,54 @@
         font-size:10px!important;
         justify-content:center!important;
       }
+      /* V1211: Açılır TEST MODU panelleri tablo/graph arkasında kalmasın. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1056-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1057-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1060-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1065-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1056-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1057-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1060-ledger-screen-head,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1065-ledger-screen-head{
+        overflow:visible!important;
+        position:relative!important;
+        z-index:100000!important;
+        isolation:isolate!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1112-ledger-title-row,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1112-ledger-title-row{
+        overflow:visible!important;
+        position:relative!important;
+        z-index:100100!important;
+        isolation:isolate!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1103-ledger-test-toolbar.v1210-bet-test-toolbar,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1103-ledger-test-toolbar.v1182-crypto-test-toolbar{
+        overflow:visible!important;
+        position:relative!important;
+        z-index:100200!important;
+        pointer-events:auto!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1103-ledger-test-toolbar.v1210-bet-test-toolbar .v1210-bet-test-panel,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1103-ledger-test-toolbar.v1182-crypto-test-toolbar .v1182-crypto-test-panel{
+        z-index:100300!important;
+        pointer-events:auto!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1057-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1056-ledger-screen-body,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1057-ledger-screen-body{
+        position:relative!important;
+        z-index:1!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1057-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1061-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1057-ledger-sheet-grid,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto .v1061-ledger-sheet-grid{
+        position:relative!important;
+        z-index:1!important;
+      }
+
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto{
         --v1203-crypto-pad-left:6px;
         --v1203-crypto-pad-right:6px;
