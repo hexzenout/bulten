@@ -1878,7 +1878,7 @@
 
 
 
-      /* V1204: Kripto Coin kutusu rengi Orman Füme. */
+      /* V1205: Kripto Coin kutusu rengi Kömür Slate. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto{
         --v1203-crypto-sheet:518px;
         --v1203-crypto-gap:8px;
@@ -1936,8 +1936,8 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto th:nth-child(3),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3){width:92px!important;min-width:92px!important;max-width:92px!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(3),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3){background:linear-gradient(180deg,#18362f 0%,#0f241f 100%)!important;color:#ecfdf5!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{color:#ecfdf5!important;text-shadow:0 1px 0 rgba(0,0,0,.42)!important;font-size:10.6px!important;letter-spacing:-.032em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3){background:linear-gradient(180deg,#182230 0%,#101827 100%)!important;color:#e5edf8!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{color:#e5edf8!important;text-shadow:0 1px 0 rgba(0,0,0,.42)!important;font-size:10.6px!important;letter-spacing:-.032em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
 
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
