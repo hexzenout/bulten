@@ -2240,6 +2240,54 @@
         display:none!important;
       }
 
+
+
+      /* V1216: Test satırı ve manuel/gerçek satır yazılarını aynı stile kilitle. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3){
+        color:#071827!important;
+        text-shadow:none!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3){
+        background:#dbeafe!important;
+        color:#071827!important;
+        text-shadow:none!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1057-ledger-input,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-line,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{
+        color:#071827!important;
+        font-family:Arial,Helvetica,sans-serif!important;
+        font-size:10.8px!important;
+        font-weight:900!important;
+        letter-spacing:0!important;
+        line-height:1.16!important;
+        text-shadow:none!important;
+        background:transparent!important;
+        white-space:nowrap!important;
+        text-transform:none!important;
+        font-style:normal!important;
+        opacity:1!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1057-ledger-input,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-name{
+        font-size:10.7px!important;
+        font-weight:900!important;
+      }
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.crypto[data-v1110-ledger-cols] .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{
+        font-size:10.7px!important;
+        font-weight:900!important;
+        overflow:hidden!important;
+        text-overflow:ellipsis!important;
+      }
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -4504,7 +4552,7 @@
       cell.querySelectorAll(".v1063-ledger-value, .v1057-ledger-input").forEach(value => {
         value.style.setProperty("color", "#071827", "important");
         value.style.setProperty("text-shadow", "none", "important");
-        value.style.setProperty("font-weight", "950", "important");
+        value.style.setProperty("font-weight", "900", "important");
         value.style.setProperty("letter-spacing", "0", "important");
         value.style.setProperty("background", "transparent", "important");
       });
@@ -4764,7 +4812,7 @@
       alert("Çıktı belleğe yazılamadı. Tarayıcı depolama iznini kontrol et.");
       return;
     }
-    const url = `ledger-output.html?v=v1209-crypto-output-coin-style&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1216-manual-test-style-fast-png&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }

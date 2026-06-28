@@ -791,6 +791,20 @@
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(3) .v1057-ledger-input,
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3) .v1057-ledger-input{color:#071827!important;text-shadow:none!important;font-size:10.9px!important;font-weight:950!important;letter-spacing:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;background:transparent!important;}
 
+
+    /* V1216: Çıktı sayfasında manuel/test yazı stili aynı kalsın. */
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3){color:#071827!important;text-shadow:none!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3){background:#dbeafe!important;color:#071827!important;text-shadow:none!important;}
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-line,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1078-ledger-match-text,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-match-name,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1057-ledger-input{
+      color:#071827!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.7px!important;font-weight:900!important;letter-spacing:0!important;line-height:1.16!important;text-shadow:none!important;background:transparent!important;white-space:nowrap!important;text-transform:none!important;font-style:normal!important;opacity:1!important;
+    }
+
   </style>
 </head>
 <body>
@@ -832,7 +846,7 @@
       cell.querySelectorAll(".v1063-ledger-value, .v1057-ledger-input").forEach(value => {
         value.style.setProperty("color", "#071827", "important");
         value.style.setProperty("text-shadow", "none", "important");
-        value.style.setProperty("font-weight", "950", "important");
+        value.style.setProperty("font-weight", "900", "important");
         value.style.setProperty("letter-spacing", "0", "important");
         value.style.setProperty("background", "transparent", "important");
       });
@@ -941,13 +955,42 @@
       ctx.fillStyle="#020617";
       ctx.fillRect(0,0,width,height);
       ctx.drawImage(img,0,0,width,height);
-      return canvas.toDataURL("image/png");
+      return await new Promise((resolve,reject)=>{
+        if(!canvas.toBlob) return resolve(canvas.toDataURL("image/png"));
+        canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("PNG blob üretilemedi.")), "image/png");
+      });
     } finally { tempHost.remove(); }
   }
 
-  function downloadDataUrl(dataUrl, filename){
+  let pngWarmCache = null;
+  let pngWarmPromise = null;
+  let pngWarmName = "";
+  let pngWarmUrl = "";
+  function clearPngWarmCache(){
+    if(pngWarmUrl){ try{ URL.revokeObjectURL(pngWarmUrl); }catch(e){} }
+    pngWarmCache=null; pngWarmPromise=null; pngWarmName=""; pngWarmUrl="";
+  }
+  async function ensurePngBlob(){
+    if(!outputNode) throw new Error("Çıktı alanı bulunamadı.");
+    const filename=getFilename();
+    if(pngWarmCache && pngWarmName === filename) return pngWarmCache;
+    if(pngWarmPromise && pngWarmName === filename) return await pngWarmPromise;
+    pngWarmName = filename;
+    pngWarmPromise = nodeToPngDataUrl(outputNode).then(result => {
+      pngWarmCache = result;
+      return result;
+    }).finally(() => { pngWarmPromise = null; });
+    return await pngWarmPromise;
+  }
+  function downloadBlobOrData(result, filename){
     const a=document.createElement("a");
-    a.href=dataUrl;
+    if(result instanceof Blob){
+      if(pngWarmUrl){ try{ URL.revokeObjectURL(pngWarmUrl); }catch(e){} }
+      pngWarmUrl=URL.createObjectURL(result);
+      a.href=pngWarmUrl;
+    }else{
+      a.href=result;
+    }
     a.download=safeFilename(filename);
     document.body.appendChild(a);
     a.click();
@@ -955,6 +998,7 @@
   }
 
   function dataUrlToObjectUrl(dataUrl){
+    if(dataUrl instanceof Blob) return URL.createObjectURL(dataUrl);
     const parts=String(dataUrl).split(",");
     const meta=parts[0] || "";
     const mime=(meta.match(/data:([^;]+)/)||[])[1] || "image/png";
@@ -969,13 +1013,13 @@
     const old=button ? button.textContent : "";
     if(button){ button.disabled=true; button.setAttribute("aria-busy", "true"); }
     try{
-      const dataUrl=await nodeToPngDataUrl(outputNode);
+      const result=await ensurePngBlob();
       if(action === "open"){
-        const objectUrl=dataUrlToObjectUrl(dataUrl);
+        const objectUrl=dataUrlToObjectUrl(result);
         window.open(objectUrl, "_blank");
         setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
       } else {
-        downloadDataUrl(dataUrl, getFilename());
+        downloadBlobOrData(result, getFilename());
       }
     }catch(e){
       alert("PNG hazırlanamadı. Sayfayı yenileyip tekrar dene.");
@@ -993,8 +1037,10 @@
     stage.innerHTML = `<div class="v1163-output-wrap">${payload.html}</div>`;
     outputNode = stage.querySelector("[data-v1163-output-node], [data-v1162-output-node], .v1162-ledger-output-modal");
     prepareOutputNode(outputNode);
+    clearPngWarmCache();
     setTimeout(() => prepareOutputNode(outputNode), 120);
     setTimeout(() => prepareOutputNode(outputNode), 320);
+    setTimeout(() => { ensurePngBlob().catch(() => {}); }, 420);
     return true;
   }
 
