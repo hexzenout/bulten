@@ -782,6 +782,15 @@
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3){background:#dbeafe!important;color:#071827!important;border-color:#0f172a!important;border-left:1px solid #0f172a!important;border-right:1px solid #0f172a!important;border-top:1px solid #0f172a!important;border-bottom:1px solid #0f172a!important;box-shadow:none!important;}
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(3) .v1063-ledger-value{color:#071827!important;text-shadow:none!important;font-weight:950!important;}
 
+
+    /* V1209: Çıktı sayfasında kripto Coin hücreleri yan hücrelerle aynı açık tasarıma son kez kilitlendi. */
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(3),
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3){background:#dbeafe!important;color:#071827!important;border-color:#0f172a!important;border-left:1px solid #0f172a!important;border-right:1px solid #0f172a!important;border-top:1px solid #0f172a!important;border-bottom:1px solid #0f172a!important;box-shadow:none!important;}
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(3) .v1063-ledger-value,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3) .v1063-ledger-value,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-excel-table tbody td:nth-child(3) .v1057-ledger-input,
+    .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-excel-table tbody td:nth-child(3) .v1057-ledger-input{color:#071827!important;text-shadow:none!important;font-size:10.9px!important;font-weight:950!important;letter-spacing:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;background:transparent!important;}
+
   </style>
 </head>
 <body>
@@ -815,6 +824,19 @@
     node.querySelectorAll("script").forEach(el => el.remove());
     node.querySelectorAll("[title]").forEach(el => el.removeAttribute("title"));
     node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
+    node.querySelectorAll(".v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto tbody td:nth-child(3), .v1054-daily-ledger.crypto tbody td:nth-child(3)").forEach(cell => {
+      cell.style.setProperty("background", "#dbeafe", "important");
+      cell.style.setProperty("color", "#071827", "important");
+      cell.style.setProperty("border-color", "#0f172a", "important");
+      cell.style.setProperty("box-shadow", "none", "important");
+      cell.querySelectorAll(".v1063-ledger-value, .v1057-ledger-input").forEach(value => {
+        value.style.setProperty("color", "#071827", "important");
+        value.style.setProperty("text-shadow", "none", "important");
+        value.style.setProperty("font-weight", "950", "important");
+        value.style.setProperty("letter-spacing", "0", "important");
+        value.style.setProperty("background", "transparent", "important");
+      });
+    });
     node.querySelectorAll(".v1056-ledger-screen-body,.v1057-ledger-screen-body,.v1057-ledger-sheet-grid,.v1061-ledger-sheet-grid,.v1057-ledger-sheet,.v1061-ledger-sheet").forEach(el => {
       el.style.setProperty("overflow","visible","important");
       el.style.setProperty("max-height","none","important");
