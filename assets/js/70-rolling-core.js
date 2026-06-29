@@ -2638,7 +2638,42 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-combo .v1069-ledger-match-line.open .v1069-ledger-status-mark,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.open .v1069-ledger-status-mark{top:1.15px!important;transform:none!important;}
 
-            .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
+
+
+      /* V1255: Kamera çıktısında Maç/Kupon iç düzeni ana BAHİS/KUPON DEFTERİ ile aynı aksa alınır.
+         Tablo/kolon/popup/satır ölçüsüne dokunmaz; sadece çıktıdaki ikon-yazı hizası ve kırılım farkını ezer. */
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1063-ledger-value.v1069-ledger-item-lines{align-items:flex-start!important;justify-content:center!important;gap:0!important;overflow:hidden!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{padding:2px 0!important;gap:1px!important;justify-content:center!important;align-items:flex-start!important;transform:none!important;box-sizing:border-box!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{display:flex!important;align-items:center!important;column-gap:2px!important;gap:2px!important;width:auto!important;max-width:100%!important;margin:0!important;padding:0!important;line-height:1.04!important;overflow:visible!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line + .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line + .v1069-ledger-match-line{margin-top:0!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-status-mark{position:relative!important;top:1.25px!important;transform:none!important;align-self:center!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;max-width:10px!important;height:11px!important;min-height:11px!important;max-height:11px!important;line-height:11px!important;margin:0!important;padding:0!important;font-family:Arial,Helvetica,sans-serif!important;font-size:11px!important;font-weight:1000!important;text-align:center!important;overflow:visible!important;background:none!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line.loss .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.loss .v1069-ledger-status-mark{top:1.35px!important;transform:none!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.open .v1069-ledger-status-mark{top:1.15px!important;transform:none!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;max-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{display:inline-block!important;min-width:0!important;max-width:100%!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10px!important;font-weight:900!important;line-height:1.03!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:normal!important;word-break:normal!important;letter-spacing:0!important;color:#f8fafc!important;text-align:left!important;text-shadow:none!important;filter:none!important;margin-left:0!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd{display:inline!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10px!important;font-weight:900!important;line-height:1.03!important;letter-spacing:0!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;vertical-align:baseline!important;text-shadow:none!important;filter:none!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd{margin-left:2px!important;white-space:nowrap!important;font-weight:1000!important;color:#fbbf24!important;}
+
+                  .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
   }
@@ -5021,6 +5056,9 @@
     node.querySelectorAll(".v1069-ledger-match-line").forEach(line => {
       const mark = line.querySelector(".v1069-ledger-status-mark");
       if (!mark) return;
+      const row = line.closest("tr");
+      const comboLike = !!(row && (row.classList.contains("v1118-ledger-row-combo") || row.classList.contains("v1118-ledger-row-longcombo")));
+      const singleLike = !!(row && row.classList.contains("v1118-ledger-row-single"));
       const pendingLike = line.classList.contains("pending") || line.classList.contains("push") || line.classList.contains("open");
       const emptyLike = !String(mark.textContent || "").trim() || mark.classList.contains("v1123-ledger-status-empty");
       if (pendingLike || emptyLike) {
@@ -5029,7 +5067,7 @@
         mark.style.setProperty("color", "#94a3b8", "important");
       }
       mark.style.setProperty("font-size", "11px", "important");
-      mark.style.setProperty("line-height", "1", "important");
+      mark.style.setProperty("line-height", comboLike ? "11px" : (singleLike ? "12px" : "11px"), "important");
       mark.style.setProperty("font-weight", "1000", "important");
       mark.style.setProperty("font-family", "Arial, Helvetica, sans-serif", "important");
       mark.style.setProperty("display", "inline-flex", "important");
@@ -5037,13 +5075,25 @@
       mark.style.setProperty("justify-content", "center", "important");
       mark.style.setProperty("background", "none", "important");
       mark.style.setProperty("transform", "none", "important");
-      mark.style.setProperty("width", "12px", "important");
-      mark.style.setProperty("min-width", "12px", "important");
-      mark.style.setProperty("height", "12px", "important");
-      mark.style.setProperty("flex", "0 0 12px", "important");
+      mark.style.setProperty("width", comboLike ? "10px" : "11px", "important");
+      mark.style.setProperty("min-width", comboLike ? "10px" : "11px", "important");
+      mark.style.setProperty("max-width", comboLike ? "10px" : "11px", "important");
+      mark.style.setProperty("height", comboLike ? "11px" : "12px", "important");
+      mark.style.setProperty("min-height", comboLike ? "11px" : "12px", "important");
+      mark.style.setProperty("max-height", comboLike ? "11px" : "12px", "important");
+      mark.style.setProperty("flex", comboLike ? "0 0 10px" : "0 0 11px", "important");
       mark.style.setProperty("white-space", "nowrap", "important");
       mark.style.setProperty("overflow", "visible", "important");
-      mark.style.setProperty("position", "static", "important");
+      mark.style.setProperty("position", "relative", "important");
+      mark.style.setProperty("top", comboLike ? (pendingLike ? "1.15px" : "1.35px") : (singleLike ? "-0.4px" : "0"), "important");
+      if (comboLike) {
+        line.style.setProperty("display", "flex", "important");
+        line.style.setProperty("align-items", "center", "important");
+        line.style.setProperty("column-gap", "2px", "important");
+        line.style.setProperty("gap", "2px", "important");
+        line.style.setProperty("line-height", "1.04", "important");
+        line.style.setProperty("overflow", "visible", "important");
+      }
     });
     node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
     node.querySelectorAll(".v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto tbody td:nth-child(3), .v1054-daily-ledger.crypto tbody td:nth-child(3)").forEach(cell => {
@@ -5307,13 +5357,22 @@
             mark.innerHTML = v1172LedgerDashHtml();
             mark.style.setProperty("color", "#94a3b8", "important");
             mark.style.setProperty("font-size", "11px", "important");
-            mark.style.setProperty("line-height", "1", "important");
+            mark.style.setProperty("line-height", "11px", "important");
             mark.style.setProperty("font-weight", "1000", "important");
             mark.style.setProperty("display", "inline-flex", "important");
             mark.style.setProperty("align-items", "center", "important");
             mark.style.setProperty("justify-content", "center", "important");
             mark.style.setProperty("background", "none", "important");
             mark.style.setProperty("transform", "none", "important");
+            mark.style.setProperty("position", "relative", "important");
+            mark.style.setProperty("top", "1.15px", "important");
+            mark.style.setProperty("width", "10px", "important");
+            mark.style.setProperty("min-width", "10px", "important");
+            mark.style.setProperty("max-width", "10px", "important");
+            mark.style.setProperty("height", "11px", "important");
+            mark.style.setProperty("min-height", "11px", "important");
+            mark.style.setProperty("max-height", "11px", "important");
+            mark.style.setProperty("flex", "0 0 10px", "important");
           }
         });
       }
@@ -5338,7 +5397,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1238-output-fit-stop&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1255-output-sync&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
