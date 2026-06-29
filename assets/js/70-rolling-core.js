@@ -3057,15 +3057,13 @@
          Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
       pages.push(page);
     };
+    const v1249ColumnTinyGapPx = 12;
     const v1239ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
+      // V1249: Öncelik boşluk bırakmamak. Kolon hedefe yaklaşmadıysa satır eklenir;
+      // hedefin biraz altındaysa yeni kolona geçebilir. Aşağı sarkma sorun kabul edilmez.
       if (usedPx <= 0) return true;
-      if (targetPx <= 0) return usedPx + rowPx <= capacityPx;
-      const nextPx = usedPx + rowPx;
-      if (nextPx <= targetPx) return true;
-      const beforeGap = Math.abs(targetPx - usedPx);
-      const afterGap = Math.abs(nextPx - targetPx);
-      const softOvershoot = Math.min(34, Math.max(12, rowPx * 0.34));
-      return afterGap <= beforeGap || nextPx <= targetPx + softOvershoot;
+      const safeTarget = Math.max(1, Number(targetPx || capacityPx));
+      return usedPx < safeTarget - v1249ColumnTinyGapPx;
     };
     const v1238MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
@@ -3085,7 +3083,9 @@
       const usedPx = Number(page.weights[col] || 0);
       if (page.chunks[col].length) {
         if (col === 0) {
-          if (usedPx + rowPx > capacityPx) col = v1238MoveToNextColumnOrPage(idx);
+          // V1249: 1. tablo pencereyi doldurmaya çalışır; altta büyük boşluk bırakmak yerine
+          // satır biraz aşağı sarkabilir. Sadece kolon zaten hedefe çok yaklaştıysa sonraki tabloya geç.
+          if (usedPx >= capacityPx - v1249ColumnTinyGapPx) col = v1238MoveToNextColumnOrPage(idx);
         } else {
           // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
           // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
