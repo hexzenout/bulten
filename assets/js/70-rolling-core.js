@@ -2931,30 +2931,13 @@
     if (info.count <= 1) return 0.82;
     return info.isLong ? 1.22 : 1.0;
   }
-  function v1241LedgerVisualLineUnits(row, mode) {
-    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 1;
-    const sourceLines = Array.isArray(row?.itemLines) ? row.itemLines : [];
-    let lines = sourceLines.map(line => ({ name: cleanText(line?.name || ""), odds: v1076LedgerOddsText(line?.odds) })).filter(line => line.name);
-    if (!lines.length) {
-      lines = v1069LedgerSplitItemText(row?.item || row?.name || "").map(name => ({ name: cleanText(name || ""), odds: "" })).filter(line => line.name);
-    }
-    if (!lines.length) return 1;
-    return lines.reduce((sum, line) => {
-      const text = cleanText(`${line.name || ""}${line.odds ? " " + line.odds : ""}`);
-      const compactText = text.replace(/\s+/g, " ").trim();
-      const widePenalty = /[çğıöşüÇĞİÖŞÜ]/u.test(compactText) ? 2 : 0;
-      const chars = compactText.length + widePenalty;
-      return sum + Math.max(1, Math.min(3, Math.ceil(chars / 27)));
-    }, 0);
-  }
   function v1135LedgerRowPx(row, mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
-    const visualLines = Math.max(count, v1241LedgerVisualLineUnits(row, mode));
     if (count <= 1) return 21;
-    if (count === 2) return visualLines <= 2 ? 32 : visualLines === 3 ? 44 : 54;
-    return Math.min(168, Math.round(15 + visualLines * 11.8 + count * 2.2 + (info.isLong ? 4 : 0)));
+    if (count === 2) return info.isLong ? 37 : 32;
+    return Math.min(122, 23 + count * 15 + (info.isLong ? 5 : 0));
   }
   function v1135LedgerTableBodyPx() {
     const viewportH = Math.max(720, Math.floor(window.innerHeight || document.documentElement?.clientHeight || 900));
@@ -3097,8 +3080,8 @@
         if (col === 0) {
           if (usedPx + rowPx > capacityPx) col = v1238MoveToNextColumnOrPage(idx);
         } else {
-          // V1241: satır sayısı tahminle değil, içerik yüksekliği hesabıyla dengelenir.
-          // 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
+          // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
+          // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
           const firstPx = Math.max(1, Number(page.weights[0] || capacityPx));
           const prevPx = Math.max(1, Number(page.weights[col - 1] || firstPx));
           const targetPx = col === 1 ? firstPx : Math.max(1, Math.round((firstPx + prevPx) / 2));
