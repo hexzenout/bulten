@@ -2942,10 +2942,8 @@
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
-    // V1247: Sadece test verisi bölme hesabı. Popup/modal, satır CSS'i ve kamera çıktısına dokunmaz.
-    // V1246 çok yüksek hesaplayıp tabloyu 10 satırda kesiyordu; V1245 ise tekli/kısa satırı fazla küçük sayabiliyordu.
-    if (count <= 1) return info.isLong ? 30 : 27;
-    if (count === 2) return info.isLong ? 40 : 36;
+    if (count <= 1) return 21;
+    if (count === 2) return info.isLong ? 37 : 32;
     return Math.min(122, 23 + count * 15 + (info.isLong ? 5 : 0));
   }
   function v1135LedgerTableBodyPx() {
