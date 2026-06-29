@@ -2788,30 +2788,130 @@
       status: pnlRaw < 0 ? "loss" : pnlRaw > 0 ? "win" : "pending"
     };
   }
+  function v1239LedgerRand(seed) {
+    let t = Number(seed || 1) >>> 0;
+    return function() {
+      t += 0x6D2B79F5;
+      let r = t;
+      r = Math.imul(r ^ (r >>> 15), r | 1);
+      r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function v1239PickLedgerTestItem(list, rnd) {
+    const arr = Array.isArray(list) && list.length ? list : [null];
+    return arr[Math.floor((typeof rnd === "function" ? rnd() : Math.random()) * arr.length) % arr.length];
+  }
+  function v1239BuildLedgerRandomMixedTestRow(mode, index, ts, seed) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet") return v1103BuildLedgerTestRow(m, index, ts);
+    const n = index + 1;
+    const rand = v1239LedgerRand((Number(seed || ts || Date.now()) + index * 2654435761) >>> 0);
+    const comboSizes = [1, 1, 2, 2, 2, 3, 4, 5, 6, 3, 1, 4, 2, 5];
+    const comboSize = v1239PickLedgerTestItem(comboSizes, rand);
+    const dayOffset = Math.floor(index / (3 + Math.floor(rand() * 3)));
+    const dateObj = new Date(ts + dayOffset * 24 * 60 * 60 * 1000);
+    const date = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}`;
+    const id = `ledger_test_random_mix_${m}_${ts}_${String(n).padStart(3, "0")}`;
+    const baseTs = ts + index * 1000;
+    const singleNames = [
+      `Tam Karışık Tekli Maç ${n}`,
+      `Test Tekli Maç ${n}`,
+      `Beşiktaş kazanır veee 5 goll ${n}`,
+      `Fenerbahçe kazanır ve 5 gol atar ${n}`,
+      `Galatasaray çifte şans ${n}`
+    ];
+    const statusesPool = ["win", "loss", "pending", "win", "pending", "loss"];
+    if (comboSize <= 1) {
+      const status = v1239PickLedgerTestItem(statusesPool, rand) || "win";
+      const stake = v1239PickLedgerTestItem([25, 25, 50, 50, 89], rand) || 25;
+      const pnlRaw = status === "loss" ? -stake : status === "pending" ? 0 : stake;
+      const name = v1239PickLedgerTestItem(singleNames, rand);
+      return {
+        id,
+        ts: baseTs,
+        source: "test",
+        testOnly: 1,
+        force: 1,
+        date,
+        time: v1056TimeLabelFromTs(baseTs),
+        item: name,
+        itemLines: [{ name, odds: 2, status }],
+        kind: "Tek",
+        stake: money(stake),
+        roi: "2",
+        pnl: v1069LedgerPnlText(pnlRaw),
+        pnlRaw,
+        status
+      };
+    }
+    const teams = ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Trabzonspor", "Başakşehir", "Adana Demirspor", "Samsunspor", "Konyaspor"];
+    const shuffled = teams.slice().sort(() => rand() - 0.5);
+    const itemLines = shuffled.slice(0, comboSize).map((team, lineIndex) => {
+      const status = v1239PickLedgerTestItem(statusesPool, rand) || "pending";
+      const odds = v1239PickLedgerTestItem([2, 2, 1.84, 1.72], rand) || 2;
+      return {
+        name: `Tam Karışık ${team} ${lineIndex + 1}. maç ${n}`,
+        odds,
+        status
+      };
+    });
+    const roiMap = { 2: "4", 3: "8", 4: "16", 5: "32", 6: "64" };
+    const pnlRaw = v1239PickLedgerTestItem([268, 150, 50, -50, -100, 0], rand);
+    const stake = v1239PickLedgerTestItem(comboSize >= 3 ? [100, 100, 50] : [50, 50, 100], rand);
+    return {
+      id,
+      ts: baseTs,
+      source: "test",
+      testOnly: 1,
+      force: 1,
+      date,
+      time: v1056TimeLabelFromTs(baseTs),
+      item: itemLines.map(line => line.name).join(" + "),
+      itemLines,
+      kind: "Kombine",
+      stake: money(stake || 50),
+      roi: roiMap[comboSize] || "4",
+      pnl: v1069LedgerPnlText(pnlRaw),
+      pnlRaw,
+      status: pnlRaw < 0 ? "loss" : pnlRaw > 0 ? "win" : "pending"
+    };
+  }
   function v1232BuildLedgerAutoFitTestRow(mode, index, ts) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m !== "bet") return v1103BuildLedgerTestRow(m, index, ts);
-    return v1140BuildLedgerFullMixedTestRow(m, index, ts);
+    return v1239BuildLedgerRandomMixedTestRow(m, index, ts, ts);
+  }
+  function v1239BuildRowsForTables(mode, tableCount, rowBuilder, limit) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const safeTables = Math.max(1, Math.min(6, Number(tableCount || 1)));
+    const realRows = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row));
+    const seed = Date.now() + Math.floor(Math.random() * 1000000);
+    const ts = seed + 1000;
+    const buildRow = typeof rowBuilder === "function" ? rowBuilder : v1103BuildLedgerTestRow;
+    let lastGoodRows = realRows.slice();
+    for (let addCount = 0; addCount <= Math.max(1, Number(limit || 500)); addCount += 1) {
+      const candidateRows = realRows.slice();
+      for (let j = 0; j < addCount; j += 1) candidateRows.push(buildRow(m, j, ts, seed));
+      const chunks = v1135LedgerFlatChunks(v1119LedgerBuildPages(candidateRows, m));
+      if (chunks.length > safeTables) break;
+      if (chunks.length === safeTables) lastGoodRows = candidateRows;
+    }
+    return lastGoodRows;
+  }
+  function v1239SaveLedgerTestRows(mode, rows) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const edits = v1057LoadLedgerEdits();
+    edits[m].manual = (edits[m].manual || []).filter(row => !v1103IsLedgerTestRow(row));
+    edits[m].manual.push(...(Array.isArray(rows) ? rows : []).filter(row => v1103IsLedgerTestRow(row)));
+    v1057SaveLedgerEdits(edits);
   }
   function v1140FillLedgerFullMixedTestRows(mode, tableCount) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m !== "bet") return v1103FillLedgerTestRowsByTable(m, tableCount);
     v1103ClearLedgerTestRows(m);
-    const realRows = v1057LedgerRows(m).filter(row => !v1103IsLedgerTestRow(row));
-    const safeTables = Math.max(1, Math.min(6, Number(tableCount || 3)));
-    let lastGoodRows = realRows.slice();
-    const ts = Date.now() + 1000;
-    for (let addCount = 0; addCount <= 220; addCount += 1) {
-      const candidateRows = realRows.slice();
-      for (let j = 0; j < addCount; j += 1) candidateRows.push(v1140BuildLedgerFullMixedTestRow(m, j, ts));
-      const chunks = v1135LedgerFlatChunks(v1119LedgerBuildPages(candidateRows, m));
-      if (chunks.length > safeTables) break;
-      if (chunks.length === safeTables) lastGoodRows = candidateRows;
-    }
-    const edits = v1057LoadLedgerEdits();
-    edits[m].manual = (edits[m].manual || []).filter(row => !v1103IsLedgerTestRow(row));
-    edits[m].manual.push(...lastGoodRows.filter(row => v1103IsLedgerTestRow(row)));
-    v1057SaveLedgerEdits(edits);
+    const rows = v1239BuildRowsForTables(m, tableCount, v1239BuildLedgerRandomMixedTestRow, 260);
+    v1239SaveLedgerTestRows(m, rows);
   }
   function v1110LedgerSummarySpacerHtml() {
     return `<div class="v1059-ledger-summary v1060-ledger-summary-inline v1061-ledger-summary-inline v1110-ledger-summary-blank" aria-hidden="true"><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div><div><span>&nbsp;</span><b>&nbsp;</b></div></div>`;
@@ -2870,7 +2970,7 @@
     const buildRow = typeof rowBuilder === "function" ? rowBuilder : v1103BuildLedgerTestRow;
     for (let addCount = 0; addCount <= 500; addCount += 1) {
       const candidateRows = realRows.slice();
-      for (let j = 0; j < addCount; j += 1) candidateRows.push(buildRow(m, j, ts));
+      for (let j = 0; j < addCount; j += 1) candidateRows.push(buildRow(m, j, ts, ts));
       const chunks = v1135LedgerFlatChunks(v1119LedgerBuildPages(candidateRows, m));
       if (chunks.length > safeTables) return Math.max(realRows.length, lastGoodTotal);
       if (chunks.length === safeTables) lastGoodTotal = candidateRows.length;
@@ -2879,9 +2979,14 @@
   }
   function v1103FillLedgerTestRowsByTable(mode, tableCount) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const rowBuilder = m === "bet" ? v1232BuildLedgerAutoFitTestRow : null;
-    const total = v1135LedgerTargetTotalForTables(m, tableCount, rowBuilder);
-    v1103FillLedgerTestRows(m, total, rowBuilder);
+    if (m === "bet") {
+      v1103ClearLedgerTestRows(m);
+      const rows = v1239BuildRowsForTables(m, tableCount, v1239BuildLedgerRandomMixedTestRow, 520);
+      v1239SaveLedgerTestRows(m, rows);
+      return;
+    }
+    const total = v1135LedgerTargetTotalForTables(m, tableCount, null);
+    v1103FillLedgerTestRows(m, total, null);
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -2945,12 +3050,15 @@
          Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
       pages.push(page);
     };
-    const v1238ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
+    const v1239ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
       if (usedPx <= 0) return true;
-      if (usedPx >= targetPx) return false;
+      if (targetPx <= 0) return usedPx + rowPx <= capacityPx;
+      const nextPx = usedPx + rowPx;
+      if (nextPx <= targetPx) return true;
       const beforeGap = Math.abs(targetPx - usedPx);
-      const afterGap = Math.abs((usedPx + rowPx) - targetPx);
-      return (usedPx + rowPx <= targetPx) || afterGap <= beforeGap;
+      const afterGap = Math.abs(nextPx - targetPx);
+      const softOvershoot = Math.min(34, Math.max(12, rowPx * 0.34));
+      return afterGap <= beforeGap || nextPx <= targetPx + softOvershoot;
     };
     const v1238MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
@@ -2972,9 +3080,12 @@
         if (col === 0) {
           if (usedPx + rowPx > capacityPx) col = v1238MoveToNextColumnOrPage(idx);
         } else {
-          // V1238: 2./3. tabloyu zorla kısa kesme; ortak alt hedef çizgisine en yakın gerçek satırı seç.
-          const targetPx = Math.max(1, Number(page.weights[0] || capacityPx));
-          if (!v1238ShouldKeepRowInColumn(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
+          // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
+          // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
+          const firstPx = Math.max(1, Number(page.weights[0] || capacityPx));
+          const prevPx = Math.max(1, Number(page.weights[col - 1] || firstPx));
+          const targetPx = col === 1 ? firstPx : Math.max(1, Math.round((firstPx + prevPx) / 2));
+          if (!v1239ShouldKeepRowInColumn(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
         }
       }
       page.chunks[col].push(weightedRow);
