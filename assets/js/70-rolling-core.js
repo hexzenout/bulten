@@ -3058,13 +3058,21 @@
       pages.push(page);
     };
     const v1249ColumnTinyGapPx = 12;
-    const v1239ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
-      // V1249: Öncelik boşluk bırakmamak. Kolon hedefe yaklaşmadıysa satır eklenir;
-      // hedefin biraz altındaysa yeni kolona geçebilir. Aşağı sarkma sorun kabul edilmez.
+    const v1250ShouldStartNextRow = (usedPx, rowPx, targetPx) => {
+      // V1250: Kolon zaten dolduysa yeni satır başlatma.
+      // Büyük boşluk kalacaksa satır eklenebilir; satır hedefi biraz aşsa da kabul edilir.
+      // Ama önceki satır hedefe yeterince yaklaştıysa/ulaştıysa sırf doldurmak için ekstra satır açılmaz.
       if (usedPx <= 0) return true;
       const safeTarget = Math.max(1, Number(targetPx || capacityPx));
-      return usedPx < safeTarget - v1249ColumnTinyGapPx;
+      const nextPx = usedPx + Math.max(0, Number(rowPx || 0));
+      if (usedPx >= safeTarget - v1249ColumnTinyGapPx) return false;
+      if (nextPx <= safeTarget) return true;
+      const beforeGap = Math.abs(safeTarget - usedPx);
+      const afterGap = Math.abs(nextPx - safeTarget);
+      const softOvershoot = Math.min(46, Math.max(18, Math.max(0, Number(rowPx || 0)) * 0.36));
+      return afterGap <= beforeGap || nextPx <= safeTarget + softOvershoot;
     };
+    const v1239ShouldKeepRowInColumn = v1250ShouldStartNextRow;
     const v1238MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
         page.end = idx;
@@ -3083,9 +3091,9 @@
       const usedPx = Number(page.weights[col] || 0);
       if (page.chunks[col].length) {
         if (col === 0) {
-          // V1249: 1. tablo pencereyi doldurmaya çalışır; altta büyük boşluk bırakmak yerine
-          // satır biraz aşağı sarkabilir. Sadece kolon zaten hedefe çok yaklaştıysa sonraki tabloya geç.
-          if (usedPx >= capacityPx - v1249ColumnTinyGapPx) col = v1238MoveToNextColumnOrPage(idx);
+          // V1250: 1. tablo büyük boşluk bırakmasın; fakat son tamamlanan satır
+          // pencere altına ulaştıysa 13. gibi gereksiz yeni satır başlatmasın.
+          if (!v1250ShouldStartNextRow(usedPx, rowPx, capacityPx)) col = v1238MoveToNextColumnOrPage(idx);
         } else {
           // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
           // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
