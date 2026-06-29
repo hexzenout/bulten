@@ -3050,15 +3050,23 @@
          Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
       pages.push(page);
     };
-    const v1239ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
+    const v1243ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
       if (usedPx <= 0) return true;
-      if (targetPx <= 0) return usedPx + rowPx <= capacityPx;
-      const nextPx = usedPx + rowPx;
-      if (nextPx <= targetPx) return true;
-      const beforeGap = Math.abs(targetPx - usedPx);
-      const afterGap = Math.abs(nextPx - targetPx);
-      const softOvershoot = Math.min(34, Math.max(12, rowPx * 0.34));
-      return afterGap <= beforeGap || nextPx <= targetPx + softOvershoot;
+      const safeUsed = Math.max(0, Number(usedPx || 0));
+      const safeRow = Math.max(1, Number(rowPx || 1));
+      const safeTarget = Math.max(0, Number(targetPx || 0));
+      const nextPx = safeUsed + safeRow;
+      if (safeTarget <= 0) return nextPx <= capacityPx;
+      if (nextPx <= safeTarget) return true;
+      if (safeUsed >= safeTarget) return false;
+      /* V1243: tablo dolumunda hedef alt çizgiye en yakın GERÇEK satır seçilir.
+         2. tablo büyük oranda 1. tabloya, 3. tablo ise 1+2 dengesine bakar.
+         Hafif aşağı taşmaya izin verilir; belirgin taşma veya boş/filler satır üretilmez. */
+      const beforeGap = Math.max(0, safeTarget - safeUsed);
+      const afterGap = Math.max(0, nextPx - safeTarget);
+      const softOvershoot = Math.min(58, Math.max(18, safeRow * 0.48));
+      const balanceBias = 1.58;
+      return afterGap <= softOvershoot || afterGap <= beforeGap * balanceBias;
     };
     const v1238MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
@@ -3085,7 +3093,7 @@
           const firstPx = Math.max(1, Number(page.weights[0] || capacityPx));
           const prevPx = Math.max(1, Number(page.weights[col - 1] || firstPx));
           const targetPx = col === 1 ? firstPx : Math.max(1, Math.round((firstPx + prevPx) / 2));
-          if (!v1239ShouldKeepRowInColumn(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
+          if (!v1243ShouldKeepRowInColumn(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
         }
       }
       page.chunks[col].push(weightedRow);
