@@ -2938,31 +2938,15 @@
     if (info.count <= 1) return 0.82;
     return info.isLong ? 1.22 : 1.0;
   }
-  function v1246LedgerBetLineWrapUnits(row) {
-    const sourceLines = Array.isArray(row?.itemLines) ? row.itemLines : [];
-    let lines = sourceLines.map(line => cleanText(line?.name || "")).filter(Boolean);
-    if (!lines.length) lines = v1069LedgerSplitItemText(row?.item || row?.name || "");
-    if (!lines.length) lines = ["Bahis / maç"];
-    const multi = lines.length > 1;
-    const charLimit = multi ? 24 : 30;
-    return lines.reduce((sum, name) => {
-      const text = cleanText(name || "");
-      const oddsPad = multi ? 6 : 5;
-      const softBreaks = multi ? ((text.match(/\s+ve\s+|\s+veya\s+|\s+ya da\s+|gol atar|çifte şans/giu) || []).length) : 0;
-      const units = Math.max(1, Math.ceil((text.length + oddsPad) / charLimit) + softBreaks);
-      return sum + Math.min(4, units);
-    }, 0);
-  }
   function v1135LedgerRowPx(row, mode) {
     if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
-    const units = Math.max(1, v1246LedgerBetLineWrapUnits(row));
-    if (count <= 1) return Math.min(56, Math.max(info.isLong ? 31 : 24, 10 + units * 11));
-    const base = count >= 5 ? 10 : count >= 3 ? 9 : 8;
-    const linePx = count >= 5 ? 12.4 : 11.7;
-    const safePx = Math.round(base + units * linePx + (info.isLong ? 5 : 0));
-    return Math.min(168, Math.max(count === 2 ? 42 : 58, safePx));
+    // V1247: Sadece test verisi bölme hesabı. Popup/modal, satır CSS'i ve kamera çıktısına dokunmaz.
+    // V1246 çok yüksek hesaplayıp tabloyu 10 satırda kesiyordu; V1245 ise tekli/kısa satırı fazla küçük sayabiliyordu.
+    if (count <= 1) return info.isLong ? 30 : 27;
+    if (count === 2) return info.isLong ? 40 : 36;
+    return Math.min(122, 23 + count * 15 + (info.isLong ? 5 : 0));
   }
   function v1135LedgerTableBodyPx() {
     const viewportH = Math.max(720, Math.floor(window.innerHeight || document.documentElement?.clientHeight || 900));
@@ -3075,17 +3059,15 @@
          Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
       pages.push(page);
     };
-    const v1246ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
+    const v1239ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
       if (usedPx <= 0) return true;
-      const safeTargetPx = Math.max(1, Number(targetPx || capacityPx));
+      if (targetPx <= 0) return usedPx + rowPx <= capacityPx;
       const nextPx = usedPx + rowPx;
-      if (nextPx <= safeTargetPx) return true;
-      const beforeGap = Math.abs(safeTargetPx - usedPx);
-      const afterGap = Math.abs(nextPx - safeTargetPx);
-      const softOvershoot = Math.min(38, Math.max(14, rowPx * 0.28));
-      const hardLimit = safeTargetPx + Math.min(46, Math.max(18, rowPx * 0.34));
-      if (nextPx > hardLimit) return false;
-      return afterGap <= beforeGap + 6 || nextPx <= safeTargetPx + softOvershoot;
+      if (nextPx <= targetPx) return true;
+      const beforeGap = Math.abs(targetPx - usedPx);
+      const afterGap = Math.abs(nextPx - targetPx);
+      const softOvershoot = Math.min(34, Math.max(12, rowPx * 0.34));
+      return afterGap <= beforeGap || nextPx <= targetPx + softOvershoot;
     };
     const v1238MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
@@ -3105,15 +3087,14 @@
       const usedPx = Number(page.weights[col] || 0);
       if (page.chunks[col].length) {
         if (col === 0) {
-          // V1246: 1. tablo doğal dolar; son satır dengeyi bozmayacak kadar hafif taşarsa kalabilir.
-          if (!v1246ShouldKeepRowInColumn(usedPx, rowPx, capacityPx)) col = v1238MoveToNextColumnOrPage(idx);
+          if (usedPx + rowPx > capacityPx) col = v1238MoveToNextColumnOrPage(idx);
         } else {
-          // V1246: 2. tablo 1. tablonun gerçek oluşan alt seviyesine göre biter.
-          // 3. tablo, 1+2'nin oluşan dengesine göre şekillenir; 2. tabloyu geri çekmez.
+          // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
+          // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
           const firstPx = Math.max(1, Number(page.weights[0] || capacityPx));
           const prevPx = Math.max(1, Number(page.weights[col - 1] || firstPx));
           const targetPx = col === 1 ? firstPx : Math.max(1, Math.round((firstPx + prevPx) / 2));
-          if (!v1246ShouldKeepRowInColumn(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
+          if (!v1239ShouldKeepRowInColumn(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
         }
       }
       page.chunks[col].push(weightedRow);
