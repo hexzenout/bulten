@@ -460,7 +460,7 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after{content:none!important;display:none!important;}
       /* V1172: Dash ekranda kesin görünsün diye glyph içi ayrıca zorlanır. */
       #v1056-ledger-screen-host .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
-      .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+      .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:none!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:0!important;font-weight:1000!important;line-height:0!important;width:0!important;min-width:0!important;height:0!important;text-align:left!important;vertical-align:middle!important;visibility:hidden!important;opacity:0!important;overflow:hidden!important;transform:none!important;transform-origin:left center!important;text-shadow:none!important;background:none!important;}
 
       /* V1180: Kripto işlem defteri 35'li sisteme geçsin; yazılar okunaklı ve hizalı kalsın. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary,
@@ -2733,6 +2733,40 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text{line-height:1!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{align-self:center!important;transform:none!important;top:auto!important;}
+
+
+      /* V1258: Tekli/son satır yazısı komşu satıra taşmasın; bekleyen '-' işareti ✓/✕ ile aynı sol raydan başlasın.
+         Popup/kolon/satır bölme/random mantığı değişmez; sadece Maç/Kupon iç kırpma ve tire glyph hizası. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3){overflow:hidden!important;position:relative!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1060-ledger-cell-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1060-ledger-cell-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines{overflow:hidden!important;clip-path:inset(0)!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;max-width:10px!important;height:12px!important;min-height:12px!important;max-height:12px!important;margin:0!important;padding:0!important;color:transparent!important;font-size:0!important;line-height:12px!important;top:auto!important;transform:none!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{content:""!important;display:block!important;width:9.6px!important;height:2.35px!important;border-radius:999px!important;background:#94a3b8!important;position:absolute!important;left:0!important;top:50%!important;transform:translateY(-50%)!important;}
 
 
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
@@ -5147,14 +5181,21 @@
       mark.style.setProperty("white-space", "nowrap", "important");
       mark.style.setProperty("overflow", "visible", "important");
       mark.style.setProperty("position", "relative", "important");
-      mark.style.setProperty("top", comboLike ? (pendingLike ? "1.15px" : "1.35px") : (singleLike ? "-0.4px" : "0"), "important");
+      mark.style.setProperty("top", comboLike ? (pendingLike ? "auto" : "1.35px") : (singleLike ? "-0.4px" : "0"), "important");
+      if (pendingLike) {
+        mark.style.setProperty("justify-content", "flex-start", "important");
+        mark.style.setProperty("width", "10px", "important");
+        mark.style.setProperty("min-width", "10px", "important");
+        mark.style.setProperty("max-width", "10px", "important");
+        mark.style.setProperty("flex", "0 0 10px", "important");
+      }
       if (comboLike) {
         line.style.setProperty("display", "flex", "important");
         line.style.setProperty("align-items", "center", "important");
         line.style.setProperty("column-gap", "2px", "important");
         line.style.setProperty("gap", "2px", "important");
         line.style.setProperty("line-height", "1.04", "important");
-        line.style.setProperty("overflow", "visible", "important");
+        line.style.setProperty("overflow", "hidden", "important");
       }
     });
     node.querySelectorAll(".v1119-ledger-row-filler").forEach(row => row.remove());
@@ -5459,7 +5500,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1257-text-safe-icon-center&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1258-text-clip-dash-align&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
@@ -6970,10 +7011,10 @@
   function v1171LedgerStatusMarkAttrs(status) {
     const s = String(status || "");
     if (s !== "pending" && s !== "push" && s !== "open") return "";
-    return ' style="color:#94a3b8!important;font-size:15px!important;line-height:9px!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:12px!important;min-width:12px!important;height:12px!important;flex:0 0 12px!important;background:none!important;transform:none!important;position:static!important;visibility:visible!important;opacity:1!important;overflow:visible!important;white-space:nowrap!important;text-align:center!important;margin:0!important;padding:0!important;"';
+    return ' style="color:#94a3b8!important;font-size:15px!important;line-height:9px!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:1000!important;display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;width:10px!important;min-width:10px!important;height:12px!important;flex:0 0 10px!important;background:none!important;transform:none!important;position:static!important;visibility:visible!important;opacity:1!important;overflow:visible!important;white-space:nowrap!important;text-align:center!important;margin:0!important;padding:0!important;"';
   }
   function v1172LedgerDashHtml() {
-    return '<span class="v1172-ledger-dash-glyph" style="display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;">-</span>';
+    return '<span class="v1172-ledger-dash-glyph" style="display:none!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:0!important;font-weight:1000!important;line-height:0!important;width:0!important;min-width:0!important;height:0!important;text-align:left!important;vertical-align:middle!important;visibility:hidden!important;opacity:0!important;overflow:hidden!important;transform:none!important;transform-origin:left center!important;text-shadow:none!important;background:none!important;">-</span>';
   }
   function v1119LedgerStatusMarkHtml(status) {
     const s = String(status || "");

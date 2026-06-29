@@ -82,7 +82,7 @@
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto td:nth-child(4) .v1063-ledger-value{line-height:1.24!important;padding-bottom:2px!important;font-size:10.8px!important;}
 
 
-    .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+    .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:none!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:0!important;font-weight:1000!important;line-height:0!important;width:0!important;min-width:0!important;height:0!important;text-align:left!important;vertical-align:middle!important;visibility:hidden!important;opacity:0!important;overflow:hidden!important;transform:none!important;transform-origin:left center!important;text-shadow:none!important;background:none!important;}
     /* V1181: Kripto çıktı sayfasında Coin kolonunu daralt + 35 satır alt boşluğu kapat. */
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1057-ledger-sheet-grid,
     .v1162-ledger-output-modal.crypto .v1054-daily-ledger.crypto .v1061-ledger-sheet-grid{grid-template-columns:repeat(var(--v1110-ledger-cols,3), 468px)!important;width:max-content!important;max-width:none!important;justify-content:start!important;gap:8px!important;}
@@ -1172,6 +1172,40 @@
     #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{align-self:center!important;transform:none!important;top:auto!important;}
 
+      /* V1258: Tekli/son satır yazısı komşu satıra taşmasın; bekleyen '-' işareti ✓/✕ ile aynı sol raydan başlasın.
+         Popup/kolon/satır bölme/random mantığı değişmez; sadece Maç/Kupon iç kırpma ve tire glyph hizası. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3){overflow:hidden!important;position:relative!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1060-ledger-cell-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1060-ledger-cell-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1063-ledger-value,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(3) .v1069-ledger-item-lines{overflow:hidden!important;clip-path:inset(0)!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{overflow:hidden!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;max-width:10px!important;height:12px!important;min-height:12px!important;max-height:12px!important;margin:0!important;padding:0!important;color:transparent!important;font-size:0!important;line-height:12px!important;top:auto!important;transform:none!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{content:""!important;display:block!important;width:9.6px!important;height:2.35px!important;border-radius:999px!important;background:#94a3b8!important;position:absolute!important;left:0!important;top:50%!important;transform:translateY(-50%)!important;}
+
+
 
   </style>
 </head>
@@ -1200,7 +1234,7 @@
 
   function hideMenu(){ if(menu) menu.style.display = "none"; }
 
-  function dashHtml(){ return '<span class="v1172-ledger-dash-glyph" style="display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;">-</span>'; }
+  function dashHtml(){ return '<span class="v1172-ledger-dash-glyph" style="display:none!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:0!important;font-weight:1000!important;line-height:0!important;width:0!important;min-width:0!important;height:0!important;text-align:left!important;vertical-align:middle!important;visibility:hidden!important;opacity:0!important;overflow:hidden!important;transform:none!important;transform-origin:left center!important;text-shadow:none!important;background:none!important;">-</span>'; }
 
   function prepareOutputNode(node){
     if(!node || !(node instanceof Element)) return;
@@ -1260,14 +1294,21 @@
       mark.style.setProperty("opacity", "1", "important");
       mark.style.setProperty("overflow", "visible", "important");
       mark.style.setProperty("position", "relative", "important");
-      mark.style.setProperty("top", comboLike ? (pendingLike ? "1.15px" : "1.35px") : (singleLike ? "-0.4px" : "0"), "important");
+      mark.style.setProperty("top", comboLike ? (pendingLike ? "auto" : "1.35px") : (singleLike ? "-0.4px" : "0"), "important");
+      if(pendingLike){
+        mark.style.setProperty("justify-content", "flex-start", "important");
+        mark.style.setProperty("width", "10px", "important");
+        mark.style.setProperty("min-width", "10px", "important");
+        mark.style.setProperty("max-width", "10px", "important");
+        mark.style.setProperty("flex", "0 0 10px", "important");
+      }
       if(comboLike){
         line.style.setProperty("display", "flex", "important");
         line.style.setProperty("align-items", "center", "important");
         line.style.setProperty("column-gap", "2px", "important");
         line.style.setProperty("gap", "2px", "important");
         line.style.setProperty("line-height", "1.04", "important");
-        line.style.setProperty("overflow", "visible", "important");
+        line.style.setProperty("overflow", "hidden", "important");
       }
     });
   }
