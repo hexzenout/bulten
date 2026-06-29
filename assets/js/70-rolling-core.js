@@ -460,15 +460,7 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after{content:none!important;display:none!important;}
       /* V1172: Dash ekranda kesin görünsün diye glyph içi ayrıca zorlanır. */
       #v1056-ledger-screen-host .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
-      .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-0.2px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
-      /* V1252: Maç / Kupon seçim ikonları iki satırlık yazı bloğunun tam orta hizasına alınır. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{align-items:center!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line .v1069-ledger-status-mark{position:relative!important;top:1px!important;align-self:center!important;transform:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark{top:1.2px!important;transform:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark{top:1px!important;transform:none!important;}
+      .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
 
       /* V1180: Kripto işlem defteri 35'li sisteme geçsin; yazılar okunaklı ve hizalı kalsın. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary,
@@ -2628,6 +2620,23 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(7){width:15.9%!important;min-width:0!important;max-width:none!important;}
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(6){font-size:9.2px!important;letter-spacing:-.025em!important;padding-left:1px!important;padding-right:1px!important;}
+
+      /* V1252: Maç/Kupon seçim ikonları iki satırlık yazı bloğunun tam görsel ortasına insin.
+         Sadece ekrandaki BAHİS / KUPON DEFTERİ test modalını hedefler; popup/kolon/satır/kamera ölçüsü değişmez. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-combo .v1069-ledger-match-line,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-longcombo .v1069-ledger-match-line{display:flex!important;align-items:center!important;column-gap:2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-combo .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-longcombo .v1069-ledger-status-mark{position:relative!important;top:1.25px!important;transform:none!important;align-self:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-combo .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-combo .v1069-ledger-match-line.loss .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.loss .v1069-ledger-status-mark{top:1.35px!important;transform:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-combo .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-combo .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-combo .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1118-ledger-row-longcombo .v1069-ledger-match-line.open .v1069-ledger-status-mark{top:1.15px!important;transform:none!important;}
 
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
@@ -5271,6 +5280,54 @@
     return "";
   }
 
+  function v1253LedgerExactStyleHtml() {
+    try {
+      return Array.from(document.querySelectorAll("style"))
+        .map(style => style && style.textContent ? `<style data-v1253-ledger-exact-style>${style.textContent}</style>` : "")
+        .filter(Boolean)
+        .join("\n");
+    } catch {
+      return "";
+    }
+  }
+
+  function v1253BuildLedgerExactOutputHtml(mode = "bet") {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const host = document.getElementById("v1056-ledger-screen-host");
+    const sourceNode = host ? host.querySelector(`.v1056-ledger-screen-modal.${m}`) : null;
+    if (!sourceNode) return "";
+    const clone = sourceNode.cloneNode(true);
+    clone.setAttribute("data-v1163-output-node", "1");
+    clone.setAttribute("data-v1253-exact-output", "1");
+    clone.removeAttribute("id");
+    clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+    clone.querySelectorAll("script").forEach(el => el.remove());
+    clone.querySelectorAll("[data-v1060-ledger-photo]").forEach(el => el.removeAttribute("data-v1060-ledger-photo"));
+    clone.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.removeAttribute("data-v1056-ledger-close"));
+    clone.querySelectorAll("button, input, select, textarea").forEach(el => {
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+        el.setAttribute("value", el.value || "");
+      }
+      el.setAttribute("tabindex", "-1");
+      el.setAttribute("aria-disabled", "true");
+    });
+    const rect = sourceNode.getBoundingClientRect();
+    const width = Math.max(320, Math.ceil(sourceNode.scrollWidth || rect.width || sourceNode.offsetWidth || 0));
+    clone.style.setProperty("width", `${width}px`, "important");
+    clone.style.setProperty("min-width", `${width}px`, "important");
+    clone.style.setProperty("max-width", `${width}px`, "important");
+    clone.style.setProperty("margin", "0", "important");
+    clone.style.setProperty("position", "relative", "important");
+    clone.style.setProperty("left", "auto", "important");
+    clone.style.setProperty("top", "auto", "important");
+    clone.style.setProperty("right", "auto", "important");
+    clone.style.setProperty("bottom", "auto", "important");
+    clone.style.setProperty("transform", "none", "important");
+    clone.style.setProperty("pointer-events", "none", "important");
+    clone.style.setProperty("line-height", "normal", "important");
+    return `${v1253LedgerExactStyleHtml()}${clone.outerHTML}`;
+  }
+
   function v1163BuildLedgerOutputHtml(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const tempHost = document.createElement("div");
@@ -5319,7 +5376,8 @@
     const key = v1163LedgerOutputStorageKey();
     const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
     const filename = v1162LedgerFilename(m);
-    const payload = { mode: m, title, filename, html: v1163BuildLedgerOutputHtml(m), ts: Date.now(), v: "1209" };
+    const exactHtml = v1253BuildLedgerExactOutputHtml(m);
+    const payload = { mode: m, title, filename, html: exactHtml || v1163BuildLedgerOutputHtml(m), exact: !!exactHtml, ts: Date.now(), v: "1253" };
     if (!payload.html) {
       alert("Kupon Defteri çıktısı hazırlanamadı. Defteri kapatıp tekrar aç.");
       return;
@@ -5329,7 +5387,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1238-output-fit-stop&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1253-exact-ledger-output&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }

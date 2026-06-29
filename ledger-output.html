@@ -1098,6 +1098,7 @@
   const menu = document.getElementById("v1163-menu");
   let payload = null;
   let outputNode = null;
+  let exactOutput = false;
 
   function localDateStamp(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
   function safeFilename(name){ return String(name || `bulten-bahis-kupon-defteri-${localDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi,"-").replace(/-+/g,"-").replace(/^-|-$/g,"") || `bulten-bahis-kupon-defteri-${localDateStamp()}.png`; }
@@ -1188,13 +1189,13 @@
   async function nodeToPngDataUrl(node){
     if(!node || !(node instanceof Element)) throw new Error("Çıktı alanı bulunamadı.");
     try { await document.fonts?.ready; } catch(e) {}
-    prepareOutputNode(node);
+    if(!exactOutput) prepareOutputNode(node);
     const rect=node.getBoundingClientRect();
     const width=Math.max(320, Math.ceil(node.scrollWidth || rect.width || node.offsetWidth || 0));
     const height=Math.max(120, Math.ceil(node.scrollHeight || rect.height || node.offsetHeight || 0));
     const clone=node.cloneNode(true);
     copyComputedTree(node, clone);
-    prepareOutputNode(clone);
+    if(!exactOutput) prepareOutputNode(clone);
     clone.removeAttribute("id");
     clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
     clone.style.setProperty("width", `${width}px`, "important");
@@ -1309,12 +1310,15 @@
     if(!payload.html) return false;
     titleEl.textContent = payload.title || "BULTEN Kupon Defteri Çıktısı";
     document.title = `${payload.title || "BULTEN Çıktı"} - ${getFilename()}`;
+    exactOutput = !!payload.exact;
     stage.innerHTML = `<div class="v1163-output-wrap">${payload.html}</div>`;
     outputNode = stage.querySelector("[data-v1163-output-node], [data-v1162-output-node], .v1162-ledger-output-modal");
-    prepareOutputNode(outputNode);
+    if(!exactOutput) prepareOutputNode(outputNode);
     clearPngWarmCache();
-    setTimeout(() => prepareOutputNode(outputNode), 120);
-    setTimeout(() => prepareOutputNode(outputNode), 320);
+    if(!exactOutput){
+      setTimeout(() => prepareOutputNode(outputNode), 120);
+      setTimeout(() => prepareOutputNode(outputNode), 320);
+    }
     setTimeout(() => { ensurePngBlob().catch(() => {}); }, 420);
     return true;
   }
