@@ -5280,54 +5280,6 @@
     return "";
   }
 
-  function v1253LedgerExactStyleHtml() {
-    try {
-      return Array.from(document.querySelectorAll("style"))
-        .map(style => style && style.textContent ? `<style data-v1253-ledger-exact-style>${style.textContent}</style>` : "")
-        .filter(Boolean)
-        .join("\n");
-    } catch {
-      return "";
-    }
-  }
-
-  function v1253BuildLedgerExactOutputHtml(mode = "bet") {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    const host = document.getElementById("v1056-ledger-screen-host");
-    const sourceNode = host ? host.querySelector(`.v1056-ledger-screen-modal.${m}`) : null;
-    if (!sourceNode) return "";
-    const clone = sourceNode.cloneNode(true);
-    clone.setAttribute("data-v1163-output-node", "1");
-    clone.setAttribute("data-v1253-exact-output", "1");
-    clone.removeAttribute("id");
-    clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
-    clone.querySelectorAll("script").forEach(el => el.remove());
-    clone.querySelectorAll("[data-v1060-ledger-photo]").forEach(el => el.removeAttribute("data-v1060-ledger-photo"));
-    clone.querySelectorAll("[data-v1056-ledger-close]").forEach(el => el.removeAttribute("data-v1056-ledger-close"));
-    clone.querySelectorAll("button, input, select, textarea").forEach(el => {
-      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-        el.setAttribute("value", el.value || "");
-      }
-      el.setAttribute("tabindex", "-1");
-      el.setAttribute("aria-disabled", "true");
-    });
-    const rect = sourceNode.getBoundingClientRect();
-    const width = Math.max(320, Math.ceil(sourceNode.scrollWidth || rect.width || sourceNode.offsetWidth || 0));
-    clone.style.setProperty("width", `${width}px`, "important");
-    clone.style.setProperty("min-width", `${width}px`, "important");
-    clone.style.setProperty("max-width", `${width}px`, "important");
-    clone.style.setProperty("margin", "0", "important");
-    clone.style.setProperty("position", "relative", "important");
-    clone.style.setProperty("left", "auto", "important");
-    clone.style.setProperty("top", "auto", "important");
-    clone.style.setProperty("right", "auto", "important");
-    clone.style.setProperty("bottom", "auto", "important");
-    clone.style.setProperty("transform", "none", "important");
-    clone.style.setProperty("pointer-events", "none", "important");
-    clone.style.setProperty("line-height", "normal", "important");
-    return `${v1253LedgerExactStyleHtml()}${clone.outerHTML}`;
-  }
-
   function v1163BuildLedgerOutputHtml(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const tempHost = document.createElement("div");
@@ -5376,8 +5328,7 @@
     const key = v1163LedgerOutputStorageKey();
     const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
     const filename = v1162LedgerFilename(m);
-    const exactHtml = v1253BuildLedgerExactOutputHtml(m);
-    const payload = { mode: m, title, filename, html: exactHtml || v1163BuildLedgerOutputHtml(m), exact: !!exactHtml, ts: Date.now(), v: "1253" };
+    const payload = { mode: m, title, filename, html: v1163BuildLedgerOutputHtml(m), ts: Date.now(), v: "1209" };
     if (!payload.html) {
       alert("Kupon Defteri çıktısı hazırlanamadı. Defteri kapatıp tekrar aç.");
       return;
@@ -5387,7 +5338,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1253-exact-ledger-output&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1238-output-fit-stop&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
