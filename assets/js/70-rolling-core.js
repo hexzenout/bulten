@@ -460,7 +460,15 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after{content:none!important;display:none!important;}
       /* V1172: Dash ekranda kesin görünsün diye glyph içi ayrıca zorlanır. */
       #v1056-ledger-screen-host .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
-      .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-1px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+      .v1162-ledger-output-modal .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:9px!important;min-width:9px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateY(-0.2px) scaleX(1.45)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+      /* V1252: Maç / Kupon seçim ikonları iki satırlık yazı bloğunun tam orta hizasına alınır. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{align-items:center!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line .v1069-ledger-status-mark{position:relative!important;top:1px!important;align-self:center!important;transform:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark{top:1.2px!important;transform:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark{top:1px!important;transform:none!important;}
 
       /* V1180: Kripto işlem defteri 35'li sisteme geçsin; yazılar okunaklı ve hizalı kalsın. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal .v1054-daily-ledger.crypto .v1059-ledger-summary,
