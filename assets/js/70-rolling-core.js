@@ -3059,9 +3059,7 @@
     };
     const v1249ColumnTinyGapPx = 12;
     const v1250ShouldStartNextRow = (usedPx, rowPx, targetPx) => {
-      // V1250: Kolon zaten dolduysa yeni satır başlatma.
-      // Büyük boşluk kalacaksa satır eklenebilir; satır hedefi biraz aşsa da kabul edilir.
-      // Ama önceki satır hedefe yeterince yaklaştıysa/ulaştıysa sırf doldurmak için ekstra satır açılmaz.
+      // V1250: 1. tablo pencereyi doldursun; pencere dolduysa yeni satır başlatmasın.
       if (usedPx <= 0) return true;
       const safeTarget = Math.max(1, Number(targetPx || capacityPx));
       const nextPx = usedPx + Math.max(0, Number(rowPx || 0));
@@ -3072,7 +3070,21 @@
       const softOvershoot = Math.min(46, Math.max(18, Math.max(0, Number(rowPx || 0)) * 0.36));
       return afterGap <= beforeGap || nextPx <= safeTarget + softOvershoot;
     };
-    const v1239ShouldKeepRowInColumn = v1250ShouldStartNextRow;
+    const v1251ShouldStartFollowColumnRow = (usedPx, rowPx, targetPx) => {
+      // V1251: 2. ve 3. tablo, hedef çizgiye ulaştıktan sonra 25/40 gibi
+      // yeni satır BAŞLATMASIN. Burada amaç altta büyük boşluk bırakmamak;
+      // ama kolon zaten dolu görünüyorsa ekstra satırı sonraki tabloya bırakmak.
+      if (usedPx <= 0) return true;
+      const row = Math.max(0, Number(rowPx || 0));
+      const safeTarget = Math.max(1, Number(targetPx || capacityPx) - 34);
+      const nextPx = usedPx + row;
+      if (usedPx >= safeTarget - 16) return false;
+      if (nextPx <= safeTarget) return true;
+      const beforeGap = Math.abs(safeTarget - usedPx);
+      const afterGap = Math.abs(nextPx - safeTarget);
+      const tinyOvershoot = Math.min(24, Math.max(10, row * 0.18));
+      return afterGap < beforeGap && nextPx <= safeTarget + tinyOvershoot;
+    };
     const v1238MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
         page.end = idx;
@@ -3100,7 +3112,7 @@
           const firstPx = Math.max(1, Number(page.weights[0] || capacityPx));
           const prevPx = Math.max(1, Number(page.weights[col - 1] || firstPx));
           const targetPx = col === 1 ? firstPx : Math.max(1, Math.round((firstPx + prevPx) / 2));
-          if (!v1239ShouldKeepRowInColumn(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
+          if (!v1251ShouldStartFollowColumnRow(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
         }
       }
       page.chunks[col].push(weightedRow);
