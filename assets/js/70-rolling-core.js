@@ -2602,6 +2602,18 @@
       .v1162-ledger-output-modal.bet .v1057-ledger-excel-table tbody,
       .v1162-ledger-output-modal.bet .v1061-ledger-excel-table tbody{height:auto!important;min-height:0!important;max-height:none!important;}
 
+      /* V1238: kamera çıktısında Oran kolonuna Kar-zarar'dan küçük pay aktar; Maç / Kupon ve toplam ölçüye dokunmaz. */
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(6){width:6.6%!important;min-width:0!important;max-width:none!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(7),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(7){width:15.9%!important;min-width:0!important;max-width:none!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(6){font-size:9.2px!important;letter-spacing:-.025em!important;padding-left:1px!important;padding-right:1px!important;}
+
             .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -2933,25 +2945,36 @@
          Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
       pages.push(page);
     };
+    const v1238ShouldKeepRowInColumn = (usedPx, rowPx, targetPx) => {
+      if (usedPx <= 0) return true;
+      if (usedPx >= targetPx) return false;
+      const beforeGap = Math.abs(targetPx - usedPx);
+      const afterGap = Math.abs((usedPx + rowPx) - targetPx);
+      return (usedPx + rowPx <= targetPx) || afterGap <= beforeGap;
+    };
+    const v1238MoveToNextColumnOrPage = (idx) => {
+      if (page.chunks.length >= 3) {
+        page.end = idx;
+        commitPage();
+        page = { chunks: [[]], weights: [0], start: idx, end: idx };
+        return 0;
+      }
+      page.chunks.push([]);
+      page.weights.push(0);
+      return page.chunks.length - 1;
+    };
     source.forEach((row, idx) => {
       const weightedRow = { ...row, _ledgerNo: idx + 1 };
       const rowPx = v1135LedgerRowPx(weightedRow, m);
       let col = page.chunks.length - 1;
       const usedPx = Number(page.weights[col] || 0);
-      const prevColLimitPx = col > 0 ? Number(page.weights[col - 1] || capacityPx) : capacityPx;
-      const limitPx = col > 0 ? Math.min(capacityPx, prevColLimitPx) : capacityPx;
-      // V1237: 2./3. tablo, solundaki kolonun alt hizasını geçecek ekstra satır basmaz.
-      const wouldOverflow = page.chunks[col].length && usedPx + rowPx > limitPx;
-      if (wouldOverflow) {
-        if (page.chunks.length >= 3) {
-          page.end = idx;
-          commitPage();
-          page = { chunks: [[]], weights: [0], start: idx, end: idx };
-          col = 0;
+      if (page.chunks[col].length) {
+        if (col === 0) {
+          if (usedPx + rowPx > capacityPx) col = v1238MoveToNextColumnOrPage(idx);
         } else {
-          page.chunks.push([]);
-          page.weights.push(0);
-          col += 1;
+          // V1238: 2./3. tabloyu zorla kısa kesme; ortak alt hedef çizgisine en yakın gerçek satırı seç.
+          const targetPx = Math.max(1, Number(page.weights[0] || capacityPx));
+          if (!v1238ShouldKeepRowInColumn(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
         }
       }
       page.chunks[col].push(weightedRow);
@@ -5160,7 +5183,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1237-output-icon-stop&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1238-output-fit-stop&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
