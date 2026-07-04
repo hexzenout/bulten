@@ -2756,6 +2756,13 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-size:15px!important;width:10px!important;min-width:10px!important;height:8px!important;line-height:8px!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateX(-0.45px) translateY(-1px) scaleX(1.55)!important;transform-origin:center!important;}
 
 
+      /* V1261: Tekli maçlarda Maç/Kupon yazısı hücre içinde ortalanmasın; kombineyle aynı sol başlangıç rayından başlasın.
+         Sadece tekli Maç/Kupon yatay başlangıcını düzeltir; satır bölme, popup, kamera ve ikon tasarımına dokunmaz. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{align-items:flex-start!important;justify-content:center!important;padding-left:0!important;padding-right:0!important;text-align:left!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line{width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;justify-content:flex-start!important;align-items:center!important;margin-left:0!important;margin-right:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{margin-left:0!important;text-align:left!important;}
+
+
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
