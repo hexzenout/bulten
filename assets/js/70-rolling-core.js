@@ -2763,6 +2763,23 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{margin-left:0!important;text-align:left!important;}
 
 
+
+
+      /* V1262: Bahis Kupon Defteri Oran kolonu genişletildi; pay sadece Kar-zarar kolonundan alındı.
+         Popup/kolon toplamı, Maç-Kupon, satır düzeni ve diğer modüller değişmez. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:7.4%!important;min-width:0!important;max-width:none!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:15.1%!important;min-width:0!important;max-width:none!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(6){width:7.4%!important;min-width:0!important;max-width:none!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(7),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(7){width:15.1%!important;min-width:0!important;max-width:none!important;}
+
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -5487,7 +5504,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1259-revert-v1258-safe-dash&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1262-odds-column-width&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
