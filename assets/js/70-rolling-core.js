@@ -5387,7 +5387,7 @@
     const safeName = cleanText(filename || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`;
     try {
       tab.document.open();
-      tab.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(safeName)}</title><style>html,body{margin:0;background:#020617;color:#e5e7eb;font-family:Arial,sans-serif;}body{min-height:100vh;} .bar{position:sticky;top:0;z-index:2;display:flex;gap:10px;align-items:center;padding:10px 12px;background:#020617;border-bottom:1px solid rgba(148,163,184,.25);} .bar a{appearance:none;border:1px solid rgba(251,191,36,.45);background:#111827;color:#fde68a;border-radius:10px;padding:8px 12px;font-weight:900;text-decoration:none;} .bar span{font-size:12px;color:#94a3b8;font-weight:800;} .wrap{padding:0;} img{display:block;max-width:none;height:auto;margin:0;}</style></head><body><div class="bar"><a id="download" href="${dataUrl}" download="${escapeHtml(safeName)}">PNG indir</a><span>Sağ tık: tarihli PNG indir</span></div><div class="wrap"><img src="${dataUrl}" alt="${escapeHtml(safeName)}"></div><script>document.addEventListener('contextmenu',function(e){e.preventDefault();var a=document.getElementById('download');if(a)a.click();});</script></body></html>`);
+      tab.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(safeName)}</title><style>html,body{margin:0;background:#020617;color:#e5e7eb;font-family:Arial,sans-serif;}body{min-height:100vh;} .bar{position:sticky;top:0;z-index:2;display:flex;gap:10px;align-items:center;padding:10px 12px;background:#020617;border-bottom:1px solid rgba(148,163,184,.25);} .bar a{appearance:none;border:1px solid rgba(251,191,36,.45);background:#111827;color:#fde68a;border-radius:10px;padding:8px 12px;font-weight:900;text-decoration:none;} .bar span{font-size:12px;color:#94a3b8;font-weight:800;} .wrap{padding:0;} img{display:block;max-width:none;height:auto;margin:0;}</style></head><body><div class="bar"><a id="download" href="${dataUrl}" download="${escapeHtml(safeName)}">Resmi indir</a><span>Sağ tık: tarihli PNG indir</span></div><div class="wrap"><img src="${dataUrl}" alt="${escapeHtml(safeName)}"></div><script>document.addEventListener('contextmenu',function(e){e.preventDefault();var a=document.getElementById('download');if(a)a.click();});</script></body></html>`);
       tab.document.close();
     } catch {
       try { tab.location.href = dataUrl; } catch {}
@@ -5471,6 +5471,119 @@
     return "";
   }
 
+
+  function v1264PrepareExactLedgerCaptureClone(clone) {
+    if (!clone || !(clone instanceof Element)) return clone;
+    clone.querySelectorAll("script").forEach(el => el.remove());
+    clone.removeAttribute("id");
+    clone.removeAttribute("role");
+    clone.removeAttribute("aria-modal");
+    clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+    clone.querySelectorAll("[data-v1060-ledger-photo], [data-v1056-ledger-close], [data-v1063-ledger-clock]").forEach(el => el.remove());
+    clone.querySelectorAll(".v1056-ledger-screen-body, .v1057-ledger-screen-body, .v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid, .v1057-ledger-sheet, .v1061-ledger-sheet, .v1057-ledger-excel-table, .v1061-ledger-excel-table").forEach(el => {
+      el.style.setProperty("overflow", "visible", "important");
+      el.style.setProperty("max-height", "none", "important");
+      el.style.setProperty("height", "auto", "important");
+      el.style.setProperty("min-height", "0", "important");
+      el.style.setProperty("margin-bottom", "0", "important");
+      el.style.setProperty("padding-bottom", "0", "important");
+      el.style.setProperty("transform", "none", "important");
+      el.style.setProperty("animation", "none", "important");
+      el.style.setProperty("transition", "none", "important");
+    });
+    clone.querySelectorAll("*").forEach(el => {
+      if (!(el instanceof Element)) return;
+      el.style.setProperty("animation", "none", "important");
+      el.style.setProperty("transition", "none", "important");
+      el.style.setProperty("caret-color", "transparent", "important");
+    });
+    return clone;
+  }
+
+  async function v1264BuildCurrentLedgerOutputPng(mode = "bet") {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const modalNode = document.querySelector(`#v1056-ledger-screen-host .v1056-ledger-screen-modal.${m}`) || document.querySelector(`#v1056-ledger-screen-host .v1056-ledger-screen-modal`);
+    if (!modalNode || !(modalNode instanceof Element)) throw new Error("Kupon Defteri ekranı bulunamadı.");
+    const sourceNode = modalNode.querySelector(".v1056-ledger-screen-body") || modalNode;
+    if (!sourceNode || !(sourceNode instanceof Element)) throw new Error("Kupon Defteri tablo alanı bulunamadı.");
+    try { await document.fonts?.ready; } catch {}
+    const sourceRect = sourceNode.getBoundingClientRect();
+    const baseWidth = Math.max(320, Math.ceil(sourceNode.scrollWidth || sourceNode.offsetWidth || sourceRect.width || 0));
+    const clone = sourceNode.cloneNode(true);
+    v1156CopyComputedTree(sourceNode, clone);
+    v1264PrepareExactLedgerCaptureClone(clone);
+    clone.style.setProperty("position", "relative", "important");
+    clone.style.setProperty("left", "auto", "important");
+    clone.style.setProperty("top", "auto", "important");
+    clone.style.setProperty("margin", "0", "important");
+    clone.style.setProperty("padding-bottom", "0", "important");
+    clone.style.setProperty("box-sizing", "border-box", "important");
+    clone.style.setProperty("width", `${baseWidth}px`, "important");
+    clone.style.setProperty("min-width", `${baseWidth}px`, "important");
+    clone.style.setProperty("max-width", `${baseWidth}px`, "important");
+    clone.style.setProperty("height", "auto", "important");
+    clone.style.setProperty("min-height", "0", "important");
+    clone.style.setProperty("max-height", "none", "important");
+    clone.style.setProperty("overflow", "visible", "important");
+    clone.style.setProperty("transform", "none", "important");
+
+    const tempHost = document.createElement("div");
+    tempHost.style.position = "fixed";
+    tempHost.style.left = "-100000px";
+    tempHost.style.top = "0";
+    tempHost.style.width = `${baseWidth}px`;
+    tempHost.style.height = "auto";
+    tempHost.style.overflow = "visible";
+    tempHost.style.background = "#020617";
+    tempHost.style.margin = "0";
+    tempHost.style.padding = "0";
+    tempHost.style.pointerEvents = "none";
+    tempHost.setAttribute("aria-hidden", "true");
+    tempHost.appendChild(clone);
+    document.body.appendChild(tempHost);
+
+    try {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const width = Math.max(baseWidth, Math.ceil(clone.scrollWidth || clone.getBoundingClientRect().width || clone.offsetWidth || baseWidth));
+      clone.style.setProperty("width", `${width}px`, "important");
+      clone.style.setProperty("min-width", `${width}px`, "important");
+      clone.style.setProperty("max-width", `${width}px`, "important");
+      tempHost.style.width = `${width}px`;
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const height = Math.max(120, Math.ceil(clone.scrollHeight || clone.getBoundingClientRect().height || clone.offsetHeight || 0));
+      clone.style.setProperty("height", `${height}px`, "important");
+      clone.style.setProperty("min-height", `${height}px`, "important");
+      clone.style.setProperty("max-height", `${height}px`, "important");
+      tempHost.style.height = `${height}px`;
+      tempHost.style.overflow = "hidden";
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const serialized = new XMLSerializer().serializeToString(clone);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${serialized}</foreignObject></svg>`;
+      const img = new Image();
+      const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error("PNG üretimi zaman aşımına uğradı.")), 16000);
+        img.onload = () => { clearTimeout(timer); resolve(); };
+        img.onerror = () => { clearTimeout(timer); reject(new Error("PNG üretilemedi.")); };
+        img.src = svgUrl;
+      });
+      const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.ceil(width * scale);
+      canvas.height = Math.ceil(height * scale);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      return canvas.toDataURL("image/png");
+    } finally {
+      tempHost.remove();
+    }
+  }
+
   function v1163BuildLedgerOutputHtml(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const tempHost = document.createElement("div");
@@ -5523,24 +5636,21 @@
     }
   }
 
-  function v1163OpenLedgerOutputTab(mode = "bet") {
+  async function v1163OpenLedgerOutputTab(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
-    const key = v1163LedgerOutputStorageKey();
-    const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
     const filename = v1162LedgerFilename(m);
-    const payload = { mode: m, title, filename, html: v1163BuildLedgerOutputHtml(m), ts: Date.now(), v: "1209" };
-    if (!payload.html) {
-      alert("Kupon Defteri çıktısı hazırlanamadı. Defteri kapatıp tekrar aç.");
+    const tab = window.open("", "_blank");
+    if (!tab) {
+      alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
       return;
     }
-    const store = v1163WriteLedgerOutputPayload(key, payload);
-    if (!store) {
-      alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
-      return;
+    v1165WriteTabMessage(tab, "PNG hazırlanıyor...");
+    try {
+      const dataUrl = await v1264BuildCurrentLedgerOutputPng(m);
+      v1169WritePngViewerTab(tab, dataUrl, filename);
+    } catch (error) {
+      v1165WriteTabMessage(tab, "PNG hazırlanamadı. Kupon Defteri açıkken tekrar dene.");
     }
-    const url = `ledger-output.html?v=v1263-auto-numeric-columns&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
-    const win = window.open(url, "_blank");
-    if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
 
   function v1162OpenLedgerOutputPreview(mode = "bet") {
