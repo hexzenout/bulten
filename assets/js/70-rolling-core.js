@@ -2780,6 +2780,40 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(7),
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(7){width:15.1%!important;min-width:0!important;max-width:none!important;}
 
+
+
+      /* V1263: Sayısal kolonlar içerik uzunluğuna göre otomatik dengelenir; Maç/Kupon descender güvenliği. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(5) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(6) .v1063-ledger-value,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet td:nth-child(7) .v1063-ledger-value,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(5) .v1063-ledger-value,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(6) .v1063-ledger-value,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(7) .v1063-ledger-value{white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;line-height:1!important;letter-spacing:-.015em!important;text-rendering:geometricPrecision!important;-webkit-font-smoothing:antialiased!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.06!important;text-rendering:geometricPrecision!important;-webkit-font-smoothing:antialiased!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd{line-height:1.03!important;}
+
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -5504,7 +5538,7 @@
       alert("Çıktı belleğe yazılamadı. Eski çıktı kayıtlarını temizleyip tekrar dene.");
       return;
     }
-    const url = `ledger-output.html?v=v1262-odds-column-width&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
+    const url = `ledger-output.html?v=v1263-auto-numeric-columns&store=${encodeURIComponent(store)}&key=${encodeURIComponent(key)}`;
     const win = window.open(url, "_blank");
     if (!win) alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
   }
@@ -9946,6 +9980,110 @@ function escapeHtml(str) {
       return false;
     };
     document.addEventListener("click", openFromExcelButton, true);
+  }
+
+
+  function v1263BetLedgerCleanText(value){
+    return String(value || "").replace(/\s+/g, " ").trim();
+  }
+  function v1263BetLedgerClamp(value, min, max){
+    return Math.max(min, Math.min(max, value));
+  }
+  function v1263BetLedgerMaxLen(table, colIndex){
+    let max = 0;
+    table.querySelectorAll(`tbody tr:not(.v1119-ledger-row-filler) td:nth-child(${colIndex})`).forEach(cell => {
+      const text = v1263BetLedgerCleanText(cell.textContent);
+      if(text) max = Math.max(max, text.length);
+    });
+    return max;
+  }
+  function v1263BetLedgerFontForLen(len, base){
+    if(len >= 13) return Math.max(8.35, base - 1.45);
+    if(len >= 11) return Math.max(8.65, base - 1.10);
+    if(len >= 9) return Math.max(9.05, base - .75);
+    if(len >= 7) return Math.max(9.35, base - .35);
+    return base;
+  }
+  function v1263BetLedgerSetColumn(table, index, width, fontSize){
+    const widthText = `${width.toFixed(2)}%`;
+    table.querySelectorAll(`tr > *:nth-child(${index})`).forEach(cell => {
+      cell.style.setProperty("width", widthText, "important");
+      cell.style.setProperty("min-width", "0", "important");
+      cell.style.setProperty("max-width", "none", "important");
+      cell.style.setProperty("white-space", "nowrap", "important");
+      cell.style.setProperty("padding-left", "1px", "important");
+      cell.style.setProperty("padding-right", "1px", "important");
+      if(fontSize) cell.style.setProperty("font-size", `${fontSize.toFixed(2)}px`, "important");
+      cell.querySelectorAll(".v1063-ledger-value,.v1060-ledger-cell-text").forEach(value => {
+        value.style.setProperty("white-space", "nowrap", "important");
+        value.style.setProperty("overflow", "hidden", "important");
+        value.style.setProperty("text-overflow", "clip", "important");
+        value.style.setProperty("line-height", "1", "important");
+        value.style.setProperty("letter-spacing", "-.015em", "important");
+        value.style.setProperty("text-rendering", "geometricPrecision", "important");
+        value.style.setProperty("-webkit-font-smoothing", "antialiased", "important");
+        if(fontSize) value.style.setProperty("font-size", `${fontSize.toFixed(2)}px`, "important");
+      });
+    });
+  }
+  function v1263ApplyBetLedgerAutoColumns(root){
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll(".v1054-daily-ledger.bet .v1057-ledger-excel-table, .v1054-daily-ledger.bet .v1061-ledger-excel-table").forEach(table => {
+      if(!table || !(table instanceof Element)) return;
+      const amountLen = v1263BetLedgerMaxLen(table, 5);
+      const oddsLen = v1263BetLedgerMaxLen(table, 6);
+      const pnlLen = v1263BetLedgerMaxLen(table, 7);
+      let amount = v1263BetLedgerClamp(11.4 + Math.max(0, amountLen - 3) * .48, 11.4, 15.2);
+      let odds = v1263BetLedgerClamp(7.7 + Math.max(0, oddsLen - 3) * .62, 7.7, 11.0);
+      let pnl = v1263BetLedgerClamp(13.6 + Math.max(0, pnlLen - 8) * .38, 12.4, 16.2);
+      const fixed = 6.1 + 16.1 + 12.0;
+      let match = 100 - fixed - amount - odds - pnl;
+      if(match < 29.0){
+        let need = 29.0 - match;
+        const pnlCut = Math.min(need, Math.max(0, pnl - 12.4));
+        pnl -= pnlCut; need -= pnlCut;
+        const amountCut = Math.min(need, Math.max(0, amount - 12.0));
+        amount -= amountCut; need -= amountCut;
+        const oddsCut = Math.min(need, Math.max(0, odds - 7.8));
+        odds -= oddsCut; need -= oddsCut;
+        match = 100 - fixed - amount - odds - pnl;
+      }
+      table.querySelectorAll("tr > *:nth-child(3)").forEach(cell => {
+        cell.style.setProperty("width", `${match.toFixed(2)}%`, "important");
+        cell.style.setProperty("padding-left", "3px", "important");
+        cell.style.setProperty("padding-right", "1px", "important");
+      });
+      table.querySelectorAll("tr > *:nth-child(4)").forEach(cell => {
+        cell.style.setProperty("width", "12.00%", "important");
+        cell.style.setProperty("white-space", "nowrap", "important");
+      });
+      v1263BetLedgerSetColumn(table, 5, amount, v1263BetLedgerFontForLen(amountLen, 10));
+      v1263BetLedgerSetColumn(table, 6, odds, v1263BetLedgerFontForLen(oddsLen, 10));
+      v1263BetLedgerSetColumn(table, 7, pnl, v1263BetLedgerFontForLen(pnlLen, 10));
+      table.querySelectorAll("td:nth-child(3) .v1078-ledger-match-text, td:nth-child(3) .v1069-ledger-match-name, td:nth-child(3) .v1076-ledger-match-odd").forEach(el => {
+        el.style.setProperty("line-height", el.closest("tr")?.classList.contains("v1118-ledger-row-longcombo") ? "1.03" : "1.06", "important");
+        el.style.setProperty("text-rendering", "geometricPrecision", "important");
+        el.style.setProperty("-webkit-font-smoothing", "antialiased", "important");
+      });
+    });
+  }
+  function v1263ScheduleBetLedgerAutoColumns(root){
+    try { v1263ApplyBetLedgerAutoColumns(root || document); } catch(e) {}
+    setTimeout(() => { try { v1263ApplyBetLedgerAutoColumns(root || document); } catch(e) {} }, 80);
+    setTimeout(() => { try { v1263ApplyBetLedgerAutoColumns(root || document); } catch(e) {} }, 260);
+  }
+  if(!window.__omegaV1263BetLedgerAutoColumnsBound){
+    window.__omegaV1263BetLedgerAutoColumnsBound = true;
+    const run = () => v1263ScheduleBetLedgerAutoColumns(document);
+    if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", run, { once:true }); else run();
+    try {
+      let t = 0;
+      const observer = new MutationObserver(() => {
+        clearTimeout(t);
+        t = setTimeout(run, 60);
+      });
+      observer.observe(document.body || document.documentElement, { childList:true, subtree:true });
+    } catch(e) {}
   }
 
   window.omega_RenderRollingModule = renderModule;

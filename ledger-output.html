@@ -1194,6 +1194,30 @@
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(7),
     .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(7){width:15.1%!important;min-width:0!important;max-width:none!important;}
 
+  
+    /* V1263: Bahis çıktı ekranı sayısal kolonları içerik uzunluğuna göre otomatik dengelenir. */
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(5),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(5),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(6),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(6),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table th:nth-child(7),
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1061-ledger-excel-table td:nth-child(7){white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(5) .v1063-ledger-value,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(6) .v1063-ledger-value,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet td:nth-child(7) .v1063-ledger-value{white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;line-height:1!important;letter-spacing:-.015em!important;text-rendering:geometricPrecision!important;-webkit-font-smoothing:antialiased!important;}
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.06!important;text-rendering:geometricPrecision!important;-webkit-font-smoothing:antialiased!important;}
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-name,
+    .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd{line-height:1.03!important;}
+
   </style>
 </head>
 <body>
@@ -1222,6 +1246,84 @@
   function hideMenu(){ if(menu) menu.style.display = "none"; }
 
   function dashHtml(){ return '<span class="v1172-ledger-dash-glyph" style="display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:10px!important;min-width:10px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateX(-0.45px) translateY(-1px) scaleX(1.55)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;">-</span>'; }
+
+
+  function v1263CleanText(value){ return String(value || "").replace(/\s+/g, " ").trim(); }
+  function v1263Clamp(value, min, max){ return Math.max(min, Math.min(max, value)); }
+  function v1263MaxLen(table, colIndex){
+    let max=0;
+    table.querySelectorAll(`tbody tr:not(.v1119-ledger-row-filler) td:nth-child(${colIndex})`).forEach(cell => {
+      const text=v1263CleanText(cell.textContent);
+      if(text) max=Math.max(max, text.length);
+    });
+    return max;
+  }
+  function v1263FontForLen(len, base){
+    if(len >= 13) return Math.max(8.35, base - 1.45);
+    if(len >= 11) return Math.max(8.65, base - 1.10);
+    if(len >= 9) return Math.max(9.05, base - .75);
+    if(len >= 7) return Math.max(9.35, base - .35);
+    return base;
+  }
+  function v1263SetColumn(table,index,width,fontSize){
+    const widthText=`${width.toFixed(2)}%`;
+    table.querySelectorAll(`tr > *:nth-child(${index})`).forEach(cell => {
+      cell.style.setProperty("width", widthText, "important");
+      cell.style.setProperty("min-width", "0", "important");
+      cell.style.setProperty("max-width", "none", "important");
+      cell.style.setProperty("white-space", "nowrap", "important");
+      cell.style.setProperty("padding-left", "1px", "important");
+      cell.style.setProperty("padding-right", "1px", "important");
+      if(fontSize) cell.style.setProperty("font-size", `${fontSize.toFixed(2)}px`, "important");
+      cell.querySelectorAll(".v1063-ledger-value,.v1060-ledger-cell-text").forEach(value => {
+        value.style.setProperty("white-space", "nowrap", "important");
+        value.style.setProperty("overflow", "hidden", "important");
+        value.style.setProperty("text-overflow", "clip", "important");
+        value.style.setProperty("line-height", "1", "important");
+        value.style.setProperty("letter-spacing", "-.015em", "important");
+        value.style.setProperty("text-rendering", "geometricPrecision", "important");
+        value.style.setProperty("-webkit-font-smoothing", "antialiased", "important");
+        if(fontSize) value.style.setProperty("font-size", `${fontSize.toFixed(2)}px`, "important");
+      });
+    });
+  }
+  function v1263ApplyBetOutputAutoColumns(root){
+    const scope=root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll(".v1054-daily-ledger.bet .v1057-ledger-excel-table, .v1054-daily-ledger.bet .v1061-ledger-excel-table").forEach(table => {
+      const amountLen=v1263MaxLen(table,5);
+      const oddsLen=v1263MaxLen(table,6);
+      const pnlLen=v1263MaxLen(table,7);
+      let amount=v1263Clamp(11.4 + Math.max(0,amountLen-3)*.48,11.4,15.2);
+      let odds=v1263Clamp(7.7 + Math.max(0,oddsLen-3)*.62,7.7,11.0);
+      let pnl=v1263Clamp(13.6 + Math.max(0,pnlLen-8)*.38,12.4,16.2);
+      const fixed=6.1+16.1+12.0;
+      let match=100-fixed-amount-odds-pnl;
+      if(match < 29.0){
+        let need=29.0-match;
+        const pnlCut=Math.min(need, Math.max(0,pnl-12.4)); pnl-=pnlCut; need-=pnlCut;
+        const amountCut=Math.min(need, Math.max(0,amount-12.0)); amount-=amountCut; need-=amountCut;
+        const oddsCut=Math.min(need, Math.max(0,odds-7.8)); odds-=oddsCut; need-=oddsCut;
+        match=100-fixed-amount-odds-pnl;
+      }
+      table.querySelectorAll("tr > *:nth-child(3)").forEach(cell => {
+        cell.style.setProperty("width", `${match.toFixed(2)}%`, "important");
+        cell.style.setProperty("padding-left", "3px", "important");
+        cell.style.setProperty("padding-right", "1px", "important");
+      });
+      table.querySelectorAll("tr > *:nth-child(4)").forEach(cell => {
+        cell.style.setProperty("width", "12.00%", "important");
+        cell.style.setProperty("white-space", "nowrap", "important");
+      });
+      v1263SetColumn(table,5,amount,v1263FontForLen(amountLen,10));
+      v1263SetColumn(table,6,odds,v1263FontForLen(oddsLen,10));
+      v1263SetColumn(table,7,pnl,v1263FontForLen(pnlLen,10));
+      table.querySelectorAll("td:nth-child(3) .v1078-ledger-match-text, td:nth-child(3) .v1069-ledger-match-name, td:nth-child(3) .v1076-ledger-match-odd").forEach(el => {
+        el.style.setProperty("line-height", el.closest("tr")?.classList.contains("v1118-ledger-row-longcombo") ? "1.03" : "1.06", "important");
+        el.style.setProperty("text-rendering", "geometricPrecision", "important");
+        el.style.setProperty("-webkit-font-smoothing", "antialiased", "important");
+      });
+    });
+  }
 
   function prepareOutputNode(node){
     if(!node || !(node instanceof Element)) return;
@@ -1291,6 +1393,7 @@
         line.style.setProperty("overflow", "visible", "important");
       }
     });
+    try { v1263ApplyBetOutputAutoColumns(node); } catch(e) {}
   }
 
   function styleToText(style){
@@ -1448,6 +1551,7 @@
     clearPngWarmCache();
     setTimeout(() => prepareOutputNode(outputNode), 120);
     setTimeout(() => prepareOutputNode(outputNode), 320);
+    setTimeout(() => { try { v1263ApplyBetOutputAutoColumns(outputNode); } catch(e) {} }, 520);
     setTimeout(() => { ensurePngBlob().catch(() => {}); }, 420);
     return true;
   }
