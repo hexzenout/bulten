@@ -5321,7 +5321,8 @@
       ctx.fillStyle = "#020617";
       ctx.fillRect(0, 0, width, height);
       ctx.drawImage(img, 0, 0, width, height);
-      return canvas.toDataURL("image/png");
+      const finalCanvas = v1268TrimCanvasRightBottomBackground(canvas, [2, 6, 23], 12);
+      return finalCanvas.toDataURL("image/png");
     } finally {
       tempHost.remove();
     }
@@ -5566,6 +5567,62 @@
     return clone;
   }
 
+  function v1268TrimCanvasRightBottomBackground(canvas, bg = [2, 6, 23], tolerance = 10) {
+    if (!(canvas instanceof HTMLCanvasElement)) return canvas;
+    const width = canvas.width || 0;
+    const height = canvas.height || 0;
+    if (!width || !height) return canvas;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return canvas;
+    let imageData;
+    try {
+      imageData = ctx.getImageData(0, 0, width, height);
+    } catch {
+      return canvas;
+    }
+    const data = imageData.data;
+    const isBg = (x, y) => {
+      const i = (y * width + x) * 4;
+      const r = data[i] || 0;
+      const g = data[i + 1] || 0;
+      const b = data[i + 2] || 0;
+      const a = data[i + 3] == null ? 255 : data[i + 3];
+      return a <= tolerance || (Math.abs(r - bg[0]) <= tolerance && Math.abs(g - bg[1]) <= tolerance && Math.abs(b - bg[2]) <= tolerance);
+    };
+    let lastRow = height - 1;
+    outerRow:
+    for (let y = height - 1; y >= 0; y -= 1) {
+      for (let x = 0; x < width; x += 1) {
+        if (!isBg(x, y)) {
+          lastRow = y;
+          break outerRow;
+        }
+      }
+      if (y === 0) lastRow = 0;
+    }
+    let lastCol = width - 1;
+    outerCol:
+    for (let x = width - 1; x >= 0; x -= 1) {
+      for (let y = 0; y <= lastRow; y += 1) {
+        if (!isBg(x, y)) {
+          lastCol = x;
+          break outerCol;
+        }
+      }
+      if (x === 0) lastCol = 0;
+    }
+    const trimWidth = Math.max(1, Math.min(width, lastCol + 1));
+    const trimHeight = Math.max(1, Math.min(height, lastRow + 1));
+    if (trimWidth >= width && trimHeight >= height) return canvas;
+    const trimmed = document.createElement("canvas");
+    trimmed.width = trimWidth;
+    trimmed.height = trimHeight;
+    const trimmedCtx = trimmed.getContext("2d");
+    if (!trimmedCtx) return canvas;
+    trimmedCtx.drawImage(canvas, 0, 0, trimWidth, trimHeight, 0, 0, trimWidth, trimHeight);
+    return trimmed;
+  }
+
   async function v1264BuildCurrentLedgerOutputPng(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const modalNode = document.querySelector(`#v1056-ledger-screen-host .v1056-ledger-screen-modal.${m}`) || document.querySelector(`#v1056-ledger-screen-host .v1056-ledger-screen-modal`);
@@ -5644,7 +5701,8 @@
       ctx.fillStyle = "#020617";
       ctx.fillRect(0, 0, width, height);
       ctx.drawImage(img, 0, 0, width, height);
-      return canvas.toDataURL("image/png");
+      const finalCanvas = v1268TrimCanvasRightBottomBackground(canvas, [2, 6, 23], 12);
+      return finalCanvas.toDataURL("image/png");
     } finally {
       tempHost.remove();
     }
