@@ -3252,16 +3252,16 @@
     };
     const v1249ColumnTinyGapPx = 12;
     const v1250ShouldStartNextRow = (usedPx, rowPx, targetPx) => {
-      // V1250: 1. tablo pencereyi doldursun; pencere dolduysa yeni satır başlatmasın.
+      // V1270: 1. tablo için eski "yakınsa taşır ama doldur" toleransını kaldır.
+      // Uzun kombine satırlarında tahmin düşük kalınca 10. satırdan sonra 11/12 gibi
+      // görünmeyen satırlar aynı tabloda başlıyordu. 1. tablo artık kapasiteyi
+      // aşacak yeni satırı başlatmaz; sonraki tabloya aktarır.
       if (usedPx <= 0) return true;
       const safeTarget = Math.max(1, Number(targetPx || capacityPx));
-      const nextPx = usedPx + Math.max(0, Number(rowPx || 0));
+      const row = Math.max(0, Number(rowPx || 0));
+      const nextPx = usedPx + row;
       if (usedPx >= safeTarget - v1249ColumnTinyGapPx) return false;
-      if (nextPx <= safeTarget) return true;
-      const beforeGap = Math.abs(safeTarget - usedPx);
-      const afterGap = Math.abs(nextPx - safeTarget);
-      const softOvershoot = Math.min(46, Math.max(18, Math.max(0, Number(rowPx || 0)) * 0.36));
-      return afterGap <= beforeGap || nextPx <= safeTarget + softOvershoot;
+      return nextPx <= safeTarget;
     };
     const v1251ShouldStartFollowColumnRow = (usedPx, rowPx, targetPx) => {
       // V1251: 2. ve 3. tablo, hedef çizgiye ulaştıktan sonra 25/40 gibi
