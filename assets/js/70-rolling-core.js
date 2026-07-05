@@ -2837,6 +2837,26 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{padding-top:2px!important;padding-bottom:2px!important;overflow:visible!important;}
 
+      /* V1274: Maç/Kupon yazıları kesilmez; tekli satır hücre merkezinde kalır. Bu blok satır yüksekliğini/kolon genişliğini değiştirmez. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1063-ledger-value.v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1063-ledger-value.v1069-ledger-item-lines{overflow:visible!important;box-sizing:border-box!important;min-height:0!important;transform:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{display:inline-flex!important;align-items:center!important;column-gap:2px!important;line-height:1.1!important;margin-top:0!important;margin-bottom:0!important;padding-top:0!important;padding-bottom:0!important;overflow:visible!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.1!important;padding-top:0!important;padding-bottom:0!important;overflow:visible!important;box-sizing:border-box!important;text-rendering:geometricPrecision!important;-webkit-font-smoothing:antialiased!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding-top:0!important;padding-bottom:0!important;gap:0!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line{align-items:center!important;min-height:12px!important;line-height:1.1!important;padding-top:0!important;padding-bottom:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{line-height:1.1!important;padding-top:0!important;padding-bottom:0!important;overflow:visible!important;max-height:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{align-self:center!important;transform:none!important;overflow:visible!important;}
+
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -3184,6 +3204,7 @@
     return 72;
   }
   const V1272_BET_LEDGER_MEASURE_CACHE = new Map();
+  const V1274_BET_LEDGER_MEASURE_BOX_CACHE = new Map();
 
   function v1272LedgerMeasureViewportKey() {
     const w = Math.floor(window.innerWidth || document.documentElement?.clientWidth || 0);
@@ -3295,38 +3316,43 @@
     return deterministic;
   }
 
-  function v1272LedgerMeasureBetRowPx(row, fallbackNo, ctx) {
+  function v1274LedgerMeasureBetRowBox(row, fallbackNo, ctx) {
     const key = v1272LedgerBetMeasureKey(row, fallbackNo);
-    const cached = V1272_BET_LEDGER_MEASURE_CACHE.get(key);
-    if (Number.isFinite(cached) && cached > 0) return cached;
-    let measured = 0;
+    const cached = V1274_BET_LEDGER_MEASURE_BOX_CACHE.get(key);
+    if (cached && Number.isFinite(cached.layoutPx) && cached.layoutPx > 0) return cached;
+    let layoutPx = 0;
+    let visualPx = 0;
     try {
       if (ctx?.tbody) {
         ctx.tbody.innerHTML = v1272LedgerBetMeasureRowHtml(row, fallbackNo);
         const tr = ctx.tbody.firstElementChild;
         const trRect = tr?.getBoundingClientRect?.();
-        measured = Math.ceil(trRect?.height || tr?.offsetHeight || 0);
-        const content = tr?.querySelector?.(".v1069-ledger-item-lines");
-        const contentRect = content?.getBoundingClientRect?.();
-        const contentH = Math.ceil(content?.scrollHeight || contentRect?.height || 0);
-        let visualBottom = trRect?.bottom || 0;
-        let visualTop = trRect?.top || contentRect?.top || 0;
-        tr?.querySelectorAll?.(".v1069-ledger-match-line, .v1078-ledger-match-text")?.forEach(node => {
+        const fallbackPx = v1135LedgerRowPx(row, "bet");
+        layoutPx = Math.ceil(trRect?.height || tr?.offsetHeight || fallbackPx || 0);
+        let visualTop = Number(trRect?.top || 0);
+        let visualBottom = Number(trRect?.bottom || visualTop + layoutPx);
+        tr?.querySelectorAll?.(".v1063-ledger-value, .v1069-ledger-item-lines, .v1069-ledger-match-line, .v1078-ledger-match-text, .v1069-ledger-match-name, .v1076-ledger-match-odd, .v1069-ledger-status-mark")?.forEach(node => {
           const rect = node.getBoundingClientRect?.();
           if (!rect) return;
-          if (rect.top < visualTop) visualTop = rect.top;
-          if (rect.bottom > visualBottom) visualBottom = rect.bottom;
+          if (Number.isFinite(rect.top) && rect.top < visualTop) visualTop = rect.top;
+          if (Number.isFinite(rect.bottom) && rect.bottom > visualBottom) visualBottom = rect.bottom;
         });
-        const visualH = Math.ceil(visualBottom - (trRect?.top || visualTop));
-        // V1273: ölçümü gerçek DOM'dan al ama V1272'deki fazla emniyet payı yüzünden satırları şişirme.
-        measured = Math.max(measured, contentH + 2, visualH + 1);
+        visualPx = Math.max(layoutPx, Math.ceil(visualBottom - (trRect?.top || visualTop)));
         ctx.tbody.textContent = "";
       }
     } catch(e) {}
-    const px = Math.max(1, measured || v1135LedgerRowPx(row, "bet"));
-    if (V1272_BET_LEDGER_MEASURE_CACHE.size > 900) V1272_BET_LEDGER_MEASURE_CACHE.clear();
-    V1272_BET_LEDGER_MEASURE_CACHE.set(key, px);
-    return px;
+    const fallbackPx = v1135LedgerRowPx(row, "bet");
+    const box = {
+      layoutPx: Math.max(1, layoutPx || fallbackPx),
+      visualPx: Math.max(1, visualPx || layoutPx || fallbackPx)
+    };
+    if (V1274_BET_LEDGER_MEASURE_BOX_CACHE.size > 900) V1274_BET_LEDGER_MEASURE_BOX_CACHE.clear();
+    V1274_BET_LEDGER_MEASURE_BOX_CACHE.set(key, box);
+    return box;
+  }
+
+  function v1272LedgerMeasureBetRowPx(row, fallbackNo, ctx) {
+    return v1274LedgerMeasureBetRowBox(row, fallbackNo, ctx).layoutPx;
   }
 
   function v1272LedgerMeasureBetRows(rows) {
@@ -3334,8 +3360,12 @@
     const ctx = v1272LedgerGetBetMeasureContext();
     try {
       const capacityPx = v1272LedgerBetAvailableBodyPx(ctx);
-      const rowPx = source.map((row, idx) => v1272LedgerMeasureBetRowPx({ ...row, _ledgerNo: idx + 1 }, idx + 1, ctx));
-      return { capacityPx, rowPx };
+      const rowBoxes = source.map((row, idx) => v1274LedgerMeasureBetRowBox({ ...row, _ledgerNo: idx + 1 }, idx + 1, ctx));
+      return {
+        capacityPx,
+        rowPx: rowBoxes.map(box => Math.max(1, Number(box.layoutPx || 0))),
+        visualPx: rowBoxes.map(box => Math.max(1, Number(box.visualPx || box.layoutPx || 0)))
+      };
     } finally {
       v1272LedgerDisposeBetMeasureContext(ctx);
     }
@@ -3343,19 +3373,11 @@
 
   function v1272LedgerCanAppendRow(usedPx, rowPx, availablePx) {
     const used = Math.max(0, Number(usedPx || 0));
-    const row = Math.max(1, Number(rowPx || 0));
     const available = Math.max(1, Number(availablePx || 0));
+    // V1274: karar satırın tamamı sığıyor mu değil, yeni satır bu tabloda başlayabiliyor mu.
+    // Tabloda 1-2px dışında gözle görülür boşluk varsa satır aynı tabloda başlar; taşma DOM ölçümüyle sonraki satırı yeni tabloya yollar.
     if (used <= 0) return true;
-    if (used >= available) return false;
-    const next = used + row;
-    if (next <= available) return true;
-    const gap = available - used;
-    const overflow = next - available;
-    // V1273: tolerans sadece satırın neredeyse tamamı tabloda kalıyorsa çalışır.
-    // Büyük taşmayı engeller; fakat 8-15px gibi küçük farklarda altta boşluk bırakmaz.
-    const tinyOverflow = Math.min(18, Math.max(7, row * 0.14));
-    const mostlyVisible = gap >= Math.max(18, row * 0.72);
-    return mostlyVisible && overflow <= tinyOverflow;
+    return used < available - 2;
   }
 
   function v1135LedgerTargetTotalForTables(mode, tableCount, rowBuilder) {
@@ -3437,41 +3459,51 @@
     const measured = v1272LedgerMeasureBetRows(source);
     const capacityPx = Math.max(1, Number(measured.capacityPx || v1135LedgerTableBodyPx()));
     const pages = [];
-    let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+    let page = { chunks: [[]], weights: [0], sealed: [false], start: 0, end: 0 };
     const commitPage = () => {
       page.chunks = page.chunks.filter(chunk => chunk.length);
       page.weights = (page.weights || []).slice(0, page.chunks.length);
+      page.sealed = (page.sealed || []).slice(0, page.chunks.length);
       if (!page.chunks.length) {
         page.chunks = [[]];
         page.weights = [0];
+        page.sealed = [false];
       }
-      /* V1272: bahis tarafında filler yok; her tablo gerçek DOM yüksekliğiyle kaç satır alıyorsa orada biter. */
+      /* V1274: bahis tarafında filler yok; her tablo aynı satır-başlangıç/DOM-taşma kuralıyla biter. */
       pages.push(page);
     };
     const v1272MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
         page.end = idx;
         commitPage();
-        page = { chunks: [[]], weights: [0], start: idx, end: idx };
+        page = { chunks: [[]], weights: [0], sealed: [false], start: idx, end: idx };
         return 0;
       }
       page.chunks.push([]);
       page.weights.push(0);
+      page.sealed = page.sealed || [];
+      page.sealed.push(false);
       return page.chunks.length - 1;
     };
     source.forEach((row, idx) => {
       const weightedRow = { ...row, _ledgerNo: idx + 1 };
       const rowPx = Math.max(1, Number(measured.rowPx?.[idx] || v1135LedgerRowPx(weightedRow, m)));
+      const rowVisualPx = Math.max(rowPx, Number(measured.visualPx?.[idx] || rowPx));
       let col = page.chunks.length - 1;
-      const usedPx = Number(page.weights[col] || 0);
-      if (page.chunks[col].length && !v1272LedgerCanAppendRow(usedPx, rowPx, capacityPx)) {
+      let usedPx = Number(page.weights[col] || 0);
+      const colSealed = !!page.sealed?.[col];
+      if (page.chunks[col].length && (colSealed || !v1272LedgerCanAppendRow(usedPx, rowPx, capacityPx))) {
         col = v1272MoveToNextColumnOrPage(idx);
+        usedPx = Number(page.weights[col] || 0);
       }
       page.chunks[col].push(weightedRow);
-      page.weights[col] += rowPx;
+      page.weights[col] = usedPx + rowPx;
+      page.sealed = page.sealed || [];
+      const visualBottom = usedPx + rowVisualPx;
+      page.sealed[col] = visualBottom >= capacityPx - 2 || page.weights[col] >= capacityPx - 2;
       page.end = idx + 1;
     });
-    if (!source.length) page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+    if (!source.length) page = { chunks: [[]], weights: [0], sealed: [false], start: 0, end: 0 };
     commitPage();
     return pages;
   }
