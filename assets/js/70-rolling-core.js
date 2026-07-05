@@ -7312,6 +7312,107 @@
       .sort((a,b) => b.score - a.score);
     return candidates[0]?.r || null;
   }
+  function v1294LedgerTextKey(value) {
+    return cleanText(value || "").toLocaleLowerCase("tr-TR").replace(/\s+/g, " ").trim();
+  }
+  function v1294FindSingleHistoryForOp(op, historyRows, ts, pnl) {
+    if (!op || !Array.isArray(historyRows) || !historyRows.length) return null;
+    if (v1057OpKind("bet", op) !== "Tek") return null;
+    const opLines = v1068BetMatchLines(op);
+    const opNameRaw = cleanText(opLines?.[0]?.name || v1057OpName("bet", op) || "");
+    const opName = v1294LedgerTextKey(opNameRaw);
+    const opStake = Math.abs(Number(op?.amt ?? op?.stake ?? 0));
+    const opOdds = Number(v1053BetOpTotalOdds(op) || op?.odds || 0);
+    const opStatus = v1073NormalizeBetMatchResult(op?.res || op?.status || op?.result || "");
+    const opTs = Number(ts || op?.resultTs || op?.closedTs || op?.ts || op?.updatedAt || op?.createdAt || 0);
+    const opPnl = Number(pnl || 0);
+    const candidates = historyRows
+      .filter(r => r && !/^kombine/i.test(cleanText(r.name || "")))
+      .filter(r => v1068BetMatchLines(r).length <= 1)
+      .map(r => {
+        const histLines = v1068BetMatchLines(r);
+        const histNameRaw = cleanText(histLines?.[0]?.name || r?.name || "");
+        const histName = v1294LedgerTextKey(histNameRaw);
+        const histStake = Math.abs(Number(r?.stake || 0));
+        const histOdds = Number(r?.odds || histLines?.[0]?.odds || 0);
+        const histStatus = v1073NormalizeBetMatchResult(r?.status || r?.result || r?.res || histLines?.[0]?.status || "");
+        const histTs = Number(r?.ts || 0);
+        const histPnl = Number(r?.pnl || 0);
+        const textRelated = !!(opName && histName && (histName.includes(opName) || opName.includes(histName)));
+        let score = 0;
+        if (textRelated) score += 8;
+        if (textRelated && histNameRaw.length > opNameRaw.length) score += 2;
+        if (opStatus && histStatus && opStatus === histStatus) score += 3;
+        if (opStake && histStake && Math.abs(opStake - histStake) < 0.01) score += 4;
+        if (opOdds && histOdds && Math.abs(opOdds - histOdds) < 0.01) score += 4;
+        if (Number.isFinite(opPnl) && Math.abs(histPnl - opPnl) < 0.01) score += 3;
+        if (opTs && histTs) {
+          const diff = Math.abs(histTs - opTs);
+          if (diff < 10 * 60 * 1000) score += 3;
+          else if (diff < 24 * 60 * 60 * 1000) score += 1;
+        }
+        const numericStrong = !!(opStake && histStake && Math.abs(opStake - histStake) < 0.01 && opOdds && histOdds && Math.abs(opOdds - histOdds) < 0.01);
+        const safe = textRelated || (numericStrong && opStatus && histStatus && opStatus === histStatus);
+        return { r, score, safe };
+      })
+      .filter(x => x.safe && x.score >= 10)
+      .sort((a, b) => b.score - a.score);
+    return candidates[0]?.r || null;
+  }
+  function v1294FindSingleLiveSlotForOp(op, betSlots, pnl) {
+    if (!op || !Array.isArray(betSlots) || !betSlots.length) return null;
+    if (v1057OpKind("bet", op) !== "Tek") return null;
+    const opLines = v1068BetMatchLines(op);
+    const opNameRaw = cleanText(opLines?.[0]?.name || v1057OpName("bet", op) || "");
+    const opName = v1294LedgerTextKey(opNameRaw);
+    const opStake = Math.abs(Number(op?.amt ?? op?.stake ?? 0));
+    const opOdds = Number(v1053BetOpTotalOdds(op) || op?.odds || 0);
+    const opStatus = v1073NormalizeBetMatchResult(op?.res || op?.status || op?.result || "");
+    const opPnl = Number(pnl || 0);
+    const candidates = betSlots
+      .map((slot, index) => ({ slot, index }))
+      .filter(({ slot }) => slot && betKind(slot) !== "combo" && cleanText(slot.name || ""))
+      .map(({ slot, index }) => {
+        const slotNameRaw = cleanText(slot.name || "");
+        const slotName = v1294LedgerTextKey(slotNameRaw);
+        const slotStake = Math.abs(Number(slot.stake || 0));
+        const slotOdds = Number(slot.odds || 0);
+        const slotStatus = v1073NormalizeBetMatchResult(slot.status || slot.result || slot.res || "");
+        const slotPnl = Number(slot.pnl || 0);
+        const textRelated = !!(opName && slotName && (slotName.includes(opName) || opName.includes(slotName)));
+        let score = 0;
+        if (textRelated) score += 8;
+        if (textRelated && slotNameRaw.length > opNameRaw.length) score += 3;
+        if (opStatus && slotStatus && opStatus === slotStatus) score += 3;
+        if (opStake && slotStake && Math.abs(opStake - slotStake) < 0.01) score += 4;
+        if (opOdds && slotOdds && Math.abs(opOdds - slotOdds) < 0.01) score += 4;
+        if (Number.isFinite(opPnl) && Math.abs(slotPnl - opPnl) < 0.01) score += 3;
+        const numericStrong = !!(opStake && slotStake && Math.abs(opStake - slotStake) < 0.01 && opOdds && slotOdds && Math.abs(opOdds - slotOdds) < 0.01);
+        const safe = textRelated || (numericStrong && opStatus && slotStatus && opStatus === slotStatus);
+        return { slot, index, score, safe };
+      })
+      .filter(x => x.safe && x.score >= 10)
+      .sort((a, b) => b.score - a.score);
+    return candidates[0]?.slot || null;
+  }
+  function v1294OpWithFullSingleSource(op, liveSlot, historyRow) {
+    if (!op || v1057OpKind("bet", op) !== "Tek") return op;
+    const histLines = v1068BetMatchLines(historyRow);
+    const histName = cleanText(histLines?.[0]?.name || historyRow?.name || "");
+    const liveName = cleanText(liveSlot?.name || "");
+    const opName = cleanText(v1068BetMatchLines(op)?.[0]?.name || v1057OpName("bet", op) || "");
+    const fullName = [opName, histName, liveName].reduce((best, item) => v1292PreferFullerCleanText(best, item), "");
+    if (!fullName || fullName === opName) return op;
+    return {
+      ...op,
+      name: fullName,
+      note: fullName,
+      match: fullName,
+      odds: Number(op?.odds || liveSlot?.odds || histLines?.[0]?.odds || 0),
+      stake: Number(op?.stake || op?.amt || liveSlot?.stake || historyRow?.stake || 0),
+      amt: Number(op?.amt || op?.stake || liveSlot?.stake || historyRow?.stake || 0)
+    };
+  }
   function v1064LedgerOpItem(mode, op, historyRow) {
     const m = mode === "crypto" ? "crypto" : "bet";
     if (m === "crypto") return v1057OpName(m, op);
@@ -7372,6 +7473,7 @@
     const db = v1045ReadRollingDb();
     const historyMap = m === "bet" ? v1064HistoryBetMap() : new Map();
     const historyRowsForMatch = m === "bet" ? Array.from(historyMap.values()) : [];
+    const liveBetSlots = m === "bet" ? (Array.isArray(loadState()?.modeSlots?.bet) ? loadState().modeSlots.bet : []) : [];
     const rows = [];
     Object.entries(db || {}).forEach(([key, plan]) => {
       if (!plan || v1057PlanModeFromKey(key, plan) !== m) return;
@@ -7385,11 +7487,15 @@
           const ts = Number(op.resultTs || op.closedTs || op.ts || op.updatedAt || op.createdAt || Date.now());
           const planDays = v1041NormalizeGrowthDays(plan.days || (String(key).match(/(\d+)/)?.[1] || 7));
           const directHist = op?.historyId ? historyMap.get(String(op.historyId)) : null;
-          const hist = directHist || v1065FindComboHistoryForOp(op, historyRowsForMatch, ts, pnl);
+          const hist = directHist
+            || v1065FindComboHistoryForOp(op, historyRowsForMatch, ts, pnl)
+            || (m === "bet" ? v1294FindSingleHistoryForOp(op, historyRowsForMatch, ts, pnl) : null);
+          const liveSlot = m === "bet" ? v1294FindSingleLiveSlotForOp(op, liveBetSlots, pnl) : null;
+          const opForDisplay = m === "bet" ? v1294OpWithFullSingleSource(op, liveSlot, hist) : op;
           rows.push({
             id: `auto_${m}_${v1057SafeLedgerId(key)}_${day}_${opIndex}`,
             source: "rolling",
-            historyId: op?.historyId || "",
+            historyId: op?.historyId || hist?.id || "",
             planKey: key,
             days: planDays,
             day,
@@ -7398,12 +7504,12 @@
             no: rows.length + 1,
             date: v1057TodayDateInput(ts),
             time: v1056TimeLabelFromTs(ts),
-            item: v1064LedgerOpItem(m, op, hist),
-            itemLines: m === "bet" ? v1068LedgerBetItemLines(op, hist) : [],
-            status: op?.res || hist?.status || "",
-            kind: v1057OpKind(m, op),
-            stake: money(Math.abs(Number(hist?.stake ?? op.amt ?? op.stake ?? 0))),
-            roi: hist ? v1054DailyRoi(m, hist) : v1057OpRoi(m, op, pnl),
+            item: v1064LedgerOpItem(m, opForDisplay, hist),
+            itemLines: m === "bet" ? v1068LedgerBetItemLines(opForDisplay, hist) : [],
+            status: opForDisplay?.res || hist?.status || "",
+            kind: v1057OpKind(m, opForDisplay),
+            stake: money(Math.abs(Number(hist?.stake ?? opForDisplay.amt ?? opForDisplay.stake ?? 0))),
+            roi: hist ? v1054DailyRoi(m, hist) : v1057OpRoi(m, opForDisplay, pnl),
             pnl: v1069LedgerPnlText(pnl),
             pnlRaw: Number(pnl || 0)
           });
@@ -10649,6 +10755,77 @@ function escapeHtml(str) {
   if(!window.__omegaV1293BetLedgerLongSingleSafeLayoutBound){
     window.__omegaV1293BetLedgerLongSingleSafeLayoutBound = true;
     const run = () => { try { v1293EnsureBetLedgerLongSingleSafeLayoutStyles(); } catch(e) {} };
+    if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", run, { once:true }); else run();
+  }
+
+
+  function v1294EnsureBetLedgerUnifiedMatchLineStyles(){
+    const styleId = "v1294-bet-ledger-unified-match-line";
+    let styleEl = document.getElementById(styleId);
+    if (styleEl) return;
+    styleEl = document.createElement("style");
+    styleEl.id = styleId;
+    styleEl.textContent = `
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{display:flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:2px!important;gap:2px!important;margin:0!important;padding:0!important;width:auto!important;max-width:100%!important;min-width:0!important;line-height:1.03!important;overflow:visible!important;box-sizing:border-box!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;max-width:10px!important;height:11px!important;min-height:11px!important;max-height:11px!important;line-height:11px!important;margin:0!important;padding:0!important;font-family:Arial,Helvetica,sans-serif!important;font-size:11px!important;font-weight:1000!important;text-align:center!important;align-self:center!important;background:none!important;overflow:visible!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#10b981!important;transform:translateX(-0.7px)!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#dc2626!important;transform:none!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:#94a3b8!important;font-size:0!important;transform:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::after,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::after,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.pending .v1069-ledger-status-mark::after,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.push .v1069-ledger-status-mark::after,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line.open .v1069-ledger-status-mark::after{content:none!important;display:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:inline-block!important;color:#94a3b8!important;font-family:Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:1000!important;line-height:8px!important;width:10px!important;min-width:10px!important;max-width:10px!important;height:8px!important;text-align:center!important;vertical-align:middle!important;visibility:visible!important;opacity:1!important;overflow:visible!important;transform:translateX(-0.45px) translateY(-1px) scaleX(1.55)!important;transform-origin:center!important;text-shadow:0 0 0 #94a3b8!important;background:none!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text{display:block!important;flex:1 1 auto!important;min-width:0!important;max-width:calc(100% - 12px)!important;margin:0!important;padding:0!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;overflow-wrap:normal!important;word-break:normal!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:900!important;line-height:1.04!important;letter-spacing:0!important;text-align:left!important;box-sizing:border-box!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{display:inline!important;line-height:1.04!important;vertical-align:baseline!important;overflow:visible!important;text-overflow:clip!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{margin-left:2px!important;white-space:nowrap!important;color:#fbbf24!important;font-weight:1000!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{align-items:flex-start!important;justify-content:center!important;padding-left:0!important;padding-right:0!important;text-align:left!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long td,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long td{height:auto!important;min-height:23px!important;max-height:none!important;vertical-align:middle!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{min-height:23px!important;height:auto!important;max-height:none!important;padding:2px 0!important;overflow:visible!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-line{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1078-ledger-match-text{max-height:none!important;padding-bottom:1px!important;overflow:visible!important;line-height:1.04!important;}
+    `;
+    const parent = document.head || document.documentElement;
+    if (parent) parent.appendChild(styleEl);
+  }
+  if(!window.__omegaV1294BetLedgerUnifiedMatchLineBound){
+    window.__omegaV1294BetLedgerUnifiedMatchLineBound = true;
+    const run = () => { try { v1294EnsureBetLedgerUnifiedMatchLineStyles(); } catch(e) {} };
     if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", run, { once:true }); else run();
   }
 
