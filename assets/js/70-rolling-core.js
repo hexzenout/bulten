@@ -8160,6 +8160,7 @@
       v1163OpenLedgerOutputTab(photoMode);
     }));
     v1057BindLedgerScreen(host, m);
+    try { v1291ScheduleBetLedgerOpenStableLayout(host, m); } catch(e) {}
   }
   function v1040GetGrowthPlan(store, mode, days, state) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -10540,6 +10541,22 @@ function escapeHtml(str) {
     try { v1263ApplyBetLedgerAutoColumns(root || document); } catch(e) {}
     setTimeout(() => { try { v1263ApplyBetLedgerAutoColumns(root || document); } catch(e) {} }, 80);
     setTimeout(() => { try { v1263ApplyBetLedgerAutoColumns(root || document); } catch(e) {} }, 260);
+  }
+
+  function v1291ScheduleBetLedgerOpenStableLayout(root, mode){
+    const m = mode === "crypto" ? "crypto" : "bet";
+    const scope = root && root.querySelectorAll ? root : document;
+    const run = () => {
+      try { v1110FinalizeLedgerLayout(scope); } catch(e) {}
+      if (m === "bet") {
+        try { v1263ApplyBetLedgerAutoColumns(scope); } catch(e) {}
+      }
+    };
+    run();
+    try { requestAnimationFrame(() => requestAnimationFrame(run)); } catch(e) {}
+    setTimeout(run, 40);
+    setTimeout(run, 120);
+    setTimeout(run, 320);
   }
   if(!window.__omegaV1263BetLedgerAutoColumnsBound){
     window.__omegaV1263BetLedgerAutoColumnsBound = true;
