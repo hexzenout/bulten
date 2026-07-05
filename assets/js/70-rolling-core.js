@@ -3173,6 +3173,183 @@
     if (count >= 3) return 104;
     return 72;
   }
+  const V1272_BET_LEDGER_MEASURE_CACHE = new Map();
+  const V1274_BET_LEDGER_MEASURE_BOX_CACHE = new Map();
+
+  function v1272LedgerMeasureViewportKey() {
+    const w = Math.floor(window.innerWidth || document.documentElement?.clientWidth || 0);
+    const h = Math.floor(window.innerHeight || document.documentElement?.clientHeight || 0);
+    return `${w}x${h}`;
+  }
+
+  function v1272LedgerBetMeasureHeadHtml() {
+    return `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th></tr>`;
+  }
+
+  function v1272LedgerBetMeasureRowHtml(row, fallbackNo = 1) {
+    const safeRow = row && typeof row === "object" ? row : {};
+    const pnlText = String(safeRow.pnl || "");
+    const isLoss = /^-/.test(pnlText) || Number(safeRow.pnlRaw || 0) < 0;
+    const globalNo = Number(safeRow._ledgerNo || safeRow.no || fallbackNo || 1);
+    const rowClass = v1118LedgerRowClass(safeRow, "bet");
+    return `<tr${rowClass ? ` class="${rowClass}"` : ""}>
+      <td>${v1060LedgerCellText(globalNo, "num")}</td>
+      <td>${v1060LedgerCellText(safeRow._displayDate || safeRow.date || "", "date")}</td>
+      <td>${v1068LedgerItemCell(safeRow, "bet", "item")}</td>
+      <td>${v1063LedgerCell(safeRow, "kind")}</td>
+      <td>${v1063LedgerCell(safeRow, "stake", "money")}</td>
+      <td>${v1063LedgerCell(safeRow, "roi")}</td>
+      <td class="v1069-ledger-pnl-cell ${isLoss ? "loss" : "win"}">${v1063LedgerCell(safeRow, "pnl", "pnl-text")}</td>
+    </tr>`;
+  }
+
+  function v1272LedgerBetMeasureKey(row, fallbackNo = 1) {
+    const safeRow = row && typeof row === "object" ? row : {};
+    const sourceLines = Array.isArray(safeRow.itemLines) ? safeRow.itemLines : [];
+    const lines = sourceLines.length
+      ? sourceLines.map(line => [cleanText(line?.name || ""), line?.odds || "", line?.status || line?.result || line?.res || ""].join("~"))
+      : v1069LedgerSplitItemText(safeRow.item || safeRow.name || "");
+    return [
+      v1272LedgerMeasureViewportKey(),
+      Number(safeRow._ledgerNo || safeRow.no || fallbackNo || 1),
+      safeRow._displayDate || safeRow.date || "",
+      safeRow.kind || "",
+      safeRow.stake || "",
+      safeRow.roi || "",
+      safeRow.pnl || "",
+      Number(safeRow.pnlRaw || 0),
+      lines.join("|")
+    ].join("¦");
+  }
+
+  function v1272LedgerGetBetMeasureContext() {
+    if (typeof document === "undefined" || !document.body) return null;
+    try { v1103EnsureLedgerTestStyles(); } catch(e) {}
+    let host = document.getElementById("v1056-ledger-screen-host");
+    let temporaryHost = false;
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "v1056-ledger-screen-host";
+      host.setAttribute("data-v1272-measure-host", "1");
+      host.style.cssText = "position:fixed!important;left:-100000px!important;top:0!important;width:max-content!important;height:auto!important;overflow:visible!important;visibility:hidden!important;pointer-events:none!important;z-index:-1!important;";
+      document.body.appendChild(host);
+      temporaryHost = true;
+    }
+    let box = host.querySelector(".v1272-ledger-measure-box");
+    if (!box) {
+      box = document.createElement("div");
+      box.className = "v1272-ledger-measure-box";
+      box.setAttribute("aria-hidden", "true");
+      box.style.cssText = "position:fixed!important;left:-100000px!important;top:0!important;width:max-content!important;height:auto!important;overflow:visible!important;visibility:hidden!important;pointer-events:none!important;z-index:-1!important;";
+      host.appendChild(box);
+    }
+    box.innerHTML = `<section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal bet v1110-ledger-test-modal" data-v1110-ledger-cols="3" style="--v1110-ledger-cols:3">
+      <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head"><div class="v1112-ledger-title-row"><b>BAHİS / KUPON DEFTERİ</b></div><div class="v1060-ledger-head-actions v1063-ledger-head-actions"></div></header>
+      <div class="v1056-ledger-screen-body v1057-ledger-screen-body">
+        <section class="v1040-growth-plan bet v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro v1063-ledger-pro v1065-ledger-pro v1056-ledger-modal-table" data-growth-plan="bet" data-growth-view="daily">
+          <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid"><section class="v1057-ledger-sheet v1061-ledger-sheet">${v1110LedgerSummarySpacerHtml()}<table class="v1057-ledger-excel-table v1061-ledger-excel-table"><thead>${v1272LedgerBetMeasureHeadHtml()}</thead><tbody></tbody></table></section></div>
+        </section>
+      </div>
+    </section>`;
+    return {
+      host,
+      box,
+      temporaryHost,
+      modal: box.querySelector(".v1056-ledger-screen-modal"),
+      body: box.querySelector(".v1056-ledger-screen-body, .v1057-ledger-screen-body"),
+      summary: box.querySelector(".v1059-ledger-summary, .v1060-ledger-summary-inline, .v1061-ledger-summary-inline"),
+      thead: box.querySelector("thead"),
+      tbody: box.querySelector("tbody")
+    };
+  }
+
+  function v1272LedgerDisposeBetMeasureContext(ctx) {
+    if (!ctx) return;
+    if (ctx.temporaryHost && ctx.host && ctx.host.parentNode) {
+      try { ctx.host.parentNode.removeChild(ctx.host); } catch(e) {}
+    }
+  }
+
+  function v1272LedgerBetAvailableBodyPx(ctx) {
+    const deterministic = Math.max(1, Number(v1135LedgerTableBodyPx() || 770));
+    try {
+      const bodyH = Math.floor(ctx?.body?.getBoundingClientRect?.().height || 0);
+      const summaryH = Math.ceil(ctx?.summary?.getBoundingClientRect?.().height || 0);
+      const headH = Math.ceil(ctx?.thead?.getBoundingClientRect?.().height || 0);
+      const available = Math.floor(bodyH - summaryH - headH - 1);
+      if (Number.isFinite(available) && available >= 320) {
+        // V1273: görünmeyen ölçüm kutusu bazen gövdeyi olduğundan kısa döndürüp tabloyu erken kesiyordu.
+        // Pencere yüksekliği zaten sabit profil olduğu için gerçek ölçüm küçükse deterministik alt sınır korunur.
+        return Math.max(deterministic, Math.min(820, available));
+      }
+    } catch(e) {}
+    return deterministic;
+  }
+
+  function v1274LedgerMeasureBetRowBox(row, fallbackNo, ctx) {
+    const key = v1272LedgerBetMeasureKey(row, fallbackNo);
+    const cached = V1274_BET_LEDGER_MEASURE_BOX_CACHE.get(key);
+    if (cached && Number.isFinite(cached.layoutPx) && cached.layoutPx > 0) return cached;
+    let layoutPx = 0;
+    let visualPx = 0;
+    try {
+      if (ctx?.tbody) {
+        ctx.tbody.innerHTML = v1272LedgerBetMeasureRowHtml(row, fallbackNo);
+        const tr = ctx.tbody.firstElementChild;
+        const trRect = tr?.getBoundingClientRect?.();
+        const fallbackPx = v1135LedgerRowPx(row, "bet");
+        layoutPx = Math.ceil(trRect?.height || tr?.offsetHeight || fallbackPx || 0);
+        let visualTop = Number(trRect?.top || 0);
+        let visualBottom = Number(trRect?.bottom || visualTop + layoutPx);
+        tr?.querySelectorAll?.(".v1063-ledger-value, .v1069-ledger-item-lines, .v1069-ledger-match-line, .v1078-ledger-match-text, .v1069-ledger-match-name, .v1076-ledger-match-odd, .v1069-ledger-status-mark")?.forEach(node => {
+          const rect = node.getBoundingClientRect?.();
+          if (!rect) return;
+          if (Number.isFinite(rect.top) && rect.top < visualTop) visualTop = rect.top;
+          if (Number.isFinite(rect.bottom) && rect.bottom > visualBottom) visualBottom = rect.bottom;
+        });
+        visualPx = Math.max(layoutPx, Math.ceil(visualBottom - (trRect?.top || visualTop)));
+        ctx.tbody.textContent = "";
+      }
+    } catch(e) {}
+    const fallbackPx = v1135LedgerRowPx(row, "bet");
+    const box = {
+      layoutPx: Math.max(1, layoutPx || fallbackPx),
+      visualPx: Math.max(1, visualPx || layoutPx || fallbackPx)
+    };
+    if (V1274_BET_LEDGER_MEASURE_BOX_CACHE.size > 900) V1274_BET_LEDGER_MEASURE_BOX_CACHE.clear();
+    V1274_BET_LEDGER_MEASURE_BOX_CACHE.set(key, box);
+    return box;
+  }
+
+  function v1272LedgerMeasureBetRowPx(row, fallbackNo, ctx) {
+    return v1274LedgerMeasureBetRowBox(row, fallbackNo, ctx).layoutPx;
+  }
+
+  function v1272LedgerMeasureBetRows(rows) {
+    const source = Array.isArray(rows) ? rows : [];
+    const ctx = v1272LedgerGetBetMeasureContext();
+    try {
+      const capacityPx = v1272LedgerBetAvailableBodyPx(ctx);
+      const rowBoxes = source.map((row, idx) => v1274LedgerMeasureBetRowBox({ ...row, _ledgerNo: idx + 1 }, idx + 1, ctx));
+      return {
+        capacityPx,
+        rowPx: rowBoxes.map(box => Math.max(1, Number(box.layoutPx || 0))),
+        visualPx: rowBoxes.map(box => Math.max(1, Number(box.visualPx || box.layoutPx || 0)))
+      };
+    } finally {
+      v1272LedgerDisposeBetMeasureContext(ctx);
+    }
+  }
+
+  function v1272LedgerCanAppendRow(usedPx, rowPx, availablePx) {
+    const used = Math.max(0, Number(usedPx || 0));
+    const available = Math.max(1, Number(availablePx || 0));
+    // V1274: karar satırın tamamı sığıyor mu değil, yeni satır bu tabloda başlayabiliyor mu.
+    // Tabloda 1-2px dışında gözle görülür boşluk varsa satır aynı tabloda başlar; taşma DOM ölçümüyle sonraki satırı yeni tabloya yollar.
+    if (used <= 0) return true;
+    return used < available - 2;
+  }
+
   function v1135LedgerTargetTotalForTables(mode, tableCount, rowBuilder) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const safeTables = Math.max(1, Math.min(6, Number(tableCount || 1)));
@@ -3203,7 +3380,9 @@
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    if (!v1103LedgerTestModeEnabled()) {
+    /* V1276: Bahis / Kupon Defteri gerçek modda da testte onaylanan 1/2/3 tablo DOM dağıtımını kullanır.
+       Test satırı üretme/toolbar ayrı kalır; gerçek kayıtlar aynı tablo motoruna girer. */
+    if (m !== "bet" && !v1103LedgerTestModeEnabled()) {
       return [{ chunks: v1057LedgerChunks(rows, 25), start: 0, end: Array.isArray(rows) ? rows.length : 0 }];
     }
     const source = Array.isArray(rows) ? rows : [];
@@ -3249,90 +3428,54 @@
       commitPage();
       return pages;
     }
-    const capacityPx = v1135LedgerTableBodyPx();
+    const measured = v1272LedgerMeasureBetRows(source);
+    const capacityPx = Math.max(1, Number(measured.capacityPx || v1135LedgerTableBodyPx()));
     const pages = [];
-    let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+    let page = { chunks: [[]], weights: [0], sealed: [false], start: 0, end: 0 };
     const commitPage = () => {
       page.chunks = page.chunks.filter(chunk => chunk.length);
       page.weights = (page.weights || []).slice(0, page.chunks.length);
+      page.sealed = (page.sealed || []).slice(0, page.chunks.length);
       if (!page.chunks.length) {
         page.chunks = [[]];
         page.weights = [0];
+        page.sealed = [false];
       }
-      /* V1233: bahis tarafında alt hizalama için boş/filler kutu üretme.
-         Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
+      /* V1274: bahis tarafında filler yok; her tablo aynı satır-başlangıç/DOM-taşma kuralıyla biter. */
       pages.push(page);
     };
-    const v1249ColumnTinyGapPx = 12;
-    const v1250ShouldStartNextRow = (usedPx, rowPx, targetPx) => {
-      // V1270: 1. tablo için eski "yakınsa taşır ama doldur" toleransını kaldır.
-      // Uzun kombine satırlarında tahmin düşük kalınca 10. satırdan sonra 11/12 gibi
-      // görünmeyen satırlar aynı tabloda başlıyordu. 1. tablo artık kapasiteyi
-      // aşacak yeni satırı başlatmaz; sonraki tabloya aktarır.
-      if (usedPx <= 0) return true;
-      const safeTarget = Math.max(1, Number(targetPx || capacityPx));
-      const row = Math.max(0, Number(rowPx || 0));
-      const nextPx = usedPx + row;
-      if (usedPx >= safeTarget - v1249ColumnTinyGapPx) return false;
-      return nextPx <= safeTarget;
-    };
-    const v1251ShouldStartFollowColumnRow = (usedPx, rowPx, targetPx) => {
-      // V1251: 2. ve 3. tablo, hedef çizgiye ulaştıktan sonra 25/40 gibi
-      // yeni satır BAŞLATMASIN. Burada amaç altta büyük boşluk bırakmamak;
-      // ama kolon zaten dolu görünüyorsa ekstra satırı sonraki tabloya bırakmak.
-      if (usedPx <= 0) return true;
-      const row = Math.max(0, Number(rowPx || 0));
-      const safeTarget = Math.max(1, Number(targetPx || capacityPx) - 34);
-      const nextPx = usedPx + row;
-      if (usedPx >= safeTarget - 16) return false;
-      if (nextPx <= safeTarget) return true;
-      const beforeGap = Math.abs(safeTarget - usedPx);
-      const afterGap = Math.abs(nextPx - safeTarget);
-      const tinyOvershoot = Math.min(24, Math.max(10, row * 0.18));
-      return afterGap < beforeGap && nextPx <= safeTarget + tinyOvershoot;
-    };
-    const v1238MoveToNextColumnOrPage = (idx) => {
+    const v1272MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
         page.end = idx;
         commitPage();
-        page = { chunks: [[]], weights: [0], start: idx, end: idx };
+        page = { chunks: [[]], weights: [0], sealed: [false], start: idx, end: idx };
         return 0;
       }
       page.chunks.push([]);
       page.weights.push(0);
+      page.sealed = page.sealed || [];
+      page.sealed.push(false);
       return page.chunks.length - 1;
     };
     source.forEach((row, idx) => {
       const weightedRow = { ...row, _ledgerNo: idx + 1 };
-      const rowPx = v1135LedgerRowPx(weightedRow, m);
+      const rowPx = Math.max(1, Number(measured.rowPx?.[idx] || v1135LedgerRowPx(weightedRow, m)));
+      const rowVisualPx = Math.max(rowPx, Number(measured.visualPx?.[idx] || rowPx));
       let col = page.chunks.length - 1;
-      const usedPx = Number(page.weights[col] || 0);
-      if (page.chunks[col].length) {
-        if (col === 0) {
-          // V1269: 1. tabloda 13 satır zaten gövdeyi doldurduysa 14. satırı aynı
-          // kolonda başlatma. Önceki tolerans, özellikle uzun kombine satırlarında
-          // tahmini yükseklik düşük kaldığında fazladan 14. satırı basabiliyordu.
-          const firstColumnRows = page.chunks[col].length || 0;
-          const firstColumnNearFull = usedPx >= capacityPx * 0.78;
-          if (firstColumnRows >= 13 && firstColumnNearFull) {
-            col = v1238MoveToNextColumnOrPage(idx);
-          } else if (!v1250ShouldStartNextRow(usedPx, rowPx, capacityPx)) {
-            col = v1238MoveToNextColumnOrPage(idx);
-          }
-        } else {
-          // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
-          // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
-          const firstPx = Math.max(1, Number(page.weights[0] || capacityPx));
-          const prevPx = Math.max(1, Number(page.weights[col - 1] || firstPx));
-          const targetPx = col === 1 ? firstPx : Math.max(1, Math.round((firstPx + prevPx) / 2));
-          if (!v1251ShouldStartFollowColumnRow(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
-        }
+      let usedPx = Number(page.weights[col] || 0);
+      const colSealed = !!page.sealed?.[col];
+      if (page.chunks[col].length && (colSealed || !v1272LedgerCanAppendRow(usedPx, rowPx, capacityPx))) {
+        col = v1272MoveToNextColumnOrPage(idx);
+        usedPx = Number(page.weights[col] || 0);
       }
       page.chunks[col].push(weightedRow);
-      page.weights[col] += rowPx;
+      page.weights[col] = usedPx + rowPx;
+      page.sealed = page.sealed || [];
+      const visualBottom = usedPx + rowVisualPx;
+      page.sealed[col] = visualBottom >= capacityPx - 2 || page.weights[col] >= capacityPx - 2;
       page.end = idx + 1;
     });
-    if (!source.length) page = { chunks: [[]], weights: [0], start: 0, end: 0 };
+    if (!source.length) page = { chunks: [[]], weights: [0], sealed: [false], start: 0, end: 0 };
     commitPage();
     return pages;
   }
@@ -3350,15 +3493,16 @@
     return { total, page, totalPages, start: current.start || 0, end: current.end || 0, pageRows, chunks: current.chunks || [[]] };
   }
   function v1110LedgerChunks(rows, mode) {
-    if (!v1103LedgerTestModeEnabled()) return v1057LedgerChunks(rows, 25);
-    return v1110LedgerPageInfo(rows, mode).chunks;
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet" && !v1103LedgerTestModeEnabled()) return v1057LedgerChunks(rows, 25);
+    return v1110LedgerPageInfo(rows, m).chunks;
   }
   function v1110LedgerPagerHtml(rows, mode) {
     return "";
   }
   function v1110LedgerHeaderPagerHtml(mode) {
-    if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet" && !v1103LedgerTestModeEnabled()) return "";
     const rows = v1057LedgerRows(m);
     const info = v1110LedgerPageInfo(rows, m);
     if (info.totalPages <= 1) return "";
@@ -3372,7 +3516,8 @@
     modal.classList.remove('v1110-ledger-test-modal');
     modal.removeAttribute('data-v1110-ledger-cols');
     modal.style.removeProperty('--v1110-ledger-cols');
-    if (!v1103LedgerTestModeEnabled()) return;
+    const useLedgerTableLayout = modal.classList.contains('bet') || v1103LedgerTestModeEnabled();
+    if (!useLedgerTableLayout) return;
     const cols = Math.max(1, Math.min(3, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1));
     modal.classList.add('v1110-ledger-test-modal');
     modal.setAttribute('data-v1110-ledger-cols', String(cols));
