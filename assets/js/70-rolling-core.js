@@ -2813,29 +2813,29 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-name,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd{line-height:1.03!important;}
-      /* V1272: Maç/Kupon descender güvenliği; g/q/y alt uzantıları kırpılmasın, ikon merkezi korunur. */
+      /* V1273: Maç/Kupon descender güvenliği daraltıldı; tekli satır yeniden hücre merkezine oturur. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-item-lines,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-item-lines{overflow:visible!important;box-sizing:border-box!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{overflow:visible!important;line-height:1.1!important;align-items:center!important;padding-bottom:1px!important;box-sizing:border-box!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{overflow:visible!important;line-height:1.08!important;align-items:center!important;padding-bottom:0!important;box-sizing:border-box!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1078-ledger-match-text,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-name,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.1!important;padding-bottom:2px!important;overflow:visible!important;box-sizing:border-box!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.09!important;padding-bottom:1px!important;overflow:visible!important;box-sizing:border-box!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{overflow:visible!important;align-items:flex-start!important;justify-content:center!important;padding-bottom:2px!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{overflow:visible!important;align-items:center!important;justify-content:center!important;padding-bottom:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line{overflow:visible!important;align-items:center!important;padding-bottom:1px!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line{overflow:visible!important;align-items:center!important;padding-bottom:0!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{max-height:none!important;line-height:1.1!important;padding-bottom:2px!important;overflow:visible!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{max-height:none!important;line-height:1.09!important;padding-bottom:1px!important;overflow:visible!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{align-self:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{padding-top:2px!important;padding-bottom:3px!important;overflow:visible!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{padding-top:2px!important;padding-bottom:2px!important;overflow:visible!important;}
 
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
@@ -3280,14 +3280,19 @@
   }
 
   function v1272LedgerBetAvailableBodyPx(ctx) {
+    const deterministic = Math.max(1, Number(v1135LedgerTableBodyPx() || 770));
     try {
       const bodyH = Math.floor(ctx?.body?.getBoundingClientRect?.().height || 0);
       const summaryH = Math.ceil(ctx?.summary?.getBoundingClientRect?.().height || 0);
       const headH = Math.ceil(ctx?.thead?.getBoundingClientRect?.().height || 0);
-      const available = Math.floor(bodyH - summaryH - headH - 3);
-      if (Number.isFinite(available) && available >= 320) return available;
+      const available = Math.floor(bodyH - summaryH - headH - 1);
+      if (Number.isFinite(available) && available >= 320) {
+        // V1273: görünmeyen ölçüm kutusu bazen gövdeyi olduğundan kısa döndürüp tabloyu erken kesiyordu.
+        // Pencere yüksekliği zaten sabit profil olduğu için gerçek ölçüm küçükse deterministik alt sınır korunur.
+        return Math.max(deterministic, Math.min(820, available));
+      }
     } catch(e) {}
-    return v1135LedgerTableBodyPx();
+    return deterministic;
   }
 
   function v1272LedgerMeasureBetRowPx(row, fallbackNo, ctx) {
@@ -3313,7 +3318,8 @@
           if (rect.bottom > visualBottom) visualBottom = rect.bottom;
         });
         const visualH = Math.ceil(visualBottom - (trRect?.top || visualTop));
-        measured = Math.max(measured, contentH + 4, visualH + 3);
+        // V1273: ölçümü gerçek DOM'dan al ama V1272'deki fazla emniyet payı yüzünden satırları şişirme.
+        measured = Math.max(measured, contentH + 2, visualH + 1);
         ctx.tbody.textContent = "";
       }
     } catch(e) {}
@@ -3345,8 +3351,11 @@
     if (next <= available) return true;
     const gap = available - used;
     const overflow = next - available;
-    const tinyOverflow = Math.min(10, Math.max(4, row * 0.08));
-    return gap >= row - tinyOverflow && overflow <= tinyOverflow;
+    // V1273: tolerans sadece satırın neredeyse tamamı tabloda kalıyorsa çalışır.
+    // Büyük taşmayı engeller; fakat 8-15px gibi küçük farklarda altta boşluk bırakmaz.
+    const tinyOverflow = Math.min(18, Math.max(7, row * 0.14));
+    const mostlyVisible = gap >= Math.max(18, row * 0.72);
+    return mostlyVisible && overflow <= tinyOverflow;
   }
 
   function v1135LedgerTargetTotalForTables(mode, tableCount, rowBuilder) {
