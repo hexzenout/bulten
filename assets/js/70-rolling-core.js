@@ -2813,19 +2813,29 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-name,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd{line-height:1.03!important;}
-      /* V1271: Maç/Kupon yazılarında g/q/y alt çıkıntısı kesilmesin. */
+      /* V1272: Maç/Kupon descender güvenliği; g/q/y alt uzantıları kırpılmasın, ikon merkezi korunur. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-item-lines{overflow:visible!important;box-sizing:border-box!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{overflow:visible!important;line-height:1.08!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{overflow:visible!important;line-height:1.1!important;align-items:center!important;padding-bottom:1px!important;box-sizing:border-box!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1078-ledger-match-text,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-name,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.09!important;padding-bottom:1px!important;overflow:visible!important;box-sizing:border-box!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.1!important;padding-bottom:2px!important;overflow:visible!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{overflow:visible!important;align-items:flex-start!important;justify-content:center!important;padding-bottom:2px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line{overflow:visible!important;align-items:center!important;padding-bottom:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{max-height:none!important;line-height:1.1!important;padding-bottom:2px!important;overflow:visible!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{align-self:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{padding-top:2px!important;padding-bottom:2px!important;overflow:visible!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{padding-top:2px!important;padding-bottom:3px!important;overflow:visible!important;}
 
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
@@ -3173,6 +3183,172 @@
     if (count >= 3) return 104;
     return 72;
   }
+  const V1272_BET_LEDGER_MEASURE_CACHE = new Map();
+
+  function v1272LedgerMeasureViewportKey() {
+    const w = Math.floor(window.innerWidth || document.documentElement?.clientWidth || 0);
+    const h = Math.floor(window.innerHeight || document.documentElement?.clientHeight || 0);
+    return `${w}x${h}`;
+  }
+
+  function v1272LedgerBetMeasureHeadHtml() {
+    return `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th></tr>`;
+  }
+
+  function v1272LedgerBetMeasureRowHtml(row, fallbackNo = 1) {
+    const safeRow = row && typeof row === "object" ? row : {};
+    const pnlText = String(safeRow.pnl || "");
+    const isLoss = /^-/.test(pnlText) || Number(safeRow.pnlRaw || 0) < 0;
+    const globalNo = Number(safeRow._ledgerNo || safeRow.no || fallbackNo || 1);
+    const rowClass = v1118LedgerRowClass(safeRow, "bet");
+    return `<tr${rowClass ? ` class="${rowClass}"` : ""}>
+      <td>${v1060LedgerCellText(globalNo, "num")}</td>
+      <td>${v1060LedgerCellText(safeRow._displayDate || safeRow.date || "", "date")}</td>
+      <td>${v1068LedgerItemCell(safeRow, "bet", "item")}</td>
+      <td>${v1063LedgerCell(safeRow, "kind")}</td>
+      <td>${v1063LedgerCell(safeRow, "stake", "money")}</td>
+      <td>${v1063LedgerCell(safeRow, "roi")}</td>
+      <td class="v1069-ledger-pnl-cell ${isLoss ? "loss" : "win"}">${v1063LedgerCell(safeRow, "pnl", "pnl-text")}</td>
+    </tr>`;
+  }
+
+  function v1272LedgerBetMeasureKey(row, fallbackNo = 1) {
+    const safeRow = row && typeof row === "object" ? row : {};
+    const sourceLines = Array.isArray(safeRow.itemLines) ? safeRow.itemLines : [];
+    const lines = sourceLines.length
+      ? sourceLines.map(line => [cleanText(line?.name || ""), line?.odds || "", line?.status || line?.result || line?.res || ""].join("~"))
+      : v1069LedgerSplitItemText(safeRow.item || safeRow.name || "");
+    return [
+      v1272LedgerMeasureViewportKey(),
+      Number(safeRow._ledgerNo || safeRow.no || fallbackNo || 1),
+      safeRow._displayDate || safeRow.date || "",
+      safeRow.kind || "",
+      safeRow.stake || "",
+      safeRow.roi || "",
+      safeRow.pnl || "",
+      Number(safeRow.pnlRaw || 0),
+      lines.join("|")
+    ].join("¦");
+  }
+
+  function v1272LedgerGetBetMeasureContext() {
+    if (typeof document === "undefined" || !document.body) return null;
+    try { v1103EnsureLedgerTestStyles(); } catch(e) {}
+    let host = document.getElementById("v1056-ledger-screen-host");
+    let temporaryHost = false;
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "v1056-ledger-screen-host";
+      host.setAttribute("data-v1272-measure-host", "1");
+      host.style.cssText = "position:fixed!important;left:-100000px!important;top:0!important;width:max-content!important;height:auto!important;overflow:visible!important;visibility:hidden!important;pointer-events:none!important;z-index:-1!important;";
+      document.body.appendChild(host);
+      temporaryHost = true;
+    }
+    let box = host.querySelector(".v1272-ledger-measure-box");
+    if (!box) {
+      box = document.createElement("div");
+      box.className = "v1272-ledger-measure-box";
+      box.setAttribute("aria-hidden", "true");
+      box.style.cssText = "position:fixed!important;left:-100000px!important;top:0!important;width:max-content!important;height:auto!important;overflow:visible!important;visibility:hidden!important;pointer-events:none!important;z-index:-1!important;";
+      host.appendChild(box);
+    }
+    box.innerHTML = `<section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal bet v1110-ledger-test-modal" data-v1110-ledger-cols="3" style="--v1110-ledger-cols:3">
+      <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head"><div class="v1112-ledger-title-row"><b>BAHİS / KUPON DEFTERİ</b></div><div class="v1060-ledger-head-actions v1063-ledger-head-actions"></div></header>
+      <div class="v1056-ledger-screen-body v1057-ledger-screen-body">
+        <section class="v1040-growth-plan bet v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro v1063-ledger-pro v1065-ledger-pro v1056-ledger-modal-table" data-growth-plan="bet" data-growth-view="daily">
+          <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid"><section class="v1057-ledger-sheet v1061-ledger-sheet">${v1110LedgerSummarySpacerHtml()}<table class="v1057-ledger-excel-table v1061-ledger-excel-table"><thead>${v1272LedgerBetMeasureHeadHtml()}</thead><tbody></tbody></table></section></div>
+        </section>
+      </div>
+    </section>`;
+    return {
+      host,
+      box,
+      temporaryHost,
+      modal: box.querySelector(".v1056-ledger-screen-modal"),
+      body: box.querySelector(".v1056-ledger-screen-body, .v1057-ledger-screen-body"),
+      summary: box.querySelector(".v1059-ledger-summary, .v1060-ledger-summary-inline, .v1061-ledger-summary-inline"),
+      thead: box.querySelector("thead"),
+      tbody: box.querySelector("tbody")
+    };
+  }
+
+  function v1272LedgerDisposeBetMeasureContext(ctx) {
+    if (!ctx) return;
+    if (ctx.temporaryHost && ctx.host && ctx.host.parentNode) {
+      try { ctx.host.parentNode.removeChild(ctx.host); } catch(e) {}
+    }
+  }
+
+  function v1272LedgerBetAvailableBodyPx(ctx) {
+    try {
+      const bodyH = Math.floor(ctx?.body?.getBoundingClientRect?.().height || 0);
+      const summaryH = Math.ceil(ctx?.summary?.getBoundingClientRect?.().height || 0);
+      const headH = Math.ceil(ctx?.thead?.getBoundingClientRect?.().height || 0);
+      const available = Math.floor(bodyH - summaryH - headH - 3);
+      if (Number.isFinite(available) && available >= 320) return available;
+    } catch(e) {}
+    return v1135LedgerTableBodyPx();
+  }
+
+  function v1272LedgerMeasureBetRowPx(row, fallbackNo, ctx) {
+    const key = v1272LedgerBetMeasureKey(row, fallbackNo);
+    const cached = V1272_BET_LEDGER_MEASURE_CACHE.get(key);
+    if (Number.isFinite(cached) && cached > 0) return cached;
+    let measured = 0;
+    try {
+      if (ctx?.tbody) {
+        ctx.tbody.innerHTML = v1272LedgerBetMeasureRowHtml(row, fallbackNo);
+        const tr = ctx.tbody.firstElementChild;
+        const trRect = tr?.getBoundingClientRect?.();
+        measured = Math.ceil(trRect?.height || tr?.offsetHeight || 0);
+        const content = tr?.querySelector?.(".v1069-ledger-item-lines");
+        const contentRect = content?.getBoundingClientRect?.();
+        const contentH = Math.ceil(content?.scrollHeight || contentRect?.height || 0);
+        let visualBottom = trRect?.bottom || 0;
+        let visualTop = trRect?.top || contentRect?.top || 0;
+        tr?.querySelectorAll?.(".v1069-ledger-match-line, .v1078-ledger-match-text")?.forEach(node => {
+          const rect = node.getBoundingClientRect?.();
+          if (!rect) return;
+          if (rect.top < visualTop) visualTop = rect.top;
+          if (rect.bottom > visualBottom) visualBottom = rect.bottom;
+        });
+        const visualH = Math.ceil(visualBottom - (trRect?.top || visualTop));
+        measured = Math.max(measured, contentH + 4, visualH + 3);
+        ctx.tbody.textContent = "";
+      }
+    } catch(e) {}
+    const px = Math.max(1, measured || v1135LedgerRowPx(row, "bet"));
+    if (V1272_BET_LEDGER_MEASURE_CACHE.size > 900) V1272_BET_LEDGER_MEASURE_CACHE.clear();
+    V1272_BET_LEDGER_MEASURE_CACHE.set(key, px);
+    return px;
+  }
+
+  function v1272LedgerMeasureBetRows(rows) {
+    const source = Array.isArray(rows) ? rows : [];
+    const ctx = v1272LedgerGetBetMeasureContext();
+    try {
+      const capacityPx = v1272LedgerBetAvailableBodyPx(ctx);
+      const rowPx = source.map((row, idx) => v1272LedgerMeasureBetRowPx({ ...row, _ledgerNo: idx + 1 }, idx + 1, ctx));
+      return { capacityPx, rowPx };
+    } finally {
+      v1272LedgerDisposeBetMeasureContext(ctx);
+    }
+  }
+
+  function v1272LedgerCanAppendRow(usedPx, rowPx, availablePx) {
+    const used = Math.max(0, Number(usedPx || 0));
+    const row = Math.max(1, Number(rowPx || 0));
+    const available = Math.max(1, Number(availablePx || 0));
+    if (used <= 0) return true;
+    if (used >= available) return false;
+    const next = used + row;
+    if (next <= available) return true;
+    const gap = available - used;
+    const overflow = next - available;
+    const tinyOverflow = Math.min(10, Math.max(4, row * 0.08));
+    return gap >= row - tinyOverflow && overflow <= tinyOverflow;
+  }
+
   function v1135LedgerTargetTotalForTables(mode, tableCount, rowBuilder) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const safeTables = Math.max(1, Math.min(6, Number(tableCount || 1)));
@@ -3249,7 +3425,8 @@
       commitPage();
       return pages;
     }
-    const capacityPx = v1135LedgerTableBodyPx();
+    const measured = v1272LedgerMeasureBetRows(source);
+    const capacityPx = Math.max(1, Number(measured.capacityPx || v1135LedgerTableBodyPx()));
     const pages = [];
     let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
     const commitPage = () => {
@@ -3259,39 +3436,10 @@
         page.chunks = [[]];
         page.weights = [0];
       }
-      /* V1233: bahis tarafında alt hizalama için boş/filler kutu üretme.
-         Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
+      /* V1272: bahis tarafında filler yok; her tablo gerçek DOM yüksekliğiyle kaç satır alıyorsa orada biter. */
       pages.push(page);
     };
-    const v1249ColumnTinyGapPx = 12;
-    const v1250ShouldStartNextRow = (usedPx, rowPx, targetPx) => {
-      // V1270: 1. tablo için eski "yakınsa taşır ama doldur" toleransını kaldır.
-      // Uzun kombine satırlarında tahmin düşük kalınca 10. satırdan sonra 11/12 gibi
-      // görünmeyen satırlar aynı tabloda başlıyordu. 1. tablo artık kapasiteyi
-      // aşacak yeni satırı başlatmaz; sonraki tabloya aktarır.
-      if (usedPx <= 0) return true;
-      const safeTarget = Math.max(1, Number(targetPx || capacityPx));
-      const row = Math.max(0, Number(rowPx || 0));
-      const nextPx = usedPx + row;
-      if (usedPx >= safeTarget - v1249ColumnTinyGapPx) return false;
-      return nextPx <= safeTarget;
-    };
-    const v1251ShouldStartFollowColumnRow = (usedPx, rowPx, targetPx) => {
-      // V1251: 2. ve 3. tablo, hedef çizgiye ulaştıktan sonra 25/40 gibi
-      // yeni satır BAŞLATMASIN. Burada amaç altta büyük boşluk bırakmamak;
-      // ama kolon zaten dolu görünüyorsa ekstra satırı sonraki tabloya bırakmak.
-      if (usedPx <= 0) return true;
-      const row = Math.max(0, Number(rowPx || 0));
-      const safeTarget = Math.max(1, Number(targetPx || capacityPx) - 34);
-      const nextPx = usedPx + row;
-      if (usedPx >= safeTarget - 16) return false;
-      if (nextPx <= safeTarget) return true;
-      const beforeGap = Math.abs(safeTarget - usedPx);
-      const afterGap = Math.abs(nextPx - safeTarget);
-      const tinyOvershoot = Math.min(24, Math.max(10, row * 0.18));
-      return afterGap < beforeGap && nextPx <= safeTarget + tinyOvershoot;
-    };
-    const v1238MoveToNextColumnOrPage = (idx) => {
+    const v1272MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
         page.end = idx;
         commitPage();
@@ -3304,29 +3452,11 @@
     };
     source.forEach((row, idx) => {
       const weightedRow = { ...row, _ledgerNo: idx + 1 };
-      const rowPx = v1135LedgerRowPx(weightedRow, m);
+      const rowPx = Math.max(1, Number(measured.rowPx?.[idx] || v1135LedgerRowPx(weightedRow, m)));
       let col = page.chunks.length - 1;
       const usedPx = Number(page.weights[col] || 0);
-      if (page.chunks[col].length) {
-        if (col === 0) {
-          // V1269: 1. tabloda 13 satır zaten gövdeyi doldurduysa 14. satırı aynı
-          // kolonda başlatma. Önceki tolerans, özellikle uzun kombine satırlarında
-          // tahmini yükseklik düşük kaldığında fazladan 14. satırı basabiliyordu.
-          const firstColumnRows = page.chunks[col].length || 0;
-          const firstColumnNearFull = usedPx >= capacityPx * 0.78;
-          if (firstColumnRows >= 13 && firstColumnNearFull) {
-            col = v1238MoveToNextColumnOrPage(idx);
-          } else if (!v1250ShouldStartNextRow(usedPx, rowPx, capacityPx)) {
-            col = v1238MoveToNextColumnOrPage(idx);
-          }
-        } else {
-          // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
-          // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
-          const firstPx = Math.max(1, Number(page.weights[0] || capacityPx));
-          const prevPx = Math.max(1, Number(page.weights[col - 1] || firstPx));
-          const targetPx = col === 1 ? firstPx : Math.max(1, Math.round((firstPx + prevPx) / 2));
-          if (!v1251ShouldStartFollowColumnRow(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
-        }
+      if (page.chunks[col].length && !v1272LedgerCanAppendRow(usedPx, rowPx, capacityPx)) {
+        col = v1272MoveToNextColumnOrPage(idx);
       }
       page.chunks[col].push(weightedRow);
       page.weights[col] += rowPx;
@@ -3453,42 +3583,9 @@
     });
   }
   function v1271RebalanceBetLedgerOverflowRows(scope) {
-    const root = scope && scope.querySelectorAll ? scope : document;
-    const modal = root.querySelector('.v1056-ledger-screen-modal.bet.v1110-ledger-test-modal');
-    const body = root.querySelector('.v1056-ledger-screen-body, .v1057-ledger-screen-body');
-    const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
-    if (!modal || !body || !grid || !v1103LedgerTestModeEnabled()) return;
-    const tbodies = Array.from(grid.querySelectorAll('.v1057-ledger-excel-table tbody, .v1061-ledger-excel-table tbody'));
-    if (tbodies.length < 2) return;
-    const bodyRect = body.getBoundingClientRect();
-    const limit = Math.floor(bodyRect.bottom - 8);
-    if (!Number.isFinite(limit) || limit <= 0) return;
-    const rowBottom = (row) => Math.ceil(row?.getBoundingClientRect?.().bottom || 0);
-    const moveLastToNext = (fromIndex) => {
-      const from = tbodies[fromIndex];
-      const to = tbodies[fromIndex + 1];
-      if (!from || !to) return false;
-      const rows = Array.from(from.querySelectorAll('tr')).filter(row => !row.classList.contains('v1119-ledger-row-filler'));
-      if (rows.length <= 1) return false;
-      const last = rows[rows.length - 1];
-      if (!last || rowBottom(last) <= limit) return false;
-      to.insertBefore(last, to.firstElementChild || null);
-      return true;
-    };
-    let changed = false;
-    for (let guard = 0; guard < 48; guard += 1) {
-      let moved = false;
-      for (let i = 0; i < tbodies.length - 1; i += 1) {
-        if (moveLastToNext(i)) {
-          moved = true;
-          changed = true;
-        }
-      }
-      if (!moved) break;
-    }
-    if (changed) {
-      grid.setAttribute('data-v1271-real-overflow-balanced', '1');
-    }
+    // V1272: V1271 sonradan satır taşıyan dar yama devre dışı.
+    // Satır dağıtımı artık v1119LedgerBuildPages içinde aynı CSS bağlamındaki gerçek DOM ölçüsüyle yapılır.
+    return;
   }
 
   function v1110FinalizeLedgerLayout(scope) {
