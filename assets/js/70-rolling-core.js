@@ -3296,9 +3296,16 @@
       const usedPx = Number(page.weights[col] || 0);
       if (page.chunks[col].length) {
         if (col === 0) {
-          // V1250: 1. tablo büyük boşluk bırakmasın; fakat son tamamlanan satır
-          // pencere altına ulaştıysa 13. gibi gereksiz yeni satır başlatmasın.
-          if (!v1250ShouldStartNextRow(usedPx, rowPx, capacityPx)) col = v1238MoveToNextColumnOrPage(idx);
+          // V1269: 1. tabloda 13 satır zaten gövdeyi doldurduysa 14. satırı aynı
+          // kolonda başlatma. Önceki tolerans, özellikle uzun kombine satırlarında
+          // tahmini yükseklik düşük kaldığında fazladan 14. satırı basabiliyordu.
+          const firstColumnRows = page.chunks[col].length || 0;
+          const firstColumnNearFull = usedPx >= capacityPx * 0.78;
+          if (firstColumnRows >= 13 && firstColumnNearFull) {
+            col = v1238MoveToNextColumnOrPage(idx);
+          } else if (!v1250ShouldStartNextRow(usedPx, rowPx, capacityPx)) {
+            col = v1238MoveToNextColumnOrPage(idx);
+          }
         } else {
           // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
           // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
