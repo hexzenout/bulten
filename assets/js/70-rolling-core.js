@@ -2888,6 +2888,25 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:14.23%!important;}
 
+      /* V1277: gerçek mod uzun tekli satır; metin 2 satıra düşerse alta yapışmaz, g/y/ç/q kesilmez.
+         Normal tekli 21px, kombine satırlar, kolonlar ve kamera sistemi değişmez. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long td,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long td{height:32px!important;min-height:32px!important;max-height:32px!important;padding-top:0!important;padding-bottom:0!important;vertical-align:middle!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{height:32px!important;min-height:32px!important;max-height:32px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:2px 2px!important;overflow:visible!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-line{height:auto!important;min-height:0!important;max-height:none!important;width:100%!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:3px!important;line-height:1.05!important;overflow:visible!important;padding:0!important;margin:0!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1078-ledger-match-text{display:block!important;position:static!important;top:auto!important;flex:1 1 auto!important;min-width:0!important;width:auto!important;max-width:100%!important;max-height:none!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;line-height:1.05!important;font-size:10px!important;font-weight:950!important;letter-spacing:-.004em!important;color:#f8fafc!important;text-align:left!important;text-shadow:none!important;filter:none!important;padding:0 0 1px!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-name{display:inline!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.05!important;font-size:10px!important;font-weight:950!important;letter-spacing:-.004em!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1076-ledger-match-odd{display:inline!important;margin-left:3px!important;white-space:nowrap!important;line-height:1.05!important;font-size:10px!important;font-weight:1000!important;color:#fbbf24!important;letter-spacing:-.004em!important;text-shadow:none!important;filter:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1232-ledger-row-single-long .v1069-ledger-status-mark{align-self:center!important;transform:none!important;top:auto!important;overflow:visible!important;}
+
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -3209,7 +3228,8 @@
     if (mode !== "bet") return 32;
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
-    if (count <= 1) return 21;
+    // V1277: gerçek modda uzun tekli bahis metni 2 satıra düşerse 21px içinde alta yapışmasın/kesilmesin.
+    if (count <= 1) return info.isLong ? 32 : 21;
     if (count === 2) return info.isLong ? 37 : 32;
     return Math.min(122, 23 + count * 15 + (info.isLong ? 5 : 0));
   }
