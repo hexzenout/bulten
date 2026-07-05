@@ -2583,14 +2583,10 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1076-ledger-match-odd,
       .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1076-ledger-match-odd{display:inline!important;margin-left:3px!important;white-space:nowrap!important;line-height:.88!important;font-size:10px!important;font-weight:1000!important;color:#fbbf24!important;letter-spacing:-.004em!important;text-shadow:none!important;filter:none!important;}
 
-      /* V1280: V1277-V1279 uzun tekli kırılım/hizalama müdahalesi geri alındı.
-         Sadece alt uzantılı harfler (g/y/ğ/ç/q) için 21px tekli satırın kendi sol hizası ve kelime kırılımı korunarak güvenli pay verilir. */
+      /* V1281: son çalışan gerçek mod düzenine dönüldü; uzun tekli satırda sadece alta bitişme/harf altı kesilmesi düzeltilir.
+         Sol hizalama, kelime kırılımı, kolonlar ve 21px tekli satır ölçüsü korunur. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1078-ledger-match-text,
-      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1078-ledger-match-text{top:0!important;max-height:20px!important;line-height:.92!important;padding-bottom:1px!important;box-sizing:border-box!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1069-ledger-match-name,
-      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1069-ledger-match-name,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] tr.v1232-ledger-row-single-long .v1076-ledger-match-odd,
-      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1076-ledger-match-odd{line-height:.92!important;}
+      .v1162-ledger-output-modal.bet tr.v1232-ledger-row-single-long .v1078-ledger-match-text{top:-.6px!important;max-height:20px!important;padding-bottom:.6px!important;box-sizing:border-box!important;}
 
       /* V1234: boş hizalama/filler satırı görünmesin; kolon genişliği ve kutu ölçüsü ekrandaki tabloyla aynı kalsın. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet .v1119-ledger-row-filler,
