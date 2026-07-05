@@ -91,9 +91,6 @@
   }
   v1102InstallDailyLedgerOpenGuard();
 
-  function v1103LedgerTestModeExplicitInUrl() {
-    try { return /(?:[?&#]|^)ledgerTest=1(?:&|#|$)/.test(String(window.location?.href || "")); } catch { return false; }
-  }
   function v1103LedgerTestModeEnabled() {
     let enabled = false;
     try {
@@ -103,13 +100,6 @@
       enabled = localStorage.getItem(LEDGER_TEST_MODE_KEY) === "1";
     } catch {}
     return enabled;
-  }
-  function v1276LedgerAllowTestRows(mode) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    if (m !== "bet") return v1103LedgerTestModeEnabled();
-    // V1276: Bahis / Kupon Defteri gerçek mod. Eski localStorage test modu açık kalsa bile bet test satırları gizlenir.
-    // Teste dönmek gerekirse URL'de ledgerTest=1 açıkken test satırları/toolbar tekrar çalışır.
-    return v1103LedgerTestModeEnabled() && v1103LedgerTestModeExplicitInUrl();
   }
   function v1103IsLedgerTestRow(row) {
     const id = String(row?.id || "");
@@ -2823,100 +2813,20 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-name,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd{line-height:1.03!important;}
-      /* V1273: Maç/Kupon descender güvenliği daraltıldı; tekli satır yeniden hücre merkezine oturur. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-item-lines,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-item-lines{overflow:visible!important;box-sizing:border-box!important;}
+      /* V1271: Maç/Kupon yazılarında g/q/y alt çıkıntısı kesilmesin. */
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{overflow:visible!important;line-height:1.08!important;align-items:center!important;padding-bottom:0!important;box-sizing:border-box!important;}
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{overflow:visible!important;line-height:1.08!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1078-ledger-match-text,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-name,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.09!important;padding-bottom:1px!important;overflow:visible!important;box-sizing:border-box!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{overflow:visible!important;align-items:center!important;justify-content:center!important;padding-bottom:0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line{overflow:visible!important;align-items:center!important;padding-bottom:0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{max-height:none!important;line-height:1.09!important;padding-bottom:1px!important;overflow:visible!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{align-self:center!important;}
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{padding-top:2px!important;padding-bottom:2px!important;overflow:visible!important;}
 
-      /* V1274: Maç/Kupon yazıları kesilmez; tekli satır hücre merkezinde kalır. Bu blok satır yüksekliğini/kolon genişliğini değiştirmez. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1063-ledger-value.v1069-ledger-item-lines,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1063-ledger-value.v1069-ledger-item-lines{overflow:visible!important;box-sizing:border-box!important;min-height:0!important;transform:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{display:inline-flex!important;align-items:center!important;column-gap:2px!important;line-height:1.1!important;margin-top:0!important;margin-bottom:0!important;padding-top:0!important;padding-bottom:0!important;overflow:visible!important;box-sizing:border-box!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1078-ledger-match-text,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-name,
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.1!important;padding-top:0!important;padding-bottom:0!important;overflow:visible!important;box-sizing:border-box!important;text-rendering:geometricPrecision!important;-webkit-font-smoothing:antialiased!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding-top:0!important;padding-bottom:0!important;gap:0!important;overflow:visible!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line{align-items:center!important;min-height:12px!important;line-height:1.1!important;padding-top:0!important;padding-bottom:0!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{line-height:1.1!important;padding-top:0!important;padding-bottom:0!important;overflow:visible!important;max-height:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{align-self:center!important;transform:none!important;overflow:visible!important;}
-
-
-      /* V1275: Bahis Kupon Defteri Tutar/Oran kolonları 7+ hane için genişletildi.
-         Sheet az büyür; ek alan sadece Tutar ve Oran kolonlarına verilir. Yeşil kasa özeti tabloyla aynı sağ çizgide kalır. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"]{--v1221-bet-sheet:556px;--v1221-bet-content:556px;--v1221-bet-modal:568px;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"]{--v1221-bet-sheet:556px;--v1221-bet-content:1120px;--v1221-bet-modal:1132px;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="3"]{--v1221-bet-sheet:556px;--v1221-bet-content:1684px;--v1221-bet-modal:1696px;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.75%!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(2),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2){width:15.17%!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:30.54%!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:11.31%!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5){width:13.51%!important;min-width:0!important;max-width:none!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:9.49%!important;min-width:0!important;max-width:none!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:14.23%!important;}
-
-
-
-      /* V1283: V1276 son çalışan hiza/kırılım korunur; yalnız uzun tekli satırda g/ğ/y/q/ç altı kesilmesin.
-         Satır yüksekliği, kolon genişliği, kelime kırılımı ve yatay hizaya dokunulmaz. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0 2px!important;box-sizing:border-box!important;overflow:visible!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-match-line{height:21px!important;min-height:21px!important;max-height:21px!important;width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:3px!important;line-height:1!important;margin:0!important;padding:0!important;overflow:visible!important;box-sizing:border-box!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1078-ledger-match-text,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1078-ledger-match-text{display:block!important;position:relative!important;top:0!important;transform:none!important;min-width:0!important;width:100%!important;max-width:100%!important;max-height:20px!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;line-height:.96!important;font-size:10px!important;font-weight:950!important;letter-spacing:-.004em!important;color:#f8fafc!important;text-align:left!important;text-shadow:none!important;filter:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-match-name,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-match-name{display:inline!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:.96!important;font-size:10px!important;font-weight:950!important;letter-spacing:-.004em!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1076-ledger-match-odd,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1076-ledger-match-odd{display:inline!important;margin-left:3px!important;white-space:nowrap!important;line-height:.96!important;font-size:10px!important;font-weight:1000!important;color:#fbbf24!important;letter-spacing:-.004em!important;text-shadow:none!important;filter:none!important;}
-
-      /* V1284: uzun tekli maç/kupon satırında ikon ve yazı başlangıcı combo satırlarla aynı hizada kalsın.
-         Sadece v1232 uzun tekli iç hizası; tablo genişliği, satır dağıtımı ve kamera sistemi değişmez. */
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{height:21px!important;min-height:21px!important;max-height:21px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;padding:0 2px!important;box-sizing:border-box!important;overflow:visible!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-match-line,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-match-line{height:21px!important;min-height:21px!important;max-height:21px!important;width:auto!important;max-width:100%!important;min-width:0!important;display:flex!important;align-items:flex-start!important;justify-content:flex-start!important;column-gap:2px!important;gap:2px!important;line-height:1!important;margin:0!important;padding:0!important;overflow:visible!important;box-sizing:border-box!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-status-mark,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-status-mark{align-self:flex-start!important;flex:0 0 10px!important;width:10px!important;min-width:10px!important;max-width:10px!important;height:11px!important;min-height:11px!important;max-height:11px!important;line-height:11px!important;margin:0!important;padding:0!important;top:auto!important;transform:none!important;overflow:visible!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1078-ledger-match-text,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1078-ledger-match-text{display:block!important;position:relative!important;top:0!important;transform:none!important;flex:1 1 auto!important;min-width:0!important;width:auto!important;max-width:calc(100% - 12px)!important;max-height:21px!important;margin:0!important;padding:0!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;overflow-wrap:normal!important;word-break:normal!important;line-height:1.03!important;font-size:10px!important;font-weight:950!important;letter-spacing:-.004em!important;color:#f8fafc!important;text-align:left!important;text-shadow:none!important;filter:none!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-match-name,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1069-ledger-match-name{display:inline!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.03!important;font-size:10px!important;font-weight:950!important;letter-spacing:-.004em!important;color:#f8fafc!important;text-shadow:none!important;filter:none!important;vertical-align:baseline!important;}
-      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1076-ledger-match-odd,
-      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single.v1232-ledger-row-single-long .v1076-ledger-match-odd{display:inline!important;margin-left:2px!important;white-space:nowrap!important;line-height:1.03!important;font-size:10px!important;font-weight:1000!important;color:#fbbf24!important;letter-spacing:-.004em!important;text-shadow:none!important;filter:none!important;vertical-align:baseline!important;}
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
@@ -3229,13 +3139,13 @@
     try { localStorage.setItem(v1110LedgerTestPageKey(mode), String(Math.max(0, Number(page || 0)))); } catch {}
   }
   function v1119LedgerRowWeight(row, mode) {
-    if (mode !== "bet") return 1;
+    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 1;
     const info = v1118LedgerBetLineInfo(row);
     if (info.count <= 1) return 0.82;
     return info.isLong ? 1.22 : 1.0;
   }
   function v1135LedgerRowPx(row, mode) {
-    if (mode !== "bet") return 32;
+    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
     if (count <= 1) return 21;
@@ -3256,190 +3166,13 @@
     return (Array.isArray(chunk) ? chunk : []).reduce((sum, row) => sum + v1135LedgerRowPx(row, mode), 0);
   }
   function v1146LedgerScrollOverflowAllowancePx(row, mode) {
-    if (mode !== "bet") return 0;
+    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 0;
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
     if (count >= 5) return 118;
     if (count >= 3) return 104;
     return 72;
   }
-  const V1272_BET_LEDGER_MEASURE_CACHE = new Map();
-  const V1274_BET_LEDGER_MEASURE_BOX_CACHE = new Map();
-
-  function v1272LedgerMeasureViewportKey() {
-    const w = Math.floor(window.innerWidth || document.documentElement?.clientWidth || 0);
-    const h = Math.floor(window.innerHeight || document.documentElement?.clientHeight || 0);
-    return `${w}x${h}`;
-  }
-
-  function v1272LedgerBetMeasureHeadHtml() {
-    return `<tr><th>No.</th><th>Tarih</th><th>Maç / Kupon</th><th>Tür</th><th>Tutar</th><th>Oran</th><th>Kar-zarar</th></tr>`;
-  }
-
-  function v1272LedgerBetMeasureRowHtml(row, fallbackNo = 1) {
-    const safeRow = row && typeof row === "object" ? row : {};
-    const pnlText = String(safeRow.pnl || "");
-    const isLoss = /^-/.test(pnlText) || Number(safeRow.pnlRaw || 0) < 0;
-    const globalNo = Number(safeRow._ledgerNo || safeRow.no || fallbackNo || 1);
-    const rowClass = v1118LedgerRowClass(safeRow, "bet");
-    return `<tr${rowClass ? ` class="${rowClass}"` : ""}>
-      <td>${v1060LedgerCellText(globalNo, "num")}</td>
-      <td>${v1060LedgerCellText(safeRow._displayDate || safeRow.date || "", "date")}</td>
-      <td>${v1068LedgerItemCell(safeRow, "bet", "item")}</td>
-      <td>${v1063LedgerCell(safeRow, "kind")}</td>
-      <td>${v1063LedgerCell(safeRow, "stake", "money")}</td>
-      <td>${v1063LedgerCell(safeRow, "roi")}</td>
-      <td class="v1069-ledger-pnl-cell ${isLoss ? "loss" : "win"}">${v1063LedgerCell(safeRow, "pnl", "pnl-text")}</td>
-    </tr>`;
-  }
-
-  function v1272LedgerBetMeasureKey(row, fallbackNo = 1) {
-    const safeRow = row && typeof row === "object" ? row : {};
-    const sourceLines = Array.isArray(safeRow.itemLines) ? safeRow.itemLines : [];
-    const lines = sourceLines.length
-      ? sourceLines.map(line => [cleanText(line?.name || ""), line?.odds || "", line?.status || line?.result || line?.res || ""].join("~"))
-      : v1069LedgerSplitItemText(safeRow.item || safeRow.name || "");
-    return [
-      v1272LedgerMeasureViewportKey(),
-      Number(safeRow._ledgerNo || safeRow.no || fallbackNo || 1),
-      safeRow._displayDate || safeRow.date || "",
-      safeRow.kind || "",
-      safeRow.stake || "",
-      safeRow.roi || "",
-      safeRow.pnl || "",
-      Number(safeRow.pnlRaw || 0),
-      lines.join("|")
-    ].join("¦");
-  }
-
-  function v1272LedgerGetBetMeasureContext() {
-    if (typeof document === "undefined" || !document.body) return null;
-    try { v1103EnsureLedgerTestStyles(); } catch(e) {}
-    let host = document.getElementById("v1056-ledger-screen-host");
-    let temporaryHost = false;
-    if (!host) {
-      host = document.createElement("div");
-      host.id = "v1056-ledger-screen-host";
-      host.setAttribute("data-v1272-measure-host", "1");
-      host.style.cssText = "position:fixed!important;left:-100000px!important;top:0!important;width:max-content!important;height:auto!important;overflow:visible!important;visibility:hidden!important;pointer-events:none!important;z-index:-1!important;";
-      document.body.appendChild(host);
-      temporaryHost = true;
-    }
-    let box = host.querySelector(".v1272-ledger-measure-box");
-    if (!box) {
-      box = document.createElement("div");
-      box.className = "v1272-ledger-measure-box";
-      box.setAttribute("aria-hidden", "true");
-      box.style.cssText = "position:fixed!important;left:-100000px!important;top:0!important;width:max-content!important;height:auto!important;overflow:visible!important;visibility:hidden!important;pointer-events:none!important;z-index:-1!important;";
-      host.appendChild(box);
-    }
-    box.innerHTML = `<section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal bet v1110-ledger-test-modal" data-v1110-ledger-cols="3" style="--v1110-ledger-cols:3">
-      <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head"><div class="v1112-ledger-title-row"><b>BAHİS / KUPON DEFTERİ</b></div><div class="v1060-ledger-head-actions v1063-ledger-head-actions"></div></header>
-      <div class="v1056-ledger-screen-body v1057-ledger-screen-body">
-        <section class="v1040-growth-plan bet v1044-growth-plan-compact v1046-growth-plan-slim v1048-growth-plan-clean v1053-growth-view-daily v1054-daily-ledger v1057-ledger-excel v1059-ledger-professional v1060-ledger-pro v1061-ledger-pro v1063-ledger-pro v1065-ledger-pro v1056-ledger-modal-table" data-growth-plan="bet" data-growth-view="daily">
-          <div class="v1057-ledger-sheet-grid v1061-ledger-sheet-grid"><section class="v1057-ledger-sheet v1061-ledger-sheet">${v1110LedgerSummarySpacerHtml()}<table class="v1057-ledger-excel-table v1061-ledger-excel-table"><thead>${v1272LedgerBetMeasureHeadHtml()}</thead><tbody></tbody></table></section></div>
-        </section>
-      </div>
-    </section>`;
-    return {
-      host,
-      box,
-      temporaryHost,
-      modal: box.querySelector(".v1056-ledger-screen-modal"),
-      body: box.querySelector(".v1056-ledger-screen-body, .v1057-ledger-screen-body"),
-      summary: box.querySelector(".v1059-ledger-summary, .v1060-ledger-summary-inline, .v1061-ledger-summary-inline"),
-      thead: box.querySelector("thead"),
-      tbody: box.querySelector("tbody")
-    };
-  }
-
-  function v1272LedgerDisposeBetMeasureContext(ctx) {
-    if (!ctx) return;
-    if (ctx.temporaryHost && ctx.host && ctx.host.parentNode) {
-      try { ctx.host.parentNode.removeChild(ctx.host); } catch(e) {}
-    }
-  }
-
-  function v1272LedgerBetAvailableBodyPx(ctx) {
-    const deterministic = Math.max(1, Number(v1135LedgerTableBodyPx() || 770));
-    try {
-      const bodyH = Math.floor(ctx?.body?.getBoundingClientRect?.().height || 0);
-      const summaryH = Math.ceil(ctx?.summary?.getBoundingClientRect?.().height || 0);
-      const headH = Math.ceil(ctx?.thead?.getBoundingClientRect?.().height || 0);
-      const available = Math.floor(bodyH - summaryH - headH - 1);
-      if (Number.isFinite(available) && available >= 320) {
-        // V1273: görünmeyen ölçüm kutusu bazen gövdeyi olduğundan kısa döndürüp tabloyu erken kesiyordu.
-        // Pencere yüksekliği zaten sabit profil olduğu için gerçek ölçüm küçükse deterministik alt sınır korunur.
-        return Math.max(deterministic, Math.min(820, available));
-      }
-    } catch(e) {}
-    return deterministic;
-  }
-
-  function v1274LedgerMeasureBetRowBox(row, fallbackNo, ctx) {
-    const key = v1272LedgerBetMeasureKey(row, fallbackNo);
-    const cached = V1274_BET_LEDGER_MEASURE_BOX_CACHE.get(key);
-    if (cached && Number.isFinite(cached.layoutPx) && cached.layoutPx > 0) return cached;
-    let layoutPx = 0;
-    let visualPx = 0;
-    try {
-      if (ctx?.tbody) {
-        ctx.tbody.innerHTML = v1272LedgerBetMeasureRowHtml(row, fallbackNo);
-        const tr = ctx.tbody.firstElementChild;
-        const trRect = tr?.getBoundingClientRect?.();
-        const fallbackPx = v1135LedgerRowPx(row, "bet");
-        layoutPx = Math.ceil(trRect?.height || tr?.offsetHeight || fallbackPx || 0);
-        let visualTop = Number(trRect?.top || 0);
-        let visualBottom = Number(trRect?.bottom || visualTop + layoutPx);
-        tr?.querySelectorAll?.(".v1063-ledger-value, .v1069-ledger-item-lines, .v1069-ledger-match-line, .v1078-ledger-match-text, .v1069-ledger-match-name, .v1076-ledger-match-odd, .v1069-ledger-status-mark")?.forEach(node => {
-          const rect = node.getBoundingClientRect?.();
-          if (!rect) return;
-          if (Number.isFinite(rect.top) && rect.top < visualTop) visualTop = rect.top;
-          if (Number.isFinite(rect.bottom) && rect.bottom > visualBottom) visualBottom = rect.bottom;
-        });
-        visualPx = Math.max(layoutPx, Math.ceil(visualBottom - (trRect?.top || visualTop)));
-        ctx.tbody.textContent = "";
-      }
-    } catch(e) {}
-    const fallbackPx = v1135LedgerRowPx(row, "bet");
-    const box = {
-      layoutPx: Math.max(1, layoutPx || fallbackPx),
-      visualPx: Math.max(1, visualPx || layoutPx || fallbackPx)
-    };
-    if (V1274_BET_LEDGER_MEASURE_BOX_CACHE.size > 900) V1274_BET_LEDGER_MEASURE_BOX_CACHE.clear();
-    V1274_BET_LEDGER_MEASURE_BOX_CACHE.set(key, box);
-    return box;
-  }
-
-  function v1272LedgerMeasureBetRowPx(row, fallbackNo, ctx) {
-    return v1274LedgerMeasureBetRowBox(row, fallbackNo, ctx).layoutPx;
-  }
-
-  function v1272LedgerMeasureBetRows(rows) {
-    const source = Array.isArray(rows) ? rows : [];
-    const ctx = v1272LedgerGetBetMeasureContext();
-    try {
-      const capacityPx = v1272LedgerBetAvailableBodyPx(ctx);
-      const rowBoxes = source.map((row, idx) => v1274LedgerMeasureBetRowBox({ ...row, _ledgerNo: idx + 1 }, idx + 1, ctx));
-      return {
-        capacityPx,
-        rowPx: rowBoxes.map(box => Math.max(1, Number(box.layoutPx || 0))),
-        visualPx: rowBoxes.map(box => Math.max(1, Number(box.visualPx || box.layoutPx || 0)))
-      };
-    } finally {
-      v1272LedgerDisposeBetMeasureContext(ctx);
-    }
-  }
-
-  function v1272LedgerCanAppendRow(usedPx, rowPx, availablePx) {
-    const used = Math.max(0, Number(usedPx || 0));
-    const available = Math.max(1, Number(availablePx || 0));
-    // V1274: karar satırın tamamı sığıyor mu değil, yeni satır bu tabloda başlayabiliyor mu.
-    // Tabloda 1-2px dışında gözle görülür boşluk varsa satır aynı tabloda başlar; taşma DOM ölçümüyle sonraki satırı yeni tabloya yollar.
-    if (used <= 0) return true;
-    return used < available - 2;
-  }
-
   function v1135LedgerTargetTotalForTables(mode, tableCount, rowBuilder) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const safeTables = Math.max(1, Math.min(6, Number(tableCount || 1)));
@@ -3470,9 +3203,7 @@
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    /* V1276: Bahis / Kupon Defteri gerçek modda da testte onaylanan 1/2/3 tablo DOM dağıtımını kullanır.
-       Test satırı üretme/toolbar ayrı kalır; gerçek kayıtlar aynı tablo motoruna girer. */
-    if (m !== "bet" && !v1103LedgerTestModeEnabled()) {
+    if (!v1103LedgerTestModeEnabled()) {
       return [{ chunks: v1057LedgerChunks(rows, 25), start: 0, end: Array.isArray(rows) ? rows.length : 0 }];
     }
     const source = Array.isArray(rows) ? rows : [];
@@ -3518,54 +3249,90 @@
       commitPage();
       return pages;
     }
-    const measured = v1272LedgerMeasureBetRows(source);
-    const capacityPx = Math.max(1, Number(measured.capacityPx || v1135LedgerTableBodyPx()));
+    const capacityPx = v1135LedgerTableBodyPx();
     const pages = [];
-    let page = { chunks: [[]], weights: [0], sealed: [false], start: 0, end: 0 };
+    let page = { chunks: [[]], weights: [0], start: 0, end: 0 };
     const commitPage = () => {
       page.chunks = page.chunks.filter(chunk => chunk.length);
       page.weights = (page.weights || []).slice(0, page.chunks.length);
-      page.sealed = (page.sealed || []).slice(0, page.chunks.length);
       if (!page.chunks.length) {
         page.chunks = [[]];
         page.weights = [0];
-        page.sealed = [false];
       }
-      /* V1274: bahis tarafında filler yok; her tablo aynı satır-başlangıç/DOM-taşma kuralıyla biter. */
+      /* V1233: bahis tarafında alt hizalama için boş/filler kutu üretme.
+         Kolonlar kaç gerçek satır sığıyorsa orada bitsin; boş hücre çizilmesin. */
       pages.push(page);
     };
-    const v1272MoveToNextColumnOrPage = (idx) => {
+    const v1249ColumnTinyGapPx = 12;
+    const v1250ShouldStartNextRow = (usedPx, rowPx, targetPx) => {
+      // V1270: 1. tablo için eski "yakınsa taşır ama doldur" toleransını kaldır.
+      // Uzun kombine satırlarında tahmin düşük kalınca 10. satırdan sonra 11/12 gibi
+      // görünmeyen satırlar aynı tabloda başlıyordu. 1. tablo artık kapasiteyi
+      // aşacak yeni satırı başlatmaz; sonraki tabloya aktarır.
+      if (usedPx <= 0) return true;
+      const safeTarget = Math.max(1, Number(targetPx || capacityPx));
+      const row = Math.max(0, Number(rowPx || 0));
+      const nextPx = usedPx + row;
+      if (usedPx >= safeTarget - v1249ColumnTinyGapPx) return false;
+      return nextPx <= safeTarget;
+    };
+    const v1251ShouldStartFollowColumnRow = (usedPx, rowPx, targetPx) => {
+      // V1251: 2. ve 3. tablo, hedef çizgiye ulaştıktan sonra 25/40 gibi
+      // yeni satır BAŞLATMASIN. Burada amaç altta büyük boşluk bırakmamak;
+      // ama kolon zaten dolu görünüyorsa ekstra satırı sonraki tabloya bırakmak.
+      if (usedPx <= 0) return true;
+      const row = Math.max(0, Number(rowPx || 0));
+      const safeTarget = Math.max(1, Number(targetPx || capacityPx) - 34);
+      const nextPx = usedPx + row;
+      if (usedPx >= safeTarget - 16) return false;
+      if (nextPx <= safeTarget) return true;
+      const beforeGap = Math.abs(safeTarget - usedPx);
+      const afterGap = Math.abs(nextPx - safeTarget);
+      const tinyOvershoot = Math.min(24, Math.max(10, row * 0.18));
+      return afterGap < beforeGap && nextPx <= safeTarget + tinyOvershoot;
+    };
+    const v1238MoveToNextColumnOrPage = (idx) => {
       if (page.chunks.length >= 3) {
         page.end = idx;
         commitPage();
-        page = { chunks: [[]], weights: [0], sealed: [false], start: idx, end: idx };
+        page = { chunks: [[]], weights: [0], start: idx, end: idx };
         return 0;
       }
       page.chunks.push([]);
       page.weights.push(0);
-      page.sealed = page.sealed || [];
-      page.sealed.push(false);
       return page.chunks.length - 1;
     };
     source.forEach((row, idx) => {
       const weightedRow = { ...row, _ledgerNo: idx + 1 };
-      const rowPx = Math.max(1, Number(measured.rowPx?.[idx] || v1135LedgerRowPx(weightedRow, m)));
-      const rowVisualPx = Math.max(rowPx, Number(measured.visualPx?.[idx] || rowPx));
+      const rowPx = v1135LedgerRowPx(weightedRow, m);
       let col = page.chunks.length - 1;
-      let usedPx = Number(page.weights[col] || 0);
-      const colSealed = !!page.sealed?.[col];
-      if (page.chunks[col].length && (colSealed || !v1272LedgerCanAppendRow(usedPx, rowPx, capacityPx))) {
-        col = v1272MoveToNextColumnOrPage(idx);
-        usedPx = Number(page.weights[col] || 0);
+      const usedPx = Number(page.weights[col] || 0);
+      if (page.chunks[col].length) {
+        if (col === 0) {
+          // V1269: 1. tabloda 13 satır zaten gövdeyi doldurduysa 14. satırı aynı
+          // kolonda başlatma. Önceki tolerans, özellikle uzun kombine satırlarında
+          // tahmini yükseklik düşük kaldığında fazladan 14. satırı basabiliyordu.
+          const firstColumnRows = page.chunks[col].length || 0;
+          const firstColumnNearFull = usedPx >= capacityPx * 0.78;
+          if (firstColumnRows >= 13 && firstColumnNearFull) {
+            col = v1238MoveToNextColumnOrPage(idx);
+          } else if (!v1250ShouldStartNextRow(usedPx, rowPx, capacityPx)) {
+            col = v1238MoveToNextColumnOrPage(idx);
+          }
+        } else {
+          // V1239: 2. tablo 1. tabloya göre; 3. tablo 1+2'nin oluşan dengesine göre biter.
+          // 3. tablo, 2. tabloyu yukarı çekmez; her kolon kendi sırası geldikten sonra karar verir.
+          const firstPx = Math.max(1, Number(page.weights[0] || capacityPx));
+          const prevPx = Math.max(1, Number(page.weights[col - 1] || firstPx));
+          const targetPx = col === 1 ? firstPx : Math.max(1, Math.round((firstPx + prevPx) / 2));
+          if (!v1251ShouldStartFollowColumnRow(usedPx, rowPx, targetPx)) col = v1238MoveToNextColumnOrPage(idx);
+        }
       }
       page.chunks[col].push(weightedRow);
-      page.weights[col] = usedPx + rowPx;
-      page.sealed = page.sealed || [];
-      const visualBottom = usedPx + rowVisualPx;
-      page.sealed[col] = visualBottom >= capacityPx - 2 || page.weights[col] >= capacityPx - 2;
+      page.weights[col] += rowPx;
       page.end = idx + 1;
     });
-    if (!source.length) page = { chunks: [[]], weights: [0], sealed: [false], start: 0, end: 0 };
+    if (!source.length) page = { chunks: [[]], weights: [0], start: 0, end: 0 };
     commitPage();
     return pages;
   }
@@ -3583,16 +3350,15 @@
     return { total, page, totalPages, start: current.start || 0, end: current.end || 0, pageRows, chunks: current.chunks || [[]] };
   }
   function v1110LedgerChunks(rows, mode) {
-    const m = mode === "crypto" ? "crypto" : "bet";
-    if (m !== "bet" && !v1103LedgerTestModeEnabled()) return v1057LedgerChunks(rows, 25);
-    return v1110LedgerPageInfo(rows, m).chunks;
+    if (!v1103LedgerTestModeEnabled()) return v1057LedgerChunks(rows, 25);
+    return v1110LedgerPageInfo(rows, mode).chunks;
   }
   function v1110LedgerPagerHtml(rows, mode) {
     return "";
   }
   function v1110LedgerHeaderPagerHtml(mode) {
+    if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    if (m !== "bet" && !v1103LedgerTestModeEnabled()) return "";
     const rows = v1057LedgerRows(m);
     const info = v1110LedgerPageInfo(rows, m);
     if (info.totalPages <= 1) return "";
@@ -3606,8 +3372,7 @@
     modal.classList.remove('v1110-ledger-test-modal');
     modal.removeAttribute('data-v1110-ledger-cols');
     modal.style.removeProperty('--v1110-ledger-cols');
-    const useLedgerTableLayout = modal.classList.contains('bet') || v1103LedgerTestModeEnabled();
-    if (!useLedgerTableLayout) return;
+    if (!v1103LedgerTestModeEnabled()) return;
     const cols = Math.max(1, Math.min(3, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1));
     modal.classList.add('v1110-ledger-test-modal');
     modal.setAttribute('data-v1110-ledger-cols', String(cols));
@@ -3688,9 +3453,42 @@
     });
   }
   function v1271RebalanceBetLedgerOverflowRows(scope) {
-    // V1272: V1271 sonradan satır taşıyan dar yama devre dışı.
-    // Satır dağıtımı artık v1119LedgerBuildPages içinde aynı CSS bağlamındaki gerçek DOM ölçüsüyle yapılır.
-    return;
+    const root = scope && scope.querySelectorAll ? scope : document;
+    const modal = root.querySelector('.v1056-ledger-screen-modal.bet.v1110-ledger-test-modal');
+    const body = root.querySelector('.v1056-ledger-screen-body, .v1057-ledger-screen-body');
+    const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
+    if (!modal || !body || !grid || !v1103LedgerTestModeEnabled()) return;
+    const tbodies = Array.from(grid.querySelectorAll('.v1057-ledger-excel-table tbody, .v1061-ledger-excel-table tbody'));
+    if (tbodies.length < 2) return;
+    const bodyRect = body.getBoundingClientRect();
+    const limit = Math.floor(bodyRect.bottom - 8);
+    if (!Number.isFinite(limit) || limit <= 0) return;
+    const rowBottom = (row) => Math.ceil(row?.getBoundingClientRect?.().bottom || 0);
+    const moveLastToNext = (fromIndex) => {
+      const from = tbodies[fromIndex];
+      const to = tbodies[fromIndex + 1];
+      if (!from || !to) return false;
+      const rows = Array.from(from.querySelectorAll('tr')).filter(row => !row.classList.contains('v1119-ledger-row-filler'));
+      if (rows.length <= 1) return false;
+      const last = rows[rows.length - 1];
+      if (!last || rowBottom(last) <= limit) return false;
+      to.insertBefore(last, to.firstElementChild || null);
+      return true;
+    };
+    let changed = false;
+    for (let guard = 0; guard < 48; guard += 1) {
+      let moved = false;
+      for (let i = 0; i < tbodies.length - 1; i += 1) {
+        if (moveLastToNext(i)) {
+          moved = true;
+          changed = true;
+        }
+      }
+      if (!moved) break;
+    }
+    if (changed) {
+      grid.setAttribute('data-v1271-real-overflow-balanced', '1');
+    }
   }
 
   function v1110FinalizeLedgerLayout(scope) {
@@ -3707,8 +3505,8 @@
     setTimeout(run, 220);
   }
   function v1103LedgerTestToolbar(mode) {
+    if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
-    if (!v1276LedgerAllowTestRows(m)) return "";
     if (m === "crypto") {
       return `<div class="v1103-ledger-test-toolbar v1182-crypto-test-toolbar" data-v1103-ledger-test-toolbar><button type="button" class="v1182-crypto-test-toggle" aria-label="Kripto test paneli">TEST MODU ▾</button><div class="v1182-crypto-test-panel" data-v1182-crypto-test-panel><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:35">35'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:70">70'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:105">105'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:140">140'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:175">175'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:210">210'a Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div></div>`;
     }
@@ -7464,7 +7262,7 @@
       });
     (modeEdits.manual || []).forEach(row => {
       if (!row || !row.id || modeEdits.deleted?.[row.id]) return;
-      if (v1103IsLedgerTestRow(row) && !v1276LedgerAllowTestRows(m)) return;
+      if (v1103IsLedgerTestRow(row) && !v1103LedgerTestModeEnabled()) return;
       const merged = { ts: Number(row.ts || Date.now()), source: "manual", no: "", date: "", time: "", item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, ...row, manual: true };
       if (!merged.force && !v1061LedgerHasContent(merged)) return;
       byId.set(row.id, merged);
@@ -7668,8 +7466,8 @@
     return { count, isLong };
   }
   function v1118LedgerRowClass(row, mode) {
+    if (!v1103LedgerTestModeEnabled()) return "";
     if (mode === "crypto") {
-      if (!v1103LedgerTestModeEnabled()) return "";
       const coinText = cleanText(row?.item || row?.name || "");
       return coinText.length > 16 ? "v1225-ledger-row-longcoin" : "";
     }
@@ -10610,6 +10408,59 @@ function escapeHtml(str) {
       });
       observer.observe(document.body || document.documentElement, { childList:true, subtree:true });
     } catch(e) {}
+  }
+
+
+  function v1285EnsureBetLedgerSingleIconAlignmentStyles(){
+    const styleId = "v1285-bet-ledger-single-icon-align";
+    let styleEl = document.getElementById(styleId);
+    if (styleEl) return;
+    styleEl = document.createElement("style");
+    styleEl.id = styleId;
+    styleEl.textContent = `
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1063-ledger-value.v1069-ledger-item-lines.v1110-ledger-item-single{align-items:flex-start!important;justify-content:center!important;padding-left:0!important;padding-right:0!important;text-align:left!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line{width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;column-gap:2px!important;gap:2px!important;margin-left:0!important;margin-right:0!important;padding:0!important;overflow:hidden!important;box-sizing:border-box!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-status-mark{position:relative!important;top:0!important;left:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 11px!important;width:11px!important;min-width:11px!important;max-width:11px!important;height:11px!important;min-height:11px!important;max-height:11px!important;line-height:11px!important;margin:0!important;padding:0!important;font-family:Arial,Helvetica,sans-serif!important;font-size:11px!important;font-weight:1000!important;text-align:center!important;transform:none!important;align-self:center!important;overflow:visible!important;background:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.win .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.win .v1069-ledger-status-mark{color:#10b981!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.loss .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.loss .v1069-ledger-status-mark{color:#dc2626!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.open .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.pending .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.push .v1069-ledger-status-mark,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.open .v1069-ledger-status-mark{color:transparent!important;font-size:0!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-status-mark .v1172-ledger-dash-glyph,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-status-mark .v1172-ledger-dash-glyph{display:none!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.open .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.pending .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.push .v1069-ledger-status-mark::before,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-line.open .v1069-ledger-status-mark::before{content:""!important;display:block!important;position:absolute!important;left:1px!important;top:50%!important;width:9px!important;height:2px!important;border-radius:999px!important;background:#64748b!important;transform:translateY(-50%)!important;}
+
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text{display:block!important;flex:1 1 auto!important;min-width:0!important;max-width:calc(100% - 13px)!important;margin:0!important;padding:0!important;overflow:hidden!important;white-space:normal!important;text-overflow:clip!important;overflow-wrap:normal!important;word-break:normal!important;line-height:1!important;text-align:left!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text > *,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1078-ledger-match-text > *{line-height:1!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-single .v1076-ledger-match-odd{display:inline!important;line-height:1!important;vertical-align:baseline!important;}
+    `;
+    const parent = document.head || document.documentElement;
+    if (parent) parent.appendChild(styleEl);
+  }
+  if(!window.__omegaV1285BetLedgerSingleIconAlignBound){
+    window.__omegaV1285BetLedgerSingleIconAlignBound = true;
+    const run = () => { try { v1285EnsureBetLedgerSingleIconAlignmentStyles(); } catch(e) {} };
+    if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", run, { once:true }); else run();
   }
 
   window.omega_RenderRollingModule = renderModule;
