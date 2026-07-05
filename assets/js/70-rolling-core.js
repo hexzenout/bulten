@@ -5403,6 +5403,72 @@
     } catch {}
   }
 
+  function v1265WritePreviewShellTab(tab, title, filename) {
+    if (!tab) return false;
+    const safeTitle = escapeHtml(cleanText(title || 'BULTEN Önizleme') || 'BULTEN Önizleme');
+    const safeName = cleanText(filename || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`;
+    try {
+      tab.document.open();
+      tab.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${safeTitle}</title><style>
+        html,body{margin:0;background:#020617;color:#e5e7eb;font-family:Arial,sans-serif;}
+        body{min-height:100vh;}
+        .bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:10px 12px;background:#020617;border-bottom:1px solid rgba(148,163,184,.22);}
+        .title{font-size:13px;font-weight:900;color:#f8fafc;margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .download{appearance:none;border:1px solid rgba(251,191,36,.45);background:#111827;color:#fde68a;border-radius:10px;padding:8px 12px;font-weight:900;text-decoration:none;pointer-events:none;opacity:.45;}
+        .download.ready{pointer-events:auto;opacity:1;}
+        .status{font-size:12px;color:#94a3b8;font-weight:800;white-space:nowrap;}
+        .wrap{padding:0;overflow:auto;}
+        .preview-stage{display:block;width:max-content;min-width:100%;background:#020617;}
+        .preview-stage img{display:block;max-width:none;height:auto;margin:0;}
+      </style></head><body><div class="bar"><div class="title">${safeTitle}</div><a id="download" class="download" href="#" download="${escapeHtml(safeName)}" aria-disabled="true">Resmi indir</a><span id="status" class="status">Önizleme açıldı · PNG hazırlanıyor…</span></div><div class="wrap"><div id="previewStage" class="preview-stage"></div></div></body></html>`);
+      tab.document.close();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function v1265PopulatePreviewTab(tab, previewNode) {
+    if (!tab || !previewNode) return false;
+    try {
+      const stage = tab.document.getElementById('previewStage');
+      if (!stage) return false;
+      stage.innerHTML = '';
+      const imported = tab.document.importNode(previewNode, true);
+      stage.appendChild(imported);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function v1265FinalizePreviewTab(tab, dataUrl, filename) {
+    if (!tab) return;
+    const safeName = cleanText(filename || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`;
+    try {
+      const stage = tab.document.getElementById('previewStage');
+      const link = tab.document.getElementById('download');
+      const status = tab.document.getElementById('status');
+      if (stage) {
+        stage.innerHTML = '';
+        const img = tab.document.createElement('img');
+        img.src = dataUrl;
+        img.alt = safeName;
+        stage.appendChild(img);
+      }
+      if (link) {
+        link.href = dataUrl;
+        link.download = safeName;
+        link.classList.add('ready');
+        link.setAttribute('aria-disabled', 'false');
+      }
+      if (status) status.textContent = 'PNG hazır';
+      tab.document.addEventListener('contextmenu', function(e){ e.preventDefault(); const a = tab.document.getElementById('download'); if(a && a.classList.contains('ready')) a.click(); }, { passive:false });
+    } catch {
+      try { tab.location.href = dataUrl; } catch {}
+    }
+  }
+
   async function v1165OpenLedgerDirectPngTab(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const filename = v1162LedgerFilename(m);
@@ -5638,18 +5704,46 @@
 
   async function v1163OpenLedgerOutputTab(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
+    const title = m === "crypto" ? "Kripto İşlem Defteri" : "Bahis / Kupon Defteri";
     const filename = v1162LedgerFilename(m);
     const tab = window.open("", "_blank");
     if (!tab) {
       alert("Yeni sekme engellendi. Tarayıcı açılır pencere iznini kontrol et.");
       return;
     }
-    v1165WriteTabMessage(tab, "PNG hazırlanıyor...");
+    if (!v1265WritePreviewShellTab(tab, title, filename)) {
+      alert("Önizleme penceresi açılamadı. Tarayıcı açılır pencere iznini kontrol et.");
+      try { tab.close(); } catch {}
+      return;
+    }
     try {
+      const modalNode = document.querySelector(`#v1056-ledger-screen-host .v1056-ledger-screen-modal.${m}`) || document.querySelector(`#v1056-ledger-screen-host .v1056-ledger-screen-modal`);
+      const sourceNode = modalNode?.querySelector('.v1056-ledger-screen-body') || modalNode;
+      if (sourceNode instanceof Element) {
+        const previewClone = sourceNode.cloneNode(true);
+        v1156CopyComputedTree(sourceNode, previewClone);
+        v1264PrepareExactLedgerCaptureClone(previewClone);
+        previewClone.style.setProperty('position', 'relative', 'important');
+        previewClone.style.setProperty('left', 'auto', 'important');
+        previewClone.style.setProperty('top', 'auto', 'important');
+        previewClone.style.setProperty('margin', '0', 'important');
+        previewClone.style.setProperty('padding-bottom', '0', 'important');
+        previewClone.style.setProperty('box-sizing', 'border-box', 'important');
+        previewClone.style.setProperty('height', 'auto', 'important');
+        previewClone.style.setProperty('min-height', '0', 'important');
+        previewClone.style.setProperty('max-height', 'none', 'important');
+        previewClone.style.setProperty('overflow', 'visible', 'important');
+        previewClone.style.setProperty('transform', 'none', 'important');
+        const previewWidth = Math.max(320, Math.ceil(sourceNode.scrollWidth || sourceNode.offsetWidth || sourceNode.getBoundingClientRect().width || 0));
+        previewClone.style.setProperty('width', `${previewWidth}px`, 'important');
+        previewClone.style.setProperty('min-width', `${previewWidth}px`, 'important');
+        previewClone.style.setProperty('max-width', `${previewWidth}px`, 'important');
+        v1265PopulatePreviewTab(tab, previewClone);
+      }
       const dataUrl = await v1264BuildCurrentLedgerOutputPng(m);
-      v1169WritePngViewerTab(tab, dataUrl, filename);
+      v1265FinalizePreviewTab(tab, dataUrl, filename);
     } catch (error) {
-      v1165WriteTabMessage(tab, "PNG hazırlanamadı. Kupon Defteri açıkken tekrar dene.");
+      v1165WriteTabMessage(tab, 'PNG hazırlanamadı. Kupon Defteri açıkken tekrar dene.');
     }
   }
 
