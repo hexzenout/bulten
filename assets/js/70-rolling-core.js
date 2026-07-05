@@ -5139,7 +5139,7 @@
               const img = new Image();
               img.onload = () => {
                 try {
-                  const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+                  const scale = 1;
                   const canvas = document.createElement("canvas");
                   canvas.width = Math.ceil(width * scale);
                   canvas.height = Math.ceil(height * scale);
@@ -5263,7 +5263,7 @@
 
   async function v1162NodeToPngDataUrl(node) {
     if (!node || !(node instanceof Element)) throw new Error("Çıktı alanı bulunamadı.");
-    try { await document.fonts?.ready; } catch {}
+    try { await Promise.race([document.fonts?.ready || Promise.resolve(), new Promise(resolve => setTimeout(resolve, 300))]); } catch {}
     const rect = node.getBoundingClientRect();
     const width = Math.max(320, Math.ceil(node.scrollWidth || rect.width || node.offsetWidth || 0));
     const height = Math.max(120, Math.ceil(node.scrollHeight || rect.height || node.offsetHeight || 0));
@@ -5299,7 +5299,7 @@
     document.body.appendChild(tempHost);
 
     try {
-      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise(resolve => requestAnimationFrame(resolve));
       const serialized = new XMLSerializer().serializeToString(clone);
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${serialized}</foreignObject></svg>`;
       const img = new Image();
@@ -5310,7 +5310,7 @@
         img.onerror = () => { clearTimeout(timer); reject(new Error("PNG üretilemedi.")); };
         img.src = svgUrl;
       });
-      const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+      const scale = 1;
       const canvas = document.createElement("canvas");
       canvas.width = Math.ceil(width * scale);
       canvas.height = Math.ceil(height * scale);
@@ -5469,86 +5469,6 @@
     }
   }
 
-  function v1266DownloadDataUrl(dataUrl, filename) {
-    if (!dataUrl) return;
-    const safeName = cleanText(filename || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`).replace(/[^a-z0-9._-]+/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || `bulten-kupon-defteri-${v1162LocalDateStamp()}.png`;
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = safeName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
-
-  function v1266BuildInlineLedgerPreviewNode(mode = 'bet') {
-    const m = mode === 'crypto' ? 'crypto' : 'bet';
-    const modalNode = document.querySelector(`#v1056-ledger-screen-host .v1056-ledger-screen-modal.${m}`) || document.querySelector(`#v1056-ledger-screen-host .v1056-ledger-screen-modal`);
-    const sourceNode = modalNode?.querySelector('.v1056-ledger-screen-body') || modalNode;
-    if (!(sourceNode instanceof Element)) return null;
-    const previewClone = sourceNode.cloneNode(true);
-    v1156CopyComputedTree(sourceNode, previewClone);
-    v1264PrepareExactLedgerCaptureClone(previewClone);
-    previewClone.classList.add('v1266-inline-ledger-preview');
-    previewClone.style.setProperty('position', 'relative', 'important');
-    previewClone.style.setProperty('left', 'auto', 'important');
-    previewClone.style.setProperty('top', 'auto', 'important');
-    previewClone.style.setProperty('margin', '0 auto', 'important');
-    previewClone.style.setProperty('padding-bottom', '0', 'important');
-    previewClone.style.setProperty('box-sizing', 'border-box', 'important');
-    previewClone.style.setProperty('height', 'auto', 'important');
-    previewClone.style.setProperty('min-height', '0', 'important');
-    previewClone.style.setProperty('max-height', 'none', 'important');
-    previewClone.style.setProperty('overflow', 'visible', 'important');
-    previewClone.style.setProperty('transform', 'none', 'important');
-    previewClone.style.setProperty('background', '#020617', 'important');
-    previewClone.style.setProperty('border-radius', '12px', 'important');
-    previewClone.style.setProperty('box-shadow', '0 18px 48px rgba(0,0,0,.35)', 'important');
-    const previewWidth = Math.max(320, Math.ceil(sourceNode.scrollWidth || sourceNode.offsetWidth || sourceNode.getBoundingClientRect().width || 0));
-    previewClone.style.setProperty('width', `${previewWidth}px`, 'important');
-    previewClone.style.setProperty('min-width', `${previewWidth}px`, 'important');
-    previewClone.style.setProperty('max-width', `${previewWidth}px`, 'important');
-    return previewClone;
-  }
-
-  function v1266OpenLedgerOutputInlinePreview(mode = 'bet') {
-    const m = mode === 'crypto' ? 'crypto' : 'bet';
-    const host = getRollingPhotoHost();
-    const filename = v1162LedgerFilename(m);
-    const title = m === 'crypto' ? 'Kripto İşlem Defteri' : 'Bahis / Kupon Defteri';
-    host.innerHTML = `<div class="v781-photo-overlay v1095-ledger-photo-overlay v1098-ledger-photo-overlay" data-v781-photo-close><section class="v1095-ledger-photo-modal v1098-ledger-photo-modal v1160-ledger-inline-photo-modal v1266-ledger-inline-preview-modal" onclick="event.stopPropagation()"><div class="v1095-ledger-photo-toolbar v1098-ledger-photo-toolbar v1266-ledger-preview-toolbar"><div class="v1266-ledger-preview-title"><b>${escapeHtml(title)}</b><span>Önizleme hazır · İndirince PNG oluşturulur</span></div><div class="v1266-ledger-preview-actions"><button type="button" data-v1266-photo-download>Resmi indir</button><button type="button" class="v1095-ledger-photo-close" data-v781-photo-close title="Kapat">×</button></div></div><div class="v1098-ledger-photo-clone-stage v1160-ledger-inline-photo-stage v1266-ledger-inline-stage" data-v1266-preview-stage></div></section></div>`;
-    const stage = host.querySelector('[data-v1266-preview-stage]');
-    const previewNode = v1266BuildInlineLedgerPreviewNode(m);
-    if (stage && previewNode) stage.appendChild(previewNode);
-    host.style.display = 'block';
-    host.setAttribute('aria-hidden', 'false');
-    host.querySelectorAll('[data-v781-photo-close]').forEach(el => el.addEventListener('click', event => {
-      if (event.target !== el && !event.target.hasAttribute('data-v781-photo-close')) return;
-      host.innerHTML = '';
-      host.style.display = 'none';
-      host.setAttribute('aria-hidden', 'true');
-    }));
-    host.querySelector('[data-v1266-photo-download]')?.addEventListener('click', async (event) => {
-      const btn = event.currentTarget;
-      if (!(btn instanceof HTMLButtonElement)) return;
-      const original = btn.textContent || 'Resmi indir';
-      btn.disabled = true;
-      btn.textContent = 'PNG hazırlanıyor...';
-      try {
-        const dataUrl = await v1264BuildCurrentLedgerOutputPng(m);
-        v1266DownloadDataUrl(dataUrl, filename);
-        btn.textContent = 'İndirildi';
-        setTimeout(() => {
-          btn.disabled = false;
-          btn.textContent = original;
-        }, 1200);
-      } catch (error) {
-        btn.disabled = false;
-        btn.textContent = original;
-        alert('PNG hazırlanamadı. Kupon Defteri açıkken tekrar dene.');
-      }
-    });
-  }
-
   async function v1165OpenLedgerDirectPngTab(mode = "bet") {
     const m = mode === "crypto" ? "crypto" : "bet";
     const filename = v1162LedgerFilename(m);
@@ -5578,7 +5498,7 @@
       const node = tempHost.querySelector("[data-v1165-output-node]");
       v1162PrepareOutputNode(node);
       setTimeout(() => v1162PrepareOutputNode(node), 80);
-      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise(resolve => requestAnimationFrame(resolve));
       const dataUrl = await v1162NodeToPngDataUrl(node);
       v1169WritePngViewerTab(tab, dataUrl, filename);
     } catch (error) {
@@ -5652,7 +5572,7 @@
     if (!modalNode || !(modalNode instanceof Element)) throw new Error("Kupon Defteri ekranı bulunamadı.");
     const sourceNode = modalNode.querySelector(".v1056-ledger-screen-body") || modalNode;
     if (!sourceNode || !(sourceNode instanceof Element)) throw new Error("Kupon Defteri tablo alanı bulunamadı.");
-    try { await document.fonts?.ready; } catch {}
+    try { await Promise.race([document.fonts?.ready || Promise.resolve(), new Promise(resolve => setTimeout(resolve, 300))]); } catch {}
     const sourceRect = sourceNode.getBoundingClientRect();
     const baseWidth = Math.max(320, Math.ceil(sourceNode.scrollWidth || sourceNode.offsetWidth || sourceRect.width || 0));
     const clone = sourceNode.cloneNode(true);
@@ -5689,20 +5609,20 @@
     document.body.appendChild(tempHost);
 
     try {
-      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise(resolve => requestAnimationFrame(resolve));
       const width = Math.max(baseWidth, Math.ceil(clone.scrollWidth || clone.getBoundingClientRect().width || clone.offsetWidth || baseWidth));
       clone.style.setProperty("width", `${width}px`, "important");
       clone.style.setProperty("min-width", `${width}px`, "important");
       clone.style.setProperty("max-width", `${width}px`, "important");
       tempHost.style.width = `${width}px`;
-      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise(resolve => requestAnimationFrame(resolve));
       const height = Math.max(120, Math.ceil(clone.scrollHeight || clone.getBoundingClientRect().height || clone.offsetHeight || 0));
       clone.style.setProperty("height", `${height}px`, "important");
       clone.style.setProperty("min-height", `${height}px`, "important");
       clone.style.setProperty("max-height", `${height}px`, "important");
       tempHost.style.height = `${height}px`;
       tempHost.style.overflow = "hidden";
-      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise(resolve => requestAnimationFrame(resolve));
       const serialized = new XMLSerializer().serializeToString(clone);
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${serialized}</foreignObject></svg>`;
       const img = new Image();
@@ -5713,7 +5633,7 @@
         img.onerror = () => { clearTimeout(timer); reject(new Error("PNG üretilemedi.")); };
         img.src = svgUrl;
       });
-      const scale = Math.max(1, Math.min(2, Math.round(window.devicePixelRatio || 1)));
+      const scale = 1;
       const canvas = document.createElement("canvas");
       canvas.width = Math.ceil(width * scale);
       canvas.height = Math.ceil(height * scale);
@@ -7972,7 +7892,7 @@
       event.preventDefault();
       event.stopPropagation();
       const photoMode = btn.dataset.v1060LedgerPhoto === "crypto" ? "crypto" : "bet";
-      v1266OpenLedgerOutputInlinePreview(photoMode);
+      v1163OpenLedgerOutputTab(photoMode);
     }));
     v1057BindLedgerScreen(host, m);
   }
