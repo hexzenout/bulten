@@ -91,6 +91,9 @@
   }
   v1102InstallDailyLedgerOpenGuard();
 
+  function v1103LedgerTestModeExplicitInUrl() {
+    try { return /(?:[?&#]|^)ledgerTest=1(?:&|#|$)/.test(String(window.location?.href || "")); } catch { return false; }
+  }
   function v1103LedgerTestModeEnabled() {
     let enabled = false;
     try {
@@ -100,6 +103,13 @@
       enabled = localStorage.getItem(LEDGER_TEST_MODE_KEY) === "1";
     } catch {}
     return enabled;
+  }
+  function v1276LedgerAllowTestRows(mode) {
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet") return v1103LedgerTestModeEnabled();
+    // V1276: Bahis / Kupon Defteri gerçek mod. Eski localStorage test modu açık kalsa bile bet test satırları gizlenir.
+    // Teste dönmek gerekirse URL'de ledgerTest=1 açıkken test satırları/toolbar tekrar çalışır.
+    return v1103LedgerTestModeEnabled() && v1103LedgerTestModeExplicitInUrl();
   }
   function v1103IsLedgerTestRow(row) {
     const id = String(row?.id || "");
@@ -3190,13 +3200,13 @@
     try { localStorage.setItem(v1110LedgerTestPageKey(mode), String(Math.max(0, Number(page || 0)))); } catch {}
   }
   function v1119LedgerRowWeight(row, mode) {
-    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 1;
+    if (mode !== "bet") return 1;
     const info = v1118LedgerBetLineInfo(row);
     if (info.count <= 1) return 0.82;
     return info.isLong ? 1.22 : 1.0;
   }
   function v1135LedgerRowPx(row, mode) {
-    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 32;
+    if (mode !== "bet") return 32;
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
     if (count <= 1) return 21;
@@ -3217,7 +3227,7 @@
     return (Array.isArray(chunk) ? chunk : []).reduce((sum, row) => sum + v1135LedgerRowPx(row, mode), 0);
   }
   function v1146LedgerScrollOverflowAllowancePx(row, mode) {
-    if (mode !== "bet" || !v1103LedgerTestModeEnabled()) return 0;
+    if (mode !== "bet") return 0;
     const info = v1118LedgerBetLineInfo(row);
     const count = Math.max(1, Number(info.count || 1));
     if (count >= 5) return 118;
@@ -3431,7 +3441,9 @@
   }
   function v1119LedgerBuildPages(rows, mode) {
     const m = mode === "crypto" ? "crypto" : "bet";
-    if (!v1103LedgerTestModeEnabled()) {
+    /* V1276: Bahis / Kupon Defteri gerçek modda da testte onaylanan 1/2/3 tablo DOM dağıtımını kullanır.
+       Test satırı üretme/toolbar ayrı kalır; gerçek kayıtlar aynı tablo motoruna girer. */
+    if (m !== "bet" && !v1103LedgerTestModeEnabled()) {
       return [{ chunks: v1057LedgerChunks(rows, 25), start: 0, end: Array.isArray(rows) ? rows.length : 0 }];
     }
     const source = Array.isArray(rows) ? rows : [];
@@ -3542,15 +3554,16 @@
     return { total, page, totalPages, start: current.start || 0, end: current.end || 0, pageRows, chunks: current.chunks || [[]] };
   }
   function v1110LedgerChunks(rows, mode) {
-    if (!v1103LedgerTestModeEnabled()) return v1057LedgerChunks(rows, 25);
-    return v1110LedgerPageInfo(rows, mode).chunks;
+    const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet" && !v1103LedgerTestModeEnabled()) return v1057LedgerChunks(rows, 25);
+    return v1110LedgerPageInfo(rows, m).chunks;
   }
   function v1110LedgerPagerHtml(rows, mode) {
     return "";
   }
   function v1110LedgerHeaderPagerHtml(mode) {
-    if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
+    if (m !== "bet" && !v1103LedgerTestModeEnabled()) return "";
     const rows = v1057LedgerRows(m);
     const info = v1110LedgerPageInfo(rows, m);
     if (info.totalPages <= 1) return "";
@@ -3564,7 +3577,8 @@
     modal.classList.remove('v1110-ledger-test-modal');
     modal.removeAttribute('data-v1110-ledger-cols');
     modal.style.removeProperty('--v1110-ledger-cols');
-    if (!v1103LedgerTestModeEnabled()) return;
+    const useLedgerTableLayout = modal.classList.contains('bet') || v1103LedgerTestModeEnabled();
+    if (!useLedgerTableLayout) return;
     const cols = Math.max(1, Math.min(3, grid.querySelectorAll('.v1057-ledger-sheet, .v1061-ledger-sheet').length || 1));
     modal.classList.add('v1110-ledger-test-modal');
     modal.setAttribute('data-v1110-ledger-cols', String(cols));
@@ -3664,8 +3678,8 @@
     setTimeout(run, 220);
   }
   function v1103LedgerTestToolbar(mode) {
-    if (!v1103LedgerTestModeEnabled()) return "";
     const m = mode === "crypto" ? "crypto" : "bet";
+    if (!v1276LedgerAllowTestRows(m)) return "";
     if (m === "crypto") {
       return `<div class="v1103-ledger-test-toolbar v1182-crypto-test-toolbar" data-v1103-ledger-test-toolbar><button type="button" class="v1182-crypto-test-toggle" aria-label="Kripto test paneli">TEST MODU ▾</button><div class="v1182-crypto-test-panel" data-v1182-crypto-test-panel><strong>TEST MODU</strong><button type="button" data-v1103-ledger-test-fill="${m}:35">35'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:70">70'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:105">105'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:140">140'a Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:175">175'e Tamamla</button><button type="button" data-v1103-ledger-test-fill="${m}:210">210'a Tamamla</button><button type="button" data-v1103-ledger-test-clear="${m}">Testi Temizle</button><button type="button" class="danger" data-v1103-ledger-test-disable="${m}">Test Modunu Kapat</button></div></div>`;
     }
@@ -7421,7 +7435,7 @@
       });
     (modeEdits.manual || []).forEach(row => {
       if (!row || !row.id || modeEdits.deleted?.[row.id]) return;
-      if (v1103IsLedgerTestRow(row) && !v1103LedgerTestModeEnabled()) return;
+      if (v1103IsLedgerTestRow(row) && !v1276LedgerAllowTestRows(m)) return;
       const merged = { ts: Number(row.ts || Date.now()), source: "manual", no: "", date: "", time: "", item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, ...row, manual: true };
       if (!merged.force && !v1061LedgerHasContent(merged)) return;
       byId.set(row.id, merged);
@@ -7625,8 +7639,8 @@
     return { count, isLong };
   }
   function v1118LedgerRowClass(row, mode) {
-    if (!v1103LedgerTestModeEnabled()) return "";
     if (mode === "crypto") {
+      if (!v1103LedgerTestModeEnabled()) return "";
       const coinText = cleanText(row?.item || row?.name || "");
       return coinText.length > 16 ? "v1225-ledger-row-longcoin" : "";
     }
