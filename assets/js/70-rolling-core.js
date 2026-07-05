@@ -2813,6 +2813,19 @@
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1078-ledger-match-text,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1069-ledger-match-name,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1076-ledger-match-odd{line-height:1.03!important;}
+      /* V1271: Maç/Kupon yazılarında g/q/y alt çıkıntısı kesilmesin. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-line,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-line{overflow:visible!important;line-height:1.08!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1078-ledger-match-text,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-match-name,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1076-ledger-match-odd,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1078-ledger-match-text,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-match-name,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1076-ledger-match-odd{line-height:1.09!important;padding-bottom:1px!important;overflow:visible!important;box-sizing:border-box!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-combo .v1063-ledger-value.v1069-ledger-item-lines,
+      .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet tr.v1118-ledger-row-longcombo .v1063-ledger-value.v1069-ledger-item-lines{padding-top:2px!important;padding-bottom:2px!important;overflow:visible!important;}
 
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
@@ -3439,10 +3452,52 @@
       });
     });
   }
+  function v1271RebalanceBetLedgerOverflowRows(scope) {
+    const root = scope && scope.querySelectorAll ? scope : document;
+    const modal = root.querySelector('.v1056-ledger-screen-modal.bet.v1110-ledger-test-modal');
+    const body = root.querySelector('.v1056-ledger-screen-body, .v1057-ledger-screen-body');
+    const grid = root.querySelector('.v1057-ledger-sheet-grid, .v1061-ledger-sheet-grid');
+    if (!modal || !body || !grid || !v1103LedgerTestModeEnabled()) return;
+    const tbodies = Array.from(grid.querySelectorAll('.v1057-ledger-excel-table tbody, .v1061-ledger-excel-table tbody'));
+    if (tbodies.length < 2) return;
+    const bodyRect = body.getBoundingClientRect();
+    const limit = Math.floor(bodyRect.bottom - 8);
+    if (!Number.isFinite(limit) || limit <= 0) return;
+    const rowBottom = (row) => Math.ceil(row?.getBoundingClientRect?.().bottom || 0);
+    const moveLastToNext = (fromIndex) => {
+      const from = tbodies[fromIndex];
+      const to = tbodies[fromIndex + 1];
+      if (!from || !to) return false;
+      const rows = Array.from(from.querySelectorAll('tr')).filter(row => !row.classList.contains('v1119-ledger-row-filler'));
+      if (rows.length <= 1) return false;
+      const last = rows[rows.length - 1];
+      if (!last || rowBottom(last) <= limit) return false;
+      to.insertBefore(last, to.firstElementChild || null);
+      return true;
+    };
+    let changed = false;
+    for (let guard = 0; guard < 48; guard += 1) {
+      let moved = false;
+      for (let i = 0; i < tbodies.length - 1; i += 1) {
+        if (moveLastToNext(i)) {
+          moved = true;
+          changed = true;
+        }
+      }
+      if (!moved) break;
+    }
+    if (changed) {
+      grid.setAttribute('data-v1271-real-overflow-balanced', '1');
+    }
+  }
+
   function v1110FinalizeLedgerLayout(scope) {
     const run = () => {
       v1110ApplyLedgerTestLayout(scope);
-      requestAnimationFrame(() => v1110FitLedgerTestRows(scope));
+      requestAnimationFrame(() => {
+        v1110FitLedgerTestRows(scope);
+        requestAnimationFrame(() => v1271RebalanceBetLedgerOverflowRows(scope));
+      });
     };
     run();
     setTimeout(run, 0);
