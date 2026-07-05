@@ -4066,16 +4066,49 @@
     item.closedTs = row.ts;
     return id;
   }
+  function v1292PreferFullerCleanText(a, b) {
+    const aa = cleanText(a || "");
+    const bb = cleanText(b || "");
+    if (!aa) return bb;
+    if (!bb) return aa;
+    return bb.length > aa.length ? bb : aa;
+  }
+  function v1292FullBetSlotName(slot) {
+    const direct = cleanText(slot?.name || slot?.match || slot?.label || slot?.note || slot?.title || "");
+    const matches = getSlotMatches(slot || {});
+    const first = cleanText(matches?.[0]?.name || "");
+    return v1292PreferFullerCleanText(direct, first) || "Bahis / maç";
+  }
+  function v1292BetHistoryLinesFromSlot(slot) {
+    const matches = getSlotMatches(slot || {});
+    const directName = v1292FullBetSlotName(slot);
+    const source = matches.length ? matches : [{ name: directName, odds: slot?.odds, status: slot?.status || slot?.result || slot?.res }];
+    return source.map((match, idx) => {
+      const name = idx === 0 ? v1292PreferFullerCleanText(match?.name, directName) : cleanText(match?.name || "");
+      return {
+        name: name || `Maç ${idx + 1}`,
+        odds: Number(match?.odds || (idx === 0 ? slot?.odds : 0) || 0),
+        status: v1073NormalizeBetMatchResult(match?.status || match?.result || match?.res || slot?.status || slot?.result || slot?.res)
+      };
+    }).filter(line => cleanText(line.name || ""));
+  }
+
   function addHistoryRecord(mode, slot, index) {
     if (!slot || (slot.status !== "win" && slot.status !== "loss")) return;
     const h = loadHistory();
     const now = Date.now();
+    const betLines = mode === "bet" ? v1292BetHistoryLinesFromSlot(slot) : [];
+    const betName = mode === "bet" ? (betLines[0]?.name || v1292FullBetSlotName(slot)) : "";
     const rec = {
       id: "rh_" + now + "_" + Math.random().toString(36).slice(2),
       mode,
       ts: now,
       row: index + 1,
-      name: String(slot.name || "").trim() || (mode === "crypto" ? "Kripto işlem" : "Bahis / maç"),
+      name: mode === "bet" ? (betName || "Bahis / maç") : (String(slot.name || "").trim() || "Kripto işlem"),
+      matchLines: mode === "bet" ? betLines.map(line => cleanText(line.name || "")).filter(Boolean) : undefined,
+      matchOdds: mode === "bet" ? betLines.map(line => Number(line.odds || 0)) : undefined,
+      matchResults: mode === "bet" ? betLines.map(line => v1073NormalizeBetMatchResult(line.status || slot.status || "")) : undefined,
+      combo: mode === "bet" && betLines.length > 1 ? betLines.map((line, idx) => ({ name: cleanText(line.name || "") || `Maç ${idx + 1}`, odds: Number(line.odds || 0), status: v1073NormalizeBetMatchResult(line.status || slot.status || "") })) : undefined,
       stake: Number(slot.stake || 0),
       odds: Number(slot.odds || 0),
       status: slot.status,
@@ -7218,6 +7251,20 @@
     if (histLines.length > 1) return histLines;
     const opLines = v1068BetMatchLines(op);
     if (opLines.length > 1) return opLines;
+    if (histLines.length && opLines.length) {
+      const h = histLines[0] || {};
+      const o = opLines[0] || {};
+      const histName = cleanText(h.name || "");
+      const opName = cleanText(o.name || "");
+      const name = v1292PreferFullerCleanText(histName, opName);
+      return [{
+        ...o,
+        ...h,
+        name,
+        odds: Number(h.odds || 0) || Number(o.odds || 0),
+        status: v1073NormalizeBetMatchResult(h.status || o.status || historyRow?.status || op?.res || op?.status || "")
+      }];
+    }
     return histLines.length ? histLines : opLines;
   }
   function v1064CleanComboHistoryName(name) {
@@ -7270,10 +7317,12 @@
     if (m === "crypto") return v1057OpName(m, op);
     const lines = v1068LedgerBetItemLines(op, historyRow);
     if (lines.length > 1) return lines.map(line => cleanText(line?.name || "")).filter(Boolean).join(" + ");
+    const lineName = cleanText(lines?.[0]?.name || "");
     const histName = v1064CleanComboHistoryName(historyRow?.name || "");
     if (histName && /\s\+\s/.test(histName)) return histName;
     const direct = v1057OpName(m, op);
-    if (direct && direct !== "Bahis / maç") return direct;
+    const fullSingle = v1292PreferFullerCleanText(lineName, direct && direct !== "Bahis / maç" ? direct : "");
+    if (fullSingle) return fullSingle;
     return histName || direct || "Bahis / maç";
   }
   function v1057OpKind(mode, op) {
@@ -10201,8 +10250,14 @@ function escapeHtml(str) {
         const fresh = loadState();
         const settleSlotIndex = Number(action.slot || 0);
         if (action.mode === "bet") {
-          const coupon = getBetCouponForSlot(fresh, settleSlotIndex);
           const slot = fresh?.modeSlots?.bet?.[settleSlotIndex];
+          if (slot) {
+            const actionName = cleanText(action.slotName || "");
+            if (actionName && actionName.length > cleanText(slot.name || "").length) slot.name = actionName;
+            if (!Number(slot.odds || 0) && Number(action.slotOdds || 0)) slot.odds = Number(action.slotOdds || 0);
+            if (!Number(slot.stake || 0) && Number(action.slotStake || 0)) slot.stake = Number(action.slotStake || 0);
+          }
+          const coupon = getBetCouponForSlot(fresh, settleSlotIndex);
           if (coupon && Array.isArray(coupon.matches) && coupon.matches.length > 1) {
             const matchIndex = getBetCouponMatchIndex(coupon, settleSlotIndex);
             applyComboMatchStatus(fresh, settleSlotIndex, matchIndex, action.status === "loss" ? "loss" : action.status === "pending" ? "pending" : "win");
@@ -10395,7 +10450,10 @@ function escapeHtml(str) {
           title: finalStatus === "pending" ? "Tekrar bekliyor durumuna al" : "Sonucu kaydetmeden önce onayla",
           message: finalStatus === "pending" ? `${name} tekrar BEKLİYOR durumuna alınacak.` : `${name} için sonuç: ${resultLabel}.`,
           detail: finalStatus === "pending" ? "Yanlış işaretleme yaptıysan bu kayıt yeniden bekliyor olur." : "Bu kayıt Geçmiş/Rapor merkezine işlenecek. Deneme tıklamasıysa iptal et.",
-          confirmText: finalStatus === "pending" ? "BEKLİYOR olarak kaydet" : `${resultLabel} olarak kaydet`
+          confirmText: finalStatus === "pending" ? "BEKLİYOR olarak kaydet" : `${resultLabel} olarak kaydet`,
+          slotName: mode === "bet" ? cleanText(list[i]?.name || "") : "",
+          slotOdds: mode === "bet" ? Number(list[i]?.odds || 0) : 0,
+          slotStake: mode === "bet" ? Number(list[i]?.stake || 0) : 0
         };
         refresh();
         return;
