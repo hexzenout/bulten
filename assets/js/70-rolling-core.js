@@ -2857,6 +2857,27 @@
       #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1069-ledger-status-mark,
       .v1162-ledger-output-modal.bet .v1054-daily-ledger.bet .v1069-ledger-status-mark{align-self:center!important;transform:none!important;overflow:visible!important;}
 
+
+      /* V1275: Bahis Kupon Defteri Tutar/Oran kolonları 7+ hane için genişletildi.
+         Sheet az büyür; ek alan sadece Tutar ve Oran kolonlarına verilir. Yeşil kasa özeti tabloyla aynı sağ çizgide kalır. */
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="1"]{--v1221-bet-sheet:556px;--v1221-bet-content:556px;--v1221-bet-modal:568px;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="2"]{--v1221-bet-sheet:556px;--v1221-bet-content:1120px;--v1221-bet-modal:1132px;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols="3"]{--v1221-bet-sheet:556px;--v1221-bet-content:1684px;--v1221-bet-modal:1696px;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(1),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(1){width:5.75%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(2),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(2){width:15.17%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(3),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(3){width:30.54%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(4),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(4){width:11.31%!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(5),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(5){width:13.51%!important;min-width:0!important;max-width:none!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(6),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(6){width:9.49%!important;min-width:0!important;max-width:none!important;white-space:nowrap!important;padding-left:1px!important;padding-right:1px!important;}
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table th:nth-child(7),
+      #v1056-ledger-screen-host .v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet .v1057-ledger-excel-table td:nth-child(7){width:14.23%!important;}
+
                   .v1098-ledger-photo-toolbar button[data-v781-photo-open]{border-color:rgba(251,191,36,.45)!important;background:#111827!important;color:#fde68a!important;}
       @media (max-width:980px){.v1110-ledger-header-pager{display:none!important;}#v1056-ledger-screen-host .v1110-ledger-test-modal{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;height:calc(100vh - 24px)!important;margin:12px auto!important;}}
     `;
