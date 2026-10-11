@@ -1,547 +1,7 @@
 {
-    "up": "16:10",
+    "up": "06:04",
     "mode": "fixture",
     "veriler": [
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - PREMIER LEAGUE",
-            "f": "gb-eng",
-            "m": "Arsenal - Leeds United",
-            "dt": "2026-10-10",
-            "tm": "14:30",
-            "vip": 99
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "West Bromwich Albion - Birmingham City",
-            "dt": "2026-10-10",
-            "tm": "14:30",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Charlton Athletic - Bristol City",
-            "dt": "2026-10-10",
-            "tm": "14:30",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Swansea City - Norwich City",
-            "dt": "2026-10-10",
-            "tm": "14:30",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "TÜRKİYE - SÜPER LİG",
-            "f": "tr",
-            "m": "Alanyaspor - Erzurum BB",
-            "dt": "2026-10-10",
-            "tm": "16:00",
-            "vip": 100
-        },
-        {
-            "t": "futbol",
-            "l": "TÜRKİYE - SÜPER LİG",
-            "f": "tr",
-            "m": "Samsunspor - Trabzonspor",
-            "dt": "2026-10-10",
-            "tm": "16:00",
-            "vip": 100
-        },
-        {
-            "t": "futbol",
-            "l": "İTALYA - SERIE A",
-            "f": "it",
-            "m": "Genoa - Fiorentina",
-            "dt": "2026-10-10",
-            "tm": "16:00",
-            "vip": 96
-        },
-        {
-            "t": "futbol",
-            "l": "ALMANYA - BUNDESLIGA",
-            "f": "de",
-            "m": "Augsburg - Bayern Munich",
-            "dt": "2026-10-10",
-            "tm": "16:30",
-            "vip": 97
-        },
-        {
-            "t": "futbol",
-            "l": "ALMANYA - BUNDESLIGA",
-            "f": "de",
-            "m": "FSV Mainz 05 - Bayer Leverkusen",
-            "dt": "2026-10-10",
-            "tm": "16:30",
-            "vip": 97
-        },
-        {
-            "t": "futbol",
-            "l": "ALMANYA - BUNDESLIGA",
-            "f": "de",
-            "m": "Union Berlin - Elversberg",
-            "dt": "2026-10-10",
-            "tm": "16:30",
-            "vip": 97
-        },
-        {
-            "t": "futbol",
-            "l": "ALMANYA - BUNDESLIGA",
-            "f": "de",
-            "m": "TSG Hoffenheim - Hamburger SV",
-            "dt": "2026-10-10",
-            "tm": "16:30",
-            "vip": 97
-        },
-        {
-            "t": "futbol",
-            "l": "ALMANYA - BUNDESLIGA",
-            "f": "de",
-            "m": "SC Paderborn - VfB Stuttgart",
-            "dt": "2026-10-10",
-            "tm": "16:30",
-            "vip": 97
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - PREMIER LEAGUE",
-            "f": "gb-eng",
-            "m": "Aston Villa - Brentford",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 99
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - PREMIER LEAGUE",
-            "f": "gb-eng",
-            "m": "Chelsea - Bournemouth",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 99
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - PREMIER LEAGUE",
-            "f": "gb-eng",
-            "m": "Sunderland - Brighton and Hove Albion",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 99
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - PREMIER LEAGUE",
-            "f": "gb-eng",
-            "m": "Ipswich Town - Fulham",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 99
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Blackburn Rovers - Cardiff City",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Bolton Wanderers - Stoke City",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Watford - Burnley",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Derby County - Wrexham AFC",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Sheffield United - Lincoln City",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Middlesbrough - Wolverhampton Wanderers",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - CHAMPIONSHIP",
-            "f": "gb-eng",
-            "m": "Preston North End - Millwall",
-            "dt": "2026-10-10",
-            "tm": "17:00",
-            "vip": 70
-        },
-        {
-            "t": "futbol",
-            "l": "İSPANYA - LA LIGA",
-            "f": "es",
-            "m": "Alavés - Atlético Madrid",
-            "dt": "2026-10-10",
-            "tm": "17:15",
-            "vip": 98
-        },
-        {
-            "t": "futbol",
-            "l": "HOLLANDA - EREDIVISIE",
-            "f": "nl",
-            "m": "Go Ahead Eagles - Sparta Rotterdam",
-            "dt": "2026-10-10",
-            "tm": "17:30",
-            "vip": 69
-        },
-        {
-            "t": "futbol",
-            "l": "FRANSA - LIGUE 1",
-            "f": "fr",
-            "m": "Lille - Le Havre",
-            "dt": "2026-10-10",
-            "tm": "18:15",
-            "vip": 95
-        },
-        {
-            "t": "futbol",
-            "l": "TÜRKİYE - SÜPER LİG",
-            "f": "tr",
-            "m": "Çaykur Rizespor - Fenerbahce",
-            "dt": "2026-10-10",
-            "tm": "19:00",
-            "vip": 100
-        },
-        {
-            "t": "futbol",
-            "l": "İTALYA - SERIE A",
-            "f": "it",
-            "m": "Inter Milan - Parma",
-            "dt": "2026-10-10",
-            "tm": "19:00",
-            "vip": 96
-        },
-        {
-            "t": "futbol",
-            "l": "İNGİLTERE - PREMIER LEAGUE",
-            "f": "gb-eng",
-            "m": "Manchester United - Tottenham Hotspur",
-            "dt": "2026-10-10",
-            "tm": "19:30",
-            "vip": 99
-        },
-        {
-            "t": "futbol",
-            "l": "İSPANYA - LA LIGA",
-            "f": "es",
-            "m": "Barcelona - Getafe",
-            "dt": "2026-10-10",
-            "tm": "19:30",
-            "vip": 98
-        },
-        {
-            "t": "futbol",
-            "l": "ALMANYA - BUNDESLIGA",
-            "f": "de",
-            "m": "RB Leipzig - Eintracht Frankfurt",
-            "dt": "2026-10-10",
-            "tm": "19:30",
-            "vip": 97
-        },
-        {
-            "t": "futbol",
-            "l": "HOLLANDA - EREDIVISIE",
-            "f": "nl",
-            "m": "Feyenoord - AZ Alkmaar",
-            "dt": "2026-10-10",
-            "tm": "19:45",
-            "vip": 69
-        },
-        {
-            "t": "futbol",
-            "l": "PORTEKİZ - PRIMEIRA LIGA",
-            "f": "pt",
-            "m": "CS Maritimo - FC Porto",
-            "dt": "2026-10-10",
-            "tm": "20:00",
-            "vip": 68
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Toronto FC - CF Montreal",
-            "dt": "2026-10-10",
-            "tm": "20:00",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "HOLLANDA - EREDIVISIE",
-            "f": "nl",
-            "m": "Fortuna Sittard - FC Twente Enschede",
-            "dt": "2026-10-10",
-            "tm": "21:00",
-            "vip": 69
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Chicago Fire - New York City FC",
-            "dt": "2026-10-10",
-            "tm": "21:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "İTALYA - SERIE A",
-            "f": "it",
-            "m": "Napoli - Frosinone",
-            "dt": "2026-10-10",
-            "tm": "21:45",
-            "vip": 96
-        },
-        {
-            "t": "futbol",
-            "l": "FRANSA - LIGUE 1",
-            "f": "fr",
-            "m": "AS Monaco - Toulouse",
-            "dt": "2026-10-10",
-            "tm": "21:45",
-            "vip": 95
-        },
-        {
-            "t": "futbol",
-            "l": "FRANSA - LIGUE 1",
-            "f": "fr",
-            "m": "Brest - Angers",
-            "dt": "2026-10-10",
-            "tm": "21:45",
-            "vip": 95
-        },
-        {
-            "t": "futbol",
-            "l": "FRANSA - LIGUE 1",
-            "f": "fr",
-            "m": "Paris Saint Germain - Le Mans FC",
-            "dt": "2026-10-10",
-            "tm": "21:45",
-            "vip": 95
-        },
-        {
-            "t": "futbol",
-            "l": "FRANSA - LIGUE 1",
-            "f": "fr",
-            "m": "Lorient - Paris FC",
-            "dt": "2026-10-10",
-            "tm": "21:45",
-            "vip": 95
-        },
-        {
-            "t": "futbol",
-            "l": "ARJANTİN - ARGENTINA PRIMERA",
-            "f": "ar",
-            "m": "Barracas Central - Atlético Huracán",
-            "dt": "2026-10-10",
-            "tm": "21:45",
-            "vip": 66
-        },
-        {
-            "t": "futbol",
-            "l": "İSPANYA - LA LIGA",
-            "f": "es",
-            "m": "Real Madrid - Villarreal",
-            "dt": "2026-10-10",
-            "tm": "22:00",
-            "vip": 98
-        },
-        {
-            "t": "futbol",
-            "l": "HOLLANDA - EREDIVISIE",
-            "f": "nl",
-            "m": "Ajax - NEC Nijmegen",
-            "dt": "2026-10-10",
-            "tm": "22:00",
-            "vip": 69
-        },
-        {
-            "t": "futbol",
-            "l": "PORTEKİZ - PRIMEIRA LIGA",
-            "f": "pt",
-            "m": "Académico de Viseu - Estoril",
-            "dt": "2026-10-10",
-            "tm": "22:30",
-            "vip": 68
-        },
-        {
-            "t": "futbol",
-            "l": "PORTEKİZ - PRIMEIRA LIGA",
-            "f": "pt",
-            "m": "Casa Pia - Santa Clara",
-            "dt": "2026-10-10",
-            "tm": "22:30",
-            "vip": 68
-        },
-        {
-            "t": "futbol",
-            "l": "ARJANTİN - ARGENTINA PRIMERA",
-            "f": "ar",
-            "m": "Central Córdoba - Estudiantes",
-            "dt": "2026-10-10",
-            "tm": "23:00",
-            "vip": 66
-        },
-        {
-            "t": "futbol",
-            "l": "BREZİLYA - BRAZIL SERIE A",
-            "f": "br",
-            "m": "Vasco da Gama - Remo",
-            "dt": "2026-10-11",
-            "tm": "00:00",
-            "vip": 67
-        },
-        {
-            "t": "futbol",
-            "l": "ARJANTİN - ARGENTINA PRIMERA",
-            "f": "ar",
-            "m": "CA Tigre BA - Banfield",
-            "dt": "2026-10-11",
-            "tm": "01:15",
-            "vip": 66
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Atlanta United FC - FC Cincinnati",
-            "dt": "2026-10-11",
-            "tm": "02:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Charlotte FC - FC Dallas",
-            "dt": "2026-10-11",
-            "tm": "02:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Orlando City SC - Columbus Crew SC",
-            "dt": "2026-10-11",
-            "tm": "02:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Inter Miami CF - D.C. United",
-            "dt": "2026-10-11",
-            "tm": "02:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "New England Revolution - Seattle Sounders FC",
-            "dt": "2026-10-11",
-            "tm": "02:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "New York Red Bulls - San Diego FC",
-            "dt": "2026-10-11",
-            "tm": "02:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Philadelphia Union - Real Salt Lake",
-            "dt": "2026-10-11",
-            "tm": "02:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "BREZİLYA - BRAZIL SERIE A",
-            "f": "br",
-            "m": "Sao Paulo - Vitoria",
-            "dt": "2026-10-11",
-            "tm": "03:00",
-            "vip": 67
-        },
-        {
-            "t": "futbol",
-            "l": "ARJANTİN - ARGENTINA PRIMERA",
-            "f": "ar",
-            "m": "River Plate - Estudiantes de Río Cuarto",
-            "dt": "2026-10-11",
-            "tm": "03:30",
-            "vip": 66
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Austin FC - Nashville SC",
-            "dt": "2026-10-11",
-            "tm": "03:30",
-            "vip": 65
-        },
-        {
-            "t": "futbol",
-            "l": "AMERİKA - MLS",
-            "f": "us",
-            "m": "Minnesota United FC - Houston Dynamo",
-            "dt": "2026-10-11",
-            "tm": "03:30",
-            "vip": 65
-        },
         {
             "t": "futbol",
             "l": "AMERİKA - MLS",
@@ -2182,6 +1642,78 @@
         },
         {
             "t": "futbol",
+            "l": "İNGİLTERE - CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Birmingham City - Queens Park Rangers",
+            "dt": "2026-10-17",
+            "tm": "17:00",
+            "vip": 70
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "West Bromwich Albion - Blackburn Rovers",
+            "dt": "2026-10-17",
+            "tm": "17:00",
+            "vip": 70
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Southampton - Bolton Wanderers",
+            "dt": "2026-10-17",
+            "tm": "17:00",
+            "vip": 70
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Bristol City - Sheffield United",
+            "dt": "2026-10-17",
+            "tm": "17:00",
+            "vip": 70
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Derby County - Stoke City",
+            "dt": "2026-10-17",
+            "tm": "17:00",
+            "vip": 70
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Norwich City - Portsmouth",
+            "dt": "2026-10-17",
+            "tm": "17:00",
+            "vip": 70
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Wrexham AFC - Preston North End",
+            "dt": "2026-10-17",
+            "tm": "17:00",
+            "vip": 70
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - CHAMPIONSHIP",
+            "f": "gb-eng",
+            "m": "Swansea City - West Ham United",
+            "dt": "2026-10-17",
+            "tm": "17:00",
+            "vip": 70
+        },
+        {
+            "t": "futbol",
             "l": "İSPANYA - LA LIGA",
             "f": "es",
             "m": "Villarreal - Elche CF",
@@ -2206,6 +1738,15 @@
             "dt": "2026-10-17",
             "tm": "18:15",
             "vip": 95
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - SÜPER LİG",
+            "f": "tr",
+            "m": "Fenerbahce - Alanyaspor",
+            "dt": "2026-10-17",
+            "tm": "19:00",
+            "vip": 100
         },
         {
             "t": "futbol",
@@ -2260,6 +1801,15 @@
             "dt": "2026-10-17",
             "tm": "21:00",
             "vip": 66
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Philadelphia Union - Charlotte FC",
+            "dt": "2026-10-17",
+            "tm": "21:30",
+            "vip": 65
         },
         {
             "t": "futbol",
@@ -2335,6 +1885,15 @@
         },
         {
             "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Minnesota United FC - St. Louis City SC",
+            "dt": "2026-10-17",
+            "tm": "23:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
             "l": "BREZİLYA - BRAZIL SERIE A",
             "f": "br",
             "m": "Botafogo - Chapecoense",
@@ -2380,12 +1939,120 @@
         },
         {
             "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Atlanta United FC - Inter Miami CF",
+            "dt": "2026-10-18",
+            "tm": "02:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "New England Revolution - Chicago Fire",
+            "dt": "2026-10-18",
+            "tm": "02:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Orlando City SC - D.C. United",
+            "dt": "2026-10-18",
+            "tm": "02:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "New York City FC - Los Angeles FC",
+            "dt": "2026-10-18",
+            "tm": "02:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "New York Red Bulls - Toronto FC",
+            "dt": "2026-10-18",
+            "tm": "02:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
             "l": "BREZİLYA - BRAZIL SERIE A",
             "f": "br",
             "m": "Sao Paulo - Vasco da Gama",
             "dt": "2026-10-18",
             "tm": "03:00",
             "vip": 67
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Austin FC - Vancouver Whitecaps FC",
+            "dt": "2026-10-18",
+            "tm": "03:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Houston Dynamo - FC Dallas",
+            "dt": "2026-10-18",
+            "tm": "03:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Sporting Kansas City - Real Salt Lake",
+            "dt": "2026-10-18",
+            "tm": "03:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Seattle Sounders FC - CF Montreal",
+            "dt": "2026-10-18",
+            "tm": "05:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "Portland Timbers - Colorado Rapids",
+            "dt": "2026-10-18",
+            "tm": "05:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "LA Galaxy - San Diego FC",
+            "dt": "2026-10-18",
+            "tm": "05:30",
+            "vip": 65
+        },
+        {
+            "t": "futbol",
+            "l": "AMERİKA - MLS",
+            "f": "us",
+            "m": "San Jose Earthquakes - Nashville SC",
+            "dt": "2026-10-18",
+            "tm": "05:30",
+            "vip": 65
         },
         {
             "t": "futbol",
@@ -2901,6 +2568,15 @@
             "vip": 100
         },
         {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Ipswich Town - Nottingham Forest",
+            "dt": "2026-10-23",
+            "tm": "22:00",
+            "vip": 99
+        },
+        {
             "t": "basketbol",
             "l": "AMERİKA - NBA",
             "f": "us",
@@ -2917,6 +2593,87 @@
             "dt": "2026-10-24",
             "tm": "04:40",
             "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Aston Villa - Manchester City",
+            "dt": "2026-10-24",
+            "tm": "14:30",
+            "vip": 99
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Arsenal - Everton",
+            "dt": "2026-10-24",
+            "tm": "17:00",
+            "vip": 99
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Coventry City - Fulham",
+            "dt": "2026-10-24",
+            "tm": "17:00",
+            "vip": 99
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Chelsea - Tottenham Hotspur",
+            "dt": "2026-10-24",
+            "tm": "19:30",
+            "vip": 99
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Manchester United - Bournemouth",
+            "dt": "2026-10-25",
+            "tm": "17:00",
+            "vip": 99
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Hull City - Brentford",
+            "dt": "2026-10-25",
+            "tm": "17:00",
+            "vip": 99
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Liverpool - Brighton and Hove Albion",
+            "dt": "2026-10-25",
+            "tm": "17:00",
+            "vip": 99
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Crystal Palace - Newcastle United",
+            "dt": "2026-10-25",
+            "tm": "17:00",
+            "vip": 99
+        },
+        {
+            "t": "futbol",
+            "l": "İNGİLTERE - PREMIER LEAGUE",
+            "f": "gb-eng",
+            "m": "Sunderland - Leeds United",
+            "dt": "2026-10-25",
+            "tm": "19:30",
+            "vip": 99
         },
         {
             "t": "basketbol",
@@ -3172,21 +2929,21 @@
         }
     ],
     "sayac": {
-        "TÜRKİYE - SÜPER LİG": 11,
-        "İNGİLTERE - PREMIER LEAGUE": 20,
-        "İSPANYA - LA LIGA": 18,
-        "ALMANYA - BUNDESLIGA": 17,
-        "İTALYA - SERIE A": 20,
-        "FRANSA - LIGUE 1": 17,
+        "TÜRKİYE - SÜPER LİG": 9,
+        "İNGİLTERE - PREMIER LEAGUE": 24,
+        "İSPANYA - LA LIGA": 15,
+        "ALMANYA - BUNDESLIGA": 11,
+        "İTALYA - SERIE A": 17,
+        "FRANSA - LIGUE 1": 12,
         "AVRUPA - CHAMPIONS LEAGUE": 18,
         "AVRUPA - EUROPA LEAGUE": 18,
         "AVRUPA - CONFERENCE LEAGUE": 18,
-        "İNGİLTERE - CHAMPIONSHIP": 27,
-        "HOLLANDA - EREDIVISIE": 17,
-        "PORTEKİZ - PRIMEIRA LIGA": 7,
-        "BREZİLYA - BRAZIL SERIE A": 20,
-        "ARJANTİN - ARGENTINA PRIMERA": 28,
-        "AMERİKA - MLS": 30,
+        "İNGİLTERE - CHAMPIONSHIP": 25,
+        "HOLLANDA - EREDIVISIE": 13,
+        "PORTEKİZ - PRIMEIRA LIGA": 4,
+        "BREZİLYA - BRAZIL SERIE A": 18,
+        "ARJANTİN - ARGENTINA PRIMERA": 24,
+        "AMERİKA - MLS": 33,
         "AMERİKA - NBA": 46,
         "AVRUPA - EUROLEAGUE": 19,
         "AMERİKA - WNBA": 1,
@@ -3201,85 +2958,85 @@
         "RUSYA - VTB": 0
     },
     "logs": [
-        "[2026-10-10 16:09:45] OK soccer_turkey_super_league | key#1 | remaining=67 used=433",
-        "[2026-10-10 16:09:45] LİG TAMAMLANDI | TÜRKİYE - SÜPER LİG | 11 maç",
-        "[2026-10-10 16:09:45] LİG TARAMA BAŞLADI | İNGİLTERE - PREMIER LEAGUE",
-        "[2026-10-10 16:09:46] OK soccer_epl | key#1 | remaining=66 used=434",
-        "[2026-10-10 16:09:46] LİG TAMAMLANDI | İNGİLTERE - PREMIER LEAGUE | 20 maç",
-        "[2026-10-10 16:09:46] LİG TARAMA BAŞLADI | İSPANYA - LA LIGA",
-        "[2026-10-10 16:09:46] OK soccer_spain_la_liga | key#1 | remaining=65 used=435",
-        "[2026-10-10 16:09:46] LİG TAMAMLANDI | İSPANYA - LA LIGA | 18 maç",
-        "[2026-10-10 16:09:47] LİG TARAMA BAŞLADI | ALMANYA - BUNDESLIGA",
-        "[2026-10-10 16:09:47] OK soccer_germany_bundesliga | key#1 | remaining=64 used=436",
-        "[2026-10-10 16:09:47] LİG TAMAMLANDI | ALMANYA - BUNDESLIGA | 17 maç",
-        "[2026-10-10 16:09:48] LİG TARAMA BAŞLADI | İTALYA - SERIE A",
-        "[2026-10-10 16:09:48] OK soccer_italy_serie_a | key#1 | remaining=63 used=437",
-        "[2026-10-10 16:09:48] LİG TAMAMLANDI | İTALYA - SERIE A | 20 maç",
-        "[2026-10-10 16:09:49] LİG TARAMA BAŞLADI | FRANSA - LIGUE 1",
-        "[2026-10-10 16:09:49] OK soccer_france_ligue_one | key#1 | remaining=62 used=438",
-        "[2026-10-10 16:09:49] LİG TAMAMLANDI | FRANSA - LIGUE 1 | 17 maç",
-        "[2026-10-10 16:09:49] LİG TARAMA BAŞLADI | AVRUPA - CHAMPIONS LEAGUE",
-        "[2026-10-10 16:09:49] OK soccer_uefa_champs_league | key#1 | remaining=61 used=439",
-        "[2026-10-10 16:09:49] LİG TAMAMLANDI | AVRUPA - CHAMPIONS LEAGUE | 18 maç",
-        "[2026-10-10 16:09:50] LİG TARAMA BAŞLADI | AVRUPA - EUROPA LEAGUE",
-        "[2026-10-10 16:09:50] OK soccer_uefa_europa_league | key#1 | remaining=60 used=440",
-        "[2026-10-10 16:09:50] LİG TAMAMLANDI | AVRUPA - EUROPA LEAGUE | 18 maç",
-        "[2026-10-10 16:09:51] LİG TARAMA BAŞLADI | AVRUPA - CONFERENCE LEAGUE",
-        "[2026-10-10 16:09:51] OK soccer_uefa_europa_conference_league | key#1 | remaining=59 used=441",
-        "[2026-10-10 16:09:51] LİG TAMAMLANDI | AVRUPA - CONFERENCE LEAGUE | 18 maç",
-        "[2026-10-10 16:09:52] LİG TARAMA BAŞLADI | İNGİLTERE - CHAMPIONSHIP",
-        "[2026-10-10 16:09:52] OK soccer_efl_champ | key#1 | remaining=58 used=442",
-        "[2026-10-10 16:09:52] LİG TAMAMLANDI | İNGİLTERE - CHAMPIONSHIP | 27 maç",
-        "[2026-10-10 16:09:52] LİG TARAMA BAŞLADI | HOLLANDA - EREDIVISIE",
-        "[2026-10-10 16:09:53] OK soccer_netherlands_eredivisie | key#1 | remaining=57 used=443",
-        "[2026-10-10 16:09:53] LİG TAMAMLANDI | HOLLANDA - EREDIVISIE | 17 maç",
-        "[2026-10-10 16:09:53] LİG TARAMA BAŞLADI | PORTEKİZ - PRIMEIRA LIGA",
-        "[2026-10-10 16:09:53] OK soccer_portugal_primeira_liga | key#1 | remaining=56 used=444",
-        "[2026-10-10 16:09:53] LİG TAMAMLANDI | PORTEKİZ - PRIMEIRA LIGA | 7 maç",
-        "[2026-10-10 16:09:54] LİG TARAMA BAŞLADI | BREZİLYA - BRAZIL SERIE A",
-        "[2026-10-10 16:09:54] OK soccer_brazil_campeonato | key#1 | remaining=55 used=445",
-        "[2026-10-10 16:09:54] LİG TAMAMLANDI | BREZİLYA - BRAZIL SERIE A | 20 maç",
-        "[2026-10-10 16:09:55] LİG TARAMA BAŞLADI | ARJANTİN - ARGENTINA PRIMERA",
-        "[2026-10-10 16:09:55] OK soccer_argentina_primera_division | key#1 | remaining=54 used=446",
-        "[2026-10-10 16:09:55] LİG TAMAMLANDI | ARJANTİN - ARGENTINA PRIMERA | 28 maç",
-        "[2026-10-10 16:09:56] LİG TARAMA BAŞLADI | AMERİKA - MLS",
-        "[2026-10-10 16:09:56] OK soccer_usa_mls | key#1 | remaining=53 used=447",
-        "[2026-10-10 16:09:56] LİG TAMAMLANDI | AMERİKA - MLS | 30 maç",
-        "[2026-10-10 16:09:56] LİG TARAMA BAŞLADI | AMERİKA - NBA",
-        "[2026-10-10 16:09:56] OK basketball_nba | key#1 | remaining=52 used=448",
-        "[2026-10-10 16:09:56] LİG TAMAMLANDI | AMERİKA - NBA | 46 maç",
-        "[2026-10-10 16:09:57] LİG TARAMA BAŞLADI | AVRUPA - EUROLEAGUE",
-        "[2026-10-10 16:09:57] OK basketball_euroleague | key#1 | remaining=51 used=449",
-        "[2026-10-10 16:09:57] LİG TAMAMLANDI | AVRUPA - EUROLEAGUE | 19 maç",
-        "[2026-10-10 16:09:58] LİG TARAMA BAŞLADI | AMERİKA - WNBA",
-        "[2026-10-10 16:09:58] OK basketball_wnba | key#1 | remaining=50 used=450",
-        "[2026-10-10 16:09:58] LİG TAMAMLANDI | AMERİKA - WNBA | 1 maç",
-        "[2026-10-10 16:09:59] LİG TARAMA BAŞLADI | AMERİKA - NCAA",
-        "[2026-10-10 16:09:59] OK basketball_ncaab | key#1 | remaining=50 used=450",
-        "[2026-10-10 16:09:59] LİG TAMAMLANDI | AMERİKA - NCAA | 0 maç",
-        "[2026-10-10 16:09:59] LİG TARAMA BAŞLADI | TÜRKİYE - BSL",
-        "[2026-10-10 16:09:59] API HATA basketball_turkey_bsl | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
-        "[2026-10-10 16:09:59] LİG TAMAMLANDI | TÜRKİYE - BSL | 0 maç",
-        "[2026-10-10 16:10:00] LİG TARAMA BAŞLADI | İSPANYA - LIGA ACB",
-        "[2026-10-10 16:10:00] API HATA basketball_spain_liga_endesa | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
-        "[2026-10-10 16:10:00] LİG TAMAMLANDI | İSPANYA - LIGA ACB | 0 maç",
-        "[2026-10-10 16:10:01] LİG TARAMA BAŞLADI | İTALYA - LEGA A",
-        "[2026-10-10 16:10:01] API HATA basketball_italy_lega_a | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
-        "[2026-10-10 16:10:01] LİG TAMAMLANDI | İTALYA - LEGA A | 0 maç",
-        "[2026-10-10 16:10:01] LİG TARAMA BAŞLADI | FRANSA - LNB PRO A",
-        "[2026-10-10 16:10:02] API HATA basketball_france_lnb_pro_a | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
-        "[2026-10-10 16:10:02] LİG TAMAMLANDI | FRANSA - LNB PRO A | 0 maç",
-        "[2026-10-10 16:10:02] LİG TARAMA BAŞLADI | ALMANYA - BBL",
-        "[2026-10-10 16:10:02] API HATA basketball_germany_bbl | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
-        "[2026-10-10 16:10:02] LİG TAMAMLANDI | ALMANYA - BBL | 0 maç",
-        "[2026-10-10 16:10:03] LİG TARAMA BAŞLADI | AVRUPA - EUROCUP",
-        "[2026-10-10 16:10:03] API HATA basketball_eurocup | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
-        "[2026-10-10 16:10:03] LİG TAMAMLANDI | AVRUPA - EUROCUP | 0 maç",
-        "[2026-10-10 16:10:04] LİG TARAMA BAŞLADI | AVRUPA - BCL",
-        "[2026-10-10 16:10:04] API HATA basketball_champions_league | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
-        "[2026-10-10 16:10:04] LİG TAMAMLANDI | AVRUPA - BCL | 0 maç",
-        "[2026-10-10 16:10:04] LİG TARAMA BAŞLADI | RUSYA - VTB",
-        "[2026-10-10 16:10:05] API HATA basketball_vtb_united_league | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
-        "[2026-10-10 16:10:05] LİG TAMAMLANDI | RUSYA - VTB | 0 maç"
+        "[2026-10-11 06:03:44] OK soccer_turkey_super_league | key#1 | remaining=41 used=459",
+        "[2026-10-11 06:03:44] LİG TAMAMLANDI | TÜRKİYE - SÜPER LİG | 9 maç",
+        "[2026-10-11 06:03:45] LİG TARAMA BAŞLADI | İNGİLTERE - PREMIER LEAGUE",
+        "[2026-10-11 06:03:45] OK soccer_epl | key#1 | remaining=40 used=460",
+        "[2026-10-11 06:03:45] LİG TAMAMLANDI | İNGİLTERE - PREMIER LEAGUE | 24 maç",
+        "[2026-10-11 06:03:46] LİG TARAMA BAŞLADI | İSPANYA - LA LIGA",
+        "[2026-10-11 06:03:46] OK soccer_spain_la_liga | key#1 | remaining=39 used=461",
+        "[2026-10-11 06:03:46] LİG TAMAMLANDI | İSPANYA - LA LIGA | 15 maç",
+        "[2026-10-11 06:03:46] LİG TARAMA BAŞLADI | ALMANYA - BUNDESLIGA",
+        "[2026-10-11 06:03:46] OK soccer_germany_bundesliga | key#1 | remaining=38 used=462",
+        "[2026-10-11 06:03:46] LİG TAMAMLANDI | ALMANYA - BUNDESLIGA | 11 maç",
+        "[2026-10-11 06:03:47] LİG TARAMA BAŞLADI | İTALYA - SERIE A",
+        "[2026-10-11 06:03:47] OK soccer_italy_serie_a | key#1 | remaining=37 used=463",
+        "[2026-10-11 06:03:47] LİG TAMAMLANDI | İTALYA - SERIE A | 17 maç",
+        "[2026-10-11 06:03:48] LİG TARAMA BAŞLADI | FRANSA - LIGUE 1",
+        "[2026-10-11 06:03:48] OK soccer_france_ligue_one | key#1 | remaining=36 used=464",
+        "[2026-10-11 06:03:48] LİG TAMAMLANDI | FRANSA - LIGUE 1 | 12 maç",
+        "[2026-10-11 06:03:49] LİG TARAMA BAŞLADI | AVRUPA - CHAMPIONS LEAGUE",
+        "[2026-10-11 06:03:49] OK soccer_uefa_champs_league | key#1 | remaining=35 used=465",
+        "[2026-10-11 06:03:49] LİG TAMAMLANDI | AVRUPA - CHAMPIONS LEAGUE | 18 maç",
+        "[2026-10-11 06:03:49] LİG TARAMA BAŞLADI | AVRUPA - EUROPA LEAGUE",
+        "[2026-10-11 06:03:50] OK soccer_uefa_europa_league | key#1 | remaining=34 used=466",
+        "[2026-10-11 06:03:50] LİG TAMAMLANDI | AVRUPA - EUROPA LEAGUE | 18 maç",
+        "[2026-10-11 06:03:50] LİG TARAMA BAŞLADI | AVRUPA - CONFERENCE LEAGUE",
+        "[2026-10-11 06:03:50] OK soccer_uefa_europa_conference_league | key#1 | remaining=33 used=467",
+        "[2026-10-11 06:03:50] LİG TAMAMLANDI | AVRUPA - CONFERENCE LEAGUE | 18 maç",
+        "[2026-10-11 06:03:51] LİG TARAMA BAŞLADI | İNGİLTERE - CHAMPIONSHIP",
+        "[2026-10-11 06:03:51] OK soccer_efl_champ | key#1 | remaining=32 used=468",
+        "[2026-10-11 06:03:51] LİG TAMAMLANDI | İNGİLTERE - CHAMPIONSHIP | 25 maç",
+        "[2026-10-11 06:03:52] LİG TARAMA BAŞLADI | HOLLANDA - EREDIVISIE",
+        "[2026-10-11 06:03:52] OK soccer_netherlands_eredivisie | key#1 | remaining=31 used=469",
+        "[2026-10-11 06:03:52] LİG TAMAMLANDI | HOLLANDA - EREDIVISIE | 13 maç",
+        "[2026-10-11 06:03:53] LİG TARAMA BAŞLADI | PORTEKİZ - PRIMEIRA LIGA",
+        "[2026-10-11 06:03:53] OK soccer_portugal_primeira_liga | key#1 | remaining=30 used=470",
+        "[2026-10-11 06:03:53] LİG TAMAMLANDI | PORTEKİZ - PRIMEIRA LIGA | 4 maç",
+        "[2026-10-11 06:03:53] LİG TARAMA BAŞLADI | BREZİLYA - BRAZIL SERIE A",
+        "[2026-10-11 06:03:53] OK soccer_brazil_campeonato | key#1 | remaining=29 used=471",
+        "[2026-10-11 06:03:53] LİG TAMAMLANDI | BREZİLYA - BRAZIL SERIE A | 18 maç",
+        "[2026-10-11 06:03:54] LİG TARAMA BAŞLADI | ARJANTİN - ARGENTINA PRIMERA",
+        "[2026-10-11 06:03:54] OK soccer_argentina_primera_division | key#1 | remaining=28 used=472",
+        "[2026-10-11 06:03:54] LİG TAMAMLANDI | ARJANTİN - ARGENTINA PRIMERA | 24 maç",
+        "[2026-10-11 06:03:55] LİG TARAMA BAŞLADI | AMERİKA - MLS",
+        "[2026-10-11 06:03:55] OK soccer_usa_mls | key#1 | remaining=27 used=473",
+        "[2026-10-11 06:03:55] LİG TAMAMLANDI | AMERİKA - MLS | 33 maç",
+        "[2026-10-11 06:03:56] LİG TARAMA BAŞLADI | AMERİKA - NBA",
+        "[2026-10-11 06:03:56] OK basketball_nba | key#1 | remaining=26 used=474",
+        "[2026-10-11 06:03:56] LİG TAMAMLANDI | AMERİKA - NBA | 46 maç",
+        "[2026-10-11 06:03:56] LİG TARAMA BAŞLADI | AVRUPA - EUROLEAGUE",
+        "[2026-10-11 06:03:57] OK basketball_euroleague | key#1 | remaining=25 used=475",
+        "[2026-10-11 06:03:57] LİG TAMAMLANDI | AVRUPA - EUROLEAGUE | 19 maç",
+        "[2026-10-11 06:03:57] LİG TARAMA BAŞLADI | AMERİKA - WNBA",
+        "[2026-10-11 06:03:57] OK basketball_wnba | key#1 | remaining=24 used=476",
+        "[2026-10-11 06:03:57] LİG TAMAMLANDI | AMERİKA - WNBA | 1 maç",
+        "[2026-10-11 06:03:58] LİG TARAMA BAŞLADI | AMERİKA - NCAA",
+        "[2026-10-11 06:03:58] OK basketball_ncaab | key#1 | remaining=24 used=476",
+        "[2026-10-11 06:03:58] LİG TAMAMLANDI | AMERİKA - NCAA | 0 maç",
+        "[2026-10-11 06:03:59] LİG TARAMA BAŞLADI | TÜRKİYE - BSL",
+        "[2026-10-11 06:03:59] API HATA basketball_turkey_bsl | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
+        "[2026-10-11 06:03:59] LİG TAMAMLANDI | TÜRKİYE - BSL | 0 maç",
+        "[2026-10-11 06:03:59] LİG TARAMA BAŞLADI | İSPANYA - LIGA ACB",
+        "[2026-10-11 06:04:00] API HATA basketball_spain_liga_endesa | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
+        "[2026-10-11 06:04:00] LİG TAMAMLANDI | İSPANYA - LIGA ACB | 0 maç",
+        "[2026-10-11 06:04:00] LİG TARAMA BAŞLADI | İTALYA - LEGA A",
+        "[2026-10-11 06:04:00] API HATA basketball_italy_lega_a | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
+        "[2026-10-11 06:04:00] LİG TAMAMLANDI | İTALYA - LEGA A | 0 maç",
+        "[2026-10-11 06:04:01] LİG TARAMA BAŞLADI | FRANSA - LNB PRO A",
+        "[2026-10-11 06:04:01] API HATA basketball_france_lnb_pro_a | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
+        "[2026-10-11 06:04:01] LİG TAMAMLANDI | FRANSA - LNB PRO A | 0 maç",
+        "[2026-10-11 06:04:02] LİG TARAMA BAŞLADI | ALMANYA - BBL",
+        "[2026-10-11 06:04:02] API HATA basketball_germany_bbl | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
+        "[2026-10-11 06:04:02] LİG TAMAMLANDI | ALMANYA - BBL | 0 maç",
+        "[2026-10-11 06:04:03] LİG TARAMA BAŞLADI | AVRUPA - EUROCUP",
+        "[2026-10-11 06:04:03] API HATA basketball_eurocup | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
+        "[2026-10-11 06:04:03] LİG TAMAMLANDI | AVRUPA - EUROCUP | 0 maç",
+        "[2026-10-11 06:04:03] LİG TARAMA BAŞLADI | AVRUPA - BCL",
+        "[2026-10-11 06:04:03] API HATA basketball_champions_league | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
+        "[2026-10-11 06:04:03] LİG TAMAMLANDI | AVRUPA - BCL | 0 maç",
+        "[2026-10-11 06:04:04] LİG TARAMA BAŞLADI | RUSYA - VTB",
+        "[2026-10-11 06:04:04] API HATA basketball_vtb_united_league | status=404 | body={\"message\":\"Unknown sport\",\"error_code\":\"UNKNOWN_SPORT\",\"details_url\":\"https://the-odds-api.com/liveapi/guides/v4/api-error-codes.html#unknown-sport\"}",
+        "[2026-10-11 06:04:04] LİG TAMAMLANDI | RUSYA - VTB | 0 maç"
     ]
 }
