@@ -9055,6 +9055,16 @@
     if (raw > 1000) return 1000;
     return raw;
   }
+  function v1332GrowthPercentToMultiplier(growth) {
+    const g = v1045SmartGrowthPercent(growth);
+    return Number((1 + g / 100).toFixed(2));
+  }
+  function v1332MultiplierToGrowthPercent(multiplier) {
+    const raw = Number(String(multiplier ?? "").replace(",", "."));
+    if (!Number.isFinite(raw)) return 30;
+    const clamped = Math.max(1.0, Math.min(11.0, raw));
+    return v1045SmartGrowthPercent(Number(((clamped - 1) * 100).toFixed(4)));
+  }
   function v1045GrowthColumnLabel(growth) {
     return "BÜYÜME";
   }
@@ -9109,13 +9119,13 @@
     if (!startInput || !targetInput || !growthInput) return;
     const start = Math.max(0, Number(startInput.value || 0));
     const currentTarget = Math.max(0, Number(targetInput.value || 0));
-    const currentGrowth = v1045SmartGrowthPercent(growthInput.value);
-    // V1052: HEDEF <-> BÜYÜME % sadece üst satırda taslak olarak senkronlanır.
+    const currentGrowth = v1332MultiplierToGrowthPercent(growthInput.value);
+    // V1052: HEDEF <-> ÇARPAN sadece üst satırda taslak olarak senkronlanır.
     // Büyüme Planı tablosu / gün kutuları Planı Uygula basılmadan değiştirilmez.
     if (source === "target") {
       const computedGrowth = v1049CalcGrowthFromTarget(start, currentTarget, days);
       if (Number.isFinite(computedGrowth) && document.activeElement !== growthInput) {
-        growthInput.value = v1049InputNumberText(computedGrowth);
+        growthInput.value = v1332GrowthPercentToMultiplier(computedGrowth).toFixed(2);
       }
       overlay.dataset.v1052DraftGrowth = v1049InputNumberText(computedGrowth);
       overlay.dataset.v1052DraftTarget = v1049InputNumberText(currentTarget);
@@ -9134,11 +9144,12 @@
       const store = v1040LoadGrowthPlans();
       const plan = v1054GetHeaderPlan(store, mode, days, loadState());
       plan.start = Number.isFinite(start) ? Number(start.toFixed(2)) : plan.start;
-      plan.growth = v1045SmartGrowthPercent(growthInput.value);
+      plan.growth = v1332MultiplierToGrowthPercent(growthInput.value);
       plan.target = Number.isFinite(Number(targetInput.value || 0)) ? Number(Number(targetInput.value || 0).toFixed(2)) : plan.target;
       v1054SaveHeaderPlan(store, mode, days, plan);
       v1040SaveGrowthPlans(store);
     } catch {}
+    try { v1330SyncExcelTargetMultipliers(); } catch {}
   }
   function v1046RememberRollingRoute(mode, days) {
     const m = mode === "crypto" ? "crypto" : "bet";
@@ -9252,12 +9263,17 @@
     if (!item) {
       item = document.createElement("div");
       item.className = "config-item v1046-growth-config";
-      item.innerHTML = `<label>BÜYÜME %:</label><input type="number" step="0.1" id="excel-growth-percent-input" value="30"><button type="button" class="v1048-growth-apply-top" data-v1048-growth-apply="1">Planı Uygula</button>`;
+      item.innerHTML = `<label>ÇARPAN:</label><input type="number" step="0.05" min="1" id="excel-growth-percent-input" value="1.30"><button type="button" class="v1048-growth-apply-top" data-v1048-growth-apply="1">Planı Uygula</button>`;
       const currentItem = currentNode.closest(".config-item");
       if (currentItem && currentItem.parentElement) currentItem.parentElement.insertBefore(item, currentItem);
+    } else {
+      const lbl = item.querySelector("label");
+      if (lbl) lbl.textContent = "ÇARPAN:";
     }
     const input = item.querySelector("#excel-growth-percent-input") || item.querySelector("input");
     if (!input) return null;
+    input.step = "0.05";
+    input.min = "1";
     const m = mode === "crypto" ? "crypto" : "bet";
     const d = v1041NormalizeGrowthDays(days);
     const store = v1040LoadGrowthPlans();
@@ -9266,7 +9282,7 @@
     if (startInput && document.activeElement !== startInput && Number.isFinite(Number(plan.start))) {
       startInput.value = v1049InputNumberText(plan.start);
     }
-    if (document.activeElement !== input) input.value = v1049InputNumberText(plan.growth || 0);
+    if (document.activeElement !== input) input.value = v1332GrowthPercentToMultiplier(plan.growth || 0).toFixed(2);
     if (document.activeElement !== targetInput) {
       const computedTarget = Number.isFinite(Number(plan.target)) && Number(plan.target) > 0
         ? Number(plan.target)
@@ -9304,6 +9320,7 @@
       input.addEventListener("input", sync);
       input.addEventListener("change", sync);
     }
+    try { v1330SyncExcelTargetMultipliers(); } catch {}
     return input;
   }
   function v1055RenderInlineDailyLedger(mode) {
@@ -9377,13 +9394,20 @@
     const plan = v1054GetHeaderPlan(store, m, d, state);
     const overlay = document.getElementById("rolling-excel-overlay") || document;
     const startInput = document.getElementById("excel-start-bal") || overlay.querySelector(`[data-growth-input="${m}:${d}:start"]`);
-    const growthInput = document.getElementById("excel-growth-percent-input") || overlay.querySelector(`[data-growth-input="${m}:${d}:growth"]`);
+    const topMultInput = document.getElementById("excel-growth-percent-input");
+    const growthInput = topMultInput || overlay.querySelector(`[data-growth-input="${m}:${d}:growth"]`);
     const targetInput = document.getElementById("excel-target-bal-input");
     const start = Number(startInput?.value ?? plan.start);
-    let growth = Number(growthInput?.value ?? plan.growth);
+    let growth = growthInput
+      ? (growthInput === topMultInput ? v1332MultiplierToGrowthPercent(growthInput.value) : Number(growthInput.value))
+      : plan.growth;
     if (targetInput && document.activeElement === targetInput) {
       growth = v1049CalcGrowthFromTarget(start, Number(targetInput.value || 0), d);
-      if (growthInput) growthInput.value = v1049InputNumberText(growth);
+      if (growthInput) {
+        growthInput.value = growthInput === topMultInput
+          ? v1332GrowthPercentToMultiplier(growth).toFixed(2)
+          : v1049InputNumberText(growth);
+      }
     }
     plan.start = Number.isFinite(start) && start >= 0 ? Number(start.toFixed(2)) : plan.start;
     plan.growth = v1045SmartGrowthPercent(growth);
@@ -9427,6 +9451,160 @@
     }
   }
 
+  function v1330EnsureTargetMultiplierStyles() {
+    const styleId = "v1330-rolling-target-x-styles";
+    if (document.getElementById(styleId)) return;
+    const styleEl = document.createElement("style");
+    styleEl.id = styleId;
+    styleEl.textContent = `
+      #rolling-excel-overlay #v1330-excel-target-x{
+        display:inline-flex!important;
+        align-items:center!important;
+        justify-content:center!important;
+        height:28px!important;
+        padding:0 9px!important;
+        margin-left:6px!important;
+        border-radius:8px!important;
+        border:1px solid rgba(56,189,248,.42)!important;
+        background:linear-gradient(135deg, rgba(56,189,248,.16), rgba(14,165,233,.07))!important;
+        color:#7dd3fc!important;
+        font-family:'JetBrains Mono',monospace!important;
+        font-size:11.5px!important;
+        font-weight:950!important;
+        letter-spacing:.01em!important;
+        white-space:nowrap!important;
+        box-shadow:0 4px 12px rgba(56,189,248,.09), inset 0 1px 0 rgba(255,255,255,.08)!important;
+        font-variant-numeric:tabular-nums!important;
+        vertical-align:middle!important;
+      }
+      #rolling-excel-overlay .v1043-excel-growth-bar{
+        display:flex!important;
+        align-items:center!important;
+        justify-content:flex-start!important;
+        gap:10px!important;
+        flex-wrap:wrap!important;
+      }
+      #rolling-excel-overlay .v1330-rolling-remaining-x{
+        display:inline-flex!important;
+        align-items:center!important;
+        gap:7px!important;
+        height:34px!important;
+        min-height:34px!important;
+        padding:0 12px!important;
+        border-radius:12px!important;
+        border:1px solid rgba(52,211,153,.42)!important;
+        background:linear-gradient(135deg, rgba(16,185,129,.18), rgba(6,78,59,.26) 55%, rgba(15,23,42,.92))!important;
+        box-shadow:0 6px 16px rgba(2,6,23,.24), inset 0 1px 0 rgba(255,255,255,.09)!important;
+        font-family:'JetBrains Mono',monospace!important;
+        white-space:nowrap!important;
+        box-sizing:border-box!important;
+      }
+      #rolling-excel-overlay .v1330-rolling-remaining-x i{
+        font-size:12px!important;
+        color:#34d399!important;
+      }
+      #rolling-excel-overlay .v1330-rolling-remaining-x span{
+        font-size:10.5px!important;
+        font-weight:850!important;
+        letter-spacing:.03em!important;
+        color:#a7f3d0!important;
+      }
+      #rolling-excel-overlay .v1330-rolling-remaining-x b{
+        display:inline-flex!important;
+        align-items:center!important;
+        padding:2px 7px!important;
+        border-radius:7px!important;
+        background:rgba(2,6,23,.48)!important;
+        border:1px solid rgba(250,204,21,.28)!important;
+        font-size:12px!important;
+        font-weight:1000!important;
+        color:#fde047!important;
+        font-variant-numeric:tabular-nums!important;
+      }
+      #rolling-excel-overlay .v1330-rolling-remaining-x.reached{
+        border-color:rgba(74,222,128,.68)!important;
+        background:linear-gradient(135deg, rgba(34,197,94,.28), rgba(21,128,61,.34) 55%, rgba(6,78,59,.92))!important;
+      }
+      #rolling-excel-overlay .v1330-rolling-remaining-x.reached i{
+        color:#86efac!important;
+      }
+      #rolling-excel-overlay .v1330-rolling-remaining-x.reached span{
+        color:#ecfdf5!important;
+        font-weight:950!important;
+      }
+    `;
+    const parent = document.head || document.documentElement;
+    if (parent) parent.appendChild(styleEl);
+  }
+
+  function v1330ParseMoneyText(value) {
+    const raw = String(value ?? "").replace(/[^\d.,-]/g, "").trim();
+    if (!raw) return NaN;
+    const normalized = raw.includes(",") && raw.includes(".")
+      ? raw.replace(/,/g, "")
+      : raw.includes(",")
+      ? raw.replace(/,/g, ".")
+      : raw;
+    const n = Number(normalized);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  function v1330FormatMultiplierX(ratio) {
+    const n = Number(ratio);
+    if (!Number.isFinite(n) || n <= 0) return "—";
+    const rounded = Math.round(n * 100) / 100;
+    if (Math.abs(rounded - Math.round(rounded)) < 0.005) {
+      return `${Math.round(rounded)}x`;
+    }
+    return `${rounded.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x`;
+  }
+
+  function v1330SyncExcelTargetMultipliers() {
+    const overlay = document.getElementById("rolling-excel-overlay");
+    if (!overlay) return;
+    try { v1330EnsureTargetMultiplierStyles(); } catch(e) {}
+    const startInput = document.getElementById("excel-start-bal");
+    const targetInput = document.getElementById("excel-target-bal-input");
+    const currentNode = document.getElementById("excel-current-bal");
+    if (!startInput || !targetInput || !currentNode) return;
+    if (currentNode.dataset.v1330Bound !== "1") {
+      currentNode.dataset.v1330Bound = "1";
+      try {
+        new MutationObserver(() => {
+          try { v1330SyncExcelTargetMultipliers(); } catch(e) {}
+        }).observe(currentNode, { childList: true, characterData: true, subtree: true });
+      } catch(e) {}
+    }
+
+    const startVal = Number(startInput.value || 0);
+    const targetVal = Number(targetInput.value || 0);
+    const currentParsed = v1330ParseMoneyText(currentNode.textContent || "");
+    const currentVal = Number.isFinite(currentParsed) ? currentParsed : startVal;
+
+    const targetItem = targetInput.closest(".config-item");
+    if (targetItem) {
+      let badge = document.getElementById("v1330-excel-target-x");
+      if (!badge) {
+        badge = document.createElement("span");
+        badge.id = "v1330-excel-target-x";
+        targetItem.appendChild(badge);
+      }
+      badge.textContent = startVal > 0 && targetVal > 0 ? `(${v1330FormatMultiplierX(targetVal / startVal)})` : "(—)";
+    }
+
+    const remEl = overlay.querySelector("[data-v1330-remaining-x]");
+    if (remEl) {
+      const reached = targetVal > 0 && currentVal >= targetVal;
+      remEl.classList.toggle("reached", reached);
+      if (reached) {
+        remEl.innerHTML = `<i class="fa-solid fa-trophy" aria-hidden="true"></i><span>HEDEFE ULAŞILDI ✓</span>`;
+      } else {
+        const remText = targetVal > 0 && currentVal > 0 ? v1330FormatMultiplierX(targetVal / currentVal) : "—";
+        remEl.innerHTML = `<i class="fa-solid fa-bullseye" aria-hidden="true"></i><span>HEDEFE KALAN</span><b>${remText}</b>`;
+      }
+    }
+  }
+
   function v1043InjectExcelGrowthPlan() {
     const overlay = document.getElementById("rolling-excel-overlay");
     if (!overlay || overlay.style.display === "none") return;
@@ -9453,12 +9631,14 @@
     host.innerHTML = `<section class="v1043-excel-growth-shell ${mode}" data-v1043-excel-growth-shell="${mode}:${days}">
       <div class="v1043-excel-growth-bar v1053-growth-mode-bar v1055-growth-mode-bar-single">
         <button type="button" class="v758-row-tool v1041-growth-toggle v1053-growth-mode-btn${open ? " active" : ""}" data-v1053-excel-growth-view="${mode}:rolling"><i class="fa-solid fa-chart-line"></i> ${baseLabel} ROLLİNG BÜYÜME PLANI</button>
+        <div id="v1330-rolling-remaining-x" class="v1330-rolling-remaining-x ${mode}" data-v1330-remaining-x></div>
       </div>
       ${open ? renderGrowthPlanPanel(mode, state) : ""}
     </section>`;
     v1043BindExcelGrowthPlan(host, mode, days);
     v1045BindExcelHeaderSync();
     v1045DecorateExcelDays(mode, days, state);
+    try { v1330SyncExcelTargetMultipliers(); } catch(e) {}
   }
 
   function v1043BindExcelGrowthPlan(host, mode, days) {
