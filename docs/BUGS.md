@@ -28,6 +28,7 @@
 - Route geçişlerinde modüller birbirine karışıyor mu?
 
 ## Çözülenler
+- V1296: Eksik `assets/js/crypto.js` 404 çağrısı kaldırıldı; `live_scores.json` <-> Canlı Takip şema uyuşmazlığı ve `#live-watch-list-page` boş kalma sorunu düzeltildi; `#live` ve `#rolling` route sızıntıları kapatıldı; ölü `BULTEN_V805_*`, `BULTEN_V901_*`, kök `js/` ve `css/` kopyaları temizlendi.
 - V541: Oran Terminali altına POLYMARKET ayrı panel olarak eklendi.
 - V541: Polymarket kayıtlarının normal oran kıyaslama listelerine karışma riski azaltıldı.
 - V541: sw.js değiştirilmeden POLYMARKET paneli eklendi.

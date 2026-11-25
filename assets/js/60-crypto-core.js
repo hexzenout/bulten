@@ -519,6 +519,7 @@
             const target = document.getElementById('live-watch-list-page');
             const source = document.getElementById('live-watch-list');
             if(target && source) target.innerHTML = source.innerHTML;
+            else if(typeof omega_RenderLiveWatchCenter === 'function') omega_RenderLiveWatchCenter();
             const slots = omega_GetTodaySlots ? omega_GetTodaySlots() : [];
             const cryptoCount = slots.filter(s => s.track && s.type === 'crypto').length;
             const betCount = slots.filter(s => s.track && s.type !== 'crypto').length;
@@ -538,23 +539,35 @@
                 return _omega_old_switch_v10(targetModule, clickedElement, updateHistory);
             }
 
-            omega_CloseRollingExcel();
+            omega_CloseRollingExcel(true);
             omega_CloseChannelManager();
+            if(typeof omega_HardHideRollingV493 === 'function') omega_HardHideRollingV493();
             const topMenu = document.getElementById('main-dropdown-nav');
             if(topMenu) topMenu.classList.remove('active-menu');
             if(updateHistory) history.pushState({ tab: targetModule }, '', '#' + targetModule);
+
+            document.body.classList.remove('omega-tab-futbol','omega-tab-basketbol','omega-tab-rolling','omega-tab-stream','omega-tab-favs','omega-tab-live','omega-tab-odds','omega-tab-crypto','omega-tab-finance','rolling-active');
+            document.body.classList.add('omega-tab-' + targetModule);
+            document.documentElement.classList.remove('rolling-hash-boot');
+
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
             if(clickedElement) clickedElement.classList.add('active');
 
-            ['omega-radar-block','omega-favs-block','omega-stream-block','omega-live-block','omega-crypto-block','omega-odds-block'].forEach(id => {
+            ['omega-radar-block','omega-favs-block','omega-stream-block','omega-live-block','omega-live-center-block','omega-crypto-block','omega-odds-block','omega-rolling-block'].forEach(id => {
                 const el = document.getElementById(id);
-                if(el) el.style.display = 'none';
+                if(el) {
+                    el.style.display = 'none';
+                    if(id === 'omega-rolling-block') {
+                        el.removeAttribute('data-visible');
+                        el.setAttribute('aria-hidden', 'true');
+                    }
+                }
             });
             const fin = document.getElementById('v19-finance-block');
             if(fin) fin.classList.remove('active');
 
             const centerWrapper = document.querySelector('.center-wrapper');
-            if(centerWrapper) centerWrapper.style.maxWidth = (targetModule === 'crypto' || targetModule === 'odds') ? '1850px' : '1500px';
+            if(centerWrapper) centerWrapper.style.maxWidth = targetModule === 'crypto' ? '1850px' : '1500px';
             const titleElem = document.getElementById('active-module-name');
 
             if(targetModule === 'live') {
@@ -564,13 +577,6 @@
                 if(titleElem) titleElem.innerHTML = '<span style="color:var(--blue-accent)">/ CANLI TAKİP</span>';
                 omega_RefreshLiveCenter(true);
                 setTimeout(omega_RenderLivePageMirror, 300);
-            } else if(targetModule === 'odds') {
-                _ACTIVE_TAB = 'odds';
-                const oddsBlock = document.getElementById('omega-odds-block');
-                if (oddsBlock) oddsBlock.style.display = 'block';
-                if (centerWrapper) centerWrapper.style.maxWidth = '1850px';
-                if (titleElem) titleElem.innerHTML = '<span style="color:#a855f7">/ ORAN TERMİNALİ</span>';
-                if (typeof window.omega_RenderOddsTerminal === 'function') setTimeout(() => window.omega_RenderOddsTerminal(), 0);
             } else if(targetModule === 'crypto') {
                 _ACTIVE_TAB = 'crypto';
                 const cryptoBlock = document.getElementById('omega-crypto-block');

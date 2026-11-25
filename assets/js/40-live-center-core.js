@@ -12,7 +12,7 @@ async function omega_LoadLiveScores(force=false) {
                 _LIVE_SCORES_CACHE = await r.json();
                 _LIVE_SCORES_TS = Date.now();
             } catch(e) {
-                _LIVE_SCORES_CACHE = { live: [], error: true };
+                _LIVE_SCORES_CACHE = { matches: [], live: [], error: true };
                 _LIVE_SCORES_TS = Date.now();
             }
             return _LIVE_SCORES_CACHE;
@@ -20,14 +20,17 @@ async function omega_LoadLiveScores(force=false) {
 
         function omega_FindScoreForSlot(slot) {
             const db = _LIVE_SCORES_CACHE;
-            if(!db || !Array.isArray(db.live)) return null;
-            const name = String(slot.name || '').toLowerCase();
+            const list = Array.isArray(db?.matches) ? db.matches : (Array.isArray(db?.live) ? db.live : null);
+            if(!list) return null;
+            const name = String(slot.name || '').trim().toLowerCase();
             if(!name) return null;
-            return db.live.find(x => {
-                const home = String(x.home || x.ev_sahibi || '').toLowerCase();
-                const away = String(x.away || x.deplasman || '').toLowerCase();
-                const match = `${home} - ${away}`;
-                return name.includes(home) || name.includes(away) || match.includes(name);
+            return list.find(x => {
+                const rawName = String(x.name || '').trim().toLowerCase();
+                const parts = rawName.includes(' - ') ? rawName.split(' - ') : [];
+                const home = String(x.home || x.ev_sahibi || parts[0] || '').trim().toLowerCase();
+                const away = String(x.away || x.deplasman || parts[1] || '').trim().toLowerCase();
+                const match = rawName || (home && away ? `${home} - ${away}` : '');
+                return Boolean((home && name.includes(home)) || (away && name.includes(away)) || (match && (match.includes(name) || name.includes(match))));
             }) || null;
         }
 
@@ -67,8 +70,10 @@ async function omega_LoadLiveScores(force=false) {
 
         function omega_BuildWatchBetCard(slot, idx) {
             const score = omega_FindScoreForSlot(slot);
-            const scoreText = score ? `${score.home_score ?? score.ev ?? 0} - ${score.away_score ?? score.dep ?? 0}` : 'Skor bekleniyor';
-            const minute = score ? (score.minute || score.dakika || score.status || 'Canlı') : 'live_scores.json bağlanınca aktif';
+            const homeGoals = score ? (score.home_goals ?? score.home_score ?? score.ev) : null;
+            const awayGoals = score ? (score.away_goals ?? score.away_score ?? score.dep) : null;
+            const scoreText = score ? (homeGoals != null && awayGoals != null ? `${homeGoals} - ${awayGoals}` : (score.score || '0 - 0')) : 'Skor bekleniyor';
+            const minute = score ? (score.minute || score.elapsed || score.dakika || score.status || 'Canlı') : 'live_scores.json bağlanınca aktif';
             return `<div class="watch-card bet">
                 <div class="watch-card-top">
                     <div class="watch-title"><b>${slot.name || 'Maç adı girilmedi'}</b><span>BAHİS · #${idx+1}</span></div>
@@ -88,19 +93,22 @@ async function omega_LoadLiveScores(force=false) {
 
         function omega_RenderLiveWatchCenter() {
             const box = document.getElementById('live-watch-list');
-            if(!box) return;
+            const pageBox = document.getElementById('live-watch-list-page');
+            if(!box && !pageBox) return;
             const slots = omega_GetTodaySlots();
             const tracked = slots.map((slot, idx) => ({slot, idx})).filter(x => x.slot.track);
             const cryptoCount = tracked.filter(x => x.slot.type === 'crypto').length;
             const betCount = tracked.filter(x => x.slot.type !== 'crypto').length;
             omega_Text('watch-crypto-count', cryptoCount);
             omega_Text('watch-bet-count', betCount);
+            omega_Text('live-page-crypto-count', cryptoCount);
+            omega_Text('live-page-bet-count', betCount);
             const filtered = _WATCH_FILTER === 'live' ? tracked.filter(x => x.slot.status === 'pending' || x.slot.status === 'empty') : tracked;
-            if(filtered.length === 0) {
-                box.innerHTML = `<div class="watch-empty">Takip listesi boş. Günlük işlem tablosunda bir satır için TAKİP butonuna bas.</div>`;
-                return;
-            }
-            box.innerHTML = filtered.map(({slot, idx}) => slot.type === 'crypto' ? omega_BuildWatchCryptoCard(slot, idx) : omega_BuildWatchBetCard(slot, idx)).join('');
+            const html = filtered.length === 0
+                ? `<div class="watch-empty">Takip listesi boş. Günlük işlem tablosunda bir satır için TAKİP butonuna bas.</div>`
+                : filtered.map(({slot, idx}) => slot.type === 'crypto' ? omega_BuildWatchCryptoCard(slot, idx) : omega_BuildWatchBetCard(slot, idx)).join('');
+            if(box) box.innerHTML = html;
+            if(pageBox) pageBox.innerHTML = html;
         }
 
         async function omega_RefreshLiveCenter(force=false) {

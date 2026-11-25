@@ -5,6 +5,47 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 
 ## Format
 
+### V1296 - 2026-11-25
+#### Değişenler
+- `assets/js/80-app-fixes.js` içindeki mevcut olmayan `assets/js/crypto.js` dinamik script yüklemesi (404) kaldırıldı.
+- `assets/js/40-live-center-core.js` ve `assets/js/50-daily-trade-core.js` dosyaları `live_score_motor.py` çıktısı (`matches`, `name`, `home_goals`, `away_goals`) ile uyumlu hale getirildi; boş takım adına eşleşme bug'ı giderildi ve `#live-watch-list-page` doğrudan güncellenir hale getirildi.
+- `assets/js/10-radar-core.js` ve `assets/js/60-crypto-core.js` içinde `#omega-live-block` ve `#omega-rolling-block` route sızıntıları giderildi; `00-omega-core.js` içindeki tekrarlı `hashchange` dinleyicisi ve `60-crypto-core.js` içindeki erişilemez `odds` dalı temizlendi.
+- `index.html` içine `55-odds-terminal-live-gate.css` ve `55-odds-terminal-final-ui.css` statik `<link>` olarak eklendi; tekrarlı `v534-preboot-flicker-guard` ve kullanılmayan `draw` kripto sekmesi kaldırıldı, değişen JS modüllerinin cache-bust sürümü `v1296` yapıldı.
+- Kullanılmayan `BULTEN_V805_kasa_hedefi_kalan_mor_fix/`, `BULTEN_V901_tutar_placeholder_uyari_fix/`, kök `js/` ve `css/` kopya dizinleri kaldırıldı.
+
+#### Düzeltilenler
+- Açılışta eksik `assets/js/crypto.js` 404 hatası giderildi.
+- `live_scores.json` -> Canlı Takip kartları şema uyumsuzluğu giderildi.
+- `#live` ve `#rolling` sekmelerinden geçişte blok görünür kalma / body sınıfı sızıntısı giderildi.
+- `71-finance-ui.js` sonrası `#live-watch-list-page` alanının boş kalma sorunu giderildi.
+
+#### Değişen Dosyalar
+- index.html
+- assets/js/00-omega-core.js
+- assets/js/10-radar-core.js
+- assets/js/40-live-center-core.js
+- assets/js/50-daily-trade-core.js
+- assets/js/60-crypto-core.js
+- assets/js/80-app-fixes.js
+- docs/BULTEN_CONTEXT.md
+- docs/BUGS.md
+- docs/TODO.md
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Değişmeyen Dosyalar
+- sw.js
+- .github/workflows/update-radar.yml
+- .github/workflows/update-live-scores.yml
+- assets/data/odds-sources.json
+- assets/data/odds-snapshot.json
+- assets/js/20-stream-core.js
+- assets/js/55-odds-terminal.js
+- assets/js/70-rolling-core.js
+
+#### Sıradaki Hedef
+- Oran Terminali / POLYMARKET canlı veri akışını bağlamak ve Firebase bulut senkronizasyonunu tamamlamak.
+
 ### V578 - 2026-06-08
 #### Değişenler
 - Dry-run payload kontrolüne şema rehberi eklendi.

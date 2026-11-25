@@ -81,16 +81,3 @@ window.addEventListener('popstate', (e) => {
         /* Daily trade / tracking table overrides moved to assets/js/daily-trade-core.js */
 
         /* Crypto module functions moved to assets/js/crypto-core.js */
-
-
-        function omega_HandleHashRouteV46B() {
-            const rawHash = window.location.hash.replace('#', '') || 'futbol';
-            const hash = rawHash.split('/')[0] || 'futbol';
-            const validTabs = ['futbol', 'basketbol', 'rolling', 'stream', 'favs', 'live', 'odds', 'crypto', 'finance'];
-            if (validTabs.includes(hash)) {
-                const el = document.getElementById('nav-' + hash);
-                if (typeof omega_SwitchMainTab === 'function') omega_SwitchMainTab(hash, el, false);
-            }
-        }
-
-        window.addEventListener('hashchange', omega_HandleHashRouteV46B);

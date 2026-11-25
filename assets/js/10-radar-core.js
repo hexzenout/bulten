@@ -127,6 +127,8 @@ async function omega_InitializeEngine() {
             const radarBlock = document.getElementById('omega-radar-block');
             const favsBlock = document.getElementById('omega-favs-block');
             const streamBlock = document.getElementById('omega-stream-block');
+            const liveBlock = document.getElementById('omega-live-block');
+            const liveCenterBlock = document.getElementById('omega-live-center-block');
             const rollingBlock = document.getElementById('omega-rolling-block');
             const cryptoBlock = document.getElementById('omega-crypto-block');
             const financeBlock = document.getElementById('v19-finance-block');
@@ -135,6 +137,8 @@ async function omega_InitializeEngine() {
             if (radarBlock) radarBlock.style.display = 'none';
             if (favsBlock) favsBlock.style.display = 'none';
             if (streamBlock) streamBlock.style.display = 'none';
+            if (liveBlock) liveBlock.style.display = 'none';
+            if (liveCenterBlock) liveCenterBlock.style.display = 'none';
             if (cryptoBlock) cryptoBlock.style.display = 'none';
             if (oddsBlock) oddsBlock.style.display = 'none';
             if (rollingBlock) {

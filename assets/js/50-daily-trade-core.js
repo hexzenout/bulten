@@ -182,9 +182,12 @@ function omega_RenderDailyTradeGrid() {
 
         omega_BuildWatchBetCard = function(slot, idx) {
             const score = omega_FindScoreForSlot(slot);
-            const scoreText = score ? `${score.home_score ?? score.ev ?? 0} - ${score.away_score ?? score.dep ?? 0}` : 'Skor bekleniyor';
+            const homeGoals = score ? (score.home_goals ?? score.home_score ?? score.ev) : null;
+            const awayGoals = score ? (score.away_goals ?? score.away_score ?? score.dep) : null;
+            const scoreText = score ? (homeGoals != null && awayGoals != null ? `${homeGoals} - ${awayGoals}` : (score.score || '0 - 0')) : 'Skor bekleniyor';
             const minute = score ? (score.minute || score.elapsed || score.dakika || score.status || 'Canlı') : 'Skor motoru bekleniyor';
             const status = score ? (score.status || score.long_status || 'Canlı') : 'live_scores.json bulunamazsa burada bekler';
+            const matchLabel = score?.home && score?.away ? `${score.home} - ${score.away}` : (score?.name || '');
             return `<div class="watch-card bet">
                 <div class="watch-card-top">
                     <div class="watch-title"><b>${slot.name || 'Maç adı girilmedi'}</b><span>BAHİS · #${idx+1}</span></div>
@@ -192,7 +195,7 @@ function omega_RenderDailyTradeGrid() {
                 </div>
                 <div class="football-score-box ${score?'live':'wait'}">
                     <div class="football-score-main"><b>Canlı Skor</b><span>${scoreText}</span></div>
-                    <div class="football-score-sub">${status}${score?.league ? ' · '+score.league : ''}${score?.home && score?.away ? '<br>'+score.home+' - '+score.away : ''}</div>
+                    <div class="football-score-sub">${status}${score?.league ? ' · '+score.league : ''}${matchLabel ? '<br>'+matchLabel : ''}</div>
                 </div>
                 <div class="watch-metrics">
                     <div class="watch-metric"><span>Tutar</span><b>$${(parseFloat(slot.stake)||0).toFixed(2)}</b></div>

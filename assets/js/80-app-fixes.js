@@ -62,18 +62,8 @@
     return true;
   }
 
-  function loadCryptoModule() {
-    if (window.__v26CryptoModuleRequested) return;
-    window.__v26CryptoModuleRequested = true;
-    const s = document.createElement("script");
-    s.src = "assets/js/crypto.js?v=tv-lwc-20260519-1";
-    s.defer = true;
-    document.body.appendChild(s);
-  }
-
   function bootFixes() {
     hideBadStartupTexts();
-    loadCryptoModule();
 
     const timer = setInterval(function () {
       hideBadStartupTexts();
