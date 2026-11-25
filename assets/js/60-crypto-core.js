@@ -546,18 +546,18 @@
             if(topMenu) topMenu.classList.remove('active-menu');
             if(updateHistory) history.pushState({ tab: targetModule }, '', '#' + targetModule);
 
-            document.body.classList.remove('omega-tab-futbol','omega-tab-basketbol','omega-tab-rolling','omega-tab-stream','omega-tab-favs','omega-tab-live','omega-tab-odds','omega-tab-crypto','omega-tab-finance','rolling-active');
+            document.body.classList.remove('omega-tab-futbol','omega-tab-basketbol','omega-tab-rolling','omega-tab-kasa-challenge','omega-tab-stream','omega-tab-favs','omega-tab-live','omega-tab-odds','omega-tab-crypto','omega-tab-finance','rolling-active');
             document.body.classList.add('omega-tab-' + targetModule);
             document.documentElement.classList.remove('rolling-hash-boot');
 
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
             if(clickedElement) clickedElement.classList.add('active');
 
-            ['omega-radar-block','omega-favs-block','omega-stream-block','omega-live-block','omega-live-center-block','omega-crypto-block','omega-odds-block','omega-rolling-block'].forEach(id => {
+            ['omega-radar-block','omega-favs-block','omega-stream-block','omega-live-block','omega-live-center-block','omega-crypto-block','omega-odds-block','omega-rolling-block','omega-kasa-challenge-block'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
                     el.style.display = 'none';
-                    if(id === 'omega-rolling-block') {
+                    if(id === 'omega-rolling-block' || id === 'omega-kasa-challenge-block') {
                         el.removeAttribute('data-visible');
                         el.setAttribute('aria-hidden', 'true');
                     }

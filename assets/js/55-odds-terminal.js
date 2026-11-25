@@ -6348,12 +6348,12 @@
       history.pushState({ tab: "odds" }, "", "#odds");
     }
 
-    const hideIds = ["omega-radar-block","omega-favs-block","omega-stream-block","omega-live-block","omega-live-center-block","omega-crypto-block","omega-rolling-block"];
+    const hideIds = ["omega-radar-block","omega-favs-block","omega-stream-block","omega-live-block","omega-live-center-block","omega-crypto-block","omega-rolling-block","omega-kasa-challenge-block"];
     hideIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.style.display = "none";
-        if (id === "omega-rolling-block") {
+        if (id === "omega-rolling-block" || id === "omega-kasa-challenge-block") {
           el.removeAttribute("data-visible");
           el.setAttribute("aria-hidden", "true");
         }
@@ -6363,7 +6363,7 @@
     const fin = document.getElementById("v19-finance-block");
     if (fin) fin.classList.remove("active");
 
-    document.body.classList.remove("omega-tab-futbol","omega-tab-basketbol","omega-tab-rolling","omega-tab-stream","omega-tab-favs","omega-tab-live","omega-tab-crypto","omega-tab-finance");
+    document.body.classList.remove("omega-tab-futbol","omega-tab-basketbol","omega-tab-rolling","omega-tab-kasa-challenge","omega-tab-stream","omega-tab-favs","omega-tab-live","omega-tab-crypto","omega-tab-finance");
     document.body.classList.add("omega-tab-odds");
     document.body.classList.remove("rolling-active");
     document.documentElement.classList.remove("rolling-hash-boot");

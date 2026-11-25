@@ -1,0 +1,57 @@
+/* Kasa Challenge isolated route and menu styles */
+
+.accordion-menu .nav-rolling-sub-link.kasa-challenge > i {
+    color: #3b82f6 !important;
+}
+
+.accordion-menu .nav-rolling-sub-link.kasa-challenge.active {
+    background: rgba(59, 130, 246, 0.22) !important;
+    color: #fff !important;
+    font-weight: 900 !important;
+}
+
+body:not(.omega-tab-kasa-challenge) #omega-kasa-challenge-block {
+    display: none !important;
+}
+
+body:not(.omega-route-ready) #omega-kasa-challenge-block {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+body.omega-route-ready.omega-tab-kasa-challenge #omega-kasa-challenge-block {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+body.omega-tab-kasa-challenge .main-scroll-box {
+    overflow-y: hidden !important;
+}
+
+body.omega-tab-kasa-challenge .center-wrapper {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+}
+
+body.omega-tab-kasa-challenge #omega-site-footer {
+    display: none !important;
+}
+
+#omega-kasa-challenge-block {
+    width: 100%;
+    height: calc(100vh - 60px);
+    height: calc(100dvh - 60px);
+    overflow: hidden;
+    background: transparent;
+}
+
+.kasa-challenge-frame {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: transparent;
+}

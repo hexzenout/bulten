@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kasa Challenge Paneli</title>
+    <script src="vendor/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --card-bg: #1e293b;
+            --panel-bg: #0f172a;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.4);
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.4);
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+            --cyan: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: transparent;
+            color: var(--text-main);
+            padding: 12px 16px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1220px;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            position: relative;
+        }
+
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, rgba(30, 41, 59, 0.5), transparent);
+            padding: 10px 16px;
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+        }
+
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--primary-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .brand-logo svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+            z-index: 2;
+        }
+
+        h2 {
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+        h2 span { color: var(--primary); font-weight: 400; }
+
+        .header-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-header { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 7px 13px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-family); }
+        .btn-header:hover { background: var(--primary); color: white; box-shadow: 0 0 15px var(--primary-glow); }
+
+        .btn-calculator { background: rgba(139, 92, 246, 0.1); border-color: var(--purple); color: var(--purple); }
+        .btn-calculator:hover { background: var(--purple); color: white; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
+
+        .btn-reset { background: rgba(239, 68, 68, 0.1); border-color: var(--danger); color: var(--danger); }
+        .btn-reset:hover { background: var(--danger); color: white; box-shadow: 0 0 15px var(--danger-glow); }
+
+        /* Üst Görünüm: Sol Grafik + Sağ Özet Kartları */
+        .top-dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+            align-items: stretch;
+        }
+
+        .summary-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .chart-section {
+            background: linear-gradient(180deg, var(--panel-bg) 0%, rgba(15,23,42,0.5) 100%);
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 2px 20px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+        .chart-title { font-size: 13px; font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .chart-container { position: relative; height: 185px; width: 100%; flex: 1; min-height: 170px; }
+
+        .highlight-board { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .highlight-card { background: linear-gradient(145deg, var(--panel-bg), #141e30); padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-color); position: relative; overflow: hidden; box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); }
+        .highlight-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
+        .highlight-card.blue::before { background: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+        .highlight-card.green::before { background: var(--success); box-shadow: 0 0 15px var(--success-glow); }
+        .hl-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .hl-value { font-size: 28px; font-weight: 900; letter-spacing: -1px; word-break: break-word; line-height: 1.1; }
+        .hl-value.blue-text { color: var(--primary); text-shadow: 0 0 20px var(--primary-glow); }
+        .hl-value.green-text { color: var(--success); text-shadow: 0 0 20px var(--success-glow); }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 1; }
+        .stat-card { background: rgba(15, 23, 42, 0.6); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .stat-card .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .stat-card .value { font-size: 16px; font-weight: bold; color: var(--text-main); }
+
+        .compact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: stretch; }
+
+        .settings-panel { background: var(--panel-bg); padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; }
+        .settings-panel h3 { margin-top: 0; font-size: 14px; color: var(--text-main); margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .input-group { margin-bottom: 10px; }
+        .input-group:last-child { margin-bottom: 0; }
+        .input-group label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: var(--text-muted); font-weight: 600; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; gap: 8px; }
+        .input-group input, .input-group select { width: 100%; padding: 9px 11px; background: var(--bg-color); border: 1px solid #475569; color: white; border-radius: 8px; font-size: 15px; font-weight: 600; transition: all 0.2s; font-family: var(--font-family); }
+        .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .bet-input-wrapper { position: relative; }
+        .bet-input-wrapper input { border-color: var(--success); background: rgba(16, 185, 129, 0.05); font-size: 16px; color: var(--success); }
+        .bet-input-wrapper input:focus { border-color: var(--success); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+
+        .clickable-text { color: var(--primary); cursor: pointer; font-size: 11px; font-weight: 700; transition: color 0.2s; display: flex; align-items: center; gap: 4px; text-transform: none; }
+        .clickable-text:hover { color: #93c5fd; text-decoration: underline; }
+
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+        button.action-btn { padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.15s ease-in-out; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; gap: 8px; text-transform: uppercase; font-family: var(--font-family); letter-spacing: 0.5px; }
+        button.action-btn:active { transform: scale(0.97); }
+        .btn-win { background: linear-gradient(135deg, #10b981, #059669); color: white; border: 1px solid #34d399; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .btn-win:hover { filter: brightness(1.1); box-shadow: 0 0 20px var(--success-glow); }
+        .btn-lose { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: 1px solid #f87171; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .btn-lose:hover { filter: brightness(1.1); box-shadow: 0 0 20px var(--danger-glow); }
+
+        .info-box { display: inline-flex; align-items: center; gap: 5px; color: var(--primary); font-size: 11px; font-weight: 600; cursor: help; position: relative; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-box .tooltip { visibility: hidden; width: 280px; max-width: calc(100vw - 60px); background-color: var(--card-bg); color: var(--text-main); text-align: left; border-radius: 8px; padding: 12px; position: absolute; z-index: 10; bottom: 135%; left: 0; opacity: 0; transition: opacity 0.3s; border: 1px solid var(--primary); font-size: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-weight: normal; line-height: 1.5; text-transform: none; letter-spacing: normal; }
+        .info-box:hover .tooltip { visibility: visible; opacity: 1; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 17, 32, 0.85); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 9000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 25px; width: 95%; max-width: 900px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); transform: translateY(30px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; gap: 10px; }
+        .modal-title { font-size: 20px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-close-modal { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 28px; line-height: 1; padding: 0; transition: color 0.2s; }
+        .btn-close-modal:hover { color: var(--danger); }
+
+        .lang-toggle { display: flex; gap: 5px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .lang-btn { background: transparent; border: none; color: var(--text-muted); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: all 0.2s; display: flex; align-items: center; gap: 4px; font-family: var(--font-family); }
+        .lang-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+        .lang-btn.active { background: var(--primary); color: white; box-shadow: 0 0 10px var(--primary-glow); }
+
+        .log-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; overflow-y: auto; padding-right: 6px; padding-bottom: 10px; flex-grow: 1; }
+        .log-list::-webkit-scrollbar { width: 8px; }
+        .log-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+        .log-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        .log-item { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: stretch; transition: transform 0.1s; gap: 10px; }
+        .log-item:hover { background: rgba(30, 41, 59, 0.8); }
+        .log-win-border { border-left: 4px solid var(--success); }
+        .log-lose-border { border-left: 4px solid var(--danger); }
+        .log-info { display: flex; flex-direction: column; gap: 8px; }
+        .log-top-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); font-weight: 600; flex-wrap: wrap; }
+        .log-badge-win { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; letter-spacing: 0.5px; }
+        .log-badge-lose { background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; letter-spacing: 0.5px; }
+        .log-name { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 2px; word-break: break-word; }
+        .log-amount { font-size: 14px; font-weight: 600; color: var(--text-main); }
+        .text-profit { color: var(--success); font-weight: 900; font-size: 15px; }
+        .text-loss { color: var(--danger); font-weight: 900; font-size: 15px; }
+        .log-actions { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; gap: 8px; }
+        .log-bank-after { background: var(--bg-color); padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; color: var(--text-main); border: 1px solid var(--border-color); white-space: nowrap; }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--danger); padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s; text-transform: uppercase; font-family: var(--font-family); letter-spacing: 0.5px; }
+        .btn-delete:hover { background: var(--danger); color: white; }
+
+        .calculator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 600px) { .calculator-grid { grid-template-columns: 1fr; } }
+        .calc-panel { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .calc-result-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(145deg, rgba(139, 92, 246, 0.1), rgba(15, 23, 42, 0.8)); border: 1px dashed var(--purple); padding: 20px; border-radius: 12px; height: 100%; text-align: center; }
+        .calc-result-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
+        .calc-result-value { font-size: 42px; font-weight: 900; color: var(--success); text-shadow: 0 0 20px var(--success-glow); margin-bottom: 5px; word-break: break-word; }
+        .calc-result-x { font-size: 20px; font-weight: bold; color: var(--purple); background: rgba(139, 92, 246, 0.2); padding: 4px 12px; border-radius: 8px; }
+
+        .svg-icon { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+        .celebration-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 17, 32, 0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; padding: 16px; }
+        .celebration-overlay.active { opacity: 1; pointer-events: all; }
+        .celeb-box { background: linear-gradient(145deg, #1e293b, #0f172a); padding: 40px; border-radius: 20px; text-align: center; border: 2px solid var(--success); box-shadow: 0 0 50px rgba(16, 185, 129, 0.5); transform: scale(0.5); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 100%; }
+        .celebration-overlay.active .celeb-box { transform: scale(1); }
+        .celeb-title { font-size: 40px; font-weight: 900; color: var(--success); text-shadow: 0 0 20px rgba(16, 185, 129, 0.8); margin-bottom: 10px; text-transform: uppercase; }
+        .celeb-desc { font-size: 18px; color: var(--text-main); margin-bottom: 25px; }
+        .celeb-btn { background: var(--success); color: white; padding: 12px 25px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px var(--success-glow); font-family: var(--font-family); text-transform: uppercase; }
+        .celeb-btn:hover { background: #059669; }
+        #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10000; }
+
+        @media (min-width: 960px) and (min-height: 760px) {
+            .chart-container { height: 225px; }
+        }
+
+        @media (max-width: 920px) {
+            body { align-items: flex-start; padding: 14px 14px 24px; }
+            .top-dashboard-grid { grid-template-columns: 1fr; }
+            .stat-grid { grid-template-columns: repeat(4, 1fr); }
+            .compact-layout { grid-template-columns: 1fr; }
+            .chart-container { height: 210px; }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 12px 10px 22px; }
+            .header-area { flex-direction: column; align-items: flex-start; padding: 12px 14px; }
+            .header-buttons { width: 100%; }
+            h2 { font-size: 18px; }
+            .highlight-board { grid-template-columns: 1fr; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .hl-value { font-size: 26px; }
+            .log-list { grid-template-columns: 1fr; }
+            .modal-content { padding: 18px; }
+            .celeb-box { padding: 24px; }
+            .celeb-title { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="celebration-overlay" id="celebration-screen">
+    <canvas id="confetti-canvas"></canvas>
+    <div class="celeb-box">
+        <div class="celeb-title">🎉 HEDEFE ULAŞILDI! 🎉</div>
+        <div class="celeb-desc">Tebrikler! Belirlediğin hedefe başarıyla ulaştın.</div>
+        <button class="celeb-btn" onclick="closeCelebration()">Devam Et</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="history-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <svg class="svg-icon" style="width: 24px; height: 24px;" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                İşlem Geçmişi (<span id="log-count">0</span>)
+            </div>
+            <button class="btn-close-modal" onclick="closeModal('history-modal')">×</button>
+        </div>
+        <div class="log-list" id="log-list"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="calculator-modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <div class="modal-title" id="lbl-calc-title">
+                <svg class="svg-icon" style="width: 24px; height: 24px; color: var(--purple);" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h-2v5H6v2h2v5h2v-5h2v-2zm7 5h-4v-2h4v2zm0-6h-4V9h4v2z"/></svg>
+                Bileşik Getiri (All-In)
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="lang-toggle">
+                    <button id="btn-tr" class="lang-btn active" onclick="setCalcLang('tr')">🇹🇷 TR</button>
+                    <button id="btn-en" class="lang-btn" onclick="setCalcLang('en')">🇺🇸 EN</button>
+                </div>
+                <button class="btn-close-modal" onclick="closeModal('calculator-modal')">×</button>
+            </div>
+        </div>
+        <div class="calculator-grid">
+            <div class="calc-panel">
+                <div class="input-group">
+                    <label id="lbl-calc-amount">Başlangıç Miktarı ($):</label>
+                    <input type="number" id="calc-amount-input" value="25" step="1" oninput="calculateAllIn()">
+                </div>
+                <div class="input-group">
+                    <label id="lbl-calc-odds">Ortalama Çarpan:</label>
+                    <input type="number" id="calc-odds" value="1.50" step="0.01" oninput="calculateAllIn()">
+                </div>
+                <div class="input-group">
+                    <label id="lbl-calc-steps">Toplam Adım Sayısı:</label>
+                    <input type="number" id="calc-steps" value="5" step="1" oninput="calculateAllIn()">
+                </div>
+            </div>
+
+            <div class="calc-result-box">
+                <div class="calc-result-title" id="lbl-calc-result-title">Seri Sonu Ulaşılacak Kasa</div>
+                <div class="calc-result-value" id="calc-final-bankroll">$0.00</div>
+                <div class="calc-result-x" id="calc-final-x">0.00x</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header-area">
+        <div class="header-title-box">
+            <div class="brand-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+            </div>
+            <h2>KASA <span>CHALLENGE</span></h2>
+        </div>
+        <div class="header-buttons">
+            <button class="btn-header btn-calculator" onclick="openModal('calculator-modal'); calculateAllIn();">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h-2v5H6v2h2v5h2v-5h2v-2zm7 5h-4v-2h4v2zm0-6h-4V9h4v2z"/></svg>
+                All-In
+            </button>
+            <button class="btn-header" onclick="openModal('history-modal')">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                Geçmiş
+            </button>
+            <button class="btn-header btn-reset" onclick="resetAllData()">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                Sıfırla
+            </button>
+        </div>
+    </div>
+
+    <div class="top-dashboard-grid">
+        <div class="chart-section">
+            <div class="chart-header">
+                <div class="chart-title">
+                    <svg class="svg-icon" style="color: var(--primary);" viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+                    Canlı Kasa İlerleme Grafiği
+                </div>
+                <div style="font-size:11px; color:var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+                    <span style="display:inline-block; width:10px; height:10px; background:#ef4444; border-radius:50%; margin-right:4px;"></span>Kayıp/Düşüş
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="bankrollChart"></canvas>
+            </div>
+        </div>
+
+        <div class="summary-column">
+            <div class="highlight-board">
+                <div class="highlight-card blue">
+                    <div class="hl-title">GÜNCEL KASA</div>
+                    <div class="hl-value blue-text" id="hl-current-bankroll">$250.00</div>
+                </div>
+                <div class="highlight-card green">
+                    <div class="hl-title">İŞLEM TUTARI</div>
+                    <div class="hl-value green-text" id="hl-bet-amount">$125.00</div>
+                </div>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="label">Başlangıç Kasası</div>
+                    <div class="value" id="stat-start">$250.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Net Kâr / Zarar</div>
+                    <div class="value" id="stat-profit" style="color: var(--text-muted);">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Hedef ($)</div>
+                    <div class="value" id="stat-target" style="color: var(--purple);">$1000.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Hedefe Kalan</div>
+                    <div class="value" id="stat-multiplier" style="color: var(--cyan);">4.00X</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="compact-layout">
+        <div class="settings-panel">
+            <div>
+                <h3>⚙️ Kasa Ayarları</h3>
+                <div class="input-group">
+                    <label>Başlangıç Kasası:</label>
+                    <input type="number" id="start-bankroll-input" value="250" step="0.5">
+                </div>
+                <div class="input-group">
+                    <label>Hedef Bakiye:</label>
+                    <input type="number" id="target-input" value="1000" step="1">
+                </div>
+                <div class="input-group" style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                    <label>
+                        <span>Güncel Bakiye ($):</span>
+                        <span id="edit-bankroll-btn" class="clickable-text" style="color: var(--warning);" onclick="toggleBankrollEdit()">Düzenle</span>
+                    </label>
+                    <input type="number" id="current-bankroll-input" value="250" step="0.5" readonly style="background: rgba(0,0,0,0.3); border-color: rgba(245, 158, 11, 0.2); opacity: 0.7;">
+                </div>
+            </div>
+            <div class="info-box">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 7h2v2h-2z"/></svg>
+                Otomatik Risk Kademesi Aktif
+                <div class="tooltip">Sistem; kasanız 10K, 20K, 40K, 50K, 80K, 100K ve 150K sınırlarını aştıkça risk oranını otomatik olarak düşürerek ana paranızı sert kayıplardan korur.</div>
+            </div>
+        </div>
+
+        <div class="settings-panel">
+            <div>
+                <h3>🎯 İşlem Ayarları</h3>
+                <div class="input-group" style="background: rgba(59, 130, 246, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px dashed var(--primary); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    <label style="margin-bottom: 0;">Aktif Risk Kademesi:</label>
+                    <div id="risk-phase" style="font-size: 16px; font-weight: 900; color: var(--primary); font-family: var(--font-family); text-transform: uppercase;">1/2 Risk</div>
+                </div>
+                <div class="input-group">
+                    <label>İşlem Adı:</label>
+                    <input type="text" id="bet-name-input">
+                </div>
+                <div class="input-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label>Çarpan:</label>
+                        <input type="number" id="odds-input" value="1.70" step="0.01" min="1.01">
+                    </div>
+                    <div>
+                        <label>
+                            Tutar ($):
+                            <span class="clickable-text" onclick="applySuggested()">Öneri: $<span id="suggested-bet-text">125.00</span></span>
+                        </label>
+                        <div class="bet-input-wrapper">
+                            <input type="number" id="actual-bet-input" value="125" step="0.5">
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group" style="background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; margin-top: 10px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <label style="margin-bottom: 0;">Beklenen Net Kâr</label>
+                    <div id="potential-profit" style="font-size: 18px; font-weight: 900; color: var(--success);">+$87.50</div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-win" onclick="handleResult(true)">KAZANDIN</button>
+                <button class="action-btn btn-lose" onclick="handleResult(false)">KAYBETTİN</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('wheel', function(e) {
+        if (document.activeElement && document.activeElement.type === 'number') { e.preventDefault(); }
+    }, { passive: false });
+
+    function closeParentMenus() {
+        try {
+            if (window.parent && window.parent !== window && window.parent.document) {
+                const topMenu = window.parent.document.getElementById('main-dropdown-nav');
+                if (topMenu) topMenu.classList.remove('active-menu');
+                const dropMenu = window.parent.document.getElementById('drop-menu-list');
+                if (dropMenu && dropMenu.style.display === 'block') dropMenu.style.display = 'none';
+            }
+        } catch (e) {}
+    }
+
+    document.addEventListener('pointerdown', closeParentMenus, true);
+
+    const STORAGE_PREFIX = 'bulten_kasa_challenge_v1:';
+    const STORAGE_KEY = STORAGE_PREFIX + 'data';
+    let historyList = [];
+    let absoluteStepCounter = 0;
+
+    let currentBankroll = 250.0;
+    let suggestedBetValue = 125.0;
+    let isBankrollEditable = false;
+    let bankrollChart = null;
+    let hasCelebrated = false;
+
+    let calcLang = 'tr';
+    const calcTranslations = {
+        tr: {
+            title: 'Bileşik Getiri (All-In)',
+            amount: 'Başlangıç Miktarı ($):',
+            odds: 'Ortalama Çarpan:',
+            steps: 'Toplam Adım Sayısı:',
+            resultTitle: 'Seri Sonu Ulaşılacak Kasa',
+            multiplierSuffix: 'x'
+        },
+        en: {
+            title: 'Compound Return (All-In)',
+            amount: 'Starting Amount ($):',
+            odds: 'Average Multiplier:',
+            steps: 'Total Steps:',
+            resultTitle: 'Final Bankroll',
+            multiplierSuffix: 'x'
+        }
+    };
+
+    const startBankInput = document.getElementById('start-bankroll-input');
+    const targetBankInput = document.getElementById('target-input');
+    const currentBankInput = document.getElementById('current-bankroll-input');
+    const betNameInput = document.getElementById('bet-name-input');
+    const oddsInput = document.getElementById('odds-input');
+    const actualBetInput = document.getElementById('actual-bet-input');
+    const btnEditBankroll = document.getElementById('edit-bankroll-btn');
+
+    const hlCurrentBankroll = document.getElementById('hl-current-bankroll');
+    const hlBetAmount = document.getElementById('hl-bet-amount');
+    const statStart = document.getElementById('stat-start');
+    const statProfit = document.getElementById('stat-profit');
+    const statTarget = document.getElementById('stat-target');
+    const statMultiplier = document.getElementById('stat-multiplier');
+    const uiRiskPhase = document.getElementById('risk-phase');
+    const uiSuggestedBetText = document.getElementById('suggested-bet-text');
+    const uiPotentialProfit = document.getElementById('potential-profit');
+    const logListEl = document.getElementById('log-list');
+    const logCountEl = document.getElementById('log-count');
+    const celebrationScreen = document.getElementById('celebration-screen');
+
+    const calcAmountInput = document.getElementById('calc-amount-input');
+    const calcOddsInput = document.getElementById('calc-odds');
+    const calcStepsInput = document.getElementById('calc-steps');
+    const calcFinalBankroll = document.getElementById('calc-final-bankroll');
+    const calcFinalX = document.getElementById('calc-final-x');
+
+    function escapeHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function openModal(modalId) {
+        document.body.style.overflow = 'hidden';
+        document.getElementById(modalId).classList.add('active');
+    }
+
+    function closeModal(modalId) {
+        document.body.style.overflow = '';
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    window.addEventListener('click', function(e) {
+        if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+            closeModal(e.target.id);
+        } else if (e.target === celebrationScreen) {
+            closeCelebration();
+        }
+    });
+
+    function setCalcLang(lang) {
+        calcLang = lang;
+        document.getElementById('lbl-calc-title').innerHTML = `<svg class="svg-icon" style="width: 24px; height: 24px; color: var(--purple);" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h-2v5H6v2h2v5h2v-5h2v-2zm7 5h-4v-2h4v2zm0-6h-4V9h4v2z"/></svg> ` + calcTranslations[lang].title;
+        document.getElementById('lbl-calc-amount').innerText = calcTranslations[lang].amount;
+        document.getElementById('lbl-calc-odds').innerText = calcTranslations[lang].odds;
+        document.getElementById('lbl-calc-steps').innerText = calcTranslations[lang].steps;
+        document.getElementById('lbl-calc-result-title').innerText = calcTranslations[lang].resultTitle;
+
+        document.getElementById('btn-tr').classList.toggle('active', lang === 'tr');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+        calculateAllIn();
+    }
+
+    function calculateAllIn() {
+        let startAmount = parseFloat(calcAmountInput.value) || 0;
+        let odds = parseFloat(calcOddsInput.value) || 1.0;
+        let steps = parseInt(calcStepsInput.value, 10) || 5;
+
+        if (odds > 3.25) { odds = 3.25; }
+        if (odds < 1.25) { odds = 1.25; }
+
+        let finalAmount = startAmount * Math.pow(odds, steps);
+        let multiplierX = startAmount > 0 ? (finalAmount / startAmount) : 0;
+
+        calcFinalBankroll.innerText = "$" + finalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        calcFinalX.innerText = multiplierX.toFixed(2) + calcTranslations[calcLang].multiplierSuffix;
+    }
+
+    function triggerConfetti() {
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+        const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+        for (let i = 0; i < 150; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                w: Math.random() * 10 + 5,
+                h: Math.random() * 10 + 5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: Math.random() * 3 + 2,
+                speedX: Math.random() * 4 - 2,
+                angle: Math.random() * 360,
+                spin: Math.random() * 0.2 - 0.1
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.angle += p.spin;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.angle);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                ctx.restore();
+                if (p.y > canvas.height) particles.splice(i, 1);
+            }
+            if (particles.length > 0) requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    function showCelebration() {
+        celebrationScreen.classList.add('active');
+        triggerConfetti();
+        hasCelebrated = true;
+    }
+
+    function closeCelebration() {
+        celebrationScreen.classList.remove('active');
+    }
+
+    function saveToLocalStorage() {
+        try {
+            const data = {
+                historyList: historyList,
+                absoluteStepCounter: absoluteStepCounter,
+                hasCelebrated: hasCelebrated,
+                settings: {
+                    startBank: startBankInput.value,
+                    targetBank: targetBankInput.value,
+                    currentBank: currentBankInput.value,
+                    odds: oddsInput.value,
+                    actualBet: actualBetInput.value
+                }
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {}
+    }
+
+    function loadFromLocalStorage() {
+        try {
+            const dataStr = localStorage.getItem(STORAGE_KEY);
+            if (dataStr) {
+                const data = JSON.parse(dataStr);
+                historyList = Array.isArray(data.historyList) ? data.historyList : [];
+                absoluteStepCounter = data.absoluteStepCounter || 0;
+                hasCelebrated = Boolean(data.hasCelebrated);
+                if (data.settings) {
+                    if (data.settings.startBank !== undefined) startBankInput.value = data.settings.startBank;
+                    if (data.settings.targetBank !== undefined) targetBankInput.value = data.settings.targetBank;
+                    if (data.settings.currentBank !== undefined) currentBankInput.value = data.settings.currentBank;
+                    if (data.settings.odds !== undefined) oddsInput.value = data.settings.odds;
+                    if (data.settings.actualBet !== undefined) actualBetInput.value = data.settings.actualBet;
+                }
+            }
+        } catch (e) {}
+    }
+
+    function clearKasaChallengeStorage() {
+        try {
+            Object.keys(localStorage).forEach(function (key) {
+                if (key.indexOf(STORAGE_PREFIX) === 0) {
+                    localStorage.removeItem(key);
+                }
+            });
+        } catch (e) {}
+    }
+
+    function resetAllData() {
+        if (confirm("DİKKAT: Tüm Kasa Challenge geçmiş loglarınız, kasanız ve ayarlarınız sıfırlanacak! Emin misiniz?")) {
+            clearKasaChallengeStorage();
+            historyList = [];
+            absoluteStepCounter = 0;
+            hasCelebrated = false;
+            currentBankInput.value = startBankInput.value;
+            actualBetInput.value = "";
+            betNameInput.value = "";
+            updateState(true);
+        }
+    }
+
+    function getColorForValue(val) {
+        if (val >= 200000) return '#c084fc';
+        if (val >= 150000) return '#ec4899';
+        if (val >= 100000) return '#f97316';
+        if (val >= 50000) return '#f59e0b';
+        if (val >= 20000) return '#eab308';
+        if (val >= 10000) return '#84cc16';
+        if (val >= 5000) return '#10b981';
+        if (val >= 3000) return '#0ea5e9';
+        return '#3b82f6';
+    }
+
+    function computeChartYBounds(dataPoints) {
+        if (!dataPoints.length) return { min: 0, max: 100 };
+        if (dataPoints.length === 1) {
+            const base = dataPoints[0];
+            return {
+                min: Math.max(0, Number((base * 0.92).toFixed(2))),
+                max: Number(Math.max(base * 1.4, base + 10).toFixed(2))
+            };
+        }
+        const minVal = Math.min.apply(null, dataPoints);
+        const maxVal = Math.max.apply(null, dataPoints);
+        const span = Math.max(maxVal - minVal, 10);
+        const pad = span * 0.12;
+        return {
+            min: Math.max(0, Number((minVal - pad).toFixed(2))),
+            max: Number((maxVal + pad).toFixed(2))
+        };
+    }
+
+    function renderChart() {
+        if (typeof Chart === 'undefined') return;
+        const canvas = document.getElementById('bankrollChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let startB = parseFloat(startBankInput.value) || 0;
+        let labels = ['Başlangıç'];
+        let dataPoints = [startB];
+        let reversedHistory = [...historyList].reverse();
+        reversedHistory.forEach(log => {
+            labels.push((log.name ? log.name + ' ' : '') + '(#' + log.id + ')');
+            dataPoints.push(log.bankAfter);
+        });
+        const yBounds = computeChartYBounds(dataPoints);
+
+        if (bankrollChart) {
+            bankrollChart.data.labels = labels;
+            bankrollChart.data.datasets[0].data = dataPoints;
+            bankrollChart.options.scales.y.min = yBounds.min;
+            bankrollChart.options.scales.y.max = yBounds.max;
+            bankrollChart.update('none');
+        } else {
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            let gradient = ctx.createLinearGradient(0, 0, 0, 240);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.14)');
+            gradient.addColorStop(1, 'rgba(11, 17, 32, 0)');
+            bankrollChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Kasa Bakiyesi ($)',
+                        data: dataPoints,
+                        fill: true,
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        tension: 0.25,
+                        cubicInterpolationMode: 'monotone',
+                        segment: {
+                            borderColor: c => {
+                                if (!c.p0 || !c.p1) return '#3b82f6';
+                                const val0 = c.p0.parsed.y;
+                                const val1 = c.p1.parsed.y;
+                                if (val1 < val0) return '#ef4444';
+                                return getColorForValue(val1);
+                            }
+                        },
+                        pointBackgroundColor: c => {
+                            const idx = c.dataIndex;
+                            const val = c.raw;
+                            if (idx > 0 && val < c.dataset.data[idx - 1]) return '#ef4444';
+                            return getColorForValue(val);
+                        },
+                        pointBorderColor: '#0b1120',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    layout: { padding: { top: 8, bottom: 8 } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleColor: '#94a3b8',
+                            bodyColor: '#f8fafc',
+                            titleFont: { size: 12 },
+                            bodyFont: { size: 15, weight: 'bold' },
+                            padding: 12,
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(c) { return 'Bakiye: $' + c.parsed.y.toFixed(2); }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { display: false } },
+                        y: {
+                            min: yBounds.min,
+                            max: yBounds.max,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+                            ticks: { callback: function(val) { return '$' + Number(val).toFixed(0); } }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function toggleBankrollEdit() {
+        isBankrollEditable = !isBankrollEditable;
+        if (isBankrollEditable) {
+            currentBankInput.removeAttribute('readonly');
+            currentBankInput.style.background = 'var(--bg-color)';
+            currentBankInput.style.borderColor = 'var(--warning)';
+            currentBankInput.style.opacity = '1';
+            currentBankInput.focus();
+            btnEditBankroll.innerHTML = 'Kaydet';
+            btnEditBankroll.style.color = 'var(--success)';
+        } else {
+            currentBankInput.setAttribute('readonly', 'true');
+            currentBankInput.style.background = 'rgba(0,0,0,0.3)';
+            currentBankInput.style.borderColor = 'rgba(245, 158, 11, 0.2)';
+            currentBankInput.style.opacity = '0.7';
+            btnEditBankroll.innerHTML = 'Düzenle';
+            btnEditBankroll.style.color = 'var(--warning)';
+            updateState(true);
+        }
+    }
+
+    function applySuggested() {
+        actualBetInput.value = suggestedBetValue.toFixed(2);
+        updateDynamicValues();
+        saveToLocalStorage();
+    }
+
+    function updateState(updateBetAmount = false) {
+        let startBank = parseFloat(startBankInput.value) || 0;
+        let targetBank = parseFloat(targetBankInput.value) || 0;
+        currentBankroll = parseFloat(currentBankInput.value) || 0;
+        let ratio = 1 / 2;
+        let phaseText = "1/2 Risk";
+        if (currentBankroll >= 150000) { ratio = 1 / 25; phaseText = "1/25 Risk"; }
+        else if (currentBankroll >= 100000) { ratio = 1 / 20; phaseText = "1/20 Risk"; }
+        else if (currentBankroll >= 80000) { ratio = 1 / 16; phaseText = "1/16 Risk"; }
+        else if (currentBankroll >= 50000) { ratio = 1 / 14; phaseText = "1/14 Risk"; }
+        else if (currentBankroll >= 40000) { ratio = 1 / 12; phaseText = "1/12 Risk"; }
+        else if (currentBankroll >= 20000) { ratio = 1 / 9; phaseText = "1/9 Risk"; }
+        else if (currentBankroll >= 10000) { ratio = 1 / 7; phaseText = "1/7 Risk"; }
+        else if (currentBankroll >= 3000) { ratio = 1 / 5; phaseText = "1/5 Risk"; }
+        else if (currentBankroll >= 2000) { ratio = 1 / 3; phaseText = "1/3 Risk"; }
+
+        suggestedBetValue = currentBankroll * ratio;
+        if (updateBetAmount || actualBetInput.value === "") {
+            actualBetInput.value = suggestedBetValue.toFixed(2);
+        }
+
+        let totalProfit = currentBankroll - startBank;
+        let multiplier = (currentBankroll > 0) ? (targetBank / currentBankroll) : 0;
+        hlCurrentBankroll.innerText = "$" + currentBankroll.toFixed(2);
+        hlBetAmount.innerText = "$" + (parseFloat(actualBetInput.value) || 0).toFixed(2);
+        statStart.innerText = "$" + startBank.toFixed(2);
+        statTarget.innerText = "$" + targetBank.toFixed(2);
+
+        if (totalProfit > 0) statProfit.innerHTML = `<span style="color: var(--success);">+$${totalProfit.toFixed(2)}</span>`;
+        else if (totalProfit < 0) statProfit.innerHTML = `<span style="color: var(--danger);">-$${Math.abs(totalProfit).toFixed(2)}</span>`;
+        else statProfit.innerHTML = `<span style="color: var(--text-muted);">$0.00</span>`;
+
+        let isTypingTarget = (document.activeElement === targetBankInput);
+        if (currentBankroll >= targetBank && targetBank > 0) {
+            statMultiplier.innerHTML = `<span style="color: var(--success); font-weight: 800;">🎉 Ulaşıldı!</span>`;
+            if (!hasCelebrated && !isTypingTarget) { showCelebration(); }
+        } else {
+            statMultiplier.innerText = multiplier.toFixed(2) + "X";
+            if (!isTypingTarget) { hasCelebrated = false; }
+        }
+
+        uiRiskPhase.innerText = phaseText;
+        uiSuggestedBetText.innerText = suggestedBetValue.toFixed(2);
+        updateDynamicValues();
+        renderLogs();
+        renderChart();
+        saveToLocalStorage();
+    }
+
+    function updateDynamicValues() {
+        let actualBet = parseFloat(actualBetInput.value) || 0;
+        let odds = parseFloat(oddsInput.value) || 1.0;
+        let potentialProfit = actualBet * (odds - 1);
+        uiPotentialProfit.innerText = "+$" + potentialProfit.toFixed(2);
+        hlBetAmount.innerText = "$" + actualBet.toFixed(2);
+        saveToLocalStorage();
+    }
+
+    function handleResult(isWin) {
+        let actualBet = parseFloat(actualBetInput.value) || 0;
+        let odds = parseFloat(oddsInput.value) || 1.0;
+        let netProfit = actualBet * (odds - 1);
+        let betName = betNameInput.value.trim();
+        absoluteStepCounter++;
+        let logEntry = {
+            id: absoluteStepCounter,
+            isWin: isWin,
+            odds: odds,
+            betAmount: actualBet,
+            netProfit: netProfit,
+            bankBefore: currentBankroll,
+            name: betName
+        };
+        if (isWin) currentBankroll += netProfit;
+        else currentBankroll -= actualBet;
+        logEntry.bankAfter = currentBankroll;
+        historyList.unshift(logEntry);
+        currentBankInput.value = currentBankroll.toFixed(2);
+        betNameInput.value = "";
+        updateState(true);
+    }
+
+    function deleteLog(id) {
+        let logIndex = historyList.findIndex(l => l.id === id);
+        if (logIndex > -1) {
+            let log = historyList[logIndex];
+            if (log.isWin) currentBankroll -= log.netProfit;
+            else currentBankroll += log.betAmount;
+            currentBankInput.value = currentBankroll.toFixed(2);
+            historyList.splice(logIndex, 1);
+            updateState(false);
+        }
+    }
+
+    function renderLogs() {
+        logListEl.innerHTML = "";
+        logCountEl.innerText = historyList.length;
+        historyList.forEach(log => {
+            const item = document.createElement('div');
+            item.className = `log-item ${log.isWin ? 'log-win-border' : 'log-lose-border'}`;
+            let badge = log.isWin ? `<span class="log-badge-win">KAZANDI</span>` : `<span class="log-badge-lose">KAYBETTİ</span>`;
+            let nameTag = log.name ? `<div class="log-name">🏷️ ${escapeHtml(log.name)}</div>` : '';
+            let amountText = log.isWin
+                ? `Tutar: $${log.betAmount.toFixed(2)} &nbsp;|&nbsp; <span class="text-profit">+$${log.netProfit.toFixed(2)}</span>`
+                : `Tutar: $${log.betAmount.toFixed(2)} &nbsp;|&nbsp; <span class="text-loss">-$${log.betAmount.toFixed(2)}</span>`;
+            item.innerHTML = `<div class="log-info">${nameTag}<div class="log-top-row"><span>#${log.id}</span> ${badge} <span>Çarpan: ${log.odds.toFixed(2)}</span></div><div class="log-amount">${amountText}</div></div><div class="log-actions"><div class="log-bank-after">Kasa: $${log.bankAfter.toFixed(2)}</div><button class="btn-delete" onclick="deleteLog(${log.id})">Geri Al</button></div>`;
+            logListEl.appendChild(item);
+        });
+    }
+
+    startBankInput.addEventListener('input', () => updateState(false));
+    targetBankInput.addEventListener('input', () => updateState(false));
+    targetBankInput.addEventListener('blur', () => updateState(false));
+    currentBankInput.addEventListener('input', () => { if (isBankrollEditable) updateState(true); });
+    oddsInput.addEventListener('input', updateDynamicValues);
+    actualBetInput.addEventListener('input', updateDynamicValues);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadFromLocalStorage();
+        updateState(false);
+    });
+</script>
+
+</body>
+</html>

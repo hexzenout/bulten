@@ -118,7 +118,7 @@ async function omega_InitializeEngine() {
 
             if (updateHistory) history.pushState({ tab: targetModule }, '', '#' + targetModule);
 
-            document.body.classList.remove('omega-tab-futbol','omega-tab-basketbol','omega-tab-rolling','omega-tab-stream','omega-tab-favs','omega-tab-live','omega-tab-odds','omega-tab-crypto','omega-tab-finance');
+            document.body.classList.remove('omega-tab-futbol','omega-tab-basketbol','omega-tab-rolling','omega-tab-kasa-challenge','omega-tab-stream','omega-tab-favs','omega-tab-live','omega-tab-odds','omega-tab-crypto','omega-tab-finance');
             document.body.classList.add('omega-tab-' + targetModule);
 
             document.querySelectorAll('.nav-link').forEach(i => i.classList.remove('active'));
@@ -130,6 +130,7 @@ async function omega_InitializeEngine() {
             const liveBlock = document.getElementById('omega-live-block');
             const liveCenterBlock = document.getElementById('omega-live-center-block');
             const rollingBlock = document.getElementById('omega-rolling-block');
+            const kasaChallengeBlock = document.getElementById('omega-kasa-challenge-block');
             const cryptoBlock = document.getElementById('omega-crypto-block');
             const financeBlock = document.getElementById('v19-finance-block');
             const oddsBlock = document.getElementById('omega-odds-block');
@@ -141,6 +142,10 @@ async function omega_InitializeEngine() {
             if (liveCenterBlock) liveCenterBlock.style.display = 'none';
             if (cryptoBlock) cryptoBlock.style.display = 'none';
             if (oddsBlock) oddsBlock.style.display = 'none';
+            if (kasaChallengeBlock && targetModule !== 'kasa-challenge') {
+                if (typeof window.omega_DeactivateKasaChallenge === 'function') window.omega_DeactivateKasaChallenge();
+                else kasaChallengeBlock.style.display = 'none';
+            }
             if (rollingBlock) {
                 rollingBlock.style.display = 'none';
                 rollingBlock.removeAttribute('data-visible');
@@ -152,7 +157,8 @@ async function omega_InitializeEngine() {
 
             const centerWrapper = document.querySelector('.center-wrapper');
             if(centerWrapper) {
-                if(targetModule === 'stream') centerWrapper.style.maxWidth = '1800px';
+                if(targetModule === 'kasa-challenge') centerWrapper.style.maxWidth = '100%';
+                else if(targetModule === 'stream') centerWrapper.style.maxWidth = '1800px';
                 else if(targetModule === 'finance' || targetModule === 'rolling') centerWrapper.style.maxWidth = '1700px';
                 else if(targetModule === 'crypto' || targetModule === 'odds') centerWrapper.style.maxWidth = '1850px';
                 else centerWrapper.style.maxWidth = '1000px';
@@ -195,6 +201,12 @@ async function omega_InitializeEngine() {
                 }
                 if (titleElem) titleElem.innerHTML = '<span class="module-title-rolling" style="color:#7E22CE">/ ROLLING</span>';
                 if (typeof omega_RenderRollingModule === 'function') omega_RenderRollingModule();
+
+            } else if(targetModule === 'kasa-challenge') {
+                _ACTIVE_TAB = 'kasa-challenge';
+                if (titleElem) titleElem.innerHTML = '<span class="v508-title-kasa-challenge" style="color:#3b82f6">/ KASA CHALLENGE</span>';
+                if (typeof window.omega_ActivateKasaChallenge === 'function') window.omega_ActivateKasaChallenge();
+                else if (kasaChallengeBlock) kasaChallengeBlock.style.display = 'block';
 
             } else if(targetModule === 'favs') {
                 _ACTIVE_TAB = 'favs';

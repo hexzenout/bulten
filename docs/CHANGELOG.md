@@ -5,6 +5,37 @@ Her paket/güncelleme sonrası bu dosya güncellenecek.
 
 ## Format
 
+### V1297 - 2026-11-25
+#### Değişenler
+- `ROLLING` alt menüsüne üçüncü seçenek olarak `KASA CHALLENGE` (`#kasa-challenge`) eklendi; teknik olarak `#rolling/*` yapısından izole bağımsız route olarak bağlandı.
+- `Kasa_Takip_Uygulamasi_v10.html` uygulaması `assets/kasa-challenge/kasa-challenge.html` ve yerel `assets/kasa-challenge/vendor/chart.umd.min.js` (Chart.js v4.4.7) ile izole iframe modülü olarak entegre edildi.
+- Kasa Challenge verileri `bulten_kasa_challenge_v1:` prefix'i altına alındı; sıfırlama işlemi yalnızca bu prefix'teki anahtarları temizler.
+- Grafik ölçek/eğri ayarı (`computeChartYBounds`, `cubicInterpolationMode: 'monotone'`, `animation: false`) ile ilk kazanma adımındaki aşağı inip çıkma görsel sıçraması giderildi; masaüstünde tek ekrana sığan görünüm ve iframe içi tıklamalarda ana menü kapanma desteği eklendi.
+
+#### Değişen Dosyalar
+- index.html
+- assets/js/00-omega-core.js
+- assets/js/10-radar-core.js
+- assets/js/55-odds-terminal.js
+- assets/js/60-crypto-core.js
+- assets/js/90-ui-menu-fixes.js
+- assets/js/92-healthcheck.js
+- docs/CHANGELOG.md
+- docs/FILE_MAP.md
+
+#### Yeni Dosyalar
+- assets/kasa-challenge/kasa-challenge.html
+- assets/kasa-challenge/vendor/chart.umd.min.js
+- assets/css/95-kasa-challenge.css
+- assets/js/95-kasa-challenge.js
+
+#### Değişmeyen Dosyalar
+- sw.js
+- assets/js/70-rolling-core.js
+- assets/js/30-finance-core.js
+- assets/js/82-firebase-core.js
+- assets/css/43-rolling-final.css
+
 ### V1296 - 2026-11-25
 #### Değişenler
 - `assets/js/80-app-fixes.js` içindeki mevcut olmayan `assets/js/crypto.js` dinamik script yüklemesi (404) kaldırıldı.

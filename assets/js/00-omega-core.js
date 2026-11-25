@@ -34,11 +34,12 @@ let _MASTER_DB = [];
 
         const ROLLING_TARGETS = { 7: 1000, 15: 5000, 30: 15000, 60: 40000, 90: 100000 };
 
+        const OMEGA_VALID_TABS = ['futbol', 'basketbol', 'rolling', 'kasa-challenge', 'stream', 'favs', 'live', 'odds', 'crypto', 'finance'];
+
         window.addEventListener('DOMContentLoaded', () => {
             const rawHash = window.location.hash.replace('#', '') || 'futbol';
             const hash = rawHash.split('/')[0] || 'futbol';
-            const validTabs = ['futbol', 'basketbol', 'rolling', 'stream', 'favs', 'live', 'odds', 'crypto', 'finance'];
-            if (validTabs.includes(hash)) {
+            if (OMEGA_VALID_TABS.includes(hash)) {
                 omega_SwitchMainTab(hash, document.getElementById('nav-' + hash), false);
             } else {
                 omega_SwitchMainTab('futbol', document.getElementById('nav-futbol'), false);
@@ -50,8 +51,7 @@ let _MASTER_DB = [];
         function omega_HandleHashRouteV38() {
             const rawHash = window.location.hash.replace('#', '') || 'futbol';
             const hash = rawHash.split('/')[0] || 'futbol';
-            const validTabs = ['futbol', 'basketbol', 'rolling', 'stream', 'favs', 'live', 'odds', 'crypto', 'finance'];
-            if (validTabs.includes(hash)) {
+            if (OMEGA_VALID_TABS.includes(hash)) {
                 const el = document.getElementById('nav-' + hash);
                 omega_SwitchMainTab(hash, el, false);
             }

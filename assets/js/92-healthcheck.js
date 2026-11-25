@@ -71,6 +71,7 @@
     { key: "crypto", label: "Kripto", id: "omega-crypto-block" },
     { key: "odds", label: "Oran Terminali", id: "omega-odds-block" },
     { key: "rolling", label: "Rolling", id: "omega-rolling-block" },
+    { key: "kasa-challenge", label: "Kasa Challenge", id: "omega-kasa-challenge-block" },
     { key: "finance", label: "Kasa", id: "v19-finance-block" }
   ];
 
@@ -84,6 +85,7 @@
     crypto: { expected: ["crypto"], bodyClass: "omega-tab-crypto", nav: "nav-crypto" },
     odds: { expected: ["odds"], bodyClass: "omega-tab-odds", nav: "nav-odds" },
     rolling: { expected: ["rolling"], bodyClass: "omega-tab-rolling", nav: "nav-rolling" },
+    "kasa-challenge": { expected: ["kasa-challenge"], bodyClass: "omega-tab-kasa-challenge", nav: "nav-kasa-challenge" },
     finance: { expected: ["finance"], bodyClass: "omega-tab-finance", nav: "nav-finance" }
   };
 

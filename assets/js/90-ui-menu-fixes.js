@@ -9,6 +9,7 @@
     futbol: { id: "nav-futbol", label: "FUTBOL", color: "#10b981", cls: "v508-title-futbol" },
     basketbol: { id: "nav-basketbol", label: "BASKETBOL", color: "#f97316", cls: "v508-title-basketbol" },
     rolling: { id: "nav-rolling", label: "ROLLING", color: "#7E22CE", cls: "v508-title-rolling" },
+    "kasa-challenge": { id: "nav-kasa-challenge", label: "KASA CHALLENGE", color: "#3b82f6", cls: "v508-title-kasa-challenge" },
     stream: { id: "nav-stream", label: "CANLI YAYIN", color: "#3b82f6", cls: "v508-title-stream" },
     favs: { id: "nav-favs", label: "FAVORİLERİM", color: "#ef4444", cls: "v508-title-favs" },
     live: { id: "nav-live", label: "CANLI TAKİP", color: "#3b82f6", cls: "v508-title-live" },
@@ -37,13 +38,15 @@
     if (!branch) return;
     const raw = rollingRawHash();
     const isRollingRoute = raw.startsWith("rolling") || raw.startsWith("finance/rolling");
+    const isKasaChallengeRoute = raw.startsWith("kasa-challenge");
+    const isSubmenuRoute = isRollingRoute || isKasaChallengeRoute;
 
     if (forceOpen === true) {
       branch.classList.remove("manual-closed");
       branch.classList.add("open");
     }
-    if (!isRollingRoute) branch.classList.remove("manual-closed");
-    branch.classList.toggle("route-open", isRollingRoute);
+    if (!isSubmenuRoute) branch.classList.remove("manual-closed");
+    branch.classList.toggle("route-open", isSubmenuRoute);
 
     const shouldOpen = branch.classList.contains("open") || (branch.classList.contains("route-open") && !branch.classList.contains("manual-closed"));
     const toggle = document.getElementById("nav-rolling");
@@ -52,12 +55,15 @@
     const mode = rollingModeFromHash();
     const bet = document.getElementById("nav-rolling-bet");
     const crypto = document.getElementById("nav-rolling-crypto");
+    const kasaChallenge = document.getElementById("nav-kasa-challenge");
     if (bet) bet.classList.toggle("active", isRollingRoute && mode === "bet");
     if (crypto) crypto.classList.toggle("active", isRollingRoute && mode === "crypto");
+    if (kasaChallenge) kasaChallenge.classList.toggle("active", isKasaChallengeRoute);
   }
 
   function keyFromHash() {
     const raw = String(location.hash || "").replace(/^#\/?/, "").toLowerCase();
+    if (raw.startsWith("kasa-challenge")) return "kasa-challenge";
     if (raw.startsWith("finance/rolling") || raw.startsWith("rolling")) return "rolling";
     if (raw.startsWith("stream") || raw.startsWith("canli-yayin")) return "stream";
     if (raw.startsWith("basketbol")) return "basketbol";
@@ -198,9 +204,11 @@
         return;
       }
 
-      const rollingSub = e.target.closest("#nav-rolling-bet, #nav-rolling-crypto");
+      const rollingSub = e.target.closest("#nav-rolling-bet, #nav-rolling-crypto, #nav-kasa-challenge");
       if (rollingSub) {
-        try { localStorage.setItem(ROLLING_PAGE_MODE_KEY, rollingSub.id === "nav-rolling-crypto" ? "crypto" : "bet"); } catch {}
+        if (rollingSub.id !== "nav-kasa-challenge") {
+          try { localStorage.setItem(ROLLING_PAGE_MODE_KEY, rollingSub.id === "nav-rolling-crypto" ? "crypto" : "bet"); } catch {}
+        }
         syncRollingBranch(true);
       }
 

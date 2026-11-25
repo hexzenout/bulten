@@ -37,7 +37,12 @@
 - assets/js/90-ui-menu-fixes.js
 - assets/js/91-runtime-core.js
 - assets/js/92-healthcheck.js
+- assets/js/95-kasa-challenge.js
 - assets/js/pwa.js
+
+## Kasa Challenge (İzole Iframe Modülü)
+- assets/kasa-challenge/kasa-challenge.html
+- assets/kasa-challenge/vendor/chart.umd.min.js
 
 ## CSS Dosyaları
 - assets/css/00-base.css
@@ -54,6 +59,7 @@
 - assets/css/55-odds-terminal-live-gate.css
 - assets/css/55-odds-terminal.css
 - assets/css/90-final-fixes.css
+- assets/css/95-kasa-challenge.css
 
 ## Data / JSON Dosyaları
 - assets/data/55-odds-terminal-catalog.json
