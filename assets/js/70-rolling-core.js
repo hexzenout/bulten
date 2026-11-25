@@ -9314,11 +9314,32 @@
     }
     if (input.dataset.v1046GrowthBound !== "1") {
       input.dataset.v1046GrowthBound = "1";
-      const sync = () => {
+      let lastKey = "";
+      let keyResetTimer = 0;
+      const formatFixed2 = () => {
+        const g = v1332MultiplierToGrowthPercent(input.value);
+        input.value = v1332GrowthPercentToMultiplier(g).toFixed(2);
+      };
+      input.addEventListener("keydown", e => {
+        lastKey = String(e?.key || "");
+        clearTimeout(keyResetTimer);
+        keyResetTimer = setTimeout(() => { lastKey = ""; }, 120);
+      });
+      const syncInput = e => {
+        const isTyping = /^(?:[0-9.,]|Backspace|Delete)$/i.test(lastKey)
+          || e?.inputType === "insertText"
+          || e?.inputType === "deleteContentBackward"
+          || e?.inputType === "deleteContentForward";
+        if (!isTyping) formatFixed2();
         v1049SyncExcelTargetGrowth("growth");
       };
-      input.addEventListener("input", sync);
-      input.addEventListener("change", sync);
+      const syncCommit = () => {
+        formatFixed2();
+        v1049SyncExcelTargetGrowth("growth");
+      };
+      input.addEventListener("input", syncInput);
+      input.addEventListener("change", syncCommit);
+      input.addEventListener("blur", syncCommit);
     }
     try { v1330SyncExcelTargetMultipliers(); } catch {}
     return input;
@@ -9457,10 +9478,18 @@
     const styleEl = document.createElement("style");
     styleEl.id = styleId;
     styleEl.textContent = `
+      #rolling-excel-overlay #excel-growth-percent-input{
+        width:72px!important;
+        min-width:72px!important;
+        max-width:72px!important;
+        font-variant-numeric:tabular-nums!important;
+        box-sizing:border-box!important;
+      }
       #rolling-excel-overlay #v1330-excel-target-x{
         display:inline-flex!important;
         align-items:center!important;
         justify-content:center!important;
+        min-width:92px!important;
         height:28px!important;
         padding:0 9px!important;
         margin-left:6px!important;
@@ -9476,6 +9505,8 @@
         box-shadow:0 4px 12px rgba(56,189,248,.09), inset 0 1px 0 rgba(255,255,255,.08)!important;
         font-variant-numeric:tabular-nums!important;
         vertical-align:middle!important;
+        text-align:center!important;
+        box-sizing:border-box!important;
       }
       #rolling-excel-overlay .v1043-excel-growth-bar{
         display:flex!important;
@@ -9512,6 +9543,8 @@
       #rolling-excel-overlay .v1330-rolling-remaining-x b{
         display:inline-flex!important;
         align-items:center!important;
+        justify-content:center!important;
+        min-width:70px!important;
         padding:2px 7px!important;
         border-radius:7px!important;
         background:rgba(2,6,23,.48)!important;
@@ -9520,6 +9553,7 @@
         font-weight:1000!important;
         color:#fde047!important;
         font-variant-numeric:tabular-nums!important;
+        box-sizing:border-box!important;
       }
       #rolling-excel-overlay .v1330-rolling-remaining-x.reached{
         border-color:rgba(74,222,128,.68)!important;
@@ -9553,9 +9587,6 @@
     const n = Number(ratio);
     if (!Number.isFinite(n) || n <= 0) return "—";
     const rounded = Math.round(n * 100) / 100;
-    if (Math.abs(rounded - Math.round(rounded)) < 0.005) {
-      return `${Math.round(rounded)}x`;
-    }
     return `${rounded.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x`;
   }
 
