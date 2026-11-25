@@ -8907,7 +8907,7 @@
     const title = m === "crypto" ? "KRİPTO İŞLEM DEFTERİ" : "BAHİS / KUPON DEFTERİ";
     const modalHtml = `<section class="v1056-ledger-screen-modal v1057-ledger-screen-modal v1061-ledger-screen-modal v1065-ledger-screen-modal ${m}" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
         <header class="v1056-ledger-screen-head v1057-ledger-screen-head v1060-ledger-screen-head v1065-ledger-screen-head">
-          <div class="v1112-ledger-title-row"><b>${title}</b>${v1103LedgerTestToolbar(m)}${v1110LedgerHeaderPagerHtml(m)}</div>
+          <div class="v1112-ledger-title-row"><b>${title}</b>${v1110LedgerHeaderPagerHtml(m)}</div>
           <div class="v1060-ledger-head-actions v1063-ledger-head-actions">
             <span class="v1063-ledger-clock" data-v1063-ledger-clock></span>
             <button type="button" class="v1060-ledger-photo v1061-ledger-photo v1063-ledger-photo" data-v1060-ledger-photo="${m}" title="Defter fotoğrafı"><i class="fa-solid fa-camera"></i></button>
