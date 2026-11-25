@@ -14,6 +14,7 @@
 11. V577 ile Oran Karşılaştırma ve Fırsat Radarı canlı veri değildir ayrımıyla konsolide edildi.
 12. V577 ile Kaynaklar sekmesi sade ana akışa çekildi; V574 snapshot hazırlık özeti Geliştirici Detayları içinde korundu.
 13. V578 ile dry-run payload şeması, nested records desteği ve market alias eşleşme tablosu eklendi.
+14. V1296 ile eksik `crypto.js` 404 yüklemesi, `live_scores.json` şema uyuşmazlığı, `#live`/`#rolling` route sızıntıları ve artık yedek dizinler temizlendi.
 
 ## Sıradaki İşler
 1. Kaynak adapter sözleşmesini ve örnek JSON üretim formatını netleştir.

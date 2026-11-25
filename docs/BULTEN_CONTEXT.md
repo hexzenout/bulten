@@ -148,6 +148,7 @@ Sıradaki hedef, gerçek veri motoruna geçmeden önce kaynak adapter sözleşme
 - sw.js gereksiz yere değişmemeli.
 
 ## Son Bilinen Paket Notu
+- V1296: Teknik denetim ve hata düzeltme paketi — `assets/js/crypto.js` 404 yüklemesi kaldırıldı, `live_scores.json` (`matches`, `home_goals`, `away_goals`) Canlı Takip ile hizalandı, `#live` ve `#rolling` route sızıntıları kapatıldı, `index.html` preboot/CSS linkleri sadeleştirildi, artık yedek klasörler (`BULTEN_V805_*`, `BULTEN_V901_*`, kök `js/`, `css/`) temizlendi; `sw.js` değiştirilmedi.
 - V578: Dry-run payload şeması, nested records desteği ve ham market → katalog market alias eşleşme tablosu eklendi; sw.js/workflow değiştirilmedi, index.html sadece cache-bust v578 için değişti.
 - V577: Oran Terminali üstüne Veri Akışı Durumu bandı eklendi; Fırsat Radarı ve Oran Karşılaştırma okunur özetlerle konsolide edildi; Kaynaklar sadeleştirildi; sw.js değiştirilmedi, index.html sadece cache-bust v577 için değişti.
 - V576: Oran Karşılaştırma / Oran Hareketleri popup stabilitesi ve cache-bust çözümü korundu.

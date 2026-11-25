@@ -50,10 +50,14 @@
 - assets/css/42-rolling-route.css
 - assets/css/43-rolling-final.css
 - assets/css/50-sound-center.css
+- assets/css/55-odds-terminal-final-ui.css
+- assets/css/55-odds-terminal-live-gate.css
 - assets/css/55-odds-terminal.css
 - assets/css/90-final-fixes.css
 
 ## Data / JSON Dosyaları
+- assets/data/55-odds-terminal-catalog.json
+- assets/data/55-odds-terminal-runtime.json
 - assets/data/odds-sources.json
 - assets/data/odds-snapshot.json
 
@@ -75,6 +79,7 @@
 - Route sızıntısı oluşturulmayacak.
 
 ## Son Güncelleme
+- V1296: Eksik `crypto.js` 404 çağrısı kaldırıldı; `live_scores.json` <-> Canlı Takip Merkezi (`matches`, `home_goals`/`away_goals`) şeması hizalandı; `#live` ve `#rolling` route sızıntıları ve tekrarlı `hashchange` dinleyicisi düzeltildi; `index.html` preboot/CSS linkleri sadeleştirildi; kullanılmayan yedek klasörler (`BULTEN_V805_*`, `BULTEN_V901_*`, kök `js/`, `css/`) temizlendi. `sw.js` ve workflow dosyaları değiştirilmedi.
 - V578: Dry-run payload şeması, nested records desteği ve ham market → katalog market alias eşleşme tablosu eklendi; sw.js ve workflow dosyaları değiştirilmedi.
 - V577: Oran Terminali gerçek veri öncesi ana akış konsolide edildi; Veri Akışı Durumu bandı, okunur Oran Karşılaştırma özeti ve sade Kaynaklar akışı eklendi.
 - V576: Oran Karşılaştırma / Oran Hareketleri hover popup stabilitesi ve cache-bust akışı korundu.
