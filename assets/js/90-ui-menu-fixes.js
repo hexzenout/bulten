@@ -9,7 +9,7 @@
     futbol: { id: "nav-futbol", label: "FUTBOL", color: "#10b981", cls: "v508-title-futbol" },
     basketbol: { id: "nav-basketbol", label: "BASKETBOL", color: "#f97316", cls: "v508-title-basketbol" },
     rolling: { id: "nav-rolling", label: "ROLLING", color: "#7E22CE", cls: "v508-title-rolling" },
-    "kasa-challenge": { id: "nav-kasa-challenge", label: "KASA CHALLENGE", color: "#3b82f6", cls: "v508-title-kasa-challenge" },
+    "kasa-challenge": { id: "nav-kasa-challenge", label: "KASA CHALLENGE", color: "#f97316", cls: "v508-title-kasa-challenge" },
     stream: { id: "nav-stream", label: "CANLI YAYIN", color: "#3b82f6", cls: "v508-title-stream" },
     favs: { id: "nav-favs", label: "FAVORİLERİM", color: "#ef4444", cls: "v508-title-favs" },
     live: { id: "nav-live", label: "CANLI TAKİP", color: "#3b82f6", cls: "v508-title-live" },

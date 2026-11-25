@@ -3,7 +3,7 @@
 
   const FRAME_ID = "kasa-challenge-frame";
   const BLOCK_ID = "omega-kasa-challenge-block";
-  const FRAME_SRC = "assets/kasa-challenge/kasa-challenge.html?v=v1298";
+  const FRAME_SRC = "assets/kasa-challenge/kasa-challenge.html?v=v1314";
 
   function getBlock() {
     return document.getElementById(BLOCK_ID);

@@ -204,7 +204,7 @@ async function omega_InitializeEngine() {
 
             } else if(targetModule === 'kasa-challenge') {
                 _ACTIVE_TAB = 'kasa-challenge';
-                if (titleElem) titleElem.innerHTML = '<span class="v508-title-kasa-challenge" style="color:#3b82f6">/ KASA CHALLENGE</span>';
+                if (titleElem) titleElem.innerHTML = '<span class="v508-title-kasa-challenge" style="color:#f97316">/ KASA CHALLENGE</span>';
                 if (typeof window.omega_ActivateKasaChallenge === 'function') window.omega_ActivateKasaChallenge();
                 else if (kasaChallengeBlock) kasaChallengeBlock.style.display = 'block';
 
