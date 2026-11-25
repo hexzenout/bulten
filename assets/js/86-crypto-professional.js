@@ -417,12 +417,14 @@
       }
       #omega-rolling-feature-host .v929-history-date-wrap {
         position:relative;
-        flex: 0 0 auto;
-        display:inline-flex;
-        align-items:center;
+        flex: 1 1 100%;
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
         justify-content:flex-start;
+        gap:8px;
         min-width:0;
-        width:auto;
+        width:100%;
       }
       #omega-rolling-feature-host .v929-history-date-open {
         width:auto;
@@ -445,16 +447,13 @@
         content:none !important;
       }
       #omega-rolling-feature-host .v929-history-date-panel {
-        position:absolute;
-        left:0;
-        top:calc(100% + 10px);
-        z-index:30;
-        width:min(390px, 88vw);
-        padding:14px;
-        border-radius:18px;
-        border:1px solid rgba(251,191,36,.34);
-        background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.98));
-        box-shadow:0 24px 70px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.06);
+        position:relative;
+        width:min(362px, 100%);
+        padding:11px 12px;
+        border-radius:14px;
+        border:1px solid rgba(251,191,36,.36);
+        background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.99));
+        box-shadow:0 14px 36px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.06);
       }
       #omega-rolling-feature-host .v929-history-date-panel[hidden] { display:none !important; }
       #omega-rolling-feature-host .v929-history-date-panel-head {
@@ -462,49 +461,115 @@
         align-items:center;
         justify-content:space-between;
         gap:10px;
-        margin-bottom:12px;
+        margin-bottom:8px;
       }
       #omega-rolling-feature-host .v929-history-date-panel-head b {
         color:#fbbf24;
         font:950 13px/1 'Inter',system-ui,sans-serif;
       }
       #omega-rolling-feature-host .v929-history-date-panel-head span {
-        color:#94a3b8;
-        font:800 11px/1.2 'Inter',system-ui,sans-serif;
+        color:#e2e8f0;
+        background:rgba(30,41,59,.85);
+        border:1px solid rgba(148,163,184,.24);
+        border-radius:999px;
+        padding:4px 9px;
+        font:800 11px/1.1 'Inter',system-ui,sans-serif;
       }
       #omega-rolling-feature-host .v929-date-grid {
         display:grid;
-        grid-template-columns:1fr 1.2fr 1fr;
-        gap:10px;
+        grid-template-columns:.85fr 1.25fr .85fr;
+        gap:7px;
       }
       #omega-rolling-feature-host .v929-date-field small {
         display:block;
-        margin:0 0 6px;
+        margin:0 0 4px;
         color:#93c5fd;
         font:900 11px/1 'Inter',system-ui,sans-serif;
       }
-      #omega-rolling-feature-host .v929-date-field select {
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-trigger {
         width:100%;
-        min-height:38px;
-        border-radius:12px;
+        min-height:33px;
+        border-radius:10px;
         border:1px solid rgba(148,163,184,.28);
-        background:rgba(2,6,23,.84);
+        background:rgba(2,6,23,.86);
         color:#f8fafc;
         padding:0 10px;
-        outline:0;
-        font:900 12px/1 'Inter',system-ui,sans-serif;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:6px;
+        font:800 12px/1 'Inter',system-ui,sans-serif;
+        transform:none;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-trigger:hover {
+        transform:none;
+        border-color:rgba(251,191,36,.55);
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-trigger.is-open {
+        border-color:rgba(251,191,36,.84);
+        color:#fbbf24;
+        box-shadow:0 0 0 2px rgba(251,191,36,.14);
+      }
+      #omega-rolling-feature-host .v929-date-caret {
+        font-size:10px;
+        opacity:.78;
+      }
+      #omega-rolling-feature-host .v929-date-drawer {
+        margin-top:8px;
+        padding:7px;
+        border-radius:11px;
+        border:1px solid rgba(148,163,184,.18);
+        background:rgba(2,6,23,.76);
+        max-height:178px;
+        overflow-y:auto;
+      }
+      #omega-rolling-feature-host .v929-date-drawer-grid {
+        display:grid;
+        gap:4px;
+      }
+      #omega-rolling-feature-host .v929-date-drawer-grid.is-day {
+        grid-template-columns:repeat(7, minmax(0, 1fr));
+      }
+      #omega-rolling-feature-host .v929-date-drawer-grid.is-month {
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+        gap:5px;
+      }
+      #omega-rolling-feature-host .v929-date-drawer-grid.is-year {
+        grid-template-columns:repeat(auto-fit, minmax(76px, 1fr));
+        gap:5px;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-opt {
+        min-height:26px;
+        border-radius:7px;
+        padding:0 4px;
+        border:1px solid rgba(148,163,184,.2);
+        background:rgba(15,23,42,.74);
+        color:#e2e8f0;
+        font:800 12px/1 'Inter',system-ui,sans-serif;
+        justify-content:center;
+        transform:none;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-opt:hover {
+        transform:none;
+        border-color:rgba(251,191,36,.58);
+        color:#fef3c7;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-opt.is-selected {
+        background:rgba(251,191,36,.2);
+        border-color:rgba(251,191,36,.86);
+        color:#fbbf24;
       }
       #omega-rolling-feature-host .v929-date-actions {
         display:flex;
         align-items:center;
         justify-content:space-between;
         gap:10px;
-        margin-top:13px;
+        margin-top:9px;
       }
       #omega-rolling-feature-host .v929-date-actions button {
-        min-height:36px;
-        border-radius:12px;
-        padding:0 13px;
+        min-height:33px;
+        border-radius:10px;
+        padding:0 14px;
       }
       #omega-rolling-feature-host .v929-date-actions [data-v929-date-apply] {
         color:#020617;
@@ -3298,37 +3363,57 @@
     return new Date(2026, Number(month) - 1, 1).toLocaleDateString("tr-TR", { month:"long" });
   }
 
+  function v929ClampDateParts(year, month, day) {
+    const today = v929TodayYmdParts();
+    const maxY = Math.max(2026, today.y);
+    const y = Math.min(Math.max(2026, Number(year) || maxY), maxY);
+    const mMin = y === 2026 ? 5 : 1;
+    const mMax = y === today.y ? today.m : 12;
+    const m = Math.min(Math.max(mMin, Number(month) || mMax), mMax);
+    const dMin = 1;
+    const dMax = y === today.y && m === today.m ? today.d : v929DaysInMonth(y, m);
+    const d = Math.min(Math.max(dMin, Number(day) || dMax), dMax);
+    const ymd = `${String(y).padStart(4,"0")}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    return { y, m, d, maxY, mMin, mMax, dMin, dMax, ymd };
+  }
+
+  function v929BuildDatePanelInnerHtml(mode, year, month, day, activePart = "day") {
+    const c = v929ClampDateParts(year, month, day);
+    const part = ["year", "month", "day"].includes(activePart) ? activePart : "day";
+    let drawerClass = "is-day";
+    let drawerHtml = "";
+    if (part === "year") {
+      drawerClass = "is-year";
+      const years = [];
+      for (let yy = c.maxY; yy >= 2026; yy--) years.push(yy);
+      drawerHtml = years.map(yy => `<button type="button" class="v929-date-opt ${yy === c.y ? "is-selected" : ""}" data-v929-date-pick="year:${yy}" data-mode="${mode}">${yy}</button>`).join("");
+    } else if (part === "month") {
+      drawerClass = "is-month";
+      const months = [];
+      for (let mm = c.mMin; mm <= c.mMax; mm++) months.push(mm);
+      drawerHtml = months.map(mm => `<button type="button" class="v929-date-opt ${mm === c.m ? "is-selected" : ""}" data-v929-date-pick="month:${mm}" data-mode="${mode}">${v763EscapeHtml(v929MonthName(mm))}</button>`).join("");
+    } else {
+      const days = [];
+      for (let dd = c.dMin; dd <= c.dMax; dd++) days.push(dd);
+      drawerHtml = days.map(dd => `<button type="button" class="v929-date-opt ${dd === c.d ? "is-selected" : ""}" data-v929-date-pick="day:${dd}" data-mode="${mode}">${String(dd).padStart(2, "0")}</button>`).join("");
+    }
+    return `<div class="v929-history-date-panel-head"><b>Tarih Seç</b><span>${v763EscapeHtml(v929FormatHistoryDateLabel(c.ymd))}</span></div>
+      <div class="v929-date-grid">
+        <div class="v929-date-field"><small>Yıl</small><button type="button" class="v929-date-trigger ${part === "year" ? "is-open" : ""}" data-v929-date-part="year" data-mode="${mode}"><span>${c.y}</span><span class="v929-date-caret">▾</span></button></div>
+        <div class="v929-date-field"><small>Ay</small><button type="button" class="v929-date-trigger ${part === "month" ? "is-open" : ""}" data-v929-date-part="month" data-mode="${mode}"><span>${v763EscapeHtml(v929MonthName(c.m))}</span><span class="v929-date-caret">▾</span></button></div>
+        <div class="v929-date-field"><small>Gün</small><button type="button" class="v929-date-trigger ${part === "day" ? "is-open" : ""}" data-v929-date-part="day" data-mode="${mode}"><span>${String(c.d).padStart(2, "0")}</span><span class="v929-date-caret">▾</span></button></div>
+      </div>
+      <div class="v929-date-drawer"><div class="v929-date-drawer-grid ${drawerClass}">${drawerHtml}</div></div>
+      <div class="v929-date-actions"><button type="button" data-v929-date-clear="${mode}">Temizle</button><button type="button" data-v929-date-apply="${mode}">Uygula</button></div>`;
+  }
+
   function v929BuildDatePanelHtml(mode, manual) {
     const today = v929TodayYmdParts();
     const todayValue = `${String(today.y).padStart(4,"0")}-${String(today.m).padStart(2,"0")}-${String(today.d).padStart(2,"0")}`;
     const safeManual = v928ClampHistoryDate(manual || todayValue) || V928_HISTORY_MIN_DATE;
     const parts = safeManual.split("-").map(Number);
-    let year = parts[0] || Math.max(2026, today.y);
-    let month = parts[1] || today.m || 5;
-    let day = parts[2] || today.d || 1;
-    year = Math.min(Math.max(2026, year), Math.max(2026, today.y));
-    month = Math.min(Math.max(year === 2026 ? 5 : 1, month), year === today.y ? today.m : 12);
-    day = Math.min(Math.max(year === 2026 && month === 5 ? 1 : 1, day), year === today.y && month === today.m ? today.d : v929DaysInMonth(year, month));
-    const yearMax = Math.max(2026, today.y);
-    const years = [];
-    for (let y = yearMax; y >= 2026; y--) years.push(y);
-    const monthMin = year === 2026 ? 5 : 1;
-    const monthMax = year === today.y ? today.m : 12;
-    const months = [];
-    for (let m = monthMin; m <= monthMax; m++) months.push(m);
-    const dayMin = year === 2026 && month === 5 ? 1 : 1;
-    const dayMax = year === today.y && month === today.m ? today.d : v929DaysInMonth(year, month);
-    const days = [];
-    for (let d = dayMin; d <= dayMax; d++) days.push(d);
-    return `<div class="v929-history-date-panel" data-v929-date-panel="${mode}" hidden>
-      <div class="v929-history-date-panel-head"><b>Tarih Seç</b></div>
-      <div class="v929-date-grid">
-        <label class="v929-date-field"><small>Yıl</small><select data-v929-date-year="${mode}">${years.map(y => `<option value="${y}" ${y === year ? "selected" : ""}>${y}</option>`).join("")}</select></label>
-        <label class="v929-date-field"><small>Ay</small><select data-v929-date-month="${mode}">${months.map(m => `<option value="${m}" ${m === month ? "selected" : ""}>${v763EscapeHtml(v929MonthName(m))}</option>`).join("")}</select></label>
-        <label class="v929-date-field"><small>Gün</small><select data-v929-date-day="${mode}">${days.map(d => `<option value="${d}" ${d === day ? "selected" : ""}>${String(d).padStart(2, "0")}</option>`).join("")}</select></label>
-      </div>
-      <div class="v929-date-actions"><button type="button" data-v929-date-clear="${mode}">Temizle</button><button type="button" data-v929-date-apply="${mode}">Uygula</button></div>
-    </div>`;
+    const c = v929ClampDateParts(parts[0] || Math.max(2026, today.y), parts[1] || today.m || 5, parts[2] || today.d || 1);
+    return `<div class="v929-history-date-panel" data-v929-date-panel="${mode}" data-year="${c.y}" data-month="${c.m}" data-day="${c.d}" data-part="day" hidden>${v929BuildDatePanelInnerHtml(mode, c.y, c.m, c.d, "day")}</div>`;
   }
 
   function v926HistoryFiltersHtml(mode) {
@@ -4630,6 +4715,13 @@
         if (!event.target.closest("[data-v765-kapsul]") && !event.target.closest("[data-v768-feature-open]")) v774FlushAllPendingFromDom();
       }
     }, true);
+    function v929CloseAllDatePanels(exceptPanel = null) {
+      document.querySelectorAll("[data-v929-date-panel]").forEach(other => {
+        if (other === exceptPanel) return;
+        other.hidden = true;
+        other.closest(".v768-feature-modal")?.classList.remove("is-date-panel-open");
+      });
+    }
     document.addEventListener("click", function(event) {
       const dateOpen = event.target.closest && event.target.closest("[data-v929-date-open]");
       if (dateOpen) {
@@ -4639,10 +4731,55 @@
         const wrap = dateOpen.closest(`[data-v929-date-wrap="${mode}"]`);
         const panel = wrap?.querySelector(`[data-v929-date-panel="${mode}"]`);
         const willOpen = panel ? panel.hidden : false;
-        document.querySelectorAll("[data-v929-date-panel]").forEach(other => {
-          if (other !== panel) other.hidden = true;
-        });
-        if (panel) panel.hidden = !willOpen;
+        v929CloseAllDatePanels(panel);
+        if (panel) {
+          panel.hidden = !willOpen;
+          panel.closest(".v768-feature-modal")?.classList.toggle("is-date-panel-open", willOpen);
+        }
+        return;
+      }
+      const partBtn = event.target.closest && event.target.closest("[data-v929-date-part]");
+      if (partBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = partBtn.closest("[data-v929-date-panel]");
+        if (!panel) return;
+        const mode = panel.dataset.v929DatePanel === "crypto" ? "crypto" : "bet";
+        const nextPart = partBtn.dataset.v929DatePart || "day";
+        const c = v929ClampDateParts(panel.dataset.year, panel.dataset.month, panel.dataset.day);
+        panel.dataset.part = nextPart;
+        panel.innerHTML = v929BuildDatePanelInnerHtml(mode, c.y, c.m, c.d, nextPart);
+        return;
+      }
+      const pickBtn = event.target.closest && event.target.closest("[data-v929-date-pick]");
+      if (pickBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = pickBtn.closest("[data-v929-date-panel]");
+        if (!panel) return;
+        const mode = panel.dataset.v929DatePanel === "crypto" ? "crypto" : "bet";
+        const [kind, rawVal] = String(pickBtn.dataset.v929DatePick || "").split(":");
+        const val = Number(rawVal);
+        let y = Number(panel.dataset.year || 2026);
+        let m = Number(panel.dataset.month || 5);
+        let d = Number(panel.dataset.day || 1);
+        let nextPart = "day";
+        if (kind === "year" && Number.isFinite(val)) {
+          y = val;
+          nextPart = "month";
+        } else if (kind === "month" && Number.isFinite(val)) {
+          m = val;
+          nextPart = "day";
+        } else if (kind === "day" && Number.isFinite(val)) {
+          d = val;
+          nextPart = "day";
+        }
+        const c = v929ClampDateParts(y, m, d);
+        panel.dataset.year = String(c.y);
+        panel.dataset.month = String(c.m);
+        panel.dataset.day = String(c.d);
+        panel.dataset.part = nextPart;
+        panel.innerHTML = v929BuildDatePanelInnerHtml(mode, c.y, c.m, c.d, nextPart);
         return;
       }
       const apply = event.target.closest && event.target.closest("[data-v929-date-apply]");
@@ -4650,11 +4787,9 @@
         event.preventDefault();
         event.stopPropagation();
         const mode = apply.dataset.v929DateApply === "crypto" ? "crypto" : "bet";
-        const wrap = apply.closest(`[data-v929-date-wrap="${mode}"]`);
-        const y = Number(wrap?.querySelector(`[data-v929-date-year="${mode}"]`)?.value || 2026);
-        const m = Number(wrap?.querySelector(`[data-v929-date-month="${mode}"]`)?.value || 6);
-        const d = Number(wrap?.querySelector(`[data-v929-date-day="${mode}"]`)?.value || 1);
-        const clampedDate = v928ClampHistoryDate(`${String(y).padStart(4,"0")}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`);
+        const panel = apply.closest(`[data-v929-date-panel="${mode}"]`);
+        const c = v929ClampDateParts(panel?.dataset.year, panel?.dataset.month, panel?.dataset.day);
+        const clampedDate = v928ClampHistoryDate(c.ymd);
         localStorage.setItem(v926HistoryDateStorageKey(mode), clampedDate);
         localStorage.setItem(v926HistoryFilterStorageKey(mode), "manual");
         v768OpenFeaturePanel(mode, "history");
@@ -4672,41 +4807,14 @@
       }
       const insideDatePicker = event.target.closest && (event.target.closest("[data-v929-date-panel]") || event.target.closest("[data-v929-date-open]"));
       if (!insideDatePicker) {
-        document.querySelectorAll("[data-v929-date-panel]").forEach(panel => { panel.hidden = true; });
+        v929CloseAllDatePanels(null);
       }
     }, true);
     document.addEventListener("pointerdown", function(event) {
       const openPanel = document.querySelector("[data-v929-date-panel]:not([hidden])");
       if (!openPanel) return;
       const insideDatePicker = event.target.closest && (event.target.closest("[data-v929-date-panel]") || event.target.closest("[data-v929-date-open]"));
-      if (!insideDatePicker) openPanel.hidden = true;
-    }, true);
-    document.addEventListener("change", function(event) {
-      const yearSelect = event.target && event.target.closest && event.target.closest("[data-v929-date-year]");
-      const monthSelect = event.target && event.target.closest && event.target.closest("[data-v929-date-month]");
-      if (!yearSelect && !monthSelect) return;
-      const mode = (yearSelect?.dataset.v929DateYear || monthSelect?.dataset.v929DateMonth) === "crypto" ? "crypto" : "bet";
-      const wrap = (yearSelect || monthSelect).closest(`[data-v929-date-wrap="${mode}"]`);
-      if (!wrap) return;
-      const today = v929TodayYmdParts();
-      const ySel = wrap.querySelector(`[data-v929-date-year="${mode}"]`);
-      const mSel = wrap.querySelector(`[data-v929-date-month="${mode}"]`);
-      const dSel = wrap.querySelector(`[data-v929-date-day="${mode}"]`);
-      let y = Number(ySel?.value || 2026);
-      let m = Number(mSel?.value || 6);
-      let d = Number(dSel?.value || 1);
-      const monthMin = y === 2026 ? 5 : 1;
-      const monthMax = y === today.y ? today.m : 12;
-      if (m < monthMin) m = monthMin;
-      if (m > monthMax) m = monthMax;
-      if (mSel) {
-        mSel.innerHTML = Array.from({ length: monthMax - monthMin + 1 }, (_, i) => monthMin + i).map(mm => `<option value="${mm}" ${mm === m ? "selected" : ""}>${v929MonthName(mm)}</option>`).join("");
-      }
-      const dayMin = y === 2026 && m === 5 ? 1 : 1;
-      const dayMax = y === today.y && m === today.m ? today.d : v929DaysInMonth(y, m);
-      if (d < dayMin) d = dayMin;
-      if (d > dayMax) d = dayMax;
-      if (dSel) dSel.innerHTML = Array.from({ length: dayMax - dayMin + 1 }, (_, i) => dayMin + i).map(dd => `<option value="${dd}" ${dd === d ? "selected" : ""}>${String(dd).padStart(2, "0")}</option>`).join("");
+      if (!insideDatePicker) v929CloseAllDatePanels(null);
     }, true);
     document.addEventListener("input", function(event) {
       const kapsul = event.target && event.target.closest && event.target.closest("[data-v765-kapsul]");
