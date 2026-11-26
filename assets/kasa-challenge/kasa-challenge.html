@@ -281,6 +281,8 @@
         .modal-head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .btn-backup { background: #0f172a; border: 1px solid #2b384e; color: #cbd5e1; padding: 6px 11px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: var(--font-family); transition: all 0.15s; }
         .btn-backup:hover { border-color: var(--primary); color: #fff; background: rgba(59, 130, 246, 0.14); }
+        .btn-cam-export { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 29px; border-radius: 8px; border: 1px solid rgba(251, 191, 36, 0.55); background: rgba(251, 191, 36, 0.14); color: #fbbf24; cursor: pointer; transition: all 0.15s; padding: 0; }
+        .btn-cam-export:hover { background: rgba(251, 191, 36, 0.28); border-color: #fbbf24; color: #fde68a; transform: translateY(-1px); }
         .btn-close-modal { background: #0f172a; border: 1px solid #263248; color: #94a3b8; cursor: pointer; font-size: 20px; line-height: 1; width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s; }
         .btn-close-modal:hover { color: #fff; border-color: var(--danger); background: rgba(239, 68, 68, 0.15); }
 
@@ -567,6 +569,9 @@
                 <span class="modal-count-badge" id="log-count">0</span>
             </div>
             <div class="modal-head-actions">
+                <button type="button" class="btn-cam-export" onclick="exportHistoryPng()" title="Tablo Görseli İndir (PNG)">
+                    <svg class="svg-icon" style="width:15px;height:15px;" viewBox="0 0 24 24"><path d="M9 2 7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg>
+                </button>
                 <button type="button" class="btn-backup" onclick="exportBackup()">Yedeği İndir</button>
                 <button type="button" class="btn-backup" onclick="document.getElementById('backup-file-input').click()">Yedek Yükle</button>
                 <input type="file" id="backup-file-input" accept="application/json,.json" style="display:none;" onchange="importBackup(event)">
@@ -1103,6 +1108,183 @@
                 }
             }
         } catch (e) {}
+    }
+
+    function exportHistoryPng() {
+        const rows = historyList.filter(log => {
+            if (activeHistoryFilter === 'win') return Boolean(log.isWin);
+            if (activeHistoryFilter === 'lose') return !log.isWin;
+            return true;
+        }).slice().reverse();
+
+        const startVal = parseFloat(startBankInput.value) || 0;
+        const targetVal = parseFloat(targetBankInput.value) || 0;
+        const curVal = Number(currentBankroll || 0);
+        const netVal = curVal - startVal;
+        const growthX = startVal > 0 ? (curVal / startVal).toFixed(2) + 'X' : '0.00X';
+
+        const W = 1080;
+        const pad = 32;
+        const rowH = 40;
+        const tableHeaderH = 38;
+        const rowsHeight = Math.max(1, rows.length) * rowH;
+        const H = 228 + tableHeaderH + rowsHeight + 48;
+        const scale = 2;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = W * scale;
+        canvas.height = H * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.scale(scale, scale);
+
+        const drawRoundRect = (x, y, w, h, r, fill, stroke) => {
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, r);
+            if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+            if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
+        };
+
+        const fitText = (text, maxW) => {
+            let s = String(text || '');
+            if (ctx.measureText(s).width <= maxW) return s;
+            while (s.length > 1 && ctx.measureText(s + '…').width > maxW) s = s.slice(0, -1);
+            return s + '…';
+        };
+
+        ctx.fillStyle = '#070c18';
+        ctx.fillRect(0, 0, W, H);
+
+        drawRoundRect(16, 16, W - 32, H - 32, 18, '#0b1222', '#26344d');
+
+        // Header
+        ctx.font = '900 22px Inter, system-ui, sans-serif';
+        ctx.fillStyle = '#fbbf24';
+        ctx.textAlign = 'left';
+        ctx.fillText('KASA CHALLENGE · İŞLEM TABLOSU', pad, 56);
+
+        ctx.font = '700 13px Inter, system-ui, sans-serif';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'right';
+        ctx.fillText(new Date().toLocaleString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }), W - pad, 54);
+
+        // 4 Summary Cards
+        const cards = [
+            { label: 'BAŞLANGIÇ', val: '$' + fmtMoney(startVal), color: '#60a5fa' },
+            { label: 'GÜNCEL KASA', val: '$' + fmtMoney(curVal), color: '#f8fafc' },
+            { label: 'NET K/Z', val: (netVal >= 0 ? '+$' : '-$') + fmtMoney(Math.abs(netVal)), color: netVal >= 0 ? '#34d399' : '#f87171' },
+            { label: 'BÜYÜME / HEDEF', val: `${growthX} / $${fmtMoney(targetVal)}`, color: '#fbbf24' }
+        ];
+        const cardGap = 12;
+        const cardW = (W - pad * 2 - cardGap * 3) / 4;
+        cards.forEach((c, idx) => {
+            const cx = pad + idx * (cardW + cardGap);
+            drawRoundRect(cx, 78, cardW, 74, 12, '#111a2e', '#26344d');
+            ctx.textAlign = 'left';
+            ctx.font = '800 11px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(c.label, cx + 14, 102);
+            ctx.font = '900 18px Inter, system-ui, sans-serif';
+            ctx.fillStyle = c.color;
+            ctx.fillText(fitText(c.val, cardW - 24), cx + 14, 132);
+        });
+
+        // Table Header
+        const tableY = 172;
+        const cols = [
+            { label: '#', w: 54, align: 'left' },
+            { label: 'TARİH', w: 132, align: 'left' },
+            { label: 'İŞLEM', w: 260, align: 'left' },
+            { label: 'TUTAR', w: 112, align: 'right' },
+            { label: 'ORAN', w: 80, align: 'right' },
+            { label: 'DURUM', w: 118, align: 'center' },
+            { label: 'K/Z', w: 128, align: 'right' },
+            { label: 'KASA', w: 132, align: 'right' }
+        ];
+
+        drawRoundRect(pad, tableY, W - pad * 2, tableHeaderH, 9, '#162238', '#2a3a57');
+        let curX = pad;
+        ctx.font = '800 11px Inter, system-ui, sans-serif';
+        ctx.fillStyle = '#94a3b8';
+        cols.forEach(col => {
+            ctx.textAlign = col.align;
+            const tx = col.align === 'right' ? curX + col.w - 10 : col.align === 'center' ? curX + col.w / 2 : curX + 10;
+            ctx.fillText(col.label, tx, tableY + 23);
+            curX += col.w;
+        });
+
+        // Rows
+        const bodyY = tableY + tableHeaderH + 4;
+        if (!rows.length) {
+            drawRoundRect(pad, bodyY, W - pad * 2, rowH, 8, '#0e1628', '#1e293b');
+            ctx.font = '700 13px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.textAlign = 'center';
+            ctx.fillText('Henüz kayıtlı işlem bulunmuyor.', W / 2, bodyY + 25);
+        } else {
+            rows.forEach((log, idx) => {
+                const ry = bodyY + idx * rowH;
+                drawRoundRect(pad, ry + 2, W - pad * 2, rowH - 4, 8, idx % 2 === 0 ? '#0e1628' : '#111a2e', '#1b273e');
+                let rx = pad;
+                const midY = ry + 24;
+
+                // #
+                ctx.font = '800 12px Inter, system-ui, sans-serif';
+                ctx.fillStyle = '#fbbf24';
+                ctx.textAlign = 'left';
+                ctx.fillText('#' + log.id, rx + 10, midY);
+                rx += cols[0].w;
+
+                // Tarih
+                ctx.font = '600 12px Inter, system-ui, sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(fitText(formatLogDateTime(log.createdAt), cols[1].w - 14), rx + 10, midY);
+                rx += cols[1].w;
+
+                // İşlem
+                ctx.font = '700 12px Inter, system-ui, sans-serif';
+                ctx.fillStyle = log.name ? '#e2e8f0' : '#64748b';
+                ctx.fillText(fitText(log.name || '—', cols[2].w - 14), rx + 10, midY);
+                rx += cols[2].w;
+
+                // Tutar
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#cbd5e1';
+                ctx.fillText('$' + fmtMoney(log.betAmount), rx + cols[3].w - 10, midY);
+                rx += cols[3].w;
+
+                // Oran
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillText(Number(log.odds || 0).toFixed(2), rx + cols[4].w - 10, midY);
+                rx += cols[4].w;
+
+                // Durum badge
+                const bw = 86;
+                const bx = rx + (cols[5].w - bw) / 2;
+                drawRoundRect(bx, ry + 8, bw, 22, 999, log.isWin ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)', log.isWin ? 'rgba(16,185,129,0.45)' : 'rgba(239,68,68,0.45)');
+                ctx.textAlign = 'center';
+                ctx.font = '800 10px Inter, system-ui, sans-serif';
+                ctx.fillStyle = log.isWin ? '#34d399' : '#f87171';
+                ctx.fillText(log.isWin ? 'KAZANDI' : 'KAYBETTİ', rx + cols[5].w / 2, midY - 1);
+                rx += cols[5].w;
+
+                // K/Z
+                ctx.textAlign = 'right';
+                ctx.font = '800 12px Inter, system-ui, sans-serif';
+                ctx.fillStyle = log.isWin ? '#34d399' : '#f87171';
+                const pnlStr = log.isWin ? '+$' + fmtMoney(log.netProfit) : '-$' + fmtMoney(log.betAmount);
+                ctx.fillText(pnlStr, rx + cols[6].w - 10, midY);
+                rx += cols[6].w;
+
+                // Kasa
+                ctx.fillStyle = '#f8fafc';
+                ctx.fillText('$' + fmtMoney(log.bankAfter), rx + cols[7].w - 10, midY);
+            });
+        }
+
+        const link = document.createElement('a');
+        link.download = `kasa-challenge-tablo-${new Date().toISOString().slice(0, 10)}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
     }
 
     function exportBackup() {
