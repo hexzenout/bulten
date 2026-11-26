@@ -449,99 +449,150 @@
       #omega-rolling-feature-host .v929-history-date-panel {
         position:relative;
         width:min(362px, 100%);
-        padding:11px 12px;
-        border-radius:14px;
+        padding:12px 13px;
+        border-radius:15px;
         border:1px solid rgba(251,191,36,.36);
         background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.99));
-        box-shadow:0 14px 36px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.06);
+        box-shadow:0 16px 40px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.06);
       }
       #omega-rolling-feature-host .v929-history-date-panel[hidden] { display:none !important; }
-      #omega-rolling-feature-host .v929-history-date-panel-head {
+      #omega-rolling-feature-host .v929-cal-nav {
         display:flex;
         align-items:center;
         justify-content:space-between;
-        gap:10px;
+        gap:8px;
         margin-bottom:8px;
       }
-      #omega-rolling-feature-host .v929-history-date-panel-head b {
-        color:#fbbf24;
-        font:950 13px/1 'Inter',system-ui,sans-serif;
-      }
-      #omega-rolling-feature-host .v929-history-date-panel-head span {
-        color:#e2e8f0;
-        background:rgba(30,41,59,.85);
-        border:1px solid rgba(148,163,184,.24);
-        border-radius:999px;
-        padding:4px 9px;
-        font:800 11px/1.1 'Inter',system-ui,sans-serif;
-      }
-      #omega-rolling-feature-host .v929-date-grid {
-        display:grid;
-        grid-template-columns:.85fr 1.25fr .85fr;
-        gap:7px;
-      }
-      #omega-rolling-feature-host .v929-date-field small {
-        display:block;
-        margin:0 0 4px;
-        color:#93c5fd;
-        font:900 11px/1 'Inter',system-ui,sans-serif;
-      }
-      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-trigger {
-        width:100%;
-        min-height:33px;
-        border-radius:10px;
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-arrow {
+        width:32px;
+        min-width:32px;
+        min-height:30px;
+        padding:0;
+        border-radius:9px;
         border:1px solid rgba(148,163,184,.28);
         background:rgba(2,6,23,.86);
-        color:#f8fafc;
+        color:#e2e8f0;
+        font:900 13px/1 'Inter',system-ui,sans-serif;
+        transform:none;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-arrow:disabled {
+        opacity:.32;
+        cursor:not-allowed;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-ym-btn {
+        flex:1 1 auto;
+        min-height:30px;
+        border-radius:9px;
+        border:1px solid rgba(251,191,36,.28);
+        background:rgba(15,23,42,.88);
+        color:#fbbf24;
         padding:0 10px;
+        font:900 13px/1 'Inter',system-ui,sans-serif;
+        gap:6px;
+        transform:none;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-ym-btn:hover,
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-arrow:not(:disabled):hover {
+        transform:none;
+        border-color:rgba(251,191,36,.68);
+      }
+      #omega-rolling-feature-host .v929-cal-range-info {
         display:flex;
         align-items:center;
         justify-content:space-between;
-        gap:6px;
-        font:800 12px/1 'Inter',system-ui,sans-serif;
-        transform:none;
-      }
-      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-trigger:hover {
-        transform:none;
-        border-color:rgba(251,191,36,.55);
-      }
-      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-trigger.is-open {
-        border-color:rgba(251,191,36,.84);
-        color:#fbbf24;
-        box-shadow:0 0 0 2px rgba(251,191,36,.14);
-      }
-      #omega-rolling-feature-host .v929-date-caret {
-        font-size:10px;
-        opacity:.78;
-      }
-      #omega-rolling-feature-host .v929-date-drawer {
-        margin-top:8px;
-        padding:7px;
-        border-radius:11px;
+        gap:8px;
+        padding:6px 10px;
+        margin-bottom:8px;
+        border-radius:10px;
         border:1px solid rgba(148,163,184,.18);
-        background:rgba(2,6,23,.76);
-        max-height:178px;
-        overflow-y:auto;
+        background:rgba(2,6,23,.74);
+        font:800 11.5px/1.25 'Inter',system-ui,sans-serif;
+        color:#cbd5e1;
       }
-      #omega-rolling-feature-host .v929-date-drawer-grid {
+      #omega-rolling-feature-host .v929-cal-range-info b {
+        color:#fbbf24;
+        font-weight:900;
+      }
+      #omega-rolling-feature-host .v929-cal-range-info span {
+        color:#94a3b8;
+        font-size:10.5px;
+      }
+      #omega-rolling-feature-host .v929-cal-weekdays {
         display:grid;
-        gap:4px;
-      }
-      #omega-rolling-feature-host .v929-date-drawer-grid.is-day {
         grid-template-columns:repeat(7, minmax(0, 1fr));
+        gap:3px;
+        margin-bottom:4px;
       }
-      #omega-rolling-feature-host .v929-date-drawer-grid.is-month {
+      #omega-rolling-feature-host .v929-cal-weekdays span {
+        text-align:center;
+        color:#93c5fd;
+        font:900 10.5px/1.2 'Inter',system-ui,sans-serif;
+        padding:2px 0;
+      }
+      #omega-rolling-feature-host .v929-cal-days {
+        display:grid;
+        grid-template-columns:repeat(7, minmax(0, 1fr));
+        gap:3px;
+      }
+      #omega-rolling-feature-host .v929-cal-spacer {
+        min-height:28px;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-day {
+        min-height:28px;
+        border-radius:8px;
+        padding:0;
+        border:1px solid rgba(148,163,184,.14);
+        background:rgba(15,23,42,.66);
+        color:#e2e8f0;
+        font:800 12px/1 'Inter',system-ui,sans-serif;
+        justify-content:center;
+        transform:none;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-day:disabled {
+        opacity:.26;
+        cursor:not-allowed;
+        border-color:transparent;
+        background:transparent;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-day:not(:disabled):hover {
+        transform:none;
+        border-color:rgba(251,191,36,.62);
+        color:#fef3c7;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-day.is-today {
+        border-color:rgba(56,189,248,.65);
+        color:#7dd3fc;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-day.is-in-range {
+        background:rgba(251,191,36,.16);
+        border-color:rgba(251,191,36,.34);
+        color:#fde68a;
+      }
+      #omega-rolling-feature-host .v929-history-date-panel button.v929-cal-day.is-edge {
+        background:#fbbf24;
+        border-color:#fbbf24;
+        color:#020617;
+        font-weight:950;
+      }
+      #omega-rolling-feature-host .v929-cal-ym-box {
+        display:grid;
+        gap:8px;
+        padding:6px 2px;
+      }
+      #omega-rolling-feature-host .v929-cal-ym-years {
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px;
+      }
+      #omega-rolling-feature-host .v929-cal-ym-months {
+        display:grid;
         grid-template-columns:repeat(3, minmax(0, 1fr));
         gap:5px;
       }
-      #omega-rolling-feature-host .v929-date-drawer-grid.is-year {
-        grid-template-columns:repeat(auto-fit, minmax(76px, 1fr));
-        gap:5px;
-      }
       #omega-rolling-feature-host .v929-history-date-panel button.v929-date-opt {
-        min-height:26px;
-        border-radius:7px;
-        padding:0 4px;
+        min-height:28px;
+        border-radius:8px;
+        padding:0 8px;
         border:1px solid rgba(148,163,184,.2);
         background:rgba(15,23,42,.74);
         color:#e2e8f0;
@@ -549,32 +600,120 @@
         justify-content:center;
         transform:none;
       }
-      #omega-rolling-feature-host .v929-history-date-panel button.v929-date-opt:hover {
-        transform:none;
-        border-color:rgba(251,191,36,.58);
-        color:#fef3c7;
-      }
       #omega-rolling-feature-host .v929-history-date-panel button.v929-date-opt.is-selected {
-        background:rgba(251,191,36,.2);
-        border-color:rgba(251,191,36,.86);
+        background:rgba(251,191,36,.22);
+        border-color:rgba(251,191,36,.84);
         color:#fbbf24;
       }
       #omega-rolling-feature-host .v929-date-actions {
         display:flex;
         align-items:center;
         justify-content:space-between;
-        gap:10px;
-        margin-top:9px;
+        gap:8px;
+        margin-top:10px;
       }
       #omega-rolling-feature-host .v929-date-actions button {
-        min-height:33px;
+        min-height:32px;
         border-radius:10px;
-        padding:0 14px;
+        padding:0 12px;
       }
       #omega-rolling-feature-host .v929-date-actions [data-v929-date-apply] {
         color:#020617;
         background:#fbbf24;
         border-color:#fbbf24;
+      }
+      #omega-rolling-feature-host .v929-date-actions [data-v929-date-apply]:disabled {
+        opacity:.42;
+        cursor:not-allowed;
+      }
+      #omega-rolling-feature-host .v930-history-summary {
+        display:grid;
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+        gap:8px;
+        margin:0 0 10px;
+      }
+      #omega-rolling-feature-host .v930-history-stat {
+        padding:9px 11px;
+        border-radius:13px;
+        border:1px solid rgba(148,163,184,.18);
+        background:rgba(15,23,42,.72);
+        display:grid;
+        gap:3px;
+      }
+      #omega-rolling-feature-host .v930-history-stat small {
+        color:#94a3b8;
+        font:800 10.5px/1.1 'Inter',system-ui,sans-serif;
+      }
+      #omega-rolling-feature-host .v930-history-stat b {
+        color:#f8fafc;
+        font:900 13.5px/1.15 'Inter',system-ui,sans-serif;
+      }
+      #omega-rolling-feature-host .v930-history-stat b .pos { color:#4ade80; }
+      #omega-rolling-feature-host .v930-history-stat b .neg { color:#f87171; }
+      #omega-rolling-feature-host .v930-history-stat b.pos { color:#4ade80; }
+      #omega-rolling-feature-host .v930-history-stat b.neg { color:#f87171; }
+      #rolling-excel-overlay .v931-clear-all-btn {
+        border-color:rgba(248,113,113,.36) !important;
+        color:#fca5a5 !important;
+        background:rgba(127,29,29,.22) !important;
+      }
+      #rolling-excel-overlay .v931-clear-all-btn:hover {
+        border-color:rgba(248,113,113,.75) !important;
+        color:#fee2e2 !important;
+        background:rgba(153,27,27,.36) !important;
+      }
+      .v931-clear-confirm-backdrop {
+        position:fixed;
+        inset:0;
+        z-index:1001020;
+        background:rgba(2,6,23,.76);
+        backdrop-filter:blur(4px);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:16px;
+      }
+      .v931-clear-confirm-card {
+        width:min(380px, 92vw);
+        border-radius:18px;
+        border:1px solid rgba(248,113,113,.4);
+        background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.99));
+        box-shadow:0 24px 64px rgba(0,0,0,.62);
+        padding:18px;
+        color:#f8fafc;
+        display:grid;
+        gap:12px;
+      }
+      .v931-clear-confirm-card b {
+        color:#fca5a5;
+        font:950 15px/1.2 'Inter',system-ui,sans-serif;
+      }
+      .v931-clear-confirm-card p {
+        margin:0;
+        color:#cbd5e1;
+        font:600 13px/1.45 'Inter',system-ui,sans-serif;
+      }
+      .v931-clear-confirm-actions {
+        display:flex;
+        align-items:center;
+        justify-content:flex-end;
+        gap:8px;
+        margin-top:4px;
+      }
+      .v931-clear-confirm-actions button {
+        min-height:36px;
+        padding:0 14px;
+        border-radius:10px;
+        border:1px solid rgba(148,163,184,.28);
+        background:rgba(15,23,42,.86);
+        color:#e2e8f0;
+        font:800 12.5px/1 'Inter',system-ui,sans-serif;
+        cursor:pointer;
+      }
+      .v931-clear-confirm-actions [data-v931-clear-confirm] {
+        background:#dc2626;
+        border-color:#ef4444;
+        color:#fff;
       }
       #omega-rolling-feature-host .v768-feature-modal.crypto.active,
       #omega-rolling-feature-host .v768-feature-modal.crypto.history {
@@ -2427,6 +2566,38 @@
     omega_RenderExcelTable();
   };
 
+  window.omega_RollingClearAllBoxes = function() {
+    document.getElementById("v931-clear-confirm-backdrop")?.remove();
+    const wrap = document.createElement("div");
+    wrap.id = "v931-clear-confirm-backdrop";
+    wrap.className = "v931-clear-confirm-backdrop";
+    wrap.innerHTML = `<div class="v931-clear-confirm-card" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+      <b>Tüm Kutuları Temizle</b>
+      <p>Bu modeldeki tüm günlerin maç ve işlem kutuları boşaltılacak. Emin misin?</p>
+      <div class="v931-clear-confirm-actions">
+        <button type="button" data-v931-clear-cancel>Vazgeç</button>
+        <button type="button" data-v931-clear-confirm>Evet, Temizle</button>
+      </div>
+    </div>`;
+    const close = () => wrap.remove();
+    wrap.addEventListener("click", close);
+    wrap.querySelector("[data-v931-clear-cancel]")?.addEventListener("click", close);
+    wrap.querySelector("[data-v931-clear-confirm]")?.addEventListener("click", () => {
+      const plan = ensureRollingPlan();
+      const days = Math.max(1, Number(_ACTIVE_EXCEL_DAYS || 7));
+      for (let d = 1; d <= days; d++) {
+        plan.ops[d] = new Array(v780DefaultSlotCount(d)).fill(null);
+      }
+      if (plan.pending) delete plan.pending;
+      if (plan.cryptoPending) delete plan.cryptoPending;
+      if (plan.slotCounts) delete plan.slotCounts;
+      omega_SaveRollingDB();
+      omega_RenderExcelTable();
+      close();
+    });
+    document.body.appendChild(wrap);
+  };
+
   function v763EscapeHtml(value) {
     return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
   }
@@ -3316,10 +3487,12 @@
     }
     const manual = v926GetHistoryManualDate(mode);
     if (manual) {
-      const parts = manual.split("-").map(Number);
-      if (parts.length === 3 && parts.every(Boolean)) {
-        const start = new Date(parts[0], parts[1] - 1, parts[2]);
-        const end = new Date(parts[0], parts[1] - 1, parts[2] + 1);
+      const parsed = v929ParseManualRange(manual);
+      if (parsed.start) {
+        const sp = parsed.start.split("-").map(Number);
+        const ep = (parsed.end || parsed.start).split("-").map(Number);
+        const start = new Date(sp[0], sp[1] - 1, sp[2]);
+        const end = new Date(ep[0], ep[1] - 1, ep[2] + 1);
         return [start.getTime(), end.getTime()];
       }
     }
@@ -3343,16 +3516,68 @@
     });
   }
 
-  function v929FormatHistoryDateLabel(value) {
-    const raw = String(value || "").trim();
-    const parts = raw.split("-").map(Number);
-    if (parts.length !== 3 || parts.some(n => !Number.isFinite(n) || !n)) return "Tarih Seç";
-    return new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString("tr-TR", { day:"2-digit", month:"long", year:"numeric" });
-  }
-
   function v929TodayYmdParts() {
     const now = new Date();
     return { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };
+  }
+
+  function v929TodayYmdString() {
+    const t = v929TodayYmdParts();
+    return `${String(t.y).padStart(4,"0")}-${String(t.m).padStart(2,"0")}-${String(t.d).padStart(2,"0")}`;
+  }
+
+  function v929ClampYmd(ymd) {
+    const raw = String(ymd || "").trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return "";
+    const todayStr = v929TodayYmdString();
+    if (raw < V928_HISTORY_MIN_DATE) return V928_HISTORY_MIN_DATE;
+    if (raw > todayStr) return todayStr;
+    return raw;
+  }
+
+  function v929ParseManualRange(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return { start: "", end: "" };
+    const chunks = raw.split("..").map(s => v929ClampYmd(s)).filter(Boolean);
+    if (!chunks.length) return { start: "", end: "" };
+    const a = chunks[0];
+    const b = chunks[1] || chunks[0];
+    return a <= b ? { start: a, end: b } : { start: b, end: a };
+  }
+
+  function v929SerializeManualRange(start, end) {
+    const s = v929ClampYmd(start);
+    if (!s) return "";
+    const e = v929ClampYmd(end) || s;
+    return s === e ? s : (s <= e ? `${s}..${e}` : `${e}..${s}`);
+  }
+
+  function v929DaysBetween(startYmd, endYmd) {
+    if (!startYmd || !endYmd) return 0;
+    const sp = startYmd.split("-").map(Number);
+    const ep = endYmd.split("-").map(Number);
+    const t1 = Date.UTC(sp[0], sp[1] - 1, sp[2]);
+    const t2 = Date.UTC(ep[0], ep[1] - 1, ep[2]);
+    return Math.round(Math.abs(t2 - t1) / 86400000) + 1;
+  }
+
+  function v929FormatHistoryDateLabel(value) {
+    const { start, end } = v929ParseManualRange(value);
+    if (!start) return "Tarih Seç";
+    const sp = start.split("-").map(Number);
+    const ep = (end || start).split("-").map(Number);
+    const d1 = new Date(sp[0], sp[1] - 1, sp[2]);
+    if (!end || start === end) {
+      return d1.toLocaleDateString("tr-TR", { day:"2-digit", month:"long", year:"numeric" });
+    }
+    const d2 = new Date(ep[0], ep[1] - 1, ep[2]);
+    if (sp[0] === ep[0] && sp[1] === ep[1]) {
+      return `${String(sp[2]).padStart(2,"0")}–${String(ep[2]).padStart(2,"0")} ${d1.toLocaleDateString("tr-TR", { month:"long" })} ${sp[0]}`;
+    }
+    if (sp[0] === ep[0]) {
+      return `${d1.toLocaleDateString("tr-TR", { day:"2-digit", month:"short" })} – ${d2.toLocaleDateString("tr-TR", { day:"2-digit", month:"short" })} ${sp[0]}`;
+    }
+    return `${d1.toLocaleDateString("tr-TR", { day:"2-digit", month:"short", year:"numeric" })} – ${d2.toLocaleDateString("tr-TR", { day:"2-digit", month:"short", year:"numeric" })}`;
   }
 
   function v929DaysInMonth(year, month) {
@@ -3363,57 +3588,82 @@
     return new Date(2026, Number(month) - 1, 1).toLocaleDateString("tr-TR", { month:"long" });
   }
 
-  function v929ClampDateParts(year, month, day) {
+  function v929ClampViewYm(year, month) {
     const today = v929TodayYmdParts();
     const maxY = Math.max(2026, today.y);
-    const y = Math.min(Math.max(2026, Number(year) || maxY), maxY);
+    const y = Math.min(Math.max(2026, Number(year) || today.y), maxY);
     const mMin = y === 2026 ? 5 : 1;
     const mMax = y === today.y ? today.m : 12;
-    const m = Math.min(Math.max(mMin, Number(month) || mMax), mMax);
-    const dMin = 1;
-    const dMax = y === today.y && m === today.m ? today.d : v929DaysInMonth(y, m);
-    const d = Math.min(Math.max(dMin, Number(day) || dMax), dMax);
-    const ymd = `${String(y).padStart(4,"0")}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-    return { y, m, d, maxY, mMin, mMax, dMin, dMax, ymd };
+    const m = Math.min(Math.max(mMin, Number(month) || today.m), mMax);
+    return { y, m, maxY, mMin, mMax, today };
   }
 
-  function v929BuildDatePanelInnerHtml(mode, year, month, day, activePart = "day") {
-    const c = v929ClampDateParts(year, month, day);
-    const part = ["year", "month", "day"].includes(activePart) ? activePart : "day";
-    let drawerClass = "is-day";
-    let drawerHtml = "";
-    if (part === "year") {
-      drawerClass = "is-year";
+  function v929BuildDatePanelInnerHtml(mode, viewYear, viewMonth, startYmd, endYmd, viewMode = "cal", pickPhase = "fresh") {
+    const vm = v929ClampViewYm(viewYear, viewMonth);
+    const todayStr = v929TodayYmdString();
+    const parsed = v929ParseManualRange(v929SerializeManualRange(startYmd, endYmd));
+    const selStart = parsed.start;
+    const selEnd = parsed.end;
+    const isRange = Boolean(selStart && selEnd && selStart !== selEnd);
+    const daySpan = selStart ? v929DaysBetween(selStart, selEnd || selStart) : 0;
+    const infoLeft = selStart ? v929FormatHistoryDateLabel(v929SerializeManualRange(selStart, selEnd)) : "Tarih seçin";
+    const infoRight = !selStart
+      ? "Gün veya aralık seç"
+      : pickPhase === "picking_end"
+        ? "Bitiş seç veya Uygula"
+        : isRange
+          ? `${daySpan} gün`
+          : "Değiştirmek için gün seç";
+    const canPrev = !(vm.y === 2026 && vm.m <= 5);
+    const canNext = !(vm.y === vm.today.y && vm.m >= vm.today.m);
+    let bodyHtml = "";
+    if (viewMode === "ym") {
       const years = [];
-      for (let yy = c.maxY; yy >= 2026; yy--) years.push(yy);
-      drawerHtml = years.map(yy => `<button type="button" class="v929-date-opt ${yy === c.y ? "is-selected" : ""}" data-v929-date-pick="year:${yy}" data-mode="${mode}">${yy}</button>`).join("");
-    } else if (part === "month") {
-      drawerClass = "is-month";
+      for (let yy = vm.maxY; yy >= 2026; yy--) years.push(yy);
       const months = [];
-      for (let mm = c.mMin; mm <= c.mMax; mm++) months.push(mm);
-      drawerHtml = months.map(mm => `<button type="button" class="v929-date-opt ${mm === c.m ? "is-selected" : ""}" data-v929-date-pick="month:${mm}" data-mode="${mode}">${v763EscapeHtml(v929MonthName(mm))}</button>`).join("");
+      for (let mm = vm.mMin; mm <= vm.mMax; mm++) months.push(mm);
+      bodyHtml = `<div class="v929-cal-ym-box">
+        <div class="v929-cal-ym-years">${years.map(yy => `<button type="button" class="v929-date-opt ${yy === vm.y ? "is-selected" : ""}" data-v929-cal-pick-year="${yy}">${yy}</button>`).join("")}</div>
+        <div class="v929-cal-ym-months">${months.map(mm => `<button type="button" class="v929-date-opt ${mm === vm.m ? "is-selected" : ""}" data-v929-cal-pick-month="${mm}">${v763EscapeHtml(v929MonthName(mm))}</button>`).join("")}</div>
+      </div>`;
     } else {
-      const days = [];
-      for (let dd = c.dMin; dd <= c.dMax; dd++) days.push(dd);
-      drawerHtml = days.map(dd => `<button type="button" class="v929-date-opt ${dd === c.d ? "is-selected" : ""}" data-v929-date-pick="day:${dd}" data-mode="${mode}">${String(dd).padStart(2, "0")}</button>`).join("");
+      const firstWeekday = (new Date(vm.y, vm.m - 1, 1).getDay() + 6) % 7;
+      const totalDays = v929DaysInMonth(vm.y, vm.m);
+      const cells = [];
+      for (let i = 0; i < firstWeekday; i++) cells.push(`<span class="v929-cal-spacer"></span>`);
+      for (let dd = 1; dd <= totalDays; dd++) {
+        const ymd = `${String(vm.y).padStart(4,"0")}-${String(vm.m).padStart(2,"0")}-${String(dd).padStart(2,"0")}`;
+        const disabled = ymd < V928_HISTORY_MIN_DATE || ymd > todayStr;
+        const isEdge = Boolean(selStart && (ymd === selStart || ymd === selEnd));
+        const isInRange = Boolean(isRange && ymd > selStart && ymd < selEnd);
+        const isToday = ymd === todayStr;
+        const cls = ["v929-cal-day", isToday ? "is-today" : "", isInRange ? "is-in-range" : "", isEdge ? "is-edge" : ""].filter(Boolean).join(" ");
+        cells.push(`<button type="button" class="${cls}" data-v929-cal-day="${ymd}" ${disabled ? "disabled" : ""}>${dd}</button>`);
+      }
+      bodyHtml = `<div class="v929-cal-weekdays"><span>Pzt</span><span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cmt</span><span>Paz</span></div>
+        <div class="v929-cal-days">${cells.join("")}</div>`;
     }
-    return `<div class="v929-history-date-panel-head"><b>Tarih Seç</b><span>${v763EscapeHtml(v929FormatHistoryDateLabel(c.ymd))}</span></div>
-      <div class="v929-date-grid">
-        <div class="v929-date-field"><small>Yıl</small><button type="button" class="v929-date-trigger ${part === "year" ? "is-open" : ""}" data-v929-date-part="year" data-mode="${mode}"><span>${c.y}</span><span class="v929-date-caret">▾</span></button></div>
-        <div class="v929-date-field"><small>Ay</small><button type="button" class="v929-date-trigger ${part === "month" ? "is-open" : ""}" data-v929-date-part="month" data-mode="${mode}"><span>${v763EscapeHtml(v929MonthName(c.m))}</span><span class="v929-date-caret">▾</span></button></div>
-        <div class="v929-date-field"><small>Gün</small><button type="button" class="v929-date-trigger ${part === "day" ? "is-open" : ""}" data-v929-date-part="day" data-mode="${mode}"><span>${String(c.d).padStart(2, "0")}</span><span class="v929-date-caret">▾</span></button></div>
+    return `<div class="v929-cal-nav">
+        <button type="button" class="v929-cal-arrow" data-v929-cal-nav="-1" ${canPrev ? "" : "disabled"} aria-label="Önceki ay">‹</button>
+        <button type="button" class="v929-cal-ym-btn" data-v929-cal-ym-toggle>${v763EscapeHtml(v929MonthName(vm.m))} ${vm.y} ▾</button>
+        <button type="button" class="v929-cal-arrow" data-v929-cal-nav="1" ${canNext ? "" : "disabled"} aria-label="Sonraki ay">›</button>
       </div>
-      <div class="v929-date-drawer"><div class="v929-date-drawer-grid ${drawerClass}">${drawerHtml}</div></div>
-      <div class="v929-date-actions"><button type="button" data-v929-date-clear="${mode}">Temizle</button><button type="button" data-v929-date-apply="${mode}">Uygula</button></div>`;
+      <div class="v929-cal-range-info"><b>${v763EscapeHtml(infoLeft)}</b><span>${v763EscapeHtml(infoRight)}</span></div>
+      ${bodyHtml}
+      <div class="v929-date-actions">
+        <button type="button" data-v929-date-clear="${mode}">Temizle</button>
+        <button type="button" data-v929-cal-whole-month="${mode}">Bu Ayı Seç</button>
+        <button type="button" data-v929-cal-today="${mode}">Bugün</button>
+        <button type="button" data-v929-date-apply="${mode}" ${selStart ? "" : "disabled"}>Uygula</button>
+      </div>`;
   }
 
   function v929BuildDatePanelHtml(mode, manual) {
+    const parsed = v929ParseManualRange(manual);
     const today = v929TodayYmdParts();
-    const todayValue = `${String(today.y).padStart(4,"0")}-${String(today.m).padStart(2,"0")}-${String(today.d).padStart(2,"0")}`;
-    const safeManual = v928ClampHistoryDate(manual || todayValue) || V928_HISTORY_MIN_DATE;
-    const parts = safeManual.split("-").map(Number);
-    const c = v929ClampDateParts(parts[0] || Math.max(2026, today.y), parts[1] || today.m || 5, parts[2] || today.d || 1);
-    return `<div class="v929-history-date-panel" data-v929-date-panel="${mode}" data-year="${c.y}" data-month="${c.m}" data-day="${c.d}" data-part="day" hidden>${v929BuildDatePanelInnerHtml(mode, c.y, c.m, c.d, "day")}</div>`;
+    const anchor = (parsed.end || parsed.start || v929TodayYmdString()).split("-").map(Number);
+    const vm = v929ClampViewYm(anchor[0] || today.y, anchor[1] || today.m);
+    return `<div class="v929-history-date-panel" data-v929-date-panel="${mode}" data-view-y="${vm.y}" data-view-m="${vm.m}" data-start="${v763EscapeHtml(parsed.start)}" data-end="${v763EscapeHtml(parsed.end)}" data-view-mode="cal" data-pick-phase="fresh" hidden>${v929BuildDatePanelInnerHtml(mode, vm.y, vm.m, parsed.start, parsed.end, "cal", "fresh")}</div>`;
   }
 
   function v926HistoryFiltersHtml(mode) {
@@ -4184,12 +4434,32 @@
     </article>`;
   }
 
+  function v930HistorySummaryBarHtml(rows, isCrypto) {
+    const count = rows.length;
+    let wins = 0;
+    let netPnl = 0;
+    rows.forEach(row => {
+      const pnl = isCrypto ? v960CryptoHistoryPnl(row) : (row.res === "win" ? (Number(row.possible || 0) - Number(row.stake || 0)) : -Number(row.stake || 0));
+      if (isCrypto ? pnl >= 0 : row.res === "win") wins += 1;
+      netPnl += pnl;
+    });
+    const losses = count - wins;
+    const netText = v941FormatSignedMoney(netPnl);
+    const netCls = netPnl > 0 ? "pos" : netPnl < 0 ? "neg" : "";
+    return `<div class="v930-history-summary" data-v930-history-summary>
+      <div class="v930-history-stat"><small>Toplam İşlem</small><b>${count}</b></div>
+      <div class="v930-history-stat"><small>${isCrypto ? "Kârlı / Zararlı" : "Kazanan / Kaybeden"}</small><b><span class="pos">${wins}</span> / <span class="neg">${losses}</span></b></div>
+      <div class="v930-history-stat"><small>Net K/Z</small><b class="${netCls}">${netText}</b></div>
+    </div>`;
+  }
+
   function v768FeatureRowsHtml(mode, kind) {
     const isCrypto = mode === "crypto";
     const allRows = kind === "active" ? v768LiveRows(mode) : v768HistoryRows(mode);
     const rows = kind === "history" ? v926FilterHistoryRows(allRows, mode) : allRows;
-    if (!rows.length) return `<div class="v768-feature-empty">${kind === "active" ? "Aktif bahis yok. Maç/işlem yazınca burada görünür." : "Seçilen tarih aralığında geçmiş kayıt yok."}</div>`;
-    return rows.map(row => {
+    const summaryBar = kind === "history" ? v930HistorySummaryBarHtml(rows, isCrypto) : "";
+    if (!rows.length) return `${summaryBar}<div class="v768-feature-empty">${kind === "active" ? "Aktif bahis yok. Maç/işlem yazınca burada görünür." : "Seçilen tarih aralığında geçmiş kayıt yok."}</div>`;
+    return summaryBar + rows.map(row => {
       if (isCrypto) return v956CryptoFeatureCardHtml(row, kind);
       const comboRows = Array.isArray(row.combo) ? row.combo : [];
       const isBet = !isCrypto;
@@ -4719,8 +4989,15 @@
       document.querySelectorAll("[data-v929-date-panel]").forEach(other => {
         if (other === exceptPanel) return;
         other.hidden = true;
-        other.closest(".v768-feature-modal")?.classList.remove("is-date-panel-open");
       });
+    }
+    function v929RenderCalendarPanel(panel) {
+      if (!panel) return;
+      const mode = panel.dataset.v929DatePanel === "crypto" ? "crypto" : "bet";
+      const vm = v929ClampViewYm(panel.dataset.viewY, panel.dataset.viewM);
+      panel.dataset.viewY = String(vm.y);
+      panel.dataset.viewM = String(vm.m);
+      panel.innerHTML = v929BuildDatePanelInnerHtml(mode, vm.y, vm.m, panel.dataset.start || "", panel.dataset.end || "", panel.dataset.viewMode || "cal", panel.dataset.pickPhase || "fresh");
     }
     document.addEventListener("click", function(event) {
       const dateOpen = event.target.closest && event.target.closest("[data-v929-date-open]");
@@ -4734,52 +5011,141 @@
         v929CloseAllDatePanels(panel);
         if (panel) {
           panel.hidden = !willOpen;
-          panel.closest(".v768-feature-modal")?.classList.toggle("is-date-panel-open", willOpen);
+          if (willOpen) {
+            panel.dataset.viewMode = "cal";
+            panel.dataset.pickPhase = "fresh";
+            v929RenderCalendarPanel(panel);
+          }
         }
         return;
       }
-      const partBtn = event.target.closest && event.target.closest("[data-v929-date-part]");
-      if (partBtn) {
+      const navBtn = event.target.closest && event.target.closest("[data-v929-cal-nav]");
+      if (navBtn) {
         event.preventDefault();
         event.stopPropagation();
-        const panel = partBtn.closest("[data-v929-date-panel]");
+        const panel = navBtn.closest("[data-v929-date-panel]");
         if (!panel) return;
-        const mode = panel.dataset.v929DatePanel === "crypto" ? "crypto" : "bet";
-        const nextPart = partBtn.dataset.v929DatePart || "day";
-        const c = v929ClampDateParts(panel.dataset.year, panel.dataset.month, panel.dataset.day);
-        panel.dataset.part = nextPart;
-        panel.innerHTML = v929BuildDatePanelInnerHtml(mode, c.y, c.m, c.d, nextPart);
+        const delta = Number(navBtn.dataset.v929CalNav || 0);
+        let y = Number(panel.dataset.viewY || 2026);
+        let m = Number(panel.dataset.viewM || 5) + delta;
+        if (m < 1) { m = 12; y -= 1; }
+        if (m > 12) { m = 1; y += 1; }
+        const vm = v929ClampViewYm(y, m);
+        panel.dataset.viewY = String(vm.y);
+        panel.dataset.viewM = String(vm.m);
+        panel.dataset.viewMode = "cal";
+        if (panel.dataset.pickPhase !== "picking_end") panel.dataset.pickPhase = "fresh";
+        v929RenderCalendarPanel(panel);
         return;
       }
-      const pickBtn = event.target.closest && event.target.closest("[data-v929-date-pick]");
-      if (pickBtn) {
+      const ymToggle = event.target.closest && event.target.closest("[data-v929-cal-ym-toggle]");
+      if (ymToggle) {
         event.preventDefault();
         event.stopPropagation();
-        const panel = pickBtn.closest("[data-v929-date-panel]");
+        const panel = ymToggle.closest("[data-v929-date-panel]");
         if (!panel) return;
-        const mode = panel.dataset.v929DatePanel === "crypto" ? "crypto" : "bet";
-        const [kind, rawVal] = String(pickBtn.dataset.v929DatePick || "").split(":");
-        const val = Number(rawVal);
-        let y = Number(panel.dataset.year || 2026);
-        let m = Number(panel.dataset.month || 5);
-        let d = Number(panel.dataset.day || 1);
-        let nextPart = "day";
-        if (kind === "year" && Number.isFinite(val)) {
-          y = val;
-          nextPart = "month";
-        } else if (kind === "month" && Number.isFinite(val)) {
-          m = val;
-          nextPart = "day";
-        } else if (kind === "day" && Number.isFinite(val)) {
-          d = val;
-          nextPart = "day";
+        panel.dataset.viewMode = panel.dataset.viewMode === "ym" ? "cal" : "ym";
+        v929RenderCalendarPanel(panel);
+        return;
+      }
+      const pickYear = event.target.closest && event.target.closest("[data-v929-cal-pick-year]");
+      if (pickYear) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = pickYear.closest("[data-v929-date-panel]");
+        if (!panel) return;
+        const vm = v929ClampViewYm(Number(pickYear.dataset.v929CalPickYear || 2026), Number(panel.dataset.viewM || 5));
+        panel.dataset.viewY = String(vm.y);
+        panel.dataset.viewM = String(vm.m);
+        if (panel.dataset.pickPhase !== "picking_end") panel.dataset.pickPhase = "fresh";
+        v929RenderCalendarPanel(panel);
+        return;
+      }
+      const pickMonth = event.target.closest && event.target.closest("[data-v929-cal-pick-month]");
+      if (pickMonth) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = pickMonth.closest("[data-v929-date-panel]");
+        if (!panel) return;
+        const vm = v929ClampViewYm(Number(panel.dataset.viewY || 2026), Number(pickMonth.dataset.v929CalPickMonth || 5));
+        panel.dataset.viewY = String(vm.y);
+        panel.dataset.viewM = String(vm.m);
+        panel.dataset.viewMode = "cal";
+        if (panel.dataset.pickPhase !== "picking_end") panel.dataset.pickPhase = "fresh";
+        v929RenderCalendarPanel(panel);
+        return;
+      }
+      const dayBtn = event.target.closest && event.target.closest("[data-v929-cal-day]");
+      if (dayBtn && !dayBtn.disabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = dayBtn.closest("[data-v929-date-panel]");
+        if (!panel) return;
+        const clicked = v929ClampYmd(dayBtn.dataset.v929CalDay);
+        if (!clicked) return;
+        const phase = panel.dataset.pickPhase || "fresh";
+        const curStart = panel.dataset.start || "";
+        const curEnd = panel.dataset.end || "";
+        if (curStart && curStart === curEnd && clicked === curStart) {
+          panel.dataset.start = "";
+          panel.dataset.end = "";
+          panel.dataset.pickPhase = "fresh";
+        } else if (curStart && curEnd && curStart !== curEnd && clicked === curStart) {
+          panel.dataset.start = curEnd;
+          panel.dataset.end = curEnd;
+          panel.dataset.pickPhase = "picking_end";
+        } else if (curStart && curEnd && curStart !== curEnd && clicked === curEnd) {
+          panel.dataset.start = curStart;
+          panel.dataset.end = curStart;
+          panel.dataset.pickPhase = "picking_end";
+        } else if (phase !== "picking_end" || !curStart) {
+          panel.dataset.start = clicked;
+          panel.dataset.end = clicked;
+          panel.dataset.pickPhase = "picking_end";
+        } else if (clicked < curStart) {
+          panel.dataset.start = clicked;
+          panel.dataset.end = curStart;
+          panel.dataset.pickPhase = "done";
+        } else {
+          panel.dataset.start = curStart;
+          panel.dataset.end = clicked;
+          panel.dataset.pickPhase = "done";
         }
-        const c = v929ClampDateParts(y, m, d);
-        panel.dataset.year = String(c.y);
-        panel.dataset.month = String(c.m);
-        panel.dataset.day = String(c.d);
-        panel.dataset.part = nextPart;
-        panel.innerHTML = v929BuildDatePanelInnerHtml(mode, c.y, c.m, c.d, nextPart);
+        v929RenderCalendarPanel(panel);
+        return;
+      }
+      const wholeMonthBtn = event.target.closest && event.target.closest("[data-v929-cal-whole-month]");
+      if (wholeMonthBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = wholeMonthBtn.closest("[data-v929-date-panel]");
+        if (!panel) return;
+        const vm = v929ClampViewYm(panel.dataset.viewY, panel.dataset.viewM);
+        const lastDay = v929DaysInMonth(vm.y, vm.m);
+        const firstStr = v929ClampYmd(`${String(vm.y).padStart(4,"0")}-${String(vm.m).padStart(2,"0")}-01`);
+        const lastStr = v929ClampYmd(`${String(vm.y).padStart(4,"0")}-${String(vm.m).padStart(2,"0")}-${String(lastDay).padStart(2,"0")}`);
+        panel.dataset.start = firstStr;
+        panel.dataset.end = lastStr;
+        panel.dataset.viewMode = "cal";
+        panel.dataset.pickPhase = "done";
+        v929RenderCalendarPanel(panel);
+        return;
+      }
+      const todayBtn = event.target.closest && event.target.closest("[data-v929-cal-today]");
+      if (todayBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = todayBtn.closest("[data-v929-date-panel]");
+        if (!panel) return;
+        const t = v929TodayYmdParts();
+        const todayStr = v929TodayYmdString();
+        panel.dataset.viewY = String(t.y);
+        panel.dataset.viewM = String(t.m);
+        panel.dataset.start = todayStr;
+        panel.dataset.end = todayStr;
+        panel.dataset.viewMode = "cal";
+        panel.dataset.pickPhase = "done";
+        v929RenderCalendarPanel(panel);
         return;
       }
       const apply = event.target.closest && event.target.closest("[data-v929-date-apply]");
@@ -4788,9 +5154,9 @@
         event.stopPropagation();
         const mode = apply.dataset.v929DateApply === "crypto" ? "crypto" : "bet";
         const panel = apply.closest(`[data-v929-date-panel="${mode}"]`);
-        const c = v929ClampDateParts(panel?.dataset.year, panel?.dataset.month, panel?.dataset.day);
-        const clampedDate = v928ClampHistoryDate(c.ymd);
-        localStorage.setItem(v926HistoryDateStorageKey(mode), clampedDate);
+        const serialized = v929SerializeManualRange(panel?.dataset.start, panel?.dataset.end);
+        if (!serialized) return;
+        localStorage.setItem(v926HistoryDateStorageKey(mode), serialized);
         localStorage.setItem(v926HistoryFilterStorageKey(mode), "manual");
         v768OpenFeaturePanel(mode, "history");
         return;

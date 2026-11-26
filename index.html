@@ -529,7 +529,10 @@ html.v536-sound-preboot #v28-sound-mount::before {
         <div class="modal-header">
             <h2 id="excel-modal-title">ROLLING EXCEL</h2>
             <div class="progress-bar-container"><div id="excel-progress-bar" class="progress-bar-fill"></div></div>
-            <button type="button" class="btn-modal-back" onclick="omega_CloseRollingExcel(true)">KAPAT</button>
+            <div class="v931-header-actions" style="display:flex;align-items:center;gap:8px;flex:0 0 auto;">
+                <button type="button" class="btn-modal-back v931-clear-all-btn" onclick="omega_RollingClearAllBoxes()">TÜM KUTULARI TEMİZLE</button>
+                <button type="button" class="btn-modal-back" onclick="omega_CloseRollingExcel(true)">KAPAT</button>
+            </div>
         </div>
         <div class="modal-config-bar">
             <div class="config-item"><label>BAŞLANGIÇ:</label><input type="number" id="excel-start-bal" value="100" onchange="omega_UpdateExcelConfig()" style="background:transparent; border:none; border-bottom:1px solid #444; color:var(--green); font-family:'JetBrains Mono'; font-size:1em; font-weight:800; padding:2px; width:60px; text-align:center;"></div>
@@ -581,7 +584,7 @@ html.v536-sound-preboot #v28-sound-mount::before {
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <script src="assets/js/84-crypto-tv-chart.js?v=v517"></script>
 <script src="assets/js/85-cleanup-core.js?v=v517"></script>
-<script src="assets/js/86-crypto-professional.js?v=v976"></script>
+<script src="assets/js/86-crypto-professional.js?v=v980"></script>
 
 <script src="assets/js/90-ui-menu-fixes.js?v=v1307"></script>
 <script src="assets/js/91-runtime-core.js?v=v517"></script>
