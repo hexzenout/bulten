@@ -2573,7 +2573,7 @@
     wrap.className = "v931-clear-confirm-backdrop";
     wrap.innerHTML = `<div class="v931-clear-confirm-card" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
       <b>Tüm Kutuları Temizle</b>
-      <p>Bu modeldeki tüm günlerin maç ve işlem kutuları boşaltılacak. Emin misin?</p>
+      <p>Bu modeldeki tüm günlerin işlem kutuları boşaltılacak. Emin misin?</p>
       <div class="v931-clear-confirm-actions">
         <button type="button" data-v931-clear-cancel>Vazgeç</button>
         <button type="button" data-v931-clear-confirm>Evet, Temizle</button>
@@ -3735,7 +3735,7 @@
   }
 
   function v904BetMatchStatusLabel(status) {
-    return status === "win" ? "Kazandı" : status === "loss" ? "Kaybetti" : "────────";
+    return status === "win" ? "Kazandı" : status === "loss" ? "Kaybetti" : "Bekliyor";
   }
 
   function v908CompactText(value, maxLen) {
