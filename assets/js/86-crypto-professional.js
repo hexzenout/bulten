@@ -715,6 +715,32 @@
         border-color:#ef4444;
         color:#fff;
       }
+      #omega-rolling-feature-host .v932-detail-restore-row {
+        display:flex;
+        justify-content:flex-end;
+        margin-top:8px;
+        padding-top:8px;
+        border-top:1px solid rgba(148,163,184,.16);
+      }
+      #omega-rolling-feature-host .v932-history-restore-btn {
+        display:inline-flex !important;
+        align-items:center !important;
+        gap:6px !important;
+        height:30px !important;
+        padding:0 12px !important;
+        border-radius:9px !important;
+        border:1px solid rgba(56,189,248,.42) !important;
+        background:rgba(14,116,144,.22) !important;
+        color:#7dd3fc !important;
+        font:800 11.5px/1 'Inter',system-ui,sans-serif !important;
+        white-space:nowrap !important;
+        cursor:pointer !important;
+      }
+      #omega-rolling-feature-host .v932-history-restore-btn:hover {
+        border-color:#38bdf8 !important;
+        background:rgba(14,116,144,.38) !important;
+        color:#e0f2fe !important;
+      }
       #omega-rolling-feature-host .v768-feature-modal.crypto.active,
       #omega-rolling-feature-host .v768-feature-modal.crypto.history {
         width:min(528px, 96vw) !important;
@@ -817,27 +843,31 @@
         line-height: 1 !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.w,
-      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.w {
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.w,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul:has(.v847-leg-panel-inner) > .k-actions.v32[data-v847-main-actions] button.w {
         background: linear-gradient(135deg, rgba(22,163,74,.32), rgba(5,46,22,.94)) !important;
         border: 1px solid rgba(34,197,94,.68) !important;
         color: #bbf7d0 !important;
         box-shadow: 0 0 14px rgba(34,197,94,.16) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.w:hover,
-      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.w:hover {
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.w:hover,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul:has(.v847-leg-panel-inner) > .k-actions.v32[data-v847-main-actions] button.w:hover {
         border-color: #4ade80 !important;
         color: #dcfce7 !important;
         background: linear-gradient(135deg, rgba(34,197,94,.42), rgba(6,78,59,.96)) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.l,
-      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.l {
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.l,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul:has(.v847-leg-panel-inner) > .k-actions.v32[data-v847-main-actions] button.l {
         background: linear-gradient(135deg, rgba(185,28,28,.38), rgba(69,10,10,.96)) !important;
         border: 1px solid rgba(220,38,38,.75) !important;
         color: #fecaca !important;
         box-shadow: 0 0 14px rgba(220,38,38,.20) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.l:hover,
-      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.l:hover {
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.l:hover,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul:has(.v847-leg-panel-inner) > .k-actions.v32[data-v847-main-actions] button.l:hover {
         border-color: #ef4444 !important;
         color: #fee2e2 !important;
         background: linear-gradient(135deg, rgba(220,38,38,.50), rgba(127,29,29,.96)) !important;
@@ -3778,13 +3808,18 @@
 
   function v904BetMatchListHtml(row, kind, matchItems) {
     const items = Array.isArray(matchItems) ? matchItems : [];
-    if (!items.length) return "";
-    return `<ul class="v904-bet-match-list">${items.map((x, idx) => {
-      const status = v904BetMatchStatus(row, kind, idx, items.length);
-      const safeName = v763EscapeHtml(x.note || `Maç ${idx + 1}`);
-      const odds = Number(x.odds || 0) ? Number(x.odds).toFixed(2) : "-";
-      return `<li class="${status}"><span>${idx + 1}. ${safeName}</span><b>${odds}</b><em>${v904BetMatchStatusLabel(status)}</em></li>`;
-    }).join("")}</ul>`;
+    const listHtml = items.length
+      ? `<ul class="v904-bet-match-list">${items.map((x, idx) => {
+          const status = v904BetMatchStatus(row, kind, idx, items.length);
+          const safeName = v763EscapeHtml(x.note || `Maç ${idx + 1}`);
+          const odds = Number(x.odds || 0) ? Number(x.odds).toFixed(2) : "-";
+          return `<li class="${status}"><span>${idx + 1}. ${safeName}</span><b>${odds}</b><em>${v904BetMatchStatusLabel(status)}</em></li>`;
+        }).join("")}</ul>`
+      : "";
+    const restoreRow = kind === "history"
+      ? `<div class="v932-detail-restore-row"><button type="button" class="v932-history-restore-btn" data-v932-restore="bet:${row.day}:${row.slot}"><i class="fa-solid fa-rotate-left"></i> Aktife Geri Al</button></div>`
+      : "";
+    return `${listHtml}${restoreRow}`;
   }
 
 
@@ -4432,7 +4467,11 @@
       v957CryptoMetric("Kaldıraç", v927LeverageLabel(meta.leverage), "lev")
     ].filter(Boolean).join("");
     const targets = v957CryptoTargetsHtml(row, kind);
-    const actions = kind === "active" ? `<div class="v958-crypto-actions"><button type="button" class="win" data-v958-crypto-resolve="${row.day}:${row.slot}:win" onclick="return omega_CryptoFeatureResolve(event, ${row.day}, ${row.slot}, 'win')">KÂR</button><button type="button" class="loss" data-v958-crypto-resolve="${row.day}:${row.slot}:loss" onclick="return omega_CryptoFeatureResolve(event, ${row.day}, ${row.slot}, 'loss')">ZARAR</button></div>` : "";
+    const actions = kind === "active"
+      ? `<div class="v958-crypto-actions"><button type="button" class="win" data-v958-crypto-resolve="${row.day}:${row.slot}:win" onclick="return omega_CryptoFeatureResolve(event, ${row.day}, ${row.slot}, 'win')">KÂR</button><button type="button" class="loss" data-v958-crypto-resolve="${row.day}:${row.slot}:loss" onclick="return omega_CryptoFeatureResolve(event, ${row.day}, ${row.slot}, 'loss')">ZARAR</button></div>`
+      : kind === "history"
+        ? `<div class="v932-detail-restore-row"><button type="button" class="v932-history-restore-btn" data-v932-restore="crypto:${row.day}:${row.slot}"><i class="fa-solid fa-rotate-left"></i> Aktife Geri Al</button></div>`
+        : "";
     return `<div class="v957-crypto-detail">
       ${metrics ? `<div class="v957-crypto-detail-grid">${metrics}</div>` : ""}
       ${targets}
@@ -4850,7 +4889,75 @@
 
   if (!window.__omegaV768ExcelFeatureDelegationBound) {
     window.__omegaV768ExcelFeatureDelegationBound = true;
+    function v932RestoreHistoryToActive(mode, day, slot) {
+      const m = mode === "crypto" ? "crypto" : "bet";
+      const d = Number(day || 0);
+      const s = Number(slot || 0);
+      if (!d || !Number.isInteger(s) || s < 0) return false;
+      const plan = ensureRollingPlan();
+      const op = plan.ops?.[d]?.[s];
+      if (!op) return false;
+      if (m === "crypto") {
+        const meta = v927CryptoMetaFromOp(op);
+        const stakeNum = Number(op.amt ?? op.stake ?? op.amount ?? 0);
+        const plNum = v941ParseMoney(op.odds || op.pl || 0);
+        v954SetCryptoDraft(d, s, {
+          note: op.note || meta.coin || "",
+          amt: stakeNum ? String(stakeNum) : "",
+          odds: op.odds ? String(op.odds) : (plNum ? v941FormatSignedMoney(plNum) : ""),
+          cryptoMeta: meta,
+          createdAt: Number(op.createdAt || Date.now()),
+          updatedAt: Date.now()
+        });
+      } else {
+        const stakeNum = Number(op.amt ?? op.stake ?? op.amount ?? 0);
+        v774SetPendingSlot(d, s, {
+          note: op.note || "",
+          amt: stakeNum ? String(stakeNum) : "",
+          odds: op.odds ? String(op.odds) : "",
+          combo: Array.isArray(op.combo) ? op.combo.map(c => ({ note: c.note || "", odds: c.odds || "" })) : [],
+          comboResults: Array.isArray(op.comboResults) ? [...op.comboResults] : [],
+          createdAt: Number(op.createdAt || Date.now()),
+          updatedAt: Date.now()
+        });
+      }
+      if (Array.isArray(plan.ops?.[d])) plan.ops[d][s] = null;
+      omega_SaveRollingDB();
+      omega_RenderExcelTable();
+      v768OpenFeaturePanel(m, "history");
+      return true;
+    }
+    function v932AskRestoreConfirm(mode, day, slot) {
+      document.getElementById("v932-restore-confirm-backdrop")?.remove();
+      const wrap = document.createElement("div");
+      wrap.id = "v932-restore-confirm-backdrop";
+      wrap.className = "v931-clear-confirm-backdrop";
+      wrap.innerHTML = `<div class="v931-clear-confirm-card" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+        <b style="color:#7dd3fc;">Aktife Geri Al</b>
+        <p>Bu işlemi tekrar aktif kutuya almak istiyor musun?</p>
+        <div class="v931-clear-confirm-actions">
+          <button type="button" data-v932-restore-cancel>Vazgeç</button>
+          <button type="button" data-v932-restore-ok style="background:#0284c7;border-color:#38bdf8;color:#fff;">Evet, Aktife Al</button>
+        </div>
+      </div>`;
+      const close = () => wrap.remove();
+      wrap.addEventListener("click", close);
+      wrap.querySelector("[data-v932-restore-cancel]")?.addEventListener("click", close);
+      wrap.querySelector("[data-v932-restore-ok]")?.addEventListener("click", () => {
+        close();
+        v932RestoreHistoryToActive(mode, day, slot);
+      });
+      document.body.appendChild(wrap);
+    }
     document.addEventListener("click", function(event) {
+      const restoreBtn = event.target.closest && event.target.closest("[data-v932-restore]");
+      if (restoreBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const [m, rawD, rawS] = String(restoreBtn.dataset.v932Restore || "").split(":");
+        v932AskRestoreConfirm(m, Number(rawD), Number(rawS));
+        return;
+      }
       const v770Btn = event.target.closest && event.target.closest("[data-v770-excel-open]");
       if (v770Btn) {
         if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
