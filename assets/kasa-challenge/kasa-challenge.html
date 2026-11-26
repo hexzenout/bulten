@@ -283,6 +283,8 @@
         .btn-backup:hover { border-color: var(--primary); color: #fff; background: rgba(59, 130, 246, 0.14); }
         .btn-cam-export { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 29px; border-radius: 8px; border: 1px solid rgba(251, 191, 36, 0.55); background: rgba(251, 191, 36, 0.14); color: #fbbf24; cursor: pointer; transition: all 0.15s; padding: 0; }
         .btn-cam-export:hover { background: rgba(251, 191, 36, 0.28); border-color: #fbbf24; color: #fde68a; transform: translateY(-1px); }
+        .btn-cam-day { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 22px; border-radius: 6px; border: 1px solid rgba(251, 191, 36, 0.45); background: rgba(251, 191, 36, 0.12); color: #fbbf24; cursor: pointer; transition: all 0.15s; flex-shrink: 0; }
+        .btn-cam-day:hover { background: rgba(251, 191, 36, 0.28); border-color: #fbbf24; color: #fde68a; }
         .btn-close-modal { background: #0f172a; border: 1px solid #263248; color: #94a3b8; cursor: pointer; font-size: 20px; line-height: 1; width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s; }
         .btn-close-modal:hover { color: #fff; border-color: var(--danger); background: rgba(239, 68, 68, 0.15); }
 
@@ -1110,8 +1112,9 @@
         } catch (e) {}
     }
 
-    function exportHistoryPng() {
+    function exportHistoryPng(targetDayKey = '') {
         const rows = historyList.filter(log => {
+            if (targetDayKey && getDateGroupKey(log.createdAt) !== targetDayKey) return false;
             if (activeHistoryFilter === 'win') return Boolean(log.isWin);
             if (activeHistoryFilter === 'lose') return !log.isWin;
             return true;
@@ -1120,7 +1123,9 @@
         const startVal = parseFloat(startBankInput.value) || 0;
         const targetVal = parseFloat(targetBankInput.value) || 0;
         const curVal = Number(currentBankroll || 0);
-        const netVal = curVal - startVal;
+        const netVal = targetDayKey
+            ? rows.reduce((acc, r) => acc + (r.isWin ? Number(r.netProfit || 0) : -Number(r.betAmount || 0)), 0)
+            : (curVal - startVal);
         const growthX = startVal > 0 ? (curVal / startVal).toFixed(2) + 'X' : '0.00X';
 
         const W = 1080;
@@ -1160,7 +1165,8 @@
         ctx.font = '900 22px Inter, system-ui, sans-serif';
         ctx.fillStyle = '#fbbf24';
         ctx.textAlign = 'left';
-        ctx.fillText('KASA CHALLENGE · İŞLEM TABLOSU', pad, 56);
+        const headerTitle = targetDayKey ? `KASA CHALLENGE · ${targetDayKey.toUpperCase()}` : 'KASA CHALLENGE · İŞLEM TABLOSU';
+        ctx.fillText(headerTitle, pad, 56);
 
         ctx.font = '700 13px Inter, system-ui, sans-serif';
         ctx.fillStyle = '#94a3b8';
@@ -1171,7 +1177,7 @@
         const cards = [
             { label: 'BAŞLANGIÇ', val: '$' + fmtMoney(startVal), color: '#60a5fa' },
             { label: 'GÜNCEL KASA', val: '$' + fmtMoney(curVal), color: '#f8fafc' },
-            { label: 'NET K/Z', val: (netVal >= 0 ? '+$' : '-$') + fmtMoney(Math.abs(netVal)), color: netVal >= 0 ? '#34d399' : '#f87171' },
+            { label: targetDayKey ? 'GÜNLÜK NET K/Z' : 'NET K/Z', val: (netVal >= 0 ? '+$' : '-$') + fmtMoney(Math.abs(netVal)), color: netVal >= 0 ? '#34d399' : '#f87171' },
             { label: 'BÜYÜME / HEDEF', val: `${growthX} / $${fmtMoney(targetVal)}`, color: '#fbbf24' }
         ];
         const cardGap = 12;
@@ -1282,7 +1288,8 @@
         }
 
         const link = document.createElement('a');
-        link.download = `kasa-challenge-tablo-${new Date().toISOString().slice(0, 10)}.png`;
+        const safeDay = targetDayKey ? targetDayKey.toLowerCase().replace(/[^a-z0-9çğıöşü]+/gi, '-') : new Date().toISOString().slice(0, 10);
+        link.download = `kasa-challenge-${safeDay}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
     }
@@ -1998,6 +2005,9 @@
                     <span class="log-day-meta">${daySummaryHtml}</span>
                 </div>
                 <div class="log-day-right">
+                    <span role="button" tabindex="0" class="btn-cam-day" title="Bu Günü İndir (PNG)" onclick="event.stopPropagation(); exportHistoryPng(this.dataset.day)" data-day="${escapeHtml(dayKey)}">
+                        <svg class="svg-icon" style="width:13px;height:13px;" viewBox="0 0 24 24"><path d="M9 2 7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg>
+                    </span>
                     <span style="color:${dayNetColor};">${dayNetStr}</span>
                     <span class="log-day-chevron">▾</span>
                 </div>
