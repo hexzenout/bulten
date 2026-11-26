@@ -92,14 +92,8 @@
   v1102InstallDailyLedgerOpenGuard();
 
   function v1103LedgerTestModeEnabled() {
-    let enabled = false;
-    try {
-      const href = String(window.location?.href || "");
-      if (/(?:[?&#]|^)ledgerTest=1(?:&|#|$)/.test(href)) localStorage.setItem(LEDGER_TEST_MODE_KEY, "1");
-      if (/(?:[?&#]|^)ledgerTest=0(?:&|#|$)/.test(href)) localStorage.removeItem(LEDGER_TEST_MODE_KEY);
-      enabled = localStorage.getItem(LEDGER_TEST_MODE_KEY) === "1";
-    } catch {}
-    return enabled;
+    try { localStorage.removeItem(LEDGER_TEST_MODE_KEY); } catch {}
+    return false;
   }
   function v1103IsLedgerTestRow(row) {
     const id = String(row?.id || "");
@@ -8156,7 +8150,7 @@
       });
     (modeEdits.manual || []).forEach(row => {
       if (!row || !row.id || modeEdits.deleted?.[row.id]) return;
-      if (v1103IsLedgerTestRow(row) && !v1103LedgerTestModeEnabled()) return;
+      if (v1103IsLedgerTestRow(row)) return;
       const merged = { ts: Number(row.ts || Date.now()), source: "manual", no: "", date: "", time: "", item: "", kind: "", stake: "", roi: "", pnl: "", pnlRaw: 0, ...row, manual: true };
       if (!merged.force && !v1061LedgerHasContent(merged)) return;
       byId.set(row.id, merged);

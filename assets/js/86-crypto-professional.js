@@ -816,6 +816,28 @@
         font-size: .78rem !important;
         line-height: 1 !important;
       }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.w {
+        background: linear-gradient(135deg, rgba(22,163,74,.32), rgba(5,46,22,.94)) !important;
+        border: 1px solid rgba(34,197,94,.68) !important;
+        color: #bbf7d0 !important;
+        box-shadow: 0 0 14px rgba(34,197,94,.16) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.w:hover {
+        border-color: #4ade80 !important;
+        color: #dcfce7 !important;
+        background: linear-gradient(135deg, rgba(34,197,94,.42), rgba(6,78,59,.96)) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.l {
+        background: linear-gradient(135deg, rgba(185,28,28,.38), rgba(69,10,10,.96)) !important;
+        border: 1px solid rgba(220,38,38,.75) !important;
+        color: #fecaca !important;
+        box-shadow: 0 0 14px rgba(220,38,38,.20) !important;
+      }
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.l:hover {
+        border-color: #ef4444 !important;
+        color: #fee2e2 !important;
+        background: linear-gradient(135deg, rgba(220,38,38,.50), rgba(127,29,29,.96)) !important;
+      }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .v928-crypto-empty-head {
         margin-bottom:8px !important;
         border-color:rgba(251,191,36,.58) !important;
@@ -954,8 +976,12 @@
         cursor: pointer !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-trigger[data-side="short"] {
-        color: #ffe4e6 !important;
-        border-color: rgba(251,113,133,.58) !important;
+        color: #fecaca !important;
+        border-color: rgba(220,38,38,.78) !important;
+        background:
+          linear-gradient(135deg, rgba(185,28,28,.38), rgba(69,10,10,.96) 58%, rgba(127,29,29,.34)),
+          linear-gradient(180deg, rgba(2,6,23,.98), rgba(15,23,42,.98)) !important;
+        box-shadow: inset 0 0 0 1px rgba(220,38,38,.22), 0 0 16px rgba(220,38,38,.22) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu {
         position: absolute !important;
@@ -1055,17 +1081,19 @@
         color:#bbf7d0 !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu button[data-v937-side-value="short"] {
-        color:#fecdd3 !important;
+        color:#f87171 !important;
+        background:rgba(127,29,29,.22) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu button[data-v937-side-value="long"].is-active,
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu button[data-v937-side-value="long"]:hover {
-        color:#22c55e !important;
-        background:rgba(34,197,94,.15) !important;
+        color:#4ade80 !important;
+        background:rgba(34,197,94,.18) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu button[data-v937-side-value="short"].is-active,
       #rolling-excel-overlay[data-roll-mode="crypto"] .v937-crypto-side-menu button[data-v937-side-value="short"]:hover {
-        color:#ef4444 !important;
-        background:rgba(239,68,68,.15) !important;
+        color:#fecaca !important;
+        background:rgba(185,28,28,.45) !important;
+        box-shadow: inset 0 0 0 1px rgba(220,38,38,.55) !important;
       }
       #rolling-excel-overlay[data-roll-mode="crypto"] .v938-crypto-tp-pair {
         grid-column: 1 / -1 !important;
