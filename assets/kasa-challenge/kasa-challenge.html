@@ -389,13 +389,15 @@
         .btn-delete { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; padding: 6px 12px; border-radius: 7px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; text-transform: uppercase; font-family: var(--font-family); letter-spacing: 0.4px; }
         .btn-delete:hover { background: var(--danger); color: white; border-color: var(--danger); }
 
-        .calculator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 600px) { .calculator-grid { grid-template-columns: 1fr; } }
+        .calculator-grid { display: grid; grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.35fr); gap: 20px; }
+        @media (max-width: 700px) { .calculator-grid { grid-template-columns: 1fr; } }
         .calc-panel { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .calc-result-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(145deg, rgba(139, 92, 246, 0.1), rgba(15, 23, 42, 0.8)); border: 1px dashed var(--purple); padding: 20px; border-radius: 12px; height: 100%; text-align: center; }
+        .calc-result-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(145deg, rgba(139, 92, 246, 0.1), rgba(15, 23, 42, 0.8)); border: 1px dashed var(--purple); padding: 20px; border-radius: 12px; height: 100%; text-align: center; min-width: 0; overflow: hidden; }
         .calc-result-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
-        .calc-result-value { font-size: 42px; font-weight: 900; color: var(--success); text-shadow: 0 0 20px var(--success-glow); margin-bottom: 5px; word-break: break-word; }
+        .calc-result-value { font-size: 42px; font-weight: 900; color: var(--success); text-shadow: 0 0 20px var(--success-glow); margin-bottom: 5px; white-space: nowrap; word-break: normal; max-width: 100%; line-height: 1.15; font-variant-numeric: tabular-nums; }
         .calc-result-x { font-size: 20px; font-weight: bold; color: var(--purple); background: rgba(139, 92, 246, 0.2); padding: 4px 12px; border-radius: 8px; }
+        .calc-limit-warn { display: none; margin-top: 10px; font-size: 12px; font-weight: 700; color: #fbbf24; background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.32); padding: 6px 10px; border-radius: 8px; line-height: 1.35; }
+        .calc-limit-warn.show { display: block; }
 
         .svg-icon { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
 
@@ -509,7 +511,7 @@
 </div>
 
 <div class="modal-overlay" id="calculator-modal">
-    <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-content" style="max-width: 920px;">
         <div class="modal-header">
             <div class="modal-title" id="lbl-calc-title">
                 <svg class="svg-icon" style="width: 24px; height: 24px; color: var(--purple);" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h-2v5H6v2h2v5h2v-5h2v-2zm7 5h-4v-2h4v2zm0-6h-4V9h4v2z"/></svg>
@@ -543,6 +545,7 @@
                 <div class="calc-result-title" id="lbl-calc-result-title">Seri Sonu Ulaşılacak Kasa</div>
                 <div class="calc-result-value" id="calc-final-bankroll">$0.00</div>
                 <div class="calc-result-x" id="calc-final-x">0.00x</div>
+                <div class="calc-limit-warn" id="calc-limit-warn"></div>
             </div>
         </div>
     </div>
@@ -740,7 +743,9 @@
             odds: 'Ortalama Çarpan:',
             steps: 'Toplam Adım Sayısı:',
             resultTitle: 'Seri Sonu Ulaşılacak Kasa',
-            multiplierSuffix: 'x'
+            multiplierSuffix: 'x',
+            limitStep: (n) => `999 trilyon $ sınırını aşmamak için adım ${n} olarak ayarlandı.`,
+            limitStart: 'Başlangıç tutarı en fazla 999 trilyon $ olabilir.'
         },
         en: {
             title: 'Compound Return (All-In)',
@@ -748,7 +753,9 @@
             odds: 'Average Multiplier:',
             steps: 'Total Steps:',
             resultTitle: 'Final Bankroll',
-            multiplierSuffix: 'x'
+            multiplierSuffix: 'x',
+            limitStep: (n) => `Steps capped at ${n} to stay within the $999T limit.`,
+            limitStart: 'Starting amount cannot exceed $999T.'
         }
     };
 
@@ -851,19 +858,57 @@
         calculateAllIn();
     }
 
+    function fitCalcResultFont() {
+        const box = calcFinalBankroll.parentElement;
+        if (!box) return;
+        const maxWidth = Math.max(120, box.clientWidth - 40);
+        let size = 42;
+        calcFinalBankroll.style.fontSize = size + "px";
+        while (calcFinalBankroll.scrollWidth > maxWidth && size > 15) {
+            size -= 1;
+            calcFinalBankroll.style.fontSize = size + "px";
+        }
+    }
+
     function calculateAllIn() {
+        const MAX_FINAL = 999999999999999.99;
+        const warnEl = document.getElementById('calc-limit-warn');
+        let warnText = '';
+
         let startAmount = parseFloat(calcAmountInput.value) || 0;
         let odds = parseFloat(calcOddsInput.value) || 1.0;
-        let steps = parseInt(calcStepsInput.value, 10) || 5;
+        let steps = parseInt(calcStepsInput.value, 10);
+        if (Number.isNaN(steps)) steps = 5;
+        if (steps < 0) steps = 0;
 
         if (odds > 3.25) { odds = 3.25; }
         if (odds < 1.25) { odds = 1.25; }
 
+        if (startAmount > MAX_FINAL) {
+            startAmount = 999999999999999;
+            calcAmountInput.value = String(startAmount);
+            warnText = calcTranslations[calcLang].limitStart;
+        }
+
         let finalAmount = startAmount * Math.pow(odds, steps);
+        if (startAmount > 0 && odds > 1 && (!Number.isFinite(finalAmount) || finalAmount > MAX_FINAL)) {
+            const maxSteps = Math.max(0, Math.floor(Math.log(MAX_FINAL / startAmount) / Math.log(odds)));
+            steps = maxSteps;
+            calcStepsInput.value = String(maxSteps);
+            finalAmount = startAmount * Math.pow(odds, steps);
+            warnText = calcTranslations[calcLang].limitStep(maxSteps);
+        }
+
         let multiplierX = startAmount > 0 ? (finalAmount / startAmount) : 0;
 
         calcFinalBankroll.innerText = "$" + fmtMoney(finalAmount);
         calcFinalX.innerText = multiplierX.toFixed(2) + calcTranslations[calcLang].multiplierSuffix;
+        if (warnEl) {
+            warnEl.textContent = warnText;
+            warnEl.classList.toggle('show', Boolean(warnText));
+        }
+        fitCalcResultFont();
+        requestAnimationFrame(fitCalcResultFont);
     }
 
     function triggerConfetti() {
