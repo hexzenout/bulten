@@ -9,6 +9,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendEmailVerification,
+  GoogleAuthProvider,
+  signInWithPopup,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
@@ -17,16 +20,23 @@ import {
   doc,
   getDoc,
   setDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
+const ADMIN_EMAIL = "kutaysalda1@gmail.com";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBkFQxOie3jWQMftT4Lv59cGRvkXYoIFwU",
-  authDomain: "bulten-terminal.firebaseapp.com",
-  projectId: "bulten-terminal",
-  storageBucket: "bulten-terminal.firebasestorage.app",
-  messagingSenderId: "28873536369",
-  appId: "1:28873536369:web:78f605040883bd0b387cd0"
+  apiKey: "AIzaSyBmuh5uQMz_J1l_IBK7fSn3XvePcIcGVm8",
+  authDomain: "bulten-app-27392.firebaseapp.com",
+  projectId: "bulten-app-27392",
+  storageBucket: "bulten-app-27392.firebasestorage.app",
+  messagingSenderId: "44925253394",
+  appId: "1:44925253394:web:c9f58cf42cb69e612225cb"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -448,6 +458,194 @@ function injectAuthStyles() {
       display: none !important;
     }
 
+    .v26-auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #64748b;
+      font-size: 0.72em;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .v26-auth-divider::before,
+    .v26-auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #1e293b;
+    }
+
+    .v26-google-btn {
+      width: 100%;
+      justify-content: center;
+      padding: 11px 14px;
+      border-radius: 11px;
+      font-size: 0.84em;
+      font-weight: 800;
+      background: #ffffff;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.12s ease;
+    }
+
+    .v26-google-btn:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+    }
+
+    .v26-resend-btn {
+      display: none;
+      width: 100%;
+      justify-content: center;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      background: rgba(251, 191, 36, 0.1);
+      color: #fbbf24;
+      font-size: 0.76em;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .v26-resend-btn.show {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .v26-admin-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.84);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999995;
+      padding: 16px;
+    }
+
+    .v26-admin-modal.show {
+      display: flex;
+    }
+
+    .v26-admin-card {
+      width: min(880px, 100%);
+      max-height: min(86vh, 760px);
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      background: #0b101d;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      border-radius: 18px;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.78);
+      overflow: hidden;
+    }
+
+    .v26-admin-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 18px;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(15, 23, 42, 0.55));
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .v26-admin-head h3 {
+      margin: 0;
+      color: #fbbf24;
+      font-size: 1em;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+    }
+
+    .v26-admin-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .v26-admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px 18px;
+      border-bottom: 1px solid #1e293b;
+      background: #080c17;
+    }
+
+    .v26-admin-stat {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 11px;
+      padding: 9px 12px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .v26-admin-stat span {
+      color: #94a3b8;
+      font-size: 0.7em;
+      font-weight: 700;
+    }
+
+    .v26-admin-stat strong {
+      color: #f8fafc;
+      font-size: 1.05em;
+      font-weight: 900;
+    }
+
+    .v26-admin-body {
+      overflow: auto;
+      padding: 14px 18px 18px;
+    }
+
+    .v26-admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78em;
+    }
+
+    .v26-admin-table th {
+      text-align: left;
+      color: #94a3b8;
+      font-weight: 800;
+      font-size: 0.85em;
+      text-transform: uppercase;
+      padding: 8px 10px;
+      border-bottom: 1px solid #1e293b;
+      white-space: nowrap;
+    }
+
+    .v26-admin-table td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.7);
+      color: #e2e8f0;
+      vertical-align: middle;
+    }
+
+    .v26-admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.86em;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .v26-admin-badge.google { background: rgba(59, 130, 246, 0.16); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.32); }
+    .v26-admin-badge.password { background: rgba(251, 191, 36, 0.14); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+    .v26-admin-badge.ok { background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.32); }
+    .v26-admin-badge.wait { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.32); }
+
     @media(max-width: 760px) {
       .v26-auth-shell {
         margin-left: auto;
@@ -513,6 +711,7 @@ function createAuthUI() {
       </div>
       <div class="v26-account-msg" id="v26-account-msg">Kasa ve kayıtların hesabınla eşlenir.</div>
       <div class="v26-account-actions">
+        <button class="v26-auth-btn gold" id="v26-admin-members-btn" type="button" style="display:none;"><i class="fa-solid fa-users"></i><span>ÜYELER (YÖNETİCİ)</span></button>
         <button class="v26-auth-btn gold" id="v26-sync-now-btn" type="button"><i class="fa-solid fa-cloud-arrow-up"></i><span>ŞİMDİ EŞİTLE</span></button>
         <button class="v26-auth-btn" id="v26-pull-now-btn" type="button"><i class="fa-solid fa-cloud-arrow-down"></i><span>HESAPTAN ÇEK</span></button>
         <button class="v26-auth-btn danger" id="v26-auth-logout-btn" type="button"><i class="fa-solid fa-right-from-bracket"></i><span>ÇIKIŞ YAP</span></button>
@@ -539,6 +738,16 @@ function createAuthUI() {
         <button class="v26-auth-tab" id="v26-tab-register" type="button">KAYIT OL</button>
       </div>
       <div class="v26-auth-card-body">
+        <button class="v26-google-btn" id="v26-google-login-btn" type="button">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.01 24.01 0 0 0 0 21.56l7.98-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span>Google ile Devam Et</span>
+        </button>
+        <div class="v26-auth-divider">veya e-posta ile</div>
         <div class="v26-auth-field">
           <label for="v26-auth-email">E-posta</label>
           <div class="v26-auth-input-wrap">
@@ -558,6 +767,10 @@ function createAuthUI() {
         <div class="v26-auth-msg" id="v26-auth-msg">
           Giriş yaptığında kasa geçmişin ve ayarların hesabınla otomatik eşitlenir.
         </div>
+        <button class="v26-resend-btn" id="v26-resend-verify-btn" type="button">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Doğrulama Mailini Tekrar Gönder</span>
+        </button>
         <button class="v26-auth-btn gold v26-auth-submit" id="v26-auth-submit-btn" type="button">GİRİŞ YAP</button>
       </div>
     </div>
@@ -565,15 +778,48 @@ function createAuthUI() {
 
   document.body.appendChild(modal);
 
+  const adminModal = document.createElement("div");
+  adminModal.className = "v26-admin-modal";
+  adminModal.id = "v26-admin-modal";
+  adminModal.innerHTML = `
+    <div class="v26-admin-card" onclick="event.stopPropagation()">
+      <div class="v26-admin-head">
+        <h3><i class="fa-solid fa-users"></i> BULTEN ÜYELER (YÖNETİCİ)</h3>
+        <div class="v26-admin-head-actions">
+          <button class="v26-auth-btn" id="v26-admin-refresh-btn" type="button"><i class="fa-solid fa-rotate"></i><span>Yenile</span></button>
+          <button class="v26-auth-close" id="v26-admin-close-btn" type="button">×</button>
+        </div>
+      </div>
+      <div class="v26-admin-stats" id="v26-admin-stats">
+        <div class="v26-admin-stat"><span>Toplam Üye</span><strong>-</strong></div>
+        <div class="v26-admin-stat"><span>Google İle</span><strong>-</strong></div>
+        <div class="v26-admin-stat"><span>E-posta İle</span><strong>-</strong></div>
+        <div class="v26-admin-stat"><span>Doğrulanan</span><strong>-</strong></div>
+      </div>
+      <div class="v26-admin-body" id="v26-admin-body">
+        <div class="v26-auth-msg">Üyeler yükleniyor...</div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(adminModal);
+
   document.getElementById("v26-auth-open-btn").onclick = openAuthModal;
   document.getElementById("v26-auth-close-btn").onclick = closeAuthModal;
   document.getElementById("v26-tab-login").onclick = () => switchAuthMode("login");
   document.getElementById("v26-tab-register").onclick = () => switchAuthMode("register");
+  document.getElementById("v26-google-login-btn").onclick = loginWithGoogle;
   document.getElementById("v26-auth-submit-btn").onclick = submitAuthForm;
+  document.getElementById("v26-resend-verify-btn").onclick = resendVerificationEmail;
   document.getElementById("v26-forgot-btn").onclick = resetPassword;
   document.getElementById("v26-auth-logout-btn").onclick = logoutUser;
   document.getElementById("v26-sync-now-btn").onclick = () => saveUserCloudData(false);
   document.getElementById("v26-pull-now-btn").onclick = () => loadUserCloudData(false);
+  document.getElementById("v26-admin-members-btn").onclick = openAdminMembersModal;
+  document.getElementById("v26-admin-close-btn").onclick = closeAdminMembersModal;
+  document.getElementById("v26-admin-refresh-btn").onclick = loadAdminMembers;
+  adminModal.addEventListener("click", (e) => {
+    if (e.target.id === "v26-admin-modal") closeAdminMembersModal();
+  });
 
   const passToggle = document.getElementById("v26-pass-toggle");
   const passInput = document.getElementById("v26-auth-password");
@@ -616,6 +862,64 @@ function createAuthUI() {
   updateAuthUI(window.V26_FIREBASE.user);
 }
 
+function setResendVisible(show) {
+  const btn = document.getElementById("v26-resend-verify-btn");
+  if (btn) btn.classList.toggle("show", Boolean(show));
+}
+
+function isAdminUser(user) {
+  return Boolean(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL && user.emailVerified);
+}
+
+function isPasswordProviderOnly(user) {
+  const providers = Array.isArray(user?.providerData) ? user.providerData.map((p) => p.providerId) : [];
+  return providers.length > 0 && providers.every((id) => id === "password");
+}
+
+function isUserAllowedSession(user) {
+  if (!user) return false;
+  if (isPasswordProviderOnly(user) && !user.emailVerified) return false;
+  return true;
+}
+
+function detectDeviceSummary() {
+  const ua = navigator.userAgent || "";
+  let os = "Bilinmiyor";
+  if (/iPhone|iPad|iPod/i.test(ua)) os = "iOS";
+  else if (/Android/i.test(ua)) os = "Android";
+  else if (/Mac OS X|Macintosh/i.test(ua)) os = "Mac";
+  else if (/Windows/i.test(ua)) os = "Windows";
+  else if (/Linux/i.test(ua)) os = "Linux";
+
+  let browser = "Tarayıcı";
+  if (/Edg\//i.test(ua)) browser = "Edge";
+  else if (/Chrome\//i.test(ua)) browser = "Chrome";
+  else if (/Safari\//i.test(ua)) browser = "Safari";
+  else if (/Firefox\//i.test(ua)) browser = "Firefox";
+
+  const formFactor = /Mobi|Android|iPhone/i.test(ua) ? "Mobil" : "Masaüstü";
+  return `${formFactor} · ${os} (${browser})`;
+}
+
+async function upsertUserProfile(user, providerHint = "", isNew = false) {
+  if (!user) return;
+  try {
+    const providerIds = Array.isArray(user.providerData) ? user.providerData.map((p) => p.providerId) : [];
+    const provider = providerHint || (providerIds.includes("google.com") ? "google" : "password");
+    const payload = {
+      email: user.email || "",
+      displayName: user.displayName || "",
+      provider,
+      emailVerified: Boolean(user.emailVerified),
+      device: detectDeviceSummary(),
+      lang: navigator.language || "tr",
+      lastLoginAt: serverTimestamp()
+    };
+    if (isNew) payload.createdAt = serverTimestamp();
+    await setDoc(doc(db, "users", user.uid), payload, { merge: true });
+  } catch (e) {}
+}
+
 function switchAuthMode(mode) {
   authMode = mode === "register" ? "register" : "login";
   document.getElementById("v26-tab-login")?.classList.toggle("active", authMode === "login");
@@ -626,22 +930,25 @@ function switchAuthMode(mode) {
   if (submitBtn) submitBtn.textContent = authMode === "login" ? "GİRİŞ YAP" : "HESAP OLUŞTUR";
   if (forgotBtn) forgotBtn.style.display = authMode === "login" ? "inline-block" : "none";
   if (passInput) passInput.autocomplete = authMode === "login" ? "current-password" : "new-password";
+  setResendVisible(false);
   setAuthMessage(
     authMode === "login"
       ? "Giriş yaptığında kasa geçmişin ve ayarların hesabınla otomatik eşitlenir."
-      : "Yeni hesap oluşturduğunda verilerin güvenle bulutta saklanır."
+      : "Kayıt sonrası e-postana doğrulama bağlantısı gönderilir."
   );
 }
 
 function openAuthModal() {
   const modal = document.getElementById("v26-auth-modal");
   if (modal) modal.classList.add("show");
+  setResendVisible(false);
   setTimeout(() => document.getElementById("v26-auth-email")?.focus(), 40);
 }
 
 function closeAuthModal() {
   const modal = document.getElementById("v26-auth-modal");
   if (modal) modal.classList.remove("show");
+  setResendVisible(false);
 }
 
 function setAuthMessage(message, type = "") {
@@ -674,15 +981,35 @@ function submitAuthForm() {
   return loginUser();
 }
 
+async function loginWithGoogle() {
+  setResendVisible(false);
+  try {
+    setAuthMessage("Google ile bağlanılıyor...");
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    const cred = await signInWithPopup(auth, provider);
+    await upsertUserProfile(cred.user, "google", Boolean(cred._tokenResponse?.isNewUser));
+    setAuthMessage("Google ile giriş başarılı.", "good");
+    closeAuthModal();
+  } catch (err) {
+    setAuthMessage(firebaseErrorToTurkish(err), "bad");
+  }
+}
+
 async function registerUser() {
   const inputs = getAuthInputs();
   if (!inputs) return;
+  setResendVisible(false);
 
   try {
     setAuthMessage("Hesap oluşturuluyor...");
-    await createUserWithEmailAndPassword(auth, inputs.email, inputs.password);
-    setAuthMessage("Hesap oluşturuldu ve giriş yapıldı.", "good");
-    closeAuthModal();
+    const cred = await createUserWithEmailAndPassword(auth, inputs.email, inputs.password);
+    await upsertUserProfile(cred.user, "password", true);
+    await sendEmailVerification(cred.user);
+    await signOut(auth);
+    switchAuthMode("login");
+    setResendVisible(true);
+    setAuthMessage("Doğrulama bağlantısı e-postana gönderildi. Gelen kutunu (ve spam klasörünü) onayladıktan sonra giriş yapabilirsin.", "good");
   } catch (err) {
     setAuthMessage(firebaseErrorToTurkish(err), "bad");
   }
@@ -691,12 +1018,41 @@ async function registerUser() {
 async function loginUser() {
   const inputs = getAuthInputs();
   if (!inputs) return;
+  setResendVisible(false);
 
   try {
     setAuthMessage("Giriş yapılıyor...");
-    await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+    const cred = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+    if (isPasswordProviderOnly(cred.user) && !cred.user.emailVerified) {
+      await upsertUserProfile(cred.user, "password", false);
+      await signOut(auth);
+      setResendVisible(true);
+      setAuthMessage("E-posta adresin henüz doğrulanmamış. Mailindeki bağlantıya tıklayıp onayladıktan sonra giriş yapabilirsin.", "bad");
+      return;
+    }
+    await upsertUserProfile(cred.user, "", false);
     setAuthMessage("Giriş başarılı.", "good");
     closeAuthModal();
+  } catch (err) {
+    setAuthMessage(firebaseErrorToTurkish(err), "bad");
+  }
+}
+
+async function resendVerificationEmail() {
+  const inputs = getAuthInputs();
+  if (!inputs) return;
+  try {
+    setAuthMessage("Doğrulama maili gönderiliyor...");
+    const cred = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+    if (cred.user.emailVerified) {
+      await upsertUserProfile(cred.user, "", false);
+      setAuthMessage("E-postan zaten doğrulanmış, giriş yapıldı.", "good");
+      closeAuthModal();
+      return;
+    }
+    await sendEmailVerification(cred.user);
+    await signOut(auth);
+    setAuthMessage("Doğrulama maili tekrar gönderildi. Gelen kutunu ve spam klasörünü kontrol et.", "good");
   } catch (err) {
     setAuthMessage(firebaseErrorToTurkish(err), "bad");
   }
@@ -726,6 +1082,111 @@ async function logoutUser() {
   }
 }
 
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function formatAdminTime(ts) {
+  if (!ts) return "-";
+  try {
+    const d = typeof ts.toDate === "function" ? ts.toDate() : new Date(ts);
+    if (Number.isNaN(d.getTime())) return "-";
+    return d.toLocaleString("tr-TR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  } catch (e) {
+    return "-";
+  }
+}
+
+function openAdminMembersModal() {
+  if (!isAdminUser(window.V26_FIREBASE.user)) return;
+  document.getElementById("v26-account-popover")?.classList.remove("show");
+  document.getElementById("v26-admin-modal")?.classList.add("show");
+  loadAdminMembers();
+}
+
+function closeAdminMembersModal() {
+  document.getElementById("v26-admin-modal")?.classList.remove("show");
+}
+
+async function loadAdminMembers() {
+  const body = document.getElementById("v26-admin-body");
+  const stats = document.getElementById("v26-admin-stats");
+  if (!body || !isAdminUser(window.V26_FIREBASE.user)) return;
+
+  body.innerHTML = '<div class="v26-auth-msg">Üyeler yükleniyor...</div>';
+  try {
+    const q = query(collection(db, "users"), orderBy("lastLoginAt", "desc"), limit(200));
+    const snap = await getDocs(q);
+    const rows = [];
+    snap.forEach((docSnap) => rows.push({ id: docSnap.id, ...docSnap.data() }));
+
+    const total = rows.length;
+    const googleCount = rows.filter((r) => r.provider === "google").length;
+    const passwordCount = rows.filter((r) => r.provider !== "google").length;
+    const verifiedCount = rows.filter((r) => r.emailVerified || r.provider === "google").length;
+
+    if (stats) {
+      stats.innerHTML = `
+        <div class="v26-admin-stat"><span>Toplam Üye</span><strong>${total}</strong></div>
+        <div class="v26-admin-stat"><span>Google İle</span><strong>${googleCount}</strong></div>
+        <div class="v26-admin-stat"><span>E-posta İle</span><strong>${passwordCount}</strong></div>
+        <div class="v26-admin-stat"><span>Doğrulanan</span><strong>${verifiedCount}</strong></div>
+      `;
+    }
+
+    if (!rows.length) {
+      body.innerHTML = '<div class="v26-auth-msg">Henüz kayıtlı üye bulunmuyor.</div>';
+      return;
+    }
+
+    body.innerHTML = `
+      <table class="v26-admin-table">
+        <thead>
+          <tr>
+            <th>Üye / E-posta</th>
+            <th>Yöntem</th>
+            <th>Doğrulama</th>
+            <th>Cihaz</th>
+            <th>Kayıt</th>
+            <th>Son Giriş</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((r) => {
+            const isGoogle = r.provider === "google";
+            const isVerified = Boolean(r.emailVerified || isGoogle);
+            return `
+              <tr>
+                <td>
+                  <strong>${escapeHtml(r.email || r.id)}</strong>
+                  ${r.displayName ? `<div style="color:#94a3b8;font-size:0.86em;">${escapeHtml(r.displayName)}</div>` : ""}
+                </td>
+                <td><span class="v26-admin-badge ${isGoogle ? "google" : "password"}">${isGoogle ? "Google" : "E-posta"}</span></td>
+                <td><span class="v26-admin-badge ${isVerified ? "ok" : "wait"}">${isVerified ? "Doğrulandı" : "Bekliyor"}</span></td>
+                <td>${escapeHtml(r.device || "-")}</td>
+                <td>${formatAdminTime(r.createdAt)}</td>
+                <td>${formatAdminTime(r.lastLoginAt || r.updatedAt)}</td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    `;
+  } catch (err) {
+    body.innerHTML = `<div class="v26-auth-msg bad">${escapeHtml(firebaseErrorToTurkish(err))}</div>`;
+  }
+}
+
 function updateAuthUI(user) {
   const openBtn = document.getElementById("v26-auth-open-btn");
   const pill = document.getElementById("v26-auth-user-pill");
@@ -733,20 +1194,24 @@ function updateAuthUI(user) {
   const avatar = document.getElementById("v26-auth-avatar");
   const emailEl = document.getElementById("v26-account-email");
   const popover = document.getElementById("v26-account-popover");
+  const adminBtn = document.getElementById("v26-admin-members-btn");
 
   if (!openBtn || !pill || !label) return;
 
-  if (user) {
-    const email = user.email || "Kullanıcı";
+  const validUser = isUserAllowedSession(user) ? user : null;
+  if (validUser) {
+    const email = validUser.email || "Kullanıcı";
     openBtn.style.display = "none";
     pill.style.display = "inline-flex";
-    label.textContent = email;
-    if (avatar) avatar.textContent = email.charAt(0).toUpperCase();
+    label.textContent = validUser.displayName || email;
+    if (avatar) avatar.textContent = (validUser.displayName || email).charAt(0).toUpperCase();
     if (emailEl) emailEl.textContent = email;
+    if (adminBtn) adminBtn.style.display = isAdminUser(validUser) ? "inline-flex" : "none";
     setSyncBadge("Eşitlendi");
   } else {
     openBtn.style.display = "inline-flex";
     pill.style.display = "none";
+    if (adminBtn) adminBtn.style.display = "none";
     if (popover) popover.classList.remove("show");
   }
 }
@@ -917,6 +1382,11 @@ function firebaseErrorToTurkish(err) {
     "auth/invalid-credential": "E-posta veya şifre hatalı.",
     "auth/too-many-requests": "Çok fazla deneme yapıldı. Biraz bekleyip tekrar dene.",
     "auth/network-request-failed": "Ağ hatası. İnternet bağlantını kontrol et.",
+    "auth/popup-closed-by-user": "Google giriş penceresi kapatıldı.",
+    "auth/cancelled-popup-request": "Google giriş isteği iptal edildi.",
+    "auth/popup-blocked": "Tarayıcı açılır pencereyi engelledi. İzin verip tekrar dene.",
+    "auth/operation-not-allowed": "Google ile giriş yöntemi henüz aktif değil.",
+    "auth/unauthorized-domain": "Bu adres Google girişi için yetkili değil. Önizlemede localhost adresini kullanabilirsin.",
     "permission-denied": "Bulut izni reddedildi."
   };
 
@@ -924,14 +1394,18 @@ function firebaseErrorToTurkish(err) {
 }
 
 onAuthStateChanged(auth, (user) => {
-  window.V26_FIREBASE.user = user || null;
+  const validUser = isUserAllowedSession(user) ? user : null;
+  window.V26_FIREBASE.user = validUser;
   window.V26_FIREBASE.ready = true;
   document.body.classList.add("v27-auth-ready");
-  updateAuthUI(user);
-  if (user) syncKasaOnLogin(user);
+  updateAuthUI(validUser);
+  if (validUser) {
+    upsertUserProfile(validUser);
+    syncKasaOnLogin(validUser);
+  }
 
   window.dispatchEvent(new CustomEvent("v26-auth-ready", {
-    detail: { user }
+    detail: { user: validUser }
   }));
 });
 
