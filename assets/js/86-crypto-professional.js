@@ -816,24 +816,28 @@
         font-size: .78rem !important;
         line-height: 1 !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.w {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.w,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.w {
         background: linear-gradient(135deg, rgba(22,163,74,.32), rgba(5,46,22,.94)) !important;
         border: 1px solid rgba(34,197,94,.68) !important;
         color: #bbf7d0 !important;
         box-shadow: 0 0 14px rgba(34,197,94,.16) !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.w:hover {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.w:hover,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.w:hover {
         border-color: #4ade80 !important;
         color: #dcfce7 !important;
         background: linear-gradient(135deg, rgba(34,197,94,.42), rgba(6,78,59,.96)) !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.l {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.l,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.l {
         background: linear-gradient(135deg, rgba(185,28,28,.38), rgba(69,10,10,.96)) !important;
         border: 1px solid rgba(220,38,38,.75) !important;
         color: #fecaca !important;
         box-shadow: 0 0 14px rgba(220,38,38,.20) !important;
       }
-      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.l:hover {
+      #rolling-excel-overlay[data-roll-mode="crypto"] .v928-crypto-kapsul.is-open .k-actions.v32 button.l:hover,
+      #rolling-excel-overlay[data-roll-mode="bet"] .v765-bet-kapsul .k-actions.v32 button.l:hover {
         border-color: #ef4444 !important;
         color: #fee2e2 !important;
         background: linear-gradient(135deg, rgba(220,38,38,.50), rgba(127,29,29,.96)) !important;
