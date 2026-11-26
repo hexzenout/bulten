@@ -8371,8 +8371,7 @@
     const d = v1041NormalizeGrowthDays(days || 7);
     const targetDay = Math.max(1, Number(day || 1));
     const targetOp = Math.max(0, Number(opIndex || 0));
-    const host = document.getElementById("v1056-ledger-screen-host");
-    if (host) host.innerHTML = "";
+    document.getElementById("v1056-ledger-screen-host")?.remove();
     localStorage.setItem("finance_rolling_mode", m);
     localStorage.setItem(PAGE_MODE_KEY, m);
     v1046RememberRollingRoute(m, d);
@@ -8383,18 +8382,19 @@
     }
     const focusTarget = (attempt = 0) => {
       const overlay = document.getElementById("rolling-excel-overlay");
+      const direct = overlay?.querySelector(`[data-v765-kapsul="${targetDay}:${targetOp}"]`);
       const body = overlay?.querySelector("#excel-body-content") || document.getElementById("excel-body-content");
       const dayRows = Array.from(body?.querySelectorAll(".day-row-capsule") || []);
       const dayRow = dayRows[targetDay - 1] || null;
       const capsulePool = Array.from(dayRow?.querySelectorAll(".capsule-container > .kapsul, .kapsul") || []);
       const capsules = capsulePool.filter(el => !el.closest(".day-row-capsule") || el.closest(".day-row-capsule") === dayRow);
-      const target = capsules[targetOp] || null;
+      const target = direct || capsules[targetOp] || null;
       if (target && typeof target.scrollIntoView === "function") {
-        target.scrollIntoView({ behavior: "auto", block: "center", inline: "center" });
-        target.classList.remove("v1063-ledger-focus-pulse");
+        try { target.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" }); } catch { target.scrollIntoView(); }
+        target.classList.remove("v1063-ledger-focus-pulse", "v932-restored-flash");
         void target.offsetWidth;
-        target.classList.add("v1063-ledger-focus-pulse");
-        setTimeout(() => target.classList.remove("v1063-ledger-focus-pulse"), 1250);
+        target.classList.add("v1063-ledger-focus-pulse", "v932-restored-flash");
+        setTimeout(() => target.classList.remove("v1063-ledger-focus-pulse", "v932-restored-flash"), 1800);
         return;
       }
       if (attempt < 6) setTimeout(() => focusTarget(attempt + 1), 70 + attempt * 35);
@@ -8879,6 +8879,16 @@
     }));
     if (!host.dataset.v1220LedgerRowGotoBound) {
       host.dataset.v1220LedgerRowGotoBound = "1";
+      host.addEventListener("click", event => {
+        const itemCell = event.target && event.target.closest ? event.target.closest("tr[data-v1063-ledger-goto] td:nth-child(3)") : null;
+        if (!itemCell || !host.contains(itemCell)) return;
+        const row = itemCell.closest("tr[data-v1063-ledger-goto]");
+        if (!row) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const [modeRaw, daysRaw, dayRaw, opRaw] = String(row.dataset.v1063LedgerGoto || "").split(":");
+        v1063GotoLedgerRow(modeRaw || m, daysRaw || 7, dayRaw || 1, opRaw || 0);
+      }, true);
       host.addEventListener("dblclick", event => {
         const row = event.target && event.target.closest ? event.target.closest("tr[data-v1063-ledger-goto]") : null;
         if (!row || !host.contains(row)) return;

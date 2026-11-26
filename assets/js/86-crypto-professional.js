@@ -663,9 +663,9 @@
         background:rgba(153,27,27,.36) !important;
       }
       .v931-clear-confirm-backdrop {
-        position:fixed;
-        inset:0;
-        z-index:1001020;
+        position:fixed !important;
+        inset:0 !important;
+        z-index:2147483647 !important;
         background:rgba(2,6,23,.76);
         backdrop-filter:blur(4px);
         display:flex;
@@ -715,12 +715,42 @@
         border-color:#ef4444;
         color:#fff;
       }
+      #omega-rolling-feature-host .v768-feature-modal .v768-feature-card > div.v903-bet-detail:not([hidden]) {
+        display:block !important;
+        flex-direction:column !important;
+        align-items:stretch !important;
+        width:100% !important;
+        box-sizing:border-box !important;
+      }
+      #omega-rolling-feature-host .v768-feature-card ul.v904-bet-match-list {
+        width:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        box-sizing:border-box !important;
+      }
+      #omega-rolling-feature-host .v904-bet-match-list li {
+        padding:10px 14px !important;
+      }
+      #omega-rolling-feature-host .v904-bet-match-list li span {
+        text-align:left !important;
+        justify-self:start !important;
+      }
+      #rolling-excel-overlay .v932-restored-flash {
+        box-shadow: 0 0 0 2px #38bdf8, 0 0 24px rgba(56,189,248,.45) !important;
+        border-color: #38bdf8 !important;
+        transition: box-shadow .25s ease, border-color .25s ease !important;
+      }
       #omega-rolling-feature-host .v932-detail-restore-row {
-        display:flex;
-        justify-content:flex-end;
-        margin-top:8px;
-        padding-top:8px;
-        border-top:1px solid rgba(148,163,184,.16);
+        width:100% !important;
+        max-width:100% !important;
+        grid-column:1 / -1 !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:flex-end !important;
+        box-sizing:border-box !important;
+        margin-top:8px !important;
+        padding-top:8px !important;
+        border-top:1px solid rgba(148,163,184,.16) !important;
       }
       #omega-rolling-feature-host .v932-history-restore-btn {
         display:inline-flex !important;
@@ -1836,8 +1866,11 @@
         font-feature-settings: "tnum" 1 !important;
       }
       #omega-rolling-feature-host .v957-crypto-detail {
+        width: 100% !important;
+        box-sizing: border-box !important;
         padding: 0 12px 12px !important;
         display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
         gap: 9px !important;
       }
       #omega-rolling-feature-host .v957-crypto-detail-grid {
@@ -4924,7 +4957,19 @@
       if (Array.isArray(plan.ops?.[d])) plan.ops[d][s] = null;
       omega_SaveRollingDB();
       omega_RenderExcelTable();
-      v768OpenFeaturePanel(m, "history");
+      document.getElementById("omega-rolling-feature-host")?.remove();
+      requestAnimationFrame(() => {
+        const kapsul = document.querySelector(`#rolling-excel-overlay [data-v765-kapsul="${d}:${s}"]`);
+        if (!kapsul) return;
+        if (m === "crypto") kapsul.classList.add("is-open");
+        try { kapsul.scrollIntoView({ behavior: "smooth", block: "center" }); } catch { kapsul.scrollIntoView(); }
+        kapsul.classList.add("v932-restored-flash");
+        setTimeout(() => kapsul.classList.remove("v932-restored-flash"), 1800);
+        const nameInput = document.getElementById(`e-n-${d}-${s}`);
+        if (nameInput && typeof nameInput.focus === "function") {
+          try { nameInput.focus({ preventScroll: true }); } catch {}
+        }
+      });
       return true;
     }
     function v932AskRestoreConfirm(mode, day, slot) {
