@@ -2598,9 +2598,8 @@
       .v1162-ledger-output-modal.bet .v1057-ledger-excel-table tbody,
       .v1162-ledger-output-modal.bet .v1061-ledger-excel-table tbody{height:auto!important;min-height:0!important;max-height:none!important;}
 
-      /* V1245: Ana BAHİS / KUPON DEFTERİ popup yüksekliği sabit kalsın.
-         Kamera çıktı penceresine dokunmaz; sadece ekrandaki açılır modalı eski tam boya alır. */
-      #v1056-ledger-screen-host .v1056-ledger-screen-modal.v1110-ledger-test-modal.bet[data-v1110-ledger-cols]{height:calc(100vh - 20px)!important;min-height:calc(100vh - 20px)!important;max-height:calc(100vh - 20px)!important;margin:10px auto!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;}
+      /* V1245 -> V1337: Bahis defteri satır sayısına göre dinamik büyüsün (kripto gibi), dolduğunda tam yüksekliğe (100vh - 20px) ulaşsın; ölçüm kutusu tam boyda kalır. */
+      #v1056-ledger-screen-host > .v1056-ledger-screen-overlay > .v1056-ledger-screen-modal.v1110-ledger-test-modal.bet[data-v1110-ledger-cols]{height:auto!important;min-height:0!important;max-height:calc(100vh - 20px)!important;margin:auto!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;}
       #v1056-ledger-screen-host .v1056-ledger-screen-modal.v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1056-ledger-screen-body,
       #v1056-ledger-screen-host .v1056-ledger-screen-modal.v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1057-ledger-screen-body{flex:1 1 auto!important;min-height:0!important;max-height:none!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;}
       #v1056-ledger-screen-host .v1056-ledger-screen-modal.v1110-ledger-test-modal.bet[data-v1110-ledger-cols] .v1054-daily-ledger.bet{margin-bottom:0!important;}
