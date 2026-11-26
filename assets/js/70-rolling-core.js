@@ -9914,6 +9914,19 @@ function escapeHtml(str) {
     const m = mode === "crypto" ? "crypto" : "bet";
     const plan = getPlanNumbers(state, modePnl, m);
     const modeLabel = m === "crypto" ? "Kripto" : "Bahis";
+    const fmtMult = (val) => {
+      if (!Number.isFinite(val) || val <= 0) return "-";
+      const r = Math.round(val * 100) / 100;
+      return `${Number.isInteger(r) ? r : Number(r.toFixed(2))}x`;
+    };
+    const targetMultLabel = plan.target > 0 && plan.start > 0 ? ` (${fmtMult(plan.target / plan.start)})` : "";
+    const remainingMultValue = !plan.target
+      ? "-"
+      : plan.done
+        ? "Tamamlandı"
+        : plan.current > 0
+          ? `${(plan.target / plan.current).toFixed(2)}X`
+          : "-";
     return `
       <details class="v796-target-card v798-target-card v802-target-card v984-target-card ${m}" data-target-card="${m}" ${targetCardOpen(m) ? "open" : ""}>
         <summary class="v802-target-summary v984-target-summary v985-target-summary">
@@ -9924,9 +9937,9 @@ function escapeHtml(str) {
           <b class="v984-target-title v985-target-title">${modeLabel} Kasa Hedefi</b>
           <div class="v802-target-mini-grid v984-target-mini-grid v985-target-mini-grid">
             <span>Başlangıç <b>${money(plan.start)}</b></span>
-            <span>Hedef <b>${plan.target ? money(plan.target) : "Hedef gir"}</b></span>
+            <span>Hedef${targetMultLabel} <b>${plan.target ? money(plan.target) : "Hedef gir"}</b></span>
             <span>Güncel <b>${money(plan.current)}</b></span>
-            <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
+            <span>Kalan <b>${remainingMultValue}</b></span>
           </div>
         </summary>
 
@@ -9935,7 +9948,6 @@ function escapeHtml(str) {
         <div class="v796-target-metrics v798-target-metrics">
           <span>Kasa Hedefi K/Z <b class="${plan.pnl >= 0 ? "pos" : "neg"}">${signedMoney(plan.pnl)}</b></span>
           <span>Büyüme <b class="${plan.growth >= 0 ? "pos" : "neg"}">${pctText(plan.growth)}</b></span>
-          <span>Kalan <b>${plan.target ? money(plan.remaining) : "-"}</b></span>
         </div>
 
         <div class="v798-target-detail v802-target-detail">
