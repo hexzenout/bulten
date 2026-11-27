@@ -21,7 +21,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V26 ELITE | SUPREME COMMAND CENTER OMEGA</title>
+    <title>MATRİKA | TERMINAL</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -64,16 +64,167 @@ html.v536-sound-preboot #v28-sound-mount::before {
   } catch(e) {}
 })();
 </script>
+<style id="matrika-gate-style">
+html.matrika-locked, html.matrika-locked body {
+    overflow: hidden !important;
+    background: #060a14 !important;
+}
+html.matrika-locked body > *:not(#matrika-gate-overlay) {
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+#matrika-gate-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: radial-gradient(circle at top, rgba(240, 185, 11, 0.08), transparent 55%), #060a14;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.matrika-gate-card {
+    width: 100%;
+    max-width: 360px;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(9, 14, 26, 0.99));
+    border: 1px solid rgba(240, 185, 11, 0.35);
+    border-radius: 18px;
+    padding: 28px 24px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.72);
+    text-align: center;
+}
+.matrika-gate-ico {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 14px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(240, 185, 11, 0.14);
+    border: 1px solid rgba(240, 185, 11, 0.45);
+    color: #f0b90b;
+    font-size: 20px;
+}
+.matrika-gate-title {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: #f8fafc;
+}
+.matrika-gate-sub {
+    margin: 0 0 18px;
+    font-size: 12.5px;
+    color: #94a3b8;
+}
+.matrika-gate-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(2, 6, 23, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 11px;
+    padding: 12px 14px;
+    color: #f8fafc;
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 0.25em;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.matrika-gate-input:focus {
+    border-color: #f0b90b;
+}
+.matrika-gate-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 0;
+    border-radius: 11px;
+    background: linear-gradient(180deg, #f5c52b, #d99b06);
+    color: #0b1120;
+    font-size: 13.5px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+.matrika-gate-btn:hover {
+    filter: brightness(1.06);
+}
+.matrika-gate-err {
+    min-height: 18px;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f87171;
+}
+</style>
+<script id="matrika-gate-boot">
+(function(){
+  try {
+    if (localStorage.getItem("matrika_gate_unlocked_v1") !== "1") {
+      document.documentElement.classList.add("matrika-locked");
+    }
+  } catch(e) {}
+})();
+</script>
 
 </head>
 <body>
+<script id="matrika-gate-ui">
+(function(){
+  try {
+    if (!document.documentElement.classList.contains("matrika-locked")) return;
+    var overlay = document.createElement("div");
+    overlay.id = "matrika-gate-overlay";
+    overlay.innerHTML =
+      '<div class="matrika-gate-card">' +
+        '<div class="matrika-gate-ico"><i class="fa-solid fa-lock"></i></div>' +
+        '<h1 class="matrika-gate-title">MATRİKA</h1>' +
+        '<p class="matrika-gate-sub">Devam etmek için erişim şifresini girin</p>' +
+        '<form id="matrika-gate-form" autocomplete="off">' +
+          '<input id="matrika-gate-input" class="matrika-gate-input" type="password" inputmode="numeric" placeholder="••••" autofocus>' +
+          '<button type="submit" class="matrika-gate-btn">GİRİŞ YAP</button>' +
+          '<div id="matrika-gate-err" class="matrika-gate-err"></div>' +
+        '</form>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    var form = document.getElementById("matrika-gate-form");
+    var inp = document.getElementById("matrika-gate-input");
+    var err = document.getElementById("matrika-gate-err");
+    var verifyPin = function(val) {
+      var s = String(val || "").trim();
+      var h = 2166136261;
+      for (var i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return (h >>> 0) === 1001349047;
+    };
+    setTimeout(function(){ try { inp && inp.focus(); } catch(e){} }, 50);
+    form.addEventListener("submit", function(ev){
+      ev.preventDefault();
+      if (verifyPin(inp.value)) {
+        try { localStorage.setItem("matrika_gate_unlocked_v1", "1"); } catch(e){}
+        document.documentElement.classList.remove("matrika-locked");
+        overlay.remove();
+      } else {
+        err.textContent = "Şifre hatalı, tekrar deneyin.";
+        inp.value = "";
+        inp.focus();
+      }
+    });
+  } catch(e) {}
+})();
+</script>
     <header class="top-status-bar">
         <div class="header-controls">
             <button class="small-menu-btn" id="menu-trigger-btn" onclick="omega_ToggleSidebar(event)" title="Menüyü Aç">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="header-title-box">
-                <a href="https://hexzenout.github.io/bulten/" class="home-link">
+                <a href="./" class="home-link">
                     <i class="fa-solid fa-house"></i> ANA SAYFA
                 </a>
                 <span class="module-name" id="active-module-name"></span>

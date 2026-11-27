@@ -1,6 +1,6 @@
 {
-  "name": "V26 Bülten Terminal",
-  "short_name": "V26 Terminal",
+  "name": "MATRİKA Terminal",
+  "short_name": "MATRİKA",
   "description": "Bülten, canlı takip, kripto terminal ve kasa yönetimi.",
   "start_url": "./",
   "scope": "./",
