@@ -207,10 +207,8 @@
         function omega_V10SeedTpRows() {
             const box = document.getElementById('tp-v10-rows');
             if(!box || box.children.length) return;
-            omega_V10AddTpRow('', '25');
-            omega_V10AddTpRow('', '25');
-            omega_V10AddTpRow('', '25');
-            omega_V10AddTpRow('', '25');
+            omega_V10AddTpRow('', '50');
+            omega_V10AddTpRow('', '50');
         }
 
         function omega_V10UpdateTpOutputs() {
@@ -235,7 +233,12 @@
             if(tpEl) { tpEl.textContent = `${totalTp>=0?'+':''}$${totalTp.toFixed(2)}`; tpEl.className = totalTp >= 0 ? 'good' : 'bad'; }
             if(rrEl) {
                 const risk = Math.abs(stopPnl);
-                rrEl.textContent = risk > 0 ? `1:${Math.abs(totalTp/risk).toFixed(2)}` : '-';
+                if (risk > 0) {
+                    const ratio = Math.abs(totalTp / risk).toFixed(2);
+                    rrEl.innerHTML = `<span class="v26-rr-risk">1</span><span class="v26-rr-sep">:</span><span class="v26-rr-reward">${ratio}</span>`;
+                } else {
+                    rrEl.textContent = '-';
+                }
             }
             omega_V10DrawChart();
         }

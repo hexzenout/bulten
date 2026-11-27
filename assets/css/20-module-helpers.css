@@ -538,15 +538,6 @@
     color: #aaa;
 }
 
-.crypto-v10-metrics div:nth-child(3) span {
-    font-size: 0;
-}
-
-.crypto-v10-metrics div:nth-child(3) span::after {
-    content: "2x Hedef Kârı";
-    font-size: .72rem;
-}
-
 /* Ayar paneli sade */
 .v36-settings-card b {
     color: #f97316;

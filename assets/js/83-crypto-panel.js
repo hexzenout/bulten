@@ -6,7 +6,7 @@
 (function () {
   const PANEL_TITLES = {
     graph: ["Grafik Kontrolü", "Borsa, parite, coin ve zaman aralığı"],
-    plan: ["İşlem Planı", "TP / SL / LIQ ve risk hesabı"],
+    plan: ["İşlem Merkezi", ""],
     alarm: ["Alarm Merkezi", "Aktif alarmlar ve geçmiş"],
     sound: ["Ses Ayarları", ""],
     draw: ["Çizimler", "Alarm çizgisi, fiyat çizgisi ve trend"],
@@ -54,6 +54,42 @@
     return `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}`;
   }
 
+  function v26SyncAudioBanner(active, label = "Alarm sesi çalıyor") {
+    let bar = document.getElementById("v26-floating-sound-stop");
+    if (!active) {
+      if (bar) bar.classList.remove("show");
+      return;
+    }
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "v26-floating-sound-stop";
+      bar.className = "v26-floating-sound-stop";
+      bar.innerHTML = `
+        <div class="v26-fss-left">
+          <span class="v26-fss-pulse"><i class="fa-solid fa-volume-high"></i></span>
+          <span id="v26-fss-label">Alarm sesi çalıyor</span>
+        </div>
+        <button type="button" id="v26-fss-stop-btn" class="v26-fss-stop-btn"><i class="fa-solid fa-stop"></i> SESİ DURDUR</button>
+      `;
+      document.body.appendChild(bar);
+      bar.querySelector("#v26-fss-stop-btn")?.addEventListener("click", () => {
+        v512StopPreview();
+        if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
+      });
+    }
+    const lblEl = bar.querySelector("#v26-fss-label");
+    if (lblEl) lblEl.textContent = label;
+    bar.classList.add("show");
+  }
+
+  function v512SyncPlayButton(playing) {
+    const test = qs("#v512-sound-test");
+    if (test) {
+      test.classList.toggle("testing", Boolean(playing));
+      test.innerHTML = playing ? '<i class="fa-solid fa-volume-high"></i> ÇALIYOR' : '<i class="fa-solid fa-play"></i> OYNAT';
+    }
+  }
+
   function v512StopPreview() {
     // V526: DURDUR sonrası tekrar oynatınca kaldığı saniyeden devam etsin.
     const keepSec = v512PreviewAudio ? Number(v512PreviewAudio.currentTime || 0) : Number(qs("#v512-progress")?.value || 0);
@@ -78,11 +114,9 @@
     }
 
     qs("#v512-play-custom")?.classList.remove("playing");
-    const test = qs("#v512-sound-test");
-    if (test) {
-      test.classList.remove("testing");
-      test.textContent = "OYNAT";
-    }
+    const isAlarmRinging = Boolean(window.V26AlarmAudio?.isRinging?.());
+    v512SyncPlayButton(isAlarmRinging);
+    v26SyncAudioBanner(isAlarmRinging);
   }
 
   async function v512Rows() {
@@ -250,8 +284,8 @@
       v512PreviewAudio.onended = v512StopPreview;
       v512PreviewAudio.onerror = v512StopPreview;
       qs("#v512-play-custom")?.classList.add("playing");
-      const top = qs("#v512-sound-test");
-      if (top) { top.classList.add("testing"); top.textContent = "ÇALIYOR..."; }
+      v512SyncPlayButton(true);
+      v26SyncAudioBanner(true, "Özel alarm sesi çalıyor");
       try {
         await v512PreviewAudio.play();
         v512PreviewTimer = setTimeout(v512StopPreview, Math.max(500, (safeEnd - safeStart) * 1000 + 250));
@@ -263,15 +297,20 @@
   }
 
   async function v512PlaySelected() {
+    const isPlaying = Boolean(v512PreviewAudio || window.V26AlarmAudio?.isRinging?.());
+    if (isPlaying) {
+      v512StopPreview();
+      if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop();
+      return;
+    }
     const type = qs("#v512-sound-type")?.value || "digital";
     if (type === "custom") return v512PlayCustom();
     v512StopPreview();
     if (window.V26AlarmAudio?.unlock) window.V26AlarmAudio.unlock();
     v512SetSettings({ sound: type, volume: 1, enabled: true });
-    const top = qs("#v512-sound-test");
-    if (top) { top.classList.add("testing"); top.textContent = "ÇALIYOR..."; }
+    v512SyncPlayButton(true);
+    v26SyncAudioBanner(true, "Standart alarm sesi çalıyor");
     if (window.V26AlarmAudio?.testSelected) await window.V26AlarmAudio.testSelected();
-    setTimeout(() => { if (top) { top.classList.remove("testing"); top.textContent = "OYNAT"; } }, 1200);
   }
 
   function v512Seek(sec) {
@@ -400,30 +439,57 @@
     const mount = qs("#v28-sound-mount");
     if (!mount) return;
     const s = v512Settings();
-    const soundType = s.sound || "digital";
+    const soundType = s.sound === "custom" ? "custom" : "digital";
     const isCustom = soundType === "custom";
     if (!force && ["v512","v514","v515"].includes(mount.dataset.ready) && mount.querySelector(".v512-sound-card")) return;
     mount.dataset.ready = "v515";
     document.documentElement.classList.remove("v536-sound-preboot");
     document.documentElement.classList.remove("v534-sound-preboot");
     mount.innerHTML = `
-      <div class="v512-sound-card v514-sound-card">
-        <div class="v512-sound-head"><b>Alarm Ses Merkezi</b></div>
-        <div class="v512-actions"><button id="v512-sound-test" type="button">OYNAT</button><button id="v512-sound-stop" type="button" class="danger">DURDUR</button></div>
-        <div class="v512-field"><label>Ses Tipi</label><select id="v512-sound-type"><option value="custom">Özel Ses</option><option value="digital">Dijital Uyarı</option><option value="bip">Standart Bip</option><option value="chime">Yumuşak Chime</option><option value="siren">Siren</option><option value="silent">Sessiz</option></select></div>
+      <div class="v512-sound-card v514-sound-card v26-pro-sound-card">
+        <div class="v26-sound-pro-head">
+          <div class="v26-sound-title-row">
+            <span class="v26-sound-badge-ico"><i class="fa-solid fa-volume-high"></i></span>
+            <div>
+              <b>Alarm Ses Motoru</b>
+              <small>Tetiklenen alarmlarda çalacak uyarı tonu</small>
+            </div>
+          </div>
+          <div class="v26-sound-play-bar">
+            <button id="v512-sound-test" type="button" class="v26-sound-btn play"><i class="fa-solid fa-play"></i> OYNAT</button>
+            <button id="v512-sound-stop" type="button" class="v26-sound-btn stop danger"><i class="fa-solid fa-stop"></i> DURDUR</button>
+          </div>
+        </div>
+
+        <div class="v26-sound-pills" id="v26-sound-type-pills">
+          <button type="button" class="v26-s-pill ${soundType !== "custom" ? "active" : ""}" data-sound-opt="digital"><i class="fa-solid fa-bell"></i><span>Standart Ses</span></button>
+          <button type="button" class="v26-s-pill ${soundType === "custom" ? "active" : ""}" data-sound-opt="custom"><i class="fa-solid fa-headphones"></i><span>Özel Sesler</span></button>
+        </div>
+
+        <div class="v512-field" style="display:none;"><label>Ses Tipi</label><select id="v512-sound-type"><option value="digital">Standart Ses</option><option value="custom">Özel Sesler</option></select></div>
         <div class="v512-custom ${isCustom ? "show" : ""}" id="v512-custom-panel">
-          <div class="v512-library-title"><i class="fa-solid fa-music"></i><b>Özel Ses Kütüphanesi</b></div>
+          <div class="v512-library-title"><i class="fa-solid fa-headphones"></i><b>Özel Ses Kütüphanesi</b></div>
           <div class="v512-select-row"><button type="button" id="v512-play-custom" class="v512-play"><i class="fa-solid fa-play"></i><i class="fa-solid fa-pause"></i></button><select id="v512-custom-select"><option value="">Özel ses seç...</option></select><button type="button" id="v512-remove" class="danger">KALDIR</button></div>
           <div class="v512-player">
             <div class="v512-time"><span id="v512-current">0:00</span><b>Alarm Aralığı: <strong id="v512-range-label">0:00 - 0:00</strong></b><span id="v512-total">0:00</span></div>
             <div class="v512-track" id="v512-track"><div class="v512-wave"></div><div class="v512-fill" id="v512-fill"></div><button type="button" class="v512-handle start" id="v512-start-handle" aria-label="Başlangıç tutamağı"></button><button type="button" class="v512-handle end" id="v512-end-handle" aria-label="Bitiş tutamağı"></button><input id="v512-progress" type="range" min="0" max="1" step="1" value="0"><input id="v512-start" type="range" min="0" max="1" step="1" value="0" hidden><input id="v512-end" type="range" min="0" max="1" step="1" value="1" hidden></div>
             <button type="button" id="v512-apply">BU ARALIĞI ALARM YAP</button>
           </div>
-          <div class="v512-file-row"><button type="button" id="v512-file-pick">DOSYA SEÇ</button><span id="v512-file-note">Dosya seçilmedi</span><input id="v512-file-input" type="file" accept="audio/*,.mp3,.mpeg,.wav,.ogg,.oga,.m4a,.aac,.flac,.webm,.opus,.mp4" hidden></div>
+          <div class="v512-file-row"><button type="button" id="v512-file-pick"><i class="fa-solid fa-upload"></i> DOSYA SEÇ</button><span id="v512-file-note">Dosya seçilmedi</span><input id="v512-file-input" type="file" accept="audio/*,.mp3,.mpeg,.wav,.ogg,.oga,.m4a,.aac,.flac,.webm,.opus,.mp4" hidden></div>
         </div>
       </div>
     `;
     qs("#v512-sound-type").value = soundType;
+    qsa("#v26-sound-type-pills [data-sound-opt]").forEach(btn => {
+      btn.onclick = () => {
+        const val = btn.dataset.soundOpt;
+        const sel = qs("#v512-sound-type");
+        if (sel) sel.value = val;
+        v512SetSettings({ sound: val, volume: 1, enabled: true });
+        renderSoundRootV512(true);
+        window.dispatchEvent(new CustomEvent("v26-sound-changed", { detail: { sound: val } }));
+      };
+    });
     qs("#v512-sound-stop").onclick = () => { v512StopPreview(); if (window.V26AlarmAudio?.stop) window.V26AlarmAudio.stop(); };
     qs("#v512-sound-test").onclick = v512PlaySelected;
     qs("#v512-sound-type").onchange = e => { v512SetSettings({ sound: e.target.value, volume: 1, enabled: true }); renderSoundRootV512(true); };
@@ -490,6 +556,8 @@
   }
 
   function activatePanel(name, writeHash = false) {
+    const wantsSound = name === "sound";
+    if (wantsSound) name = "alarm";
     name = PANEL_TITLES[name] ? name : "graph";
     qsa(".crypto-v28-tab").forEach(btn => btn.classList.toggle("active", btn.dataset.cryptoPanel === name));
     qsa(".crypto-v28-panel").forEach(panel => panel.classList.toggle("active", panel.dataset.cryptoPane === name));
@@ -508,7 +576,12 @@
       if (location.hash !== nextHash) history.pushState({ tab: "crypto", panel: name }, "", nextHash);
     }
 
-    if (name === "sound") setTimeout(() => renderSoundRootV512(true), 0);
+    if (name === "alarm") {
+      setTimeout(() => {
+        renderSoundRootV512(false);
+        if (wantsSound) document.querySelector('[data-v28-alarm-tab="sound"]')?.click();
+      }, 0);
+    }
   }
 
   function bindTabs() {
@@ -546,20 +619,7 @@
   }
 
   function robustTimeframeBinding() {
-    qsa("#crypto-v10-timeframes [data-tf], .tf-v10[data-tf]").forEach(btn => {
-      if (btn.dataset.v28Bound === "1") return;
-      btn.dataset.v28Bound = "1";
-      btn.addEventListener("click", () => {
-        qsa("#crypto-v10-timeframes [data-tf], .tf-v10[data-tf]").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        setTimeout(() => {
-          if (typeof window.omega_V10RefreshCrypto === "function") {
-            window.omega_V10RefreshCrypto(true);
-          }
-        }, 60);
-      }, true);
-    });
+    // 72-crypto-ui.js directly handles timeframe clicks with instant cache switching.
   }
 
   function bindSettings() {
@@ -635,13 +695,26 @@
     });
   }
 
+  window.v26ActivateCryptoPanel = activatePanel;
+
   function boot() {
+    window.addEventListener("v46b-audio-ringing", e => {
+      const ringing = Boolean(e?.detail?.ringing) || Boolean(v512PreviewAudio);
+      v512SyncPlayButton(ringing);
+      v26SyncAudioBanner(ringing, "Alarm sesi çalıyor");
+    });
     bindTabs();
     bindSettings();
     robustTimeframeBinding();
     syncHeaderClones();
     hardCleanup();
-    if ((panelFromHash() || localStorage.getItem("v28_crypto_panel") || "graph") === "sound") setTimeout(() => renderSoundRootV512(true), 0);
+    const initPanel = panelFromHash() || localStorage.getItem("v28_crypto_panel") || "graph";
+    if (initPanel === "alarm" || initPanel === "sound") {
+      setTimeout(() => {
+        renderSoundRootV512(true);
+        if (initPanel === "sound") document.querySelector('[data-v28-alarm-tab="sound"]')?.click();
+      }, 0);
+    }
     patchHashBoot();
 
     setInterval(() => {
@@ -653,7 +726,7 @@
       hardCleanup();
 
       const activePanel = panelFromHash() || localStorage.getItem("v28_crypto_panel") || "graph";
-      if (activePanel === "sound") {
+      if (activePanel === "alarm") {
         const mount = qs("#v28-sound-mount");
         if (mount && !mount.querySelector(".v512-sound-card")) renderSoundRootV512(true);
       }

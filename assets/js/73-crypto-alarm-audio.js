@@ -22,6 +22,7 @@
   let audioCtx = null;
   let ringAudio = null;
   let ringTimers = [];
+  let activeOscs = [];
   let isRinging = false;
   let objectUrls = new Map();
 
@@ -215,6 +216,8 @@
   function stopAlarm() {
     clearTimers();
     isRinging = false;
+    activeOscs.forEach(osc => { try { osc.stop(0); osc.disconnect(); } catch {} });
+    activeOscs = [];
     if (ringAudio) {
       try {
         ringAudio.pause();
@@ -237,6 +240,11 @@
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       const now = audioCtx.currentTime + delay;
+      activeOscs.push(osc);
+      osc.onended = () => {
+        activeOscs = activeOscs.filter(x => x !== osc);
+        try { osc.disconnect(); gain.disconnect(); } catch {}
+      };
       osc.start(now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + duration / 1000);
       osc.stop(now + duration / 1000 + 0.03);
@@ -348,6 +356,7 @@
     play: playAlarm,
     testSelected: async () => playAlarm("Alarm sesi test edildi."),
     stop: stopAlarm,
+    isRinging: () => isRinging,
     unlock: () => {
       ensureAudioContext();
       settings.enabled = true;

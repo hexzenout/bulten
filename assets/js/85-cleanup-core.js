@@ -55,9 +55,6 @@
     const saved = localStorage.getItem("v28_crypto_panel");
     if (saved === "draw") localStorage.setItem("v28_crypto_panel", "graph");
 
-    const timeframes = document.getElementById("crypto-v10-timeframes");
-    if (timeframes) timeframes.innerHTML = "";
-
     const mini = document.querySelector(".crypto-v28-mini-panel");
     if (mini) {
       const b = mini.querySelector("b");

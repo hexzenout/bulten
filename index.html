@@ -26,8 +26,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <link rel="stylesheet" href="assets/css/00-base.css?v=v517">
-  <link rel="stylesheet" href="assets/css/10-route-crypto.css?v=v517">
-  <link rel="stylesheet" href="assets/css/20-module-helpers.css?v=v517">
+  <link rel="stylesheet" href="assets/css/10-route-crypto.css?v=v1397">
+  <link rel="stylesheet" href="assets/css/20-module-helpers.css?v=v1397">
   <link rel="stylesheet" href="assets/css/30-finance-core.css?v=v517">
   <link rel="stylesheet" href="assets/css/31-finance-panels.css?v=v753">
   <link rel="stylesheet" href="assets/css/40-rolling-prep.css?v=v517">
@@ -196,8 +196,6 @@ html.v536-sound-preboot #v28-sound-mount::before {
                             <button class="crypto-v28-tab active" data-crypto-panel="graph"><i class="fa-solid fa-chart-candlestick"></i><span>Grafik</span></button>
                             <button class="crypto-v28-tab" data-crypto-panel="plan"><i class="fa-solid fa-list-check"></i><span>İşlem</span></button>
                             <button class="crypto-v28-tab" data-crypto-panel="alarm"><i class="fa-solid fa-bell"></i><span>Alarm</span></button>
-                            <button class="crypto-v28-tab" data-crypto-panel="sound"><i class="fa-solid fa-volume-high"></i><span>Ses</span></button>
-                            <button class="crypto-v28-tab crypto-v28-tab-disabled" data-crypto-panel="settings" type="button" aria-disabled="true"><i class="fa-solid fa-sliders"></i><span>Ayar</span></button>
                         </aside>
 
                         <div class="crypto-v10-chart-panel crypto-v28-chart-panel">
@@ -267,7 +265,7 @@ html.v536-sound-preboot #v28-sound-mount::before {
                                     <input id="v10-entry" type="number" placeholder="Boşsa canlı fiyat alınır" step="0.00000001">
 
                                     <label>Likidasyon</label>
-                                    <input id="v10-liq" type="number" placeholder="Manuel LIQ" step="0.00000001">
+                                    <input id="v10-liq" type="number" placeholder="Gerçek işlemde otomatik gelir" step="0.00000001" readonly>
 
                                     <label>2x Kâr Fiyatı</label>
                                     <input id="v10-2x" type="number" placeholder="Manuel 2x fiyatı" step="0.00000001">
@@ -293,17 +291,13 @@ html.v536-sound-preboot #v28-sound-mount::before {
                                 <div class="crypto-v10-metrics">
                                     <div><span>Canlı PnL</span><b id="v10-live-pnl">$0.00</b></div>
                                     <div><span>Stop Zararı</span><b id="v10-stop-pnl">$0.00</b></div>
-                                    <div><span>Toplam TP Kârı</span><b id="v10-tp-total">$0.00</b></div>
-                                    <div><span>Risk / Ödül</span><b id="v10-rr">-</b></div>
+                                    <div><span>TP Hedefleri Toplam Kârı<small class="v26-metric-sub">Girilen TP1/TP2 hedeflerinin toplam kazancı</small></span><b id="v10-tp-total">$0.00</b></div>
+                                    <div><span>Risk / Ödül<small class="v26-metric-sub">Risk : Kazanç oranı</small></span><b id="v10-rr">-</b></div>
                                 </div>
                             </div>
 
                             <div class="crypto-v28-panel" data-crypto-pane="alarm">
                                 <div id="v28-alarm-mount"></div>
-                            </div>
-
-                            <div class="crypto-v28-panel" data-crypto-pane="sound">
-                                <div id="v28-sound-mount"></div>
                             </div>
 
                             <div class="crypto-v28-panel" data-crypto-pane="settings">
@@ -571,19 +565,20 @@ html.v536-sound-preboot #v28-sound-mount::before {
 <script src="assets/js/40-live-center-core.js?v=v1296"></script>
 <script src="assets/js/50-daily-trade-core.js?v=v1296"></script>
 <script src="assets/js/55-odds-terminal.js?v=v1297"></script>
-    <script src="assets/js/60-crypto-core.js?v=v1297"></script>
+    <script src="assets/js/60-crypto-core.js?v=v1397"></script>
 <script src="assets/js/70-rolling-core.js?v=v1340"></script>
 <script src="assets/js/71-finance-ui.js?v=v972"></script>
-<script src="assets/js/72-crypto-ui.js?v=v517"></script>
-<script src="assets/js/73-crypto-alarm-audio.js?v=v517"></script>
-<script src="assets/js/74-crypto-alarm-center.js?v=v517"></script>
+<script src="assets/js/72-crypto-ui.js?v=v1397"></script>
+<script src="assets/js/75-crypto-pro-tv.js?v=v1397"></script>
+<script src="assets/js/76-crypto-trade-pro.js?v=v1397"></script>
+<script src="assets/js/73-crypto-alarm-audio.js?v=v1397"></script>
+<script src="assets/js/74-crypto-alarm-center.js?v=v1397"></script>
 <script src="assets/js/80-app-fixes.js?v=v1296"></script>
 <script src="assets/js/pwa.js?v=v517"></script>
 <script type="module" src="assets/js/82-firebase-core.js?v=v1343"></script>
-<script src="assets/js/83-crypto-panel.js?v=v536"></script>
+<script src="assets/js/83-crypto-panel.js?v=v1397"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/84-crypto-tv-chart.js?v=v517"></script>
-<script src="assets/js/85-cleanup-core.js?v=v517"></script>
+<script src="assets/js/85-cleanup-core.js?v=v1369"></script>
 <script src="assets/js/86-crypto-professional.js?v=v995"></script>
 
 <script src="assets/js/90-ui-menu-fixes.js?v=v1307"></script>

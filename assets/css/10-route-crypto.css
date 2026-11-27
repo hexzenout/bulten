@@ -216,10 +216,8 @@ body.v36-fast-mode .controls-wrapper {
    V31 CLEANUP: CRYPTO REAL CHART + FINANCE TAB FIX
 ================================ */
 
-/* Eski işlevsiz grafik süreleri ve çizim paneli gizlendi */
-.crypto-v10-timeframes,
+/* Eski işlevsiz çizim paneli gizlendi */
 .crypto-v12-toolbar,
-#drawing-v14-panel,
 #crypto-v12-hint,
 .crypto-v28-tab[data-crypto-panel="draw"],
 .crypto-v28-panel[data-crypto-pane="draw"] {
@@ -585,4 +583,3081 @@ body.v36-fast-mode .controls-wrapper {
 #omega-crypto-block .crypto-v28-tab.active {
     border-color: rgba(249,115,22,.42) !important;
     background: rgba(249,115,22,.10) !important;
+}
+
+/* V26 CRYPTO PRO: TradingView + 1x-100x Leverage + Watchlist */
+#omega-crypto-block .v26-pro-chart-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: rgba(10, 15, 28, 0.9);
+    border: 1px solid #1e293b;
+}
+
+#omega-crypto-block .v26-mode-switch {
+    display: inline-flex;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-mode-btn {
+    padding: 6px 12px;
+    border-radius: 9px;
+    border: 1px solid #2a3447;
+    background: #0f172a;
+    color: #94a3b8;
+    font-size: 0.76em;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+#omega-crypto-block .v26-mode-btn.active {
+    background: rgba(249, 115, 22, 0.18);
+    border-color: rgba(249, 115, 22, 0.55);
+    color: #fb923c;
+}
+
+#omega-crypto-block .v26-lev-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+#omega-crypto-block .v26-lev-lbl {
+    color: #94a3b8;
+    font-size: 0.72em;
+    font-weight: 800;
+    margin-right: 4px;
+}
+
+#omega-crypto-block .v26-lev-btn {
+    padding: 4px 8px;
+    border-radius: 7px;
+    border: 1px solid #263144;
+    background: #0b1222;
+    color: #cbd5e1;
+    font-size: 0.72em;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-lev-btn.active {
+    background: rgba(251, 191, 36, 0.2);
+    border-color: #fbbf24;
+    color: #fbbf24;
+}
+
+#omega-crypto-block .v26-lev-input {
+    width: 54px;
+    padding: 4px 6px;
+    border-radius: 7px;
+    border: 1px solid #334155;
+    background: #070b14;
+    color: #fbbf24;
+    font-size: 0.76em;
+    font-weight: 800;
+    text-align: center;
+}
+
+#omega-crypto-block .v26-tv-widget-host {
+    width: 100%;
+    height: 580px;
+    min-height: 580px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    background: #0b0f19;
+}
+
+#omega-crypto-block .v26-tv-loading {
+    height: 580px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 0.85em;
+    font-weight: 700;
+}
+
+#omega-crypto-block .v26-header-lev-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.74em;
+    font-weight: 900;
+    margin-left: 6px;
+}
+
+#omega-crypto-block .v26-header-lev-badge.up {
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+#omega-crypto-block .v26-header-lev-badge.down {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+#omega-crypto-block .v26-watch-box {
+    margin-top: 0 !important;
+    border-top: none !important;
+    padding-top: 0 !important;
+    display: grid;
+    gap: 8px;
+}
+
+#omega-crypto-block .crypto-v28-layout {
+    align-items: start !important;
+    grid-template-columns: 92px minmax(0, 1fr) 392px !important;
+    gap: 10px !important;
+}
+
+#omega-crypto-block .crypto-v10-chart-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 14px !important;
+    min-height: 0 !important;
+}
+
+#omega-crypto-block .crypto-v28-side-tabs {
+    gap: 8px !important;
+    align-content: start !important;
+    align-self: start !important;
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+#omega-crypto-block .crypto-v28-tab[data-crypto-panel="settings"] {
+    display: none !important;
+}
+
+#omega-crypto-block .crypto-v28-tab {
+    min-height: 64px !important;
+    padding: 10px 6px !important;
+}
+
+#omega-crypto-block .crypto-v28-mini-panel,
+#omega-crypto-block #v38-chart-controls,
+#omega-crypto-block .crypto-v12-hint,
+#omega-crypto-block .crypto-v10-chart-caption,
+#omega-crypto-block #v26-tv-caption,
+#omega-crypto-block .v26-tv-caption {
+    display: none !important;
+}
+
+#omega-crypto-block .crypto-v10-chart-head {
+    margin-bottom: 8px !important;
+    padding-bottom: 8px !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel:has(.crypto-v28-panel[data-crypto-pane="graph"].active) > .terminal-v10-panel-head {
+    display: none !important;
+}
+
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="graph"] > .crypto-v28-form,
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="graph"] > .crypto-v28-full-btn {
+    display: none !important;
+}
+
+#omega-crypto-block .v26-watch-tabs {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid #1e293b;
+    padding: 0 2px;
+}
+
+#omega-crypto-block .v26-watch-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 2px 9px;
+    border: none;
+    border-bottom: 2.5px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    color: #848e9c;
+    font-size: 0.78em;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+#omega-crypto-block .v26-watch-tab.fav-tab {
+    padding: 7px 6px 9px;
+    font-size: 0.92em;
+}
+
+#omega-crypto-block .v26-watch-tab:hover {
+    color: #f0b90b;
+}
+
+#omega-crypto-block .v26-watch-tab.active {
+    background: transparent;
+    border-bottom-color: #f0b90b;
+    color: #f8fafc;
+}
+
+#omega-crypto-block .v26-watch-tab.fav-tab.active,
+#omega-crypto-block .v26-watch-tab.fav-tab:hover {
+    color: #f0b90b;
+}
+
+#omega-crypto-block .v26-hot-pill {
+    font-style: normal;
+    background: #f0b90b;
+    color: #171000;
+    font-size: 0.72em;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 4px;
+    line-height: 1.1;
+}
+
+#omega-crypto-block .v26-watch-controls {
+    display: grid;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-watch-add-row {
+    display: flex;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-watch-input {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid #263246;
+    background: #070b14;
+    color: #f8fafc;
+    font-size: 0.78em;
+    font-weight: 700;
+}
+
+#omega-crypto-block .v26-watch-add-btn {
+    padding: 0 12px;
+    border-radius: 9px;
+    border: 1px solid rgba(251, 191, 36, 0.5);
+    background: rgba(251, 191, 36, 0.16);
+    color: #fbbf24;
+    font-size: 0.76em;
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-watch-list-head {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr) 72px 100px;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    color: #64748b;
+    font-size: 0.64em;
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+#omega-crypto-block .v26-sort-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: inherit;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+}
+
+#omega-crypto-block .v26-sort-btn.right {
+    text-align: right;
+}
+
+#omega-crypto-block .v26-sort-btn.active {
+    color: #fbbf24;
+}
+
+#omega-crypto-block .v26-col-right {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+}
+
+#omega-crypto-block .v26-col-right em {
+    font-style: normal;
+    color: #475569;
+}
+
+#omega-crypto-block .v26-vol-swap {
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid #243044;
+    color: #94a3b8;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 0.95em;
+    cursor: pointer;
+    margin-left: 2px;
+}
+
+#omega-crypto-block .v26-vol-swap:hover {
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.45);
+}
+
+#omega-crypto-block .v26-watch-list-body {
+    max-height: 610px;
+    overflow-y: auto;
+    display: grid;
+    gap: 4px;
+    padding-right: 2px;
+}
+
+#omega-crypto-block .v26-watch-row {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr) 72px 100px;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 8px;
+    border-radius: 9px;
+    border: 1px solid #162033;
+    background: #0a101d;
+    cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+#omega-crypto-block .v26-watch-row:hover {
+    border-color: #334155;
+    background: #10182b;
+}
+
+#omega-crypto-block .v26-watch-row.active {
+    border-color: rgba(249, 115, 22, 0.55);
+    background: rgba(249, 115, 22, 0.1);
+}
+
+#omega-crypto-block .v26-watch-star {
+    background: transparent;
+    border: none;
+    color: #475569;
+    font-size: 0.82em;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.12s ease, transform 0.12s ease;
+}
+
+#omega-crypto-block .v26-watch-star:hover {
+    color: #f0b90b;
+    transform: scale(1.1);
+}
+
+#omega-crypto-block .v26-watch-star.fav {
+    color: #f0b90b;
+}
+
+#omega-crypto-block .v26-watch-sym {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+#omega-crypto-block .v26-coin-ico {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex: 0 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e293b;
+}
+
+#omega-crypto-block .v26-coin-ico img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+#omega-crypto-block .v26-coin-fb {
+    font-size: 8.5px;
+    font-weight: 900;
+    color: #e2e8f0;
+    line-height: 1;
+}
+
+#omega-crypto-block .v26-watch-sym-txt {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+#omega-crypto-block .v26-watch-sym b {
+    color: #f8fafc;
+    font-size: 0.8em;
+    font-weight: 800;
+}
+
+#omega-crypto-block .v26-watch-sym em {
+    color: #64748b;
+    font-style: normal;
+    font-size: 0.66em;
+    font-weight: 700;
+}
+
+#omega-crypto-block .v26-watch-price {
+    text-align: right;
+    color: #e2e8f0;
+    font-size: 0.76em;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+#omega-crypto-block .v26-watch-chg {
+    display: grid;
+    justify-items: end;
+    line-height: 1.22;
+    font-variant-numeric: tabular-nums;
+}
+
+#omega-crypto-block .v26-watch-chg .v26-pct-val {
+    font-size: 0.74em;
+    font-weight: 800;
+    font-style: normal;
+}
+
+#omega-crypto-block .v26-watch-chg .v26-vol-val {
+    font-size: 0.66em;
+    font-weight: 700;
+    font-style: normal;
+    color: #94a3b8;
+}
+
+#omega-crypto-block .v26-watch-chg .v26-vol-val.primary {
+    font-size: 0.74em;
+    font-weight: 800;
+    color: #e2e8f0;
+}
+
+#omega-crypto-block .v26-watch-chg .up { color: #34d399; }
+#omega-crypto-block .v26-watch-chg .down { color: #f87171; }
+
+#omega-crypto-block .v26-watch-lev {
+    font-size: 0.64em;
+    font-weight: 900;
+    opacity: 0.92;
+}
+
+#omega-crypto-block .v26-watch-empty {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.78em;
+    font-weight: 700;
+}
+
+#omega-crypto-block .v26-scalp-panel {
+    margin-bottom: 6px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    background: rgba(11, 17, 32, 0.92);
+    border: 1px solid #1e293b;
+    display: grid;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-sc-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+#omega-crypto-block .v26-sc-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+#omega-crypto-block .v26-sc-inputs label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72em;
+    font-weight: 800;
+    color: #94a3b8;
+}
+
+#omega-crypto-block .v26-sc-inputs input[type="number"] {
+    width: 56px;
+    padding: 4px 6px;
+    border-radius: 7px;
+    border: 1px solid #334155;
+    background: #070b14;
+    color: #f8fafc;
+    font-size: 1em;
+    font-weight: 800;
+    text-align: center;
+}
+
+#omega-crypto-block .v26-sc-check {
+    cursor: pointer;
+    color: #cbd5e1 !important;
+}
+
+#omega-crypto-block .v26-sc-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.73em;
+    color: #94a3b8;
+    font-weight: 700;
+}
+
+#omega-crypto-block .v26-sc-metrics b {
+    color: #f8fafc;
+    font-weight: 900;
+}
+
+#omega-crypto-block .v26-sc-badge {
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.94em;
+    font-weight: 900;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #cbd5e1;
+}
+
+#omega-crypto-block .v26-sc-badge.safe {
+    background: rgba(16, 185, 129, 0.16);
+    border-color: rgba(16, 185, 129, 0.45);
+    color: #34d399;
+}
+
+#omega-crypto-block .v26-sc-badge.risky {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.45);
+    color: #f87171;
+}
+
+#omega-crypto-block .v26-sc-levels {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 12px;
+}
+
+#omega-crypto-block .v26-sc-col {
+    display: grid;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-sc-col.short {
+    border-left: 1px solid #243044;
+    padding-left: 12px;
+}
+
+#omega-crypto-block .v26-sc-lvl {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-size: 0.72em;
+    font-weight: 800;
+    background: #080c17;
+    border: 1px solid #1e293b;
+    font-variant-numeric: tabular-nums;
+}
+
+#omega-crypto-block .v26-sc-lvl.long-liq { color: #f87171; border-color: rgba(239, 68, 68, 0.32); }
+#omega-crypto-block .v26-sc-lvl.long-tp { color: #34d399; border-color: rgba(16, 185, 129, 0.32); }
+#omega-crypto-block .v26-sc-lvl.short-liq { color: #fb923c; border-color: rgba(249, 115, 22, 0.32); }
+#omega-crypto-block .v26-sc-lvl.short-tp { color: #2dd4bf; border-color: rgba(20, 184, 166, 0.32); }
+
+#omega-crypto-block #crypto-v10-timeframes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important;
+    margin: 0 0 8px 0 !important;
+}
+
+#omega-crypto-block #crypto-v10-timeframes .tf-v10 {
+    padding: 4px 9px !important;
+    border-radius: 7px !important;
+    font-size: 0.72em !important;
+    font-weight: 800 !important;
+    background: #181c24 !important;
+    border: 1px solid #2b3139 !important;
+    color: #848e9c !important;
+}
+
+#omega-crypto-block #crypto-v10-timeframes .tf-v10.active {
+    background: rgba(240, 185, 11, 0.16) !important;
+    border-color: #f0b90b !important;
+    color: #f0b90b !important;
+}
+
+#omega-crypto-block .v26-tf-more-wrap {
+    position: relative;
+    display: inline-flex;
+}
+
+#omega-crypto-block .v26-tf-more-btn {
+    min-width: 34px !important;
+    padding: 4px 8px !important;
+}
+
+#omega-crypto-block .v26-tf-more-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    z-index: 30;
+    display: none;
+    grid-template-columns: repeat(3, minmax(64px, 1fr));
+    gap: 6px;
+    padding: 8px;
+    border-radius: 10px;
+    background: #0d1322;
+    border: 1px solid #2b3447;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65);
+    white-space: nowrap;
+}
+
+#omega-crypto-block .v26-tf-more-menu .tf-v10 {
+    width: 100% !important;
+    min-width: 64px !important;
+    text-align: center !important;
+}
+
+#omega-crypto-block .v26-tf-more-menu.show {
+    display: grid;
+}
+
+#omega-crypto-block #v26-tv-chart-shell {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    min-height: 560px !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+#omega-crypto-block .v26-tf-row-host {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 8px 0;
+}
+
+#omega-crypto-block .v26-tf-row-host #crypto-v10-timeframes {
+    margin: 0 !important;
+}
+
+#omega-crypto-block .v26-tf-tools-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-top-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 7px;
+    border: 1px solid #2b3139;
+    background: #141923;
+    color: #94a3b8;
+    font-size: 0.72em;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.14s ease;
+}
+
+#omega-crypto-block .v26-top-pill:hover {
+    border-color: #fbbf24;
+    color: #fbbf24;
+}
+
+#omega-crypto-block .v26-top-pill.active {
+    border-color: rgba(240, 185, 11, 0.55);
+    background: rgba(240, 185, 11, 0.16);
+    color: #f0b90b;
+}
+
+#omega-crypto-block #v26-tv-toolbar.v26-tv-top-bar {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+    padding: 5px 6px !important;
+    margin: 0 0 8px 0 !important;
+    border-radius: 10px !important;
+    background: #0d1322 !important;
+    border: 1px solid #242f45 !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar.v26-tv-top-bar.collapsed {
+    display: none !important;
+}
+
+#omega-crypto-block .v26-tv-dock-items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px;
+    width: 100%;
+}
+
+#omega-crypto-block #v26-chart-stage.v26-chart-stage {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-height: 560px !important;
+}
+
+#omega-crypto-block #v26-chart-stage .crypto-v12-chart-wrap {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 560px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    background: transparent !important;
+}
+
+#omega-crypto-block #v26-left-ob.v26-left-ob {
+    flex: 0 0 202px;
+    width: 202px;
+    height: auto !important;
+    min-height: 560px !important;
+    align-self: stretch !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px;
+    border-radius: 12px;
+    background: #0b1120;
+    border: 1px solid #1e293b;
+}
+
+#omega-crypto-block #v26-left-ob .v26-ob-asks,
+#omega-crypto-block #v26-left-ob .v26-ob-bids {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 2px;
+}
+
+#omega-crypto-block .v26-ob-close {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 2px;
+}
+
+#omega-crypto-block .v26-ob-close:hover {
+    color: #f8fafc;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 3px !important;
+    padding: 4px 4px !important;
+    border-radius: 6px !important;
+    font-size: 9.7px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn i {
+    width: 10px !important;
+    font-size: 9.5px !important;
+    text-align: center !important;
+    flex-shrink: 0 !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.green {
+    color: #00e676 !important;
+    border-color: rgba(0, 230, 118, 0.42) !important;
+    background: rgba(0, 230, 118, 0.1) !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.red {
+    color: #ef4444 !important;
+    border-color: rgba(220, 38, 38, 0.52) !important;
+    background: rgba(220, 38, 38, 0.12) !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.cyan {
+    color: #38bdf8 !important;
+    border-color: rgba(56, 189, 248, 0.35) !important;
+    background: rgba(56, 189, 248, 0.1) !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.gold {
+    color: #fbbf24 !important;
+    border-color: rgba(251, 191, 36, 0.38) !important;
+    background: rgba(251, 191, 36, 0.1) !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.violet {
+    color: #c084fc !important;
+    border-color: rgba(192, 132, 252, 0.38) !important;
+    background: rgba(192, 132, 252, 0.1) !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.blue {
+    color: #60a5fa !important;
+    border-color: rgba(96, 165, 250, 0.38) !important;
+    background: rgba(96, 165, 250, 0.1) !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.active {
+    background: var(--gold) !important;
+    border-color: var(--gold) !important;
+    color: #171000 !important;
+}
+
+#omega-crypto-block #v26-draw-overlay.v26-draw-overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 5 !important;
+    pointer-events: none !important;
+    display: block !important;
+}
+
+#omega-crypto-block #v26-draw-actions.v26-draw-actions {
+    position: absolute !important;
+    z-index: 10 !important;
+    display: none;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 4px !important;
+    border-radius: 9px !important;
+    background: rgba(15, 23, 42, 0.96) !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.6) !important;
+}
+
+#omega-crypto-block #v26-draw-actions.v26-draw-actions.show {
+    display: inline-flex !important;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 7px !important;
+    border: 1px solid transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    font-size: 0.76em !important;
+    padding: 0 !important;
+    transition: transform 0.12s ease, background 0.15s ease !important;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.note {
+    background: rgba(59, 130, 246, 0.18) !important;
+    border-color: rgba(59, 130, 246, 0.42) !important;
+    color: #93c5fd !important;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.trash {
+    background: rgba(239, 68, 68, 0.18) !important;
+    border-color: rgba(239, 68, 68, 0.45) !important;
+    color: #fca5a5 !important;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn:hover {
+    transform: scale(1.06);
+}
+
+#omega-crypto-block #v26-note-editor.v26-note-editor {
+    position: absolute !important;
+    z-index: 12 !important;
+    display: none;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 6px !important;
+    border-radius: 10px !important;
+    background: rgba(11, 17, 32, 0.98) !important;
+    border: 1px solid rgba(250, 204, 21, 0.55) !important;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.7) !important;
+}
+
+#omega-crypto-block #v26-note-editor.v26-note-editor.show {
+    display: inline-flex !important;
+}
+
+#omega-crypto-block #v26-note-input {
+    width: 195px !important;
+    height: 28px !important;
+    padding: 0 9px !important;
+    border-radius: 7px !important;
+    border: 1px solid #334155 !important;
+    background: #080d18 !important;
+    color: #f8fafc !important;
+    font-size: 0.76em !important;
+    font-weight: 600 !important;
+    outline: none !important;
+}
+
+#omega-crypto-block #v26-note-input:focus {
+    border-color: #facc15 !important;
+}
+
+#omega-crypto-block #v26-note-save,
+#omega-crypto-block #v26-note-cancel {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 7px !important;
+    border: none !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.78em !important;
+}
+
+#omega-crypto-block #v26-note-save {
+    background: #10b981 !important;
+    color: #052e16 !important;
+}
+
+#omega-crypto-block #v26-note-cancel {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #fca5a5 !important;
+}
+
+#omega-crypto-block .v26-watch-price.flash-up {
+    color: #34d399 !important;
+    transition: color 0.12s ease !important;
+}
+
+#omega-crypto-block .v26-watch-price.flash-down {
+    color: #f87171 !important;
+    transition: color 0.12s ease !important;
+}
+
+#omega-crypto-block #drawing-v14-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 7px !important;
+    margin-top: 8px !important;
+}
+
+#omega-crypto-block #drawing-v14-panel:empty {
+    display: none !important;
+}
+
+#omega-crypto-block .drawing-v14-row {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 5px 10px !important;
+    border-radius: 9px !important;
+    background: #0d1322 !important;
+    border: 1px solid #263246 !important;
+    font-size: 0.72em !important;
+    color: #e2e8f0 !important;
+}
+
+#omega-crypto-block .drawing-v14-row.green { border-color: rgba(16, 185, 129, 0.45) !important; color: #34d399 !important; }
+#omega-crypto-block .drawing-v14-row.red { border-color: rgba(239, 68, 68, 0.45) !important; color: #f87171 !important; }
+#omega-crypto-block .drawing-v14-row.zone { border-color: rgba(59, 130, 246, 0.45) !important; color: #93c5fd !important; }
+#omega-crypto-block .drawing-v14-row.note { border-color: rgba(250, 204, 21, 0.45) !important; color: #fde047 !important; }
+
+#omega-crypto-block .drawing-v14-row button {
+    background: rgba(239, 68, 68, 0.16) !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+    color: #f87171 !important;
+    border-radius: 6px !important;
+    width: 22px !important;
+    height: 22px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+}
+
+/* Right control panels (Alarm / Plan / Sound) cleanup & readable typography */
+#omega-crypto-block .v26-sc-check.long input[type="checkbox"] {
+    accent-color: #00e676;
+    width: 14px;
+    height: 14px;
+}
+
+#omega-crypto-block .v26-sc-check.short input[type="checkbox"] {
+    accent-color: #f97316;
+    width: 14px;
+    height: 14px;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-alarm-card,
+#omega-crypto-block .crypto-v28-control-panel .v28-sound-card {
+    background: #0b1120 !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 14px !important;
+    padding: 12px !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-alarm-card > .v28-card-title,
+#omega-crypto-block .crypto-v28-control-panel .v28-sound-card > .v28-card-title {
+    display: none !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-tabs-mini {
+    margin-bottom: 10px !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-form-grid label,
+#omega-crypto-block .crypto-v28-control-panel .crypto-v28-form label {
+    font-size: 11px !important;
+    color: #94a3b8 !important;
+    gap: 5px !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-form-grid input,
+#omega-crypto-block .crypto-v28-control-panel .v28-form-grid select,
+#omega-crypto-block .crypto-v28-control-panel .crypto-v28-form input,
+#omega-crypto-block .crypto-v28-control-panel .crypto-v28-form select {
+    height: 36px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    background: #070b14 !important;
+    border: 1px solid #263246 !important;
+    color: #f8fafc !important;
+    -webkit-text-fill-color: #f8fafc !important;
+    padding: 0 10px !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-row {
+    background: #070b14 !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 11px !important;
+    padding: 10px !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-row b {
+    font-size: 13px !important;
+    color: #fbbf24 !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-row span,
+#omega-crypto-block .crypto-v28-control-panel .v28-row small {
+    font-size: 11.5px !important;
+    color: #cbd5e1 !important;
+    font-weight: 600 !important;
+}
+
+#omega-crypto-block .crypto-v28-control-panel .v28-row-actions em,
+#omega-crypto-block .crypto-v28-control-panel .v28-row-actions button {
+    font-size: 11.5px !important;
+    padding: 7px 6px !important;
+    border-radius: 8px !important;
+}
+
+/* Colorful Trade Pro Panel (İşlem Merkezi + Order Book + Per-User API Vault) */
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] {
+    display: none;
+    gap: 10px !important;
+    max-height: 760px;
+    overflow-y: auto;
+    padding-right: 3px;
+}
+
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"].active {
+    display: grid !important;
+    align-content: start !important;
+}
+
+#omega-crypto-block .v26-trade-pro-top {
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #0d1424 0%, #090e1a 100%);
+    border: 1px solid #1e293b;
+}
+
+#omega-crypto-block .v26-side-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-side-btn {
+    padding: 9px 8px;
+    border-radius: 9px;
+    border: 1px solid #243044;
+    background: #070b14;
+    color: #94a3b8;
+    font-size: 12.5px;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+#omega-crypto-block .v26-side-btn.long.active {
+    background: linear-gradient(135deg, rgba(0, 230, 118, 0.24), rgba(16, 185, 129, 0.16));
+    border-color: #00e676;
+    color: #34d399;
+    box-shadow: 0 0 18px rgba(0, 230, 118, 0.14);
+}
+
+#omega-crypto-block .v26-side-btn.short.active {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.26), rgba(239, 68, 68, 0.16));
+    border-color: #ef4444;
+    color: #f87171;
+    box-shadow: 0 0 18px rgba(220, 38, 38, 0.14);
+}
+
+#omega-crypto-block .v26-trade-mode-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-ord-tabs,
+#omega-crypto-block .v26-margin-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 3px;
+    background: #060a12;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+}
+
+#omega-crypto-block .v26-ord-tabs button,
+#omega-crypto-block .v26-margin-tabs button {
+    padding: 5px 4px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-ord-tabs button.active,
+#omega-crypto-block .v26-margin-tabs button.active {
+    background: rgba(251, 191, 36, 0.18);
+    color: #fbbf24;
+}
+
+#omega-crypto-block .v26-stake-quick {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+#omega-crypto-block .v26-stake-quick span {
+    font-size: 10.5px;
+    color: #64748b;
+    font-weight: 800;
+    margin-right: 2px;
+}
+
+#omega-crypto-block .v26-stake-quick button {
+    padding: 4px 7px;
+    border-radius: 6px;
+    border: 1px solid #243044;
+    background: #070b14;
+    color: #cbd5e1;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-stake-quick button.active,
+#omega-crypto-block .v26-stake-quick button:hover {
+    border-color: #fbbf24;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.12);
+}
+
+#omega-crypto-block .v26-trade-notional-bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 700;
+    padding-top: 4px;
+    border-top: 1px dashed #1e293b;
+}
+
+#omega-crypto-block .v26-trade-notional-bar b {
+    color: #f8fafc;
+}
+
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] .crypto-v28-form {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    padding: 10px !important;
+    border-radius: 12px !important;
+    background: #0b1120 !important;
+    border: 1px solid #1e293b !important;
+}
+
+#omega-crypto-block .v26-plan-field {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+#omega-crypto-block .v26-plan-field.full {
+    grid-column: 1 / -1;
+}
+
+#omega-crypto-block .v26-field-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+}
+
+#omega-crypto-block .v26-fill-live-btn {
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    background: rgba(56, 189, 248, 0.14);
+    color: #38bdf8;
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] .crypto-v28-two-btns {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    margin: 0 !important;
+}
+
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] .crypto-v28-two-btns button:nth-child(3) {
+    display: none !important;
+}
+
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] .tp-v10-box {
+    background: #0b1120 !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 12px !important;
+    padding: 10px !important;
+    margin: 0 !important;
+}
+
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] .crypto-v10-metrics div:nth-child(1) { border-color: rgba(56, 189, 248, 0.32) !important; background: rgba(56, 189, 248, 0.06) !important; }
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] .crypto-v10-metrics div:nth-child(2) { border-color: rgba(239, 68, 68, 0.35) !important; background: rgba(239, 68, 68, 0.06) !important; }
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] .crypto-v10-metrics div:nth-child(3) { border-color: rgba(16, 185, 129, 0.35) !important; background: rgba(16, 185, 129, 0.06) !important; }
+#omega-crypto-block .crypto-v28-panel[data-crypto-pane="plan"] .crypto-v10-metrics div:nth-child(4) { border-color: rgba(251, 191, 36, 0.35) !important; background: rgba(251, 191, 36, 0.06) !important; }
+
+#omega-crypto-block .v26-trade-pro-extras {
+    display: grid;
+    gap: 10px;
+}
+
+#omega-crypto-block .v26-ob-card {
+    padding: 10px;
+    border-radius: 12px;
+    background: #0b1120;
+    border: 1px solid #1e293b;
+    display: grid;
+    gap: 5px;
+}
+
+#omega-crypto-block .v26-ob-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
+
+#omega-crypto-block .v26-ob-head b {
+    color: #38bdf8;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-ob-head span {
+    color: #fbbf24;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+#omega-crypto-block .v26-ob-col-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 0 4px;
+}
+
+#omega-crypto-block .v26-ob-asks,
+#omega-crypto-block .v26-ob-bids {
+    display: grid;
+    gap: 2px;
+}
+
+#omega-crypto-block .v26-ob-row {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3.5px 6px;
+    border: none;
+    border-radius: 4px;
+    background: rgba(7, 11, 20, 0.7);
+    cursor: pointer;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+#omega-crypto-block .v26-ob-row:hover {
+    outline: 1px solid rgba(251, 191, 36, 0.45);
+}
+
+#omega-crypto-block .v26-ob-bar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+#omega-crypto-block .v26-ob-row.ask .v26-ob-bar { background: rgba(220, 38, 38, 0.22); }
+#omega-crypto-block .v26-ob-row.bid .v26-ob-bar { background: rgba(0, 230, 118, 0.18); }
+
+#omega-crypto-block .v26-ob-row b {
+    position: relative;
+    z-index: 1;
+    font-size: 11.5px;
+    font-weight: 800;
+}
+
+#omega-crypto-block .v26-ob-row.ask b { color: #f87171; }
+#omega-crypto-block .v26-ob-row.bid b { color: #34d399; }
+
+#omega-crypto-block .v26-ob-row em {
+    position: relative;
+    z-index: 1;
+    font-style: normal;
+    font-size: 11px;
+    color: #cbd5e1;
+}
+
+#omega-crypto-block .v26-ob-mid-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: #070b14;
+    border: 1px solid #243044;
+    font-size: 11.5px;
+}
+
+#omega-crypto-block .v26-ob-mid-strip b { color: #f8fafc; font-family: 'JetBrains Mono', monospace; }
+#omega-crypto-block .v26-ob-mid-strip span { color: #94a3b8; font-size: 10.5px; font-weight: 700; }
+
+#omega-crypto-block .v26-ob-ratio {
+    display: grid;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+#omega-crypto-block .v26-ob-ratio-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    font-weight: 800;
+}
+
+#omega-crypto-block .v26-ob-ratio-labels .up { color: #34d399; }
+#omega-crypto-block .v26-ob-ratio-labels .down { color: #f87171; }
+
+#omega-crypto-block .v26-ob-ratio-track {
+    height: 5px;
+    border-radius: 999px;
+    background: #dc2626;
+    overflow: hidden;
+}
+
+#omega-crypto-block .v26-ob-ratio-track div {
+    height: 100%;
+    background: #00e676;
+    transition: width 0.2s ease;
+}
+
+#omega-crypto-block .v26-api-card {
+    border-radius: 12px;
+    background: #0b1120;
+    border: 1px solid #1e293b;
+    overflow: hidden;
+}
+
+#omega-crypto-block .v26-api-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    color: #fbbf24;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-api-vault-body {
+    display: grid;
+    gap: 8px;
+    padding: 0 12px 12px;
+    border-top: 1px solid #1e293b;
+    padding-top: 10px;
+}
+
+#omega-crypto-block .v26-api-locked {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+#omega-crypto-block .v26-api-locked b { display: block; color: #f8fafc; font-size: 12px; margin-bottom: 3px; }
+#omega-crypto-block .v26-api-locked span { display: block; color: #94a3b8; font-size: 11px; line-height: 1.4; }
+
+#omega-crypto-block .v26-api-login-btn {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: none;
+    background: #fbbf24;
+    color: #171000;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-api-user-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+}
+
+#omega-crypto-block .v26-api-user-badge { color: #38bdf8; font-weight: 700; }
+#omega-crypto-block .v26-api-status { padding: 2px 7px; border-radius: 999px; background: #1e293b; color: #94a3b8; font-weight: 800; }
+#omega-crypto-block .v26-api-status.ready { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+#omega-crypto-block .v26-api-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-api-grid label {
+    display: grid;
+    gap: 4px;
+    font-size: 10.5px;
+    color: #94a3b8;
+    font-weight: 800;
+}
+
+#omega-crypto-block .v26-api-grid label.full { grid-column: 1 / -1; }
+
+#omega-crypto-block .v26-api-grid input,
+#omega-crypto-block .v26-api-grid select {
+    height: 34px;
+    padding: 0 9px;
+    border-radius: 8px;
+    border: 1px solid #263246;
+    background: #070b14;
+    color: #f8fafc;
+    font-size: 12px;
+}
+
+#omega-crypto-block .v26-api-actions { display: flex; gap: 6px; }
+#omega-crypto-block .v26-api-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+}
+#omega-crypto-block .v26-api-btn.save { background: #10b981; color: #052e16; }
+#omega-crypto-block .v26-api-btn.clear { flex: 0 0 auto; background: rgba(239, 68, 68, 0.18); color: #f87171; padding: 8px 12px; }
+
+#omega-crypto-block .v26-api-note {
+    font-size: 10.5px;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+#omega-crypto-block .crypto-v12-chart-wrap > :not(#v26-tv-chart-shell) {
+    display: none !important;
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.slate {
+    color: #cbd5e1;
+    border-color: #334155;
+    background: rgba(30, 41, 59, 0.7);
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.slate:hover {
+    color: #f8fafc;
+    border-color: #64748b;
+    background: rgba(51, 65, 85, 0.85);
+}
+
+#omega-crypto-block #v26-tv-toolbar .v26-tv-btn.disabled {
+    opacity: 0.42 !important;
+    pointer-events: none !important;
+}
+
+#omega-crypto-block #v26-note-price-pill {
+    display: none;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: 7px;
+    background: rgba(192, 132, 252, 0.16);
+    border: 1px solid rgba(192, 132, 252, 0.45);
+    color: #e9d5ff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+#omega-crypto-block #v26-ctx-menu.v26-ctx-menu {
+    position: absolute;
+    z-index: 25;
+    display: none;
+    min-width: 196px;
+    padding: 6px;
+    border-radius: 11px;
+    background: rgba(11, 17, 32, 0.98);
+    border: 1px solid #334155;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(8px);
+}
+
+#omega-crypto-block #v26-ctx-menu.v26-ctx-menu.show {
+    display: grid;
+    gap: 2px;
+}
+
+#omega-crypto-block #v26-ctx-menu button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 10px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #e2e8f0;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+#omega-crypto-block #v26-ctx-menu button:hover:not(:disabled) {
+    background: rgba(51, 65, 85, 0.72);
+}
+
+#omega-crypto-block #v26-ctx-menu button.green { color: #34d399; }
+#omega-crypto-block #v26-ctx-menu button.red { color: #f87171; }
+#omega-crypto-block #v26-ctx-menu button.cyan { color: #38bdf8; }
+#omega-crypto-block #v26-ctx-menu button.gold { color: #facc15; }
+#omega-crypto-block #v26-ctx-menu button.violet { color: #c084fc; }
+#omega-crypto-block #v26-ctx-menu button.blue { color: #60a5fa; }
+
+#omega-crypto-block #v26-ctx-menu button:disabled {
+    opacity: 0.38;
+    cursor: default;
+}
+
+#omega-crypto-block #v26-ctx-menu .v26-ctx-sep {
+    height: 1px;
+    margin: 4px 2px;
+    background: rgba(51, 65, 85, 0.8);
+}
+
+#omega-crypto-block .drawing-v14-panel {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Pro Alarm & Sound Center */
+#omega-crypto-block .crypto-v28-control-panel .v26-pro-alarm-card {
+    display: grid;
+    gap: 10px;
+    background: #0b1120 !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 14px !important;
+    padding: 12px !important;
+}
+
+#omega-crypto-block .v26-alarm-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+#omega-crypto-block .v26-alarm-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#omega-crypto-block .v26-alarm-hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.14);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #34d399;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+#omega-crypto-block .v26-alarm-hero-sub {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 700;
+}
+
+#omega-crypto-block .v26-alarm-sound-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    border: 1px solid rgba(192, 132, 252, 0.42);
+    background: rgba(192, 132, 252, 0.12);
+    color: #e9d5ff;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.14s ease;
+}
+
+#omega-crypto-block .v26-alarm-sound-chip:hover {
+    background: rgba(192, 132, 252, 0.24);
+    border-color: #c084fc;
+}
+
+#omega-crypto-block .v26-alarm-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    padding: 4px !important;
+    border-radius: 10px !important;
+    background: #070b14 !important;
+    border: 1px solid #1e293b !important;
+    margin-bottom: 0 !important;
+}
+
+#omega-crypto-block .v26-alarm-tabs button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 6px !important;
+    border-radius: 7px !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #94a3b8 !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    cursor: pointer;
+    transition: all 0.14s ease;
+}
+
+#omega-crypto-block .v26-alarm-tabs button em {
+    font-style: normal;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.16);
+    font-size: 10.5px;
+}
+
+#omega-crypto-block .v26-alarm-tabs button.active {
+    background: linear-gradient(135deg, #f0b90b, #eab308) !important;
+    color: #0b0e11 !important;
+}
+
+#omega-crypto-block .v26-alarm-tabs button.active em {
+    background: rgba(11, 14, 17, 0.18);
+    color: #0b0e11;
+}
+
+#omega-crypto-block .v26-alarm-composer {
+    display: grid;
+    gap: 10px;
+    padding: 11px;
+    border-radius: 12px;
+    background: #070b14;
+    border: 1px solid #1e293b;
+}
+
+#omega-crypto-block .v26-ac-row {
+    display: grid;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-ac-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: #64748b;
+}
+
+#omega-crypto-block .v26-ac-inline {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#omega-crypto-block .v26-ac-row input {
+    width: 100%;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    background: #0f172a;
+    border: 1px solid #263246;
+    color: #f8fafc;
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+#omega-crypto-block .v26-ac-row input:focus {
+    outline: none;
+    border-color: #f0b90b;
+}
+
+#omega-crypto-block .v26-mini-pill-btn {
+    flex-shrink: 0;
+    height: 36px;
+    padding: 0 9px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #141c2f;
+    color: #cbd5e1;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#omega-crypto-block .v26-mini-pill-btn.gold {
+    border-color: rgba(240, 185, 11, 0.42);
+    background: rgba(240, 185, 11, 0.12);
+    color: #fcd34d;
+}
+
+#omega-crypto-block .v26-mini-pill-btn.green {
+    border-color: rgba(16, 185, 129, 0.42);
+    background: rgba(16, 185, 129, 0.12);
+    color: #34d399;
+}
+
+#omega-crypto-block .v26-mini-pill-btn.red {
+    border-color: rgba(239, 68, 68, 0.42);
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+}
+
+#omega-crypto-block .v26-dir-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-dir-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid #263246;
+    background: #0f172a;
+    color: #94a3b8;
+    font-size: 11.5px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.14s ease;
+}
+
+#omega-crypto-block .v26-dir-btn.above.active {
+    border-color: rgba(16, 185, 129, 0.65);
+    background: rgba(16, 185, 129, 0.16);
+    color: #34d399;
+}
+
+#omega-crypto-block .v26-dir-btn.below.active {
+    border-color: rgba(239, 68, 68, 0.65);
+    background: rgba(239, 68, 68, 0.16);
+    color: #f87171;
+}
+
+#omega-crypto-block .v26-pct-chips {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+}
+
+#omega-crypto-block .v26-pct-chips button {
+    height: 27px;
+    border-radius: 6px;
+    border: 1px solid #243045;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-pct-chips button:hover {
+    border-color: #f0b90b;
+    color: #fde68a;
+}
+
+#omega-crypto-block .v26-ac-cta {
+    display: flex;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+#omega-crypto-block .v26-alarm-create-btn {
+    flex: 1 1 auto;
+    height: 38px;
+    border: 0;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #f0b90b, #f59e0b);
+    color: #0b0e11;
+    font-size: 12.5px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-alarm-clear-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-pro-alarm-list {
+    display: grid;
+    gap: 8px;
+    max-height: 295px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+#omega-crypto-block .v26-alarm-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 12px;
+    border-radius: 11px;
+    background: #070b14;
+    border: 1px dashed #243045;
+    color: #64748b;
+    font-size: 11.5px;
+    text-align: center;
+}
+
+#omega-crypto-block .v26-alarm-item {
+    display: grid !important;
+    gap: 7px !important;
+    padding: 10px 11px !important;
+    border-radius: 11px !important;
+    background: #070b14 !important;
+    border: 1px solid #1e293b !important;
+    border-left: 3px solid #334155 !important;
+}
+
+#omega-crypto-block .v26-alarm-item.above { border-left-color: #10b981 !important; }
+#omega-crypto-block .v26-alarm-item.below { border-left-color: #ef4444 !important; }
+#omega-crypto-block .v26-alarm-item.hit { border-left-color: #f0b90b !important; background: rgba(240, 185, 11, 0.06) !important; }
+#omega-crypto-block .v26-alarm-item.paused { opacity: 0.65; }
+
+#omega-crypto-block .v26-ai-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-ai-pair {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+#omega-crypto-block .v26-ai-pair b {
+    font-size: 13px !important;
+    color: #f8fafc !important;
+}
+
+#omega-crypto-block .v26-ai-ex {
+    font-size: 9.5px;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: #1e293b;
+    color: #94a3b8;
+}
+
+#omega-crypto-block .v26-ai-dir {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 5px;
+}
+
+#omega-crypto-block .v26-ai-dir.above { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+#omega-crypto-block .v26-ai-dir.below { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+#omega-crypto-block .v26-ai-status {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 999px;
+}
+
+#omega-crypto-block .v26-ai-status.on { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+#omega-crypto-block .v26-ai-status.off { background: rgba(100, 116, 139, 0.2); color: #94a3b8; }
+#omega-crypto-block .v26-ai-status.hit { background: rgba(240, 185, 11, 0.18); color: #fcd34d; }
+
+#omega-crypto-block .v26-ai-prices {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.72);
+}
+
+#omega-crypto-block .v26-ai-prices small {
+    display: block;
+    font-size: 9.5px !important;
+    color: #64748b !important;
+}
+
+#omega-crypto-block .v26-ai-prices strong,
+#omega-crypto-block .v26-ai-prices span,
+#omega-crypto-block .v26-ai-prices em {
+    font-style: normal;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    color: #e2e8f0 !important;
+}
+
+#omega-crypto-block .v26-ai-prices em.up { color: #34d399 !important; }
+#omega-crypto-block .v26-ai-prices em.down { color: #f87171 !important; }
+
+#omega-crypto-block .v26-ai-note {
+    font-size: 11px;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#omega-crypto-block .v26-ai-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-ai-btn {
+    height: 29px;
+    border-radius: 7px;
+    border: 1px solid #243045;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#omega-crypto-block .v26-ai-btn.del {
+    border-color: rgba(239, 68, 68, 0.32);
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+}
+
+#omega-crypto-block .v26-hist-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+/* Integrated Pro Sound Engine Card */
+#omega-crypto-block .v26-pro-sound-card {
+    display: grid !important;
+    gap: 11px !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    background: #070b14 !important;
+    border: 1px solid #1e293b !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-field {
+    display: none !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-custom,
+#omega-crypto-block .v26-pro-sound-card .v512-player,
+#omega-crypto-block .v26-pro-sound-card .v512-select-row,
+#omega-crypto-block .v26-pro-sound-card .v512-file-row,
+#omega-crypto-block .v26-pro-sound-card #v512-apply {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-custom {
+    border-radius: 10px !important;
+    background: #0f172a !important;
+    border: 1px solid #1e293b !important;
+    padding: 10px !important;
+    overflow: hidden !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-select-row {
+    display: grid !important;
+    grid-template-columns: 36px minmax(0, 1fr) auto !important;
+    gap: 6px !important;
+    align-items: center !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card #v512-play-custom {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card #v512-custom-select {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 36px !important;
+    font-size: 11.5px !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card #v512-remove {
+    width: auto !important;
+    min-width: 0 !important;
+    height: 36px !important;
+    padding: 0 9px !important;
+    font-size: 10.5px !important;
+    border-radius: 8px !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-player {
+    padding: 9px !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-time {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    font-size: 10.5px !important;
+    gap: 4px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-time b {
+    white-space: nowrap !important;
+    font-size: 10.5px !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-track {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 8px 0 !important;
+    box-sizing: border-box !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card .v512-wave,
+#omega-crypto-block .v26-pro-sound-card #v512-progress {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#omega-crypto-block .v26-pro-sound-card #v512-apply {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    height: 34px !important;
+    border-radius: 8px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    box-sizing: border-box !important;
+}
+
+#omega-crypto-block .v26-sound-pro-head {
+    display: grid;
+    gap: 9px;
+}
+
+#omega-crypto-block .v26-sound-title-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+#omega-crypto-block .v26-sound-badge-ico {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: rgba(192, 132, 252, 0.16);
+    border: 1px solid rgba(192, 132, 252, 0.35);
+    color: #c084fc;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+#omega-crypto-block .v26-sound-title-row b {
+    display: block;
+    font-size: 13px;
+    color: #f8fafc;
+}
+
+#omega-crypto-block .v26-sound-title-row small {
+    font-size: 11px;
+    color: #64748b;
+}
+
+#omega-crypto-block .v26-sound-play-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-sound-btn {
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid #263246;
+    font-size: 11.5px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#omega-crypto-block .v26-sound-btn.play {
+    background: rgba(16, 185, 129, 0.16);
+    border-color: rgba(16, 185, 129, 0.48);
+    color: #34d399;
+}
+
+#omega-crypto-block .v26-sound-btn.stop {
+    background: rgba(239, 68, 68, 0.14);
+    border-color: rgba(239, 68, 68, 0.42);
+    color: #fca5a5;
+}
+
+#omega-crypto-block .v26-sound-pills {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+#omega-crypto-block .v26-s-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 6px;
+    border-radius: 9px;
+    border: 1px solid #243045;
+    background: #0f172a;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.14s ease;
+}
+
+#omega-crypto-block .v26-s-pill i {
+    font-size: 13px;
+}
+
+#omega-crypto-block .v26-s-pill.active {
+    border-color: rgba(240, 185, 11, 0.72);
+    background: rgba(240, 185, 11, 0.14);
+    color: #fcd34d;
+}
+
+/* Binance-style Floating Drawing Toolbar */
+#omega-crypto-block #v26-draw-actions.v26-binance-act-bar {
+    gap: 5px;
+    padding: 5px 8px;
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid #334155;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-colors {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding-right: 6px;
+    border-right: 1px solid #334155;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-c-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-c-dot:hover {
+    transform: scale(1.15);
+}
+
+#omega-crypto-block #v26-draw-actions .v26-c-dot.active {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+    transform: scale(1.12);
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.width {
+    min-width: 36px;
+    height: 28px;
+    padding: 0 7px;
+    border-radius: 7px;
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid rgba(56, 189, 248, 0.42);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 800;
+    color: #38bdf8;
+    cursor: pointer;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.style {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: rgba(192, 132, 252, 0.14);
+    border: 1px solid rgba(192, 132, 252, 0.42);
+    color: #c084fc;
+    cursor: pointer;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.lock {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: rgba(148, 163, 184, 0.14);
+    border: 1px solid rgba(148, 163, 184, 0.38);
+    color: #cbd5e1;
+    cursor: pointer;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.width:hover {
+    background: rgba(56, 189, 248, 0.24);
+    border-color: #38bdf8;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.style:hover {
+    background: rgba(192, 132, 252, 0.24);
+    border-color: #c084fc;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.lock:hover {
+    background: rgba(240, 185, 11, 0.18);
+    border-color: rgba(240, 185, 11, 0.55);
+    color: #fcd34d;
+}
+
+#omega-crypto-block #v26-draw-actions .v26-act-btn.lock.locked {
+    color: #f0b90b;
+    background: rgba(240, 185, 11, 0.16);
+    border-color: rgba(240, 185, 11, 0.45);
+}
+
+@media (max-width: 900px) {
+    #omega-crypto-block #v26-chart-stage.v26-chart-stage {
+        flex-direction: column !important;
+    }
+    #omega-crypto-block #v26-left-ob.v26-left-ob {
+        order: 2;
+        width: 100%;
+        flex: none;
+        height: auto;
+    }
+}
+
+/* Header Pair Click Search Popover */
+#omega-crypto-block .v26-pair-head-trigger {
+    position: relative;
+    cursor: pointer;
+    display: inline-grid;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 2px;
+    padding: 4px 8px;
+    margin: -4px -8px;
+    border-radius: 9px;
+    transition: background 0.14s ease;
+}
+
+#omega-crypto-block .v26-pair-head-trigger #crypto-v10-subtitle {
+    grid-column: 1 / -1;
+    grid-row: 2;
+}
+
+#omega-crypto-block .v26-pair-head-trigger:hover {
+    background: rgba(240, 185, 11, 0.1);
+}
+
+#omega-crypto-block .v26-pair-search-badge {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    width: max-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid rgba(56, 189, 248, 0.38);
+    color: #38bdf8;
+    font-size: 10px;
+    font-weight: 800;
+    pointer-events: none;
+}
+
+#omega-crypto-block .v26-header-pair-pop {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 60;
+    width: min(350px, 92vw);
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 13px;
+    background: rgba(11, 17, 32, 0.98);
+    border: 1px solid #334155;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(10px);
+}
+
+#omega-crypto-block .v26-header-pair-pop.show {
+    display: flex;
+}
+
+#omega-crypto-block .v26-hpp-search-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    height: 36px;
+    border-radius: 9px;
+    background: #070b14;
+    border: 1px solid #263246;
+    color: #64748b;
+}
+
+#omega-crypto-block .v26-hpp-search-row input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: #f8fafc;
+    font-size: 12.5px;
+    font-weight: 700;
+    outline: none;
+}
+
+#omega-crypto-block .v26-hpp-search-row button {
+    border: 0;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 2px;
+}
+
+#omega-crypto-block .v26-hpp-list {
+    display: grid;
+    gap: 3px;
+    max-height: 290px;
+    overflow-y: auto;
+}
+
+#omega-crypto-block .v26-hpp-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 9px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: #090e1a;
+    color: #e2e8f0;
+    cursor: pointer;
+    text-align: left;
+}
+
+#omega-crypto-block .v26-hpp-row:hover {
+    border-color: rgba(240, 185, 11, 0.45);
+    background: rgba(240, 185, 11, 0.08);
+}
+
+#omega-crypto-block .v26-hpp-sym {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-hpp-sym b {
+    font-size: 12.5px;
+    color: #f8fafc;
+}
+
+#omega-crypto-block .v26-hpp-sym em {
+    font-style: normal;
+    font-size: 10.5px;
+    color: #64748b;
+}
+
+#omega-crypto-block .v26-hpp-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+}
+
+#omega-crypto-block .v26-hpp-meta em { font-style: normal; font-weight: 800; }
+#omega-crypto-block .v26-hpp-meta em.up { color: #34d399; }
+#omega-crypto-block .v26-hpp-meta em.down { color: #f87171; }
+
+/* Floating Global Sound Stop Bar */
+.v26-floating-sound-stop {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-18px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 12px 8px 14px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid rgba(239, 68, 68, 0.65);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.72), 0 0 24px rgba(239, 68, 68, 0.25);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.v26-floating-sound-stop.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.v26-fss-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #f8fafc;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.v26-fss-pulse {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: rgba(239, 68, 68, 0.22);
+    color: #fca5a5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.v26-fss-stop-btn {
+    border: 0;
+    border-radius: 999px;
+    padding: 6px 13px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-sound-btn.play.testing {
+    background: rgba(239, 68, 68, 0.22);
+    border-color: #ef4444;
+    color: #fca5a5;
+}
+
+/* Big Alarm Balloon Notification */
+.v26-alarm-balloon-wrap {
+    position: fixed;
+    top: 64px;
+    right: 18px;
+    z-index: 99998;
+    display: grid;
+    gap: 10px;
+    width: min(390px, calc(100vw - 28px));
+}
+
+.v26-alarm-balloon {
+    display: grid;
+    gap: 8px;
+    padding: 14px 15px;
+    border-radius: 14px;
+    background: rgba(11, 17, 32, 0.98);
+    border: 1px solid #334155;
+    border-left: 4px solid #f0b90b;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.78);
+    cursor: pointer;
+    animation: v26BalloonPop 0.22s ease;
+}
+
+.v26-alarm-balloon.up { border-left-color: #10b981; }
+.v26-alarm-balloon.down { border-left-color: #ef4444; }
+
+@keyframes v26BalloonPop {
+    from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.v26-ab-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.v26-ab-badge {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: #fcd34d;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.v26-ab-close {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #cbd5e1;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.v26-ab-msg {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #f8fafc;
+    line-height: 1.35;
+}
+
+.v26-ab-target {
+    color: #facc15;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.v26-ab-msg em {
+    font-style: normal;
+    padding: 1px 6px;
+    border-radius: 5px;
+}
+
+.v26-ab-msg em.up { background: rgba(16, 185, 129, 0.18); color: #34d399; }
+.v26-ab-msg em.down { background: rgba(239, 68, 68, 0.18); color: #f87171; }
+
+.v26-ab-meta {
+    font-size: 11.5px;
+    color: #94a3b8;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.v26-ab-actions {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 7px;
+    margin-top: 2px;
+}
+
+.v26-ab-go {
+    height: 33px;
+    border: 0;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f0b90b, #f59e0b);
+    color: #0b0e11;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.v26-ab-mute {
+    height: 33px;
+    border-radius: 8px;
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    background: rgba(239, 68, 68, 0.14);
+    color: #fca5a5;
+    font-size: 11.5px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#omega-crypto-block .v26-ai-jump {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #f8fafc;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#omega-crypto-block .v26-ai-jump i {
+    font-size: 10px;
+    color: #38bdf8;
+}
+
+/* Trade Pro: Locked Liquidation + Fast Limit Engine + Metric Colors */
+#omega-crypto-block .v26-ord-tabs.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#omega-crypto-block .v26-liq-locked input {
+    background: #070b14 !important;
+    border-color: rgba(148, 163, 184, 0.25) !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed !important;
+    opacity: 0.85;
+}
+
+#omega-crypto-block .v26-lock-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 1px 6px;
+    border-radius: 5px;
+    background: rgba(240, 185, 11, 0.14);
+    border: 1px solid rgba(240, 185, 11, 0.35);
+    color: #fcd34d;
+    font-size: 9.5px;
+    font-weight: 800;
+}
+
+#omega-crypto-block .v26-fast-limit-engine {
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(14, 24, 42, 0.96) 0%, rgba(9, 14, 26, 0.98) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+}
+
+#omega-crypto-block .v26-fl-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-fl-head b {
+    font-size: 12px;
+    color: #38bdf8;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-fl-vol-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 999px;
+}
+
+#omega-crypto-block .v26-fl-vol-badge.calm {
+    background: rgba(16, 185, 129, 0.14);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+#omega-crypto-block .v26-fl-vol-badge.warm {
+    background: rgba(251, 191, 36, 0.14);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.38);
+}
+
+#omega-crypto-block .v26-fl-vol-badge.hot {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.45);
+}
+
+#omega-crypto-block .v26-fl-bbo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #cbd5e1;
+    padding: 5px 8px;
+    border-radius: 7px;
+    background: #070b14;
+    border: 1px solid #1e293b;
+}
+
+#omega-crypto-block .v26-fl-buf-row {
+    display: grid;
+    gap: 5px;
+}
+
+#omega-crypto-block .v26-fl-buf-row > span {
+    font-size: 10px;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+#omega-crypto-block .v26-fl-buf-pills {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+}
+
+#omega-crypto-block .v26-fl-buf-pills button {
+    height: 26px;
+    border-radius: 6px;
+    border: 1px solid #243044;
+    background: #070b14;
+    color: #94a3b8;
+    font-size: 10.5px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#omega-crypto-block .v26-fl-buf-pills button.active {
+    border-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.18);
+    color: #e0f2fe;
+}
+
+#omega-crypto-block .v26-fl-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+}
+
+#omega-crypto-block .v26-fl-btn {
+    display: grid;
+    gap: 2px;
+    padding: 8px 9px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: center;
+}
+
+#omega-crypto-block .v26-fl-btn span {
+    font-size: 11.5px;
+    font-weight: 900;
+}
+
+#omega-crypto-block .v26-fl-btn small {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 800;
+}
+
+#omega-crypto-block .v26-fl-btn.long {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.24), rgba(5, 150, 105, 0.16));
+    border-color: rgba(16, 185, 129, 0.55);
+    color: #34d399;
+}
+
+#omega-crypto-block .v26-fl-btn.short {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.24), rgba(185, 28, 28, 0.16));
+    border-color: rgba(239, 68, 68, 0.55);
+    color: #f87171;
+}
+
+#omega-crypto-block .v26-active-scalp-card {
+    display: grid;
+    gap: 7px;
+    padding: 9px;
+    border-radius: 9px;
+    background: #070b14;
+    border: 1px solid rgba(240, 185, 11, 0.45);
+}
+
+#omega-crypto-block .v26-sc-pos-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11.5px;
+}
+
+#omega-crypto-block .v26-sc-pos-pair {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-sc-pos-pair em {
+    font-style: normal;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+#omega-crypto-block .v26-sc-pos-pair em.long { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+#omega-crypto-block .v26-sc-pos-pair em.short { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+#omega-crypto-block .v26-sc-pos-pair b { color: #f8fafc; }
+#omega-crypto-block .v26-sc-pos-pair small { color: #94a3b8; font-weight: 700; }
+#omega-crypto-block .v26-sc-pos-dur { color: #fcd34d; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 800; }
+
+#omega-crypto-block .v26-sc-pos-mid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    font-size: 11px;
+}
+
+#omega-crypto-block .v26-sc-pos-mid small { display: block; color: #64748b; font-size: 9.5px; }
+#omega-crypto-block .v26-sc-pos-mid b { color: #f8fafc; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+#omega-crypto-block .v26-sc-pos-mid b.liq { color: #fbbf24; }
+#omega-crypto-block .v26-sc-pos-mid b.up { color: #34d399; }
+#omega-crypto-block .v26-sc-pos-mid b.down { color: #f87171; }
+
+#omega-crypto-block .v26-fl-close-btn {
+    height: 34px;
+    border: 0;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f59e0b, #ea580c);
+    color: #0b0e11;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+#omega-crypto-block .v26-fl-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #94a3b8;
+    padding-top: 3px;
+    border-top: 1px dashed #1e293b;
+}
+
+#omega-crypto-block .v26-fl-foot em { font-style: normal; font-weight: 800; }
+#omega-crypto-block .v26-fl-foot em.up { color: #34d399; }
+#omega-crypto-block .v26-fl-foot em.down { color: #f87171; }
+
+#omega-crypto-block #v26-fl-clear-hist {
+    border: 1px solid #243044;
+    background: #070b14;
+    color: #94a3b8;
+    border-radius: 5px;
+    padding: 2px 7px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Clearer TP sublabel + Separated & Distinctly Colored Risk / Ödül */
+#omega-crypto-block .v26-metric-sub {
+    display: block;
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: none;
+    color: #64748b;
+    margin-top: 2px;
+    letter-spacing: 0;
+}
+
+#omega-crypto-block #v10-rr {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+#omega-crypto-block .v26-rr-risk {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(244, 63, 94, 0.16);
+    border: 1px solid rgba(244, 63, 94, 0.45);
+    color: #fb7185;
+    font-weight: 900;
+}
+
+#omega-crypto-block .v26-rr-sep {
+    color: #64748b;
+    font-weight: 800;
+    margin: 0 2px;
+}
+
+#omega-crypto-block .v26-rr-reward {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(16, 185, 129, 0.16);
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    color: #34d399;
+    font-weight: 900;
 }
