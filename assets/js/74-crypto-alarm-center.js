@@ -229,8 +229,8 @@
 
   function renderUI() {
     const mount = document.getElementById("v28-alarm-mount");
-    if (!mount || mount.dataset.ready === "3") return;
-    mount.dataset.ready = "3";
+    if (!mount || mount.dataset.ready === "4") return;
+    mount.dataset.ready = "4";
 
     mount.innerHTML = `
       <div class="v28-alarm-card v26-pro-alarm-card">
@@ -273,8 +273,8 @@
             </div>
 
             <div class="v26-ac-row">
-              <label class="v26-ac-label">NOT (OPSİYONEL)</label>
-              <input id="v28-alarm-note" placeholder="Örn: Destek kırılımı, TP1 bölgesi...">
+              <label class="v26-ac-label">ALARM AÇIKLAMASI</label>
+              <input id="v28-alarm-note" placeholder="">
             </div>
 
             <div class="v26-ac-cta">
@@ -330,14 +330,22 @@
         const pct = Number(btn.dataset.pct || 0);
         if (!pct) return;
         const sym = document.getElementById("v28-alarm-symbol")?.value || currentSymbolKey();
+        const normKey = normalizeAlarmSymbol(sym);
         const priceEl = document.getElementById("v28-alarm-price");
+        const applyTarget = (basePx) => {
+          if (!priceEl || !(basePx > 0)) return;
+          const target = basePx * (1 + pct / 100);
+          const dec = target >= 100 ? 2 : target >= 1 ? 4 : 7;
+          priceEl.value = Number(target.toFixed(dec));
+        };
+        const instant = getInstantPriceByKey(normKey);
+        if (instant > 0) {
+          applyTarget(instant);
+          return;
+        }
         try {
-          const data = await fetchPriceByKey(normalizeAlarmSymbol(sym));
-          if (priceEl && data.price > 0) {
-            const target = data.price * (1 + pct / 100);
-            const dec = target >= 100 ? 2 : target >= 1 ? 4 : 7;
-            priceEl.value = Number(target.toFixed(dec));
-          }
+          const data = await fetchPriceByKey(normKey);
+          applyTarget(data.price);
         } catch {
           alert("Canlı fiyat alınamadı.");
         }
@@ -378,12 +386,34 @@
     if (el) el.value = p.symbol;
   }
 
+  function getInstantPriceByKey(normKey) {
+    const p = parseKey(normKey);
+    const cur = parseKey(currentSymbolKey());
+    if (p.symbol === cur.symbol && p.exchange === cur.exchange) {
+      const metaPx = Number(window.v26GetCryptoMarketMeta?.()?.price || window._V10_PRICE || 0);
+      if (metaPx > 0) return metaPx;
+      const domPx = Number(String(document.getElementById("crypto-v10-price")?.textContent || "").replace(/[^0-9.]/g, ""));
+      if (domPx > 0) return domPx;
+    }
+    const tick = window.__v26BinanceTickers?.get?.(p.symbol);
+    if (tick && Number(tick.price) > 0) return Number(tick.price);
+    return 0;
+  }
+
   async function fillCurrentPrice() {
     const sym = document.getElementById("v28-alarm-symbol")?.value || currentSymbolKey();
+    const normKey = normalizeAlarmSymbol(sym);
     const priceEl = document.getElementById("v28-alarm-price");
+    if (!priceEl) return;
+
+    const instant = getInstantPriceByKey(normKey);
+    if (instant > 0) {
+      priceEl.value = instant;
+      return;
+    }
 
     try {
-      const data = await fetchPriceByKey(normalizeAlarmSymbol(sym));
+      const data = await fetchPriceByKey(normKey);
       if (priceEl && data.price) priceEl.value = data.price;
     } catch {
       alert("Canlı fiyat alınamadı.");

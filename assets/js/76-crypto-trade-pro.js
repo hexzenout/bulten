@@ -8,6 +8,171 @@
   const LS_OB_OPEN = "v26_crypto_ob_open";
   const LS_SCALP_POS = "v26_fast_scalp_pos_v1";
   const LS_SCALP_HIST = "v26_fast_scalp_hist_v1";
+  const LS_FUTURES_EX = "v26_active_futures_ex_v1";
+
+  const FUTURES_EXCHANGES = {
+    binance: {
+      id: "binance",
+      label: "Binance",
+      restTickerUrl: (base, quote) => `https://fapi.binance.com/fapi/v1/ticker/bookTicker?symbol=${encodeURIComponent(base + quote)}`,
+      parseRest: (j) => j?.bidPrice && j?.askPrice ? { bid: Number(j.bidPrice), ask: Number(j.askPrice), last: (Number(j.bidPrice) + Number(j.askPrice)) / 2 } : null,
+      wsUrl: (base, quote) => `wss://fstream.binance.com/ws/${(base + quote).toLowerCase()}@bookTicker`,
+      wsSubscribe: null,
+      parseWs: (d) => d?.b && d?.a ? { bid: Number(d.b), ask: Number(d.a), last: (Number(d.b) + Number(d.a)) / 2 } : null
+    },
+    mexc: {
+      id: "mexc",
+      label: "MEXC",
+      restTickerUrl: null,
+      parseRest: null,
+      wsUrl: () => "wss://contract.mexc.com/edge",
+      wsSubscribe: (base, quote) => [
+        { method: "sub.depth.full", param: { symbol: `${base}_${quote}`, limit: 5 } },
+        { method: "sub.ticker", param: { symbol: `${base}_${quote}` } }
+      ],
+      parseWs: (d) => {
+        if (d?.channel === "rs.error" || (d?.data && typeof d.data === "string" && d.data.toLowerCase().includes("not exist"))) {
+          return { unsupported: true };
+        }
+        if (d?.channel === "push.depth.full" && Array.isArray(d?.data?.bids) && Array.isArray(d?.data?.asks)) {
+          const bid = Number(d.data.bids[0]?.[0] || 0);
+          const ask = Number(d.data.asks[0]?.[0] || 0);
+          if (bid > 0 || ask > 0) return { bid, ask, last: 0 };
+        }
+        if (d?.channel === "push.ticker" && d?.data) {
+          const bid = Number(d.data.bid1 || 0);
+          const ask = Number(d.data.ask1 || 0);
+          const last = Number(d.data.lastPrice || 0);
+          if (bid > 0 || ask > 0 || last > 0) return { bid, ask, last };
+        }
+        return null;
+      }
+    },
+    okx: {
+      id: "okx",
+      label: "OKX",
+      restTickerUrl: null,
+      parseRest: null,
+      wsUrl: () => "wss://ws.okx.com:8443/ws/v5/public",
+      wsSubscribe: (base, quote) => ({
+        op: "subscribe",
+        args: [
+          { channel: "tickers", instId: `${base}-${quote}-SWAP` },
+          { channel: "bbo-tbt", instId: `${base}-${quote}-SWAP` }
+        ]
+      }),
+      parseWs: (d) => {
+        if (d?.event === "error") return { unsupported: true };
+        const item = d?.data?.[0];
+        if (!item) return null;
+        if (Array.isArray(item.bids) && Array.isArray(item.asks)) {
+          const bid = Number(item.bids[0]?.[0] || 0);
+          const ask = Number(item.asks[0]?.[0] || 0);
+          if (bid > 0 && ask > 0) return { bid, ask, last: (bid + ask) / 2 };
+        }
+        if (item.bidPx || item.askPx) {
+          const bid = Number(item.bidPx || 0);
+          const ask = Number(item.askPx || 0);
+          const last = Number(item.last || 0);
+          if (bid > 0 || ask > 0) return { bid: bid || last, ask: ask || last, last: last || ((bid + ask) / 2) };
+        }
+        return null;
+      }
+    },
+    bybit: {
+      id: "bybit",
+      label: "Bybit",
+      restTickerUrl: null,
+      parseRest: null,
+      wsUrl: () => "wss://stream.bybit.com/v5/public/linear",
+      wsSubscribe: (base, quote) => ({
+        op: "subscribe",
+        args: [`tickers.${base}${quote}`, `orderbook.1.${base}${quote}`]
+      }),
+      parseWs: (d) => {
+        if (d?.success === false && String(d?.ret_msg || "").toLowerCase().includes("invalid")) {
+          return { unsupported: true };
+        }
+        if (d?.topic?.startsWith("orderbook.") && d?.data) {
+          const bid = Number(d.data.b?.[0]?.[0] || 0);
+          const ask = Number(d.data.a?.[0]?.[0] || 0);
+          if (bid > 0 || ask > 0) return { bid, ask, last: 0 };
+        }
+        if (d?.topic?.startsWith("tickers.") && d?.data) {
+          const bid = Number(d.data.bid1Price || 0);
+          const ask = Number(d.data.ask1Price || 0);
+          const last = Number(d.data.lastPrice || 0);
+          if (bid > 0 || ask > 0 || last > 0) return { bid, ask, last };
+        }
+        return null;
+      }
+    },
+    bitget: {
+      id: "bitget",
+      label: "Bitget",
+      restTickerUrl: (base, quote) => `https://api.bitget.com/api/v2/mix/market/ticker?productType=USDT-FUTURES&symbol=${encodeURIComponent(base + quote)}`,
+      parseRest: (j) => {
+        if (j?.code && j.code !== "00000") return { unsupported: true };
+        const t = j?.data?.[0];
+        return t ? { bid: Number(t.bidPr || t.lastPr || 0), ask: Number(t.askPr || t.lastPr || 0), last: Number(t.lastPr || 0) } : null;
+      },
+      wsUrl: () => "wss://ws.bitget.com/v2/ws/public",
+      wsSubscribe: (base, quote) => ({ op: "subscribe", args: [{ instType: "USDT-FUTURES", channel: "ticker", instId: `${base}${quote}` }] }),
+      parseWs: (d) => {
+        if (d?.event === "error") return { unsupported: true };
+        const t = d?.data?.[0];
+        return t ? { bid: Number(t.bidPr || t.lastPr || 0), ask: Number(t.askPr || t.lastPr || 0), last: Number(t.lastPr || 0) } : null;
+      }
+    },
+    gateio: {
+      id: "gateio",
+      label: "Gate.io",
+      restTickerUrl: (base, quote) => `https://api.gateio.ws/api/v4/futures/usdt/tickers?contract=${encodeURIComponent(base + "_" + quote)}`,
+      parseRest: (j) => {
+        const t = Array.isArray(j) ? j[0] : null;
+        return t ? { bid: Number(t.highest_bid || t.last || 0), ask: Number(t.lowest_ask || t.last || 0), last: Number(t.last || 0) } : null;
+      },
+      wsUrl: () => "wss://fx-ws.gateio.ws/v4/ws/usdt",
+      wsSubscribe: (base, quote) => ({ time: Math.floor(Date.now() / 1000), channel: "futures.book_ticker", event: "subscribe", payload: [`${base}_${quote}`] }),
+      parseWs: (d) => {
+        if (d?.error) return { unsupported: true };
+        const r = d?.channel === "futures.book_ticker" ? d?.result : null;
+        return r && (r.b || r.a) ? { bid: Number(r.b || 0), ask: Number(r.a || 0), last: (Number(r.b || 0) + Number(r.a || 0)) / 2 } : null;
+      }
+    },
+    kcex: {
+      id: "kcex",
+      label: "KCEX",
+      restTickerUrl: null,
+      parseRest: null,
+      wsUrl: null,
+      wsSubscribe: null,
+      parseWs: null
+    }
+  };
+
+  function getConnectedVaultExchange() {
+    try {
+      const uid = window.V26_FIREBASE?.user?.uid;
+      if (!uid) return "";
+      const saved = JSON.parse(localStorage.getItem(`v26_api_vault_${uid}`) || "{}");
+      if (saved?.apiKey && saved?.exchange && FUTURES_EXCHANGES[saved.exchange]) {
+        return saved.exchange;
+      }
+    } catch (_) {}
+    return "";
+  }
+
+  function getActiveFuturesExchangeId() {
+    const vaultEx = getConnectedVaultExchange();
+    if (vaultEx) return vaultEx;
+    const saved = localStorage.getItem(LS_FUTURES_EX);
+    return saved && FUTURES_EXCHANGES[saved] ? saved : "binance";
+  }
+
+  function getActiveAdapter() {
+    return FUTURES_EXCHANGES[state.futuresExchange] || FUTURES_EXCHANGES.binance;
+  }
 
   function loadJson(key, fb) {
     try { return JSON.parse(localStorage.getItem(key) || "") ?? fb; } catch (_) { return fb; }
@@ -16,8 +181,9 @@
   const state = {
     mounted: false,
     orderType: "fastlimit", // "fastlimit" | "limit" | "market"
-    volBufferMode: "auto", // "auto" | "0" | "0.03" | "0.08"
+    volBufferMode: "0", // "0" | "auto"
     marginMode: "cross", // "cross" | "isolated"
+    futuresExchange: getActiveFuturesExchangeId(),
     obOpen: localStorage.getItem(LS_OB_OPEN) !== "0",
     obWs: null,
     obKey: "",
@@ -25,6 +191,14 @@
     bids: [],
     asks: [],
     midPrice: 0,
+    futWs: null,
+    futKey: "",
+    futReconnect: null,
+    futPing: null,
+    futBid: 0,
+    futAsk: 0,
+    futLast: 0,
+    futStatus: "loading", // "loading" | "live" | "unsupported" | "needs_api"
     apiSubOpen: false,
     activeScalp: loadJson(LS_SCALP_POS, null),
     scalpHistory: loadJson(LS_SCALP_HIST, [])
@@ -84,17 +258,17 @@
   }
 
   function getMarketVolatilityInfo() {
-    const topAsk = state.asks[0]?.[0] || 0;
-    const topBid = state.bids[0]?.[0] || 0;
-    const live = getLivePrice();
-    const mid = topAsk && topBid ? (topAsk + topBid) / 2 : live;
-    const spreadPct = topAsk && topBid && topAsk > 0 ? ((topAsk - topBid) / topAsk) * 100 : 0.015;
+    const topAsk = state.futAsk || 0;
+    const topBid = state.futBid || 0;
+    const hasFut = topBid > 0 && topAsk > 0;
+    const mid = hasFut ? (topAsk + topBid) / 2 : (state.futLast || 0);
+    const spreadPct = hasFut && topAsk > 0 ? ((topAsk - topBid) / topAsk) * 100 : 0.015;
     const meta = typeof window.v26GetCryptoMarketMeta === "function" ? window.v26GetCryptoMarketMeta() : null;
     const atrPct = Number(meta?.atrPct || 0);
-    // Combine spread and ATR volatility for auto buffer calculation
+    // %0.03 fast-fill floor integrated directly inside Oto Oynak (scales up to %0.15 only in extreme volatility)
     const volScore = Math.max(spreadPct * 2.5, atrPct * 0.06);
-    const autoBufPct = Math.min(0.18, Math.max(0.02, volScore || 0.03));
-    const bufPct = state.volBufferMode === "auto" ? autoBufPct : Number(state.volBufferMode || 0);
+    const autoBufPct = Math.min(0.15, Math.max(0.03, volScore || 0.03));
+    const bufPct = state.volBufferMode === "0" ? 0 : autoBufPct;
 
     let levelLabel = "Normal";
     let levelCls = "calm";
@@ -106,13 +280,14 @@
       levelCls = "warm";
     }
 
-    const askBase = topAsk || live || mid;
-    const bidBase = topBid || live || mid;
-    const dec = mid >= 1000 ? 2 : mid >= 1 ? 4 : 6;
+    const askBase = topAsk || mid;
+    const bidBase = topBid || mid;
+    const refPx = mid || getLivePrice();
+    const dec = refPx >= 1000 ? 2 : refPx >= 1 ? 4 : 6;
     const fastLongLimit = askBase > 0 ? Number((askBase * (1 + bufPct / 100)).toFixed(dec)) : 0;
     const fastShortLimit = bidBase > 0 ? Number((bidBase * (1 - bufPct / 100)).toFixed(dec)) : 0;
 
-    return { topAsk, topBid, mid, spreadPct, atrPct, bufPct, levelLabel, levelCls, fastLongLimit, fastShortLimit, dec };
+    return { topAsk, topBid, askBase, bidBase, mid, spreadPct, atrPct, bufPct, levelLabel, levelCls, fastLongLimit, fastShortLimit, dec };
   }
 
   function saveScalpState() {
@@ -128,7 +303,9 @@
     const stake = Math.max(10, Number($("v10-stake")?.value || 100));
     const lev = Math.max(1, Number($("v10-lev")?.value || 10));
     const info = getMarketVolatilityInfo();
-    const entryPrice = side === "long" ? info.fastLongLimit : info.fastShortLimit;
+    // Fills at the actual best available book price first; bufPct only sets a protection ceiling
+    const bookBest = side === "long" ? info.askBase : info.bidBase;
+    const entryPrice = bookBest > 0 ? Number(bookBest.toFixed(info.dec)) : (side === "long" ? info.fastLongLimit : info.fastShortLimit);
     if (!entryPrice || entryPrice <= 0) {
       if (typeof window.omega_ShowFinanceToast === "function") {
         window.omega_ShowFinanceToast("Canlı fiyat bekleniyor, lütfen birkaç saniye sonra tekrar deneyin.");
@@ -184,9 +361,9 @@
     const info = getMarketVolatilityInfo();
     const isSamePair = resolvePair().apiPair === pos.pair;
     const rawClose = isSamePair
-      ? (pos.side === "long" ? info.fastShortLimit : info.fastLongLimit)
+      ? (pos.side === "long" ? info.bidBase : info.askBase)
       : pos.entry;
-    const closePrice = rawClose > 0 ? rawClose : pos.entry;
+    const closePrice = rawClose > 0 ? Number(rawClose.toFixed(info.dec)) : pos.entry;
     const rawPct = pos.side === "long"
       ? (closePrice - pos.entry) / pos.entry
       : (pos.entry - closePrice) / pos.entry;
@@ -228,6 +405,16 @@
   function syncFastLimitEngine() {
     const box = $("v26-fast-limit-engine");
     if (!box) return;
+    const adapter = getActiveAdapter();
+    const titleEl = $("v26-fl-engine-title");
+    const exSel = $("v26-fl-ex-select");
+    if (titleEl) {
+      titleEl.innerHTML = `<i class="fa-solid fa-bolt"></i> ${adapter.label} Vadeli İşlem Hızlı Limit Motoru`;
+    }
+    if (exSel && exSel.value !== state.futuresExchange) {
+      exSel.value = state.futuresExchange;
+    }
+
     const info = getMarketVolatilityInfo();
     const volBadge = $("v26-fl-vol-badge");
     const bboEl = $("v26-fl-bbo-readout");
@@ -239,9 +426,15 @@
       volBadge.className = `v26-fl-vol-badge ${info.levelCls}`;
     }
     if (bboEl) {
-      bboEl.textContent = info.mid > 0
-        ? `Alış $${fmtPrice(info.topBid || info.mid)} · Satış $${fmtPrice(info.topAsk || info.mid)}`
-        : "Emir defteri bekleniyor...";
+      if (info.topBid > 0 && info.topAsk > 0) {
+        bboEl.innerHTML = `<span class="v26-bbo-bid">Vadeli Alış <b>$${fmtPrice(info.topBid)}</b></span><span class="v26-bbo-dot">·</span><span class="v26-bbo-ask">Vadeli Satış <b>$${fmtPrice(info.topAsk)}</b></span>`;
+      } else if (state.futStatus === "unsupported") {
+        bboEl.textContent = `${adapter.label} vadeli borsasında bu parite bulunamadı.`;
+      } else if (state.futStatus === "needs_api") {
+        bboEl.textContent = `${adapter.label} vadeli verisi için kişisel API bağlantısı gerekli.`;
+      } else {
+        bboEl.textContent = `${adapter.label} vadeli verisi bağlanıyor...`;
+      }
     }
     if (longPx) longPx.textContent = info.fastLongLimit > 0 ? `$${fmtPrice(info.fastLongLimit)}` : "-";
     if (shortPx) shortPx.textContent = info.fastShortLimit > 0 ? `$${fmtPrice(info.fastShortLimit)}` : "-";
@@ -341,6 +534,36 @@
     };
   }
 
+  function syncOrderBookRows(containerEl, rowsData, sideCls, maxQty) {
+    if (!rowsData.length) {
+      if (!containerEl.querySelector(".v26-ob-empty")) {
+        containerEl.innerHTML = '<div class="v26-ob-empty">Emir defteri bekleniyor...</div>';
+      }
+      return;
+    }
+    const existing = containerEl.children;
+    const needsRebuild = existing.length !== rowsData.length || !existing[0]?.dataset?.v26ObPrice;
+    if (needsRebuild) {
+      containerEl.innerHTML = rowsData.map(([pr, qty]) => {
+        const pct = Math.min(100, Math.round((qty / maxQty) * 100));
+        return `<button type="button" class="v26-ob-row ${sideCls}" data-v26-ob-price="${pr}"><span class="v26-ob-bar" style="width:${pct}%"></span><b>${fmtPrice(pr)}</b><em>${fmtQty(qty)}</em></button>`;
+      }).join("");
+      return;
+    }
+    for (let i = 0; i < rowsData.length; i++) {
+      const [pr, qty] = rowsData[i];
+      const pct = Math.min(100, Math.round((qty / maxQty) * 100));
+      const row = existing[i];
+      row.dataset.v26ObPrice = String(pr);
+      const bar = row.children[0];
+      const pxEl = row.children[1];
+      const qtyEl = row.children[2];
+      if (bar) bar.style.width = `${pct}%`;
+      if (pxEl) pxEl.textContent = fmtPrice(pr);
+      if (qtyEl) qtyEl.textContent = fmtQty(qty);
+    }
+  }
+
   function renderOrderBook() {
     const asksEl = $("v26-ob-asks");
     const bidsEl = $("v26-ob-bids");
@@ -360,32 +583,14 @@
     const maxAsk = Math.max(0.0001, ...asks.map((x) => x[1]));
     const maxBid = Math.max(0.0001, ...bids.map((x) => x[1]));
 
-    // Reverse asks so lowest ask sits right above spread strip
-    asksEl.innerHTML = [...asks].reverse().map(([pr, qty]) => {
-      const pct = Math.min(100, Math.round((qty / maxAsk) * 100));
-      return `
-        <button type="button" class="v26-ob-row ask" data-v26-ob-price="${pr}">
-          <span class="v26-ob-bar" style="width:${pct}%"></span>
-          <b>${fmtPrice(pr)}</b>
-          <em>${fmtQty(qty)}</em>
-        </button>
-      `;
-    }).join("") || '<div class="v26-ob-empty">Emir defteri bekleniyor...</div>';
-
-    bidsEl.innerHTML = bids.map(([pr, qty]) => {
-      const pct = Math.min(100, Math.round((qty / maxBid) * 100));
-      return `
-        <button type="button" class="v26-ob-row bid" data-v26-ob-price="${pr}">
-          <span class="v26-ob-bar" style="width:${pct}%"></span>
-          <b>${fmtPrice(pr)}</b>
-          <em>${fmtQty(qty)}</em>
-        </button>
-      `;
-    }).join("") || '<div class="v26-ob-empty">Emir defteri bekleniyor...</div>';
+    // Reverse asks so lowest ask sits right above spread strip; update in-place so single clicks never drop
+    syncOrderBookRows(asksEl, [...asks].reverse(), "ask", maxAsk);
+    syncOrderBookRows(bidsEl, bids, "bid", maxBid);
 
     const topAsk = asks[0]?.[0] || 0;
     const topBid = bids[0]?.[0] || 0;
-    const mid = topAsk && topBid ? (topAsk + topBid) / 2 : getLivePrice();
+    const liveChartPx = getLivePrice();
+    const mid = liveChartPx || (topAsk && topBid ? (topAsk + topBid) / 2 : 0);
     state.midPrice = mid;
     if (midEl) midEl.textContent = mid ? "$" + fmtPrice(mid) : "$-";
     if (spreadEl && topAsk && topBid) {
@@ -403,7 +608,6 @@
       if (ratioSellEl) ratioSellEl.textContent = `%${sellPct} Satış`;
       if (ratioFill) ratioFill.style.width = `${buyPct}%`;
     }
-    syncFastLimitEngine();
   }
 
   function closeOrderBook() {
@@ -417,11 +621,16 @@
 
   function isCryptoVisible() {
     const block = $("omega-crypto-block");
-    return Boolean(block && block.style.display !== "none" && state.obOpen);
+    return Boolean(block && block.style.display !== "none");
   }
 
+  function isObVisible() {
+    return isCryptoVisible() && state.obOpen;
+  }
+
+  // Left Order Book: pure untouched Binance order book synced to the chart pair
   async function connectOrderBook(force = false) {
-    if (!isCryptoVisible()) return;
+    if (!isObVisible()) return;
     const p = resolvePair();
     const key = `${p.market}:${p.apiPair}`;
     if (!force && state.obKey === key && state.obWs && state.obWs.readyState <= 1) return;
@@ -429,7 +638,6 @@
     closeOrderBook();
     state.obKey = key;
 
-    // Fetch REST snapshot immediately
     try {
       const restUrl = p.market === "fapi"
         ? `https://fapi.binance.com/fapi/v1/depth?symbol=${encodeURIComponent(p.apiPair)}&limit=10`
@@ -443,7 +651,6 @@
       }
     } catch (_) {}
 
-    // Live WebSocket stream
     try {
       const wsBase = p.market === "fapi" ? "wss://fstream.binance.com/ws" : "wss://stream.binance.com:9443/ws";
       const streamUrl = `${wsBase}/${p.apiPair.toLowerCase()}@depth10@100ms`;
@@ -464,8 +671,122 @@
       ws.onclose = () => {
         if (state.obWs !== ws) return;
         state.obWs = null;
-        if (isCryptoVisible()) {
+        if (isObVisible()) {
           state.obReconnect = setTimeout(() => connectOrderBook(true), 2500);
+        }
+      };
+      ws.onerror = () => {
+        try { ws.close(); } catch (_) {}
+      };
+    } catch (_) {}
+  }
+
+  function closeFuturesFeed() {
+    clearTimeout(state.futReconnect);
+    clearInterval(state.futPing);
+    if (state.futWs) {
+      try { state.futWs.onclose = null; state.futWs.close(); } catch (_) {}
+      state.futWs = null;
+    }
+    state.futKey = "";
+  }
+
+  // Dedicated Multi-Exchange Futures Feed ONLY for Vadeli İşlem Hızlı Limit Motoru
+  async function connectFuturesFeed(force = false) {
+    if (!isCryptoVisible()) return;
+    const p = resolvePair();
+    const quote = ($("v10-quote")?.value || "USDT").toUpperCase();
+    const base = p.apiPair.endsWith(quote) ? p.apiPair.slice(0, -quote.length) : p.base;
+    const adapter = getActiveAdapter();
+    const key = `${adapter.id}:${base}:${quote}`;
+    if (!force && state.futKey === key && state.futWs && state.futWs.readyState <= 1) return;
+
+    closeFuturesFeed();
+    state.futKey = key;
+    state.futBid = 0;
+    state.futAsk = 0;
+    state.futLast = 0;
+
+    if (!adapter.wsUrl && !adapter.restTickerUrl) {
+      state.futStatus = "needs_api";
+      syncFastLimitEngine();
+      return;
+    }
+    state.futStatus = "loading";
+    syncFastLimitEngine();
+
+    if (adapter.restTickerUrl && adapter.parseRest) {
+      try {
+        const res = await fetch(adapter.restTickerUrl(base, quote), { cache: "no-store" }).then((r) => r.json());
+        if (state.futKey !== key) return;
+        const parsed = adapter.parseRest(res);
+        if (parsed?.unsupported) {
+          state.futStatus = "unsupported";
+          syncFastLimitEngine();
+          return;
+        }
+        if (parsed && (parsed.bid > 0 || parsed.ask > 0)) {
+          state.futBid = parsed.bid || parsed.last;
+          state.futAsk = parsed.ask || parsed.last;
+          state.futLast = parsed.last || ((state.futBid + state.futAsk) / 2);
+          state.futStatus = "live";
+          syncFastLimitEngine();
+        }
+      } catch (_) {}
+    }
+
+    if (!adapter.wsUrl) return;
+    try {
+      const ws = new WebSocket(adapter.wsUrl(base, quote));
+      state.futWs = ws;
+      ws.onopen = () => {
+        if (state.futWs !== ws) return;
+        if (adapter.wsSubscribe) {
+          const msgs = adapter.wsSubscribe(base, quote);
+          const list = Array.isArray(msgs) ? msgs : [msgs];
+          list.forEach(m => { try { ws.send(JSON.stringify(m)); } catch (_) {} });
+        }
+        if (adapter.id === "mexc") {
+          state.futPing = setInterval(() => {
+            if (state.futWs === ws && ws.readyState === 1) {
+              try { ws.send(JSON.stringify({ method: "ping" })); } catch (_) {}
+            }
+          }, 15000);
+        } else if (adapter.id === "okx" || adapter.id === "bitget") {
+          state.futPing = setInterval(() => {
+            if (state.futWs === ws && ws.readyState === 1) {
+              try { ws.send("ping"); } catch (_) {}
+            }
+          }, 20000);
+        }
+      };
+      ws.onmessage = (ev) => {
+        if (state.futWs !== ws) return;
+        if (ev.data === "pong") return;
+        let d;
+        try { d = JSON.parse(ev.data); } catch (_) { return; }
+        const parsed = adapter.parseWs(d);
+        if (!parsed) return;
+        if (parsed.unsupported) {
+          state.futStatus = "unsupported";
+          syncFastLimitEngine();
+          return;
+        }
+        if (parsed.bid > 0) state.futBid = parsed.bid;
+        if (parsed.ask > 0) state.futAsk = parsed.ask;
+        if (parsed.last > 0) state.futLast = parsed.last;
+        else if (state.futBid > 0 && state.futAsk > 0) state.futLast = (state.futBid + state.futAsk) / 2;
+        if (state.futBid > 0 && state.futAsk > 0) {
+          state.futStatus = "live";
+          syncFastLimitEngine();
+        }
+      };
+      ws.onclose = () => {
+        clearInterval(state.futPing);
+        if (state.futWs !== ws) return;
+        state.futWs = null;
+        if (isCryptoVisible() && state.futStatus !== "unsupported") {
+          state.futReconnect = setTimeout(() => connectFuturesFeed(true), 2500);
         }
       };
       ws.onerror = () => {
@@ -504,9 +825,7 @@
       <div class="v26-api-grid">
         <label>Borsa
           <select id="v26-api-ex">
-            <option value="binance" ${saved.exchange === "binance" ? "selected" : ""}>Binance</option>
-            <option value="okx" ${saved.exchange === "okx" ? "selected" : ""}>OKX</option>
-            <option value="bybit" ${saved.exchange === "bybit" ? "selected" : ""}>Bybit</option>
+            ${Object.values(FUTURES_EXCHANGES).map(ex => `<option value="${ex.id}" ${(saved.exchange || state.futuresExchange) === ex.id ? "selected" : ""}>${ex.label}</option>`).join("")}
           </select>
         </label>
         <label>Yetki
@@ -538,17 +857,36 @@
         return;
       }
       localStorage.setItem(storageKey, JSON.stringify(payload));
+      setActiveFuturesExchange(payload.exchange);
       renderApiVault();
       if (typeof window.omega_ShowFinanceToast === "function") {
-        window.omega_ShowFinanceToast("API bilgileriniz sadece kişisel oturumunuza kaydedildi.");
+        window.omega_ShowFinanceToast(`${getActiveAdapter().label} API bilgileriniz sadece kişisel oturumunuza kaydedildi.`);
       }
     });
 
     $("v26-api-clear")?.addEventListener("click", () => {
       localStorage.removeItem(storageKey);
       renderApiVault();
+      syncFastLimitEngine();
     });
   }
+
+  function setActiveFuturesExchange(exId) {
+    const next = FUTURES_EXCHANGES[exId] ? exId : "binance";
+    state.futuresExchange = next;
+    localStorage.setItem(LS_FUTURES_EX, next);
+    state.futBid = 0;
+    state.futAsk = 0;
+    state.futLast = 0;
+    state.futStatus = "loading";
+    syncFastLimitEngine();
+    connectFuturesFeed(true);
+  }
+  window.V26FuturesAdapter = {
+    exchanges: FUTURES_EXCHANGES,
+    getActive: () => getActiveAdapter(),
+    setExchange: setActiveFuturesExchange
+  };
 
   function mountUI() {
     if (state.mounted) return;
@@ -594,9 +932,11 @@
           wrap.appendChild(headRow);
         } else if (ctrl.id === "v10-liq") {
           wrap.classList.add("v26-liq-locked");
+          wrap.dataset.tip = "Gerçek işlem aktif olunca likidasyon fiyatı otomatik belirir";
+          wrap.title = "Gerçek işlem aktif olunca likidasyon fiyatı otomatik belirir";
           ctrl.readOnly = true;
-          ctrl.placeholder = "Gerçek işlemde otomatik gelir";
-          ctrl.title = "Gerçek işlem veya Hızlı Limit açıldığında otomatik dolar";
+          ctrl.placeholder = "";
+          ctrl.title = "Gerçek işlem aktif olunca likidasyon fiyatı otomatik belirir";
           const headRow = document.createElement("div");
           headRow.className = "v26-field-head";
           const lockTag = document.createElement("span");
@@ -606,6 +946,7 @@
           headRow.appendChild(lockTag);
           wrap.appendChild(headRow);
         } else {
+          if (ctrl.id === "v10-stop") ctrl.placeholder = "";
           wrap.appendChild(lbl);
         }
         wrap.appendChild(ctrl);
@@ -649,17 +990,20 @@
     fastBox.className = "v26-fast-limit-engine";
     fastBox.innerHTML = `
       <div class="v26-fl-head">
-        <b><i class="fa-solid fa-bolt"></i> Hızlı Limit Motoru</b>
-        <span class="v26-fl-vol-badge calm" id="v26-fl-vol-badge">Normal · Tampon %0.03</span>
+        <b id="v26-fl-engine-title"><i class="fa-solid fa-bolt"></i> ${getActiveAdapter().label} Vadeli İşlem Hızlı Limit Motoru</b>
+        <div class="v26-fl-head-right">
+          <select id="v26-fl-ex-select" class="v26-fl-ex-select" title="Vadeli borsa veri kaynağını seç">
+            ${Object.values(FUTURES_EXCHANGES).map(ex => `<option value="${ex.id}" ${state.futuresExchange === ex.id ? "selected" : ""}>${ex.label}</option>`).join("")}
+          </select>
+          <span class="v26-fl-vol-badge calm" id="v26-fl-vol-badge">Normal · Tampon %0.03</span>
+        </div>
       </div>
       <div class="v26-fl-bbo" id="v26-fl-bbo-readout">Emir defteri bekleniyor...</div>
       <div class="v26-fl-buf-row">
         <span>Oynaklık Kalkanı:</span>
-        <div class="v26-fl-buf-pills">
-          <button type="button" class="active" data-v26-vol-buf="auto" title="Oynaklığa göre otomatik kayma tamponu">Oto Oynak</button>
-          <button type="button" data-v26-vol-buf="0" title="En iyi defter fiyatından sıfır kayma">BBO %0</button>
-          <button type="button" data-v26-vol-buf="0.03">%0.03</button>
-          <button type="button" data-v26-vol-buf="0.08">%0.08</button>
+        <div class="v26-fl-buf-pills two">
+          <button type="button" class="active" data-v26-vol-buf="0" title="Emir defterindeki en iyi fiyattan sıfır kayma ile alır">BBO %0</button>
+          <button type="button" data-v26-vol-buf="auto" title="En iyi defter fiyatından alır; piyasa çok oynaksa %0.03-%0.15 koruma sınırı uygular">Oto Oynak</button>
         </div>
       </div>
       <div class="v26-fl-actions">
@@ -733,6 +1077,36 @@
       `;
       stage.insertBefore(obCard, wrap);
 
+      let lastObPickMs = 0;
+      const pickOrderBookRow = (e) => {
+        if (e.target.closest("#v26-ob-close-btn")) return;
+        const obRow = e.target.closest("[data-v26-ob-price]");
+        if (!obRow) return;
+        if (e.type === "mousedown") {
+          if (e.button !== 0) return;
+          e.preventDefault();
+          lastObPickMs = Date.now();
+        } else if (e.type === "click" && Date.now() - lastObPickMs < 400) {
+          return;
+        }
+        const pr = obRow.dataset.v26ObPrice;
+        const entryEl = $("v10-entry");
+        if (entryEl && pr) {
+          entryEl.value = pr;
+          entryEl.dispatchEvent(new Event("input", { bubbles: true }));
+          entryEl.dispatchEvent(new Event("change", { bubbles: true }));
+          if (typeof window.v26CryptoUpdatePriceLines === "function") window.v26CryptoUpdatePriceLines();
+          if (typeof window.omega_V10UpdateTpOutputs === "function") window.omega_V10UpdateTpOutputs();
+          syncTradeSummaries();
+          obRow.classList.add("picked");
+          setTimeout(() => obRow.classList.remove("picked"), 240);
+          if (typeof window.omega_ShowFinanceToast === "function") {
+            window.omega_ShowFinanceToast(`Giriş fiyatı $${fmtPrice(pr)} olarak seçildi.`);
+          }
+        }
+      };
+
+      obCard.addEventListener("mousedown", pickOrderBookRow);
       obCard.addEventListener("click", (e) => {
         if (e.target.closest("#v26-ob-close-btn")) {
           state.obOpen = false;
@@ -740,18 +1114,7 @@
           syncOrderBookVisibility();
           return;
         }
-        const obRow = e.target.closest("[data-v26-ob-price]");
-        if (obRow) {
-          const pr = obRow.dataset.v26ObPrice;
-          const entryEl = $("v10-entry");
-          if (entryEl && pr) {
-            entryEl.value = pr;
-            entryEl.dispatchEvent(new Event("input", { bubbles: true }));
-            if (typeof window.omega_ShowFinanceToast === "function") {
-              window.omega_ShowFinanceToast(`Giriş fiyatı ${fmtPrice(pr)} olarak dolduruldu.`);
-            }
-          }
-        }
+        pickOrderBookRow(e);
       });
 
       const tgl = $("v26-ob-dock-toggle");
@@ -820,6 +1183,10 @@
       }
     });
 
+    $("v26-fl-ex-select")?.addEventListener("change", (e) => {
+      setActiveFuturesExchange(e.target.value);
+    });
+
     fastBox.addEventListener("click", (e) => {
       const bufBtn = e.target.closest("[data-v26-vol-buf]");
       if (bufBtn) {
@@ -863,9 +1230,13 @@
       $(id)?.addEventListener("input", syncTradeSummaries);
       $(id)?.addEventListener("change", syncTradeSummaries);
     });
-    $("v10-symbol")?.addEventListener("change", () => setTimeout(() => connectOrderBook(true), 80));
+    $("v10-symbol")?.addEventListener("change", () => setTimeout(() => { connectOrderBook(true); connectFuturesFeed(true); }, 80));
 
     window.addEventListener("v26-auth-ready", () => {
+      const vaultEx = getConnectedVaultExchange();
+      if (vaultEx && vaultEx !== state.futuresExchange) {
+        setActiveFuturesExchange(vaultEx);
+      }
       if (state.apiSubOpen) renderApiVault();
     });
 
@@ -873,15 +1244,27 @@
       if (isCryptoVisible()) {
         mountOrderBookDock();
         connectOrderBook(false);
+        connectFuturesFeed(false);
       } else {
         closeOrderBook();
+        closeFuturesFeed();
       }
     });
     const block = $("omega-crypto-block");
     if (block) obs.observe(block, { attributes: true, attributeFilter: ["style"] });
 
+    window.v26OnLiveTradeTick = (pair, price) => {
+      if (!price || resolvePair().apiPair !== pair) return;
+      state.midPrice = price;
+      const midEl = $("v26-ob-mid");
+      if (midEl) midEl.textContent = "$" + fmtPrice(price);
+    };
+
     syncTradeSummaries();
-    if (isCryptoVisible()) connectOrderBook(false);
+    if (isCryptoVisible()) {
+      connectOrderBook(false);
+      connectFuturesFeed(false);
+    }
   }
 
   function init() {

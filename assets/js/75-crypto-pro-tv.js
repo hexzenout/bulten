@@ -7,13 +7,21 @@
   const LS_MODE = "v26_crypto_chart_mode";
   const LS_LEV = "v26_crypto_view_lev";
   const LS_MY_LIST = "v26_crypto_my_pairs_v1";
+  const LS_CROSS_SEEDED = "v26_crypto_cross_fav_seeded_v1";
   const LS_TP_MULT = "v26_crypto_scalp_tpmult";
   const LS_LONG = "v26_crypto_scalp_long";
   const LS_SHORT = "v26_crypto_scalp_short";
 
+  const CROSS_FAV_PAIRS = [
+    "ETHBTC", "XRPETH", "XRPBTC", "BNBBTC", "BNBETH",
+    "SOLBTC", "SOLETH", "ZECBTC", "ZECETH", "SOLBNB"
+  ];
+  const CROSS_FAV_SET = new Set(CROSS_FAV_PAIRS);
+
   const DEFAULT_MY_PAIRS = [
     "BTC", "ETH", "SOL", "BNB", "XRP", "DOGE", "ADA", "AVAX", "TRX", "LINK",
-    "DOT", "SUI", "PEPE", "TON", "SHIB", "LTC", "UNI", "NEAR", "APT", "ARB"
+    "DOT", "SUI", "PEPE", "TON", "SHIB", "LTC", "UNI", "NEAR", "APT", "ARB",
+    ...CROSS_FAV_PAIRS
   ];
 
   const TF_TO_TV = {
@@ -49,11 +57,26 @@
   window.__v26CryptoChartLev = state.lev;
 
   function loadMyPairs() {
+    let list = null;
     try {
       const parsed = JSON.parse(localStorage.getItem(LS_MY_LIST) || "null");
-      if (Array.isArray(parsed) && parsed.length) return parsed;
+      if (Array.isArray(parsed) && parsed.length) list = parsed;
     } catch (_) {}
-    return DEFAULT_MY_PAIRS.slice();
+    if (!list) list = DEFAULT_MY_PAIRS.slice();
+    try {
+      if (!localStorage.getItem(LS_CROSS_SEEDED)) {
+        let changed = false;
+        for (const cp of CROSS_FAV_PAIRS) {
+          if (!list.includes(cp)) {
+            list.push(cp);
+            changed = true;
+          }
+        }
+        localStorage.setItem(LS_CROSS_SEEDED, "1");
+        if (changed) localStorage.setItem(LS_MY_LIST, JSON.stringify(list));
+      }
+    } catch (_) {}
+    return list;
   }
 
   function saveMyPairs() {
@@ -72,12 +95,15 @@
     return { exchange, quote, symbol, pair: symbol + quote, tf };
   }
 
-  function fmtPrice(v) {
+  function fmtPrice(v, sub = "/USDT") {
     const n = Number(v || 0);
-    if (!Number.isFinite(n) || n <= 0) return "$-";
-    if (n >= 1000) return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    if (n >= 1) return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 });
-    return "$" + n.toPrecision(4);
+    const isUsd = !sub || sub === "/USDT" || !sub.startsWith("/");
+    if (!Number.isFinite(n) || n <= 0) return isUsd ? "$-" : "-";
+    const prefix = isUsd ? "$" : "";
+    if (n >= 1000) return prefix + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (n >= 1) return prefix + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+    if (!isUsd) return n.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 8 });
+    return prefix + n.toPrecision(4);
   }
 
   function fmtPct(pct, mult = 1) {
@@ -104,10 +130,12 @@
     BABA: "BABAB", TSM: "TSMB", QCOM: "QCOMB", MU: "MUB"
   };
 
-  function getAssetLogoUrl(base, apiPair) {
+  function getAssetLogoUrl(base, apiPair, display) {
     const cleanBase = String(base || "").toUpperCase();
+    const dispBase = String(display || "").toUpperCase();
     const apiBase = String(apiPair || "").replace(/USDT$/, "").toUpperCase();
     return state.assetLogos.get(cleanBase)
+      || state.assetLogos.get(dispBase)
       || state.assetLogos.get(apiBase)
       || state.assetLogos.get(LOGO_ALIAS_FALLBACK[cleanBase] || "")
       || state.assetLogos.get(cleanBase + "B")
@@ -115,7 +143,7 @@
   }
 
   function logoBadgeHtml(base, apiPair, display) {
-    const url = getAssetLogoUrl(base, apiPair);
+    const url = getAssetLogoUrl(base, apiPair, display);
     const letter = String(display || base || "?").slice(0, 2);
     if (url) {
       return `<span class="v26-coin-ico"><img src="${url}" alt="${display}" referrerpolicy="no-referrer" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex';"><span class="v26-coin-fb" style="display:none;">${letter}</span></span>`;
@@ -312,7 +340,7 @@
       const priceEl = row.querySelector(".v26-watch-price");
       const chgEl = row.querySelector(".v26-watch-chg .v26-pct-val");
       const volEl = row.querySelector(".v26-watch-chg .v26-vol-val");
-      const nextPriceText = fmtPrice(tick.price);
+      const nextPriceText = fmtPrice(tick.price, row.dataset.v26Sub || "/USDT");
       if (priceEl && priceEl.textContent !== nextPriceText) {
         const prev = Number(priceEl.dataset.rawPrice || 0);
         priceEl.dataset.rawPrice = String(tick.price);
@@ -341,13 +369,14 @@
     const fapiOnly = window.__v26FapiOnlySet;
     for (const t of arr) {
       const sym = String(t.s || "");
-      if (!sym.endsWith("USDT")) continue;
+      const isCross = !isFapi && CROSS_FAV_SET.has(sym);
+      if (!sym.endsWith("USDT") && !isCross) continue;
       if (isFapi && fapiOnly && fapiOnly.size && !fapiOnly.has(sym) && state.binanceTickers.has(sym)) continue;
       const price = Number(t.c || 0);
       const open = Number(t.o || 0);
       const vol = Number(t.q || 0);
       if (!(price > 0)) continue;
-      const base = sym.slice(0, -4);
+      const base = isCross ? sym : sym.slice(0, -4);
       const pct = open > 0 ? ((price - open) / open) * 100 : (state.binanceTickers.get(sym)?.pct || 0);
       const existing = state.binanceTickers.get(sym);
       if (existing) {
@@ -469,17 +498,18 @@
 
       for (const item of spotArr) {
         const sym = String(item.symbol || "");
-        if (!sym.endsWith("USDT")) continue;
+        const isCross = CROSS_FAV_SET.has(sym);
+        if (!sym.endsWith("USDT") && !isCross) continue;
         const meta = prodMeta.get(sym);
         const price = Number(item.lastPrice || meta?.price || 0);
         const vol = Number(item.quoteVolume || meta?.vol || 0);
         if (price <= 0) continue;
-        if (vol <= 0 && !meta) continue;
-        const base = sym.slice(0, -4);
+        if (vol <= 0 && !meta && !isCross) continue;
+        const base = isCross ? sym : sym.slice(0, -4);
         const pct = Number(item.priceChangePercent ?? meta?.pct ?? 0);
-        const isBStock = meta ? meta.isBStock : detectIsBStock(sym);
+        const isBStock = !isCross && (meta ? meta.isBStock : detectIsBStock(sym));
         if (isBStock) state.bStocksSet.add(sym);
-        const row = { symbol: sym, base, price, pct, vol, market: "spot", isBStock };
+        const row = { symbol: sym, base, price, pct, vol, market: "spot", isBStock, isCross };
         map.set(sym, row);
         list.push(row);
       }
@@ -608,7 +638,7 @@
     if (!body) return;
     const p = currentPairInfo();
     const activeRes = resolveSymbol(p.symbol);
-    const q = state.search.trim().toUpperCase();
+    const q = state.search.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
     const mySet = new Set(state.myPairs);
 
     let items = [];
@@ -668,10 +698,10 @@
         ? `<b class="v26-vol-val primary">${fmtVol(item.vol)}</b><em class="v26-pct-val ${pctCls}">${fmtPct(item.pct, 1)}</em>`
         : `<b class="v26-pct-val ${pctCls}">${fmtPct(item.pct, 1)}</b><em class="v26-vol-val">${fmtVol(item.vol)}</em>`;
       return `
-        <div class="v26-watch-row ${isActive ? "active" : ""}" data-v26-pick="${item.base}" data-v26-api="${item.apiPair}">
+        <div class="v26-watch-row ${isActive ? "active" : ""}" data-v26-pick="${item.base}" data-v26-api="${item.apiPair}" data-v26-sub="${item.sub}">
           <button type="button" class="v26-watch-star ${isFav ? "fav" : ""}" data-v26-star="${item.base}" title="${isFav ? "Favorilerden çıkar" : "Favorilere ekle"}"><i class="fa-solid fa-star"></i></button>
           <span class="v26-watch-sym">${logoBadgeHtml(item.base, item.apiPair, item.display)}<span class="v26-watch-sym-txt"><b>${item.display}</b><em>${item.sub}</em></span></span>
-          <span class="v26-watch-price" data-raw-price="${item.price}">${fmtPrice(item.price)}</span>
+          <span class="v26-watch-price" data-raw-price="${item.price}">${fmtPrice(item.price, item.sub)}</span>
           <span class="v26-watch-chg">${rightHtml}</span>
         </div>
       `;
@@ -767,7 +797,7 @@
         <button type="button" class="v26-watch-tab bstocks" data-v26-watch-tab="bstocks">bStocks<span class="v26-bst-cnt"></span></button>
       </div>
       <div class="v26-watch-controls">
-        <input id="v26-watch-search" class="v26-watch-input" type="text" placeholder="Parite ara (BTC, NVDAB, SOXLB, NDX, XAU...)">
+        <input id="v26-watch-search" class="v26-watch-input" type="text" placeholder="Parite ara (BTC, NVDAB, SOXLB)">
         <div class="v26-watch-add-row" id="v26-watch-add-row" style="display:none;">
           <input id="v26-watch-add-input" class="v26-watch-input" type="text" placeholder="Ekle: NDX, XAU, NVDAB, AAPL, EURUSD...">
           <button type="button" id="v26-watch-add-btn" class="v26-watch-add-btn">+ Ekle</button>

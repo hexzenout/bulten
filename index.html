@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <link rel="stylesheet" href="assets/css/00-base.css?v=v517">
-  <link rel="stylesheet" href="assets/css/10-route-crypto.css?v=v1397">
+  <link rel="stylesheet" href="assets/css/10-route-crypto.css?v=v1400">
   <link rel="stylesheet" href="assets/css/20-module-helpers.css?v=v1397">
   <link rel="stylesheet" href="assets/css/30-finance-core.css?v=v517">
   <link rel="stylesheet" href="assets/css/31-finance-panels.css?v=v753">
@@ -265,13 +265,13 @@ html.v536-sound-preboot #v28-sound-mount::before {
                                     <input id="v10-entry" type="number" placeholder="Boşsa canlı fiyat alınır" step="0.00000001">
 
                                     <label>Likidasyon</label>
-                                    <input id="v10-liq" type="number" placeholder="Gerçek işlemde otomatik gelir" step="0.00000001" readonly>
+                                    <input id="v10-liq" type="number" placeholder="" step="0.00000001" readonly title="Gerçek işlem aktif olunca likidasyon fiyatı otomatik belirir">
 
                                     <label>2x Kâr Fiyatı</label>
                                     <input id="v10-2x" type="number" placeholder="Manuel 2x fiyatı" step="0.00000001">
 
                                     <label>Stop</label>
-                                    <input id="v10-stop" type="number" placeholder="Stop fiyatı" step="0.00000001">
+                                    <input id="v10-stop" type="number" placeholder="" step="0.00000001">
                                 </div>
 
                                 <div class="tp-v10-box">
@@ -291,8 +291,8 @@ html.v536-sound-preboot #v28-sound-mount::before {
                                 <div class="crypto-v10-metrics">
                                     <div><span>Canlı PnL</span><b id="v10-live-pnl">$0.00</b></div>
                                     <div><span>Stop Zararı</span><b id="v10-stop-pnl">$0.00</b></div>
-                                    <div><span>TP Hedefleri Toplam Kârı<small class="v26-metric-sub">Girilen TP1/TP2 hedeflerinin toplam kazancı</small></span><b id="v10-tp-total">$0.00</b></div>
-                                    <div><span>Risk / Ödül<small class="v26-metric-sub">Risk : Kazanç oranı</small></span><b id="v10-rr">-</b></div>
+                                    <div><span>TP Hedefleri Toplam Kârı</span><b id="v10-tp-total">$0.00</b></div>
+                                    <div><span>Risk / Ödül</span><b id="v10-rr">-</b></div>
                                 </div>
                             </div>
 
@@ -568,11 +568,11 @@ html.v536-sound-preboot #v28-sound-mount::before {
     <script src="assets/js/60-crypto-core.js?v=v1397"></script>
 <script src="assets/js/70-rolling-core.js?v=v1340"></script>
 <script src="assets/js/71-finance-ui.js?v=v972"></script>
-<script src="assets/js/72-crypto-ui.js?v=v1397"></script>
-<script src="assets/js/75-crypto-pro-tv.js?v=v1397"></script>
-<script src="assets/js/76-crypto-trade-pro.js?v=v1397"></script>
+<script src="assets/js/72-crypto-ui.js?v=v1404"></script>
+<script src="assets/js/75-crypto-pro-tv.js?v=v1405"></script>
+<script src="assets/js/76-crypto-trade-pro.js?v=v1405"></script>
 <script src="assets/js/73-crypto-alarm-audio.js?v=v1397"></script>
-<script src="assets/js/74-crypto-alarm-center.js?v=v1397"></script>
+<script src="assets/js/74-crypto-alarm-center.js?v=v1398"></script>
 <script src="assets/js/80-app-fixes.js?v=v1296"></script>
 <script src="assets/js/pwa.js?v=v517"></script>
 <script type="module" src="assets/js/82-firebase-core.js?v=v1343"></script>

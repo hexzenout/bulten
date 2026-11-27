@@ -101,7 +101,24 @@
     XPD: { apiPair: "XPDUSDT", market: "fapi", display: "XPD", sub: "Paladyum" },
     XPDUSD: { apiPair: "XPDUSDT", market: "fapi", display: "XPD", sub: "Paladyum" },
     EURUSD: { apiPair: "EURUSDT", market: "spot", display: "EUR", sub: "Forex" },
-    EUR: { apiPair: "EURUSDT", market: "spot", display: "EUR", sub: "Forex" }
+    EUR: { apiPair: "EURUSDT", market: "spot", display: "EUR", sub: "Forex" },
+    NVDA: { apiPair: "NVDAUSDT", market: "fapi", display: "NVDA", sub: "Nvidia Perp" },
+    SOXL: { apiPair: "SOXLUSDT", market: "fapi", display: "SOXL", sub: "Perp" },
+    SOXS: { apiPair: "SOXSUSDT", market: "fapi", display: "SOXS", sub: "Perp" },
+    SNDK: { apiPair: "SNDKUSDT", market: "fapi", display: "SNDK", sub: "Sandisk Perp" },
+    TSLA: { apiPair: "TSLAUSDT", market: "fapi", display: "TSLA", sub: "Tesla Perp" },
+    AAPL: { apiPair: "AAPLUSDT", market: "fapi", display: "AAPL", sub: "Apple Perp" },
+    SKHYNIX: { apiPair: "SKHYNIXUSDT", market: "fapi", display: "SKHYNIX", sub: "Perp" },
+    ETHBTC: { apiPair: "ETHBTC", market: "spot", display: "ETH", sub: "/BTC" },
+    XRPETH: { apiPair: "XRPETH", market: "spot", display: "XRP", sub: "/ETH" },
+    XRPBTC: { apiPair: "XRPBTC", market: "spot", display: "XRP", sub: "/BTC" },
+    BNBBTC: { apiPair: "BNBBTC", market: "spot", display: "BNB", sub: "/BTC" },
+    BNBETH: { apiPair: "BNBETH", market: "spot", display: "BNB", sub: "/ETH" },
+    SOLBTC: { apiPair: "SOLBTC", market: "spot", display: "SOL", sub: "/BTC" },
+    SOLETH: { apiPair: "SOLETH", market: "spot", display: "SOL", sub: "/ETH" },
+    ZECBTC: { apiPair: "ZECBTC", market: "spot", display: "ZEC", sub: "/BTC" },
+    ZECETH: { apiPair: "ZECETH", market: "spot", display: "ZEC", sub: "/ETH" },
+    SOLBNB: { apiPair: "SOLBNB", market: "spot", display: "SOL", sub: "/BNB" }
   };
 
   function resolveMarketSymbol(rawSymbol, quote = "USDT") {
@@ -664,11 +681,11 @@
     if (colorsEl) colorsEl.style.display = isAlarm ? "none" : "inline-flex";
     if (widthBtn) {
       widthBtn.style.display = isAlarm ? "none" : "inline-flex";
-      widthBtn.textContent = `${Number(d.lineWidth) || (d.type === "zone" ? 2 : 2)}px`;
+      widthBtn.textContent = `${Number(d.lineWidth) || 2}px`;
     }
     if (styleBtn) {
       styleBtn.style.display = isAlarm ? "none" : "inline-flex";
-      const isDashed = d.type === "note" ? d.lineStyle !== "solid" : d.lineStyle === "dashed";
+      const isDashed = d.lineStyle === "dashed";
       styleBtn.innerHTML = isDashed ? '<i class="fa-solid fa-ellipsis"></i>' : '<i class="fa-solid fa-minus"></i>';
     }
     if (lockBtn) {
@@ -817,8 +834,8 @@
       const isSel = d.id === selId || d.id === state.hoveredId;
       const cInfo = getDrawingColor(d);
       const accent = cInfo.hex;
-      const lw = Number(d.lineWidth) || (d.type === "trend" ? 2.5 : d.type === "hline" ? 1.85 : 1.5);
-      const isDashed = d.type === "note" ? d.lineStyle !== "solid" : d.lineStyle === "dashed";
+      const lw = Number(d.lineWidth) || 2;
+      const isDashed = d.lineStyle === "dashed";
 
       if (d.type === "trend") {
         ctx.beginPath();
@@ -899,12 +916,6 @@
       } else if (d.type === "note") {
         const text = d.note || "Not";
         ctx.beginPath();
-        ctx.moveTo(coords.x, coords.y);
-        ctx.lineTo(coords.x, coords.y - 12);
-        ctx.lineWidth = 1.4;
-        ctx.strokeStyle = accent;
-        ctx.stroke();
-        ctx.beginPath();
         ctx.arc(coords.x, coords.y, isSel ? 5.5 : 4, 0, Math.PI * 2);
         ctx.fillStyle = accent;
         ctx.fill();
@@ -913,7 +924,7 @@
           ctx.strokeStyle = "#ffffff";
           ctx.stroke();
         }
-        d.__noteRect = drawNoteTag(coords.x, coords.y - 4, text, isSel ? "#F0B90B" : accent, isSel);
+        d.__noteRect = drawNoteTag(coords.x, coords.y, text, isSel ? "#F0B90B" : accent, isSel);
       }
     });
 
@@ -1473,7 +1484,7 @@
     $("v26-act-style")?.addEventListener("click", ev => {
       ev.stopPropagation();
       mutateSelectedDrawing(d => {
-        const curDashed = d.type === "note" ? d.lineStyle !== "solid" : d.lineStyle === "dashed";
+        const curDashed = d.lineStyle === "dashed";
         d.lineStyle = curDashed ? "solid" : "dashed";
       });
     });
@@ -1757,19 +1768,55 @@
       closeKlineWS();
       return;
     }
-    const wsHost = p.market === "fapi" ? "wss://fstream.binance.com/ws" : "wss://stream.binance.com:9443/ws";
+    const streamHost = p.market === "fapi" ? "wss://fstream.binance.com/stream" : "wss://stream.binance.com:9443/stream";
+    const sym = p.pair.toLowerCase();
     const nextKey = `${p.market || "spot"}:${p.pair}:${tfObj.binance}`;
     if (klineWsKey === nextKey && klineWs && klineWs.readyState <= 1) return;
     closeKlineWS();
     klineWsKey = nextKey;
 
+    const scheduleUiSync = () => {
+      if (wsPriceLineTimer) return;
+      wsPriceLineTimer = setTimeout(() => {
+        wsPriceLineTimer = 0;
+        window.dispatchEvent(new CustomEvent("v26-crypto-candles-updated"));
+        renderPriceLines();
+        requestOverlayDraw();
+        checkAlarms();
+      }, 90);
+    };
+
     try {
-      const ws = new WebSocket(`${wsHost}/${p.pair.toLowerCase()}@kline_${tfObj.binance}`);
+      const ws = new WebSocket(`${streamHost}?streams=${sym}@kline_${tfObj.binance}/${sym}@aggTrade`);
       klineWs = ws;
       ws.onmessage = (ev) => {
         if (klineWs !== ws) return;
-        let msg;
-        try { msg = JSON.parse(ev.data); } catch (_) { return; }
+        let raw;
+        try { raw = JSON.parse(ev.data); } catch (_) { return; }
+        const msg = raw?.data || raw;
+
+        if (msg?.e === "aggTrade" || (msg?.p && !msg?.k)) {
+          const tradePx = Number(msg.p);
+          if (!tradePx || !state.candleSeries || !state.candles.length) return;
+          state.price = tradePx;
+          window._V10_PRICE = tradePx;
+          const priceEl = $("crypto-v10-price");
+          if (priceEl) priceEl.textContent = fmtPrice(tradePx);
+
+          const last = state.candles[state.candles.length - 1];
+          if (last) {
+            last.close = tradePx;
+            if (tradePx > last.high) last.high = tradePx;
+            if (tradePx < last.low) last.low = tradePx;
+            state.candleSeries.update(last);
+          }
+          if (typeof window.v26OnLiveTradeTick === "function") {
+            window.v26OnLiveTradeTick(p.pair, tradePx);
+          }
+          scheduleUiSync();
+          return;
+        }
+
         const k = msg?.k;
         if (!k || !state.candleSeries) return;
 
@@ -1784,6 +1831,7 @@
         if (!bar.time || !bar.close) return;
 
         state.price = bar.close;
+        window._V10_PRICE = bar.close;
         const priceEl = $("crypto-v10-price");
         if (priceEl) priceEl.textContent = fmtPrice(bar.close);
 
@@ -1816,15 +1864,10 @@
         updMa(state.ma25Series, 25);
         updMa(state.ma99Series, 99);
 
-        if (!wsPriceLineTimer) {
-          wsPriceLineTimer = setTimeout(() => {
-            wsPriceLineTimer = 0;
-            window.dispatchEvent(new CustomEvent("v26-crypto-candles-updated"));
-            renderPriceLines();
-            requestOverlayDraw();
-            checkAlarms();
-          }, 220);
+        if (typeof window.v26OnLiveTradeTick === "function") {
+          window.v26OnLiveTradeTick(p.pair, bar.close);
         }
+        scheduleUiSync();
       };
       ws.onclose = () => {
         if (klineWs === ws) {
@@ -2016,7 +2059,7 @@
     state.drawings.filter(d => isDrawingForCurrentPair(d, p)).forEach(d => {
       const cHex = getDrawingColor(d).hex;
       const lw = Number(d.lineWidth) || 2;
-      const lStyle = (d.type === "note" ? d.lineStyle !== "solid" : d.lineStyle === "dashed") ? 2 : 0;
+      const lStyle = d.lineStyle === "dashed" ? 2 : 0;
       if (d.type === "note" && d.a?.price) {
         add(d.a.price, d.note ? d.note.slice(0, 14) : "NOT", cHex, lStyle, true, lw);
       } else if (d.type === "hline" && d.price) {
@@ -2118,7 +2161,7 @@
 
   function addHLine(price, anchorTime = null) {
     pushHistory();
-    const d = { id: Date.now(), type: "hline", key: drawingPairKey(), price, anchorTime, note: "" };
+    const d = { id: Date.now(), type: "hline", key: drawingPairKey(), price, anchorTime, lineWidth: 2, lineStyle: "solid", note: "" };
     state.drawings.push(d);
     state.selectedObject = { type: "drawing", id: d.id };
     saveJSON("drawings", state.drawings);
@@ -2139,6 +2182,8 @@
       color: a.color === "red" ? "red" : "green",
       a: { time: p1.time, price: p1.price },
       b: { time: p2.time, price: p2.price },
+      lineWidth: 2,
+      lineStyle: "solid",
       note: ""
     };
     state.drawings.push(d);
@@ -2160,6 +2205,8 @@
       color: DRAW_COLORS[color] ? color : "gold",
       a: { time: a.time, price: a.price },
       b: { time: b.time, price: b.price },
+      lineWidth: 2,
+      lineStyle: "solid",
       note: ""
     };
     state.drawings.push(d);
@@ -2179,6 +2226,8 @@
       type: "note",
       key: drawingPairKey(),
       a: { time, price },
+      lineWidth: 2,
+      lineStyle: "solid",
       note
     };
     state.drawings.push(d);
@@ -2438,7 +2487,7 @@
       pop.innerHTML = `
         <div class="v26-hpp-search-row">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input id="v26-hpp-input" type="text" placeholder="Parite ara (BTC, ETH, XRP, NVDAB, NDX, XAU...)">
+          <input id="v26-hpp-input" type="text" placeholder="Parite ara (BTC, ETH, XRP, NVDAB)">
           <button type="button" id="v26-hpp-close" title="Kapat">×</button>
         </div>
         <div class="v26-hpp-list" id="v26-hpp-list"></div>
