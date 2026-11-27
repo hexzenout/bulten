@@ -567,8 +567,6 @@
   function renderOrderBook() {
     const asksEl = $("v26-ob-asks");
     const bidsEl = $("v26-ob-bids");
-    const spreadEl = $("v26-ob-spread");
-    const midEl = $("v26-ob-mid");
     const ratioBuyEl = $("v26-ob-ratio-buy");
     const ratioSellEl = $("v26-ob-ratio-sell");
     const ratioFill = $("v26-ob-ratio-fill");
@@ -592,11 +590,6 @@
     const liveChartPx = getLivePrice();
     const mid = liveChartPx || (topAsk && topBid ? (topAsk + topBid) / 2 : 0);
     state.midPrice = mid;
-    if (midEl) midEl.textContent = mid ? "$" + fmtPrice(mid) : "$-";
-    if (spreadEl && topAsk && topBid) {
-      const sp = ((topAsk - topBid) / topAsk) * 100;
-      spreadEl.textContent = `Makas %${sp.toFixed(3)}`;
-    }
 
     const sumBid = bids.reduce((a, b) => a + b[1], 0);
     const sumAsk = asks.reduce((a, b) => a + b[1], 0);
@@ -1064,11 +1057,7 @@
           </div>
         </div>
         <div class="v26-ob-col-head"><span>Fiyat ($)</span><span>Miktar</span></div>
-        <div class="v26-ob-asks" id="v26-ob-asks"></div>
-        <div class="v26-ob-mid-strip">
-          <b id="v26-ob-mid">$-</b>
-          <span id="v26-ob-spread">Makas -</span>
-        </div>
+        <div class="v26-ob-asks" id="v26-ob-asks" style="border-bottom:1px solid rgba(148,163,184,0.16);padding-bottom:4px;margin-bottom:4px;"></div>
         <div class="v26-ob-bids" id="v26-ob-bids"></div>
         <div class="v26-ob-ratio">
           <div class="v26-ob-ratio-labels"><span id="v26-ob-ratio-buy" class="up">Alış %50</span><span id="v26-ob-ratio-sell" class="down">%50 Satış</span></div>
