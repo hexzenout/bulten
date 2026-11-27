@@ -59,7 +59,7 @@
         body.dev-mode .center-wrapper { max-width: 100%; padding: 15px; }
 
         .controls-wrapper { margin-bottom: 25px; display: flex; flex-direction: column; gap: 15px; }
-        .filter-panel { display: flex; gap: 15px; align-items: center; background: #161616; padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border); }
+        .filter-panel { display: flex; gap: 15px; align-items: center; background: #161616; padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 680px; }
         .select-supreme { background: #272727; border: 1px solid #3f3f3f; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 0.85em; font-weight: 600; cursor: pointer; min-width: 200px; }
         .league-drop-wrapper { position: relative; min-width: 300px; }
         .league-drop-trigger { background: #272727; border: 1px solid #3f3f3f; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 0.8em; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
@@ -73,7 +73,7 @@
         .btn-mode-supreme { background: #272727; border: 1px solid transparent; color: var(--muted); padding: 10px 25px; border-radius: 8px; font-size: 0.8em; font-weight: 700; cursor: pointer; transition: 0.2s; letter-spacing: 1px; text-transform: uppercase; }
         .btn-mode-supreme.active { background: #fff; color: #000; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
 
-        .league-container-pro { margin-bottom: 15px; border-radius: 10px; overflow: hidden; background: #161616; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .league-container-pro { width: 100%; max-width: 520px; margin-bottom: 15px; border-radius: 10px; overflow: hidden; background: #161616; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .league-header-bar { background: #212121; padding: 12px 20px; font-weight: 800; font-size: 0.75em; color: #fff; display: flex; align-items: center; text-transform: uppercase; border-bottom: 1px solid #2a2a2a; }
         .match-row-pro { display: flex; align-items: center; padding: 12px 20px; font-size: 0.85em; transition: 0.2s; border-bottom: 1px solid #1f1f1f; }
         .match-row-pro:last-child { border-bottom: none; }
