@@ -110,3 +110,12 @@ Kod değişikliği = Codex
 Planlama ve kontrol = ChatGPT Project  
 Ana hafıza = GitHub repo  
 Son onay = kullanıcı
+
+## Yedek Fikstür ve Canlı Yayın Kaynakları (Proje Hafızası)
+
+- Mackolik Futbol Programı: `https://arsiv.mackolik.com/Program/Program.aspx?st=1`
+- Mackolik Basketbol Programı: `https://arsiv.mackolik.com/Program/Program.aspx?st=2`
+- Nesine Tam Bülten (Futbol + Basketbol): `https://cdnbulten.nesine.com/api/bulten/getprebultenfull`
+- İddaa Resmi Bülten: `https://sportsbookv2.iddaa.com/sportsbook/events`
+- ESPN Public Scoreboard (Futbol + Basketbol)
+- YouTube Canlı Yayın Kanalları: `/api/yt-live` (`@b.leagueinternational`, `@BaloncestoSuperiorNacionalPR`, `@BasketballCL`, `@beINSPORTSTürkiye`, `@dpbcolombia`, `fiba`, `@MPBLOfficial`, `@nbl`, `@OneSportsPHL`, `@PLEAGUEofficial`, `@TBF`, `@NBLPilipinas`, `@trtspor`, `@trt1`, `@aspor`, `@htspor`, `@EuroLeague`, `@FIBA3x3`)
