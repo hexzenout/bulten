@@ -15,14 +15,54 @@ function omega_OpenChannelManager() {
             setTimeout(() => { document.getElementById('channel-manager-overlay').style.display = 'none'; }, 300);
         }
 
+        function omega_NormalizeStreamUrl(raw) {
+            let url = String(raw || '').trim();
+            if (!url) return '';
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+            const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/);
+            if (ytMatch && ytMatch[1]) {
+                url = "https://www.youtube.com/embed/" + ytMatch[1] + "?autoplay=1";
+            }
+            return url;
+        }
+
+        (function seedDefaultCanliTribun(){
+            try {
+                if (typeof _CHANNELS_DB === 'undefined' || !Array.isArray(_CHANNELS_DB)) return;
+                if (localStorage.getItem('v19_canlitribun_seeded_v1') !== '1') {
+                    const defaultUrl = 'https://www.canlitribun939.top/';
+                    if (!_CHANNELS_DB.some(ch => String(ch.url || '').includes('canlitribun'))) {
+                        _CHANNELS_DB.unshift({ id: Date.now(), name: 'Canlı Tribün', url: defaultUrl });
+                    }
+                    localStorage.setItem('v19_canlitribun_seeded_v1', '1');
+                }
+                if (localStorage.getItem('v19_official_tv_seeded_v1') !== '1') {
+                    const extras = [
+                        { id: Date.now() + 1, name: 'TRT 1', url: 'https://www.trtizle.com/canli/tv/trt-1' },
+                        { id: Date.now() + 2, name: 'TRT Spor', url: 'https://www.trtizle.com/canli/tv/trt-spor' },
+                        { id: Date.now() + 3, name: 'A Spor (YouTube)', url: 'https://www.youtube.com/@aspor/live' }
+                    ];
+                    extras.forEach(ex => {
+                        if (!_CHANNELS_DB.some(ch => String(ch.name || '').toLowerCase() === ex.name.toLowerCase())) {
+                            _CHANNELS_DB.push(ex);
+                        }
+                    });
+                    localStorage.setItem('v19_official_tv_seeded_v1', '1');
+                }
+                localStorage.setItem('v19_channels', JSON.stringify(_CHANNELS_DB));
+            } catch(_) {}
+        })();
+
         function omega_AddCustomChannel() {
-            const chName = document.getElementById('new-ch-name').value;
-            const chUrl = document.getElementById('new-ch-url').value;
+            const nameEl = document.getElementById('new-ch-name');
+            const urlEl = document.getElementById('new-ch-url');
+            const chName = (nameEl?.value || '').trim();
+            const chUrl = omega_NormalizeStreamUrl(urlEl?.value || '');
             if(!chName || !chUrl) return;
             _CHANNELS_DB.push({ id: Date.now(), name: chName, url: chUrl });
             localStorage.setItem('v19_channels', JSON.stringify(_CHANNELS_DB));
-            document.getElementById('new-ch-name').value = "";
-            document.getElementById('new-ch-url').value = "";
+            if (nameEl) nameEl.value = "";
+            if (urlEl) urlEl.value = "";
             omega_RenderChannelTable();
             omega_UpdateMatrixDropdowns();
         }
@@ -109,8 +149,9 @@ function omega_OpenChannelManager() {
                             <select id="s-sel-${i}" class="matrix-channel-select select-supreme" style="padding:6px; min-width:120px; font-size:11px" onchange="omega_LoadChannelToInput(${i})">
                                 ${optionsHtml}
                             </select>
-                            <input id="s-in-${i}" value="${savedUrl}" style="flex:1; background:#000; border:1px solid #333; color:#fff; padding:8px; border-radius:4px; font-size:11px;" placeholder="Yayın URL...">
+                            <input id="s-in-${i}" value="${savedUrl}" onkeydown="if(event.key==='Enter'){event.preventDefault();omega_LaunchStreamUnit(${i});}" style="flex:1; background:#000; border:1px solid #333; color:#fff; padding:8px; border-radius:4px; font-size:11px;" placeholder="Yayın URL...">
                             <button onclick="omega_LaunchStreamUnit(${i})" style="background:var(--green); border:none; padding:0 12px; border-radius:4px; font-weight:800; cursor:pointer;">İZLE</button>
+                            <button onclick="omega_OpenExternalStream(${i})" title="Yeni Sekmede Aç" style="background:#272727; color:#f8fafc; border:none; padding:0 10px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
                             <button onclick="omega_FullscreenIframe(${i})" style="background:#272727; color:var(--blue-accent); border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-expand"></i></button>
                             <button onclick="omega_TerminateStreamUnit(${i})" style="background:var(--red); color:#fff; border:none; padding:0 12px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
                         </div>
@@ -131,19 +172,46 @@ function omega_OpenChannelManager() {
             }
         }
 
+        function omega_OpenExternalStream(id) {
+            const raw = document.getElementById('s-in-' + id)?.value || _ACTIVE_STREAMS[id - 1] || '';
+            const url = omega_NormalizeStreamUrl(raw);
+            if (url) window.open(url, '_blank', 'noopener');
+        }
+
         function omega_LaunchStreamUnit(id) {
-            let url = document.getElementById('s-in-' + id).value;
+            const inputEl = document.getElementById('s-in-' + id);
+            const url = omega_NormalizeStreamUrl(inputEl ? inputEl.value : '');
             if(url) {
-                const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/);
-                if (ytMatch && ytMatch[1]) {
-                    url = "https://www.youtube.com/embed/" + ytMatch[1] + "?autoplay=1";
-                    document.getElementById('s-in-' + id).value = url;
-                }
-                document.getElementById('s-fr-' + id).src = url;
+                if (inputEl) inputEl.value = url;
+                const fr = document.getElementById('s-fr-' + id);
+                if (fr) fr.src = url;
                 _ACTIVE_STREAMS[id-1] = url;
                 localStorage.setItem('v19_streams', JSON.stringify(_ACTIVE_STREAMS));
             }
         }
+
+        window.omega_PlayMatchStream = function(customUrl, forceExternal) {
+            const fallbackUrl = (typeof _CHANNELS_DB !== 'undefined' && _CHANNELS_DB[0]?.url) || 'https://www.canlitribun939.top/';
+            const targetUrl = omega_NormalizeStreamUrl(customUrl || fallbackUrl);
+            if (!targetUrl) return;
+            if (forceExternal) {
+                window.open(targetUrl, '_blank', 'noopener');
+                return;
+            }
+            if (typeof omega_SwitchMainTab === 'function') {
+                omega_SwitchMainTab('stream', document.getElementById('nav-stream'));
+            } else {
+                location.hash = '#stream';
+            }
+            setTimeout(() => {
+                if (typeof omega_BootStreamV49 === 'function') omega_BootStreamV49(false);
+                const in1 = document.getElementById('s-in-1');
+                if (in1) {
+                    in1.value = targetUrl;
+                    omega_LaunchStreamUnit(1);
+                }
+            }, 60);
+        };
 
         function omega_TerminateStreamUnit(id) {
             document.getElementById('s-sel-' + id).value = "";

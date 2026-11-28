@@ -24,7 +24,7 @@ async function omega_InitializeEngine() {
         }
 
         function omega_IsBasketballLeague(l) {
-            return ["NBA", "EUROLEAGUE", "BSL", "ACB", "LEGA A", "LNB", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA"].some(x => l.toUpperCase().includes(x));
+            return ["NBA", "EUROLEAGUE", "KBSL", "BSL", "ACB", "LEGA A", "LNB", "BBL", "EUROCUP", "BCL", "VTB", "NCAA", "WNBA", "B.LEAGUE", "P.LEAGUE", "MPBL", "PBA", "NBL", "FIBA", "BSN", "DPB", "BASKET"].some(x => l.toUpperCase().includes(x));
         }
 
         function omega_GetFlagCode(l) {
@@ -40,6 +40,12 @@ async function omega_InitializeEngine() {
             if(s.includes("BREZİLYA")) return "br";
             if(s.includes("ARJANTİN")) return "ar";
             if(s.includes("RUSYA")) return "ru";
+            if(s.includes("JAPONYA")) return "jp";
+            if(s.includes("AVUSTRALYA")) return "au";
+            if(s.includes("TAYVAN")) return "tw";
+            if(s.includes("FİLİPİNLER")) return "ph";
+            if(s.includes("PORTO RİKO")) return "pr";
+            if(s.includes("KOLOMBİYA")) return "co";
             if(s.includes("AMERİKA") || s.includes("NBA")) return "us";
             if(s.includes("AVRUPA")) return "eu";
             return "un";
@@ -357,7 +363,9 @@ async function omega_InitializeEngine() {
                     groupedByDay[day].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
                         const mID = omega_GenerateMatchID(m);
                         const isFav = _FAV_MATCHES.includes(mID);
+                        const hasCustomStream = Boolean(omega_GetMatchStream(mID)?.url);
                         const flagCode = omega_GetFlagCode(m.l);
+                        const safeMatchLabel = String(m.m || '').replace(/'/g, "\\'");
                         finalHtmlBuffer += `
                             <div class="league-container-pro" style="margin-bottom:12px; border-radius:8px;">
                                 <div class="league-header-bar" style="padding:10px 20px; font-size:0.7em; background:#1f1f1f; border-bottom:1px solid #2a2a2a; color:var(--muted);">
@@ -370,6 +378,7 @@ async function omega_InitializeEngine() {
                                     <i class="fa-solid fa-star fav-star-box ${isFav?'active':''}" onclick="omega_ToggleFavoriteMatch(event, '${mID}')"></i>
                                     <div class="match-clock-sup" style="width:60px;">${m.tm}</div>
                                     <div class="match-teams-main">${m.m}</div>
+                                    ${omega_RenderMatchStreamActions(mID, m.m, m.l)}
                                 </div>
                             </div>`;
                     });
@@ -400,11 +409,14 @@ async function omega_InitializeEngine() {
                         leagueGroups[ligName].sort((a,b) => a.tm.localeCompare(b.tm)).forEach(m => {
                             const mID = omega_GenerateMatchID(m);
                             const isFav = _FAV_MATCHES.includes(mID);
+                            const hasCustomStream = Boolean(omega_GetMatchStream(mID)?.url);
+                            const safeMatchLabel = String(m.m || '').replace(/'/g, "\\'");
                             finalHtmlBuffer += `
                                 <div class="match-row-pro">
                                     <i class="fa-solid fa-star fav-star-box ${isFav?'active':''}" onclick="omega_ToggleFavoriteMatch(event, '${mID}')"></i>
                                     <div class="match-clock-sup">${m.tm}</div>
                                     <div class="match-teams-main">${m.m}</div>
+                                    ${omega_RenderMatchStreamActions(mID, m.m, m.l)}
                                 </div>`;
                         });
                         finalHtmlBuffer += `</div></div>`;
@@ -424,4 +436,186 @@ async function omega_InitializeEngine() {
             }
             localStorage.setItem('v19_fav_m', JSON.stringify(_FAV_MATCHES));
             omega_ExecuteRadarFilter();
+        }
+
+        function omega_NormalizeTeamTokens(str) {
+            const norm = String(str || '').toLowerCase()
+                .replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s')
+                .replace(/ı/g,'i').replace(/ö/g,'o').replace(/ç/g,'c')
+                .replace(/[^a-z0-9\s]/g, ' ');
+            const stop = new Set(['sk','fc','bc','fk','as','ac','sc','cf','cd','club','spor','basket','basketball','team','vs','canli','live','yayin','maci']);
+            return norm.split(/\s+/).filter(w => w.length >= 4 && !stop.has(w));
+        }
+
+        function omega_MatchLiveYouTube(matchTitle) {
+            const streams = Array.isArray(window.__omegaLiveYtStreams) ? window.__omegaLiveYtStreams : [];
+            if (!streams.length) return null;
+            const tokens = omega_NormalizeTeamTokens(matchTitle);
+            if (!tokens.length) return null;
+            for (const s of streams) {
+                const titleNorm = omega_NormalizeTeamTokens(s.title).join(' ');
+                const hits = tokens.filter(t => titleNorm.includes(t));
+                if (hits.length >= 2 || (tokens.length <= 2 && hits.length >= 1 && hits[0].length >= 5)) {
+                    return s;
+                }
+            }
+            return null;
+        }
+
+        function omega_IsNesineLeague(lig) {
+            const u = String(lig || '').toUpperCase();
+            if (/TÜRKİYE - SÜPER LİG|PREMIER LEAGUE/.test(u)) return false;
+            return /LA LIGA|SERIE A|BUNDESLIGA|LIGUE 1|EREDIVISIE|CHAMPIONSHIP|PORTEKİZ|LIGA PORTUGAL|BELÇİKA|İSKOÇYA|BREZİLYA|ARJANTİN|\bMLS\b|\bNBA\b|EUROLEAGUE|\bNCAA\b|\bACB\b|\bBBL\b|LEGA A|\bLNB\b|\bVTB\b|BASKETBOL SÜPER LİGİ|BSL/.test(u);
+        }
+
+        function omega_RenderMatchStreamActions(mID, matchTitle, leagueName) {
+            const custom = omega_GetMatchStream(mID);
+            const hasCustomStream = Boolean(custom?.url);
+            const safeMatchLabel = String(matchTitle || '').replace(/'/g, "\\'");
+            // Only show YouTube / TRT / A Spor when an actual live stream matching this match is confirmed!
+            const ytMatch = omega_MatchLiveYouTube(matchTitle);
+            const showNesine = omega_IsNesineLeague(leagueName);
+
+            const parts = [];
+            if (ytMatch) {
+                const chName = String(ytMatch.channelName || 'YouTube');
+                const isTrt = /TRT|A SPOR|HT SPOR/i.test(chName);
+                if (isTrt) {
+                    parts.push(`<button type="button" class="btn-match-trt" title="${chName.replace(/"/g,'')} Canlı İzle" onclick="omega_PlayMatchedYt(event, '${ytMatch.embedUrl}')">${chName.slice(0, 10)}</button>`);
+                } else {
+                    parts.push(`<button type="button" class="btn-match-yt live" title="Canlı Yayın: ${chName.replace(/"/g,'')}" onclick="omega_PlayMatchedYt(event, '${ytMatch.embedUrl}')"><i class="fa-brands fa-youtube"></i><span>${chName.slice(0, 8)}</span></button>`);
+                }
+            }
+            if (showNesine) {
+                parts.push(`<button type="button" class="btn-match-nesine" title="Nesine Canlı'da Aç" onclick="omega_OpenNesineMatch(event)"><img src="assets/icons/nesine-logo.jpg" alt="Nesine"></button>`);
+            }
+            if (hasCustomStream || !parts.length) {
+                parts.push(`<button type="button" class="btn-match-watch ${hasCustomStream ? 'has-link' : ''}" title="TV / Canlı Yayın (Sağ tık: link ekle)" oncontextmenu="omega_OpenMatchStreamModal(event, '${mID}', '${safeMatchLabel}');return false;" onclick="omega_WatchMatchStream(event, '${mID}')"><i class="fa-solid fa-tv"></i></button>`);
+            }
+            return `<div class="match-stream-actions">${parts.join('')}</div>`;
+        }
+
+        function omega_PlayMatchedYt(event, embedUrl) {
+            if (event) event.stopPropagation();
+            if (typeof window.omega_PlayMatchStream === 'function') {
+                window.omega_PlayMatchStream(embedUrl, false);
+            }
+        }
+
+        async function omega_FetchYtLiveApi(query = '') {
+            const qParam = query ? `?q=${encodeURIComponent(query)}` : '';
+            const endpoints = [`/api/yt-live${qParam}`, `https://thematrika.vercel.app/api/yt-live${qParam}`];
+            for (const url of endpoints) {
+                try {
+                    const r = await fetch(url, { cache: 'no-store' });
+                    if (!r.ok) continue;
+                    const j = await r.json();
+                    if (j && j.ok && Array.isArray(j.streams)) return j.streams;
+                } catch (_) {}
+            }
+            return [];
+        }
+
+        async function omega_SearchMatchYt(event, matchTitle) {
+            if (event) event.stopPropagation();
+            const btn = event?.currentTarget;
+            if (btn) btn.style.opacity = '0.5';
+            const streams = await omega_FetchYtLiveApi(matchTitle);
+            if (btn) btn.style.opacity = '1';
+            if (streams.length && typeof window.omega_PlayMatchStream === 'function') {
+                window.omega_PlayMatchStream(streams[0].embedUrl, false);
+            } else {
+                const q = encodeURIComponent(String(matchTitle || '') + ' canlı');
+                window.open(`https://www.youtube.com/results?search_query=${q}&sp=EgJAAQ%253D%253D`, '_blank', 'noopener');
+            }
+        }
+
+        function omega_OpenNesineMatch(event) {
+            if (event) event.stopPropagation();
+            window.open('https://www.nesine.com/iddaa/canli-bahis', '_blank', 'noopener');
+        }
+
+        (function initYtLiveScanner(){
+            const refresh = async () => {
+                const streams = await omega_FetchYtLiveApi('');
+                if (streams.length) {
+                    window.__omegaLiveYtStreams = streams;
+                    if (typeof omega_ExecuteRadarFilter === 'function') omega_ExecuteRadarFilter();
+                }
+            };
+            setTimeout(refresh, 1500);
+            setInterval(refresh, 120000);
+        })();
+
+        function omega_GetMatchStreamMap() {
+            try { return JSON.parse(localStorage.getItem('v19_match_streams') || '{}') || {}; } catch(_) { return {}; }
+        }
+        function omega_GetMatchStream(matchID) {
+            return omega_GetMatchStreamMap()[matchID] || null;
+        }
+        function omega_WatchMatchStream(event, matchID) {
+            if (event) event.stopPropagation();
+            const saved = omega_GetMatchStream(matchID);
+            if (saved?.url && typeof window.omega_PlayMatchStream === 'function') {
+                window.omega_PlayMatchStream(saved.url, Boolean(saved.external));
+                return;
+            }
+            const fallbackUrl = (typeof _CHANNELS_DB !== 'undefined' && _CHANNELS_DB[0]?.url) || 'https://www.canlitribun939.top/';
+            window.open(fallbackUrl, '_blank', 'noopener');
+        }
+        function omega_OpenMatchStreamModal(event, matchID, matchTitle) {
+            if (event) event.stopPropagation();
+            let modal = document.getElementById('omega-match-stream-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'omega-match-stream-modal';
+                modal.className = 'match-stream-modal-bg';
+                modal.innerHTML = `
+                    <div class="match-stream-modal-card">
+                        <div class="match-stream-modal-head">
+                            <b id="ms-modal-title">Maç Yayın Linki</b>
+                            <button type="button" id="ms-modal-close">×</button>
+                        </div>
+                        <input type="text" id="ms-modal-url" class="select-supreme" style="width:100%;min-width:0;" placeholder="https://www.canlitribun939.top/...">
+                        <label class="ms-modal-chk"><input type="checkbox" id="ms-modal-ext"> <span>Site içinde açılmazsa doğrudan yeni sekmede aç</span></label>
+                        <div class="match-stream-modal-foot">
+                            <button type="button" id="ms-modal-clear" class="ms-btn-sec">Temizle</button>
+                            <button type="button" id="ms-modal-save" class="ms-btn-pri">Kaydet ve İzle</button>
+                        </div>
+                    </div>`;
+                document.body.appendChild(modal);
+                modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+                document.getElementById('ms-modal-close').onclick = () => { modal.style.display = 'none'; };
+            }
+            const cur = omega_GetMatchStream(matchID);
+            document.getElementById('ms-modal-title').textContent = matchTitle || 'Maç Yayın Linki';
+            const urlInp = document.getElementById('ms-modal-url');
+            const extChk = document.getElementById('ms-modal-ext');
+            urlInp.value = cur?.url || '';
+            extChk.checked = Boolean(cur?.external);
+            modal.style.display = 'flex';
+            setTimeout(() => urlInp.focus(), 30);
+
+            document.getElementById('ms-modal-save').onclick = () => {
+                const map = omega_GetMatchStreamMap();
+                const raw = urlInp.value.trim();
+                if (raw) {
+                    map[matchID] = { url: raw, external: extChk.checked };
+                } else {
+                    delete map[matchID];
+                }
+                localStorage.setItem('v19_match_streams', JSON.stringify(map));
+                modal.style.display = 'none';
+                omega_ExecuteRadarFilter();
+                if (raw && typeof window.omega_PlayMatchStream === 'function') {
+                    window.omega_PlayMatchStream(raw, extChk.checked);
+                }
+            };
+            document.getElementById('ms-modal-clear').onclick = () => {
+                const map = omega_GetMatchStreamMap();
+                delete map[matchID];
+                localStorage.setItem('v19_match_streams', JSON.stringify(map));
+                modal.style.display = 'none';
+                omega_ExecuteRadarFilter();
+            };
         }

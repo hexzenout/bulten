@@ -4,6 +4,177 @@
     "veriler": [
         {
             "t": "basketbol",
+            "l": "AMERİKA - WNBA",
+            "f": "us",
+            "m": "Golden State Valkyries - Atlanta Dream",
+            "dt": "2026-11-01",
+            "tm": "03:00",
+            "vip": 90
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Kairat Almaty - Mjällby AIF",
+            "dt": "2026-11-26",
+            "tm": "18:30",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Ajax Amsterdam - FC Thun",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Brighton & Hove Albion - Universitatea Craiova",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Egnatia - Lincoln Red Imps",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Heart of Midlothian - AS Monaco",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Iberia 1999 - Getafe",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Jablonec - FC Lugano",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Kauno Zalgiris - Riga FC",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Pafos - FC Midtjylland",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "SK Brann - AGF",
+            "dt": "2026-11-26",
+            "tm": "20:45",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Borac Banja Luka - Atalanta",
+            "dt": "2026-11-26",
+            "tm": "23:00",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Braga - KuPS Kuopio",
+            "dt": "2026-11-26",
+            "tm": "23:00",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "CSKA Sofia - Trabzonspor",
+            "dt": "2026-11-26",
+            "tm": "23:00",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "FC Nordsjælland - Panathinaikos",
+            "dt": "2026-11-26",
+            "tm": "23:00",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Hajduk Split - Sint-Truidense",
+            "dt": "2026-11-26",
+            "tm": "23:00",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "Inter D'Escaldes - F.C. København",
+            "dt": "2026-11-26",
+            "tm": "23:00",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "KAA Gent - Red Star Belgrade",
+            "dt": "2026-11-26",
+            "tm": "23:00",
+            "vip": 92
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CONFERENCE LEAGUE",
+            "f": "eu",
+            "m": "SC Freiburg - FC Twente",
+            "dt": "2026-11-26",
+            "tm": "23:00",
+            "vip": 92
+        },
+        {
+            "t": "basketbol",
             "l": "AMERİKA - NCAA",
             "f": "us",
             "m": "Gonzaga Bulldogs - Creighton Bluejays",
@@ -19,6 +190,42 @@
             "dt": "2026-11-28",
             "tm": "07:51",
             "vip": 80
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - 1. LİG",
+            "f": "tr",
+            "m": "Sivasspor - Bodrum FK",
+            "dt": "2026-11-28",
+            "tm": "13:30",
+            "vip": 85
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - 1. LİG",
+            "f": "tr",
+            "m": "Bandırmaspor - Batman Petrolspor",
+            "dt": "2026-11-28",
+            "tm": "13:30",
+            "vip": 85
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Avs Futebol Sad - Leixoes SC",
+            "dt": "2026-11-28",
+            "tm": "14:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Ferro Carril (K) - Social Atletico (K)",
+            "dt": "2026-11-28",
+            "tm": "15:00",
+            "vip": 66
         },
         {
             "t": "futbol",
@@ -58,6 +265,15 @@
         },
         {
             "t": "futbol",
+            "l": "TÜRKİYE - SÜPER LİG",
+            "f": "tr",
+            "m": "Samsunspor - Gençlerbirliği",
+            "dt": "2026-11-28",
+            "tm": "16:00",
+            "vip": 100
+        },
+        {
+            "t": "futbol",
             "l": "İSPANYA - LA LIGA",
             "f": "es",
             "m": "Real Betis - Rayo Vallecano",
@@ -67,12 +283,39 @@
         },
         {
             "t": "futbol",
+            "l": "AVRUPA - CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "Young Africans SC - MC Alger",
+            "dt": "2026-11-28",
+            "tm": "16:00",
+            "vip": 94
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - 1. LİG",
+            "f": "tr",
+            "m": "Vanspor FK - Bursaspor",
+            "dt": "2026-11-28",
+            "tm": "16:00",
+            "vip": 85
+        },
+        {
+            "t": "futbol",
             "l": "İTALYA - SERIE A",
             "f": "it",
             "m": "Frosinone - Parma",
             "dt": "2026-11-28",
             "tm": "17:00",
             "vip": 96
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Chaves - CD Tondela",
+            "dt": "2026-11-28",
+            "tm": "17:00",
+            "vip": 68
         },
         {
             "t": "futbol",
@@ -106,6 +349,42 @@
             "l": "ALMANYA - BUNDESLIGA",
             "f": "de",
             "m": "FSV Mainz 05 - Union Berlin",
+            "dt": "2026-11-28",
+            "tm": "17:30",
+            "vip": 97
+        },
+        {
+            "t": "futbol",
+            "l": "ALMANYA - BUNDESLIGA",
+            "f": "de",
+            "m": "Paderborn - Schalke 04",
+            "dt": "2026-11-28",
+            "tm": "17:30",
+            "vip": 97
+        },
+        {
+            "t": "futbol",
+            "l": "ALMANYA - BUNDESLIGA",
+            "f": "de",
+            "m": "Hamburg - Bayern Münih",
+            "dt": "2026-11-28",
+            "tm": "17:30",
+            "vip": 97
+        },
+        {
+            "t": "futbol",
+            "l": "ALMANYA - BUNDESLIGA",
+            "f": "de",
+            "m": "Mainz - Union Berlin",
+            "dt": "2026-11-28",
+            "tm": "17:30",
+            "vip": 97
+        },
+        {
+            "t": "futbol",
+            "l": "ALMANYA - BUNDESLIGA",
+            "f": "de",
+            "m": "Köln - Elversberg",
             "dt": "2026-11-28",
             "tm": "17:30",
             "vip": 97
@@ -193,6 +472,15 @@
         },
         {
             "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Varzim - CD Trofense",
+            "dt": "2026-11-28",
+            "tm": "18:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
             "l": "İSPANYA - LA LIGA",
             "f": "es",
             "m": "Málaga - Athletic Bilbao",
@@ -205,6 +493,15 @@
             "l": "HOLLANDA - EREDIVISIE",
             "f": "nl",
             "m": "Excelsior - SC Telstar",
+            "dt": "2026-11-28",
+            "tm": "18:30",
+            "vip": 69
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "Excelsior - Telstar",
             "dt": "2026-11-28",
             "tm": "18:30",
             "vip": 69
@@ -229,12 +526,84 @@
         },
         {
             "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Moreirense - Santa Clara",
+            "dt": "2026-11-28",
+            "tm": "18:30",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "FC Arouca - Rio Ave",
+            "dt": "2026-11-28",
+            "tm": "18:30",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Sporting Farense - Uniao Leiria",
+            "dt": "2026-11-28",
+            "tm": "18:30",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
             "l": "TÜRKİYE - SÜPER LİG",
             "f": "tr",
             "m": "Gazişehir Gaziantep - Amed SK",
             "dt": "2026-11-28",
             "tm": "19:00",
             "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - SÜPER LİG",
+            "f": "tr",
+            "m": "Gaziantep FK - Amed Sportif Faaliyetler",
+            "dt": "2026-11-28",
+            "tm": "19:00",
+            "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "Pyramids FC - Mas Maghrib A Fes",
+            "dt": "2026-11-28",
+            "tm": "19:00",
+            "vip": 94
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "Zamalek - Club Africain",
+            "dt": "2026-11-28",
+            "tm": "19:00",
+            "vip": 94
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "Esperance Tunis - Wiliete SC",
+            "dt": "2026-11-28",
+            "tm": "19:00",
+            "vip": 94
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - 1. LİG",
+            "f": "tr",
+            "m": "Muğlaspor Kulübü - Mardin 1969 Spor",
+            "dt": "2026-11-28",
+            "tm": "19:00",
+            "vip": 85
         },
         {
             "t": "futbol",
@@ -310,6 +679,15 @@
         },
         {
             "t": "futbol",
+            "l": "ALMANYA - BUNDESLIGA",
+            "f": "de",
+            "m": "Stuttgart - Eintracht Frankfurt",
+            "dt": "2026-11-28",
+            "tm": "20:30",
+            "vip": 97
+        },
+        {
+            "t": "futbol",
             "l": "AMERİKA - MLS",
             "f": "us",
             "m": "Charlotte FC - Chicago Fire",
@@ -376,6 +754,69 @@
             "l": "AMERİKA - NCAA",
             "f": "us",
             "m": "Northern Iowa Panthers - Robert Morris Colonials",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 80
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "PSV - Go Ahead Eagles",
+            "dt": "2026-11-28",
+            "tm": "20:45",
+            "vip": 69
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Vermont Catamounts - Colgate Raiders",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Georgia Tech Yellow Jackets - Alcorn State Braves",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Gardner-Webb Runnin' Bulldogs - NC Central Eagles",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Purdue Fort Wayne Mastodons - Wofford Terriers",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Northern Iowa Panthers - Robert Morris Colonials",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Radford Highlanders - Hampton Pirates",
             "dt": "2026-11-28",
             "tm": "21:00",
             "vip": 80
@@ -535,6 +976,249 @@
         },
         {
             "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Lusitania - FC Vizela",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Sporting Lisbon B - Amarante FC",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "A. de Viseu  - Alverca FC",
+            "dt": "2026-11-28",
+            "tm": "21:00",
+            "vip": 68
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Pepperdine Waves - Lehigh Mountain Hawks",
+            "dt": "2026-11-28",
+            "tm": "21:30",
+            "vip": 80
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "RSB Berkane - Colombe FC",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 94
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Virginia St - Elizabeth City Vikings",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "West Alabama - Jaguars",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Seton Hill Griffins - Glenville State Pioneers",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "High Point Panthers - Citadel Bulldogs",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Morgan State Bears - Manhattan Jaspers",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Iowa Hawkeyes - Prairie View A&M Panthers",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Navy Midshipmen - Central Connecticut State Blue Devils",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "North Carolina A&T Aggies - Delaware State Hornets",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Presbyterian Blue Hose - Sacramento State Hornets",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Niagara Purple Eagles - Le Moyne Dolphins",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Chattanooga Mocs - Troy Trojans",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "George Mason Patriots - Marist Red Foxes",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Harvard Crimson - Fordham Rams",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Sout Indi Sc - Ball State Cardinals",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "North Carolina Asheville Bulldogs - Georgia Southern Eagles",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Bradley Braves - Chicago State Cougars",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Marshall Thundering Herd - Texas AM Commerce Lions",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Mississippi Choctaws - Lynn Fightin",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "LEE University Flames - Uscb Sand Sharks",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Findlay Oile - Edinboro Fighting Scots",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Columbia Lions - North Florida Ospreys",
+            "dt": "2026-11-28",
+            "tm": "22:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Rogers State Hillcats - Texas AM International Dustdevils",
+            "dt": "2026-11-28",
+            "tm": "22:15",
+            "vip": 80
+        },
+        {
+            "t": "futbol",
             "l": "AMERİKA - MLS",
             "f": "us",
             "m": "Houston Dynamo - San Jose Earthquakes",
@@ -583,6 +1267,15 @@
             "l": "FRANSA - LIGUE 1",
             "f": "fr",
             "m": "Nice - Troyes",
+            "dt": "2026-11-28",
+            "tm": "22:45",
+            "vip": 95
+        },
+        {
+            "t": "futbol",
+            "l": "FRANSA - LIGUE 1",
+            "f": "fr",
+            "m": "Le Mans - Lille",
             "dt": "2026-11-28",
             "tm": "22:45",
             "vip": 95
@@ -796,6 +1489,96 @@
         },
         {
             "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Vitoria Guimaraes - CF Estrela",
+            "dt": "2026-11-28",
+            "tm": "23:30",
+            "vip": 68
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Utah Valley State Wolverines - San Jose State Spartans",
+            "dt": "2026-11-29",
+            "tm": "00:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Furman Paladins - Austin Peay State Governors",
+            "dt": "2026-11-29",
+            "tm": "00:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Eastern Kentucky Colonels - Tennessee Tech Golden Eagles",
+            "dt": "2026-11-29",
+            "tm": "00:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Louisiana Lafayette Ragin Cajuns - McNeese State",
+            "dt": "2026-11-29",
+            "tm": "00:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Stony Brook Seawolves - Delaware Fightin` Blue Hens",
+            "dt": "2026-11-29",
+            "tm": "00:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "American University Eagles - UMass Lowell River Hawks",
+            "dt": "2026-11-29",
+            "tm": "00:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Mount St. Mary&apos;s Mountaineers - Drexel Dragons",
+            "dt": "2026-11-29",
+            "tm": "00:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "San Diego Toreros - Northern Colorado Bears",
+            "dt": "2026-11-29",
+            "tm": "00:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Lafayette College Leopards - Maine Black Bears",
+            "dt": "2026-11-29",
+            "tm": "00:30",
+            "vip": 80
+        },
+        {
+            "t": "futbol",
             "l": "AMERİKA - MLS",
             "f": "us",
             "m": "Philadelphia Union - New England Revolution",
@@ -892,6 +1675,24 @@
             "dt": "2026-11-29",
             "tm": "02:10",
             "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Velez Sarsfield - Independiente",
+            "dt": "2026-11-29",
+            "tm": "02:00",
+            "vip": 66
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Deportivo Madryn - Gimnasia Y Esgrima Jujuy",
+            "dt": "2026-11-29",
+            "tm": "02:00",
+            "vip": 66
         },
         {
             "t": "futbol",
@@ -994,6 +1795,60 @@
         },
         {
             "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Botafogo RJ - Bahia BA",
+            "dt": "2026-11-29",
+            "tm": "03:00",
+            "vip": 67
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Duquesne Dukes - South Carolina State Bulldogs",
+            "dt": "2026-11-29",
+            "tm": "03:30",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NBA",
+            "f": "us",
+            "m": "Milwaukee - Oklahoma",
+            "dt": "2026-11-29",
+            "tm": "04:00",
+            "vip": 100
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NBA",
+            "f": "us",
+            "m": "Chicago - Indiana",
+            "dt": "2026-11-29",
+            "tm": "04:00",
+            "vip": 100
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Minnesota Golden Gophers - California Golden Bears",
+            "dt": "2026-11-29",
+            "tm": "04:00",
+            "vip": 80
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NCAA",
+            "f": "us",
+            "m": "Notre Dame Fighting Irish - Stonehill Skyhawks",
+            "dt": "2026-11-29",
+            "tm": "04:00",
+            "vip": 80
+        },
+        {
+            "t": "futbol",
             "l": "ARJANTİN - ARGENTINA PRIMERA",
             "f": "ar",
             "m": "Instituto de Córdoba - River Plate",
@@ -1017,6 +1872,24 @@
             "m": "Milwaukee Bucks - Oklahoma City Thunder",
             "dt": "2026-11-29",
             "tm": "04:10",
+            "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Instituto AC Cordoba - River Plate",
+            "dt": "2026-11-29",
+            "tm": "04:00",
+            "vip": 66
+        },
+        {
+            "t": "basketbol",
+            "l": "AMERİKA - NBA",
+            "f": "us",
+            "m": "Houston - Philadelphia",
+            "dt": "2026-11-29",
+            "tm": "04:30",
             "vip": 100
         },
         {
@@ -1056,6 +1929,96 @@
             "vip": 65
         },
         {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Tokushima Gambarous - N. Albirex",
+            "dt": "2026-11-29",
+            "tm": "07:05",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Fukushima - Yamagata Wyverns",
+            "dt": "2026-11-29",
+            "tm": "07:35",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Tokyo Hac - Erth Tokyo Z",
+            "dt": "2026-11-29",
+            "tm": "08:05",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Tachikawa Dice - Kagoshima Rebnise",
+            "dt": "2026-11-29",
+            "tm": "08:05",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Veltex Shizuoka - Fukui Blowwinds",
+            "dt": "2026-11-29",
+            "tm": "08:05",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Kumamoto Vor - Ehime O.V.",
+            "dt": "2026-11-29",
+            "tm": "08:05",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Kagawa F.A. - Bambitious",
+            "dt": "2026-11-29",
+            "tm": "08:05",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Iwate Big Bulls - Aomori Watts",
+            "dt": "2026-11-29",
+            "tm": "08:05",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Saitama Broncos - Tokyo United",
+            "dt": "2026-11-29",
+            "tm": "09:05",
+            "vip": 71
+        },
+        {
+            "t": "basketbol",
+            "l": "JAPONYA - B.LEAGUE",
+            "f": "jp",
+            "m": "Tryhoop Okayama - Fighting Eag",
+            "dt": "2026-11-29",
+            "tm": "11:35",
+            "vip": 71
+        },
+        {
             "t": "futbol",
             "l": "TÜRKİYE - SÜPER LİG",
             "f": "tr",
@@ -1066,9 +2029,45 @@
         },
         {
             "t": "futbol",
+            "l": "TÜRKİYE - 1. LİG",
+            "f": "tr",
+            "m": "Pendikspor - Iğdır FK",
+            "dt": "2026-11-29",
+            "tm": "13:30",
+            "vip": 85
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Penafiel - Benfica B",
+            "dt": "2026-11-29",
+            "tm": "14:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Louletano - Oliveirense",
+            "dt": "2026-11-29",
+            "tm": "14:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
             "l": "HOLLANDA - EREDIVISIE",
             "f": "nl",
             "m": "ADO Den Haag - FC Utrecht",
+            "dt": "2026-11-29",
+            "tm": "14:15",
+            "vip": 69
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "ADO Den Haag - Utrecht",
             "dt": "2026-11-29",
             "tm": "14:15",
             "vip": 69
@@ -1111,12 +2110,48 @@
         },
         {
             "t": "futbol",
+            "l": "TÜRKİYE - SÜPER LİG",
+            "f": "tr",
+            "m": "Eyüpspor - Başakşehir",
+            "dt": "2026-11-29",
+            "tm": "16:00",
+            "vip": 100
+        },
+        {
+            "t": "futbol",
             "l": "İSPANYA - LA LIGA",
             "f": "es",
             "m": "Valencia - CA Osasuna",
             "dt": "2026-11-29",
             "tm": "16:00",
             "vip": 98
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "Simba SC - Orlando Pirates",
+            "dt": "2026-11-29",
+            "tm": "16:00",
+            "vip": 94
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - 1. LİG",
+            "f": "tr",
+            "m": "Antalyaspor - Fatih Karagümrük",
+            "dt": "2026-11-29",
+            "tm": "16:00",
+            "vip": 85
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - 1. LİG",
+            "f": "tr",
+            "m": "Boluspor - Esenler Erokspor",
+            "dt": "2026-11-29",
+            "tm": "16:00",
+            "vip": 85
         },
         {
             "t": "futbol",
@@ -1153,6 +2188,24 @@
             "dt": "2026-11-29",
             "tm": "17:00",
             "vip": 95
+        },
+        {
+            "t": "futbol",
+            "l": "FRANSA - LIGUE 1",
+            "f": "fr",
+            "m": "AJ Auxerre - Marsilya",
+            "dt": "2026-11-29",
+            "tm": "17:00",
+            "vip": 95
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "FC Felgueiras 1932 - Porto B",
+            "dt": "2026-11-29",
+            "tm": "17:00",
+            "vip": 68
         },
         {
             "t": "futbol",
@@ -1201,12 +2254,93 @@
         },
         {
             "t": "futbol",
+            "l": "ALMANYA - BUNDESLIGA",
+            "f": "de",
+            "m": "Freiburg - Leipzig",
+            "dt": "2026-11-29",
+            "tm": "17:30",
+            "vip": 97
+        },
+        {
+            "t": "basketbol",
+            "l": "TÜRKİYE - KBSL",
+            "f": "tr",
+            "m": "Darıca Basketbol Feneri (K) - Kırklareli Belediyesi (K)",
+            "dt": "2026-11-29",
+            "tm": "18:00",
+            "vip": 78
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Vitoria Sernache - CD Mafra",
+            "dt": "2026-11-29",
+            "tm": "18:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "SAO Joao Ver - Leca FC",
+            "dt": "2026-11-29",
+            "tm": "18:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "SC Caldas - CF Os Belenenses",
+            "dt": "2026-11-29",
+            "tm": "18:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Atletico CP - Lusitano GC",
+            "dt": "2026-11-29",
+            "tm": "18:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "SC Vianense - AD Fafe",
+            "dt": "2026-11-29",
+            "tm": "18:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Vitoria Guimaraes B - Uniao SC Paredes",
+            "dt": "2026-11-29",
+            "tm": "18:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
             "l": "İSPANYA - LA LIGA",
             "f": "es",
             "m": "Deportivo La Coruña - Barcelona",
             "dt": "2026-11-29",
             "tm": "18:15",
             "vip": 98
+        },
+        {
+            "t": "basketbol",
+            "l": "AVRUPA - FIBA",
+            "f": "eu",
+            "m": "Gürcistan - Portekiz",
+            "dt": "2026-11-29",
+            "tm": "18:30",
+            "vip": 82
         },
         {
             "t": "futbol",
@@ -1219,12 +2353,75 @@
         },
         {
             "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "Zwolle - AZ Alkmaar",
+            "dt": "2026-11-29",
+            "tm": "18:45",
+            "vip": 69
+        },
+        {
+            "t": "futbol",
             "l": "TÜRKİYE - SÜPER LİG",
             "f": "tr",
             "m": "Fenerbahce - Erzurum BB",
             "dt": "2026-11-29",
             "tm": "19:00",
             "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - SÜPER LİG",
+            "f": "tr",
+            "m": "Süper Lig - 13. Hafta Özel Bahisler",
+            "dt": "2026-11-29",
+            "tm": "19:00",
+            "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - SÜPER LİG",
+            "f": "tr",
+            "m": "Fenerbahçe - Erzurumspor FK",
+            "dt": "2026-11-29",
+            "tm": "19:00",
+            "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "Petro Atletico - FC Nouadhibou",
+            "dt": "2026-11-29",
+            "tm": "19:00",
+            "vip": 94
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - 1. LİG",
+            "f": "tr",
+            "m": "Ankara Keçiörengücü - Kayserispor",
+            "dt": "2026-11-29",
+            "tm": "19:00",
+            "vip": 85
+        },
+        {
+            "t": "basketbol",
+            "l": "AVRUPA - FIBA",
+            "f": "eu",
+            "m": "Türkiye - İzlanda",
+            "dt": "2026-11-29",
+            "tm": "19:00",
+            "vip": 82
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "UD Santarem - SC Covilha",
+            "dt": "2026-11-29",
+            "tm": "19:00",
+            "vip": 68
         },
         {
             "t": "futbol",
@@ -1255,12 +2452,30 @@
         },
         {
             "t": "futbol",
+            "l": "ALMANYA - BUNDESLIGA",
+            "f": "de",
+            "m": "Hoffenheim - Augsburg",
+            "dt": "2026-11-29",
+            "tm": "19:30",
+            "vip": 97
+        },
+        {
+            "t": "futbol",
             "l": "İTALYA - SERIE A",
             "f": "it",
             "m": "AS Roma - Monza",
             "dt": "2026-11-29",
             "tm": "20:00",
             "vip": 96
+        },
+        {
+            "t": "basketbol",
+            "l": "AVRUPA - FIBA",
+            "f": "eu",
+            "m": "İspanya - Yunanistan",
+            "dt": "2026-11-29",
+            "tm": "20:00",
+            "vip": 82
         },
         {
             "t": "futbol",
@@ -1282,6 +2497,15 @@
         },
         {
             "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Gil Vicente - Estoril Praia",
+            "dt": "2026-11-29",
+            "tm": "21:00",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
             "l": "ALMANYA - BUNDESLIGA",
             "f": "de",
             "m": "Borussia Dortmund - Bayer Leverkusen",
@@ -1291,9 +2515,36 @@
         },
         {
             "t": "futbol",
+            "l": "ALMANYA - BUNDESLIGA",
+            "f": "de",
+            "m": "B. Dortmund - B. Leverkusen",
+            "dt": "2026-11-29",
+            "tm": "21:30",
+            "vip": 97
+        },
+        {
+            "t": "futbol",
+            "l": "AVRUPA - CHAMPIONS LEAGUE",
+            "f": "eu",
+            "m": "AL Hilal (OM) - Horoya AC",
+            "dt": "2026-11-29",
+            "tm": "22:00",
+            "vip": 94
+        },
+        {
+            "t": "futbol",
             "l": "HOLLANDA - EREDIVISIE",
             "f": "nl",
             "m": "NEC Nijmegen - FC Twente Enschede",
+            "dt": "2026-11-29",
+            "tm": "22:00",
+            "vip": 69
+        },
+        {
+            "t": "futbol",
+            "l": "HOLLANDA - EREDIVISIE",
+            "f": "nl",
+            "m": "NEC Nijmegen - Twente",
             "dt": "2026-11-29",
             "tm": "22:00",
             "vip": 69
@@ -1318,6 +2569,15 @@
         },
         {
             "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Vitoria BA - Santos SP",
+            "dt": "2026-11-29",
+            "tm": "22:00",
+            "vip": 67
+        },
+        {
+            "t": "futbol",
             "l": "İTALYA - SERIE A",
             "f": "it",
             "m": "Como - Juventus",
@@ -1330,6 +2590,15 @@
             "l": "FRANSA - LIGUE 1",
             "f": "fr",
             "m": "Lyon - AS Monaco",
+            "dt": "2026-11-29",
+            "tm": "22:45",
+            "vip": 95
+        },
+        {
+            "t": "futbol",
+            "l": "FRANSA - LIGUE 1",
+            "f": "fr",
+            "m": "Lyon - Monaco",
             "dt": "2026-11-29",
             "tm": "22:45",
             "vip": 95
@@ -1354,9 +2623,45 @@
         },
         {
             "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Rosario C - Barracas",
+            "dt": "2026-11-29",
+            "tm": "23:00",
+            "vip": 66
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Atletico Camioneros - Talleres de",
+            "dt": "2026-11-29",
+            "tm": "23:00",
+            "vip": 66
+        },
+        {
+            "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Dep. Armenio - Arsenal Sarandi",
+            "dt": "2026-11-29",
+            "tm": "23:00",
+            "vip": 66
+        },
+        {
+            "t": "futbol",
             "l": "PORTEKİZ - PRIMEIRA LIGA",
             "f": "pt",
             "m": "FC Porto - Sporting Lisbon",
+            "dt": "2026-11-29",
+            "tm": "23:30",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Porto - Sporting Lizbon",
             "dt": "2026-11-29",
             "tm": "23:30",
             "vip": 68
@@ -1392,6 +2697,33 @@
             "t": "futbol",
             "l": "BREZİLYA - BRAZIL SERIE A",
             "f": "br",
+            "m": "Mirassol FC SP - Paranaense",
+            "dt": "2026-11-30",
+            "tm": "00:30",
+            "vip": 67
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Corinthians - Gremio Porto",
+            "dt": "2026-11-30",
+            "tm": "00:30",
+            "vip": 67
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
+            "m": "Internacional - Bragantino SP",
+            "dt": "2026-11-30",
+            "tm": "00:30",
+            "vip": 67
+        },
+        {
+            "t": "futbol",
+            "l": "BREZİLYA - BRAZIL SERIE A",
+            "f": "br",
             "m": "Atletico Mineiro - Vasco da Gama",
             "dt": "2026-11-30",
             "tm": "01:30",
@@ -1408,9 +2740,36 @@
         },
         {
             "t": "futbol",
+            "l": "ARJANTİN - ARGENTINA PRIMERA",
+            "f": "ar",
+            "m": "Boca Juniors - Gimnasia",
+            "dt": "2026-11-30",
+            "tm": "02:30",
+            "vip": 66
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Benfica U23 - FC Famalicao U23",
+            "dt": "2026-11-30",
+            "tm": "18:30",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
             "l": "TÜRKİYE - SÜPER LİG",
             "f": "tr",
             "m": "Goztepe - Trabzonspor",
+            "dt": "2026-11-30",
+            "tm": "19:00",
+            "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - SÜPER LİG",
+            "f": "tr",
+            "m": "Göztepe - Trabzonspor",
             "dt": "2026-11-30",
             "tm": "19:00",
             "vip": 100
@@ -1426,12 +2785,39 @@
         },
         {
             "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Sporting U23 - Portimonense U23",
+            "dt": "2026-11-30",
+            "tm": "20:30",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
             "l": "TÜRKİYE - SÜPER LİG",
             "f": "tr",
             "m": "Besiktas JK - Galatasaray",
             "dt": "2026-11-30",
             "tm": "21:00",
             "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "TÜRKİYE - SÜPER LİG",
+            "f": "tr",
+            "m": "Beşiktaş - Galatasaray",
+            "dt": "2026-11-30",
+            "tm": "21:00",
+            "vip": 100
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Academica - Torreense",
+            "dt": "2026-11-30",
+            "tm": "21:00",
+            "vip": 68
         },
         {
             "t": "futbol",
@@ -1471,12 +2857,39 @@
         },
         {
             "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Casa Pia AC - Braga",
+            "dt": "2026-11-30",
+            "tm": "23:15",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
+            "l": "PORTEKİZ - PRIMEIRA LIGA",
+            "f": "pt",
+            "m": "Benfica - Famalicao",
+            "dt": "2026-11-30",
+            "tm": "23:15",
+            "vip": 68
+        },
+        {
+            "t": "futbol",
             "l": "İNGİLTERE - PREMIER LEAGUE",
             "f": "gb-eng",
             "m": "Coventry City - Ipswich Town",
             "dt": "2026-12-01",
             "tm": "23:00",
             "vip": 99
+        },
+        {
+            "t": "basketbol",
+            "l": "AVUSTRALYA - NBL",
+            "f": "au",
+            "m": "Adelaide 36ers - South East Melbourne Phoenix",
+            "dt": "2026-12-02",
+            "tm": "11:30",
+            "vip": 76
         },
         {
             "t": "futbol",
@@ -2496,7 +3909,7 @@
         "FRANSA - LIGUE 1": 17,
         "AVRUPA - CHAMPIONS LEAGUE": 18,
         "AVRUPA - EUROPA LEAGUE": 18,
-        "AVRUPA - CONFERENCE LEAGUE": 0,
+        "AVRUPA - CONFERENCE LEAGUE": 18,
         "İNGİLTERE - CHAMPIONSHIP": 12,
         "HOLLANDA - EREDIVISIE": 17,
         "PORTEKİZ - PRIMEIRA LIGA": 9,
@@ -2508,13 +3921,20 @@
         "AMERİKA - WNBA": 0,
         "AMERİKA - NCAA": 64,
         "TÜRKİYE - BSL": 0,
+        "TÜRKİYE - KBSL": 1,
         "İSPANYA - LIGA ACB": 0,
         "İTALYA - LEGA A": 0,
         "FRANSA - LNB PRO A": 0,
         "ALMANYA - BBL": 0,
         "AVRUPA - EUROCUP": 0,
         "AVRUPA - BCL": 0,
-        "RUSYA - VTB": 0
+        "RUSYA - VTB": 0,
+        "AVRUPA - FIBA": 3,
+        "AVUSTRALYA - NBL": 1,
+        "JAPONYA - B.LEAGUE": 10,
+        "TAYVAN - P.LEAGUE+": 0,
+        "FİLİPİNLER - PBA": 0,
+        "FİLİPİNLER - MPBL": 0
     },
     "logs": [
         "[2026-11-28 08:38:09] OK soccer_turkey_super_league | key#3 | remaining=382 used=118",

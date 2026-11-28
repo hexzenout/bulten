@@ -18,18 +18,23 @@ let _MASTER_DB = [];
 
         const HIERARCHY_SCORES = {
             "TÜRKİYE - SÜPER LİG": 4000, "İNGİLTERE - PREMIER LEAGUE": 3900, "İSPANYA - LA LIGA": 3800,
-            "ALMANYA - BUNDESLIGA": 3700, "İITALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
+            "ALMANYA - BUNDESLIGA": 3700, "İTALYA - SERIE A": 3600, "İITALYA - SERIE A": 3600, "FRANSA - LIGUE 1": 3500,
             "AVRUPA - CHAMPIONS LEAGUE": 3400, "AVRUPA - EUROPA LEAGUE": 3300, "AVRUPA - CONFERENCE LEAGUE": 3200,
-            "AVRUPA - EUROLEAGUE": 4900, "AMERİKA - NBA": 4800, "TÜRKİYE - BSL": 4700,
+            "TÜRKİYE - 1. LİG": 3000,
+            "AVRUPA - EUROLEAGUE": 4900, "AMERİKA - NBA": 4800, "TÜRKİYE - BSL": 4700, "TÜRKİYE - KBSL": 4650,
             "İSPANYA - LIGA ACB": 4600, "İTALYA - LEGA A": 4500, "FRANSA - LNB PRO A": 4400,
             "ALMANYA - BBL": 4300, "AVRUPA - EUROCUP": 4200, "AVRUPA - BCL": 4100,
-            "AMERİKA - NCAA": 4000, "RUSYA - VTB": 3900, "AMERİKA - WNBA": 3800
+            "AMERİKA - NCAA": 4000, "RUSYA - VTB": 3900, "AMERİKA - WNBA": 3800,
+            "AVRUPA - FIBA": 3750, "AVUSTRALYA - NBL": 3700, "JAPONYA - B.LEAGUE": 3650,
+            "TAYVAN - P.LEAGUE+": 3600, "FİLİPİNLER - PBA": 3550, "FİLİPİNLER - MPBL": 3500
         };
 
         const GOLD_BASKET_LIST = [
-            "AMERİKA - NBA", "AVRUPA - EUROLEAGUE", "TÜRKİYE - BSL", "İSPANYA - LIGA ACB",
+            "AMERİKA - NBA", "AVRUPA - EUROLEAGUE", "TÜRKİYE - BSL", "TÜRKİYE - KBSL", "İSPANYA - LIGA ACB",
             "İTALYA - LEGA A", "FRANSA - LNB PRO A", "ALMANYA - BBL", "AVRUPA - EUROCUP",
-            "AVRUPA - BCL", "AMERİKA - NCAA", "RUSYA - VTB", "AMERİKA - WNBA"
+            "AVRUPA - BCL", "AMERİKA - NCAA", "RUSYA - VTB", "AMERİKA - WNBA",
+            "AVRUPA - FIBA", "AVUSTRALYA - NBL", "JAPONYA - B.LEAGUE",
+            "TAYVAN - P.LEAGUE+", "FİLİPİNLER - PBA", "FİLİPİNLER - MPBL"
         ];
 
         const ROLLING_TARGETS = { 7: 1000, 15: 5000, 30: 15000, 60: 40000, 90: 100000 };

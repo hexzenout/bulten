@@ -1,7 +1,29 @@
 import os
 import json
 import time
-import requests
+import urllib.request
+import urllib.parse
+try:
+    import requests
+except ImportError:
+    class _ShimResp:
+        def __init__(self, status, body):
+            self.status_code = status
+            self._body = body
+        def json(self):
+            return json.loads(self._body)
+    class _ShimReq:
+        @staticmethod
+        def get(url, headers=None, timeout=12, params=None):
+            if params:
+                url = url + ("&" if "?" in url else "?") + urllib.parse.urlencode(params)
+            req = urllib.request.Request(url, headers=headers or {})
+            try:
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    return _ShimResp(r.status, r.read().decode("utf-8", errors="ignore"))
+            except Exception:
+                return _ShimResp(500, "{}")
+    requests = _ShimReq()
 from datetime import datetime, timedelta, timezone
 
 # ============================================================
@@ -21,6 +43,7 @@ REQUEST_TIMEOUT = 12
 
 LIGLER = [
     {"k": "soccer_turkey_super_league", "n": "SÜPER LİG", "t": "futbol", "f": "tr", "c": "TÜRKİYE", "vip": 100},
+    {"k": "soccer_turkey_1_lig", "n": "1. LİG", "t": "futbol", "f": "tr", "c": "TÜRKİYE", "vip": 85},
     {"k": "soccer_epl", "n": "PREMIER LEAGUE", "t": "futbol", "f": "gb-eng", "c": "İNGİLTERE", "vip": 99},
     {"k": "soccer_spain_la_liga", "n": "LA LIGA", "t": "futbol", "f": "es", "c": "İSPANYA", "vip": 98},
     {"k": "soccer_germany_bundesliga", "n": "BUNDESLIGA", "t": "futbol", "f": "de", "c": "ALMANYA", "vip": 97},
@@ -43,6 +66,7 @@ LIGLER = [
     {"k": "basketball_wnba", "n": "WNBA", "t": "basketbol", "f": "us", "c": "AMERİKA", "vip": 90},
     {"k": "basketball_ncaab", "n": "NCAA", "t": "basketbol", "f": "us", "c": "AMERİKA", "vip": 80},
     {"k": "basketball_turkey_bsl", "n": "BSL", "t": "basketbol", "f": "tr", "c": "TÜRKİYE", "vip": 79},
+    {"k": "basketball_turkey_kbsl", "n": "KBSL", "t": "basketbol", "f": "tr", "c": "TÜRKİYE", "vip": 78},
     {"k": "basketball_spain_liga_endesa", "n": "LIGA ACB", "t": "basketbol", "f": "es", "c": "İSPANYA", "vip": 78},
     {"k": "basketball_italy_lega_a", "n": "LEGA A", "t": "basketbol", "f": "it", "c": "İTALYA", "vip": 77},
     {"k": "basketball_france_lnb_pro_a", "n": "LNB PRO A", "t": "basketbol", "f": "fr", "c": "FRANSA", "vip": 76},
@@ -50,6 +74,12 @@ LIGLER = [
     {"k": "basketball_eurocup", "n": "EUROCUP", "t": "basketbol", "f": "eu", "c": "AVRUPA", "vip": 74},
     {"k": "basketball_champions_league", "n": "BCL", "t": "basketbol", "f": "eu", "c": "AVRUPA", "vip": 73},
     {"k": "basketball_vtb_united_league", "n": "VTB", "t": "basketbol", "f": "ru", "c": "RUSYA", "vip": 72},
+    {"k": "basketball_fiba", "n": "FIBA", "t": "basketbol", "f": "eu", "c": "AVRUPA", "vip": 82},
+    {"k": "basketball_australia_nbl", "n": "NBL", "t": "basketbol", "f": "au", "c": "AVUSTRALYA", "vip": 76},
+    {"k": "basketball_japan_bleague", "n": "B.LEAGUE", "t": "basketbol", "f": "jp", "c": "JAPONYA", "vip": 71},
+    {"k": "basketball_taiwan_pleague", "n": "P.LEAGUE+", "t": "basketbol", "f": "tw", "c": "TAYVAN", "vip": 70},
+    {"k": "basketball_philippines_pba", "n": "PBA", "t": "basketbol", "f": "ph", "c": "FİLİPİNLER", "vip": 69},
+    {"k": "basketball_philippines_mpbl", "n": "MPBL", "t": "basketbol", "f": "ph", "c": "FİLİPİNLER", "vip": 68},
 ]
 
 
@@ -231,18 +261,153 @@ class V19Master:
         self.log(f"JSON GÜNCELLENDİ | toplam maç: {len(self.results)}")
         return True
 
+    def supplement_from_iddaa_and_espn(self):
+        existing_keys = {
+            (x.get("l"), x.get("dt"), x.get("m", "").lower())
+            for x in self.results
+        }
+        lig_by_name = {self.league_name(l): l for l in LIGLER}
+
+        def add_match(lig_name, home, away, dt_str, tm_str):
+            lig = lig_by_name.get(lig_name)
+            if not lig or not home or not away:
+                return
+            title = f"{home} - {away}"
+            key = (lig_name, dt_str, title.lower())
+            if key in existing_keys:
+                return
+            existing_keys.add(key)
+            self.results.append({
+                "t": lig["t"],
+                "l": lig_name,
+                "f": lig["f"],
+                "m": title,
+                "dt": dt_str,
+                "tm": tm_str,
+                "vip": lig["vip"],
+            })
+            self.stats[lig_name] = self.stats.get(lig_name, 0) + 1
+
+        # 1. Iddaa official bulletin (zero-key, quota-free) covering ALL football & basketball leagues
+        IDDAA_COMP_RULES = [
+            ("türkiye süper lig", "TÜRKİYE - SÜPER LİG", 1),
+            ("türkiye 1. lig", "TÜRKİYE - 1. LİG", 1),
+            ("ingiltere premier", "İNGİLTERE - PREMIER LEAGUE", 1),
+            ("ingiltere championship", "İNGİLTERE - CHAMPIONSHIP", 1),
+            ("ispanya la liga", "İSPANYA - LA LIGA", 1),
+            ("almanya bundesliga", "ALMANYA - BUNDESLIGA", 1),
+            ("italya serie a", "İTALYA - SERIE A", 1),
+            ("fransa ligue 1", "FRANSA - LIGUE 1", 1),
+            ("hollanda eredivisie", "HOLLANDA - EREDIVISIE", 1),
+            ("portekiz", "PORTEKİZ - PRIMEIRA LIGA", 1),
+            ("brezilya serie a", "BREZİLYA - BRAZIL SERIE A", 1),
+            ("arjantin", "ARJANTİN - ARGENTINA PRIMERA", 1),
+            ("abd mls", "AMERİKA - MLS", 1),
+            ("şampiyonlar ligi", "AVRUPA - CHAMPIONS LEAGUE", 1),
+            ("avrupa ligi", "AVRUPA - EUROPA LEAGUE", 1),
+            ("konferans ligi", "AVRUPA - CONFERENCE LEAGUE", 1),
+            ("abd amerika basketbol", "AMERİKA - NBA", 2),
+            ("abd kolej basketbol", "AMERİKA - NCAA", 2),
+            ("euroleague", "AVRUPA - EUROLEAGUE", 2),
+            ("türkiye basketbol süper", "TÜRKİYE - BSL", 2),
+            ("türkiye sigorta basketbol", "TÜRKİYE - BSL", 2),
+            ("türkiye kadınlar basketbol", "TÜRKİYE - KBSL", 2),
+            ("ispanya acb", "İSPANYA - LIGA ACB", 2),
+            ("ispanya basketbol ligi", "İSPANYA - LIGA ACB", 2),
+            ("italya serie a", "İTALYA - LEGA A", 2),
+            ("italya basketbol", "İTALYA - LEGA A", 2),
+            ("fransa pro a", "FRANSA - LNB PRO A", 2),
+            ("fransa lnb", "FRANSA - LNB PRO A", 2),
+            ("almanya bbl", "ALMANYA - BBL", 2),
+            ("eurocup", "AVRUPA - EUROCUP", 2),
+            ("basketbol şampiyonlar ligi", "AVRUPA - BCL", 2),
+            ("vtb", "RUSYA - VTB", 2),
+            ("japonya b", "JAPONYA - B.LEAGUE", 2),
+            ("avustralya nbl", "AVUSTRALYA - NBL", 2),
+            ("tayvan p", "TAYVAN - P.LEAGUE+", 2),
+            ("filipinler pba", "FİLİPİNLER - PBA", 2),
+            ("filipinler mpbl", "FİLİPİNLER - MPBL", 2),
+            ("fiba", "AVRUPA - FIBA", 2),
+        ]
+        try:
+            headers = {"User-Agent": "Mozilla/5.0"}
+            cr = requests.get("https://sportsbookv2.iddaa.com/sportsbook/competitions", headers=headers, timeout=12)
+            cmap = {c["i"]: c.get("n", "") for c in (cr.json().get("data") or [])} if cr.status_code == 200 else {}
+            for st in (1, 2):
+                er = requests.get(f"https://sportsbookv2.iddaa.com/sportsbook/events?st={st}&type=0&version=0", headers=headers, timeout=12)
+                if er.status_code != 200:
+                    continue
+                for ev in (er.json().get("data") or {}).get("events") or []:
+                    cname = cmap.get(ev.get("ci"), "")
+                    clow = cname.lower()
+                    if ("kadın" in clow and "türkiye kadınlar basketbol" not in clow) or "amatör" in clow:
+                        continue
+                    target_lig = None
+                    for needle, lig_name, expected_st in IDDAA_COMP_RULES:
+                        if st == expected_st and needle in clow:
+                            target_lig = lig_name
+                            break
+                    if not target_lig:
+                        continue
+                    ts = ev.get("d")
+                    if not ts:
+                        continue
+                    dt_tr = datetime.fromtimestamp(int(ts), tz=timezone.utc) + timedelta(hours=TR_TIME_OFFSET)
+                    add_match(target_lig, ev.get("hn", ""), ev.get("an", ""), dt_tr.strftime("%Y-%m-%d"), dt_tr.strftime("%H:%M"))
+        except Exception as e:
+            self.log(f"IDDAA FALLBACK HATASI | {e}")
+
+        # 2. ESPN public scoreboard fallback (zero-key, quota-free)
+        ESPN_FALLBACKS = [
+            ("TÜRKİYE - SÜPER LİG", "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard"),
+            ("İNGİLTERE - PREMIER LEAGUE", "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard"),
+            ("İSPANYA - LA LIGA", "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard"),
+            ("ALMANYA - BUNDESLIGA", "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard"),
+            ("İTALYA - SERIE A", "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard"),
+            ("FRANSA - LIGUE 1", "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/scoreboard"),
+            ("AVRUPA - CHAMPIONS LEAGUE", "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard"),
+            ("AVRUPA - EUROPA LEAGUE", "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard"),
+            ("AVRUPA - CONFERENCE LEAGUE", "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa.conf/scoreboard"),
+            ("AMERİKA - NBA", "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"),
+            ("AMERİKA - NCAA", "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard"),
+            ("AVUSTRALYA - NBL", "https://site.api.espn.com/apis/site/v2/sports/basketball/nbl/scoreboard"),
+            ("AMERİKA - WNBA", "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard"),
+        ]
+        for lig_name, url in ESPN_FALLBACKS:
+            if self.stats.get(lig_name, 0) > 0:
+                continue
+            try:
+                r = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
+                if r.status_code != 200:
+                    continue
+                for ev in (r.json().get("events") or []):
+                    comp = (ev.get("competitions") or [{}])[0]
+                    competitors = comp.get("competitors") or []
+                    home = next((c.get("team", {}).get("displayName") for c in competitors if c.get("homeAway") == "home"), "")
+                    away = next((c.get("team", {}).get("displayName") for c in competitors if c.get("homeAway") == "away"), "")
+                    date_iso = ev.get("date")
+                    if not home or not away or not date_iso:
+                        continue
+                    dt_utc = datetime.fromisoformat(date_iso.replace("Z", "+00:00"))
+                    dt_tr = dt_utc + timedelta(hours=TR_TIME_OFFSET)
+                    add_match(lig_name, home, away, dt_tr.strftime("%Y-%m-%d"), dt_tr.strftime("%H:%M"))
+            except Exception as e:
+                self.log(f"ESPN FALLBACK HATASI | {lig_name} | {e}")
+
     def run(self):
         self.log("V19 RADAR MOTOR BAŞLADI")
 
         if not ODDS_API_POOL:
-            self.log("ODDS_KEYS BULUNAMADI")
-            self.results = []
-            self.stats = {}
-            payload = self.build_warning_json("API ŞİFRESİ EKSİK")
-
-            with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-                json.dump(payload, f, ensure_ascii=False, indent=4)
-
+            self.log("ODDS_KEYS BULUNAMADI | Mevcut veriler + Iddaa/ESPN yedekleri çalıştırılıyor.")
+            old = self.load_old_json()
+            if old and isinstance(old.get("veriler"), list):
+                self.results = list(old.get("veriler", []))
+                for item in self.results:
+                    l = item.get("l")
+                    if l:
+                        self.stats[l] = self.stats.get(l, 0) + 1
+            self.supplement_from_iddaa_and_espn()
+            self.save_json()
             return
 
         for lig in LIGLER:
@@ -267,6 +432,7 @@ class V19Master:
 
             time.sleep(REQUEST_DELAY)
 
+        self.supplement_from_iddaa_and_espn()
         self.save_json()
         self.log("V19 RADAR MOTOR BİTTİ")
 

@@ -25,7 +25,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  <link rel="stylesheet" href="assets/css/00-base.css?v=v519">
+  <link rel="stylesheet" href="assets/css/00-base.css?v=v522">
   <link rel="stylesheet" href="assets/css/10-route-crypto.css?v=v1400">
   <link rel="stylesheet" href="assets/css/20-module-helpers.css?v=v1397">
   <link rel="stylesheet" href="assets/css/30-finance-core.css?v=v517">
@@ -699,7 +699,7 @@ html.matrika-locked body > *:not(#matrika-gate-overlay) {
         <div class="modal-body-wrapper">
             <div style="display:flex; gap:10px; margin-bottom:20px; background:#161616; padding:15px; border-radius:10px; border:1px solid #272727;">
                 <input type="text" id="new-ch-name" class="select-supreme" placeholder="Kanal Adı">
-                <input type="text" id="new-ch-url" class="select-supreme" style="flex:1" placeholder="Yayın URL (M3U8 / EMBED)">
+                <input type="text" id="new-ch-url" class="select-supreme" style="flex:1" placeholder="Yayın URL (M3U8 / EMBED)" onkeydown="if(event.key==='Enter'){event.preventDefault();omega_AddCustomChannel();}">
                 <button class="btn-op-fire" onclick="omega_AddCustomChannel()" style="padding:0 25px; margin:0;">EKLE</button>
             </div>
             <table class="supreme-data-table" style="width:100%; border-collapse:collapse;">
@@ -709,9 +709,9 @@ html.matrika-locked body > *:not(#matrika-gate-overlay) {
     </div>
 
     <!-- V30 modular core scripts -->
-<script src="assets/js/00-omega-core.js?v=v1297"></script>
-<script src="assets/js/10-radar-core.js?v=v1307"></script>
-<script src="assets/js/20-stream-core.js?v=v536"></script>
+<script src="assets/js/00-omega-core.js?v=v1413"></script>
+<script src="assets/js/10-radar-core.js?v=v1413"></script>
+<script src="assets/js/20-stream-core.js?v=v1409"></script>
 <script src="assets/js/30-finance-core.js?v=v759"></script>
 <script src="assets/js/40-live-center-core.js?v=v1296"></script>
 <script src="assets/js/50-daily-trade-core.js?v=v1296"></script>
