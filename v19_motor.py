@@ -288,6 +288,80 @@ class V19Master:
             })
             self.stats[lig_name] = self.stats.get(lig_name, 0) + 1
 
+        # 0. Nesine official full bulletin (zero-key, quota-free, fastest & widest TR+Global coverage)
+        NESINE_COMP_RULES = [
+            ("türkiye süper lig", "TÜRKİYE - SÜPER LİG", 1),
+            ("türkiye 1. lig", "TÜRKİYE - 1. LİG", 1),
+            ("ingiltere premier", "İNGİLTERE - PREMIER LEAGUE", 1),
+            ("ingiltere championship", "İNGİLTERE - CHAMPIONSHIP", 1),
+            ("ispanya la liga", "İSPANYA - LA LIGA", 1),
+            ("almanya bundesliga", "ALMANYA - BUNDESLIGA", 1),
+            ("italya serie a", "İTALYA - SERIE A", 1),
+            ("fransa ligue 1", "FRANSA - LIGUE 1", 1),
+            ("hollanda eredivisie", "HOLLANDA - EREDIVISIE", 1),
+            ("portekiz", "PORTEKİZ - PRIMEIRA LIGA", 1),
+            ("brezilya serie a", "BREZİLYA - BRAZIL SERIE A", 1),
+            ("arjantin", "ARJANTİN - ARGENTINA PRIMERA", 1),
+            ("abd mls", "AMERİKA - MLS", 1),
+            ("abd major lig", "AMERİKA - MLS", 1),
+            ("şampiyonlar ligi", "AVRUPA - CHAMPIONS LEAGUE", 1),
+            ("avrupa ligi", "AVRUPA - EUROPA LEAGUE", 1),
+            ("konferans ligi", "AVRUPA - CONFERENCE LEAGUE", 1),
+            ("nba", "AMERİKA - NBA", 2),
+            ("abd kolej basketbol", "AMERİKA - NCAA", 2),
+            ("euroleague", "AVRUPA - EUROLEAGUE", 2),
+            ("türkiye basketbol süper", "TÜRKİYE - BSL", 2),
+            ("türkiye sigorta basketbol", "TÜRKİYE - BSL", 2),
+            ("türkiye kadınlar süper lig", "TÜRKİYE - KBSL", 2),
+            ("kadınlar basketbol süper", "TÜRKİYE - KBSL", 2),
+            ("ispanya acb", "İSPANYA - LIGA ACB", 2),
+            ("ispanya basketbol ligi", "İSPANYA - LIGA ACB", 2),
+            ("italya serie a", "İTALYA - LEGA A", 2),
+            ("italya basketbol", "İTALYA - LEGA A", 2),
+            ("fransa pro a", "FRANSA - LNB PRO A", 2),
+            ("fransa lnb", "FRANSA - LNB PRO A", 2),
+            ("almanya bbl", "ALMANYA - BBL", 2),
+            ("eurocup", "AVRUPA - EUROCUP", 2),
+            ("basketbol şampiyonlar ligi", "AVRUPA - BCL", 2),
+            ("vtb", "RUSYA - VTB", 2),
+            ("japonya b1", "JAPONYA - B.LEAGUE", 2),
+            ("japonya b.league", "JAPONYA - B.LEAGUE", 2),
+            ("avustralya nbl", "AVUSTRALYA - NBL", 2),
+            ("tayvan p", "TAYVAN - P.LEAGUE+", 2),
+            ("filipinler pba", "FİLİPİNLER - PBA", 2),
+            ("filipinler mpbl", "FİLİPİNLER - MPBL", 2),
+            ("fiba", "AVRUPA - FIBA", 2),
+        ]
+        try:
+            nr = requests.get("https://cdnbulten.nesine.com/api/bulten/getprebultenfull", headers={"User-Agent": "Mozilla/5.0"}, timeout=15)
+            if nr.status_code == 200:
+                sg = nr.json().get("sg") or {}
+                lmap = {x.get("LID"): x.get("N", "") for x in (sg.get("LA") or [])}
+                for ev in (sg.get("EA") or []):
+                    ev_type = ev.get("TYPE")
+                    if ev_type not in (1, 2):
+                        continue
+                    cname = lmap.get(ev.get("LC"), "")
+                    clow = cname.lower()
+                    if ("kadın" in clow and "türkiye kadınlar süper lig" not in clow and "kadınlar basketbol süper" not in clow) or "amatör" in clow:
+                        continue
+                    target_lig = None
+                    for needle, lig_name, expected_st in NESINE_COMP_RULES:
+                        if ev_type == expected_st and needle in clow:
+                            target_lig = lig_name
+                            break
+                    if not target_lig:
+                        continue
+                    d_raw = str(ev.get("D") or "")
+                    t_raw = str(ev.get("T") or "00:00")
+                    parts = d_raw.split(".")
+                    if len(parts) != 3:
+                        continue
+                    dt_str = f"{parts[2]}-{parts[1].zfill(2)}-{parts[0].zfill(2)}"
+                    add_match(target_lig, ev.get("HN", ""), ev.get("AN", ""), dt_str, t_raw)
+        except Exception as e:
+            self.log(f"NESINE FALLBACK HATASI | {e}")
+
         # 1. Iddaa official bulletin (zero-key, quota-free) covering ALL football & basketball leagues
         IDDAA_COMP_RULES = [
             ("türkiye süper lig", "TÜRKİYE - SÜPER LİG", 1),
@@ -323,7 +397,8 @@ class V19Master:
             ("eurocup", "AVRUPA - EUROCUP", 2),
             ("basketbol şampiyonlar ligi", "AVRUPA - BCL", 2),
             ("vtb", "RUSYA - VTB", 2),
-            ("japonya b", "JAPONYA - B.LEAGUE", 2),
+            ("japonya b1", "JAPONYA - B.LEAGUE", 2),
+            ("japonya b.league", "JAPONYA - B.LEAGUE", 2),
             ("avustralya nbl", "AVUSTRALYA - NBL", 2),
             ("tayvan p", "TAYVAN - P.LEAGUE+", 2),
             ("filipinler pba", "FİLİPİNLER - PBA", 2),
