@@ -311,7 +311,8 @@ class V19Master:
             ("euroleague", "AVRUPA - EUROLEAGUE", 2),
             ("türkiye basketbol süper", "TÜRKİYE - BSL", 2),
             ("türkiye sigorta basketbol", "TÜRKİYE - BSL", 2),
-            ("türkiye kadınlar basketbol", "TÜRKİYE - KBSL", 2),
+            ("kadınlar basketbol süper", "TÜRKİYE - KBSL", 2),
+            ("kbsl", "TÜRKİYE - KBSL", 2),
             ("ispanya acb", "İSPANYA - LIGA ACB", 2),
             ("ispanya basketbol ligi", "İSPANYA - LIGA ACB", 2),
             ("italya serie a", "İTALYA - LEGA A", 2),
@@ -340,7 +341,7 @@ class V19Master:
                 for ev in (er.json().get("data") or {}).get("events") or []:
                     cname = cmap.get(ev.get("ci"), "")
                     clow = cname.lower()
-                    if ("kadın" in clow and "türkiye kadınlar basketbol" not in clow) or "amatör" in clow:
+                    if ("kadın" in clow and "kadınlar basketbol süper" not in clow and "kbsl" not in clow) or "amatör" in clow:
                         continue
                     target_lig = None
                     for needle, lig_name, expected_st in IDDAA_COMP_RULES:
