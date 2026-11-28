@@ -261,22 +261,75 @@ class V19Master:
         self.log(f"JSON GÜNCELLENDİ | toplam maç: {len(self.results)}")
         return True
 
+    def _norm_team_tokens(self, name):
+        s = str(name or "").lower()
+        for a, b in (("ğ", "g"), ("ü", "u"), ("ş", "s"), ("ı", "i"), ("ö", "o"), ("ç", "c"), ("İ", "i")):
+            s = s.replace(a, b)
+        out = []
+        stop = {"sk", "fk", "fc", "bc", "sc", "ac", "as", "cf", "cd", "club", "sportif", "faaliyetler", "belediye", "belediyesi", "bld", "spor", "basketbol", "basketball", "k", "vs", "de", "la", "el"}
+        cleaned = "".join(ch if ch.isalnum() else " " for ch in s)
+        for tok in cleaned.split():
+            if len(tok) >= 3 and tok not in stop:
+                out.append(tok)
+        return set(out)
+
+    def _tm_mins(self, tm):
+        try:
+            hh, mm = str(tm or "00:00").split(":")[:2]
+            return int(hh) * 60 + int(mm)
+        except Exception:
+            return 0
+
+    def is_duplicate_in_results(self, lig_name, home, away, dt_str, tm_str):
+        h_toks = self._norm_team_tokens(home)
+        a_toks = self._norm_team_tokens(away)
+        t_mins = self._tm_mins(tm_str)
+        for ex in self.results:
+            if ex.get("l") != lig_name or ex.get("dt") != dt_str:
+                continue
+            if abs(self._tm_mins(ex.get("tm")) - t_mins) > 90:
+                continue
+            ex_m = str(ex.get("m") or "")
+            parts = ex_m.split(" - ", 1)
+            if len(parts) != 2:
+                continue
+            eh_toks = self._norm_team_tokens(parts[0])
+            ea_toks = self._norm_team_tokens(parts[1])
+            h_match = bool(h_toks & eh_toks) or any(t1 in t2 or t2 in t1 for t1 in h_toks for t2 in eh_toks if len(t1) >= 5 and len(t2) >= 5)
+            a_match = bool(a_toks & ea_toks) or any(t1 in t2 or t2 in t1 for t1 in a_toks for t2 in ea_toks if len(t1) >= 5 and len(t2) >= 5)
+            if h_match and a_match:
+                return True
+        return False
+
+    def dedupe_results(self):
+        orig = list(self.results)
+        self.results = []
+        self.stats = {self.league_name(lig): 0 for lig in LIGLER}
+        for item in orig:
+            m_low = str(item.get("m") or "").lower()
+            if any(bad in m_low for bad in ("özel bahis", "haftalık bahis", "şampiyon", "gol kralı")):
+                continue
+            parts = str(item.get("m") or "").split(" - ", 1)
+            if len(parts) == 2 and self.is_duplicate_in_results(item.get("l"), parts[0], parts[1], item.get("dt"), item.get("tm")):
+                continue
+            self.results.append(item)
+            l = item.get("l")
+            if l:
+                self.stats[l] = self.stats.get(l, 0) + 1
+
     def supplement_from_iddaa_and_espn(self):
-        existing_keys = {
-            (x.get("l"), x.get("dt"), x.get("m", "").lower())
-            for x in self.results
-        }
         lig_by_name = {self.league_name(l): l for l in LIGLER}
 
         def add_match(lig_name, home, away, dt_str, tm_str):
             lig = lig_by_name.get(lig_name)
             if not lig or not home or not away:
                 return
-            title = f"{home} - {away}"
-            key = (lig_name, dt_str, title.lower())
-            if key in existing_keys:
+            joined = f"{home} {away}".lower()
+            if any(bad in joined for bad in ("özel bahis", "haftalık bahis", "şampiyon", "gol kralı")):
                 return
-            existing_keys.add(key)
+            if self.is_duplicate_in_results(lig_name, home, away, dt_str, tm_str):
+                return
+            title = f"{home} - {away}"
             self.results.append({
                 "t": lig["t"],
                 "l": lig_name,
@@ -482,7 +535,9 @@ class V19Master:
                     l = item.get("l")
                     if l:
                         self.stats[l] = self.stats.get(l, 0) + 1
+            self.dedupe_results()
             self.supplement_from_iddaa_and_espn()
+            self.dedupe_results()
             self.save_json()
             return
 
@@ -509,6 +564,7 @@ class V19Master:
             time.sleep(REQUEST_DELAY)
 
         self.supplement_from_iddaa_and_espn()
+        self.dedupe_results()
         self.save_json()
         self.log("V19 RADAR MOTOR BİTTİ")
 
